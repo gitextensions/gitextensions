@@ -125,7 +125,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _assumeUnchangedToolTip = new TranslationString("Tell git to not check the status of this file for performance benefits."
             + Environment.NewLine + "Use this feature when a file is big and never change."
             + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
-
         #endregion
 
         private readonly ICommitTemplateManager _commitTemplateManager;
@@ -659,10 +658,15 @@ namespace GitUI.CommandsDialogs
             ResetUnStaged.Enabled = Unstaged.AllItems.Any();
         }
 
-        private void SetDialogTitle()
+        private void UpdateBranchNameDisplay()
         {
-            Task.Run(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(), Module.WorkingDir))
-                .ContinueWith(task => Text = task.Result, _taskScheduler);
+            Task.Run(() => Module.GetSelectedBranch())
+                .ContinueWith(task =>
+                {
+                    var currentBranchName = task.Result;
+                    branchNameLabel.Text = currentBranchName;
+                    Text = string.Format(_formTitle.Text, currentBranchName, Module.WorkingDir);
+                }, _taskScheduler);
         }
 
         private bool _initialized;
@@ -671,7 +675,7 @@ namespace GitUI.CommandsDialogs
         {
             _initialized = true;
 
-            SetDialogTitle();
+            UpdateBranchNameDisplay();
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
@@ -2775,7 +2779,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
-            SetDialogTitle();
+            UpdateBranchNameDisplay();
         }
 
         private void Message_Enter(object sender, EventArgs e)

@@ -5,8 +5,11 @@ using JetBrains.Annotations;
 
 namespace ResourceManager
 {
-    static public class LocalizationHelpers
+    public static class LocalizationHelpers
     {
+        private static readonly ICommitDataHeaderRenderer CommitDataHeaderRenderer = new CommitDataHeaderRenderer(null);
+
+
         private static DateTime RoundDateTime(DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
@@ -73,15 +76,18 @@ namespace ResourceManager
             GitModule module = superproject.GetSubmodule(name);
             if (module.IsValidGitWorkingDir())
             {
+                // TEMP, will be moved in the follow up refactor
+                ICommitDataManager commitDataManager = new CommitDataManager(() => module);
+
                 string error = "";
-                CommitData data = CommitData.GetCommitData(module, hash, ref error);
+                CommitData data = commitDataManager.GetCommitData(hash, ref error);
                 if (data == null)
                 {
                     sb.AppendLine("Commit hash:\t" + hash);
                     return sb.ToString();
                 }
 
-                string header = data.GetHeaderPlain();
+                string header = CommitDataHeaderRenderer.RenderPlain(data);
                 string body = "\n" + data.Body.Trim();
                 sb.AppendLine(header);
                 sb.Append(body);
@@ -110,6 +116,9 @@ namespace ResourceManager
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
+            // TEMP, will be moved in the follow up refactor
+            ICommitDataManager commitDataManager = new CommitDataManager(() => gitmodule);
+
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
             CommitData oldCommitData = null;
@@ -117,7 +126,10 @@ namespace ResourceManager
             {
                 string error = "";
                 if (status.OldCommit != null)
-                    oldCommitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
+                {
+                    oldCommitData = commitDataManager.GetCommitData(status.OldCommit, ref error);
+                }
+
                 if (oldCommitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
@@ -128,7 +140,9 @@ namespace ResourceManager
                 }
             }
             else
+            {
                 sb.AppendLine();
+            }
 
             sb.AppendLine();
             string dirty = !status.IsDirty ? "" : " (dirty)";
@@ -138,7 +152,10 @@ namespace ResourceManager
             {
                 string error = "";
                 if (status.Commit != null)
-                    commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
+                {
+                    commitData = commitDataManager.GetCommitData(status.Commit, ref error);
+                }
+
                 if (commitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
@@ -149,7 +166,9 @@ namespace ResourceManager
                 }
             }
             else
+            {
                 sb.AppendLine();
+            }
 
             sb.AppendLine();
             var submoduleStatus = gitmodule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);

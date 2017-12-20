@@ -797,13 +797,25 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconBranchCheckout {
+        internal static System.Drawing.Bitmap IconBranch {
             get {
+                object obj = ResourceManager.GetObject("IconBranch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconBranchCheckout
+        {
+            get
+            {
                 object obj = ResourceManager.GetObject("IconBranchCheckout", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -1550,6 +1562,26 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconWarning {
             get {
                 object obj = ResourceManager.GetObject("IconWarning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Bitmap ignore_all_whitespaces {
+            get {
+                object obj = ResourceManager.GetObject("ignore_all_whitespaces", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Bitmap ignore_whitespaces {
+            get {
+                object obj = ResourceManager.GetObject("ignore_whitespaces", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

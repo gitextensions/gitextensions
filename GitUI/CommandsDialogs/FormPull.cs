@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         private readonly TranslationString _formTitlePull = new TranslationString("Pull ({0})");
-        private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0}");
+        private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0})");
         #endregion
 
         public bool ErrorOccurred { get; private set; }

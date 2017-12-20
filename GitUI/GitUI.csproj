@@ -1974,6 +1974,7 @@
     <Content Include="Resources\Icons\HelpPullMerge.png" />
     <Content Include="Resources\Icons\HelpPullRebase.png" />
     <Content Include="Resources\Icons\IconArchiveRevision.png" />
+    <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
     <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
@@ -1986,6 +1987,8 @@
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
     <Content Include="Resources\Icons\IconUntrackedOnly.png" />
+    <None Include="Resources\Icons\ignore_whitespaces.ico" />
+    <None Include="Resources\Icons\ignore_all_whitespaces.ico" />
     <Content Include="Resources\Icons\increase.png" />
     <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
     <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />

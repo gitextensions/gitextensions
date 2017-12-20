@@ -16,8 +16,8 @@ namespace ReleaseNotesGenerator
     public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
     {
         private readonly TranslationString _commitLogFrom = new TranslationString("Commit log from '{0}' to '{1}' ({2}):");
-        private readonly TranslationString _fromCommitNotSpecified = new TranslationString("'From' must be commit specified");
-        private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' must be commit specified");
+        private readonly TranslationString _fromCommitNotSpecified = new TranslationString("'From' commit must be specified");
+        private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' commit must be specified");
         private readonly TranslationString _caption = new TranslationString("Invalid input");
 
         const string MostRecentHint = "most recent changes are listed on top";

@@ -100,7 +100,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="packages.config" />
     <None Include="Properties\DataSources\FormTranslate.TranslationItemWithCategory.datasource" />
   </ItemGroup>
   <ItemGroup>
@@ -168,21 +167,12 @@
   <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
     <ItemGroup>
       <!-- Plugin binaries-->
-      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.dll" />
-      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.dll" />
-      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.dll" />
-
+      <PluginBinary Include="..\Plugins\**\bin\$(Configuration)\*.dll" />
       <!-- Plugin symbols-->
-      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.pdb" />
-      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.pdb" />
-      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.pdb" />
-
+      <PluginBinary Include="..\Plugins\**\bin\$(Configuration)\*.pdb" />
       <!-- Plugin satellite assemblies -->
-      <PluginSatelliteBinary Include="..\Plugins\*\bin\$(Configuration)\*\*.dll" />
-      <PluginSatelliteBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*\*.dll" />
-      <PluginSatelliteBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*\*.dll" />
+      <PluginSatelliteBinary Include="..\Plugins\**\bin\$(Configuration)\*\*.dll" />
     </ItemGroup>
-
     <ItemGroup>
       <None Include="@(PluginBinary)" Exclude="..\Plugins\**\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll;..\Plugins\**\Microsoft.WITDataStore.dll">
         <Link>Plugins\%(Filename)%(Extension)</Link>

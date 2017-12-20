@@ -15,7 +15,6 @@ using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
 using GitUI.Editor;
 
-
 namespace GitUI.CommitInfo
 {
     public partial class CommitInfo : GitModuleControl
@@ -27,7 +26,10 @@ namespace GitUI.CommitInfo
         private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
         private const int MaximumDisplayedRefs = 20;
-        private LinkFactory _linkFactory = new LinkFactory();
+        private readonly ILinkFactory _linkFactory = new LinkFactory();
+        private readonly ICommitDataManager _commitDataManager;
+        private ICommitInformationProvider _commitInformationProvider;
+
 
         public CommitInfo()
         {
@@ -36,11 +38,19 @@ namespace GitUI.CommitInfo
             GitUICommandsSourceSet += (a, uiCommandsSource) =>
             {
                 _sortedRefs = null;
+                _commitInformationProvider = new CommitInformationProvider(() => Module);
             };
+            _commitDataManager = new CommitDataManager(() => Module);
+
+            RevisionInfo.Font = AppSettings.Font;
 
             using (Graphics g = CreateGraphics())
+            {
                 if (!AppSettings.Font.IsFixedWidth(g))
+                {
                     _RevisionHeader.Font = new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
+                }
+            }
         }
 
         [DefaultValue(false)]
@@ -146,10 +156,10 @@ namespace GitUI.CommitInfo
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
             string error = "";
-            CommitData data = CommitData.CreateFromRevision(_revision);
+            CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
-                CommitData.UpdateCommitMessage(data, Module, _revision.Guid, ref error);
+                _commitDataManager.UpdateCommitMessage(data, _revision.Guid, ref error);
                 _revision.Body = data.Body;
             }
 
@@ -159,7 +169,7 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, _linkFactory, CommandClick != null, Module);
+            var commitInformation = _commitInformationProvider.Get(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             _RevisionHeader.Height = GetRevisionHeaderHeight();
@@ -312,7 +322,8 @@ namespace GitUI.CommitInfo
                 revInfoIndex = 0;
                 gravatarSpan = 1;
                 revInfoSpan = 2;
-            } else
+            }
+            else
             {
                 this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
                 this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));

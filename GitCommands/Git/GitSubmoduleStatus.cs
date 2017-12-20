@@ -30,24 +30,6 @@
             Status = submodule.CheckSubmoduleStatus(Commit, OldCommit);
         }
 
-        public CommitData GetCommitData(GitModule submodule)
-        {
-            if (submodule == null || !submodule.IsValidGitWorkingDir())
-                return null;
-
-            string error = "";
-            return CommitData.GetCommitData(submodule, Commit, ref error);
-        }
-
-        public CommitData GetOldCommitData(GitModule submodule)
-        {
-            if (submodule == null || !submodule.IsValidGitWorkingDir())
-                return null;
-
-            string error = "";
-            return CommitData.GetCommitData(submodule, OldCommit, ref error);
-        }
-
         public string AddedAndRemovedString()
         {
             if (RemovedCommits == null || AddedCommits == null ||

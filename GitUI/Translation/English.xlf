@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49.03">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.50.02">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -77,24 +77,28 @@ This action will be performed without warning while checking out branch.</source
         <source>Appearance</source>
         <target />
       </trans-unit>
-      <trans-unit id="AuthorImageSize.Item0">
-        <source>Small (80x80)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="AuthorImageSize.Item1">
-        <source>Normal (160x160)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="AuthorImageSize.Item2">
-        <source>Large (240x240)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="AuthorImageSize.Item3">
-        <source>Extra Large (320x320)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="NoImageService.Item0">
+        <source>None</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="NoImageService.Item1">
+        <source>MonsterId</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="NoImageService.Item2">
+        <source>Wavatar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="NoImageService.Item3">
+        <source>Identicon</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="NoImageService.Item4">
+        <source>Retro</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
@@ -137,20 +141,20 @@ This action will be performed without warning while checking out branch.</source
         <source>Download dictionary</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox13.Text">
-        <source>Language</source>
+      <trans-unit id="gbAuthorImages.Text">
+        <source>Author images</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox14.Text">
-        <source>General</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox15.Text">
+      <trans-unit id="gbFonts.Text">
         <source>Fonts</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox6.Text">
-        <source>Author images</source>
+      <trans-unit id="gbGeneral.Text">
+        <source>General</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbLanguages.Text">
+        <source>Language</source>
         <target />
       </trans-unit>
       <trans-unit id="helpTranslate.Text">
@@ -167,10 +171,6 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="label34.Text">
         <source>Commit font</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label44.Text">
-        <source>Image size</source>
         <target />
       </trans-unit>
       <trans-unit id="label46.Text">
@@ -598,16 +598,20 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Yellow</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox3.Text">
+      <trans-unit id="chkDrawAlternateBackColor.Text">
+        <source>Draw alternate background</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbAppIcon.Text">
+        <source>Application Icon</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbDiffView.Text">
         <source>Difference view</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox4.Text">
+      <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox5.Text">
-        <source>Application Icon</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1095,14 +1099,6 @@ Do you want to open it?</source>
         <source>Remove</source>
         <target />
       </trans-unit>
-      <trans-unit id="RepositoriesType.Text">
-        <source>Repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="RssFeedType.Text">
-        <source>RSS Feed</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Title.HeaderText">
         <source>Title</source>
         <target />
@@ -1113,14 +1109,6 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Caption</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Type</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>RSS feed</source>
         <target />
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -1185,6 +1173,10 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Vertical ruler position [chars]</source>
         <target />
       </trans-unit>
     </body>
@@ -1948,6 +1940,10 @@ compare with first:</source>
         <source>Git bash</source>
         <target />
       </trans-unit>
+      <trans-unit id="GpgInfoTabPage.Text">
+        <source>GPG</source>
+        <target />
+      </trans-unit>
       <trans-unit id="PuTTYToolStripMenuItem.Text">
         <source>PuTTY</source>
         <target />
@@ -1992,22 +1988,6 @@ compare with first:</source>
         <source>Create pull requests...</source>
         <target />
       </trans-unit>
-      <trans-unit id="_diffNoSelection.Text">
-        <source>Diff (no selection)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_diffNotSupported.Text">
-        <source>Diff (not supported)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_diffParentWithSelection.Text">
-        <source>Diff (A: parent --&gt; B: selection)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_diffTwoSelected.Text">
-        <source>Diff (A: first --&gt; B: second)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_errorCaption.Text">
         <source>Error</source>
         <target />
@@ -2020,12 +2000,8 @@ compare with first:</source>
         <source>There are unresolved merge conflicts!</source>
         <target />
       </trans-unit>
-      <trans-unit id="_indexLockDeleted.Text">
-        <source>index.lock deleted.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_indexLockNotFound.Text">
-        <source>index.lock not found at:</source>
+      <trans-unit id="_indexLockCantDelete.Text">
+        <source>Failed to delete index.lock.</source>
         <target />
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -2046,14 +2022,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_noSubmodulesPresent.Text">
         <source>No submodules</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
-        <source>Node not found. The next available parent node will be selected.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_nodeNotFoundSelectionNotChanged.Text">
-        <source>Node not found. File tree selection was not changed.</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
@@ -2078,26 +2046,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetFileCaption.Text">
-        <source>Reset</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetFileError.Text">
-        <source>Exactly one revision must be selected. Abort.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetFileText.Text">
-        <source>Are you sure you want to reset this file or directory?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_saveFileFilterAllFiles.Text">
-        <source>All files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_saveFileFilterCurrentFormat.Text">
-        <source>Current format</source>
         <target />
       </trans-unit>
       <trans-unit id="_stashCount.Text">
@@ -2140,14 +2088,6 @@ compare with first:</source>
         <source>You are in the middle of a rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="aBToolStripMenuItem.Text">
-        <source>A &lt;--&gt; B</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="aLocalToolStripMenuItem.Text">
-        <source>A &lt;--&gt; Working directory</source>
-        <target />
-      </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
         <source>About</source>
         <target />
@@ -2164,20 +2104,8 @@ compare with first:</source>
         <source>Author</source>
         <target />
       </trans-unit>
-      <trans-unit id="bLocalToolStripMenuItem.Text">
-        <source>B &lt;--&gt; Working directory</source>
-        <target />
-      </trans-unit>
       <trans-unit id="bisectToolStripMenuItem.Text">
         <source>Bisect...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem.Text">
-        <source>Blame</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem1.Text">
-        <source>Blame</source>
         <target />
       </trans-unit>
       <trans-unit id="branchSelect.Text">
@@ -2204,10 +2132,6 @@ compare with first:</source>
         <source>Checkout revision...</source>
         <target />
       </trans-unit>
-      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherry pick file's changes</source>
-        <target />
-      </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
         <source>Cherry pick...</source>
         <target />
@@ -2232,10 +2156,6 @@ compare with first:</source>
         <source>Close (go to Dashboard)</source>
         <target />
       </trans-unit>
-      <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse all</source>
-        <target />
-      </trans-unit>
       <trans-unit id="commandsToolStripMenuItem.Text">
         <source>Commands</source>
         <target />
@@ -2254,14 +2174,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="compressGitDatabaseToolStripMenuItem.Text">
         <source>Compress git database</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
-        <source>Copy full path</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full path(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="createWorktreeToolStripMenuItem.Text">
@@ -2288,10 +2200,6 @@ compare with first:</source>
         <source>Diff contains (SLOW)</source>
         <target />
       </trans-unit>
-      <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
-        <source>Show in File tree</source>
-        <target />
-      </trans-unit>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
@@ -2304,10 +2212,6 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="donateToolStripMenuItem.Text">
         <source>Donate</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
-        <source>Edit working directory file</source>
         <target />
       </trans-unit>
       <trans-unit id="editLocalGitConfigToolStripMenuItem.Text">
@@ -2334,10 +2238,6 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Exit</source>
         <target />
       </trans-unit>
-      <trans-unit id="expandAllToolStripMenuItem.Text">
-        <source>Expand all (takes a while on large trees)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="fetchAllToolStripMenuItem.Text">
         <source>Fetch all</source>
         <target />
@@ -2350,36 +2250,8 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>File Explorer</source>
         <target />
       </trans-unit>
-      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File history</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="fileHistoryToolStripMenuItem.Text">
-        <source>File history</source>
-        <target />
-      </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
         <source>Start</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
-        <source>Archive...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
-        <source>Clean working directory...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>Find</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="findToolStripMenuItem.Text">
-        <source>Find</source>
         <target />
       </trans-unit>
       <trans-unit id="formatPatchToolStripMenuItem.Text">
@@ -2454,40 +2326,8 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Navigate</source>
         <target />
       </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder(s)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openFileToolStripMenuItem.Text">
-        <source>Open this revision (temp file)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openFileWithToolStripMenuItem.Text">
-        <source>Open this revision with... (temp file)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>Open...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open working directory file with...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="parentOfALocalToolStripMenuItem.Text">
-        <source>A's parent &lt;--&gt; Working directory</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
-        <source>B's parent &lt;--&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
@@ -2550,48 +2390,12 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Repository</source>
         <target />
       </trans-unit>
-      <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
-        <source>First</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="resetFileToParentToolStripMenuItem.Text">
-        <source>Parent</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
-        <source>Second</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
-        <source>Selected</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="resetFileToToolStripMenuItem.Text">
-        <source>Reset file(s) to</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
-        <source>Reset to selected revision</source>
-        <target />
-      </trans-unit>
       <trans-unit id="resetToolStripMenuItem.Text">
         <source>Reset changes...</source>
         <target />
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
         <source>Solve merge conflicts...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem.Text">
-        <source>Save as...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>Save (B) as...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="saveToolStripMenuItem.Text">
-        <source>Save</source>
         <target />
       </trans-unit>
       <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
@@ -2652,6 +2456,10 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="toolStripButtonPush.Text">
         <source>Push</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="toolStripFileExplorer.ToolTipText">
+        <source>File Explorer</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
@@ -2732,6 +2540,10 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
         <source>Show the Console tab</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkShowGpgInformation.Text">
+        <source>Show GPG information</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowRevisionInfoNextToRevisionGrid.Text">
@@ -3134,6 +2946,10 @@ Do you want to open the new repository "{0}" now?</source>
         <source>Initialize all submodules</source>
         <target />
       </trans-unit>
+      <trans-unit id="cbLfs.Text">
+        <source>Use LFS extension</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
         <target />
@@ -3217,6 +3033,12 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_amendCommitCaption.Text">
         <source>Amend commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_assumeUnchangedToolTip.Text">
+        <source>Tell git to not check the status of this file for performance benefits.
+Use this feature when a file is big and never change.
+Git will never check if the file has changed that will improve status check performance.</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -3393,6 +3215,11 @@ Do you want to continue?</source>
         <source>Enter a regular expression to select unstaged files.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_skipWorktreeToolTip.Text">
+        <source>Hide already tracked files that will change but that you don't want to commit.
+Suitable for some config files modified locally.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_stageDetails.Text">
         <source>Stage Details</source>
         <target />
@@ -3407,6 +3234,23 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_stageSelectedLinesToolStripMenuItem.Text">
         <source>Stage selected line(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_templateLoadErrorCapion.Text">
+        <source>Template could not be loaded</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_templateNotFound.Text">
+        <source>Template not found: {0}.
+
+You can set your template:
+	$ git config commit.template ./.git_commit_msg.txt
+You can unset the template:
+	$ git config --unset commit.template</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_templateNotFoundCaption.Text">
+        <source>Template Error</source>
         <target />
       </trans-unit>
       <trans-unit id="_unstageSelectedLines.Text">
@@ -3483,6 +3327,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
         <source>Do not assume unchanged</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="doNotSkipWorktreeToolStripMenuItem.Text">
+        <source>Do not skip worktree</source>
         <target />
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
@@ -3585,12 +3433,48 @@ Do you want to continue?</source>
         <source>Show ignored files</source>
         <target />
       </trans-unit>
+      <trans-unit id="showSkipWorktreeFilesToolStripMenuItem.Text">
+        <source>Show skip-worktree files</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showUntrackedFilesToolStripMenuItem.Text">
         <source>Show untracked files</source>
         <target />
       </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="skipWorktreeToolStripMenuItem.Text">
+        <source>Skip worktree</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedCopyPathToolStripMenuItem14.Text">
+        <source>Copy full path</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedEditFileToolStripMenuItem11.Text">
+        <source>Edit file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedFileHistoryToolStripMenuItem6.Text">
+        <source>View file history</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedOpenDifftoolToolStripMenuItem9.Text">
+        <source>Open with difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
+        <source>Open containing folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedOpenToolStripMenuItem7.Text">
+        <source>Open</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stagedOpenWithToolStripMenuItem8.Text">
+        <source>Open with...</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedResetChanges.Text">
@@ -3625,36 +3509,8 @@ Do you want to continue?</source>
         <source>Selection Filter</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripMenuItem10.Text">
-        <source>Open containing folder</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItem11.Text">
-        <source>Edit file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItem14.Text">
-        <source>Copy full path</source>
-        <target />
-      </trans-unit>
       <trans-unit id="toolStripMenuItem3.Text">
         <source>Options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItem6.Text">
-        <source>View file history</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItem7.Text">
-        <source>Open</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItem8.Text">
-        <source>Open with</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItem9.Text">
-        <source>Open with difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="toolUnstageAllItem.Text">
@@ -3845,16 +3701,48 @@ Do you want to continue?</source>
         <source>Select 1 revision to create the tag on.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_noTagMessage.Text">
-        <source>Please enter a tag message</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_pushToCaption.Text">
         <source>Push tag to '{0}'</source>
         <target />
       </trans-unit>
+      <trans-unit id="_trsAnnotated.Text">
+        <source>Annotated tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_trsLigthweight.Text">
+        <source>Lightweight tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_trsSignDefault.Text">
+        <source>Sign with default GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_trsSignSpecificKey.Text">
+        <source>Sign with specific GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="annotate.Item0">
+        <source>Lightweight tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="annotate.Item1">
+        <source>Annotated tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="annotate.Item2">
+        <source>Sign with default GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="annotate.Item3">
+        <source>Sign with specific GPG</source>
+        <target />
+      </trans-unit>
       <trans-unit id="annotate.Text">
-        <source>Create annotated tag</source>
+        <source>Lightweight tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="keyIdLbl.Text">
+        <source>Specific Key Id:</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3976,6 +3864,40 @@ Deleting a branch can cause commits to be deleted too!</source>
 When you delete a branch the commits can get lost because nothing points to them.
 When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelSelectBranches.Text">
+        <source>Select branches</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormDeleteRemoteBranch" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Delete branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="DeleteRemote.Text">
+        <source>Delete branche(s) from remote repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
+        <source>At least one remote branch is unmerged. Are you sure you want to delete it?
+Deleting a branch can cause commits to be deleted too!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteRemoteBranchesCaption.Text">
+        <source>Delete remote branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelDeleteBranchWarning.Text">
+        <source>When you delete a branch the commits can get lost because nothing points to them.
+Make sure that commits under remote branch(-es) to be deleted are reachable before proceeding.</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
@@ -4474,29 +4396,8 @@ command "git help gitattributes"
         <source>Save</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cannotAccessGitignore.Text">
-        <source>Failed to save .gitignore.
-Check if file is accessible.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitignoreCaption.Text">
-        <source>Failed to save .gitignore</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_editLocalExcludeTitle.Text">
-        <source>Edit .git/info/exclude</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
-        <source>.gitignore is only supported when there is a working directory.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitignore?</source>
         <target />
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
@@ -5085,6 +4986,14 @@ If you want to fetch all remote branches, choose fetch.
 If you want to fetch and merge a branch, choose a specific branch.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_formTitleFetch.Text">
+        <source>Fetch ({0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_formTitlePull.Text">
+        <source>Pull ({0})</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_hoverShowImageLabelText.Text">
         <source>Hover to see scenario when fast forward is possible.</source>
         <target />
@@ -5299,12 +5208,21 @@ This will initialize and update all submodules recursive.</source>
 Are you sure you want to push this branch?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_configureRemote.Text">
+        <source>Please configure a remote repository first.
+Would you like to do it now?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
         <source>Create pull request after push</source>
         <target />
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
         <source>Remember my decision.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorPushToRemoteCaption.Text">
+        <source>Push to remote</source>
         <target />
       </trans-unit>
       <trans-unit id="_forceWithLeaseTooltips.Text">
@@ -5357,10 +5275,6 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="_selectDestinationDirectory.Text">
         <source>Please select a destination directory</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
         <target />
       </trans-unit>
       <trans-unit id="_selectTag.Text">
@@ -5649,6 +5563,10 @@ Nothing to rebase.</source>
         <source>Less recent repositories</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblRecentRepositoriesHistorySize.Text">
+        <source>Recent repositories history size</source>
+        <target />
+      </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
         <source>Maximum number of most recent repositories</source>
         <target />
@@ -5691,10 +5609,6 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="Action.HeaderText">
         <source>Action</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Message.HeaderText">
-        <source>Message</source>
         <target />
       </trans-unit>
       <trans-unit id="Ref.HeaderText">
@@ -6367,6 +6281,10 @@ Fall back to 2-way merge?</source>
         <source>There is no mergetool configured. Please go to settings and set a mergetool!</source>
         <target />
       </trans-unit>
+      <trans-unit id="noMergeToolConfigured.Text">
+        <source>The mergetool is not correctly configured. Please go to settings and configure the mergetool!</source>
+        <target />
+      </trans-unit>
       <trans-unit id="openMergeToolBtn.Text">
         <source>Open in mergetool</source>
         <target />
@@ -6624,6 +6542,14 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>There are no stashes.</source>
         <target />
       </trans-unit>
+      <trans-unit id="refreshToolStripButton.Text">
+        <source>Refresh</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showToolStripLabel.Text">
+        <source>Show:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="stashDropConfirmTitle.Text">
         <source>Drop Stash Confirmation</source>
         <target />
@@ -6636,16 +6562,8 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>Stash untracked files</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripButton1.Text">
-        <source>Refresh</source>
-        <target />
-      </trans-unit>
       <trans-unit id="toolStripButton_customMessage.Text">
         <source>Custom stash message</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripLabel1.Text">
-        <source>Show:</source>
         <target />
       </trans-unit>
     </body>
@@ -7261,7 +7179,7 @@ global settings.
         <target />
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes in revision graph</source>
+        <source>Show current working directory changes as an artificial commit</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -7326,6 +7244,56 @@ global settings.
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
         <source>Default clone destination</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitIgnoreModel" source-language="en">
+    <body>
+      <trans-unit id="_cannotAccessGitignore.Text">
+        <source>Failed to save .gitignore.
+Check if file is accessible.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitignoreCaption.Text">
+        <source>Failed to save .gitignore</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_editGitignoreTitle.Text">
+        <source>Edit .gitignore</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
+        <source>.gitignore is only supported when there is a working directory.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileQuestion.Text">
+        <source>Save changes to .gitignore?</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitLocalExcludeModel" source-language="en">
+    <body>
+      <trans-unit id="_cannotAccessLocalExclude.Text">
+        <source>Failed to save .git/info/exclude.
+Check if file is accessible.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotAccessLocalExcludeCaption.Text">
+        <source>Failed to save .git/info/exclude</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_editLocalExcludeTitle.Text">
+        <source>Edit .git/info/exclude</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_localExcludeOnlyInWorkingDirSupported.Text">
+        <source>.git/info/exclude is only supported when there is a working directory.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileQuestion.Text">
+        <source>Save changes to .git/info/exclude?</source>
         <target />
       </trans-unit>
     </body>
@@ -7514,20 +7482,8 @@ Would you like to save them?</source>
         <source>Clear image cache</source>
         <target />
       </trans-unit>
-      <trans-unit id="extraLargeToolStripMenuItem.Text">
-        <source>Extra Large (320x320)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="identiconToolStripMenuItem.Text">
         <source>Identicon</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="imageSizeToolStripMenuItem.Text">
-        <source>Image size</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="largeToolStripMenuItem.Text">
-        <source>Large (240x240)</source>
         <target />
       </trans-unit>
       <trans-unit id="monsterIdToolStripMenuItem.Text">
@@ -7542,10 +7498,6 @@ Would you like to save them?</source>
         <source>None</source>
         <target />
       </trans-unit>
-      <trans-unit id="normalToolStripMenuItem.Text">
-        <source>Normal (160x160)</source>
-        <target />
-      </trans-unit>
       <trans-unit id="refreshToolStripMenuItem.Text">
         <source>Refresh image</source>
         <target />
@@ -7556,10 +7508,6 @@ Would you like to save them?</source>
       </trans-unit>
       <trans-unit id="retroToolStripMenuItem.Text">
         <source>Retro</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="smallToolStripMenuItem.Text">
-        <source>Small (80x80)</source>
         <target />
       </trans-unit>
       <trans-unit id="wavatarToolStripMenuItem.Text">
@@ -7721,6 +7669,328 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="RevisionDiff" source-language="en">
+    <body>
+      <trans-unit id="_deleteFailed.Text">
+        <source>Delete file failed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFiles.Text">
+        <source>Are you sure you want delete the selected file(s)?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFilesCaption.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffNoSelection.Text">
+        <source>Diff (no selection)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffNotSupported.Text">
+        <source>Diff (not supported)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffParentWithSelection.Text">
+        <source>Diff (A: parent --&gt; B: selection)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffTwoSelected.Text">
+        <source>Diff (A: first --&gt; B: second)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileFilterAllFiles.Text">
+        <source>All files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileFilterCurrentFormat.Text">
+        <source>Current format</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="aBToolStripMenuItem.Text">
+        <source>A &lt;--&gt; B</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="aLocalToolStripMenuItem.Text">
+        <source>A &lt;--&gt; Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="bLocalToolStripMenuItem.Text">
+        <source>B &lt;--&gt; Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="blameToolStripMenuItem.Text">
+        <source>Blame</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
+        <source>Cherry pick file's changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
+        <source>Copy full path(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffCommitSubmoduleChanges.Text">
+        <source>Commit submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
+        <source>Delete file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffEditFileToolStripMenuItem.Text">
+        <source>Edit file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffResetSubmoduleChanges.Text">
+        <source>Reset submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
+        <source>Show in File tree</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
+        <source>Stash submodule changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
+        <source>View summary</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
+        <source>Update submodule</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
+        <source>File history</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="findInDiffToolStripMenuItem.Text">
+        <source>Find</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
+        <source>Open containing folder(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
+        <source>Open with difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="parentOfALocalToolStripMenuItem.Text">
+        <source>A's parent &lt;--&gt; Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
+        <source>B's parent &lt;--&gt; Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
+        <source>First</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetFileToParentToolStripMenuItem.Text">
+        <source>Parent</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
+        <source>Second</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
+        <source>Selected</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetFileToToolStripMenuItem.Text">
+        <source>Reset file(s) to</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="saveAsToolStripMenuItem1.Text">
+        <source>Save (B) as...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="saveToolStripMenuItem.Text">
+        <source>Save</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stageFileToolStripMenuItem.Text">
+        <source>Stage file(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="unstageFileToolStripMenuItem.Text">
+        <source>Unstage file(s)</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="RevisionFileTree" source-language="en">
+    <body>
+      <trans-unit id="_assumeUnchangedCaption.Text">
+        <source>Assume this file won't change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_assumeUnchangedFail.Text">
+        <source>Fail to assume unchanged the file '{0}'.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_assumeUnchangedMessage.Text">
+        <source>This feature should be used for performance purpose when it is costly for git to check the state of a big file.
+
+
+Are you sure to assume this file won't change ?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_assumeUnchangedSuccess.Text">
+        <source>File successfully assumed unchanged.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
+        <source>Node not found. The next available parent node will be selected.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_nodeNotFoundSelectionNotChanged.Text">
+        <source>Node not found. File tree selection was not changed.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetFileCaption.Text">
+        <source>Reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetFileText.Text">
+        <source>Are you sure you want to reset this file or directory?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileFilterAllFiles.Text">
+        <source>All files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileFilterCurrentFormat.Text">
+        <source>Current format</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stopTrackingCaption.Text">
+        <source>Stop tracking the file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stopTrackingFail.Text">
+        <source>Fail to stop tracking the file '{0}'.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stopTrackingMessage.Text">
+        <source>Are you sure you want to stop tracking the file
+'{0}'?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stopTrackingSuccess.Text">
+        <source>File successfully untracked. Removal has been added to the staging area.
+
+See the changes in the commit form.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
+        <source>Assume unchanged this file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="blameToolStripMenuItem1.Text">
+        <source>Blame</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="collapseAllToolStripMenuItem.Text">
+        <source>Collapse all</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
+        <source>Copy full path</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
+        <source>Edit working directory file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="expandAllToolStripMenuItem.Text">
+        <source>Expand all (takes a while on large trees)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="expandSubtreeToolStripMenuItem.Text">
+        <source>Expand subtree (takes a while on large subtrees)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="fileHistoryToolStripMenuItem.Text">
+        <source>View history</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
+        <source>Archive...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
+        <source>Clean this folder in the working directory...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
+        <source>Reveal in Explorer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="findToolStripMenuItem.Text">
+        <source>Find in file tree...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openFileToolStripMenuItem.Text">
+        <source>Open this revision (temp file)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openFileWithToolStripMenuItem.Text">
+        <source>Open this revision with... (temp file)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openSubmoduleMenuItem.Text">
+        <source>Open with Git Extensions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="openWithToolStripMenuItem.Text">
+        <source>Open working directory file with...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
+        <source>Reset to selected revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="saveAsToolStripMenuItem.Text">
+        <source>Save as...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
+        <source>Stop tracking this file</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en">
+    <body>
+      <trans-unit id="_commitNotSigned.Text">
+        <source>Commit is not signed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_tagNotSigned.Text">
+        <source>Tag is not signed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="txtCommitGpgInfo.Text">
+        <source>Commit is not signed</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="RevisionGrid" source-language="en">
     <body>
       <trans-unit id="AuthorDataGridViewColumn.HeaderText">
@@ -7757,10 +8027,6 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
         <source>Go to parent commit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="IdDataGridViewColumn.HeaderText">
-        <source>SHA1</source>
         <target />
       </trans-unit>
       <trans-unit id="InitRepository.Text">
@@ -8578,6 +8844,26 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ToolbarSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Toolbar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbBranchOrderingCriteria.Item0">
+        <source>Last access date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbBranchOrderingCriteria.Item1">
+        <source>Alphabetically</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch ordering criteria</source>
         <target />
       </trans-unit>
     </body>

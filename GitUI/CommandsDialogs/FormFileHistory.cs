@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -14,6 +13,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormFileHistory : GitModuleForm
     {
+        private readonly ICommitDataManager _commitDataManager;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly AsyncLoader _asyncLoader;
@@ -52,6 +52,8 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, FileChanges.MenuCommands.GetNavigateMenuCommands());
             _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, FileChanges.MenuCommands.GetViewMenuCommands());
             _formBrowseMenus.InsertAdditionalMainMenuItems(toolStripSeparator4);
+
+            _commitDataManager = new CommitDataManager(() => Module);
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
@@ -471,7 +473,7 @@ namespace GitUI.CommandsDialogs
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 string error = "";
-                CommitData commit = CommitData.GetCommitData(Module, e.Data, ref error);
+                CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
                 if (commit != null)
                     FileChanges.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }

@@ -68,6 +68,7 @@ namespace GitUI
         private readonly IImageCache _avatarCache;
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
+        private readonly ICommitDataManager _commitDataManager;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
@@ -131,6 +132,8 @@ namespace GitUI
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarCache.Invalidated += (s, e) => Revisions.Invalidate();
             _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
+
+            _commitDataManager = new CommitDataManager(() => Module);
 
             _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
@@ -1921,11 +1924,11 @@ namespace GitUI
         private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule aModule)
         {
             // code taken from CommitInfo.cs
-            CommitData commitData = CommitData.CreateFromRevision(revision);
+            CommitData commitData = _commitDataManager.CreateFromRevision(revision);
             string error = "";
             if (revision.Body == null)
             {
-                CommitData.UpdateCommitMessage(commitData, aModule, revision.Guid, ref error);
+                _commitDataManager.UpdateCommitMessage(commitData, revision.Guid, ref error);
                 revision.Body = commitData.Body;
             }
 
@@ -3382,33 +3385,9 @@ namespace GitUI
             }
         }
 
-        /// <summary>
-        /// duplicated from GitExtensionsForm
-        /// </summary>
-        /// <param name="commandCode"></param>
-        /// <returns></returns>
-        private Keys GetShortcutKeys(int commandCode)
-        {
-            var hotkey = GetHotkeyCommand(commandCode);
-            return hotkey == null ? Keys.None : hotkey.KeyData;
-        }
-
         internal Keys GetShortcutKeys(Commands cmd)
         {
             return GetShortcutKeys((int)cmd);
-        }
-
-        /// <summary>
-        /// duplicated from GitExtensionsForm
-        /// </summary>
-        /// <param name="commandCode"></param>
-        /// <returns></returns>
-        private HotkeyCommand GetHotkeyCommand(int commandCode)
-        {
-            if (Hotkeys == null)
-                return null;
-
-            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         internal RevisionGridMenuCommands MenuCommands { get { return _revisionGridMenuCommands; } }
