@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="labelDeleteBranchWarning.Text" xml:space="preserve">
-    <value>When you delete a branch the commits can get lost because nothing points to them.
-Make sure that commits under remote branch(-es) to be deleted are reachable before proceeding.</value>
+    <value>The commits referenced by the deleted branch will be lost
+if no other branch or tag references them. Make sure there
+is a branch or tag referencing the commits you wish to keep.
+If you have accidentally deleted a wrong branch, go to Commands | Show reflog form
+in order to recover the lost commits.</value>
   </data>
 </root>
