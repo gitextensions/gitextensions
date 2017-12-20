@@ -38,8 +38,8 @@ namespace GitUI.CommitInfo
             GitUICommandsSourceSet += (a, uiCommandsSource) =>
             {
                 _sortedRefs = null;
-                _commitInformationProvider = new CommitInformationProvider(() => Module);
             };
+            _commitInformationProvider = new CommitInformationProvider(() => Module);
             _commitDataManager = new CommitDataManager(() => Module);
 
             RevisionInfo.Font = AppSettings.Font;
