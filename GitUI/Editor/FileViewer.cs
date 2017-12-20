@@ -61,7 +61,14 @@ namespace GitUI.Editor
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
+            ignoreWhiteSpaces.Image = GitUI.Properties.Resources.ignore_whitespaces;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
+            ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
+
+            ignoreAllWhitespaces.Checked = AppSettings.IgnoreAllWhitespaceChanges;
+            ignoreAllWhitespaces.Image = GitUI.Properties.Resources.ignore_all_whitespaces;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
             ShowEntireFile = AppSettings.ShowEntireFile;
             showEntireFileButton.Checked = ShowEntireFile;
@@ -326,8 +333,15 @@ namespace GitUI.Editor
         {
             var diffArguments = new StringBuilder();
 
-            if (IgnoreWhitespaceChanges)
-                diffArguments.Append(" --ignore-space-change");
+            if (ignoreAllWhitespaces.Checked)
+            {
+                diffArguments.Append(" --ignore-all-space");
+            }
+            else
+            {
+                if (IgnoreWhitespaceChanges)
+                    diffArguments.Append(" --ignore-space-change");
+            }
 
             if (ShowEntireFile)
                 diffArguments.AppendFormat(" --inter-hunk-context=9000 --unified=9000");
@@ -1182,6 +1196,15 @@ namespace GitUI.Editor
         private void revertSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             applySelectedLines(GetSelectionPosition(), GetSelectionLength(), reverse: true);
+        }
+
+        private void ignoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newIgnoreValue = !ignoreAllWhitespaces.Checked;
+            ignoreAllWhitespaces.Checked = newIgnoreValue;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Checked = newIgnoreValue;
+            AppSettings.IgnoreAllWhitespaceChanges = newIgnoreValue;
+            OnExtraDiffArgumentsChanged();
         }
     }
 }

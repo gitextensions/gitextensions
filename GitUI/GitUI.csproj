@@ -1954,6 +1954,8 @@
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
     <Content Include="Resources\Icons\IconUntrackedOnly.png" />
+    <None Include="Resources\Icons\ignore_whitespaces.ico" />
+    <None Include="Resources\Icons\ignore_all_whitespaces.ico" />
     <Content Include="Resources\Icons\increase.png" />
     <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
     <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
