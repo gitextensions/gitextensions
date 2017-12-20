@@ -1295,12 +1295,20 @@ Do you want to open it?</source>
         <source>Go to line</source>
         <target />
       </trans-unit>
+      <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
+        <source>Ignore all whitespace changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ignoreAllWhitespaces.ToolTipText">
+        <source>Ignore all whitespace changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
-        <source>Ignore whitespaces</source>
+        <source>Ignore leading and trailing whitespace changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore whitespace changes</source>
+        <source>Ignore leading and trailing whitespace changes</source>
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -3265,6 +3273,10 @@ You can unset the template:
         <source>Assume unchanged</source>
         <target />
       </trans-unit>
+      <trans-unit id="branchNameLabel.Text">
+        <source>(Branch name)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target />
@@ -3892,8 +3904,11 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>When you delete a branch the commits can get lost because nothing points to them.
-Make sure that commits under remote branch(-es) to be deleted are reachable before proceeding.</source>
+        <source>The commits referenced by the deleted branch will be lost
+if no other branch or tag references them. Make sure there
+is a branch or tag referencing the commits you wish to keep.
+If you have accidentally deleted a wrong branch, go to Commands | Show reflog form
+in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
@@ -4983,7 +4998,7 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
         <target />
       </trans-unit>
       <trans-unit id="_formTitleFetch.Text">
-        <source>Fetch ({0}</source>
+        <source>Fetch ({0})</source>
         <target />
       </trans-unit>
       <trans-unit id="_formTitlePull.Text">

@@ -1206,11 +1206,11 @@ Do you want to reset the configured path?</source>
         <target />
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' must be commit specified</source>
+        <source>'From' commit must be specified</source>
         <target />
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' must be commit specified</source>
+        <source>'To' commit must be specified</source>
         <target />
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
