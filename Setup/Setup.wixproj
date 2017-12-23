@@ -89,4 +89,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\WiX.3.11.0\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.11.0\build\wix.props'))" />
   </Target>
+  <Target Name="BeforeBuild">
+    <Exec Command="
+	call DownloadExternals.cmd $(Configuration)
+	call BuildGitExtNative.cmd $(Configuration) build">
+    </Exec>
+  </Target>
 </Project>

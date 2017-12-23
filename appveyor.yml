@@ -34,4 +34,6 @@ build_script:
     Write-Output "Platform: $env:IdeVersion"
     & Setup\BuildInstallers.$env:IdeVersion.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    #Get-ChildItem Setup\GitExtensions-*.msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    & Setup\MakeMonoArchive.cmd
     Get-ChildItem Setup\GitExtensions-*-Mono.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }

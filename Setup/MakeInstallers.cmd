@@ -1,7 +1,5 @@
 @echo off
 
-call DownloadExternals.cmd
-
 rem
 rem Update this version number with every release
 rem
@@ -13,14 +11,19 @@ if not "%APPVEYOR_BUILD_VERSION%"=="" (
     set numericVersion=%APPVEYOR_BUILD_VERSION%
 )
 
+SET Configuration=%1
+IF "%Configuration%"=="" SET Configuration=Release
+
+SET BuildType=%2
+IF "%BuildType%"=="" SET BuildType=Rebuild
+
 set normal=GitExtensions-%Version%-Setup.msi
 set complete=GitExtensions-%Version%-SetupComplete.msi
-
-set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
-set output=bin\Release\GitExtensions.msi
+for /f "tokens=*" %%i in ('hMSBuild.bat -only-path -notamd64') do set msbuild="%%i"
+set output=bin\%Configuration%\GitExtensions.msi
 set project=Setup.wixproj
 
-set build=%msbuild% %project% /t:Rebuild /p:Version=%version% /p:NumericVersion=%numericVersion% /p:Configuration=Release /nologo /v:m
+set build=%msbuild% %project% /t:%BuildType% /p:Version=%version% /p:NumericVersion=%numericVersion% /p:Configuration=%Configuration% /nologo /v:m
 
 echo Creating installers for Git Extensions %version%
 echo.
@@ -36,11 +39,11 @@ echo.
 echo Building %normal%
 %build% /p:IncludeRequiredSoftware=0
 IF ERRORLEVEL 1 EXIT /B 1
-copy bin\Release\GitExtensions.msi %normal%
+copy %output% %normal%
 IF ERRORLEVEL 1 EXIT /B 1
 
 echo Building %complete%
 %build% /p:IncludeRequiredSoftware=1
 IF ERRORLEVEL 1 EXIT /B 1
-copy bin\Release\GitExtensions.msi %complete%
+copy %output% %complete%
 IF ERRORLEVEL 1 EXIT /B 1
