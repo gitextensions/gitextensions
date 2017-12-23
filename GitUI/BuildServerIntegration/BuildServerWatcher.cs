@@ -48,7 +48,6 @@ namespace GitUI.BuildServerIntegration
 
             DisposeBuildServerAdapter();
 
-            // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
             {
                 if (_revisions.IsDisposed)
@@ -66,10 +65,13 @@ namespace GitUI.BuildServerIntegration
                 }
 
                 var scheduler = NewThreadScheduler.Default;
+
+                // Run this first as it (may) force start queries
+                var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
+
                 var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
                 var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
                 var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
-                var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
 
                 var cancellationToken = new CompositeDisposable
                 {
@@ -199,6 +201,49 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
+        /// <summary>
+        /// Get a "repo shortname" from the current repo URL
+        /// There is no official Git repo shortname, this is one possible definition:
+        ///  The filename without extension for the remote URL
+        /// This function could have been included in GitModule
+        /// </summary>
+        /// <returns>URL filename part if a remote exists and empty or null if no repo URL</returns>
+        private string GetRepoShortname()
+        {
+            // Extract "name of repo" from remote url
+            string remoteName = Module.GetCurrentRemote();
+            if (remoteName.IsNullOrWhiteSpace())
+            {
+                // No remote for the branch, for instance a submodule. Use first remote.
+                var remotes = Module.GetRemotes();
+                if (remotes.Length > 0)
+                {
+                    remoteName = remotes[0];
+                }
+            }
+
+            var remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+            var repoName = Path.GetFileNameWithoutExtension(remoteUrl);
+
+            return repoName;
+        }
+
+        /// <summary>
+        /// Replace variables for the project string with the current "repo shortname"
+        /// </summary>
+        /// <param name="projectNames">build server specific format, compatible with the variable format</param>
+        /// <returns>projectNames with variables replaced</returns>
+        public string ReplaceVariables(string projectNames)
+        {
+            var repoName = GetRepoShortname();
+            if (repoName.IsNullOrWhiteSpace())
+            {
+                return projectNames;
+            }
+
+            return projectNames.Replace("{cRepoShortName}", repoName);
+        }
+
         private IBuildServerCredentials ShowBuildServerCredentialsForm(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
         {
             if (_revisionGrid.InvokeRequired)
@@ -314,6 +359,7 @@ namespace GitUI.BuildServerIntegration
                         }
 
                         var buildServerAdapter = export.Value;
+
                         buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
                         return buildServerAdapter;
                     }

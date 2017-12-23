@@ -7,5 +7,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         void LaunchBuildServerInfoFetchOperation();
 
         void CancelBuildStatusFetchOperation();
+
+        string ReplaceVariables(string projectNames);
     }
 }
