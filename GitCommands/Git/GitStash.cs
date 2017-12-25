@@ -9,19 +9,12 @@ namespace GitCommands
         public string Name { get; set; }
         /// <summary>Short description of the commit the stash was based on.</summary>
         public string Message { get; set; }
-        /// <summary>Name of the branch that was current when the stash was made.</summary>
-        public string Branch { get; set; }
         /// <summary>Gets the index of the stash in the list.</summary>
         public int Index { get; set; }
         readonly string _stash;
 
         /// <summary>"stash@{i}"</summary>
         const string NameFormat = "stash@{{{0}}}";
-        const string DefaultFormat = "WIP on ";
-        const string CustomFormat = "On ";
-        const string AutostashFormat = "autostash";
-        static int DefaultFormatLength = DefaultFormat.Length;
-        static int CustomFormatLength = CustomFormat.Length;
 
         /// <summary>Initializes a new <see cref="GitStash"/> with all properties null.</summary>
         public GitStash(string stash)
@@ -36,7 +29,6 @@ namespace GitCommands
         public GitStash(string stash, int i)
             : this(stash)
         {
-
             // "stash@{i}: WIP on {branch}: {PreviousCommitMiniSHA} {PreviousCommitMessage}"
             // "stash@{i}: On {branch}: {Message}"
             // "stash@{i}: autostash"
@@ -49,18 +41,7 @@ namespace GitCommands
             if (msgStart < stash.Length)
             {
                 Message = stash.Substring(msgStart).Trim();
-                if(Message != AutostashFormat)
-                    FindBranch();
             }
-        }
-
-        void FindBranch()
-        {
-            int trimLength = Message.StartsWith(DefaultFormat)
-                ? DefaultFormatLength // "WIP on "
-                : CustomFormatLength;//  "On "
-            var branchStart = Message.Remove(0, trimLength);// "{branch}: {SHA} {msg}"
-            Branch = branchStart.Substring(0, branchStart.IndexOf(':'));
         }
 
         public override string ToString() { return Message; }
