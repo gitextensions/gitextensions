@@ -23,14 +23,14 @@ namespace GitCommands
             Body = body;
         }
 
-        public string Guid { get; private set; }
-        public string TreeGuid { get; private set; }
-        public ReadOnlyCollection<string> ParentGuids { get; private set; }
+        public string Guid { get; }
+        public string TreeGuid { get; }
+        public ReadOnlyCollection<string> ParentGuids { get; }
         public List<string> ChildrenGuids { get; set; }
-        public string Author { get; private set; }
-        public DateTimeOffset AuthorDate { get; private set; }
-        public string Committer { get; private set; }
-        public DateTimeOffset CommitDate { get; private set; }
+        public string Author { get; }
+        public DateTimeOffset AuthorDate { get; }
+        public string Committer { get; }
+        public DateTimeOffset CommitDate { get; }
 
         // TODO: this needs review, it shouldn't be mutable
         public string Body { get;  set; }

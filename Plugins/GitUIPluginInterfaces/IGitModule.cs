@@ -94,6 +94,8 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
         bool IsDetachedHead();
 
+        bool IsExistingCommitHash(string sha1Fragment, out string fullSha1);
+
         /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
 
