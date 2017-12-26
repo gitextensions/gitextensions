@@ -1008,10 +1008,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                if (AppSettings.ShowGpgInformation.ValueOrDefault)
-                {
-                    FillGpgInfo();
-                }
+                FillGpgInfo();
                 FillBuildReport();
             }
             RevisionGrid.IndexWatcher.Reset();
@@ -1065,6 +1062,10 @@ namespace GitUI.CommandsDialogs
 
         private async void FillGpgInfo()
         {
+            if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
+            {
+                return;
+            }
             var revisions = RevisionGrid.GetSelectedRevisions();
             var revision = revisions.FirstOrDefault();
             if (revision == null)
@@ -1086,6 +1087,7 @@ namespace GitUI.CommandsDialogs
             if (_buildReportTabPageExtension == null)
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl, _buildReportTabCaption.Text);
 
+            //Note: FillBuildReport will check if tab is visible and revision is OK
             _buildReportTabPageExtension.FillBuildReport(revision);
         }
 
@@ -1156,10 +1158,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                if (AppSettings.ShowGpgInformation.ValueOrDefault)
-                {
-                    FillGpgInfo();
-                }
+                FillGpgInfo();
                 FillBuildReport();
             }
             catch (Exception ex)
@@ -1484,10 +1483,7 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
-            if (AppSettings.ShowGpgInformation.ValueOrDefault)
-            {
-                FillGpgInfo();
-            }
+            FillGpgInfo();
             FillBuildReport();
             FillTerminalTab();
         }
