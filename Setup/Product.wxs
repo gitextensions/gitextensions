@@ -199,7 +199,7 @@
           <RegistryValue Value="URL: Github for Mac Protocol" Type="string" />
           <RegistryValue Name="URL Protocol" Value="" Type="string" />
         </RegistryKey>
-        <RegistryKey Key="github-windows\DefaultIcon" Root="HKCR">
+        <RegistryKey Key="github-mac\DefaultIcon" Root="HKCR">
           <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
         </RegistryKey>
         <RegistryKey Root="HKCR" Key="github-mac\shell" />
