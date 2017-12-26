@@ -72,6 +72,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
+            bool isArtificial = GitRevision.IsArtificial(commitData.Guid);
             bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
@@ -79,7 +80,11 @@ namespace ResourceManager.CommitDataRenders
 
             StringBuilder header = new StringBuilder();
             header.AppendLine(_labelFormatter.FormatLabel(Strings.GetAuthorText(), padding) + _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
-            header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.GetDateText() : Strings.GetAuthorDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate)));
+
+            if (!isArtificial)
+            {
+                header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.GetDateText() : Strings.GetAuthorDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate)));
+            }
 
             if (!authorIsCommiter)
             {
@@ -87,25 +92,29 @@ namespace ResourceManager.CommitDataRenders
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitterText(), padding) + _linkFactory.CreateLink(commitData.Committer, "mailto:" + committerEmail));
             }
 
-            if (!datesEqual)
+            if (!isArtificial)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate)));
-            }
+                if (!datesEqual)
+                {
+                    header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate)));
+                }
 
-            header.Append(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + WebUtility.HtmlEncode(commitData.Guid));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + WebUtility.HtmlEncode(commitData.Guid));
+            }
 
             if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)
             {
-                header.AppendLine();
-                header.Append(_labelFormatter.FormatLabel(Strings.GetChildrenText(), padding) + RenderHashCollection(commitData.ChildrenGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetChildrenText(), padding) + RenderHashCollection(commitData.ChildrenGuids, showRevisionsAsLinks));
             }
 
             var parentGuids = commitData.ParentGuids.Where(s => !string.IsNullOrEmpty(s)).ToList();
             if (parentGuids.Any())
             {
-                header.AppendLine();
-                header.Append(_labelFormatter.FormatLabel(Strings.GetParentsText(), padding) + RenderHashCollection(parentGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetParentsText(), padding) + RenderHashCollection(parentGuids, showRevisionsAsLinks));
             }
+
+            // remove the trailing newline character
+            header.Length = header.Length - Environment.NewLine.Length;
 
             return header.ToString();
         }

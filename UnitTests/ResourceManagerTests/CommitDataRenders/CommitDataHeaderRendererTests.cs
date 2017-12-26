@@ -208,6 +208,33 @@ namespace ResourceManagerTests.CommitDataRenders
             _labelFormatter.DidNotReceive().FormatLabel(Strings.GetCommitDateText(), Arg.Any<int>());
         }
 
+        [TestCase(GitRevision.IndexGuid)]
+        [TestCase(GitRevision.UnstagedGuid)]
+        public void Render_should_render_minimal_info_for_artificial_commits(string artificialGuid)
+        {
+            var author = "John Doe (Acme Inc) <John.Doe@test.com>";
+            var committer = author;
+            var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
+            var commitDate = authorDate;
+            var data = new CommitData(artificialGuid,
+                Guid.NewGuid().ToString("N"),
+                new ReadOnlyCollection<string>(new List<string> { "3b6ce324e30ed7fda24483fd56a180c34a262202", "2a8788ff15071a202505a96f80796dbff5750ddf", "8e66fa8095a86138a7c7fb22318d2f819669831e" }),
+                author, authorDate,
+                committer, commitDate, "");
+
+            _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
+
+            var result = _renderer.Render(data, false);
+
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Parent(s):     3b6ce324e3 2a8788ff15 8e66fa8095");
+            _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(Strings.GetDateText(), Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(Strings.GetCommitHashText(), Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(Strings.GetAuthorDateText(), Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(Strings.GetCommitterText(), Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(Strings.GetCommitDateText(), Arg.Any<int>());
+        }
+
         [Test]
         public void RenderPlain_should_throw_if_data_null()
         {

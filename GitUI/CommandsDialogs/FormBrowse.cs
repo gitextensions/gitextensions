@@ -1066,6 +1066,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
+
             var revisions = RevisionGrid.GetSelectedRevisions();
             var revision = revisions.FirstOrDefault();
             if (revision == null)
@@ -1111,49 +1112,6 @@ namespace GitUI.CommandsDialogs
             try
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
-
-                var revisions = RevisionGrid.GetSelectedRevisions();
-
-                CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
-                if (!revisions.Any() || GitRevision.IsArtificial(revisions[0].Guid))
-                {
-                    //Artificial commits cannot show tree (ls-tree) and has no commit info 
-                    CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-                    CommitInfoTabControl.RemoveIfExists(TreeTabPage);
-                    CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
-
-                    if (_showRevisionInfoNextToRevisionGrid)
-                    {
-                        RevisionsSplitContainer.Panel2Collapsed = true;
-
-                    }
-                }
-                else
-                {
-                    int i = 0;
-                    if (!_showRevisionInfoNextToRevisionGrid)
-                    {
-                        CommitInfoTabControl.InsertIfNotExists(i, CommitInfoTabPage);
-                        i++;
-                    }
-                    CommitInfoTabControl.InsertIfNotExists(i, TreeTabPage);
-                    if (AppSettings.ShowGpgInformation.ValueOrDefault)
-                    {
-                        CommitInfoTabControl.InsertIfNotExists(i + 2, GpgInfoTabPage);
-                    }
-                    else
-                    {
-                        CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
-                    }
-
-                    if (_showRevisionInfoNextToRevisionGrid)
-                    {
-                        RevisionsSplitContainer.Panel2Collapsed = false;
-                    }
-                }
-                CommitInfoTabControl.SelectedIndexChanged += CommitInfoTabControl_SelectedIndexChanged;
-
-                //RevisionGrid.HighlightSelectedBranch();
 
                 FillFileTree();
                 FillDiff();
@@ -2090,7 +2048,7 @@ namespace GitUI.CommandsDialogs
             this.mergeBranchToolStripMenuItem.Enabled =
             this.rebaseToolStripMenuItem.Enabled =
             this.stashToolStripMenuItem.Enabled =
-              selectedRevisions.Count>0 && !Module.IsBareRepository();
+              selectedRevisions.Count > 0 && !Module.IsBareRepository();
 
             this.resetToolStripMenuItem.Enabled =
             this.checkoutBranchToolStripMenuItem.Enabled =
