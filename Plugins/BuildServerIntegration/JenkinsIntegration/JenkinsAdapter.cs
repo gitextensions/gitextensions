@@ -47,10 +47,11 @@ namespace JenkinsIntegration
 
         private HttpClient _httpClient;
 
-        private IList<string> _projectsUrls = new List<string>();
-        private IList<Task<IEnumerable<string>>> _getBuildUrls;
-        private static readonly Dictionary<string, BuildInfo> _finishedBuildsInfo = new Dictionary<string, BuildInfo>();    
-
+        //Build info cache, surviving repo switch
+        private static readonly Dictionary<string, JenkinsCacheInfo> BuildCache = new Dictionary<string, JenkinsCacheInfo>();
+        private readonly IList<string> _projectsUrls = new List<string>();
+        private bool _firstQueryAfterInit;
+        
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
@@ -81,28 +82,7 @@ namespace JenkinsIntegration
                     AddGetBuildUrl(projectUrl);
                 }
             }
-        }
-
-        private void AddGetBuildUrl(string projectUrl)
-        {
-            _projectsUrls.Add(projectUrl);
-        }
-
-        private IList<Task<IEnumerable<string>>> GetBuildUrls(bool forceUpdate)
-        {
-            if (_getBuildUrls == null || forceUpdate)
-            {
-                _getBuildUrls = _projectsUrls.Select(
-                    projectUrl => GetResponseAsync(FormatToGetJson(projectUrl), CancellationToken.None)
-                    .ContinueWith(
-                        task =>
-                        {
-                            JObject jobDescription = JObject.Parse(task.Result);
-                            return jobDescription["builds"].Select(b => b["url"].ToObject<string>());
-                        },
-                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent)).ToList();
-            }
-            return _getBuildUrls;
+            _firstQueryAfterInit = true;
         }
 
         /// <summary>
@@ -113,9 +93,84 @@ namespace JenkinsIntegration
             get { return _httpClient.BaseAddress.Host; }
         }
 
+        private void AddGetBuildUrl(string projectUrl)
+        {
+            if (!_projectsUrls.Contains(projectUrl))
+            {
+                _projectsUrls.Add(projectUrl);
+                if (BuildCache.ContainsKey(projectUrl))
+                {
+                    //Make sure the cache is recalculated
+                    BuildCache[projectUrl].Timestamp = 0;
+                }
+            }
+        }
+
+        public class ResponseInfo
+        {
+            public string Url { get; set; }
+            public long Timestamp { get; set; }
+            public IEnumerable<JToken> JobDescription { get; set; }
+        }
+
+        public class JenkinsCacheInfo
+        {
+            public long Timestamp = -1;
+            public readonly IList<BuildInfo> BuildInfo = new List<BuildInfo>();
+        }
+
+        private Task<ResponseInfo> GetBuildInfoTask(string projectUrl, bool fullInfo, CancellationToken cancellationToken)
+        {
+            return GetResponseAsync(FormatToGetJson(projectUrl, fullInfo), cancellationToken)
+                .ContinueWith(
+                    task =>
+                    {
+                        long timestamp = 0;
+                        IEnumerable<JToken> s = Enumerable.Empty<JToken>();
+                        string t = task.Result;
+                        if (t.IsNotNullOrWhitespace())
+                        {
+                            JObject jobDescription = JObject.Parse(t);
+                            if (jobDescription["builds"] != null)
+                            {
+                                //Freestyle jobs
+                                s = jobDescription["builds"];
+                            }
+                            else if (jobDescription["jobs"] != null)
+                            {
+                                //Multibranch pipeline
+                                s = jobDescription["jobs"]
+                                    .SelectMany(j => j["builds"]);
+                                foreach (var j in jobDescription["jobs"])
+                                {
+                                    long ts = j["lastBuild"]["timestamp"].ToObject<long>();
+                                    timestamp = Math.Max(timestamp, ts);
+                                }
+                            }
+                            //else: The server had no response (overloaded?) or a multibranch pipeline is not configured
+
+                            if (jobDescription["lastBuild"] != null)
+                            {
+                                timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
+                            }
+                        }
+
+                        return new ResponseInfo
+                        {
+                            Url = projectUrl,
+                            Timestamp = timestamp,
+                            JobDescription = s
+                        };
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
+        }
+
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
-            return GetBuilds(scheduler, sinceDate, false);
+            //GetBuilds() will return the same builds as for GetRunningBuilds().
+            //Multiple calls will fetch same info multiple times and make debugging very confusing
+            //Similar as for AppVeyor
+            return Observable.Empty<BuildInfo>();
         }
 
         public IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler)
@@ -123,25 +178,99 @@ namespace JenkinsIntegration
             return GetBuilds(scheduler, null, true);
         }
 
-        public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
+        private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(
                     () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
         }
 
+        //Jenkins builds are retrieved with latest build first
+        //If there are many builds on the same commit, it is normally the latest that is interesting, ignore the following
+        private bool DifferFromPrev(BuildInfo curr, ref BuildInfo prev)
+        {
+            bool res = false;
+            if (prev == null
+                || prev.CommitHashList.Length != curr.CommitHashList.Length
+                || prev.CommitHashList.Length != 1
+                || prev.CommitHashList[0] != curr.CommitHashList[0])
+            {
+                res = true;
+            }
+
+            prev = curr;
+            return res;
+        }
+
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
+            //Note that 'running' is ignored (attempt to fetch data when updated) 
+            //Similar for 'sinceDate', not supported in Jenkins API
             try
             {
-                var buildUrls = GetBuildUrls(running ?? false);
-                if (buildUrls.All(t => t.IsCanceled))
+                IList<Task<ResponseInfo>> allBuildInfos = new List<Task<ResponseInfo>>();
+                IList<Task<ResponseInfo>> latestBuildInfos = new List<Task<ResponseInfo>>();
+                foreach (var projectUrl in _projectsUrls)
+                {
+                    //Update the build info from the cache and find if (inprogress) jobs may need to be requeried
+                    bool hasInProgress = false;
+                    if (BuildCache.ContainsKey(projectUrl))
+                    {
+                        BuildInfo prevBuild = null;
+                        foreach (var buildInfo in BuildCache[projectUrl].BuildInfo)
+                        {
+                            //Update revision grid from the cache when switching back to this repo
+                            if (_firstQueryAfterInit && DifferFromPrev(buildInfo, ref prevBuild))
+                            {
+                                observer.OnNext(buildInfo);
+                            }
+
+                            //If any build is InProgress, it has to be requeried
+                            //This could be done per build too, probably decreasing load only in special situations
+                            //(Updating all builds individually increases the total load)
+                            if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
+                            {
+                                hasInProgress = true;
+                            }
+                        }
+                    }
+
+                    if (hasInProgress || !BuildCache.ContainsKey(projectUrl)
+                                   || BuildCache[projectUrl].Timestamp <= 0)
+                    {
+                        //This job must be updated, no need to to check the cache
+                        BuildCache[projectUrl] = new JenkinsCacheInfo();
+                        allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
+                    }
+                    else
+                    {
+                        //Check the existing build cache
+                        latestBuildInfos.Add(GetBuildInfoTask(projectUrl, false, cancellationToken));
+                    }
+                }
+                _firstQueryAfterInit = false;
+
+                //Query the latest builds, to find if the cache has all builds
+                foreach (var url in latestBuildInfos)
+                {
+                    if (!url.IsFaulted)
+                    {
+                        if (url.Result.Timestamp > BuildCache[url.Result.Url].Timestamp)
+                        {
+                            //The cache has at least one newer job, query the status
+                            allBuildInfos.Add(GetBuildInfoTask(url.Result.Url, true, cancellationToken));
+                        }
+                    }
+                }
+
+                if (allBuildInfos.All(t => t.IsCanceled))
                 {
                     observer.OnCompleted();
                     return;
                 }
 
-                foreach (var currentGetBuildUrls in buildUrls)
+
+                foreach (var currentGetBuildUrls in allBuildInfos)
                 {
                     if (currentGetBuildUrls.IsFaulted)
                     {
@@ -151,34 +280,23 @@ namespace JenkinsIntegration
                         continue;
                     }
 
-                    if (!running.Value)
+                    //Information for all builds for the job
+                    BuildCache[currentGetBuildUrls.Result.Url].Timestamp = currentGetBuildUrls.Result.Timestamp;
+                    BuildCache[currentGetBuildUrls.Result.Url].BuildInfo.Clear();
+                    BuildInfo prevBuild = null;
+                    foreach (var buildDetails in currentGetBuildUrls.Result.JobDescription)
                     {
-                        var immutableBuilds = currentGetBuildUrls.Result.Where(buildUrl => _finishedBuildsInfo.ContainsKey(buildUrl));
-                        foreach (var buildInfo in immutableBuilds.Select(url => _finishedBuildsInfo[url]))
+                        var buildInfo = CreateBuildInfo((JObject) buildDetails);
+                        BuildCache[currentGetBuildUrls.Result.Url].BuildInfo.Add(buildInfo);
+                        if (DifferFromPrev(buildInfo, ref prevBuild))
                         {
-                            if (sinceDate.HasValue && (sinceDate.Value - buildInfo.StartDate).TotalMilliseconds <= buildInfo.Duration)
-                                continue;
                             observer.OnNext(buildInfo);
                         }
                     }
-
-                    var mutableBuilds = currentGetBuildUrls.Result.Where(buildUrl => !_finishedBuildsInfo.ContainsKey(buildUrl));
-                    var buildContents = mutableBuilds
-                        .Select(buildUrl => GetResponseAsync(FormatToGetJson(buildUrl), cancellationToken).Result)
-                        .Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
-                    foreach (var buildDetails in buildContents)
-                    {
-                        JObject buildDescription = JObject.Parse(buildDetails);
-
-                        var buildInfo = CreateBuildInfo(buildDescription);
-                        if (buildInfo.Status != BuildInfo.BuildStatus.InProgress)
-                        {
-                            _finishedBuildsInfo[buildInfo.Url] = buildInfo;
-                        }
-                        observer.OnNext(buildInfo);
-                    }
                 }
+
+                //Complete the job, it will be run again with Observe.Retry() (every 10th sec)
+                //(this will find new builds and update InProgress jobs)
                 observer.OnCompleted();
             }
             catch (OperationCanceledException)
@@ -187,38 +305,40 @@ namespace JenkinsIntegration
             }
             catch (Exception ex)
             {
-                observer.OnError(ex);
+                //Cancelling a subtask is similar to cancelling this task
+                if (ex.InnerException == null || !(ex.InnerException is OperationCanceledException))
+                {
+                    observer.OnError(ex);
+                }
             }
         }
 
+        private readonly string JenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
         private static BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
             var statusValue = buildDescription["result"].ToObject<string>();
             var startDateTicks = buildDescription["timestamp"].ToObject<long>();
-            var displayName = buildDescription["fullDisplayName"].ToObject<string>();
+            //var displayName = buildDescription["fullDisplayName"].ToObject<string>();
             var webUrl = buildDescription["url"].ToObject<string>();
+
             var action = buildDescription["actions"];
             var commitHashList = new List<string>();
-            int nbTests = 0;
-            int nbFailedTests = 0;
-            int nbSkippedTests = 0;
+            string testResults = string.Empty;
             foreach (var element in action)
             {
                 if (element["lastBuiltRevision"] != null)
                     commitHashList.Add(element["lastBuiltRevision"]["SHA1"].ToObject<string>());
                 if (element["totalCount"] != null)
                 {
-                    nbTests = element["totalCount"].ToObject<int>();
-                    nbFailedTests = element["failCount"].ToObject<int>();
-                    nbSkippedTests = element["skipCount"].ToObject<int>();
+                    int nbTests = element["totalCount"].ToObject<int>();
+                    if (nbTests != 0)
+                    {
+                        int nbFailedTests = element["failCount"].ToObject<int>();
+                        int nbSkippedTests = element["skipCount"].ToObject<int>();
+                        testResults = $"{nbTests} tests ({nbFailedTests} failed, {nbSkippedTests} skipped)";
+                    }
                 }
-            }
-
-            string testResults = string.Empty;
-            if (nbTests != 0)
-            {
-                testResults = $"{nbTests} tests ({nbFailedTests} failed, {nbSkippedTests} skipped)";
             }
 
             var isRunning = buildDescription["building"].ToObject<bool>();
@@ -235,14 +355,14 @@ namespace JenkinsIntegration
             var status = isRunning ? BuildInfo.BuildStatus.InProgress : ParseBuildStatus(statusValue);
             var statusText = status.ToString("G");
             var buildInfo = new BuildInfo
-                {
-                    Id = idValue,
-                    StartDate = TimestampToDateTime(startDateTicks),
-                    Duration = buildDuration,
-                    Status = status,
-                    CommitHashList = commitHashList.ToArray(),
-                    Url = webUrl
-                };
+            {
+                Id = idValue,
+                StartDate = TimestampToDateTime(startDateTicks),
+                Duration = buildDuration,
+                Status = status,
+                CommitHashList = commitHashList.ToArray(),
+                Url = webUrl
+            };
             var durationText = _buildDurationFormatter.Format(buildInfo.Duration);
             buildInfo.Description = $"#{idValue} {durationText} {testResults} {statusText}";
             return buildInfo;
@@ -281,46 +401,48 @@ namespace JenkinsIntegration
             cancellationToken.ThrowIfCancellationRequested();
 
             return _httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                             .ContinueWith(
-                                 task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
-                                 cancellationToken,
-                                 TaskContinuationOptions.AttachedToParent,
-                                 TaskScheduler.Current)
-                             .Unwrap();
+                .ContinueWith(
+                    task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
+                    cancellationToken,
+                    TaskContinuationOptions.AttachedToParent,
+                    TaskScheduler.Current)
+                .Unwrap();
         }
 
         private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
 #if !__MonoCS__
-            bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
             bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
                                 task.Result.StatusCode == HttpStatusCode.Unauthorized;
 
-            if (!retry)
+            if (task.IsFaulted || task.IsCanceled)
             {
-                if (task.Result.IsSuccessStatusCode)
-                {
-                    var httpContent = task.Result.Content;
-
-                    if (httpContent.Headers.ContentType.MediaType == "text/html")
-                    {
-                        // Jenkins responds with an HTML login page when guest access is denied.
-                        unauthorized = true;
-                    }
-                    else
-                    {
-                        return httpContent.ReadAsStreamAsync();
-                    }
-                }
-                else if (task.Result.StatusCode == HttpStatusCode.Forbidden)
-                {
-                    unauthorized = true;
-                }
+                //No results for this task
+                return null;
             }
 
-            if (retry)
+            if (task.Result.IsSuccessStatusCode)
             {
-                return GetStreamAsync(restServicePath, cancellationToken);
+                var httpContent = task.Result.Content;
+
+                if (httpContent.Headers.ContentType.MediaType == "text/html")
+                {
+                    // Jenkins responds with an HTML login page when guest access is denied.
+                    unauthorized = true;
+                }
+                else
+                {
+                    return httpContent.ReadAsStreamAsync();
+                }
+            }
+            else if (task.Result.StatusCode == HttpStatusCode.NotFound)
+            {
+                //The url does not exist, no jobs to retrieve
+                return null;
+            }
+            else if (task.Result.StatusCode == HttpStatusCode.Forbidden)
+            {
+                unauthorized = true;
             }
 
             if (unauthorized)
@@ -370,11 +492,52 @@ namespace JenkinsIntegration
                 TaskScheduler.Current);
         }
 
-        private string FormatToGetJson(string restServicePath)
+        private string FormatToGetJson(string restServicePath, bool buildsInfo = false)
         {
+            string buildTree = "lastBuild[timestamp]";
+            int depth = 1;
+            int postIndex = restServicePath.IndexOf('?');
+            if (postIndex >= 0)
+            {
+                int endLen = restServicePath.Length - postIndex;
+                if (restServicePath.EndsWith("/"))
+                {
+                    endLen--;
+                }
+
+                string post = restServicePath.Substring(postIndex, endLen);
+                if (post == "?m")
+                {
+                    //Multi pipeline project
+                    buildTree = "jobs[" + buildTree;
+                    if (buildsInfo)
+                    {
+                        depth = 2;
+                        buildTree += ",builds[" + JenkinsTreeBuildInfo + "]";
+                    }
+                    buildTree += "]";
+                }
+                else
+                {
+                    //user defined format (will likely require changes in the code)
+                    buildTree = post;
+                }
+
+                restServicePath = restServicePath.Substring(0, postIndex);
+            }
+            else
+            {
+                //Freestyle project
+                if (buildsInfo)
+                {
+                    buildTree += ",builds[" + JenkinsTreeBuildInfo + "]";
+                }
+            }
+
             if (!restServicePath.EndsWith("/"))
                 restServicePath += "/";
-            return restServicePath + "api/json";
+            restServicePath += "api/json?depth=" + depth + "&tree=" + buildTree;
+            return restServicePath;
         }
 
         public void Dispose()
