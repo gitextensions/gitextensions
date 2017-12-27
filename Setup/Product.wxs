@@ -194,6 +194,20 @@
           <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
         </RegistryKey>
       </Component>
+      <Component Id="Protocol.github_mac" Guid="*">
+        <RegistryKey Key="github-mac" Root="HKCR">
+          <RegistryValue Value="URL: Github for Mac Protocol" Type="string" />
+          <RegistryValue Name="URL Protocol" Value="" Type="string" />
+        </RegistryKey>
+        <RegistryKey Key="github-mac\DefaultIcon" Root="HKCR">
+          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="github-mac\shell" />
+        <RegistryKey Root="HKCR" Key="github-mac\shell\open" />
+        <RegistryKey Root="HKCR" Key="github-mac\shell\open\command">
+          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+        </RegistryKey>
+      </Component>
       <Component Id="VS2015_VSIX" Guid="*">
         <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="no" Permanent="no" />
         <File Source="..\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix" />
@@ -908,6 +922,7 @@
       </Feature>
       <Feature Id="Protocol.github_windows" Title="Assign with github-windows://-links" Level="1">
         <ComponentRef Id="Protocol.github_windows" />
+        <ComponentRef Id="Protocol.github_mac" />
       </Feature>
     </Feature>
     <?if $(var.IncludeRequiredSoftware) = 1 ?>
