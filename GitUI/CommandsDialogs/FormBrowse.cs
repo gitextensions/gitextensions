@@ -1117,7 +1117,7 @@ namespace GitUI.CommandsDialogs
                 CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
                 if (!revisions.Any() || GitRevision.IsArtificial(revisions[0].Guid))
                 {
-                    //Artificial commits cannot show tree (ls-tree) and has no commit info 
+                    //Artificial commits cannot show tree (ls-tree) and has no commit info
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
                     CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
@@ -1125,15 +1125,27 @@ namespace GitUI.CommandsDialogs
                     if (_showRevisionInfoNextToRevisionGrid)
                     {
                         RevisionsSplitContainer.Panel2Collapsed = true;
-
                     }
+
+                    // Mono special - must re-select the tab for the content to render..
+                    CommitInfoTabControl.SelectedTab = null;
+                    CommitInfoTabControl.SelectedTab = DiffTabPage;
                 }
                 else
                 {
                     int i = 0;
                     if (!_showRevisionInfoNextToRevisionGrid)
                     {
+                        // Mono special - must re-select the tab for the content to render..
+                        if (!CommitInfoTabControl.TabPages.Contains(CommitInfoTabPage))
+                        {
+                            CommitInfoTabControl.SelectedTab = null;
+                        }
                         CommitInfoTabControl.InsertIfNotExists(i, CommitInfoTabPage);
+                        if (CommitInfoTabControl.SelectedTab == null)
+                        {
+                            CommitInfoTabControl.SelectedTab = CommitInfoTabPage;
+                        }
                         i++;
                     }
                     CommitInfoTabControl.InsertIfNotExists(i, TreeTabPage);
