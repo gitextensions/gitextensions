@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // 
             this.Sha1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Sha1.DataPropertyName = "Sha1";
-            this.Sha1.HeaderText = "Sha1";
+            this.Sha1.HeaderText = "SHA-1";
             this.Sha1.Name = "Sha1";
             this.Sha1.ReadOnly = true;
             this.Sha1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // 
             this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn4.DataPropertyName = "Sha1";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Sha1";
+            this.dataGridViewTextBoxColumn4.HeaderText = "SHA-1";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
