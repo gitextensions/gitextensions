@@ -384,8 +384,19 @@ namespace GitUI.CommandsDialogs
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ToggleFullHistoryFlag();
+        }
+
+        private void ShowFullHistory_Click(object sender, EventArgs e)
+        {
+            ToggleFullHistoryFlag();
+        }
+
+        private void ToggleFullHistoryFlag()
+        {
             AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             LoadFileHistory();
         }
 
