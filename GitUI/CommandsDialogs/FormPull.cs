@@ -112,14 +112,16 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
+            if (aCommands == null)
+            {
+                return;
+            }
+
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
-            if (aCommands != null)
-            {
-                _remoteManager = new GitRemoteManager(Module);
-                Init(defaultRemote);
-            }
+            _remoteManager = new GitRemoteManager(Module);
+            Init(defaultRemote);
 
             Merge.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Merge;
             Rebase.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Rebase;
@@ -136,13 +138,10 @@ namespace GitUI.CommandsDialogs
             }
 
             // If this repo is shallow, show an option to Unshallow
-            if (aCommands != null)
-            {
-                // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
-                bool isRepoShallow = File.Exists(aCommands.Module.ResolveGitInternalPath("shallow"));
-                if (isRepoShallow)
-                    Unshallow.Visible = true;
-            }
+            // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
+            bool isRepoShallow = File.Exists(aCommands.Module.ResolveGitInternalPath("shallow"));
+            if (isRepoShallow)
+                Unshallow.Visible = true;
         }
 
 

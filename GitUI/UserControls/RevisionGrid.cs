@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
@@ -2767,18 +2768,33 @@ namespace GitUI
                 stageCount = "";
             }
 
-            //Add working directory as virtual commit
+            var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+            var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+
+            // Add working directory as virtual commit
             var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
+                Author = userName,
+                AuthorDate = DateTime.MaxValue,
+                AuthorEmail = userEmail,
+                Committer = userName,
+                CommitDate = DateTime.MaxValue,
+                CommitterEmail = userEmail,
                 SubjectCount = unstageCount,
                 Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
             Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
 
-            //Add index as virtual commit
+            // Add index as virtual commit
             var index = new GitRevision(Module, GitRevision.IndexGuid)
             {
+                Author = userName,
+                AuthorDate = DateTime.MaxValue,
+                AuthorEmail = userEmail,
+                Committer = userName,
+                CommitDate = DateTime.MaxValue,
+                CommitterEmail = userEmail,
                 SubjectCount = stageCount,
                 Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }

@@ -362,7 +362,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             {
               var menuCommand = new MenuCommand();
               menuCommand.Name = "showIdsToolStripMenuItem";
-              menuCommand.Text = "Show SHA1";
+              menuCommand.Text = "Show SHA-1";
               menuCommand.ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null);
               menuCommand.IsCheckedFunc = () => AppSettings.ShowIds;
 

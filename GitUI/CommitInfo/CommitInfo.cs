@@ -9,11 +9,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitCommands.GitExtLinks;
+using GitCommands.Utils;
+using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
-using GitUI.Editor;
+using ResourceManager.CommitDataRenders;
 
 namespace GitUI.CommitInfo
 {
@@ -27,8 +28,10 @@ namespace GitUI.CommitInfo
 
         private const int MaximumDisplayedRefs = 20;
         private readonly ILinkFactory _linkFactory = new LinkFactory();
+        private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly ICommitDataManager _commitDataManager;
-        private ICommitInformationProvider _commitInformationProvider;
+        private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
+        private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
 
 
         public CommitInfo()
@@ -38,19 +41,32 @@ namespace GitUI.CommitInfo
             GitUICommandsSourceSet += (a, uiCommandsSource) =>
             {
                 _sortedRefs = null;
-                _commitInformationProvider = new CommitInformationProvider(() => Module);
             };
+
             _commitDataManager = new CommitDataManager(() => Module);
 
-            RevisionInfo.Font = AppSettings.Font;
+            IHeaderRenderStyleProvider headerRenderer;
+            IHeaderLabelFormatter labelFormatter;
+            if (EnvUtils.IsMonoRuntime())
+            {
+                labelFormatter = new MonospacedHeaderLabelFormatter();
+                headerRenderer = new MonospacedHeaderRenderStyleProvider();
+            }
+            else
+            {
+                labelFormatter = new TabbedHeaderLabelFormatter();
+                headerRenderer = new TabbedHeaderRenderStyleProvider();
+            }
 
+            _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
+            _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
+
+            RevisionInfo.Font = AppSettings.Font;
             using (Graphics g = CreateGraphics())
             {
-                if (!AppSettings.Font.IsFixedWidth(g))
-                {
-                    _RevisionHeader.Font = new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
-                }
+                _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
             }
+            _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
         }
 
         [DefaultValue(false)]
@@ -169,11 +185,12 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
             data.ChildrenGuids = _children;
-            var commitInformation = _commitInformationProvider.Get(data, CommandClick != null);
+            var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
+            var body = _commitDataBodyRenderer.Render(data, CommandClick != null);
 
-            _RevisionHeader.SetXHTMLText(commitInformation.Header);
+            _RevisionHeader.SetXHTMLText(header);
             _RevisionHeader.Height = GetRevisionHeaderHeight();
-            _revisionInfo = commitInformation.Body;
+            _revisionInfo = body;
 
             UpdateRevisionInfo();
             LoadAuthorImage(data.Author ?? data.Committer);
@@ -394,8 +411,15 @@ namespace GitUI.CommitInfo
                     _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
                 }
             }
+
+            string body = _revisionInfo;
+            if (Revision != null && !Revision.IsArtificial())
+            {
+                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo;
+            }
+
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(body);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);

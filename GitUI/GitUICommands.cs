@@ -2002,6 +2002,11 @@ namespace GitUI
                         StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true, null);
                         return;
                     }
+                    if (args[1].StartsWith("github-mac://openRepo/"))
+                    {
+                        StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true, null);
+                        return;
+                    }
                     break;
             }
             var frmCmdLine = new FormCommandlineHelp();
