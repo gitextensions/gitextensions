@@ -72,9 +72,10 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CommitDataHeaderRenderer.cs" />
-    <Compile Include="CommitInformation.cs" />
-    <Compile Include="CommitInformationProvider.cs" />
+    <Compile Include="CommitDataRenders\CommitDataBodyRenderer.cs" />
+    <Compile Include="CommitDataRenders\CommitDataHeaderRenderer.cs" />
+    <Compile Include="CommitDataRenders\DateFormatter.cs" />
+    <Compile Include="CommitDataRenders\TabbedHeaderRenderStyleProvider.cs" />
     <Compile Include="GitExtensionsFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,11 +87,16 @@
     <Compile Include="ITranslate.cs" />
     <Compile Include="LinkFactory.cs" />
     <Compile Include="LocalizationHelpers.cs" />
+    <Compile Include="CommitDataRenders\IHeaderRenderStyleProvider.cs" />
+    <Compile Include="CommitDataRenders\MonospacedHeaderRenderStyleProvider.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="Translate.cs" />
     <Compile Include="ITranslation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranslationUtils.cs" />
+    <Compile Include="CommitDataRenders\MonospacedHeaderLabelFormatter.cs" />
+    <Compile Include="CommitDataRenders\TabbedHeaderLabelFormatter.cs" />
+    <Compile Include="CommitDataRenders\IHeaderLabelFormatter.cs" />
     <Compile Include="Xliff\TranslationUtl.cs" />
     <Compile Include="TranslationString.cs" />
     <Compile Include="Translator.cs" />

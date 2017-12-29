@@ -1008,10 +1008,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                if (AppSettings.ShowGpgInformation.ValueOrDefault)
-                {
-                    FillGpgInfo();
-                }
+                FillGpgInfo();
                 FillBuildReport();
             }
             RevisionGrid.IndexWatcher.Reset();
@@ -1065,6 +1062,11 @@ namespace GitUI.CommandsDialogs
 
         private async void FillGpgInfo()
         {
+            if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
+            {
+                return;
+            }
+
             var revisions = RevisionGrid.GetSelectedRevisions();
             var revision = revisions.FirstOrDefault();
             if (revision == null)
@@ -1086,6 +1088,7 @@ namespace GitUI.CommandsDialogs
             if (_buildReportTabPageExtension == null)
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl, _buildReportTabCaption.Text);
 
+            //Note: FillBuildReport will check if tab is visible and revision is OK
             _buildReportTabPageExtension.FillBuildReport(revision);
         }
 
@@ -1110,56 +1113,10 @@ namespace GitUI.CommandsDialogs
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
-                var revisions = RevisionGrid.GetSelectedRevisions();
-
-                CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
-                if (!revisions.Any() || GitRevision.IsArtificial(revisions[0].Guid))
-                {
-                    //Artificial commits cannot show tree (ls-tree) and has no commit info 
-                    CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-                    CommitInfoTabControl.RemoveIfExists(TreeTabPage);
-                    CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
-
-                    if (_showRevisionInfoNextToRevisionGrid)
-                    {
-                        RevisionsSplitContainer.Panel2Collapsed = true;
-
-                    }
-                }
-                else
-                {
-                    int i = 0;
-                    if (!_showRevisionInfoNextToRevisionGrid)
-                    {
-                        CommitInfoTabControl.InsertIfNotExists(i, CommitInfoTabPage);
-                        i++;
-                    }
-                    CommitInfoTabControl.InsertIfNotExists(i, TreeTabPage);
-                    if (AppSettings.ShowGpgInformation.ValueOrDefault)
-                    {
-                        CommitInfoTabControl.InsertIfNotExists(i + 2, GpgInfoTabPage);
-                    }
-                    else
-                    {
-                        CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
-                    }
-
-                    if (_showRevisionInfoNextToRevisionGrid)
-                    {
-                        RevisionsSplitContainer.Panel2Collapsed = false;
-                    }
-                }
-                CommitInfoTabControl.SelectedIndexChanged += CommitInfoTabControl_SelectedIndexChanged;
-
-                //RevisionGrid.HighlightSelectedBranch();
-
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                if (AppSettings.ShowGpgInformation.ValueOrDefault)
-                {
-                    FillGpgInfo();
-                }
+                FillGpgInfo();
                 FillBuildReport();
             }
             catch (Exception ex)
@@ -1484,10 +1441,7 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
-            if (AppSettings.ShowGpgInformation.ValueOrDefault)
-            {
-                FillGpgInfo();
-            }
+            FillGpgInfo();
             FillBuildReport();
             FillTerminalTab();
         }
@@ -2094,7 +2048,7 @@ namespace GitUI.CommandsDialogs
             this.mergeBranchToolStripMenuItem.Enabled =
             this.rebaseToolStripMenuItem.Enabled =
             this.stashToolStripMenuItem.Enabled =
-              selectedRevisions.Count>0 && !Module.IsBareRepository();
+              selectedRevisions.Count > 0 && !Module.IsBareRepository();
 
             this.resetToolStripMenuItem.Enabled =
             this.checkoutBranchToolStripMenuItem.Enabled =

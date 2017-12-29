@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs
             private static string GetLostCommitLog(GitModule aModule, string hash)
             {
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
-                    throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA1 hash.");
+                    throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA-1 hash.");
 
                 return aModule.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
             }

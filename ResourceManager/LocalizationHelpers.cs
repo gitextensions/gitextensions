@@ -2,12 +2,13 @@ using System;
 using System.Text;
 using GitCommands;
 using JetBrains.Annotations;
+using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager
 {
     public static class LocalizationHelpers
     {
-        private static readonly ICommitDataHeaderRenderer CommitDataHeaderRenderer = new CommitDataHeaderRenderer(null);
+        private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
 
 
         private static DateTime RoundDateTime(DateTime dateTime)
@@ -87,7 +88,7 @@ namespace ResourceManager
                     return sb.ToString();
                 }
 
-                string header = CommitDataHeaderRenderer.RenderPlain(data);
+                string header = PlainCommitDataHeaderRenderer.RenderPlain(data);
                 string body = "\n" + data.Body.Trim();
                 sb.AppendLine(header);
                 sb.Append(body);

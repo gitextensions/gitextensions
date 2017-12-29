@@ -10,7 +10,7 @@ Screenshots before and after (if PR changes UI):
 -
 -
 
-How did I test this code:
+What did I do to test the code and ensure quality:
  - 
  - 
  - 
