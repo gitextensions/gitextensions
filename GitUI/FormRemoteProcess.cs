@@ -179,7 +179,9 @@ namespace GitUI
                         Reset();
                     }
                     else
-                        KillGitCommand();
+                    {
+                        KillProcess();
+                    }
                 }
             }
             base.DataReceived(sender, e);
