@@ -9,11 +9,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitCommands.GitExtLinks;
+using GitCommands.Utils;
+using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
-using GitUI.Editor;
 using ResourceManager.CommitDataRenders;
 
 namespace GitUI.CommitInfo
@@ -411,8 +411,15 @@ namespace GitUI.CommitInfo
                     _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
                 }
             }
+
+            string body = _revisionInfo;
+            if (Revision != null && !Revision.IsArtificial())
+            {
+                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo;
+            }
+
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(body);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);
