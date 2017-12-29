@@ -50,7 +50,6 @@ namespace JenkinsIntegration
         //Build info cache, surviving repo switch
         private static readonly Dictionary<string, JenkinsCacheInfo> BuildCache = new Dictionary<string, JenkinsCacheInfo>();
         private readonly IList<string> _projectsUrls = new List<string>();
-        private bool _firstQueryAfterInit;
         
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
@@ -82,7 +81,6 @@ namespace JenkinsIntegration
                     AddGetBuildUrl(projectUrl);
                 }
             }
-            _firstQueryAfterInit = true;
         }
 
         /// <summary>
@@ -103,6 +101,11 @@ namespace JenkinsIntegration
                     //Make sure the cache is recalculated
                     BuildCache[projectUrl].Timestamp = 0;
                 }
+                else
+                {
+                    BuildCache[projectUrl] = new JenkinsCacheInfo();
+                }
+
             }
         }
 
@@ -186,19 +189,21 @@ namespace JenkinsIntegration
         }
 
         //Jenkins builds are retrieved with latest build first
+        //Prefer the inprogress builds to the finished
         //If there are many builds on the same commit, it is normally the latest that is interesting, ignore the following
-        private bool DifferFromPrev(BuildInfo curr, ref BuildInfo prev)
+        private bool DisplayBuild(BuildInfo curr, HashSet<string> inProgressDisplayed, HashSet<string> finishedDisplayed)
         {
             bool res = false;
-            if (prev == null
-                || prev.CommitHashList.Length != curr.CommitHashList.Length
-                || prev.CommitHashList.Length != 1
-                || prev.CommitHashList[0] != curr.CommitHashList[0])
+            if (curr != null
+                && curr.CommitHashList.Length >= 1
+                && (curr.Status == BuildInfo.BuildStatus.InProgress
+                    && inProgressDisplayed.Add(curr.CommitHashList[0])
+                  || !inProgressDisplayed.Contains(curr.CommitHashList[0])
+                    && finishedDisplayed.Add(curr.CommitHashList[0])))
             {
                 res = true;
             }
 
-            prev = curr;
             return res;
         }
 
@@ -210,45 +215,39 @@ namespace JenkinsIntegration
             {
                 IList<Task<ResponseInfo>> allBuildInfos = new List<Task<ResponseInfo>>();
                 IList<Task<ResponseInfo>> latestBuildInfos = new List<Task<ResponseInfo>>();
+                HashSet<string> inProgressDisplayed = new HashSet<string>();
+                HashSet<string> finishedDisplayed = new HashSet<string>();
                 foreach (var projectUrl in _projectsUrls)
                 {
                     //Update the build info from the cache and find if (inprogress) jobs may need to be requeried
                     bool hasInProgress = false;
-                    if (BuildCache.ContainsKey(projectUrl))
+                    foreach (var buildInfo in BuildCache[projectUrl].BuildInfo)
                     {
-                        BuildInfo prevBuild = null;
-                        foreach (var buildInfo in BuildCache[projectUrl].BuildInfo)
+                        if (DisplayBuild(buildInfo, inProgressDisplayed, finishedDisplayed))
                         {
-                            //Update revision grid from the cache when switching back to this repo
-                            if (_firstQueryAfterInit && DifferFromPrev(buildInfo, ref prevBuild))
-                            {
-                                observer.OnNext(buildInfo);
-                            }
+                            observer.OnNext(buildInfo);
+                        }
 
-                            //If any build is InProgress, it has to be requeried
-                            //This could be done per build too, probably decreasing load only in special situations
-                            //(Updating all builds individually increases the total load)
-                            if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
-                            {
-                                hasInProgress = true;
-                            }
+                        //If any displayed build is InProgress, it has to be requeried
+                        //This could be done per build too, but probably decreasing load only in special situations
+                        //(Updating all builds individually increases the total load)
+                        if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
+                        {
+                            hasInProgress = true;
                         }
                     }
 
-                    if (hasInProgress || !BuildCache.ContainsKey(projectUrl)
-                                   || BuildCache[projectUrl].Timestamp <= 0)
+                    if (hasInProgress || BuildCache[projectUrl].Timestamp <= 0)
                     {
-                        //This job must be updated, no need to to check the cache
-                        BuildCache[projectUrl] = new JenkinsCacheInfo();
+                        //This job must be updated, no need to to check the latest builds
                         allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
                     }
                     else
                     {
-                        //Check the existing build cache
+                        //Check the latest build on the server to the existing build cache
                         latestBuildInfos.Add(GetBuildInfoTask(projectUrl, false, cancellationToken));
                     }
                 }
-                _firstQueryAfterInit = false;
 
                 //Query the latest builds, to find if the cache has all builds
                 foreach (var url in latestBuildInfos)
@@ -280,15 +279,24 @@ namespace JenkinsIntegration
                         continue;
                     }
 
+                    if (currentGetBuildUrls.Result.Timestamp <= 0)
+                    {
+                        //No valid information received for the build, keep the cache
+                        continue;
+                    }
+
+                    //InProgress may have finished. Clear the status about display so it can be overridden
+                    //If "display order" should have been changed, this is updated at next update
+                    inProgressDisplayed.Clear();
+
                     //Information for all builds for the job
                     BuildCache[currentGetBuildUrls.Result.Url].Timestamp = currentGetBuildUrls.Result.Timestamp;
                     BuildCache[currentGetBuildUrls.Result.Url].BuildInfo.Clear();
-                    BuildInfo prevBuild = null;
                     foreach (var buildDetails in currentGetBuildUrls.Result.JobDescription)
                     {
                         var buildInfo = CreateBuildInfo((JObject) buildDetails);
                         BuildCache[currentGetBuildUrls.Result.Url].BuildInfo.Add(buildInfo);
-                        if (DifferFromPrev(buildInfo, ref prevBuild))
+                        if (DisplayBuild(buildInfo, inProgressDisplayed, finishedDisplayed))
                         {
                             observer.OnNext(buildInfo);
                         }
