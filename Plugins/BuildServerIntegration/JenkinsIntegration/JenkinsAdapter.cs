@@ -47,10 +47,9 @@ namespace JenkinsIntegration
 
         private HttpClient _httpClient;
 
-        //Build info cache, surviving repo switch
-        private static readonly Dictionary<string, JenkinsCacheInfo> BuildCache = new Dictionary<string, JenkinsCacheInfo>();
+        private readonly Dictionary<string, JenkinsCacheInfo> LastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
         private readonly IList<string> _projectsUrls = new List<string>();
-        
+
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
@@ -96,16 +95,7 @@ namespace JenkinsIntegration
             if (!_projectsUrls.Contains(projectUrl))
             {
                 _projectsUrls.Add(projectUrl);
-                if (BuildCache.ContainsKey(projectUrl))
-                {
-                    //Make sure the cache is recalculated
-                    BuildCache[projectUrl].Timestamp = 0;
-                }
-                else
-                {
-                    BuildCache[projectUrl] = new JenkinsCacheInfo();
-                }
-
+                LastBuildCache[projectUrl] = new JenkinsCacheInfo();
             }
         }
 
@@ -119,7 +109,6 @@ namespace JenkinsIntegration
         public class JenkinsCacheInfo
         {
             public long Timestamp = -1;
-            public readonly IList<BuildInfo> BuildInfo = new List<BuildInfo>();
         }
 
         private Task<ResponseInfo> GetBuildInfoTask(string projectUrl, bool fullInfo, CancellationToken cancellationToken)
@@ -130,31 +119,34 @@ namespace JenkinsIntegration
                     {
                         long timestamp = 0;
                         IEnumerable<JToken> s = Enumerable.Empty<JToken>();
-                        string t = task.Result;
-                        if (t.IsNotNullOrWhitespace())
+                        if (!task.IsCanceled && !task.IsFaulted)
                         {
-                            JObject jobDescription = JObject.Parse(t);
-                            if (jobDescription["builds"] != null)
+                            string t = task.Result;
+                            if (t.IsNotNullOrWhitespace())
                             {
-                                //Freestyle jobs
-                                s = jobDescription["builds"];
-                            }
-                            else if (jobDescription["jobs"] != null)
-                            {
-                                //Multibranch pipeline
-                                s = jobDescription["jobs"]
-                                    .SelectMany(j => j["builds"]);
-                                foreach (var j in jobDescription["jobs"])
+                                JObject jobDescription = JObject.Parse(t);
+                                if (jobDescription["builds"] != null)
                                 {
-                                    long ts = j["lastBuild"]["timestamp"].ToObject<long>();
-                                    timestamp = Math.Max(timestamp, ts);
+                                    //Freestyle jobs
+                                    s = jobDescription["builds"];
                                 }
-                            }
-                            //else: The server had no response (overloaded?) or a multibranch pipeline is not configured
+                                else if (jobDescription["jobs"] != null)
+                                {
+                                    //Multibranch pipeline
+                                    s = jobDescription["jobs"]
+                                        .SelectMany(j => j["builds"]);
+                                    foreach (var j in jobDescription["jobs"])
+                                    {
+                                        long ts = j["lastBuild"]["timestamp"].ToObject<long>();
+                                        timestamp = Math.Max(timestamp, ts);
+                                    }
+                                }
+                                //else: The server had no response (overloaded?) or a multibranch pipeline is not configured
 
-                            if (jobDescription["lastBuild"] != null)
-                            {
-                                timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
+                                if (jobDescription["lastBuild"] != null)
+                                {
+                                    timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
+                                }
                             }
                         }
 
@@ -188,25 +180,6 @@ namespace JenkinsIntegration
                     () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
         }
 
-        //Jenkins builds are retrieved with latest build first
-        //Prefer the inprogress builds to the finished
-        //If there are many builds on the same commit, it is normally the latest that is interesting, ignore the following
-        private bool DisplayBuild(BuildInfo curr, HashSet<string> inProgressDisplayed, HashSet<string> finishedDisplayed)
-        {
-            bool res = false;
-            if (curr != null
-                && curr.CommitHashList.Length >= 1
-                && (curr.Status == BuildInfo.BuildStatus.InProgress
-                    && inProgressDisplayed.Add(curr.CommitHashList[0])
-                  || !inProgressDisplayed.Contains(curr.CommitHashList[0])
-                    && finishedDisplayed.Add(curr.CommitHashList[0])))
-            {
-                res = true;
-            }
-
-            return res;
-        }
-
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
             //Note that 'running' is ignored (attempt to fetch data when updated) 
@@ -215,49 +188,31 @@ namespace JenkinsIntegration
             {
                 IList<Task<ResponseInfo>> allBuildInfos = new List<Task<ResponseInfo>>();
                 IList<Task<ResponseInfo>> latestBuildInfos = new List<Task<ResponseInfo>>();
-                HashSet<string> inProgressDisplayed = new HashSet<string>();
-                HashSet<string> finishedDisplayed = new HashSet<string>();
                 foreach (var projectUrl in _projectsUrls)
                 {
-                    //Update the build info from the cache and find if (inprogress) jobs may need to be requeried
-                    bool hasInProgress = false;
-                    foreach (var buildInfo in BuildCache[projectUrl].BuildInfo)
-                    {
-                        if (DisplayBuild(buildInfo, inProgressDisplayed, finishedDisplayed))
-                        {
-                            observer.OnNext(buildInfo);
-                        }
-
-                        //If any displayed build is InProgress, it has to be requeried
-                        //This could be done per build too, but probably decreasing load only in special situations
-                        //(Updating all builds individually increases the total load)
-                        if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
-                        {
-                            hasInProgress = true;
-                        }
-                    }
-
-                    if (hasInProgress || BuildCache[projectUrl].Timestamp <= 0)
+                    if (LastBuildCache[projectUrl].Timestamp <= 0)
                     {
                         //This job must be updated, no need to to check the latest builds
                         allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
                     }
                     else
                     {
-                        //Check the latest build on the server to the existing build cache
                         latestBuildInfos.Add(GetBuildInfoTask(projectUrl, false, cancellationToken));
                     }
                 }
 
-                //Query the latest builds, to find if the cache has all builds
-                foreach (var url in latestBuildInfos)
+                //Check the latest build on the server to the existing build cache
+                //The simple request will limit the load on the Jenkins server
+                //To fetch just new builds is possible too, but it will make the solution more complicated
+                //Similar, the build results could be cached so they are available when switching repos
+                foreach (var info in latestBuildInfos)
                 {
-                    if (!url.IsFaulted)
+                    if (!info.IsFaulted)
                     {
-                        if (url.Result.Timestamp > BuildCache[url.Result.Url].Timestamp)
+                        if (info.Result.Timestamp > LastBuildCache[info.Result.Url].Timestamp)
                         {
                             //The cache has at least one newer job, query the status
-                            allBuildInfos.Add(GetBuildInfoTask(url.Result.Url, true, cancellationToken));
+                            allBuildInfos.Add(GetBuildInfoTask(info.Result.Url, true, cancellationToken));
                         }
                     }
                 }
@@ -269,42 +224,43 @@ namespace JenkinsIntegration
                 }
 
 
-                foreach (var currentGetBuildUrls in allBuildInfos)
+                foreach (var build in allBuildInfos)
                 {
-                    if (currentGetBuildUrls.IsFaulted)
+                    if (build.IsFaulted)
                     {
-                        Debug.Assert(currentGetBuildUrls.Exception != null);
+                        Debug.Assert(build.Exception != null);
 
-                        observer.OnError(currentGetBuildUrls.Exception);
+                        observer.OnError(build.Exception);
                         continue;
                     }
 
-                    if (currentGetBuildUrls.Result.Timestamp <= 0)
+                    if (build.IsCanceled || build.Result.Timestamp <= 0)
                     {
-                        //No valid information received for the build, keep the cache
+                        //No valid information received for the build
                         continue;
                     }
 
-                    //InProgress may have finished. Clear the status about display so it can be overridden
-                    //If "display order" should have been changed, this is updated at next update
-                    inProgressDisplayed.Clear();
-
-                    //Information for all builds for the job
-                    BuildCache[currentGetBuildUrls.Result.Url].Timestamp = currentGetBuildUrls.Result.Timestamp;
-                    BuildCache[currentGetBuildUrls.Result.Url].BuildInfo.Clear();
-                    foreach (var buildDetails in currentGetBuildUrls.Result.JobDescription)
+                    LastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
+                    //Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
+                    //(for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
+                    foreach (var buildDetails in build.Result.JobDescription.Reverse())
                     {
-                        var buildInfo = CreateBuildInfo((JObject) buildDetails);
-                        BuildCache[currentGetBuildUrls.Result.Url].BuildInfo.Add(buildInfo);
-                        if (DisplayBuild(buildInfo, inProgressDisplayed, finishedDisplayed))
+                        if (cancellationToken.IsCancellationRequested)
                         {
-                            observer.OnNext(buildInfo);
+                            return;
+                        }
+                        var buildInfo = CreateBuildInfo((JObject) buildDetails);
+                        observer.OnNext(buildInfo);
+
+                        if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
+                        {
+                            //Need to make a full requery next time
+                            LastBuildCache[build.Result.Url].Timestamp = 0;
                         }
                     }
                 }
 
                 //Complete the job, it will be run again with Observe.Retry() (every 10th sec)
-                //(this will find new builds and update InProgress jobs)
                 observer.OnCompleted();
             }
             catch (OperationCanceledException)
@@ -327,7 +283,6 @@ namespace JenkinsIntegration
             var idValue = buildDescription["number"].ToObject<string>();
             var statusValue = buildDescription["result"].ToObject<string>();
             var startDateTicks = buildDescription["timestamp"].ToObject<long>();
-            //var displayName = buildDescription["fullDisplayName"].ToObject<string>();
             var webUrl = buildDescription["url"].ToObject<string>();
 
             var action = buildDescription["actions"];
