@@ -51,15 +51,10 @@ namespace GitUI.Script
 
         public static void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
         {
-            foreach (ScriptInfo scriptInfo in GetScripts())
-                if (scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent)
-                {
-                    if (scriptInfo.AskConfirmation)
-                        if (MessageBox.Show(form, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                            continue;
-
-                    ScriptRunner.RunScript(form, form.Module, scriptInfo.Name, null);
-                }
+            foreach (var scriptInfo in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
+            {
+                ScriptRunner.RunScript(form, form.Module, scriptInfo.Name, null);
+            }
         }
 
         public static string SerializeIntoXml()
@@ -100,8 +95,8 @@ namespace GitUI.Script
             {
                 Scripts = new BindingList<ScriptInfo>();
                 DeserializeFromOldFormat(xml);
-                
-                Trace.WriteLine(ex.Message);                
+
+                Trace.WriteLine(ex.Message);
             }
         }
 
