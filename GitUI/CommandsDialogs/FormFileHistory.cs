@@ -77,6 +77,7 @@ namespace GitUI.CommandsDialogs
 
             UpdateFollowHistoryMenuItems();
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && tabControl1.Contains(BlameTab);
             saveAsToolStripMenuItem.Visible = !isSubmodule;
