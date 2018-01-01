@@ -181,7 +181,6 @@ namespace GitUI.CommandsDialogs
             revisionDiff.Bind(RevisionGrid, fileTree);
 
             Translate();
-            LayoutRevisionInfo();
 
             if (AppSettings.ShowGitStatusInBrowseToolbar && !Module.IsBareRepository())
             {
@@ -249,8 +248,8 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.DisplayAvatarOnRight();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-                CommitInfoTabControl.RemoveIfExists(TreeTabPage);
-                CommitInfoTabControl.TabPages.Insert(0, TreeTabPage);
+                CommitInfoTabControl.RemoveIfExists(DiffTabPage);
+                CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
                 CommitInfoTabControl.SelectedTab = DiffTabPage;
                 CommitInfoTabControl.ResumeLayout(true);
                 RevisionsSplitContainer.Panel2Collapsed = false;
@@ -361,6 +360,7 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper.InitToolStripBranchFilter();
 
             Cursor.Current = Cursors.WaitCursor;
+            LayoutRevisionInfo();
             InternalInitialize(false);
             RevisionGrid.Focus();
             RevisionGrid.IndexWatcher.Reset();
@@ -1104,11 +1104,6 @@ namespace GitUI.CommandsDialogs
         private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
-            if (_showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)
-            {
-                _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
-                LayoutRevisionInfo();
-            }
             try
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
@@ -1308,6 +1303,11 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ReloadTranslation();
             fileTree.ReloadHotkeys();
             revisionDiff.ReloadHotkeys();
+            if (_showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)
+            {
+                _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+                LayoutRevisionInfo();
+            }
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
@@ -1615,7 +1615,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.50/");
+                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.51/");
             }
             catch (System.ComponentModel.Win32Exception)
             {

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -20,6 +20,7 @@
       </trans-unit>
       <trans-unit id="MsBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
+        <target>msbuild.exe の引数</target>
         
       </trans-unit>
       <trans-unit id="MsBuildEnabled.Caption">
@@ -74,6 +75,191 @@
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="BitbucketBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketPassword.Caption">
+        <source>Bitbucket Password</source>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketUsername.Caption">
+        <source>Bitbucket Username</source>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Bitbucket Server</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target>Pull Requestの作成</target>
+        
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target>名前</target>
+        
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>エラー</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in Bitbucket.</source>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>作成</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>マージ</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target>ブランチ</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target>作者</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target>注釈</target>
+        
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target>タイトル</target>
+        
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target>リポジトリ</target>
+        
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target>ブランチ</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target>ブランチ</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target>注釈</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target>タイトル</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target>リポジトリ</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target>リポジトリ</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target>リポジトリ</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target>ブランチ</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Pull Requestの作成</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Pull Requestの表示</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ja">
     <body>
       <trans-unit id="$this.Text">
@@ -106,6 +292,7 @@
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
+        <target>最後の作者</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -124,10 +311,12 @@
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
+        <target>最後のメッセージ</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
+        <target>ブランチを検索</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -151,6 +340,9 @@
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
+        <target>危険な行為です！
+リモート '{0}' のブランチを削除しようとしています。
+これはやり直せませんが、本当に続行しますか？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -160,10 +352,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
+        <target>ブランチを削除中...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>マージされていないブランチの削除は結果的にdangling コミットになります。注意してください。</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -173,14 +367,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
+        <target>'{0}' で削除したいブランチを検索</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
+        <target>ブランチを検索</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target>'{0}' 列のチェックボックスで削除するブランチを選択</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -293,6 +490,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
+        <target>最終コミット日</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -302,10 +500,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
+        <target>SHA</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
+        <target>サイズ</target>
         
       </trans-unit>
     </body>
@@ -546,10 +746,12 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
+        <target>統計情報</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
+        <target>読込中...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
@@ -574,34 +776,42 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>総コミット数</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
+        <target>総コード行数</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
+        <target>総コード行数</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
+        <target>総コード行数</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0} Blank lines ({1})</source>
+        <target>空行数{0}({1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0} Comment lines ({1})</source>
+        <target>コメント行数{0}({1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0} Commits</source>
+        <target>{0}コミット</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0} Commits by {1}</source>
+        <target>{1}によるコミット数{0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
@@ -654,6 +864,7 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>インパクト</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
@@ -776,6 +987,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
@@ -831,6 +1043,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
+        <target>ブランチ:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -847,14 +1060,17 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
+        <target>[prefix]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
@@ -871,6 +1087,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
     <body>
       <trans-unit id="Description.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
@@ -879,10 +1096,12 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
     <body>
       <trans-unit id="Description.Text">
         <source>Github</source>
+        <target>Github</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
+        <target>OAuthトークン</target>
         
       </trans-unit>
     </body>
@@ -891,6 +1110,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>インパクトグラフ</target>
         
       </trans-unit>
     </body>
@@ -903,6 +1123,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
+        <target>統計情報</target>
         
       </trans-unit>
       <trans-unit id="IgnoreDirectories.Caption">
@@ -911,6 +1132,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="IgnoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>サブモジュールを無視</target>
         
       </trans-unit>
     </body>
@@ -919,6 +1141,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="GourceArguments.Caption">
@@ -952,6 +1175,7 @@ Do you want to automatically download Gource?</source>
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
+        <target>ダウンロード</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
@@ -961,6 +1185,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       </trans-unit>
       <trans-unit id="_gource.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
@@ -979,6 +1204,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
@@ -1033,6 +1259,42 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        
+      </trans-unit>
+      <trans-unit id="enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        
+      </trans-unit>
+      <trans-unit id="jdlQuerySettings.Caption">
+        <source>JDL Query</source>
+        
+      </trans-unit>
+      <trans-unit id="jiraFields.Caption">
+        <source>Jira fields</source>
+        
+      </trans-unit>
+      <trans-unit id="passwordSettings.Caption">
+        <source>Jira password</source>
+        
+      </trans-unit>
+      <trans-unit id="stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        
+      </trans-unit>
+      <trans-unit id="urlSettings.Caption">
+        <source>Jira URL</source>
+        
+      </trans-unit>
+      <trans-unit id="userSettings.Caption">
+        <source>Jira user</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ja">
     <body>
       <trans-unit id="$this.Text">
@@ -1079,14 +1341,17 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
+        <target>HTTPプロキシ</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
+        <target>HTTPプロキシポート</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
+        <target>パスワード</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
@@ -1102,8 +1367,20 @@ Do you want to reset the configured path?</source>
         <source>Release Notes Generator</source>
         
       </trans-unit>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
+        
+      </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        
+      </trans-unit>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>'From' commit must be specified</source>
+        
+      </trans-unit>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>'To' commit must be specified</source>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
