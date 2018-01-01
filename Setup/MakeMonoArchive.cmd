@@ -103,12 +103,12 @@ xcopy /y ..\GitUI\Translation\English.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\English.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Czech.gif GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Czech.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Czech.Plugins.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Czech.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Czech.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Czech.Plugins.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Dutch.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Dutch.xlf GitExtensions\Translation\
@@ -157,18 +157,18 @@ xcopy /y ..\GitUI\Translation\Russian.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Spanish.gif GitExtensions\Translation\
+xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
+xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Spanish.Plugins.xlf GitExtensions\Translation\
+xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Spanish.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Spanish.Plugins.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
