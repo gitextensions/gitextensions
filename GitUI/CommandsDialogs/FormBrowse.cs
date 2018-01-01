@@ -1615,7 +1615,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.50/");
+                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.51/");
             }
             catch (System.ComponentModel.Win32Exception)
             {
