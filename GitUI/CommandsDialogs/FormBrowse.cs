@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs
 
             Translate();
 
-            if (AppSettings.ShowGitStatusInBrowseToolbar && !Module.IsBareRepository())
+            if (AppSettings.ShowGitStatusInBrowseToolbar)
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                 {
