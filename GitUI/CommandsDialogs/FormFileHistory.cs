@@ -77,6 +77,7 @@ namespace GitUI.CommandsDialogs
 
             UpdateFollowHistoryMenuItems();
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && tabControl1.Contains(BlameTab);
             saveAsToolStripMenuItem.Visible = !isSubmodule;
@@ -226,7 +227,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.RevisionFilter = string.Concat(" --full-history ", res.RevisionFilter);
+                res.RevisionFilter = string.Concat(" --full-history --simplify-merges ", res.RevisionFilter);
             }
 
 
@@ -384,8 +385,19 @@ namespace GitUI.CommandsDialogs
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ToggleFullHistoryFlag();
+        }
+
+        private void ShowFullHistory_Click(object sender, EventArgs e)
+        {
+            ToggleFullHistoryFlag();
+        }
+
+        private void ToggleFullHistoryFlag()
+        {
             AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             LoadFileHistory();
         }
 
