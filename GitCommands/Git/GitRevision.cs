@@ -84,9 +84,10 @@ namespace GitCommands
         {
             if (sha == null)
                 throw new ArgumentNullException("sha");
-            if (sha.Length > 8)
+            const int maxShaLength = 10;
+            if (sha.Length > maxShaLength)
             {
-                sha = sha.Substring(0, 8);
+                sha = sha.Substring(0, maxShaLength);
             }
 
             return sha;

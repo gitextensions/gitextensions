@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
                 {
                     labelDateCaption.Text = String.Format("{0}: {1}", Strings.GetCommitDateText(), _diffSelectedRevision.CommitDate);
                     labelAuthor.Text = _diffSelectedRevision.Author;
-                    gbDiffRevision.Text = _diffSelectedRevision.Guid.Substring(0, 10);
+                    gbDiffRevision.Text = GitRevision.ToShortSha(_diffSelectedRevision.Guid);
                     labelMessage.Text = _diffSelectedRevision.Subject;
                 }
             }

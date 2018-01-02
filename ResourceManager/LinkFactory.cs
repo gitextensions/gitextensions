@@ -65,9 +65,14 @@ namespace ResourceManager
                     linkText = Strings.GetCurrentIndex();
                 else
                 {
-                    linkText = preserveGuidInLinkText || guid.Length < 10
-                        ? guid
-                        : guid.Substring(0, 10);
+                    if (preserveGuidInLinkText)
+                    {
+                        linkText = guid;
+                    }
+                    else
+                    {
+                        linkText = GitRevision.ToShortSha(guid);
+                    }
                 }
             }
             return AddLink(linkText, "gitext://gotocommit/" + guid);
