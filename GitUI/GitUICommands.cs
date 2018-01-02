@@ -1580,12 +1580,21 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
         {
+            return StartPushDialog(owner, pushOnShow, false, out pushCompleted);
+        }
+
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted)
+        {
             bool pushed = false;
 
             Func<bool> action = () =>
             {
                 using (var form = new FormPush(this))
                 {
+                    if (forceWithLease)
+                    {
+                        form.CheckForceWithLease();
+                    }
                     DialogResult dlgResult;
                     if (pushOnShow)
                         dlgResult = form.PushAndShowDialogWhenFailed(owner);

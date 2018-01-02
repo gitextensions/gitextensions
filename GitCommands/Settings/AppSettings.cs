@@ -377,6 +377,12 @@ namespace GitCommands
             set { SetBool("AlwaysShowCheckoutBranchDlg", value); }
         }
 
+        public static bool CommitAndPushForcedWhenAmend
+        {
+            get { return GetBool("CommitAndPushForcedWhenAmend", false); }
+            set { SetBool("CommitAndPushForcedWhenAmend", value); }
+        }
+
         public static bool CommitInfoShowContainedInBranchesRemote
         {
             get { return GetBool("commitinfoshowcontainedinbranchesremote", false); }
