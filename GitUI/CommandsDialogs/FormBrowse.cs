@@ -1982,17 +1982,13 @@ namespace GitUI.CommandsDialogs
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
-            EnabledSplitViewLayout(MainSplitContainer.Panel2.Height == 0 && MainSplitContainer.Height > 0);
+            EnabledSplitViewLayout(MainSplitContainer.Panel2Collapsed);
         }
 
         private void EnabledSplitViewLayout(bool enabled)
         {
-            if (enabled)
-                MainSplitContainer.SplitterDistance = (MainSplitContainer.Height / 5) * 2;
-            else
-                MainSplitContainer.SplitterDistance = MainSplitContainer.Height;
+            MainSplitContainer.Panel2Collapsed = !enabled;
         }
-
 
         public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
         {
