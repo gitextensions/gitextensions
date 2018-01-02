@@ -248,6 +248,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.DisplayAvatarOnRight();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+                //Move difftab to left
                 CommitInfoTabControl.RemoveIfExists(DiffTabPage);
                 CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
                 CommitInfoTabControl.SelectedTab = DiffTabPage;
