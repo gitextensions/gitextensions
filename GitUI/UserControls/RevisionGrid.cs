@@ -100,6 +100,9 @@ namespace GitUI
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
+        // tracks status for the artificial commits while the revision graph is reloading
+        private IList<GitItemStatus> _artificialStatus;
+
 
         private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
         /// <summary>
@@ -2738,7 +2741,15 @@ namespace GitUI
             {
                 stagedRev.SubjectCount = "(" + staged + ") ";
             }
-            Revisions.Refresh();
+            if (unstagedRev == null || stagedRev == null)
+            {
+                _artificialStatus = status;
+            }
+            else
+            {
+                _artificialStatus = null;
+            }
+            Revisions.Invalidate();
         }
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
@@ -2747,7 +2758,7 @@ namespace GitUI
             var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
             // Add working directory as virtual commit
-            var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
+            var unstagedRev = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
                 Author = userName,
                 AuthorDate = DateTime.MaxValue,
@@ -2758,10 +2769,10 @@ namespace GitUI
                 Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
-            Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+            Revisions.Add(unstagedRev.Guid, unstagedRev.ParentGuids, DvcsGraph.DataType.Normal, unstagedRev);
 
             // Add index as virtual commit
-            var index = new GitRevision(Module, GitRevision.IndexGuid)
+            var stagedRev = new GitRevision(Module, GitRevision.IndexGuid)
             {
                 Author = userName,
                 AuthorDate = DateTime.MaxValue,
@@ -2772,7 +2783,16 @@ namespace GitUI
                 Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
-            Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+            Revisions.Add(stagedRev.Guid, stagedRev.ParentGuids, DvcsGraph.DataType.Normal, stagedRev);
+
+            if (_artificialStatus != null)
+            {
+                int staged = _artificialStatus.Count(item => item.IsStaged);
+                int unstaged = _artificialStatus.Count - staged;
+
+                stagedRev.SubjectCount = "(" + staged + ") ";
+                unstagedRev.SubjectCount = "(" + unstaged + ") ";
+            }
         }
 
         internal void DrawNonrelativesGray_ToolStripMenuItemClick(object sender, EventArgs e)
