@@ -34,6 +34,10 @@ Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/im
 
 <table>
   <tr>
+    <td><strong><font="red">Release Candidate (v2.51.RC1)</strong></td>
+    <td><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.RC1">[ Download ]</a></td>
+  </tr>
+  <tr>
     <td><strong>Latest Release (v2.50.02)</strong></td>
     <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md">Changelog</a></td>
   </tr>
@@ -69,5 +73,6 @@ Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/im
 * Online manual: [https://git-extensions-documentation.readthedocs.org/en/latest/](https://git-extensions-documentation.readthedocs.org/en/latest/)
 * Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
 * Wiki: [https://github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
+* Gitter chat: [https://gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
 
