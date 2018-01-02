@@ -2729,14 +2729,19 @@ namespace GitUI
 
         public void UpdateArtificialCommitCount(IList<GitItemStatus> status)
         {
+            GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);
+            GitRevision stagedRev = GetRevision(GitRevision.IndexGuid);
+            UpdateArtificialCommitCount(status, unstagedRev, stagedRev);
+        }
+
+        private void UpdateArtificialCommitCount(IList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
+        {
             int staged = status.Count(item => item.IsStaged);
             int unstaged = status.Count() - staged;
-            GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);
             if (unstagedRev != null)
             {
                 unstagedRev.SubjectCount = "(" + unstaged + ") ";
             }
-            GitRevision stagedRev = GetRevision(GitRevision.IndexGuid);
             if (stagedRev != null)
             {
                 stagedRev.SubjectCount = "(" + staged + ") ";
@@ -2787,11 +2792,7 @@ namespace GitUI
 
             if (_artificialStatus != null)
             {
-                int staged = _artificialStatus.Count(item => item.IsStaged);
-                int unstaged = _artificialStatus.Count - staged;
-
-                stagedRev.SubjectCount = "(" + staged + ") ";
-                unstagedRev.SubjectCount = "(" + unstaged + ") ";
+                UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
             }
         }
 
