@@ -38,40 +38,23 @@ namespace GitUI
             }
         }
 
-        public static bool IsItemUntracked(GitItemStatus file,
-            string firstRevision, string secondRevision)
-        {
-            if (firstRevision == GitRevision.UnstagedGuid && file.IsDeleted ||
-                secondRevision == GitRevision.UnstagedGuid && file.IsNew)
-            {
-                return true;
-            }
-            else if (firstRevision == GitRevision.UnstagedGuid) //working directory changes
-            {
-                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
-                    return !file.IsTracked;
-            }
-            return false;
-        }
-
         private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding, true);
+                    diffArgs, encoding, true, file.IsTracked);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
         {
-            if (firstRevision == null)
-                return null;
-
-            if (IsItemUntracked(file, firstRevision, secondRevision))
+            if (!file.IsTracked)
             {
                 var fullPath = Path.Combine(diffViewer.Module.WorkingDir, file.Name);
                 if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
+                {
+                    //git-status does not detect details for untracked and git-diff --no-index will not give info
                     return LocalizationHelpers.GetSubmoduleText(diffViewer.Module, file.Name.TrimEnd('/'), "");
-                return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
+                }
             }
 
             if (file.IsSubmodule && file.SubmoduleStatus != null)
@@ -91,7 +74,7 @@ namespace GitUI
         public static void ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             var firstRevision = revisions.Count > 0 ? revisions[0] : null;
-            string firstRevisionGuid = firstRevision == null ? null : firstRevision.Guid;
+            string firstRevisionGuid = firstRevision?.Guid;
             string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
             if (parentRevisionGuid == null && firstRevision != null)
                 parentRevisionGuid = firstRevision.FirstParentGuid;
@@ -100,24 +83,11 @@ namespace GitUI
 
         public static void ViewChanges(this FileViewer diffViewer, string revision, string parentRevision, GitItemStatus file, string defaultText)
         {
-            if (parentRevision == null)
+            diffViewer.ViewPatch(() =>
             {
-                if (file.TreeGuid.IsNullOrEmpty())
-                    diffViewer.ViewGitItemRevision(file.Name, revision);
-                else if (!file.IsSubmodule)
-                    diffViewer.ViewGitItem(file.Name, file.TreeGuid);
-                else
-                    diffViewer.ViewText(file.Name,
-                        LocalizationHelpers.GetSubmoduleText(diffViewer.Module, file.Name, file.TreeGuid));
-            }
-            else
-            {
-                diffViewer.ViewPatch(() =>
-                    {
-                        string selectedPatch = diffViewer.GetSelectedPatch(parentRevision, revision, file);
-                        return selectedPatch ?? defaultText;
-                    });
-            }
+                string selectedPatch = diffViewer.GetSelectedPatch(parentRevision, revision, file);
+                return selectedPatch ?? defaultText;
+            });
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)
