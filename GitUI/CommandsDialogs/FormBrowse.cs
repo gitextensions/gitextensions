@@ -133,6 +133,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IRepositoryShortNameProvider _repositoryShortNameProvider;
+        private readonly IAppTitleGenerator _appTitleGenerator;
         private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
@@ -230,6 +231,8 @@ namespace GitUI.CommandsDialogs
             }
 
             _repositoryShortNameProvider = new RepositoryShortNameProvider(new GitDirectoryResolver());
+            _appTitleGenerator = new AppTitleGenerator(new AppInformationalVersionProvider(), _repositoryShortNameProvider);
+
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
@@ -567,7 +570,8 @@ namespace GitUI.CommandsDialogs
             if (hard && hasWorkingDir)
                 ShowRevisions();
             RefreshWorkingDirCombo();
-            Text = GenerateWindowTitle(Module.WorkingDir, validWorkingDir, branchSelect.Text);
+            var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
+            Text = _appTitleGenerator.Generate(Module.WorkingDir, validWorkingDir, branchName);
             UpdateJumplist(validWorkingDir);
 
             OnActivate();
@@ -918,30 +922,6 @@ namespace GitUI.CommandsDialogs
                     else
                         statusStrip.Hide();
                 });
-        }
-
-        /// <summary>
-        /// Generates main window title according to given repository.
-        /// </summary>
-        /// <param name="workingDir">Path to repository.</param>
-        /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
-        /// <param name="branchName">Current branch name.</param>
-        private string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
-        {
-            const string defaultTitle = "Git Extensions";
-            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions{2}";
-            // ReSharper disable once RedundantAssignment
-            string additionalTitleText = "";
-#if DEBUG
-            additionalTitleText = " -> DEBUG <-";
-#endif
-            if (!isWorkingDirValid)
-                return defaultTitle + additionalTitleText;
-            string repositoryDescription = GetRepositoryShortName(workingDir);
-            if (string.IsNullOrEmpty(branchName))
-                branchName = _noBranchTitle.Text;
-            return string.Format(repositoryTitleFormat, repositoryDescription,
-                branchName.Trim('(', ')'), additionalTitleText);
         }
 
         private void RebaseClick(object sender, EventArgs e)
