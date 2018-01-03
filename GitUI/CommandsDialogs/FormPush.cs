@@ -175,6 +175,11 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
+        public void CheckForceWithLease()
+        {
+            ckForceWithLease.Checked = true;
+        }
+
         private void OpenRemotesDialogAndRefreshList(string selectedRemoteName)
         {
             if (!UICommands.StartRemotesDialog(this, selectedRemoteName))
