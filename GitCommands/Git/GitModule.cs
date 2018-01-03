@@ -3023,6 +3023,7 @@ namespace GitCommands
         {
             if (revision == GitRevision.UnstagedGuid) //working directory changes
             {
+                Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
             if (revision == GitRevision.IndexGuid) //index
