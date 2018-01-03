@@ -132,6 +132,7 @@ namespace GitUI.CommandsDialogs
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
+        private readonly IRepositoryShortNameProvider _repositoryShortNameProvider;
         private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
@@ -228,6 +229,7 @@ namespace GitUI.CommandsDialogs
                 _commitDataManager = new CommitDataManager(() => Module);
             }
 
+            _repositoryShortNameProvider = new RepositoryShortNameProvider(new GitDirectoryResolver());
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
@@ -650,29 +652,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        /// <summary>
-        /// Returns a short name for repository.
-        /// If the repository contains a description it is returned,
-        /// otherwise the last part of path is returned.
-        /// </summary>
-        /// <param name="repositoryDir">Path to repository.</param>
-        /// <returns>Short name for repository</returns>
-        private static string GetRepositoryShortName(string repositoryDir)
-        {
-            DirectoryInfo dirInfo = new DirectoryInfo(repositoryDir);
-            if (dirInfo.Exists)
-            {
-                string desc = ReadRepositoryDescription(repositoryDir);
-                if (desc.IsNullOrEmpty())
-                {
-                    desc = Repositories.RepositoryHistory.Repositories
-                        .Where(repo => repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase)).Select(repo => repo.Title)
-                        .FirstOrDefault();
-                }
-                return desc ?? dirInfo.Name;
-            }
-            return dirInfo.Name;
-        }
 
         private void LoadUserMenu()
         {
@@ -726,7 +705,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (validWorkingDir)
                 {
-                    string repositoryDescription = GetRepositoryShortName(Module.WorkingDir);
+                    string repositoryDescription = _repositoryShortNameProvider.Get(Module.WorkingDir);
                     string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
                     if (!Directory.Exists(baseFolder))
                     {
@@ -963,33 +942,6 @@ namespace GitUI.CommandsDialogs
                 branchName = _noBranchTitle.Text;
             return string.Format(repositoryTitleFormat, repositoryDescription,
                 branchName.Trim('(', ')'), additionalTitleText);
-        }
-
-        /// <summary>
-        /// Reads repository description's first line from ".git\description" file.
-        /// </summary>
-        /// <param name="workingDir">Path to repository.</param>
-        /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
-        private static string ReadRepositoryDescription(string workingDir)
-        {
-            const string repositoryDescriptionFileName = "description";
-            const string defaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
-
-            var repositoryPath = GitModule.GetGitDirectory(workingDir);
-            var repositoryDescriptionFilePath = Path.Combine(repositoryPath, repositoryDescriptionFileName);
-            if (!File.Exists(repositoryDescriptionFilePath))
-                return null;
-            try
-            {
-                var repositoryDescription = File.ReadLines(repositoryDescriptionFilePath).FirstOrDefault();
-                return string.Equals(repositoryDescription, defaultDescription, StringComparison.CurrentCulture)
-                           ? null
-                           : repositoryDescription;
-            }
-            catch (IOException)
-            {
-                return null;
-            }
         }
 
         private void RebaseClick(object sender, EventArgs e)
