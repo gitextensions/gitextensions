@@ -25,18 +25,25 @@ try{
         $pageIndex++;
     }
 
-    $issueFeatures = @();
-    $issueBugs = @();
+    $pullrequests = @();
+    $issues = @();
     $issueLinks = @();
 
     $totalIssues | ForEach-Object {
         $issue = $_;
 
-        if ($issue.labels.name -eq 'bug') {
-            $issueBugs += $issue;
+        if ($issue.pull_request -ne $null) {
+            $issue | Add-Member customTitle "PR";
         }
         else {
-            $issueFeatures += $issue;
+            $issue | Add-Member customTitle "Issue";
+        }
+
+        if ($issue.labels.name -eq 'bug') {
+            $issues += $issue;
+        }
+        else {
+            $pullrequests += $issue;
         }
         $issueLinks += "[$($issue.number)]:$($issue.html_url)"
     }
@@ -44,14 +51,14 @@ try{
 
     "### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile
     "`r`n#### Features:" | Out-File $changelogFile -Append
-    $issueFeatures | ForEach-Object {
+    $pullrequests | ForEach-Object {
         $issue = $_;
-        "* $($issue.title) - PR [$($issue.number)]" | Out-File $changelogFile -Append
+        "* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append
     }
     "`r`n#### Fixes:" | Out-File $changelogFile -Append
-    $issueBugs | ForEach-Object {
+    $issues | ForEach-Object {
         $issue = $_;
-        "* $($issue.title) - Issue [$($issue.number)]" | Out-File $changelogFile -Append
+        "* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append
     }
     "`r`n" | Out-File $changelogFile -Append
     $issueLinks | Out-File $changelogFile -Append
