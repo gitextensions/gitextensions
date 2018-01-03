@@ -3494,6 +3494,8 @@ namespace GitUI
                 formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", String.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(this);
             }
+
+            RefreshRevisions();
         }
     }
 }
