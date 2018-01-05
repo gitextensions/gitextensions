@@ -73,7 +73,9 @@ namespace GitUI
 
         public static void ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
-            var firstRevision = revisions.Count > 0 ? revisions[0] : null;
+            if (revisions.Count == 0)
+                return;
+            var firstRevision = revisions[0];
             string firstRevisionGuid = firstRevision?.Guid;
             string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
             if (parentRevisionGuid == null && firstRevision != null)
