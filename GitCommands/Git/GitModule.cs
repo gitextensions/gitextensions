@@ -2227,19 +2227,12 @@ namespace GitCommands
             //fix refs slashes
             from = from == null ? "" : from.ToPosixPath();
             to = to == null ? "" : to.ToPosixPath();
-            string commitRange = _revisionDiffProvider.Get(from, to);
+            string diffOptions = _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
-            if (!isTracked)
-            {
-                extraDiffArguments = string.Concat(extraDiffArguments, " --no-index");
-                oldFileName = fileName;
-                fileName = "/dev/null";
-            }
 
             var patchManager = new PatchManager();
-            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange,
-                fileName.Quote(), oldFileName.Quote());
+            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
             cacheResult = cacheResult && !GitRevision.IsArtificial(to) && !GitRevision.IsArtificial(from) && !to.IsNullOrEmpty() && !from.IsNullOrEmpty();
             string patch;
             if (cacheResult)
@@ -3103,11 +3096,11 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "")
+        public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "", bool isTracked=true)
         {
             var output = "";
 
-            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
+            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2, filename, oldFileName, isTracked));
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }

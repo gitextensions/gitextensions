@@ -18,7 +18,7 @@ namespace GitUI
         public static SynchronizationContext UISynchronizationContext;
 
 
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind)
+        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked=true)
         {
             //Note: Order in revisions is that first clicked is last in array
             string extraDiffArgs;
@@ -32,7 +32,7 @@ namespace GitUI
             }
             else
             {
-                string output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
+                string output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(grid, output);
             }

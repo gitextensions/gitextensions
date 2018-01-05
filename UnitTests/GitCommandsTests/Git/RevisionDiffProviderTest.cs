@@ -88,6 +88,43 @@ namespace GitCommandsTests.Git
         {
             _revisionDiffProvider.Get(from, to).Should().Be("\"123456789\" \"HEAD\"");
         }
+
+        [TestCase("123456789", GitRevision.UnstagedGuid, "a.txt", null, true)]
+        public void RevisionDiffProvider_fileNameTracked1(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked).Should().Be("\"123456789\"  -- \"a.txt\"");
+        }
+
+        [TestCase("123456789", "HEAD", null, "b.txt", true)]
+        public void RevisionDiffProvider_fileNameTracked2(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked).Should().Be("\"123456789\" \"HEAD\"");
+        }
+
+        [TestCase("123456789", "234567890", "a.txt", "b.txt", true)]
+        public void RevisionDiffProvider_fileNameTracked3(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked).Should().Be("\"123456789\" \"234567890\" -- \"a.txt\" \"b.txt\"");
+        }
+
+        [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid, "a.txt", null, false)]
+        public void RevisionDiffProvider_fileNameUntracked1(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked).Should().Be("--no-index -- \"/dev/null\" \"a.txt\"");
+        }
+
+        [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid, null, "b.txt", false)]
+        public void RevisionDiffProvider_fileNameUntracked2(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked).Should().BeEmpty();
+        }
+
+        //Ignore revisions for untracked
+        [TestCase("123456789", "234567890", "a.txt", "b.txt", false)]
+        public void RevisionDiffProvider_fileNameUntracked3(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked).Should().Be("--no-index -- \"/dev/null\" \"a.txt\"");
+        }
     }
 }
 

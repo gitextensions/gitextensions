@@ -13,6 +13,18 @@ namespace GitCommands.Git
         /// <param name="to">The second "current" revision</param>
         /// <returns></returns>
         string Get(string from, string to);
+
+        /// <summary>
+        /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
+        /// </summary>
+        /// <param name="from">The first revision</param>
+        /// <param name="to">The second "current" revision</param>
+        /// <param name="fileName">The file to compare</param>
+        /// <param name="oldFileName">The old name of the file</param>
+        /// <param name="isTracked">The file is tracked</param>
+        /// <returns></returns>
+        string Get(string from, string to, string fileName, string oldFileName, bool isTracked);
     }
 
     /// <summary>
@@ -32,13 +44,45 @@ namespace GitCommands.Git
         /// <returns></returns>
         public string Get(string from, string to)
         {
+            return GetInternal(from, to);
+        }
+
+        /// <summary>
+        /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
+        /// </summary>
+        /// <param name="from">The first revision</param>
+        /// <param name="to">The second "current" revision</param>
+        /// <param name="fileName">The file to compare</param>
+        /// <param name="oldFileName">The old name of the file</param>
+        /// <param name="isTracked">The file is tracked</param>
+        /// <returns></returns>
+        public string Get(string from, string to, string fileName, string oldFileName, bool isTracked)
+        {
+            return GetInternal(from, to, fileName, oldFileName, isTracked);
+        }
+
+        /// <summary>
+        /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
+        /// </summary>
+        /// <param name="from">The first revision</param>
+        /// <param name="to">The second "current" revision</param>
+        /// <param name="fileName">The file to compare</param>
+        /// <param name="oldFileName">The old name of the file</param>
+        /// <param name="isTracked">The file is tracked</param>
+        /// <returns></returns>
+        private string GetInternal(string from, string to, string fileName = null, string oldFileName = null, bool isTracked = true)
+        {
+
+
             string extra = string.Empty;
             from = ArtificialToDiffOptions(from);
             to = ArtificialToDiffOptions(to);
 
             //Note: As artificial are options, diff unstage..unstage and 
             // stage..stage will show output, different from e.g. HEAD..HEAD
-            //Diff-to-itself is not always disabled why this is not handled as error in release builds
+            //Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
             Debug.Assert(!(from == to && (from.IsNullOrEmpty() || from == StagedOpt)),
                 "Unexpectedly two identical artificial revisions to diff: " + from +
                 ". This will be displayed as diff to HEAD, not an identical diff.");
@@ -46,7 +90,7 @@ namespace GitCommands.Git
             //As empty (unstaged) and --cached (staged) are options (not revisions),
             // order must be preserved with -R
             if (from != to && (from.IsNullOrEmpty() ||
-                from == StagedOpt && !to.IsNullOrEmpty()))
+                               from == StagedOpt && !to.IsNullOrEmpty()))
             {
                 extra = "-R";
             }
@@ -65,7 +109,29 @@ namespace GitCommands.Git
                 to = String.Empty;
             }
 
-            return string.Join(" ", extra, from, to).Trim();
+            if (fileName.IsNotNullOrWhitespace())
+            {
+                //Untracked files can only be compared to /dev/null
+                //The UI should normall only allow this for unstaged to staged, but it can be included in multi selections
+                if (!isTracked)
+                {
+                    extra += " --no-index";
+                    oldFileName = fileName;
+                    fileName = "/dev/null";
+                }
+                else
+                {
+                    extra += " " + from + " " + to;
+                }
+
+                extra += " -- " + fileName.QuoteNE() + " " + oldFileName.QuoteNE();
+            }
+            else
+            {
+                extra = string.Join(" ", extra, from, to);
+            }
+
+            return extra.Trim();
         }
 
         /// <summary>
@@ -77,13 +143,26 @@ namespace GitCommands.Git
         /// <returns></returns>
         private string ArtificialToDiffOptions(string rev)
         {
-            if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid) { rev = string.Empty; }
-            else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid) { rev = StagedOpt; }
+            if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)
+            {
+                rev = string.Empty;
+            }
+            else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid)
+            {
+                rev = StagedOpt;
+            }
             else
             {
                 //Normal commit
-                if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^") { rev = "HEAD"; }
-                else if (rev == "^^^" || rev == GitRevision.UnstagedGuid + "^^^" || rev == GitRevision.IndexGuid + "^^") { rev = "HEAD^"; }
+                if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^")
+                {
+                    rev = "HEAD";
+                }
+                else if (rev == "^^^" || rev == GitRevision.UnstagedGuid + "^^^" || rev == GitRevision.IndexGuid + "^^")
+                {
+                    rev = "HEAD^";
+                }
+
                 rev = rev.QuoteNE();
             }
 

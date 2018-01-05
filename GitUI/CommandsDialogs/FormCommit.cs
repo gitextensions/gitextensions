@@ -2019,7 +2019,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in items)
             {
-                string output = Module.OpenWithDifftool(item.Name, null, from, to);
+                string output = Module.OpenWithDifftool(item.Name, null, from, to, "", item.IsTracked);
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(this, output);
             }
