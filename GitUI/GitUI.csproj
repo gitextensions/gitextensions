@@ -250,6 +250,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.Designer.cs">
+      <DependentUpon>GitConfigAdvancedSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1184,6 +1190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.resx">
+      <DependentUpon>GitConfigAdvancedSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.resx">
       <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
