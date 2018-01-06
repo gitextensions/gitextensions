@@ -2631,6 +2631,12 @@ namespace GitUI
             _revisionGridMenuCommands.TriggerMenuChanged(); // check/uncheck ToolStripMenuItem
         }
 
+        internal void ShowReflogReferences_ToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            AppSettings.ShowReflogReferences = !AppSettings.ShowReflogReferences;
+            ForceRefreshRevisions();
+        }
+
         internal void ShowSuperprojectTags_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.ShowSuperprojectTags = !AppSettings.ShowSuperprojectTags;

@@ -770,6 +770,12 @@ namespace GitCommands
             set { SetBool("showRemoteBranches", value); }
         }
 
+        public static bool ShowReflogReferences
+        {
+            get { return GetBool("showReflogReferences", false); }
+            set { SetBool("showReflogReferences", value); }
+        }
+
         public static bool ShowSuperprojectTags
         {
             get { return GetBool("showSuperprojectTags", false); }
