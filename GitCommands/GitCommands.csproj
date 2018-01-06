@@ -81,6 +81,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Annotations.cs" />
+    <Compile Include="AppInformationalVersionProvider.cs" />
+    <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="CommitDataManager.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
+    <Compile Include="Repository\RepositoryShortNameProvider.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
