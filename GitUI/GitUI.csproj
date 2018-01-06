@@ -127,6 +127,9 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
     <Compile Include="CommandsDialogs\BuildReportTabPageExtension.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
@@ -388,6 +391,10 @@
     <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.Designer.cs">
+      <DependentUpon>GitStatusMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1095,12 +1102,6 @@
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.Designer.cs">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-    </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
     <Compile Include="UserControls\FolderBrowserButton.cs">
       <SubType>UserControl</SubType>
@@ -1615,10 +1616,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ToolStripGitStatus.resx">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
