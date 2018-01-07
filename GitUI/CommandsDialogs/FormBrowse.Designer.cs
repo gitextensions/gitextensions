@@ -1268,6 +1268,7 @@ namespace GitUI.CommandsDialogs
             // 
             // formatPatchToolStripMenuItem
             // 
+            this.formatPatchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiff;
             this.formatPatchToolStripMenuItem.Name = "formatPatchToolStripMenuItem";
             this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.formatPatchToolStripMenuItem.Text = "Format patch...";
