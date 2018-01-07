@@ -337,11 +337,11 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "")
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IEnumerable<string> selectedFiles = null)
         {
             Func<bool> action = () =>
             {
-                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message);
+                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
                 FormProcess.ShowDialog(owner, Module, arguments);
                 return true;
             };

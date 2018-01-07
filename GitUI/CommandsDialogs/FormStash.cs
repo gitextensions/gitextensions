@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -130,6 +131,9 @@ namespace GitUI.CommandsDialogs
         {
             GitStash gitStash = Stashes.SelectedItem as GitStash;
             GitItemStatus stashedItem = Stashed.SelectedItem;
+
+            EnablePartialStash();
+
             Cursor.Current = Cursors.WaitCursor;
 
             if (stashedItem != null &&
@@ -179,6 +183,22 @@ namespace GitUI.CommandsDialogs
 
             var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
             UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg);
+            Initialize();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void StashSelectedFiles_Click(object sender, EventArgs e)
+        {
+            if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
+            {
+                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+            }
+
+            Cursor.Current = Cursors.WaitCursor;
+
+            var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
+            UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Name));
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -233,6 +253,8 @@ namespace GitUI.CommandsDialogs
 
         private void StashesSelectedIndexChanged(object sender, EventArgs e)
         {
+            EnablePartialStash();
+
             Cursor.Current = Cursors.WaitCursor;
 
             InitializeSoft();
@@ -244,6 +266,11 @@ namespace GitUI.CommandsDialogs
                 StashMessage.Text = noStashes.Text;
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void EnablePartialStash()
+        {
+            StashSelectedFiles.Enabled = Stashes.SelectedIndex == 0 && Stashed.SelectedItems.Any();
         }
 
         private void Stashes_DropDown(object sender, EventArgs e)

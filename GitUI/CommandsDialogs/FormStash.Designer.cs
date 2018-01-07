@@ -56,6 +56,7 @@ namespace GitUI.CommandsDialogs
             this.refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.View = new GitUI.Editor.FileViewer();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.StashSelectedFiles = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -120,11 +121,12 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.StashSelectedFiles, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.Stash, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chkIncludeUntrackedFiles, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.StashKeepIndex, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.Apply, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.Clear, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.Apply, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.Clear, 0, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 494);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
@@ -335,6 +337,19 @@ namespace GitUI.CommandsDialogs
             this.View.Size = new System.Drawing.Size(600, 650);
             this.View.TabIndex = 0;
             // 
+            // StashSelectedFiles
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.StashSelectedFiles, 2);
+            this.StashSelectedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StashSelectedFiles.Location = new System.Drawing.Point(3, 57);
+            this.StashSelectedFiles.Name = "StashSelectedFiles";
+            this.StashSelectedFiles.Size = new System.Drawing.Size(268, 25);
+            this.StashSelectedFiles.TabIndex = 18;
+            this.StashSelectedFiles.Text = "Save Changes of selected files to New Stash";
+            this.toolTip.SetToolTip(this.StashSelectedFiles, "Save local changes in selected files to a new stash, then revert local changes");
+            this.StashSelectedFiles.UseVisualStyleBackColor = true;
+            this.StashSelectedFiles.Click += new System.EventHandler(this.StashSelectedFiles_Click);
+            // 
             // FormStash
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -390,5 +405,6 @@ namespace GitUI.CommandsDialogs
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
         private ToolTip toolTip;
+        private Button StashSelectedFiles;
     }
 }

@@ -666,15 +666,20 @@ namespace GitCommands
             return sforce;
         }
 
-        public static string StashSaveCmd(bool untracked, bool keepIndex, string message)
+        public static string StashSaveCmd(bool untracked, bool keepIndex, string message, IEnumerable<string> selectedFiles)
         {
-            var cmd = "stash save";
+            var isPartialStash = selectedFiles != null && selectedFiles.Any();
+            var cmd = isPartialStash ? "stash push" : "stash save";
             if (untracked && VersionInUse.StashUntrackedFilesSupported)
                 cmd += " -u";
             if (keepIndex)
                 cmd += " --keep-index";
             cmd = cmd.Combine(" ", message.QuoteNE());
 
+            if (isPartialStash)
+            {
+                cmd += " -- " + string.Join(" ", selectedFiles);
+            }
             return cmd;
         }
 
