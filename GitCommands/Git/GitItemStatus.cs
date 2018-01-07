@@ -16,6 +16,7 @@ namespace GitCommands
             IsAssumeUnchanged = false;
             IsSkipWorktree = false;
             IsNew = false;
+            IsIgnored = false;
             IsStaged = true;
             IsSubmodule = false;
         }
@@ -28,7 +29,8 @@ namespace GitCommands
         {
             get
             {
-                if (!IsTracked) return "Untracked";
+                if (!IsIgnored) return "Ignored";
+                else if (!IsTracked) return "Untracked";
                 else if (IsDeleted) return "Deleted";
                 else if (IsChanged) return "Modified";
                 else if (IsNew) return "New";
@@ -45,6 +47,7 @@ namespace GitCommands
         public bool IsDeleted { get; set; }
         public bool IsChanged { get; set; }
         public bool IsNew { get; set; }
+        public bool IsIgnored { get; set; }
         public bool IsRenamed { get; set; }
         public bool IsCopied { get; set; }
         public bool IsConflict { get; set; }
