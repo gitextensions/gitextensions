@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             this.stashChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stashPopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.viewStashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageStashesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPull = new System.Windows.Forms.ToolStripSplitButton();
             this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -304,7 +304,7 @@ namespace GitUI.CommandsDialogs
             this.stashChangesToolStripMenuItem,
             this.stashPopToolStripMenuItem,
             this.toolStripSeparator9,
-            this.viewStashToolStripMenuItem});
+            this.manageStashesToolStripMenuItem});
             this.toolStripSplitStash.Image = global::GitUI.Properties.Resources.stash;
             this.toolStripSplitStash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitStash.Name = "toolStripSplitStash";
@@ -334,13 +334,13 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(126, 6);
             // 
-            // viewStashToolStripMenuItem
+            // manageStashesToolStripMenuItem
             // 
-            this.viewStashToolStripMenuItem.Name = "viewStashToolStripMenuItem";
-            this.viewStashToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.viewStashToolStripMenuItem.Text = "View stash";
-            this.viewStashToolStripMenuItem.ToolTipText = "View stash";
-            this.viewStashToolStripMenuItem.Click += new System.EventHandler(this.ViewStashToolStripMenuItemClick);
+            this.manageStashesToolStripMenuItem.Name = "manageStashesToolStripMenuItem";
+            this.manageStashesToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.manageStashesToolStripMenuItem.Text = "Manage stashes...";
+            this.manageStashesToolStripMenuItem.ToolTipText = "Manage stashes";
+            this.manageStashesToolStripMenuItem.Click += new System.EventHandler(this.ManageStashesToolStripMenuItemClick);
             // 
             // toolStripButton1
             // 
@@ -1664,7 +1664,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem stashChangesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stashPopToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripMenuItem viewStashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manageStashesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private ToolStripSeparator toolStripSeparator19;
         private ToolStripLabel toolStripLabel1;
