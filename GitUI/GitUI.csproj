@@ -1938,6 +1938,7 @@
     <Content Include="Resources\Icons\HelpPullMerge.png" />
     <Content Include="Resources\Icons\HelpPullRebase.png" />
     <Content Include="Resources\Icons\IconArchiveRevision.png" />
+    <Content Include="Resources\Icons\IconBook.png" />
     <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
