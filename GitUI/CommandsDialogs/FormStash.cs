@@ -23,6 +23,8 @@ namespace GitUI.CommandsDialogs
         readonly TranslationString cannotBeUndone = new TranslationString("This action cannot be undone.");
         readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
         readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
+        public bool ManageStashes { get; set; }
+
 
         private AsyncLoader _asyncLoader = new AsyncLoader();
 
@@ -79,7 +81,7 @@ namespace GitUI.CommandsDialogs
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
                 Stashes.Items.Add(stashedItem);
-            if (Stashes.Items.Count > 1)// more than just the default ("Current working directory changes")
+            if (ManageStashes && Stashes.Items.Count > 1)// more than just the default ("Current working directory changes")
                 Stashes.SelectedIndex = 1;// -> auto-select first non-default
             else if (Stashes.Items.Count > 0)// (no stashes) -> select default ("Current working directory changes")
                 Stashes.SelectedIndex = 0;

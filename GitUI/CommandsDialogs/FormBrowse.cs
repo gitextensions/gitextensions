@@ -1471,7 +1471,12 @@ namespace GitUI.CommandsDialogs
 
         private void ManageStashesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartStashDialog(this);
+            UICommands.StartStashDialog(this, true);
+        }
+
+        private void CreateStashToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StartStashDialog(this, false);
         }
 
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)

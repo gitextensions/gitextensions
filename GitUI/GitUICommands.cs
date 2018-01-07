@@ -964,11 +964,11 @@ namespace GitUI
             return StartFormatPatchDialog(null);
         }
 
-        public bool StartStashDialog(IWin32Window owner)
+        public bool StartStashDialog(IWin32Window owner, bool manageStashes = true)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormStash(this))
+                using (var form = new FormStash(this) { ManageStashes = manageStashes })
                     form.ShowDialog(owner);
 
                 return true;
