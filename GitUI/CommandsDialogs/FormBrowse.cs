@@ -2086,6 +2086,7 @@ namespace GitUI.CommandsDialogs
             this.runMergetoolToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
+            this.toolStripMenuItemReflog.Enabled = 
             this.bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
