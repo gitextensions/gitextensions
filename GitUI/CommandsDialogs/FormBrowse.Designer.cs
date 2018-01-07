@@ -181,6 +181,7 @@ namespace GitUI.CommandsDialogs
             this.toolPanel = new System.Windows.Forms.ToolStripContainer();
             this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfo();
             this.createAStashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoLastCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
@@ -1053,6 +1054,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitToolStripMenuItem,
+            this.undoLastCommitToolStripMenuItem,
             this.pullToolStripMenuItem,
             this.pushToolStripMenuItem,
             this.toolStripSeparator21,
@@ -1594,6 +1596,14 @@ namespace GitUI.CommandsDialogs
             this.revisionGpgInfo1.Size = new System.Drawing.Size(915, 258);
             this.revisionGpgInfo1.TabIndex = 0;
             // 
+            // undoLastCommitToolStripMenuItem
+            //
+            this.undoLastCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
+            this.undoLastCommitToolStripMenuItem.Name = "undoLastCommitToolStripMenuItem";
+            this.undoLastCommitToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.undoLastCommitToolStripMenuItem.Text = "Undo last commit";
+            this.undoLastCommitToolStripMenuItem.Click += new System.EventHandler(this.undoLastCommitToolStripMenuItem_Click);
+            // 
             // createAStashToolStripMenuItem
             // 
             this.createAStashToolStripMenuItem.Name = "createAStashToolStripMenuItem";
@@ -1808,5 +1818,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripContainer toolPanel;
         private RevisionGpgInfo revisionGpgInfo1;
         private ToolStripMenuItem createAStashToolStripMenuItem;
+        private ToolStripMenuItem undoLastCommitToolStripMenuItem;
     }
 }

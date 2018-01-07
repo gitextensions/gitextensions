@@ -108,7 +108,13 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitButtonText =
             new TranslationString("Commit");
-        #endregion
+
+        private readonly TranslationString _undoLastCommitText =
+            new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
+ 
+        private readonly TranslationString _undoLastCommitCaption =
+            new TranslationString("Undo last commit");
+       #endregion
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
@@ -2014,6 +2020,7 @@ namespace GitUI.CommandsDialogs
             this.stashToolStripMenuItem.Enabled =
               selectedRevisions.Count > 0 && !Module.IsBareRepository();
 
+            this.undoLastCommitToolStripMenuItem.Enabled =
             this.resetToolStripMenuItem.Enabled =
             this.checkoutBranchToolStripMenuItem.Enabled =
             this.runMergetoolToolStripMenuItem.Enabled =
@@ -2796,6 +2803,16 @@ namespace GitUI.CommandsDialogs
         private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
         {
             toolStripBranchFilterComboBox.DroppedDown = true;
+        }
+
+        private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialogResult = MessageBox.Show(_undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (dialogResult == DialogResult.Yes)
+            {
+                Module.RunGitCmd("reset --soft HEAD~1");
+                RefreshRevisions();
+            }
         }
     }
 }
