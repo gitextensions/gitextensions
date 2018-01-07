@@ -11,8 +11,10 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.GitExtLinks;
 using GitCommands.Utils;
+using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
+using GitUI.Hotkey;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
@@ -67,6 +69,9 @@ namespace GitUI.CommitInfo
                 _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
             }
             _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
+            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Commands.AddNotes).ToShortcutKeyDisplayString();
         }
 
         [DefaultValue(false)]

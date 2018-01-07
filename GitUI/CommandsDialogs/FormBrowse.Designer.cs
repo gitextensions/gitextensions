@@ -1150,6 +1150,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.branchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchCreate;
             this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
+            this.branchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.branchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.branchToolStripMenuItem.Text = "Create branch...";
             this.branchToolStripMenuItem.Click += new System.EventHandler(this.CreateBranchToolStripMenuItemClick);
@@ -1205,6 +1206,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.tagToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTagCreate;
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
+            this.tagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.tagToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.tagToolStripMenuItem.Text = "Create tag...";
             this.tagToolStripMenuItem.Click += new System.EventHandler(this.TagToolStripMenuItemClick);
