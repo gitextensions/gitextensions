@@ -8,21 +8,21 @@ namespace GitCommands.Git
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
         /// </summary>
-        /// <param name="parentRev">The first revision</param>
-        /// <param name="currentRev">The second "current" revision</param>
+        /// <param name="firstRevision">The first revision, "A"</param>
+        /// <param name="secondRevision">The second "current" revision, "B"</param>
         /// <returns></returns>
-        string Get(string parentRev, string currentRev);
+        string Get(string firstRevision, string secondRevision);
 
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
         /// </summary>
-        /// <param name="parentRev">The first revision</param>
-        /// <param name="currentRev">The second "current" revision</param>
+        /// <param name="firstRevision">The first revision, "A"</param>
+        /// <param name="secondRevision">The second "current" revision, "B"</param>
         /// <param name="fileName">The file to compare</param>
         /// <param name="oldFileName">The old name of the file</param>
         /// <param name="isTracked">The file is tracked</param>
         /// <returns></returns>
-        string Get(string parentRev, string currentRev, string fileName, string oldFileName, bool isTracked);
+        string Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked);
     }
 
     /// <summary>
@@ -37,75 +37,66 @@ namespace GitCommands.Git
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
         /// </summary>
-        /// <param name="parentRev">The first revision</param>
-        /// <param name="currentRev">The second "current" revision</param>
+        /// <param name="firstRevision">The first revision</param>
+        /// <param name="secondRevision">The second "current" revision</param>
         /// <returns></returns>
-        public string Get(string parentRev, string currentRev)
+        public string Get(string firstRevision, string secondRevision)
         {
-            return GetInternal(parentRev, currentRev);
+            return GetInternal(firstRevision, secondRevision);
         }
 
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
         /// </summary>
-        /// <param name="parentRev">The first revision</param>
-        /// <param name="currentRev">The second "current" revision</param>
+        /// <param name="firstRevision">The first revision, "A"</param>
+        /// <param name="secondRevision">The second "current" revision, "B"</param>
         /// <param name="fileName">The file to compare</param>
         /// <param name="oldFileName">The old name of the file</param>
         /// <param name="isTracked">The file is tracked</param>
         /// <returns></returns>
-        public string Get(string parentRev, string currentRev, string fileName, string oldFileName, bool isTracked)
+        public string Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
-            return GetInternal(parentRev, currentRev, fileName, oldFileName, isTracked);
+            return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
         }
 
-        /// <summary>
-        /// options to git-diff from GE arguments, including artificial commits
-        /// </summary>
-        /// <param name="parentRev">The first revision</param>
-        /// <param name="currentRev">The second "current" revision</param>
-        /// <param name="fileName">The file to compare</param>
-        /// <param name="oldFileName">The old name of the file</param>
-        /// <param name="isTracked">The file is tracked</param>
-        /// <returns></returns>
-        private string GetInternal(string parentRev, string currentRev, string fileName = null, string oldFileName = null, bool isTracked = true)
+        private string GetInternal(string firstRevision, string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
         {
             string extra = string.Empty;
-            parentRev = ArtificialToDiffOptions(parentRev);
-            currentRev = ArtificialToDiffOptions(currentRev);
+            firstRevision = ArtificialToDiffOptions(firstRevision);
+            secondRevision = ArtificialToDiffOptions(secondRevision);
 
             //Note: As artificial are options, diff unstage..unstage and 
             // stage..stage will show output, different from e.g. HEAD..HEAD
             //Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
-            Debug.Assert(!(parentRev == currentRev && (parentRev.IsNullOrEmpty() || parentRev == StagedOpt)),
-                "Unexpectedly two identical artificial revisions to diff: " + parentRev +
+            Debug.Assert(!(firstRevision == secondRevision && (firstRevision.IsNullOrEmpty() || firstRevision == StagedOpt)),
+                "Unexpectedly two identical artificial revisions to diff: " + firstRevision +
                 ". This will be displayed as diff to HEAD, not an identical diff.");
 
             //As empty (unstaged) and --cached (staged) are options (not revisions),
             // order must be preserved with -R
-            if (parentRev != currentRev && (parentRev.IsNullOrEmpty() ||
-                               parentRev == StagedOpt && !currentRev.IsNullOrEmpty()))
+            if (firstRevision != secondRevision && (firstRevision.IsNullOrEmpty() ||
+                               firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty()))
             {
                 extra = "-R";
             }
 
             //Special case: Remove options comparing unstaged-staged
-            if (parentRev.IsNullOrEmpty() && currentRev == StagedOpt ||
-                parentRev == StagedOpt && currentRev.IsNullOrEmpty())
+            if (firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt ||
+                firstRevision == StagedOpt && secondRevision.IsNullOrEmpty())
             {
-                parentRev = currentRev = string.Empty;
+                firstRevision = secondRevision = string.Empty;
             }
 
             //Reorder options - not strictly required
-            if (currentRev == StagedOpt)
+            if (secondRevision == StagedOpt)
             {
                 extra += " " + StagedOpt;
-                currentRev = String.Empty;
+                secondRevision = String.Empty;
             }
 
             if (fileName.IsNullOrWhiteSpace())
             {
-                extra = string.Join(" ", extra, parentRev, currentRev);
+                extra = string.Join(" ", extra, firstRevision, secondRevision);
             }
             else
             {
@@ -119,7 +110,7 @@ namespace GitCommands.Git
                 }
                 else
                 {
-                    extra += " " + parentRev + " " + currentRev;
+                    extra += " " + firstRevision + " " + secondRevision;
                 }
 
                 extra += " -- " + fileName.QuoteNE() + " " + oldFileName.QuoteNE();
