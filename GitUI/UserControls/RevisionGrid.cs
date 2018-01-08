@@ -1646,6 +1646,7 @@ namespace GitUI
 
                             ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+                            drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
                             var superprojectRef = superprojectRefs.FirstOrDefault(spGitRef => gitRef.CompleteName == spGitRef.CompleteName);
                             if (superprojectRef != null)
@@ -1672,6 +1673,7 @@ namespace GitUI
 
                         ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                               gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+                        drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
                     }
