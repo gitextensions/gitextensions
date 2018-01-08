@@ -1255,6 +1255,7 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripMenuItemReflog
             // 
+            this.toolStripMenuItemReflog.Image = global::GitUI.Properties.Resources.IconBook;
             this.toolStripMenuItemReflog.Name = "toolStripMenuItemReflog";
             this.toolStripMenuItemReflog.Size = new System.Drawing.Size(213, 22);
             this.toolStripMenuItemReflog.Text = "Show reflog...";
@@ -1267,6 +1268,7 @@ namespace GitUI.CommandsDialogs
             // 
             // formatPatchToolStripMenuItem
             // 
+            this.formatPatchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiff;
             this.formatPatchToolStripMenuItem.Name = "formatPatchToolStripMenuItem";
             this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.formatPatchToolStripMenuItem.Text = "Format patch...";
