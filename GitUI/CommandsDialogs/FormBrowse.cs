@@ -2807,8 +2807,7 @@ namespace GitUI.CommandsDialogs
 
         private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dialogResult = MessageBox.Show(_undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (dialogResult == DialogResult.Yes)
+            if (AppSettings.DontConfirmUndoLastCommit || MessageBox.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 Module.RunGitCmd("reset --soft HEAD~1");
                 RefreshRevisions();

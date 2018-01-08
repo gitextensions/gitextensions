@@ -765,6 +765,12 @@ namespace GitCommands
             set { SetBool("DontConfirmResolveConflicts", value); }
         }
 
+        public static bool DontConfirmUndoLastCommit
+        {
+            get { return GetBool("DontConfirmUndoLastCommit", false); }
+            set { SetBool("DontConfirmUndoLastCommit", value); }
+        }
+
         public static bool IncludeUntrackedFilesInAutoStash
         {
             get { return GetBool("includeUntrackedFilesInAutoStash", false); }

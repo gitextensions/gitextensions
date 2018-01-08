@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkResolveConflicts.Checked = AppSettings.DontConfirmResolveConflicts;
             chkCommitAfterConflictsResolved.Checked = AppSettings.DontConfirmCommitAfterConflictsResolved;
             chkSecondAbortConfirmation.Checked = AppSettings.DontConfirmSecondAbortConfirmation;
+            chkUndoLastCommitConfirmation.Checked = AppSettings.DontConfirmUndoLastCommit;
         }
 
         protected override void PageToSettings()
@@ -38,6 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmResolveConflicts = chkResolveConflicts.Checked;
             AppSettings.DontConfirmCommitAfterConflictsResolved = chkCommitAfterConflictsResolved.Checked;
             AppSettings.DontConfirmSecondAbortConfirmation = chkSecondAbortConfirmation.Checked;
+            AppSettings.DontConfirmUndoLastCommit = chkUndoLastCommitConfirmation.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

@@ -41,6 +41,7 @@
             this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
             this.chkUpdateModules = new System.Windows.Forms.CheckBox();
+            this.chkUndoLastCommitConfirmation = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -58,7 +59,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(459, 275);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(459, 298);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // CheckoutGB
@@ -69,7 +70,7 @@
             this.CheckoutGB.Dock = System.Windows.Forms.DockStyle.Top;
             this.CheckoutGB.Location = new System.Drawing.Point(3, 3);
             this.CheckoutGB.Name = "CheckoutGB";
-            this.CheckoutGB.Size = new System.Drawing.Size(453, 269);
+            this.CheckoutGB.Size = new System.Drawing.Size(453, 292);
             this.CheckoutGB.TabIndex = 0;
             this.CheckoutGB.TabStop = false;
             this.CheckoutGB.Text = "Don\'t ask to confirm to (use with caution)";
@@ -80,6 +81,7 @@
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 10);
             this.tableLayoutPanel3.Controls.Add(this.chkSecondAbortConfirmation, 0, 9);
             this.tableLayoutPanel3.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 8);
             this.tableLayoutPanel3.Controls.Add(this.chkResolveConflicts, 0, 7);
@@ -92,7 +94,7 @@
             this.tableLayoutPanel3.Controls.Add(this.chkUpdateModules, 0, 6);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 10;
+            this.tableLayoutPanel3.RowCount = 11;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -103,7 +105,8 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(442, 230);
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(442, 253);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // chkSecondAbortConfirmation
@@ -213,12 +216,23 @@
             this.chkUpdateModules.ThreeState = true;
             this.chkUpdateModules.UseVisualStyleBackColor = true;
             // 
+            // chkUndoLastCommitConfirmation
+            // 
+            this.chkUndoLastCommitConfirmation.AutoSize = true;
+            this.chkUndoLastCommitConfirmation.Location = new System.Drawing.Point(3, 233);
+            this.chkUndoLastCommitConfirmation.Name = "chkUndoLastCommitConfirmation";
+            this.chkUndoLastCommitConfirmation.Size = new System.Drawing.Size(107, 17);
+            this.chkUndoLastCommitConfirmation.TabIndex = 10;
+            this.chkUndoLastCommitConfirmation.Text = "Undo last commit";
+            this.chkUndoLastCommitConfirmation.ThreeState = true;
+            this.chkUndoLastCommitConfirmation.UseVisualStyleBackColor = true;
+            // 
             // ConfirmationsSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "ConfirmationsSettingsPage";
-            this.Size = new System.Drawing.Size(1109, 461);
+            this.Size = new System.Drawing.Size(1453, 919);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.CheckoutGB.ResumeLayout(false);
@@ -245,5 +259,6 @@
         private System.Windows.Forms.CheckBox chkCommitAfterConflictsResolved;
         private System.Windows.Forms.CheckBox chkResolveConflicts;
         private System.Windows.Forms.CheckBox chkSecondAbortConfirmation;
+        private System.Windows.Forms.CheckBox chkUndoLastCommitConfirmation;
     }
 }
