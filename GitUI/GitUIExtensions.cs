@@ -75,19 +75,20 @@ namespace GitUI
         {
             if (revisions.Count == 0)
                 return;
-            var firstRevision = revisions[0];
-            string firstRevisionGuid = firstRevision?.Guid;
-            string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
-            if (parentRevisionGuid == null && firstRevision != null)
-                parentRevisionGuid = firstRevision.FirstParentGuid;
-            ViewChanges(diffViewer, firstRevisionGuid, parentRevisionGuid, file, defaultText);
+
+            var selectedRevision = revisions[0];
+            string secondRevision = selectedRevision?.Guid;
+            string firstRevision = revisions.Count >= 2 ? revisions[1].Guid : null;
+            if (firstRevision == null && selectedRevision != null)
+                firstRevision = selectedRevision.FirstParentGuid;
+            ViewChanges(diffViewer, firstRevision, secondRevision, file, defaultText);
         }
 
-        public static void ViewChanges(this FileViewer diffViewer, string revision, string parentRevision, GitItemStatus file, string defaultText)
+        public static void ViewChanges(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
         {
             diffViewer.ViewPatch(() =>
             {
-                string selectedPatch = diffViewer.GetSelectedPatch(parentRevision, revision, file);
+                string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
                 return selectedPatch ?? defaultText;
             });
         }
