@@ -253,7 +253,7 @@ namespace GitUI.CommandsDialogs
             this.lblDirtyWorkingDirectory.TabIndex = 34;
             this.lblDirtyWorkingDirectory.Text = "Warning: you\'ve got changes in your working directory that could be lost if you w" +
     "ant to reset the current branch to another commit.\r\nStash them before if you don" +
-    "\'t want to lost them.";
+    "\'t want to lose them.";
             this.lblDirtyWorkingDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormReflog
