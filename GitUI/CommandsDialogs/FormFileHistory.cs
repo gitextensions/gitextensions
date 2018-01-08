@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
             bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
-            if (revision != null && revision.IsArtificial() || isSubmodule) //no blame for artificial
+            if (isSubmodule)
                 tabControl1.RemoveIfExists(BlameTab);
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
@@ -244,16 +244,6 @@ namespace GitUI.CommandsDialogs
             View.SaveCurrentScrollPos();
             Diff.SaveCurrentScrollPos();
 
-            var selectedRows = FileChanges.GetSelectedRevisions();
-            if (selectedRows.Count > 0)
-            {
-                bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
-                GitRevision revision = selectedRows[0];
-                if (revision.IsArtificial() || isSubmodule)
-                    tabControl1.RemoveIfExists(BlameTab);
-                else
-                    tabControl1.InsertIfNotExists(2, BlameTab);
-            }
             UpdateSelectedFileViewers();
         }
 
