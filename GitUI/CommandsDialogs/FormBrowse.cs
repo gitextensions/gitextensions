@@ -1956,7 +1956,7 @@ namespace GitUI.CommandsDialogs
             QuickPull,
             QuickPush,
             RotateApplicationIcon,
-            CloseRepositry,
+            CloseRepository,
             Stash,
             StashPop
         }
@@ -2000,7 +2000,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.QuickPull: UICommands.StartPullDialog(this, true); break;
                 case Commands.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
-                case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
+                case Commands.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
                 case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Commands.StashPop: UICommands.StashPop(this); break;
                 default: return base.ExecuteCommand(cmd);
