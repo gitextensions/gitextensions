@@ -94,7 +94,6 @@
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
-    <Compile Include="GitModuleTestHelper.cs" />
     <Compile Include="Patch\PatchManagerTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />
@@ -130,6 +129,10 @@
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj">
+      <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
+      <Name>CommonTestUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

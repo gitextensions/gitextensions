@@ -142,6 +142,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GravatarTests", "UnitTests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -662,6 +664,18 @@ Global
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -704,6 +718,7 @@ Global
 		{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{93CE3A27-5A63-4436-8C64-CBCA75322C5B} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
