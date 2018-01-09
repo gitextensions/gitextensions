@@ -41,15 +41,16 @@ namespace GitCommands
         /// <param name="branchName">Current branch name.</param>
         public string Generate(string workingDir, bool isValidWorkingDir, string branchName)
         {
+            if (!isValidWorkingDir)
+            {
+                return DefaultTitle;
+            }
+
             if (string.IsNullOrWhiteSpace(workingDir))
             {
                 throw new ArgumentException(nameof(workingDir));
             }
 
-            if (!isValidWorkingDir)
-            {
-                return DefaultTitle;
-            }
             string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
             var title = string.Format(RepositoryTitleFormat, repositoryDescription, (branchName ?? "no branch").Trim('(', ')'));
 #if DEBUG
