@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Abstractions;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;

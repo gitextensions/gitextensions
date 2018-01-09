@@ -90,6 +90,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesGeneratorTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -232,6 +234,10 @@ Global
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
@@ -263,6 +269,7 @@ Global
 		{93CE3A27-5A63-4436-8C64-CBCA75322C5B} = {0879812F-FE97-4B83-8679-FB006DA8229B}
 		{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE} = {0879812F-FE97-4B83-8679-FB006DA8229B}
 		{304AA3FB-3F0D-45DA-9C91-3C6575EF0F8B} = {2AF33D76-0742-41F8-B9B7-D5338119298E}
+		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548} = {0879812F-FE97-4B83-8679-FB006DA8229B}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = GitExtensions\GitExtensions.Mono.csproj

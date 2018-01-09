@@ -4,7 +4,7 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 
-namespace GitCommandsTests
+namespace CommonTestUtils
 {
     public class GitModuleTestHelper : IDisposable
     {
@@ -44,7 +44,7 @@ namespace GitCommandsTests
         /// Creates a new file, writes the specified string to the file, and then closes the file. 
         /// If the target file already exists, it is overwritten.
         /// </summary>
-        /// <returns>The file to the newly created file.</returns>
+        /// <returns>The path to the newly created file.</returns>
         public string CreateFile(string parentDir, string fileName, string fileContent)
         {
             EnsureCreatedInTempFolder(parentDir);
@@ -64,7 +64,7 @@ namespace GitCommandsTests
         /// writes the specified string to the file and then closes the file. 
         /// If the target file already exists, it is overwritten.
         /// </summary>
-        /// <returns>The file to the newly created file.</returns>
+        /// <returns>The path to the newly created file.</returns>
         public string CreateRepoFile(string fileRelativePath, string fileName, string fileContent)
         {
             if (Path.IsPathRooted(fileRelativePath))
@@ -83,7 +83,7 @@ namespace GitCommandsTests
         /// writes the specified string to the file and then closes the file. 
         /// If the target file already exists, it is overwritten.
         /// </summary>
-        /// <returns>The file to the newly created file.</returns>
+        /// <returns>The path to the newly created file.</returns>
         public string CreateRepoFile(string fileName, string fileContent)
         {
             return CreateRepoFile("", fileName, fileContent);
