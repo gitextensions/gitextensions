@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
+                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -2213,7 +2213,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked=true)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -2225,15 +2225,14 @@ namespace GitCommands
             }
 
             //fix refs slashes
-            from = from.ToPosixPath();
-            to = to == null ? "":to.ToPosixPath();
-            string commitRange = _revisionDiffProvider.Get(from, to);
+            from = from == null ? "" : from.ToPosixPath();
+            to = to == null ? "" : to.ToPosixPath();
+            string diffOptions = _revisionDiffProvider.Get(from, to, fileName, oldFileName, isTracked);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
             var patchManager = new PatchManager();
-            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange,
-                fileName.Quote(), oldFileName.Quote());
+            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
             cacheResult = cacheResult && !GitRevision.IsArtificial(to) && !GitRevision.IsArtificial(from) && !to.IsNullOrEmpty() && !from.IsNullOrEmpty();
             string patch;
             if (cacheResult)
@@ -3017,6 +3016,7 @@ namespace GitCommands
         {
             if (revision == GitRevision.UnstagedGuid) //working directory changes
             {
+                Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
             if (revision == GitRevision.IndexGuid) //index
@@ -3096,11 +3096,11 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "")
+        public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "", bool isTracked=true)
         {
             var output = "";
 
-            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
+            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2, filename, oldFileName, isTracked));
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }

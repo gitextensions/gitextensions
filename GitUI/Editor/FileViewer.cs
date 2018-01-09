@@ -482,12 +482,14 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            if (guid == GitRevision.UnstagedGuid) //working directory changes
+            if (guid == GitRevision.UnstagedGuid)
             {
+                //No blob exists for unstaged, present contents from file system
                 ViewFile(fileName);
             }
             else
             {
+                //Retrieve blob, same as GitItemStatus.TreeGuid
                 string blob = Module.GetFileBlobHash(fileName, guid);
                 ViewGitItem(fileName, blob);
             }
@@ -549,6 +551,7 @@ namespace GitUI.Editor
                                 PictureBox.Image = image;
                             });
             }
+            //Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
                 ViewText(null, "Binary file: " + fileName);

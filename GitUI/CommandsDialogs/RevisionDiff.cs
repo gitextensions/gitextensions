@@ -259,13 +259,13 @@ namespace GitUI.CommandsDialogs
 
         private void ShowSelectedFileDiff()
         {
-            if (DiffFiles.SelectedItem == null)
+            var items = _revisionGrid.GetSelectedRevisions();
+            if (DiffFiles.SelectedItem == null || items.Count() == 0)
             {
                 DiffText.ViewPatch("");
                 return;
             }
 
-            var items = _revisionGrid.GetSelectedRevisions();
             if (items.Count() == 1)
             {
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
@@ -516,7 +516,7 @@ namespace GitUI.CommandsDialogs
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
                 GitItemStatus selectedItem = itemWithParent.Item;
-                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
+                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }
 
