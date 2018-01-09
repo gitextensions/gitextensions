@@ -1,4 +1,3 @@
-using System;
 using GitCommands.Repository;
 
 namespace GitCommands
@@ -41,12 +40,7 @@ namespace GitCommands
         /// <param name="branchName">Current branch name.</param>
         public string Generate(string workingDir, bool isValidWorkingDir, string branchName)
         {
-            if (string.IsNullOrWhiteSpace(workingDir))
-            {
-                throw new ArgumentException(nameof(workingDir));
-            }
-
-            if (!isValidWorkingDir)
+            if (string.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
             {
                 return DefaultTitle;
             }

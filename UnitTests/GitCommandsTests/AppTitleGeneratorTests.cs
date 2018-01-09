@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Repository;
 using NSubstitute;
@@ -28,9 +27,10 @@ namespace GitCommandsTests
         [TestCase("")]
         [TestCase(" ")]
         [TestCase("\t")]
-        public void Generate_should_throw_if_working_folder_invalid(string path)
+        public void Generate_should_return_default_title_if_invalid_working_directory(string path)
         {
-            ((Action)(() => _appTitleGenerator.Generate(path, false, null))).ShouldThrow<ArgumentException>();
+            var title = _appTitleGenerator.Generate(path, false, null);
+            title.Should().Be("Git Extensions");
         }
 
         [Test]
