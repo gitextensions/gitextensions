@@ -2213,7 +2213,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string @firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked=true)
+        public Patch GetSingleDiff(string firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked=true)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
