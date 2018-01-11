@@ -12,7 +12,7 @@ namespace GitCommands
         public Process Process { get; private set; }
         public byte[] Output { get; private set; }
         public byte[] Error { get; private set; }
-      
+
         private readonly Thread stdOutputLoaderThread;
         private readonly Thread stdErrLoaderThread;
 
@@ -22,13 +22,13 @@ namespace GitCommands
             stdOutputLoaderThread = new Thread(_ => Output = ReadByte(Process.StandardOutput.BaseStream));
             stdOutputLoaderThread.Start();
             stdErrLoaderThread = new Thread(_ => Error = ReadByte(Process.StandardError.BaseStream));
-            stdErrLoaderThread.Start();  
+            stdErrLoaderThread.Start();
         }
 
         public void WaitForExit()
         {
             stdOutputLoaderThread.Join();
-            stdErrLoaderThread.Join();              
+            stdErrLoaderThread.Join();
             Process.WaitForExit();
         }
 
@@ -41,7 +41,7 @@ namespace GitCommands
         {
             return encoding.GetString(Error);
         }
-        
+
         /// <summary>
         /// This function reads the output to a string. This function can be dangerous, because it returns a string
         /// and needs to know the correct encoding. This function should be avoided!
@@ -86,25 +86,12 @@ namespace GitCommands
             {
                 return null;
             }
-            int commonLen = 0;
-            List<byte[]> list = new List<byte[]>();
-            byte[] buffer = new byte[4096];
-            int len;
-            while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
+
+            using (MemoryStream memStream = new MemoryStream())
             {
-                byte[] newbuff = new byte[len];
-                Array.Copy(buffer, newbuff, len);
-                commonLen += len;
-                list.Add(newbuff);
+                stream.CopyTo(memStream);
+                return memStream.ToArray();
             }
-            buffer = new byte[commonLen];
-            commonLen = 0;
-            for (int i = 0; i < list.Count; i++)
-            {
-                Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
-                commonLen += list[i].Length;
-            }
-            return buffer;
         }
     }
 }
