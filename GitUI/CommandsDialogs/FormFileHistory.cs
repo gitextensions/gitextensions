@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly AsyncLoader _asyncLoader;
         private readonly FormBrowseMenus _formBrowseMenus;
+        private readonly IFullPathResolver _fullPathResolver;
 
         private readonly TranslationString _buildReportTabCaption =
             new TranslationString("Build Report");
@@ -54,6 +55,7 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenus.InsertAdditionalMainMenuItems(toolStripSeparator4);
 
             _commitDataManager = new CommitDataManager(() => Module);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
@@ -430,7 +432,7 @@ namespace GitUI.CommandsDialogs
 
             diffToolremotelocalStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.UnstagedGuid &&
-                File.Exists(Path.Combine(Module.WorkingDir, FileName));
+                File.Exists(_fullPathResolver.Resolve(FileName));
             openWithDifftoolToolStripMenuItem.Enabled =
                 selectedRevisions.Count >= 1 && selectedRevisions.Count <= 2;
             manipuleerCommitToolStripMenuItem.Enabled =
