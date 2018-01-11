@@ -176,6 +176,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindAndReplaceForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Find and replace";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FindAndReplaceForm_FormClosing);
             this.ResumeLayout(false);
