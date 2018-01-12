@@ -156,12 +156,12 @@ Inactive remote is completely invisible to git.");
         {
             if (disabled)
             {
-                btnToggleState.Image = Properties.Resources.light_bulb_icon_off_16;
+                btnToggleState.Image = Properties.Resources.eye_opened;
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
             }
             else
             {
-                btnToggleState.Image = Properties.Resources.light_bulb_icon_on_16;
+                btnToggleState.Image = Properties.Resources.eye_closed;
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }
