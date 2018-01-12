@@ -507,7 +507,10 @@ Inactive remote is completely invisible to git.");
 
             if (Remotes.SelectedIndices.Count < 1)
             {
+                // we are here because we're adding a new remote - so no remotes selected
+                // we just need to enable the panel so the user can enter the information
                 _selectedRemote = null;
+                flpnlRemoteManagement.Enabled = true;
                 return;
             }
 
