@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
-            bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
+            bool isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
             if (isSubmodule)
                 tabControl1.RemoveIfExists(BlameTab);
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs
             fileName = fileName.ToPosixPath();
 
             // we will need this later to look up proper casing for the file
-            var fullFilePath = Path.Combine(Module.WorkingDir, fileName);
+            var fullFilePath = _fullPathResolver.Resolve(fileName);
 
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
@@ -289,7 +289,7 @@ namespace GitUI.CommandsDialogs
                 GitItemStatus file = new GitItemStatus();
                 file.IsTracked = true;
                 file.Name = fileName;
-                file.IsSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, fileName));
+                file.IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName));
                 Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
@@ -337,7 +337,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Module.WorkingDir + orgFileName.ToNativePath();
+                string fullName = _fullPathResolver.Resolve(orgFileName.ToNativePath());
 
                 using (var fileDialog = new SaveFileDialog
                 {

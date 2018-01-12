@@ -92,6 +92,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _failureWhileSaveFile = new TranslationString("Save file failed.");
         #endregion
 
+        private readonly IFullPathResolver _fullPathResolver;
+
         public FormResolveConflicts(GitUICommands aCommands)
             : this(aCommands, true)
         { }
@@ -102,6 +104,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             _offerCommit = offerCommit;
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         private FormResolveConflicts()
@@ -286,20 +289,20 @@ namespace GitUI.CommandsDialogs
             //get timestamp of file before merge. This is an extra check to verify if merge was successfully
             DateTime lastWriteTimeBeforeMerge = DateTime.Now;
             if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
-                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
+                lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
 
             Module.RunExternalCmdDetached("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+                FixPath(_fullPathResolver.Resolve(fileName)) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"");
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
-                FixPath(Path.Combine(Module.WorkingDir, fileName))), askMergeConflictSolvedCaption.Text,
+                FixPath(_fullPathResolver.Resolve(fileName))), askMergeConflictSolvedCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
 
                 DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
-                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
+                if (File.Exists(_fullPathResolver.Resolve(fileName)))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
 
                 //The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
@@ -344,7 +347,7 @@ namespace GitUI.CommandsDialogs
 
         private ItemType GetItemType(string filename)
         {
-            string fullname = Path.Combine(Module.WorkingDir, filename);
+            string fullname = _fullPathResolver.Resolve(filename);
             if (Directory.Exists(fullname) && !File.Exists(fullname))
             {
                 if (Module.IsSubmodule(filename.Trim()))
@@ -461,14 +464,14 @@ namespace GitUI.CommandsDialogs
 
                     //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                    if (File.Exists(Path.Combine(Module.WorkingDir, item.Filename)))
-                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, item.Filename));
+                    if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
+                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
 
                     var res = Module.RunCmdResult(_mergetoolPath, "" + arguments + "");
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                    if (File.Exists(Path.Combine(Module.WorkingDir, item.Filename)))
-                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, item.Filename));
+                    if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
+                        lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
 
                     //Check exitcode AND timestamp of the file. If exitcode is success and
                     //time timestamp is changed, we are pretty sure the merge was done.
@@ -916,7 +919,7 @@ namespace GitUI.CommandsDialogs
             using (var fileDialog = new SaveFileDialog
                                  {
                                      FileName = fileName,
-                                     InitialDirectory = Module.WorkingDir + PathUtil.GetDirectoryName(conflictData.Filename),
+                                     InitialDirectory = _fullPathResolver.Resolve(PathUtil.GetDirectoryName(conflictData.Filename)),
                                      AddExtension = true
                                  })
             {
@@ -1004,13 +1007,13 @@ namespace GitUI.CommandsDialogs
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            System.Diagnostics.Process.Start(Path.Combine(Module.WorkingDir, fileName));
+            System.Diagnostics.Process.Start(_fullPathResolver.Resolve(fileName));
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OsShellUtil.OpenAs(Path.Combine(Module.WorkingDir, fileName));
+            OsShellUtil.OpenAs(_fullPathResolver.Resolve(fileName));
         }
 
         private void StageFile(string filename)

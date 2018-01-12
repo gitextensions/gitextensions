@@ -121,7 +121,8 @@ namespace GitUI.AutoCompletion
             // Try to read the contents of the file: if it cannot be read, skip the operation silently.
             try
             {
-                return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
+                IFullPathResolver _fullPathResolver = new FullPathResolver(() => module.WorkingDir);
+                return File.ReadAllText(_fullPathResolver.Resolve(file.Name));
             }
             catch
             {

@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly bool _localExclude;
         private readonly AsyncLoader _ignoredFilesLoader;
+        private readonly IFullPathResolver _fullPathResolver;
 
         public FormAddToGitIgnore(GitUICommands aCommands, bool localExclude, params string[] filePatterns)
             : base(aCommands)
@@ -31,6 +32,7 @@ namespace GitUI.CommandsDialogs
                 Text = _addToLocalExcludeTitle.Text;
             if (filePatterns != null)
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         private string ExcludeFile
@@ -39,7 +41,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (!_localExclude)
                 {
-                    return Path.Combine(Module.WorkingDir, ".gitignore");
+                    return _fullPathResolver.Resolve(".gitignore");
                 }
                 else
                 {

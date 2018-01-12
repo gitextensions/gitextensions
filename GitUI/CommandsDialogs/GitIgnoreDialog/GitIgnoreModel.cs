@@ -24,12 +24,14 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
             new TranslationString("Save changes to .gitignore?");
 
         private readonly IGitModule _module;
+        private readonly IFullPathResolver _fullPathResolver;
 
         public GitIgnoreModel(IGitModule module)
         {
             _module = module;
 
             Translator.Translate(this, AppSettings.CurrentTranslation);
+            _fullPathResolver = new FullPathResolver(() => _module.WorkingDir);
         }
 
         public string FormCaption
@@ -39,7 +41,7 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
 
         public string ExcludeFile
         {
-            get { return Path.Combine(_module.WorkingDir, ".gitignore"); }
+            get { return _fullPathResolver.Resolve(".gitignore"); }
         }
 
         public string FileOnlyInWorkingDirSupported

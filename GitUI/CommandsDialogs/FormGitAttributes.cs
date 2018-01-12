@@ -25,12 +25,14 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Save changes?");
 
         public string GitAttributesFile = string.Empty;
+        private readonly IFullPathResolver _fullPathResolver;
 
         public FormGitAttributes(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -44,9 +46,9 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (File.Exists(Module.WorkingDir + ".gitattributes"))
+                if (File.Exists(_fullPathResolver.Resolve(".gitattributes")))
                 {
-                    _NO_TRANSLATE_GitAttributesText.ViewFile(Module.WorkingDir + ".gitattributes");
+                    _NO_TRANSLATE_GitAttributesText.ViewFile(_fullPathResolver.Resolve(".gitattributes"));
                 }
             }
             catch (Exception ex)
@@ -67,7 +69,7 @@ namespace GitUI.CommandsDialogs
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Module.WorkingDir + ".gitattributes",
+                        _fullPathResolver.Resolve(".gitattributes"),
                         x =>
                         {
                             this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();

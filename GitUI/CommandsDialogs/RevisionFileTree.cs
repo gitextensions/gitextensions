@@ -44,6 +44,7 @@ See the changes in the commit form.");
         //store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
         private IRevisionFileTreeController _revisionFileTreeController;
+        private readonly IFullPathResolver _fullPathResolver;
         private GitRevision _revision;
 
 
@@ -51,6 +52,7 @@ See the changes in the commit form.");
         {
             InitializeComponent();
             Translate();
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
 
@@ -272,7 +274,7 @@ See the changes in the commit form.");
             var process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName.EnsureTrailingPathSeparator());
+            process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator());
             process.Start();
         }
 
@@ -335,7 +337,7 @@ See the changes in the commit form.");
             }
 
             var fileList = new StringCollection();
-            var fileName = Path.Combine(Module.WorkingDir, gitItem.FileName);
+            var fileName = _fullPathResolver.Resolve(gitItem.FileName);
 
             fileList.Add(fileName.ToNativePath());
 
@@ -377,7 +379,7 @@ See the changes in the commit form.");
             if (gitItem == null)
                 return;
 
-            var fileName = Path.Combine(Module.WorkingDir, gitItem.FileName);
+            var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             Clipboard.SetText(fileName.ToNativePath());
         }
 
@@ -431,7 +433,7 @@ See the changes in the commit form.");
             if (gitItem == null || gitItem.ObjectType != GitObjectType.Blob)
                 return;
 
-            var fileName = Path.Combine(Module.WorkingDir, gitItem.FileName);
+            var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             UICommands.StartFileEditorDialog(fileName);
         }
 
@@ -474,7 +476,7 @@ See the changes in the commit form.");
             var itemSelected = gitItem != null;
             var isFile = itemSelected && gitItem.ObjectType == GitObjectType.Blob;
             var isFolder = itemSelected && gitItem.ObjectType == GitObjectType.Tree;
-            var isExistingFileOrDirectory = itemSelected && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
+            var isExistingFileOrDirectory = itemSelected && FormBrowseUtil.IsFileOrDirectory(_fullPathResolver.Resolve(gitItem.FileName));
 
             if (itemSelected && gitItem.ObjectType == GitObjectType.Commit)
             {
@@ -524,7 +526,7 @@ See the changes in the commit form.");
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            string filePath = gitItem == null ? Module.WorkingDir : FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem);
+            string filePath = gitItem == null ? Module.WorkingDir : _fullPathResolver.Resolve(gitItem.FileName);
             FormBrowseUtil.ShowFileOrFolderInFileExplorer(filePath);
         }
 
@@ -564,7 +566,7 @@ See the changes in the commit form.");
             if (gitItem == null || gitItem.ObjectType != GitObjectType.Blob)
                 return;
 
-            var fileName = Path.Combine(Module.WorkingDir, gitItem.FileName);
+            var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             OsShellUtil.OpenAs(fileName.ToNativePath());
         }
 
@@ -591,7 +593,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            var fullName = Path.Combine(Module.WorkingDir, gitItem.FileName);
+            var fullName = _fullPathResolver.Resolve(gitItem.FileName);
             using (var fileDialog =
                 new SaveFileDialog
                 {
@@ -618,7 +620,7 @@ See the changes in the commit form.");
             if (item == null || item.ObjectType == GitObjectType.Tree)
                 return null;
 
-            var filename = Path.Combine(Module.WorkingDir, item.FileName);
+            var filename = _fullPathResolver.Resolve(item.FileName);
             if (!File.Exists(filename))
             {
                 return null;
