@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs
             var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var selectedItemStatus = DiffFiles.SelectedItem;
             bool isBareRepository = Module.IsBareRepository();
-            bool singleFileExists = isExactlyOneItemSelected && File.Exists(DiffFiles.SelectedItem.Name); 
+            bool singleFileExists = isExactlyOneItemSelected && File.Exists(FormBrowseUtil.GetFullPathFromGitItemStatus(Module, DiffFiles.SelectedItem));
 
             var selectionInfo = new ContextMenuSelectionInfo(selectedRevisions, selectedItemStatus, isAnyCombinedDiff, isExactlyOneItemSelected, isCombinedDiff, isAnyItemSelected, isBareRepository, singleFileExists);
             return selectionInfo;
