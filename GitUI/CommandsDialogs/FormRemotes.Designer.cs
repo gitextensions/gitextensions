@@ -492,7 +492,7 @@ namespace GitUI.CommandsDialogs
             // 
             // btnToggleState
             // 
-            this.btnToggleState.Image = global::GitUI.Properties.Resources.light_bulb_icon_off_16;
+            this.btnToggleState.Image = global::GitUI.Properties.Resources.eye_opened;
             this.btnToggleState.Location = new System.Drawing.Point(7, 67);
             this.btnToggleState.Name = "btnToggleState";
             this.btnToggleState.Size = new System.Drawing.Size(26, 26);
