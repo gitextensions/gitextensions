@@ -47,6 +47,8 @@ namespace Bitbucket
                 else
                     request.AddBody(RequestBody);
             }
+            //XSRF check fails when approving/creating
+            request.AddHeader("X-Atlassian-Token", "no-check");
 
             var response = client.Execute(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
