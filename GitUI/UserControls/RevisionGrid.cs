@@ -197,6 +197,9 @@ namespace GitUI
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
             }
             compareToBaseToolStripMenuItem.Enabled = false;
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
         private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
