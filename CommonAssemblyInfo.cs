@@ -21,4 +21,4 @@
 //
 [assembly: AssemblyVersion("2.50.90")]
 [assembly: AssemblyFileVersion("2.50.90")]
-[assembly: AssemblyInformationalVersion("2.51.RC1")]
+[assembly: AssemblyInformationalVersion("2.51.RC2")]
