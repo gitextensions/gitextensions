@@ -1,6 +1,38 @@
 Changelog
 =========
 
+### [Version 2.51.RC2] (14 Jan 2018)
+
+#### Features:
+* Replace lightbulb images - PR [4351]
+* Rename arguments related to diff to firstRevision, secondRevision to … - PR [4344]
+* Use built-in stream.CopyTo method in SynchronizedProcessReader - PR [4343]
+* Add icons in the browse form command menu - PR [4331]
+* Display some missing shortcuts in Browse form menus - PR [4330]
+* FormBrowse: Add option to display reflog references - PR [4321]
+* Display branch name in bold only when it is the one checked out - PR [4320]
+* Create branch modal buttons under linux/mono - Issue [4319]
+* Browse Diff Untracked: Delete and Edit menu items are not enabled - PR [4318]
+* Commit & Push (forced with lease) when Amend is checked - Issue [4296]
+* FileHistory: Show Blame tab also for artificial commits - PR [4293]
+* Artificial commit changed count should be dynamic - PR [4209]
+* Jenkins build server integration: support for multi pipeline and wildcards  - Issue [4202]
+* GitEx does not remember splitter position - Issue [4058]
+* Enhanced view of uncommitted changes in Browse Repository - Issue [4031]
+
+#### Fixes:
+* Unable to add remote having selected deactivated item - Issue [4349]
+* Bitbucket Server: XSRF error when approving - Issue [4345]
+* fix: AE when starting app without a repository - PR [4340]
+* BuildReport: Exception for WebBrowserCtrl.Navigate - Issue [4322]
+* Browse Diff Untracked: Delete and Edit menu items are not enabled - Issue [4316]
+* FormFileHistory: DiffToLocal hidden also when relevant - Issue [4315]
+* Browse Diff Garbage and exception for untracked files - Issue [4301]
+* Number of changed files isn't displayed in Commit button - Issue [4295]
+
+
+
+
 ### [Version 2.51.RC1] (31 Dec 2017)
 
 #### Features:
@@ -1954,6 +1986,9 @@ Changelog
 * Added visual studio 2008 plugin
 * Added standalone UI
 
+
+
+
 [Version 2.50]:https://github.com/gitextensions/gitextensions/releases/tag/v2.50
 [3777]:https://github.com/gitextensions/gitextensions/issues/3777
 [3767]:https://github.com/gitextensions/gitextensions/issues/3767
@@ -2191,3 +2226,29 @@ Changelog
 [1605]:https://github.com/gitextensions/gitextensions/issues/1605
 [1583]:https://github.com/gitextensions/gitextensions/issues/1583
 [1307]:https://github.com/gitextensions/gitextensions/issues/1307
+
+[Version 2.51.RC2]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.RC2
+[4351]:https://github.com/gitextensions/gitextensions/pull/4351
+[4349]:https://github.com/gitextensions/gitextensions/issues/4349
+[4345]:https://github.com/gitextensions/gitextensions/issues/4345
+[4344]:https://github.com/gitextensions/gitextensions/pull/4344
+[4343]:https://github.com/gitextensions/gitextensions/pull/4343
+[4340]:https://github.com/gitextensions/gitextensions/pull/4340
+[4331]:https://github.com/gitextensions/gitextensions/pull/4331
+[4330]:https://github.com/gitextensions/gitextensions/pull/4330
+[4322]:https://github.com/gitextensions/gitextensions/issues/4322
+[4321]:https://github.com/gitextensions/gitextensions/pull/4321
+[4320]:https://github.com/gitextensions/gitextensions/pull/4320
+[4319]:https://github.com/gitextensions/gitextensions/issues/4319
+[4318]:https://github.com/gitextensions/gitextensions/pull/4318
+[4316]:https://github.com/gitextensions/gitextensions/issues/4316
+[4315]:https://github.com/gitextensions/gitextensions/issues/4315
+[4301]:https://github.com/gitextensions/gitextensions/issues/4301
+[4296]:https://github.com/gitextensions/gitextensions/issues/4296
+[4295]:https://github.com/gitextensions/gitextensions/issues/4295
+[4293]:https://github.com/gitextensions/gitextensions/pull/4293
+[4209]:https://github.com/gitextensions/gitextensions/pull/4209
+[4202]:https://github.com/gitextensions/gitextensions/issues/4202
+[4058]:https://github.com/gitextensions/gitextensions/issues/4058
+[4031]:https://github.com/gitextensions/gitextensions/issues/4031
+
