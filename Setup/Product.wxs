@@ -451,16 +451,16 @@
             </Component>
             <Component Id="Italian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.gif" />
-            </Component
-            <Component Id="Japanese.xlf" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.xlf" />
-            </Component>
-            <Component Id="Japanese.Plugins.xlf" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
-            </Component>
-            <Component Id="Japanese.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.gif" />
-            </Component>-->
+            </Component-->
+      <Component Id="Japanese.xlf" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.xlf" />
+      </Component>
+      <Component Id="Japanese.Plugins.xlf" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
+      </Component>
+      <Component Id="Japanese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.gif" />
+      </Component>
       <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
@@ -497,7 +497,7 @@
 	  <Component Id="SimplifiedChinese.gif" Guid="*">
 	    <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
 	  </Component>
-      <!--<Component Id="Spanish.xlf" Guid="*">
+      <Component Id="Spanish.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xlf" />
       </Component>
       <Component Id="Spanish.Plugins.xlf" Guid="*">
@@ -505,7 +505,7 @@
       </Component>
       <Component Id="Spanish.gif" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.gif" />
-      </Component>-->
+      </Component>
       <!--Component Id="TraditionalChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.xlf" />
             </Component>
