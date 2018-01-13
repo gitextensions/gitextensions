@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -64,6 +64,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <target>Проверять RC версии</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
+        <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
+        
+      </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
         <target>Использовать эмулятор консоли для отображения консоли в диалоговом окне</target>
@@ -79,6 +83,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 This action will be performed without warning while checking out branch.</source>
         <target>Использовать последнее выбранное действие &quot;локальные изменения&quot; как действие по умолчанию.
 Данное действие будет выполнено без предупреждения при переключении веток.</target>
+        
+      </trans-unit>
+      <trans-unit id="grpCommit.Text">
+        <source>Commit</source>
+        <target>Коммит</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -746,6 +755,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
         <source>Draw alternate background</source>
+        <target>Рисовать альтернативный фон</target>
         
       </trans-unit>
       <trans-unit id="gbAppIcon.Text">
@@ -2451,6 +2461,11 @@ compare with first:</source>
         <target>Отчет сборки</target>
         
       </trans-unit>
+      <trans-unit id="_commitButtonText.Text">
+        <source>Commit</source>
+        <target>Коммит</target>
+        
+      </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>Configure this menu</source>
         <target>Настроить этот список</target>
@@ -3605,6 +3620,19 @@ revision:</source>
         <target>(нет: не переключаться после клонирования)</target>
         
       </trans-unit>
+      <trans-unit id="_errorCloneFailed.Text">
+        <source>Clone Failed</source>
+        <target>Клонирование не удалось</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotRooted.Text">
+        <source>Destination folder must be an absolute path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotSupplied.Text">
+        <source>You need to specify destination folder.</source>
+        
+      </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
         <target>(Папка уже существует)</target>
@@ -3651,6 +3679,7 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
       </trans-unit>
       <trans-unit id="cbLfs.Text">
         <source>Use LFS extension</source>
+        <target>Использовать расширение LFS</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -4033,6 +4062,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_templateNotFoundCaption.Text">
         <source>Template Error</source>
+        <target>Ошибка шаблона</target>
         
       </trans-unit>
       <trans-unit id="_unstageSelectedLines.Text">
@@ -5068,6 +5098,11 @@ If you are not sure just close this window.</source>
         <target>Показать первых родителей</target>
         
       </trans-unit>
+      <trans-unit id="ShowFullHistory.ToolTipText">
+        <source>Show Full History</source>
+        <target>Показать всю историю</target>
+        
+      </trans-unit>
       <trans-unit id="ViewTab.Text">
         <source>View</source>
         <target>Показать</target>
@@ -5812,6 +5847,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="Sha1.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="Type.HeaderText">
@@ -5860,6 +5896,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn4.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -7011,6 +7048,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="Sha.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchCaptionText.Text">
@@ -7026,6 +7064,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="copySha1ToolStripMenuItem.Text">
         <source>Copy SHA-1</source>
+        <target>Копировать SHA-1</target>
         
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
@@ -8184,6 +8223,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
         <source>Show:</source>
+        <target>Показать:</target>
         
       </trans-unit>
       <trans-unit id="stashDropConfirmTitle.Text">
@@ -9689,6 +9729,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
         <source>View summary</source>
+        <target>Просмотреть краткое описание</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
@@ -9725,30 +9766,37 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
         <source>First</source>
+        <target>Первый</target>
         
       </trans-unit>
       <trans-unit id="resetFileToParentToolStripMenuItem.Text">
         <source>Parent</source>
+        <target>Предок</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
         <source>Second</source>
+        <target>Второй</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
         <source>Selected</source>
+        <target>Выбранный</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
         <source>Reset file(s) to</source>
+        <target>Сбросить файл(ы) к</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
         <source>Save (B) as...</source>
+        <target>Сохранить (B) как...</target>
         
       </trans-unit>
       <trans-unit id="saveToolStripMenuItem.Text">
         <source>Save</source>
+        <target>Сохранить</target>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -9835,6 +9883,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
+        <target>Завершено успешно</target>
         
       </trans-unit>
       <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
@@ -9870,10 +9919,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
         <source>View history</source>
+        <target>Показать историю</target>
         
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
         <source>Archive...</source>
+        <target>Архивировать...</target>
         
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
@@ -9910,6 +9961,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
         <source>Save as...</source>
+        <target>Сохранить как</target>
         
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
@@ -10029,6 +10081,10 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowFilteredBranches.Text">
         <source>Show filtered branches</source>
         <target>Показывать отфильтрованные ветки</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowReflogReferences.Text">
+        <source>Show reflog references</source>
         
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">
@@ -10327,6 +10383,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
         <source>Show SHA-1</source>
+        <target>Показать SHA-1</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -11031,14 +11088,17 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="$this.Text">
         <source>Toolbar</source>
+        <target>Панель инструментов</target>
         
       </trans-unit>
       <trans-unit id="cbBranchOrderingCriteria.Item0">
         <source>Last access date</source>
+        <target>Дата последнего обращения</target>
         
       </trans-unit>
       <trans-unit id="cbBranchOrderingCriteria.Item1">
         <source>Alphabetically</source>
+        <target>По алфавиту</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -1497,10 +1497,12 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>Le commit 'de départ' doit être spécifié</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>Le commit 'd'arrivé' doit être spécifié</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">

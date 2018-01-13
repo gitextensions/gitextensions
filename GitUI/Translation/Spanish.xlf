@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="es">
     <body>
       <trans-unit id="$this.Text">
@@ -64,6 +64,10 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         <target>Buscar versiones de prelanzamiento</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
+        <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
+        
+      </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
         <target>Utilizar la consola para ver el resultado de los comandos</target>
@@ -79,6 +83,11 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
 This action will be performed without warning while checking out branch.</source>
         <target>Usar última acción elegida para &quot;cambios locales&quot; en forma predeterminada.
 Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
+        
+      </trans-unit>
+      <trans-unit id="grpCommit.Text">
+        <source>Commit</source>
+        <target>Commit</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -102,22 +111,27 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
       </trans-unit>
       <trans-unit id="NoImageService.Item0">
         <source>None</source>
+        <target>Ninguno</target>
         
       </trans-unit>
       <trans-unit id="NoImageService.Item1">
         <source>MonsterId</source>
+        <target>MonsterId</target>
         
       </trans-unit>
       <trans-unit id="NoImageService.Item2">
         <source>Wavatar</source>
+        <target>Wavatar</target>
         
       </trans-unit>
       <trans-unit id="NoImageService.Item3">
         <source>Identicon</source>
+        <target>Identicon</target>
         
       </trans-unit>
       <trans-unit id="NoImageService.Item4">
         <source>Retro</source>
+        <target>Retro</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
@@ -172,14 +186,17 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
       </trans-unit>
       <trans-unit id="gbAuthorImages.Text">
         <source>Author images</source>
+        <target>Imágenes del autor</target>
         
       </trans-unit>
       <trans-unit id="gbFonts.Text">
         <source>Fonts</source>
+        <target>Fuentes</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
         <source>General</source>
+        <target>General</target>
         
       </trans-unit>
       <trans-unit id="gbLanguages.Text">
@@ -746,10 +763,12 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       </trans-unit>
       <trans-unit id="gbDiffView.Text">
         <source>Difference view</source>
+        <target>Vista de diferencias</target>
         
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
+        <target>Grafo de revisión</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1390,6 +1409,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
         <source>Get remote branches directly from the remote</source>
+        <target>Obtener las ramas remotas directamente desde el repositorio remoto</target>
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -2387,6 +2407,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="GpgInfoTabPage.Text">
         <source>GPG</source>
+        <target>GPG</target>
         
       </trans-unit>
       <trans-unit id="PuTTYToolStripMenuItem.Text">
@@ -2427,6 +2448,11 @@ compare with first:</source>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
         <target>Informe de construcción</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitButtonText.Text">
+        <source>Commit</source>
+        <target>Commit</target>
         
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
@@ -3025,6 +3051,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="toolStripFileExplorer.ToolTipText">
         <source>File Explorer</source>
+        <target>Explorador de archivos</target>
         
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
@@ -3107,14 +3134,17 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="cboTerminal.Item0">
         <source>bash</source>
+        <target>bash</target>
         
       </trans-unit>
       <trans-unit id="cboTerminal.Item1">
         <source>cmd</source>
+        <target>cmd</target>
         
       </trans-unit>
       <trans-unit id="cboTerminal.Item2">
         <source>powershell</source>
+        <target>powershell</target>
         
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
@@ -3572,6 +3602,18 @@ revisión:</target>
         <source>(none: don't checkout after clone)</source>
         
       </trans-unit>
+      <trans-unit id="_errorCloneFailed.Text">
+        <source>Clone Failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotRooted.Text">
+        <source>Destination folder must be an absolute path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotSupplied.Text">
+        <source>You need to specify destination folder.</source>
+        
+      </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
         <target>(El directorio ya existe)</target>
@@ -4021,6 +4063,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="branchNameLabel.Text">
         <source>(Branch name)</source>
+        <target>(Nombre de rama)</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4244,18 +4287,22 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stagedCopyPathToolStripMenuItem14.Text">
         <source>Copy full path</source>
+        <target>Copiar ruta completa</target>
         
       </trans-unit>
       <trans-unit id="stagedEditFileToolStripMenuItem11.Text">
         <source>Edit file</source>
+        <target>Editar archivo</target>
         
       </trans-unit>
       <trans-unit id="stagedFileHistoryToolStripMenuItem6.Text">
         <source>View file history</source>
+        <target>Ver historial del archivo</target>
         
       </trans-unit>
       <trans-unit id="stagedOpenDifftoolToolStripMenuItem9.Text">
         <source>Open with difftool</source>
+        <target>Abrir con diftool</target>
         
       </trans-unit>
       <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
@@ -5019,6 +5066,11 @@ Si no está seguro simplemente cierre esta ventana.</target>
         <target>Mostrar primeros padres</target>
         
       </trans-unit>
+      <trans-unit id="ShowFullHistory.ToolTipText">
+        <source>Show Full History</source>
+        <target>Mostrar historial completo</target>
+        
+      </trans-unit>
       <trans-unit id="ViewTab.Text">
         <source>View</source>
         <target>Ver</target>
@@ -5752,6 +5804,7 @@ Henk Westhuis &lt;chenk_westhuis@hotmail.com&gt;</target>
       </trans-unit>
       <trans-unit id="Sha1.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="Type.HeaderText">
@@ -5800,6 +5853,7 @@ Henk Westhuis &lt;chenk_westhuis@hotmail.com&gt;</target>
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn4.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -6647,6 +6701,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_tag.Text">
         <source>tag</source>
+        <target>etiqueta</target>
         
       </trans-unit>
       <trans-unit id="btnAction.Text">
@@ -6943,6 +6998,7 @@ Nada para rebase.</target>
       </trans-unit>
       <trans-unit id="Sha.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchCaptionText.Text">
@@ -6984,6 +7040,7 @@ Stash them before if you don't want to lose them.</source>
       </trans-unit>
       <trans-unit id="linkHead.Text">
         <source>HEAD</source>
+        <target>HEAD</target>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchOnThisCommitToolStripMenuItem.Text">
@@ -7056,14 +7113,17 @@ Stash them before if you don't want to lose them.</source>
       </trans-unit>
       <trans-unit id="_btnDeleteTooltip.Text">
         <source>Delete the selected remote</source>
+        <target>Eliminar el remoto seleccionado</target>
         
       </trans-unit>
       <trans-unit id="_btnNewTooltip.Text">
         <source>Add a new remote</source>
+        <target>Añadir un nuevo remoto</target>
         
       </trans-unit>
       <trans-unit id="_btnToggleStateTooltip_Activate.Text">
         <source>Activate the selected remote</source>
+        <target>Activar el remoto seleccionado</target>
         
       </trans-unit>
       <trans-unit id="_btnToggleStateTooltip_Deactivate.Text">
@@ -7199,6 +7259,7 @@ El valor se ha restablecido a un valor vacío.</target>
       </trans-unit>
       <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
+        <target>PuTTY SSH</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -9491,6 +9552,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
         <source>All files</source>
+        <target>Todos los archivos</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterCurrentFormat.Text">
@@ -9519,6 +9581,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
         <source>Copy full path(s)</source>
+        <target>Copiar ruta/s completa/s</target>
         
       </trans-unit>
       <trans-unit id="diffCommitSubmoduleChanges.Text">
@@ -9527,14 +9590,17 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
         <source>Delete file</source>
+        <target>Eliminar archivo</target>
         
       </trans-unit>
       <trans-unit id="diffEditFileToolStripMenuItem.Text">
         <source>Edit file</source>
+        <target>Editar archivo</target>
         
       </trans-unit>
       <trans-unit id="diffResetSubmoduleChanges.Text">
         <source>Reset submodule changes</source>
+        <target>Restablecer cambios del submódulo</target>
         
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
@@ -9547,18 +9613,22 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="diffSubmoduleSummaryMenuItem.Text">
         <source>View summary</source>
+        <target>Ver resumen</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
         <source>Update submodule</source>
+        <target>Actualizar submódulo</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
         <source>File history</source>
+        <target>Historial de archivo</target>
         
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
         <source>Find</source>
+        <target>Buscar</target>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -9567,6 +9637,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
+        <target>Abrir con diftool</target>
         
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
@@ -9579,18 +9650,22 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
         <source>First</source>
+        <target>Primero</target>
         
       </trans-unit>
       <trans-unit id="resetFileToParentToolStripMenuItem.Text">
         <source>Parent</source>
+        <target>Padre</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
         <source>Second</source>
+        <target>Segundo</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
         <source>Selected</source>
+        <target>Seleccionado</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -9603,6 +9678,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
       <trans-unit id="saveToolStripMenuItem.Text">
         <source>Save</source>
+        <target>Guardar</target>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -9619,6 +9695,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
+        <target>Asumir que este archivo no cambiará</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedFail.Text">
@@ -9650,14 +9727,17 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_resetFileCaption.Text">
         <source>Reset</source>
+        <target>Restablecer</target>
         
       </trans-unit>
       <trans-unit id="_resetFileText.Text">
         <source>Are you sure you want to reset this file or directory?</source>
+        <target>¿Está seguro que desea restablecer este archivo o directorio?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
         <source>All files</source>
+        <target>Todos los archivos</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterCurrentFormat.Text">
@@ -9685,6 +9765,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
+        <target>Exito</target>
         
       </trans-unit>
       <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
@@ -9697,10 +9778,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
         <source>Collapse all</source>
+        <target>Contraer todo</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
         <source>Copy full path</source>
+        <target>Copiar ruta completa</target>
         
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
@@ -9717,6 +9800,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
         <source>View history</source>
+        <target>Ver historial</target>
         
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
@@ -9876,6 +9960,10 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowFilteredBranches.Text">
         <source>Show filtered branches</source>
         <target>Mostrar ramas filtradas</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowReflogReferences.Text">
+        <source>Show reflog references</source>
         
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">

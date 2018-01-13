@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
@@ -64,6 +64,10 @@ Ce programme est distribué dans l'espoir d'être utile, mais SANS AUCUNE GARANT
         <target>Vérifier les nouvelles versions candidates à la livraison</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
+        <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
+        
+      </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
         <target>Utiliser l'émulateur de console pour afficher la sortie console dans les fenêtre de commandes</target>
@@ -79,6 +83,11 @@ Ce programme est distribué dans l'espoir d'être utile, mais SANS AUCUNE GARANT
 This action will be performed without warning while checking out branch.</source>
         <target>Utiliser la dernière action &quot;modifications locales&quot; comme action par défaut.
 Cette action sera effectuée sans avertissement durant le chargement d'une branche.</target>
+        
+      </trans-unit>
+      <trans-unit id="grpCommit.Text">
+        <source>Commit</source>
+        <target>Commit</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -747,6 +756,7 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
         <source>Draw alternate background</source>
+        <target>Dessiner un fond alternatif</target>
         
       </trans-unit>
       <trans-unit id="gbAppIcon.Text">
@@ -1459,6 +1469,7 @@ Voulez-vous l'ouvrir?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Vertical ruler position [chars]</source>
+        <target>Position de la règle verticale [chars]</target>
         
       </trans-unit>
     </body>
@@ -1605,18 +1616,22 @@ Voulez-vous l'ouvrir?</target>
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore all whitespace changes</source>
+        <target>Ignorer tous les changements d'espaces</target>
         
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaces.ToolTipText">
         <source>Ignore all whitespace changes</source>
+        <target>Ignorer tous les changements d'espaces</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
         <source>Ignore leading and trailing whitespace changes</source>
+        <target>Ignorer les changements d'espaces en début et fin de ligne</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore leading and trailing whitespace changes</source>
+        <target>Ignorer les changements d'espaces en début et fin de ligne</target>
         
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -2449,6 +2464,11 @@ compare with first:</source>
         <target>Rapport de construction</target>
         
       </trans-unit>
+      <trans-unit id="_commitButtonText.Text">
+        <source>Commit</source>
+        <target>Commit</target>
+        
+      </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>Configure this menu</source>
         <target>Configurer ce menu...</target>
@@ -2910,6 +2930,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem.Text">
         <source>Pull/Fetch...</source>
+        <target>Importer/Récupérer...</target>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
@@ -3153,6 +3174,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
         <source>Show GPG information</source>
+        <target>Afficher les informations GPG</target>
         
       </trans-unit>
       <trans-unit id="chkShowRevisionInfoNextToRevisionGrid.Text">
@@ -3609,6 +3631,18 @@ revision:</source>
         <target>(aucune : ne pas en charger après le clone)</target>
         
       </trans-unit>
+      <trans-unit id="_errorCloneFailed.Text">
+        <source>Clone Failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotRooted.Text">
+        <source>Destination folder must be an absolute path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotSupplied.Text">
+        <source>You need to specify destination folder.</source>
+        
+      </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
         <target>(Dossier déjà existant)</target>
@@ -3770,6 +3804,9 @@ Voulez-vous continuer ?</target>
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
 Git will never check if the file has changed that will improve status check performance.</source>
+        <target>Indiquer à git de ne pas vérifier le status de ce fichier pour des raisons de performance.
+Utilisez cette fonctionnalité quand un fichier est gros et ne change jamais.
+Git ne vérifiera jamais si le fichier a changé ce qui améliorera les performances de la vérification du status.</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -3998,6 +4035,8 @@ Do you want to continue?</source>
       <trans-unit id="_skipWorktreeToolTip.Text">
         <source>Hide already tracked files that will change but that you don't want to commit.
 Suitable for some config files modified locally.</source>
+        <target>Cacher les fichiers suivis qui vont changer mais que vous ne voulez pas committer.
+Utile pour des fichiers de configuration modifiées localement.</target>
         
       </trans-unit>
       <trans-unit id="_stageDetails.Text">
@@ -4032,6 +4071,12 @@ You can set your template:
 	$ git config commit.template ./.git_commit_msg.txt
 You can unset the template:
 	$ git config --unset commit.template</source>
+        <target>Modèle non trouvé: {0}.
+
+Vous pouvez configurer votre modèle avec :
+$ git config commit.template ./.git_commit_msg.txt
+Vous pouvez retirer votre modèle avec:
+$ git config --unset commit.template</target>
         
       </trans-unit>
       <trans-unit id="_templateNotFoundCaption.Text">
@@ -4061,6 +4106,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="branchNameLabel.Text">
         <source>(Branch name)</source>
+        <target>(Nom de la branche)</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4649,6 +4695,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="keyIdLbl.Text">
         <source>Specific Key Id:</source>
+        <target>Id de la clé spécifique :</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -4829,6 +4876,7 @@ Quand vous voulez effacer une branche non-entièrement fusionnée, vous pouvez o
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
         <source>At least one remote branch is unmerged. Are you sure you want to delete it?
 Deleting a branch can cause commits to be deleted too!</source>
+        <target>Au moins une branche distante n'est pas fusionnée. Êtes-vous sûr de vouloir l'effacer?</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesCaption.Text">
@@ -4842,6 +4890,11 @@ if no other branch or tag references them. Make sure there
 is a branch or tag referencing the commits you wish to keep.
 If you have accidentally deleted a wrong branch, go to Commands | Show reflog form
 in order to recover the lost commits.</source>
+        <target>Les commits référencés par la branche effacée seront perdus
+si aucune autre branche ou étiquette ne les références. Assurez-vous
+qu'une branche ou une étiquette référence les commits que vous souhaitez conserver.
+Si vous avez accidentellement effacé la mauvaise branche, allez dans Actions | Afficher le reflog...
+de façon à récupérer les commits perdus.</target>
         
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
@@ -5083,6 +5136,10 @@ Si vous n'êtes pas sûr, fermez seulement la fenêtre.</target>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
         <target>Afficher les premiers parents</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowFullHistory.ToolTipText">
+        <source>Show Full History</source>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5826,6 +5883,7 @@ commande &quot;git help shortlog&quot;</target>
       </trans-unit>
       <trans-unit id="Sha1.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="Type.HeaderText">
@@ -5875,6 +5933,7 @@ commande &quot;git help shortlog&quot;</target>
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn4.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -6244,6 +6303,7 @@ Si vous voulez récupérer et fusionner une branche, choisissez une branche spé
       </trans-unit>
       <trans-unit id="_formTitleFetch.Text">
         <source>Fetch ({0})</source>
+        <target>Récupérer ({0})</target>
         
       </trans-unit>
       <trans-unit id="_formTitlePull.Text">
@@ -6529,6 +6589,8 @@ Voulez-vous vraiment pousser cette branche ?
       <trans-unit id="_configureRemote.Text">
         <source>Please configure a remote repository first.
 Would you like to do it now?</source>
+        <target>Configurez s'il vous plait un dépôt distant.
+Voulez-vous le faire maintenant? </target>
         
       </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
@@ -6968,6 +7030,7 @@ Rien à rebaser.</target>
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
         <source>Recent repositories history size</source>
+        <target>Taille de l'historique des dépôts récents</target>
         
       </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
@@ -7031,6 +7094,7 @@ Rien à rebaser.</target>
       </trans-unit>
       <trans-unit id="Sha.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchCaptionText.Text">
@@ -7049,6 +7113,7 @@ Voulez-vous continuer?</target>
       </trans-unit>
       <trans-unit id="copySha1ToolStripMenuItem.Text">
         <source>Copy SHA-1</source>
+        <target>Copier le SHA-1 </target>
         
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
@@ -7069,6 +7134,8 @@ Voulez-vous continuer?</target>
       <trans-unit id="lblDirtyWorkingDirectory.Text">
         <source>Warning: you've got changes in your working directory that could be lost if you want to reset the current branch to another commit.
 Stash them before if you don't want to lose them.</source>
+        <target>Avertissement: vous avez des changements dans votre répertoire de travail qui peuvent être perdus si vous voulez réinitialiser la branche courante à un autre commit.
+Réservez les avant si vous ne voulez pas les perdre.</target>
         
       </trans-unit>
       <trans-unit id="linkCurrentBranch.Text">
@@ -7879,6 +7946,7 @@ Se rabattre sur une fusion à 2 fichier?</target>
       </trans-unit>
       <trans-unit id="noMergeToolConfigured.Text">
         <source>The mergetool is not correctly configured. Please go to settings and configure the mergetool!</source>
+        <target>L'outil de fusion n'est pas correctement configuré. Allez, sil vous plait, dans les paramètres et configurer l'outil de fusion! </target>
         
       </trans-unit>
       <trans-unit id="openMergeToolBtn.Text">
@@ -9003,6 +9071,7 @@ global settings.
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
         <source>Show current working directory changes as an artificial commit</source>
+        <target>Afficher les changements du répertoire de travail courant comme un commit artificiel</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -9123,6 +9192,8 @@ Verifiez s'il est accessible.</target>
       <trans-unit id="_cannotAccessLocalExclude.Text">
         <source>Failed to save .git/info/exclude.
 Check if file is accessible.</source>
+        <target>Échec de l'enregistrement de fichier .git/info/exclude.
+Vérifiez si le fichier est accessible.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessLocalExcludeCaption.Text">
@@ -9137,10 +9208,12 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_localExcludeOnlyInWorkingDirSupported.Text">
         <source>.git/info/exclude is only supported when there is a working directory.</source>
+        <target>.git/info/exclude n'est supporté que quand un répertoire de travail existe.</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .git/info/exclude?</source>
+        <target>Enregistrer les changements à .git/info/exclude ?</target>
         
       </trans-unit>
     </body>
@@ -9674,6 +9747,7 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
         <source>Cherry pick file's changes</source>
+        <target>Cherry picker les modifications du fichier</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -9788,10 +9862,12 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
         <source>Stage file(s)</source>
+        <target>Indexer le(s) fichier(s)</target>
         
       </trans-unit>
       <trans-unit id="unstageFileToolStripMenuItem.Text">
         <source>Unstage file(s)</source>
+        <target>Desindexer le(s) fichier(s)</target>
         
       </trans-unit>
     </body>
@@ -9800,10 +9876,12 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
+        <target>Supposer que ce fichier ne changera pas</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedFail.Text">
         <source>Fail to assume unchanged the file '{0}'.</source>
+        <target>Échec de la prise en compte du fichier '{0}' </target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedMessage.Text">
@@ -9811,6 +9889,10 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
 
 
 Are you sure to assume this file won't change ?</source>
+        <target>Cette fonctionnalité ne doit être utilisé que pour des problématiques de performance quand il est couteux pour git de vérifier l'état d'un gros fichier.
+
+
+Êtes-vous sur de vouloir supposer que ce fichier ne changera pas?</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedSuccess.Text">
@@ -9825,10 +9907,12 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
         <source>Node not found. The next available parent node will be selected.</source>
+        <target>Nœud non trouvé. Le nœud suivant disponible sera sélectionné.</target>
         
       </trans-unit>
       <trans-unit id="_nodeNotFoundSelectionNotChanged.Text">
         <source>Node not found. File tree selection was not changed.</source>
+        <target>Nœud non trouvé. La sélection de l'arborescence des fichiers n'a pas été modifiée.</target>
         
       </trans-unit>
       <trans-unit id="_resetFileCaption.Text">
@@ -9838,6 +9922,7 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_resetFileText.Text">
         <source>Are you sure you want to reset this file or directory?</source>
+        <target>Êtes-vous sûr de vouloir réinitialiser ce fichier ou répertoire?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -9857,17 +9942,23 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_stopTrackingFail.Text">
         <source>Fail to stop tracking the file '{0}'.</source>
+        <target>Échec lors de l'arrêt du suivi du fichier '{0}'.</target>
         
       </trans-unit>
       <trans-unit id="_stopTrackingMessage.Text">
         <source>Are you sure you want to stop tracking the file
 '{0}'?</source>
+        <target>Êtes-vous sûr de vouloir arrêter de suivre le fichier
+'{0}'?</target>
         
       </trans-unit>
       <trans-unit id="_stopTrackingSuccess.Text">
         <source>File successfully untracked. Removal has been added to the staging area.
 
 See the changes in the commit form.</source>
+        <target>Arrêt du suivi avec succès. La suppression a été ajouté à l'index.
+
+Vous pouvez voir les changements dans le formulaire de commit.</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -9897,6 +9988,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>Edit working directory file</source>
+        <target>Modifier le ficher du répertoire de travail</target>
         
       </trans-unit>
       <trans-unit id="expandAllToolStripMenuItem.Text">
@@ -9906,6 +9998,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="expandSubtreeToolStripMenuItem.Text">
         <source>Expand subtree (takes a while on large subtrees)</source>
+        <target>Déployer la sous arborescence (peut prendre du temps sur une grande arborescence )</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -9920,6 +10013,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
         <source>Clean this folder in the working directory...</source>
+        <target>Nettoyer ce répertoire dans le répertoire de travail...</target>
         
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
@@ -10083,6 +10177,10 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowFilteredBranches.Text">
         <source>Show filtered branches</source>
         <target>Branches filtrées</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowReflogReferences.Text">
+        <source>Show reflog references</source>
         
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">
@@ -10381,6 +10479,7 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
         <source>Show SHA-1</source>
+        <target>Afficher le SHA-1</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -10795,6 +10894,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item11">
         <source>Pull/Fetch...</source>
+        <target>Importer/Récupérer...</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item12">
@@ -11099,6 +11199,7 @@ Quand OpenSSH est utilisé, des fenêtres de console sont affichés!
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Branch ordering criteria</source>
+        <target>Critère de tri des branches</target>
         
       </trans-unit>
     </body>

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="cbLoadTestResults.Text">
         <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <target>mostrar los resultados de las pruebas en el resumen de estado de compilación para cada resultado de compilación (¡uso intensivo de la red!)</target>
         
       </trans-unit>
     </body>
@@ -102,6 +103,7 @@
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
+        <target>Servidor Bitbucket</target>
         
       </trans-unit>
     </body>
@@ -286,14 +288,17 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Remoto para el cual crear ramas de tracking</target>
         
       </trans-unit>
     </body>
@@ -302,6 +307,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
     </body>
@@ -383,6 +389,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Eliminar ramas sin fusionar resultará en commits colgados. ¡Use con cuidado!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -1121,6 +1128,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
+        <target>Remoto a pullear:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
@@ -1168,6 +1176,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
+        <target>Token OAuth</target>
         
       </trans-unit>
     </body>
@@ -1367,6 +1376,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="passwordSettings.Caption">
         <source>Jira password</source>
+        <target>Contraseña de Jira</target>
         
       </trans-unit>
       <trans-unit id="stringTemplateSetting.Caption">
@@ -1375,10 +1385,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="urlSettings.Caption">
         <source>Jira URL</source>
+        <target>URL de Jira</target>
         
       </trans-unit>
       <trans-unit id="userSettings.Caption">
         <source>Jira user</source>
+        <target>Usuario de Jira</target>
         
       </trans-unit>
     </body>
@@ -1465,6 +1477,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
+        <target>Entrada no válida</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
@@ -1474,10 +1487,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>El campo &quot;Desde&quot; debe ser especificado</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>El campo &quot;Hacia&quot; debe ser especificado</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1517,6 +1532,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Expresión de commit &quot;Hasta&quot; (inclusive):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1532,6 +1548,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Expresión de commit &quot;Desde&quot; (exclusive):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1591,6 +1608,7 @@ nombres de ramas, ó nombres de tags)</target>
     <body>
       <trans-unit id="Description.Text">
         <source>Create Bitbucket Pull Request</source>
+        <target>Crear Bitbucket Pull Request</target>
         
       </trans-unit>
       <trans-unit id="StashBaseUrl.Caption">
@@ -1829,6 +1847,7 @@ Por favor, verifique la url del servidor.</target>
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Extraer la información de la ruta de compilación copiada en el portapapeles</target>
         
       </trans-unit>
     </body>

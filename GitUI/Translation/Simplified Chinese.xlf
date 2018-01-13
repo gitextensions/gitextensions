@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="$this.Text">
@@ -64,6 +64,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <target>检查发布待定版本</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
+        <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
+        <target>若选中Amend选项，当Commit &amp;&amp; Push操作执行时，强制推入</target>
+        
+      </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
         <target>在命令对话框使用控制台模拟器显示控制台输出</target>
@@ -79,6 +84,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 This action will be performed without warning while checking out branch.</source>
         <target>用上一次选择的“本地更改&quot;作为默认操作。
 在下一次登出分支时将在没有警告的情况下对本地进行更改。</target>
+        
+      </trans-unit>
+      <trans-unit id="grpCommit.Text">
+        <source>Commit</source>
+        <target>提交</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -746,6 +756,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkDrawAlternateBackColor.Text">
         <source>Draw alternate background</source>
+        <target>绘制替代背景</target>
         
       </trans-unit>
       <trans-unit id="gbAppIcon.Text">
@@ -1605,18 +1616,22 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore all whitespace changes</source>
+        <target>忽略空白（空行和空格）的变化</target>
         
       </trans-unit>
       <trans-unit id="ignoreAllWhitespaces.ToolTipText">
         <source>Ignore all whitespace changes</source>
+        <target>忽略空白（空行和空格）的变化</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
         <source>Ignore leading and trailing whitespace changes</source>
+        <target>忽略前后的空白（空行和空格）变化</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore leading and trailing whitespace changes</source>
+        <target>忽略前后的空白（空行和空格）变化</target>
         
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -2447,6 +2462,11 @@ compare with first:</source>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
         <target>构建报告</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitButtonText.Text">
+        <source>Commit</source>
+        <target>提交</target>
         
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
@@ -3609,6 +3629,21 @@ revision:</source>
         <target>(None: 克隆后不迁出)</target>
         
       </trans-unit>
+      <trans-unit id="_errorCloneFailed.Text">
+        <source>Clone Failed</source>
+        <target>克隆失败</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotRooted.Text">
+        <source>Destination folder must be an absolute path.</source>
+        <target>目标文件夹必须是绝对路径。</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotSupplied.Text">
+        <source>You need to specify destination folder.</source>
+        <target>您需要指定目标文件夹。</target>
+        
+      </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
         <target>(目录已经存在)</target>
@@ -4153,6 +4188,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="doNotSkipWorktreeToolStripMenuItem.Text">
         <source>Do not skip worktree</source>
+        <target>不要跳过工作树</target>
         
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
@@ -4282,6 +4318,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="showSkipWorktreeFilesToolStripMenuItem.Text">
         <source>Show skip-worktree files</source>
+        <target>显示跳过工作文件</target>
         
       </trans-unit>
       <trans-unit id="showUntrackedFilesToolStripMenuItem.Text">
@@ -4296,6 +4333,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="skipWorktreeToolStripMenuItem.Text">
         <source>Skip worktree</source>
+        <target>跳过工作树</target>
         
       </trans-unit>
       <trans-unit id="stagedCopyPathToolStripMenuItem14.Text">
@@ -4624,10 +4662,12 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_trsSignDefault.Text">
         <source>Sign with default GPG</source>
+        <target>用默认的GPG签名</target>
         
       </trans-unit>
       <trans-unit id="_trsSignSpecificKey.Text">
         <source>Sign with specific GPG</source>
+        <target>签署特定的GPG</target>
         
       </trans-unit>
       <trans-unit id="annotate.Item0">
@@ -4642,10 +4682,12 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="annotate.Item2">
         <source>Sign with default GPG</source>
+        <target>用默认的GPG签名</target>
         
       </trans-unit>
       <trans-unit id="annotate.Item3">
         <source>Sign with specific GPG</source>
+        <target>签署特定的GPG</target>
         
       </trans-unit>
       <trans-unit id="annotate.Text">
@@ -4655,6 +4697,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="keyIdLbl.Text">
         <source>Specific Key Id:</source>
+        <target>特定键ID：</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -5091,6 +5134,11 @@ If you are not sure just close this window.</source>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
         <target>显示第一个父提交</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowFullHistory.ToolTipText">
+        <source>Show Full History</source>
+        <target>显示完整的历史</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5830,6 +5878,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</target>
       </trans-unit>
       <trans-unit id="Sha1.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="Type.HeaderText">
@@ -5879,6 +5928,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</target>
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn4.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -6243,6 +6293,7 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
       </trans-unit>
       <trans-unit id="_formTitleFetch.Text">
         <source>Fetch ({0})</source>
+        <target>获取 ({0})</target>
         
       </trans-unit>
       <trans-unit id="_formTitlePull.Text">
@@ -7032,6 +7083,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="Sha.HeaderText">
         <source>SHA-1</source>
+        <target>SHA-1</target>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchCaptionText.Text">
@@ -7049,6 +7101,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="copySha1ToolStripMenuItem.Text">
         <source>Copy SHA-1</source>
+        <target>复制 SHA-1</target>
         
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
@@ -7069,6 +7122,8 @@ Do you want to continue?</source>
       <trans-unit id="lblDirtyWorkingDirectory.Text">
         <source>Warning: you've got changes in your working directory that could be lost if you want to reset the current branch to another commit.
 Stash them before if you don't want to lose them.</source>
+        <target>警告：如果要将当前分支重置为另一个提交，那么工作目录中的更改可能会丢失。
+如果你不想丢弃它们，就把它们放到暂存区。</target>
         
       </trans-unit>
       <trans-unit id="linkCurrentBranch.Text">
@@ -9808,6 +9863,10 @@ This will just checkout on the submodule the commit determined by the superproje
 
 
 Are you sure to assume this file won't change ?</source>
+        <target>当git检查一个大文件的状态时，这个特性应该用于性能目的。
+
+
+你确定假定这个文件不会改变吗？</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedSuccess.Text">
@@ -9827,6 +9886,7 @@ Are you sure to assume this file won't change ?</source>
       </trans-unit>
       <trans-unit id="_nodeNotFoundSelectionNotChanged.Text">
         <source>Node not found. File tree selection was not changed.</source>
+        <target>未找到节点。 文件树选择没有改变。</target>
         
       </trans-unit>
       <trans-unit id="_resetFileCaption.Text">
@@ -10091,6 +10151,11 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowFilteredBranches.Text">
         <source>Show filtered branches</source>
         <target>显示过滤分支</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowReflogReferences.Text">
+        <source>Show reflog references</source>
+        <target>显示参考日志</target>
         
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">
@@ -10387,6 +10452,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
         <source>Show SHA-1</source>
+        <target>显示 SHA-1</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">

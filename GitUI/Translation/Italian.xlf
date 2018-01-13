@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="it">
     <body>
       <trans-unit id="$this.Text">
@@ -65,6 +65,10 @@ Questo programma è rilasciato nella speranza che possa essere utile, ma SENZA N
         <target>Controlla per versione RC</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
+        <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
+        
+      </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
         <target>Usa l'emulatore per l'output di console nelle finestre di comando.</target>
@@ -80,6 +84,11 @@ Questo programma è rilasciato nella speranza che possa essere utile, ma SENZA N
 This action will be performed without warning while checking out branch.</source>
         <target>Utilizza l'ultima azione &quot;modifiche locali&quot; selezionata come azione predefinita.
 Questa azione verrà eseguita senza preavviso durante il checkout del ramo.</target>
+        
+      </trans-unit>
+      <trans-unit id="grpCommit.Text">
+        <source>Commit</source>
+        <target>Commit</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -2411,6 +2420,11 @@ confrontare con la prima:</target>
         <target>Compilazione report</target>
         
       </trans-unit>
+      <trans-unit id="_commitButtonText.Text">
+        <source>Commit</source>
+        <target>Commit</target>
+        
+      </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>Configure this menu</source>
         <target>Configura questo menu</target>
@@ -3548,6 +3562,18 @@ revisione:</target>
       <trans-unit id="_branchNone.Text">
         <source>(none: don't checkout after clone)</source>
         <target>(none: nessun checkout dopo clone)</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorCloneFailed.Text">
+        <source>Clone Failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotRooted.Text">
+        <source>Destination folder must be an absolute path.</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorDestinationNotSupplied.Text">
+        <source>You need to specify destination folder.</source>
         
       </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
@@ -4967,6 +4993,10 @@ If you are not sure just close this window.</source>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
         <target>Mostra primo genitore</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowFullHistory.ToolTipText">
+        <source>Show Full History</source>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -9557,6 +9587,10 @@ See the changes in the commit form.</source>
       <trans-unit id="ShowFilteredBranches.Text">
         <source>Show filtered branches</source>
         <target>Visualizza branch filtrati</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowReflogReferences.Text">
+        <source>Show reflog references</source>
         
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">

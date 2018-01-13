@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.50.02" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -1364,18 +1364,22 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
+        <target>Подсказка коммита Jira</target>
         
       </trans-unit>
       <trans-unit id="enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
+        <target>Плагин подсказок Jira включён</target>
         
       </trans-unit>
       <trans-unit id="jdlQuerySettings.Caption">
         <source>JDL Query</source>
+        <target>Очередь JDL</target>
         
       </trans-unit>
       <trans-unit id="jiraFields.Caption">
         <source>Jira fields</source>
+        <target>Поля Jira</target>
         
       </trans-unit>
       <trans-unit id="passwordSettings.Caption">
@@ -1482,6 +1486,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
+        <target>Недопустимый ввод</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
@@ -1491,10 +1496,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>Должен быть указан коммит &quot;из&quot;</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>Должен быть указан коммит &quot;в&quot;</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
