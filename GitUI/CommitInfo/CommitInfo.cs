@@ -172,7 +172,10 @@ namespace GitUI.CommitInfo
             ResetTextAndImage();
 
             if (string.IsNullOrEmpty(_revision.Guid))
-                return; //is it regular case or should throw an exception
+            {
+                Debug.Assert(false, "Unexpectedly called ReloadCommitInfo() with empty revision");
+                return;
+            }
 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
@@ -199,6 +202,10 @@ namespace GitUI.CommitInfo
 
             UpdateRevisionInfo();
             LoadAuthorImage(data.Author ?? data.Committer);
+
+            //No branch/tag data for artificial commands
+            if (GitRevision.IsArtificial(_revision.Guid))
+                return;
 
             if (AppSettings.CommitInfoShowContainedInBranches)
                 ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
