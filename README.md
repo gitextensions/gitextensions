@@ -39,9 +39,9 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
 
 <table>
   <tr>
-    <td><strong><font="red">Release Candidate (v2.51.RC1)</strong></td>
-    <td><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.RC1">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md#version-251rc1-31-dec-2017">Changelog</a> <br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/2.51.RC1" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v2.51.RC1/total.svg?maxAge=86400" alt="Github Releases (RC)"></a></td>
+    <td><strong><font="red">Release Candidate (v2.51.RC2)</strong></td>
+    <td><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.RC2">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md#version-251rc2-14-jan-2018">Changelog</a> <br />
+        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/2.51.RC2" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v2.51.RC2/total.svg?maxAge=86400" alt="Github Releases (RC)"></a></td>
   </tr>
   <tr>
     <td><strong>Latest Release (v2.50.02)</strong></td>
