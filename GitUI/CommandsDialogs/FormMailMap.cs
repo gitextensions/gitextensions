@@ -47,9 +47,10 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (File.Exists(_fullPathResolver.Resolve(".mailmap")))
+                var path = _fullPathResolver.Resolve(".mailmap");
+                if (File.Exists(path))
                 {
-                    _NO_TRANSLATE_MailMapText.ViewFile(_fullPathResolver.Resolve(".mailmap"));
+                    _NO_TRANSLATE_MailMapText.ViewFile(path);
                 }
             }
             catch (Exception ex)

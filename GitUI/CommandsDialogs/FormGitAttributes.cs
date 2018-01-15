@@ -46,9 +46,10 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (File.Exists(_fullPathResolver.Resolve(".gitattributes")))
+                var path = _fullPathResolver.Resolve(".gitattributes");
+                if (File.Exists(path))
                 {
-                    _NO_TRANSLATE_GitAttributesText.ViewFile(_fullPathResolver.Resolve(".gitattributes"));
+                    _NO_TRANSLATE_GitAttributesText.ViewFile(path);
                 }
             }
             catch (Exception ex)
