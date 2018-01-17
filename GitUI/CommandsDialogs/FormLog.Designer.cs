@@ -1,4 +1,5 @@
 ﻿using GitUI.Editor;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
 {
@@ -31,7 +32,7 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.RevisionGrid = new RevisionGridControl();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.diffViewer = new GitUI.Editor.FileViewer();
@@ -73,7 +74,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+            this.RevisionGrid.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.RevisionGrid.ShowUncommitedChangesIfPossible = true;
             this.RevisionGrid.Size = new System.Drawing.Size(750, 205);
             this.RevisionGrid.TabIndex = 1;
@@ -147,7 +148,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private FileStatusList DiffFiles;
-        private RevisionGrid RevisionGrid;
+        private RevisionGridControl RevisionGrid;
         private FileViewer diffViewer;
     }
 }

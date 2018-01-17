@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI
 {
@@ -8,7 +9,7 @@ namespace GitUI
     {
         private ToolStripTextBox _NO_TRANSLATE_textBox;
         private ToolStripDropDownButton _NO_TRANSLATE_dropDownButton;
-        private RevisionGrid _NO_TRANSLATE_revisionGrid;
+        private RevisionGridControl _NO_TRANSLATE_revisionGrid;
         private ToolStripLabel _NO_TRANSLATE_label;
         private ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
@@ -63,7 +64,7 @@ namespace GitUI
             this.hashToolStripMenuItem.Text = "Hash";        
         }
 
-        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
+        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGridControl revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
             : this()
         {
             this._NO_TRANSLATE_dropDownButton = dropDownButton;

@@ -2,7 +2,7 @@
 using System.IO;
 using GitCommands;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     public class IndexChangedEventArgs : EventArgs
     {

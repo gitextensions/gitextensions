@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     class MenuUtil
     {

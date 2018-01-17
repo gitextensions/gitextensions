@@ -17,19 +17,16 @@ using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUI.Editor; // For ColorHelper
+using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
-using GitUI.RevisionGridClasses;
 using GitUI.Script;
-using GitUI.UserControls;
-using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using Gravatar;
 using ResourceManager;
 
-namespace GitUI
+namespace GitUI.UserControls.RevisionGrid
 {
     public enum RevisionGridLayout
     {
@@ -51,7 +48,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGrid : GitModuleControl
+    public sealed partial class RevisionGridControl : GitModuleControl
     {
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
@@ -118,7 +115,7 @@ namespace GitUI
             }
         }
 
-        public RevisionGrid()
+        public RevisionGridControl()
         {
             InitLayout();
             InitializeComponent();

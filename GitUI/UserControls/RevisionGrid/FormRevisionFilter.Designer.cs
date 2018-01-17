@@ -1,4 +1,4 @@
-﻿namespace GitUI.RevisionGridClasses
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     partial class FormRevisionFilter
     {

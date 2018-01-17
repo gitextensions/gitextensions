@@ -4,8 +4,8 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
-using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI.HelperDialogs
 {

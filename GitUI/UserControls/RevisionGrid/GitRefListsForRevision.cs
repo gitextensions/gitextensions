@@ -3,7 +3,7 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     internal class GitRefListsForRevision
     {

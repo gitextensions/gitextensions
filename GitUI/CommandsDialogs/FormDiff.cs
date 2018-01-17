@@ -5,13 +5,14 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private readonly RevisionGrid RevisionGrid;
+        private readonly RevisionGridControl RevisionGrid;
         private string _baseCommitDisplayStr;
         private string _headCommitDisplayStr;
         private GitRevision _baseRevision;
@@ -27,7 +28,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString btnSwapTooltip =
             new TranslationString("Swap BASE and Compare commits");
 
-        public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
+        public FormDiff(GitUICommands aCommands, RevisionGridControl revisionGrid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
         {
             RevisionGrid = revisionGrid;

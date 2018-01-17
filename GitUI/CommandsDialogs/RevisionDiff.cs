@@ -10,6 +10,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using ResourceManager;
 using GitUI.Hotkey;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
 {
@@ -26,7 +27,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Are you sure you want delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
 
-        private RevisionGrid _revisionGrid;
+        private RevisionGridControl _revisionGrid;
         private RevisionFileTree _revisionFileTree;
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
@@ -125,7 +126,7 @@ namespace GitUI.CommandsDialogs
             return _diffNotSupported.Text;
         }
 
-        public void Bind(RevisionGrid revisionGrid, RevisionFileTree revisionFileTree)
+        public void Bind(RevisionGridControl revisionGrid, RevisionFileTree revisionFileTree)
         {
             _revisionGrid = revisionGrid;
             _revisionFileTree = revisionFileTree;

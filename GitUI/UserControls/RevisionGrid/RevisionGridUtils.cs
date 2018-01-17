@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace GitUI.UserControls
+namespace GitUI.UserControls.RevisionGrid
 {
     internal class RevisionGridUtils
     {
