@@ -22,24 +22,13 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.UserControls.RevisionGrid.Layouts;
 using GitUIPluginInterfaces;
 using Gravatar;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public enum RevisionGridLayout
-    {
-        FilledBranchesSmall = 1,
-        FilledBranchesSmallWithGraph = 2,
-        Small = 3,
-        SmallWithGraph = 4,
-        Card = 5,
-        CardWithGraph = 6,
-        LargeCard = 7,
-        LargeCardWithGraph = 8
-    }
-
     public enum RevisionGraphDrawStyleEnum
     {
         Normal,
@@ -80,7 +69,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         public BuildServerWatcher BuildServerWatcher { get; private set; }
 
-        private RevisionGridLayout _layout;
+        private readonly ILayoutRendererFactory _layoutRendererFactory = new LayoutRendererFactory();
+        private ILayoutRenderer _layoutRenderer;
         private int _rowHeigth;
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
@@ -128,6 +118,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             Translate();
 
+            _layoutRenderer = _layoutRendererFactory.GetCurrent();
+
             _avatarImageNameProvider = new AvatarImageNameProvider();
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarCache.Invalidated += (s, e) => Revisions.Invalidate();
@@ -135,7 +127,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             _commitDataManager = new CommitDataManager(() => Module);
 
-            _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
+            _revisionGridMenuCommands = new RevisionGridMenuCommands(this, _layoutRendererFactory);
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
 
             // fill View context menu from MenuCommands
@@ -185,14 +177,6 @@ namespace GitUI.UserControls.RevisionGrid
             IsMessageMultilineDataGridViewColumn.Resizable = DataGridViewTriState.False;
 
             this.HotkeysEnabled = true;
-            try
-            {
-                SetRevisionsLayout((RevisionGridLayout)AppSettings.RevisionGraphLayout);
-            }
-            catch
-            {
-                SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
-            }
             compareToBaseToolStripMenuItem.Enabled = false;
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -250,7 +234,7 @@ namespace GitUI.UserControls.RevisionGrid
                 IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
 
-                RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                RefsFont = _layoutRenderer.IsFilledBranchesLayout ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
                 SuperprojectFont = new Font(_normalFont, FontStyle.Underline);
             }
@@ -1572,7 +1556,7 @@ namespace GitUI.UserControls.RevisionGrid
                 if (columnIndex == messageColIndex)
                 {
                     int baseOffset = 0;
-                    if (IsCardLayout())
+                    if (_layoutRenderer.IsCardLayout)
                     {
                         baseOffset = 5;
 
@@ -1607,7 +1591,7 @@ namespace GitUI.UserControls.RevisionGrid
                     float offset = baseOffset;
                     var gitRefs = revision.Refs;
 
-                    drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+                    drawRefArgs.RefsFont = _layoutRenderer.IsFilledBranchesLayout ? rowFont : RefsFont;
 
                     if (spi != null)
                     {
@@ -1678,14 +1662,14 @@ namespace GitUI.UserControls.RevisionGrid
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
                     }
 
-                    if (IsCardLayout())
+                    if (_layoutRenderer.IsCardLayout)
                         offset = baseOffset;
 
                     var text = (string)e.FormattedValue;
                     var bounds = AdjustCellBounds(e.CellBounds, offset);
                     RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
-                    if (IsCardLayout())
+                    if (_layoutRenderer.IsCardLayout)
                     {
                         int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
                         int gravatarSize = _rowHeigth - textHeight - 12;
@@ -1779,7 +1763,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
-            if (IsCardLayout())
+            if (_layoutRenderer.IsCardLayout)
             {
                 using (Brush textBrush = new SolidBrush(textColor))
                 {
@@ -1799,7 +1783,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else
             {
-                string headName = IsFilledBranchesLayout()
+                string headName = _layoutRenderer.IsFilledBranchesLayout
                                ? name
                                : string.Concat("[", name, "] ");
 
@@ -1808,7 +1792,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 offset += textSize.Width;
 
-                if (IsFilledBranchesLayout())
+                if (_layoutRenderer.IsFilledBranchesLayout)
                 {
                     offset += 9;
 
@@ -2987,7 +2971,7 @@ namespace GitUI.UserControls.RevisionGrid
             // hide revision graph when hiding merge commits, reasons:
             // 1, revison graph is no longer relevant, as we are not sohwing all commits
             // 2, performance hit when both revision graph and no merge commits are enabled
-            if (IsGraphLayout() && !AppSettings.ShowMergeCommits)
+            if (_layoutRenderer.IsGraphLayout && !AppSettings.ShowMergeCommits)
             {
                 ToggleRevisionGraph();
                 SetRevisionsLayout();
@@ -3026,12 +3010,11 @@ namespace GitUI.UserControls.RevisionGrid
 
         internal void ShowRevisionGraph_ToolStripMenuItemClick(object sender, EventArgs e)
         {
-
             ToggleRevisionGraph();
             SetRevisionsLayout();
             _revisionGridMenuCommands.TriggerMenuChanged();
             // must show MergeCommits when showing revision graph
-            if (!AppSettings.ShowMergeCommits && IsGraphLayout())
+            if (!AppSettings.ShowMergeCommits && _layoutRenderer.IsGraphLayout)
             {
                 AppSettings.ShowMergeCommits = true;
                 showMergeCommitsToolStripMenuItem.Checked = true;
@@ -3078,16 +3061,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void ToggleRevisionCardLayout()
         {
-            var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));
-            layouts.Sort();
-            var maxLayout = (int)layouts[layouts.Count - 1];
-
-            int nextLayout = AppSettings.RevisionGraphLayout + 1;
-
-            if (nextLayout > maxLayout)
-                nextLayout = 1;
-
-            SetRevisionsLayout((RevisionGridLayout)nextLayout);
+            SetRevisionsLayout(_layoutRendererFactory.GetNext().Layout);
         }
 
         public void SetRevisionsLayout(RevisionGridLayout revisionGridLayout)
@@ -3098,27 +3072,14 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void SetRevisionsLayout()
         {
-            _layout = Enum.IsDefined(typeof(RevisionGridLayout), AppSettings.RevisionGraphLayout)
-                         ? (RevisionGridLayout)AppSettings.RevisionGraphLayout
-                         : RevisionGridLayout.SmallWithGraph;
-
-            IsCardLayout();
-
+            _layoutRenderer = _layoutRendererFactory.GetCurrent();
             NormalFont = AppSettings.Font;// new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
             SetAuthoredRevisionsBrush();
 
-            if (IsCardLayout())
+            if (_layoutRenderer.IsCardLayout)
             {
-                if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card
-                    || AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
-                {
-                    _rowHeigth = 45;
-                }
-                else
-                {
-                    _rowHeigth = 70;
-                }
+                _rowHeigth = _layoutRenderer.Height;
 
                 if (_filledItemBrush == null)
                 {
@@ -3128,13 +3089,10 @@ namespace GitUI.UserControls.RevisionGrid
                 }
                 _selectedItemBrush = _filledItemBrush;
 
-                Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
-
             }
             else
             {
-                if (IsFilledBranchesLayout())
+                if (_layoutRenderer.IsFilledBranchesLayout)
                 {
                     using (var graphics = Graphics.FromHwnd(Handle))
                     {
@@ -3145,7 +3103,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
                 else
                 {
-                    _rowHeigth = 25;
+                    _rowHeigth = _layoutRenderer.Height;
 
                     if (_filledItemBrush == null)
                     {
@@ -3155,14 +3113,14 @@ namespace GitUI.UserControls.RevisionGrid
                     }
                     _selectedItemBrush = _filledItemBrush;
                 }
-
-                Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
             }
+
+            Revisions.ShowAuthor(!_layoutRenderer.IsCardLayout);
+            Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
 
             //Hide graph column when there it is disabled OR when a filter is active
             //allowing for special case when history of a single file is being displayed
-            if (!IsGraphLayout() || (ShouldHideGraph(false) && !AllowGraphWithFilter))
+            if (!_layoutRenderer.IsGraphLayout || (ShouldHideGraph(false) && !AllowGraphWithFilter))
             {
                 Revisions.HideRevisionGraph();
             }
@@ -3184,27 +3142,6 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 _authoredRevisionsBrush = new SolidBrush(AppSettings.AuthoredRevisionsColor);
             }
-        }
-
-        private bool IsFilledBranchesLayout()
-        {
-            return _layout == RevisionGridLayout.FilledBranchesSmall || _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
-        }
-
-        private bool IsCardLayout()
-        {
-            return _layout == RevisionGridLayout.Card
-                   || _layout == RevisionGridLayout.CardWithGraph
-                   || _layout == RevisionGridLayout.LargeCard
-                   || _layout == RevisionGridLayout.LargeCardWithGraph;
-        }
-
-        internal bool IsGraphLayout()
-        {
-            return _layout == RevisionGridLayout.SmallWithGraph
-                   || _layout == RevisionGridLayout.CardWithGraph
-                   || _layout == RevisionGridLayout.LargeCardWithGraph
-                   || _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
         }
 
         #region Hotkey commands

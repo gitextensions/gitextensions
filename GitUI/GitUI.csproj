@@ -375,9 +375,11 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RevisionGrid\Layouts\ILayoutRenderer.cs" />
     <Compile Include="UserControls\RevisionGrid\CopyToClipboardMenuHelper.cs" />
     <Compile Include="UserControls\RevisionGrid\CaptionCustomMenuRenderer.cs" />
     <Compile Include="UserControls\RevisionGrid\GitRefListsForRevision.cs" />
+    <Compile Include="UserControls\RevisionGrid\Layouts\LayoutRendererFactory.cs" />
     <Compile Include="UserControls\RevisionGrid\MenuUtil.cs" />
     <Compile Include="UserControls\RevisionGrid\NavigationHistory.cs" />
     <Compile Include="UserControls\RevisionGrid\ParentChildNavigationHistory.cs" />
@@ -388,6 +390,7 @@
     <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.Designer.cs">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RevisionGrid\Layouts\RevisionGridLayout.cs" />
     <Compile Include="UserControls\RevisionGrid\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />

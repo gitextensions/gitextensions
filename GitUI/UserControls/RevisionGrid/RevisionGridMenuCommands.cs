@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using GitUI.UserControls.RevisionGrid.Layouts;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -19,14 +20,16 @@ namespace GitUI.UserControls.RevisionGrid
             new TranslationString("No revision found.");
 
         RevisionGridControl _revisionGrid;
+        private readonly ILayoutRendererFactory _layoutRendererFactory;
 
         // must both be created only once
         IEnumerable<MenuCommand> _navigateMenuCommands;
         IEnumerable<MenuCommand> _viewMenuCommands;
 
-        public RevisionGridMenuCommands(RevisionGridControl revisionGrid)
+        public RevisionGridMenuCommands(RevisionGridControl revisionGrid, ILayoutRendererFactory layoutRendererFactory)
         {
             _revisionGrid = revisionGrid;
+            _layoutRendererFactory = layoutRendererFactory;
             CreateOrUpdateMenuCommands(); // for translation
             TranslationCategoryName = "RevisionGrid";
             Translate();
@@ -300,7 +303,7 @@ namespace GitUI.UserControls.RevisionGrid
                 menuCommand.Name = "showRevisionGraphToolStripMenuItem";
                 menuCommand.Text = "Show revision graph";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowRevisionGraph_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.IsGraphLayout();
+                menuCommand.IsCheckedFunc = () => _layoutRendererFactory.GetCurrent().IsGraphLayout;
 
                 resultList.Add(menuCommand);
             }
