@@ -114,10 +114,7 @@ namespace GitUI.CommandsDialogs
                     return _diffNoSelection.Text;
 
                 case 1: // diff "parent" --> "selected revision"
-                    var revision = revisions[0];
-                    if (revision != null && revision.HasParent)
-                        return _diffParentWithSelection.Text;
-                    break;
+                    return _diffParentWithSelection.Text;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     return _diffTwoSelected.Text;
