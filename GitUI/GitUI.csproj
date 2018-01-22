@@ -283,6 +283,8 @@
     <Compile Include="Editor\Diff\DiffViewerLineNumberCtrl.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelper.cs" />
     <Compile Include="Editor\Diff\LineSegmentGetter.cs" />
+    <Compile Include="Editor\CustomSyntaxStrategyManager.cs" />
+    <Compile Include="Editor\GitCommitHighlightingStrategy.cs" />
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -167,7 +167,11 @@ namespace GitUI.Editor
 
         public void SetHighlighting(string syntax)
         {
-            TextEditor.SetHighlighting(syntax);
+            var strategy = CustomSyntaxStrategyManager.TryFindCustomSyntaxStrategy(syntax);
+            if (strategy != null)
+                TextEditor.Document.HighlightingStrategy = strategy;
+            else
+                TextEditor.SetHighlighting(syntax);
             TextEditor.Refresh();
         }
 

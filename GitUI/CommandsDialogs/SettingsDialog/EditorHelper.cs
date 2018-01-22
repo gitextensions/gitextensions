@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             return new Object[]
             {
-                "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor",
+                "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor --syntax GitCommit",
                 "vi",
                 "notepad",
                 GetNotepadPP(),

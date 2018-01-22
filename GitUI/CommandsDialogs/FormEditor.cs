@@ -16,17 +16,23 @@ namespace GitUI.CommandsDialogs
         private string _fileName;
         private bool _formClosing = false;
 
-        public FormEditor(GitUICommands aCommands, string fileName, bool showWarning)
+        public FormEditor(GitUICommands aCommands, string fileName, bool showWarning, string highlightingSyntax)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
 
+            // set highlighting syntax
+            if (highlightingSyntax != null)
+                fileViewer.SetHighlighting(highlightingSyntax);
+
             // for translation form
             if (fileName != null)
                 OpenFile(fileName);
+
             fileViewer.TextChanged += (s, e) => HasChanges = true;
             fileViewer.TextLoaded += (s, e) => HasChanges = false;
+
             panelMessage.Visible = showWarning;
         }
 
