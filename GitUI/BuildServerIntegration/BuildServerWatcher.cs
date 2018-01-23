@@ -14,7 +14,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.HelperDialogs;
-using GitUI.RevisionGridClasses;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -22,7 +22,7 @@ namespace GitUI.BuildServerIntegration
 {
     public class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
-        private readonly RevisionGrid revisionGrid;
+        private readonly RevisionGridControl revisionGrid;
         private readonly DvcsGraph revisions;
         private GitModule Module { get { return revisionGrid.Module; } }
 
@@ -34,7 +34,7 @@ namespace GitUI.BuildServerIntegration
 
         private readonly object buildServerCredentialsLock = new object();
 
-        public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
+        public BuildServerWatcher(RevisionGridControl revisionGrid, DvcsGraph revisions)
         {
             this.revisionGrid = revisionGrid;
             this.revisions = revisions;

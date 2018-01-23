@@ -1,4 +1,5 @@
 ﻿using GitUI.Editor;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
 {
@@ -19,7 +20,7 @@ namespace GitUI.CommandsDialogs
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.FileChanges = new GitUI.RevisionGrid();
+            this.FileChanges = new RevisionGridControl();
             this.FileHistoryContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffToolremotelocalStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +94,7 @@ namespace GitUI.CommandsDialogs
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
-            this.FileChanges.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+            this.FileChanges.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.FileChanges.ShowUncommitedChangesIfPossible = true;
             this.FileChanges.Size = new System.Drawing.Size(748, 101);
             this.FileChanges.TabIndex = 2;
@@ -448,7 +449,7 @@ namespace GitUI.CommandsDialogs
         private System.Diagnostics.EventLog eventLog1;
         private FileViewer View;
         private FileViewer Diff;
-        private RevisionGrid FileChanges;
+        private RevisionGridControl FileChanges;
         private System.Windows.Forms.ContextMenuStrip FileHistoryContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private Blame.BlameControl Blame;

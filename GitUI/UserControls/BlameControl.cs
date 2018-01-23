@@ -7,6 +7,7 @@ using GitCommands;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.Blame
 {
@@ -15,7 +16,7 @@ namespace GitUI.Blame
         private GitBlame _blame;
         private GitBlameLine _lastBlameLine = new GitBlameLine();
         private GitBlameLine _clickedBlameLine = new GitBlameLine();
-        private RevisionGrid _revGrid;
+        private RevisionGridControl _revGrid;
         private string _blameHash;
         private string _fileName;
         private Encoding _encoding;
@@ -191,7 +192,7 @@ namespace GitUI.Blame
         
         private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null)
+        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGridControl revGrid, Control controlToMask, Encoding encoding, int? initialLine = null)
         {
             //refresh only when something changed
             string guid = revision.Guid;

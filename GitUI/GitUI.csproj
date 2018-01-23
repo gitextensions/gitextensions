@@ -375,20 +375,23 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardMenuHelper.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\ParentChildNavigationHistory.cs" />
+    <Compile Include="UserControls\RevisionGrid\Layouts\ILayoutRenderer.cs" />
+    <Compile Include="UserControls\RevisionGrid\CopyToClipboardMenuHelper.cs" />
+    <Compile Include="UserControls\RevisionGrid\CaptionCustomMenuRenderer.cs" />
+    <Compile Include="UserControls\RevisionGrid\GitRefListsForRevision.cs" />
+    <Compile Include="UserControls\RevisionGrid\Layouts\LayoutRendererFactory.cs" />
+    <Compile Include="UserControls\RevisionGrid\MenuUtil.cs" />
+    <Compile Include="UserControls\RevisionGrid\NavigationHistory.cs" />
+    <Compile Include="UserControls\RevisionGrid\ParentChildNavigationHistory.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlighting.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.cs">
+    <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.Designer.cs">
+    <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.Designer.cs">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridUtils.cs" />
+    <Compile Include="UserControls\RevisionGrid\Layouts\RevisionGridLayout.cs" />
+    <Compile Include="UserControls\RevisionGrid\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
@@ -408,16 +411,16 @@
     <Compile Include="UserControls\RemotesComboboxControl.Designer.cs">
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
+    <Compile Include="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
+    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Junction.cs">
+    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Junction.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Lanes.cs">
+    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Lanes.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
@@ -518,7 +521,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IGitUICommandsSource.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\IndexWatcher.cs" />
+    <Compile Include="UserControls\RevisionGrid\IndexWatcher.cs" />
     <Compile Include="UserControls\MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -648,10 +651,10 @@
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.Designer.cs">
       <DependentUpon>DashboardItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.cs">
+    <Compile Include="UserControls\RevisionGrid\DvcsGraph.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Designer.cs">
+    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Designer.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\FileStatusList.cs">
@@ -1010,10 +1013,10 @@
     <Compile Include="CommandsDialogs\FormRevertCommit.Designer.cs">
       <DependentUpon>FormRevertCommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\FormRevisionFilter.cs">
+    <Compile Include="UserControls\RevisionGrid\FormRevisionFilter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\FormRevisionFilter.Designer.cs">
+    <Compile Include="UserControls\RevisionGrid\FormRevisionFilter.Designer.cs">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormSettings.cs">
@@ -1084,11 +1087,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid.cs">
+    <Compile Include="UserControls\RevisionGrid\RevisionGridControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid.Designer.cs">
-      <DependentUpon>RevisionGrid.cs</DependentUpon>
+    <Compile Include="UserControls\RevisionGrid\RevisionGridControl.Designer.cs">
+      <DependentUpon>RevisionGridControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SearchWindow.cs">
       <SubType>Form</SubType>
@@ -1098,7 +1101,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\RevisionGridMenuCommands.cs" />
+    <Compile Include="UserControls\RevisionGrid\RevisionGridMenuCommands.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1333,7 +1336,7 @@
     <EmbeddedResource Include="UserControls\RemotesComboboxControl.resx">
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGridClasses\DvcsGraph.resx">
+    <EmbeddedResource Include="UserControls\RevisionGrid\DvcsGraph.resx">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1555,7 +1558,7 @@
       <DependentUpon>FormRevertCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGridClasses\FormRevisionFilter.resx">
+    <EmbeddedResource Include="UserControls\RevisionGrid\FormRevisionFilter.resx">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1610,11 +1613,11 @@
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
       <LogicalName>GitUI.Properties.Resources.resources</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGrid.resx">
-      <DependentUpon>RevisionGrid.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\RevisionGrid\RevisionGridControl.resx">
+      <DependentUpon>RevisionGridControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
+    <EmbeddedResource Include="UserControls\RevisionGrid\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">

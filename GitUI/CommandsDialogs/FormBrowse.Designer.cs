@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitUI.Editor;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
 {
@@ -57,7 +58,7 @@ namespace GitUI.CommandsDialogs
             this.ShowFirstParent = new System.Windows.Forms.ToolStripButton();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.RevisionGrid = new RevisionGridControl();
             this.CommitInfoTabControl = new System.Windows.Forms.TabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
@@ -581,7 +582,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+            this.RevisionGrid.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.RevisionGrid.ShowUncommitedChangesIfPossible = true;
             this.RevisionGrid.Size = new System.Drawing.Size(651, 208);
             this.RevisionGrid.TabIndex = 0;
@@ -1643,7 +1644,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabPage TreeTabPage;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
-        private GitUI.RevisionGrid RevisionGrid;
+        private RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_Workingdir;

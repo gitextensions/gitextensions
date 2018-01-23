@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using GitCommands;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     partial class DvcsGraph
     {

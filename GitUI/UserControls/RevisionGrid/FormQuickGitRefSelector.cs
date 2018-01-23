@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     public partial class FormQuickGitRefSelector : GitModuleForm
     {

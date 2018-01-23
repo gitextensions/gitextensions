@@ -77,6 +77,8 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdateFixture.cs" />
     <Compile Include="Hotkey\HotkeySettingsManagerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\RevisionGrid\Layouts\LayoutRendererFactoryTests.cs" />
+    <Compile Include="UserControls\RevisionGrid\Layouts\RevisionGridLayoutTests.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProviderTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
@@ -113,9 +115,7 @@
       <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\RevisionGridClasses\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>

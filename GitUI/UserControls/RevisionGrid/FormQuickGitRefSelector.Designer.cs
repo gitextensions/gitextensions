@@ -1,4 +1,4 @@
-﻿namespace GitUI.UserControls.RevisionGridClasses
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     partial class FormQuickGitRefSelector
     {

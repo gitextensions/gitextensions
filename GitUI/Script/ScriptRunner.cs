@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.HelperDialogs;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -15,7 +16,7 @@ namespace GitUI.Script
     {
         /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
         /// and returns true if any executed.</summary>
-        public static bool ExecuteScriptCommand(IWin32Window owner, GitModule aModule, int command, RevisionGrid revisionGrid = null)
+        public static bool ExecuteScriptCommand(IWin32Window owner, GitModule aModule, int command, RevisionGridControl revisionGrid = null)
         {
             var curScripts = ScriptManager.GetScripts();
             bool anyScriptExecuted = false;
@@ -31,7 +32,7 @@ namespace GitUI.Script
             return anyScriptExecuted;
         }
 
-        public static bool RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGrid revisionGrid)
+        public static bool RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGridControl revisionGrid)
         {
             if (string.IsNullOrEmpty(script))
                 return false;
@@ -79,7 +80,7 @@ namespace GitUI.Script
             return path;
         }
 
-        private static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
+        private static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
         {
             if (scriptInfo.AskConfirmation && DialogResult.No == MessageBox.Show(owner, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
@@ -364,7 +365,7 @@ namespace GitUI.Script
 
         }
 
-        private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<IGitRef> selectedRemoteBranches,
+        private static GitRevision CalculateSelectedRevision(RevisionGridControl revisionGrid, List<IGitRef> selectedRemoteBranches,
                                                              List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
                                                              List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
@@ -390,7 +391,7 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
-        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGridControl RevisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
                                                       List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches,
                                                       GitRevision currentRevision)
         {

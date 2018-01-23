@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     class NavigationHistory
     {

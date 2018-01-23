@@ -1,10 +1,8 @@
-
 using System.Windows.Forms;
-using GitUI.RevisionGridClasses;
 
-namespace GitUI
+namespace GitUI.UserControls.RevisionGrid
 {
-    partial class RevisionGrid
+    partial class RevisionGridControl
     {
         /// <summary>
         /// Required designer variable.
@@ -76,8 +74,8 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
-            this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGridControl));
+            this.Revisions = new DvcsGraph();
             this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -814,7 +812,7 @@ namespace GitUI
             this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.Revisions);
-            this.Name = "RevisionGrid";
+            this.Name = "RevisionGridControl";
             this.Size = new System.Drawing.Size(682, 235);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
             this.mainContextMenu.ResumeLayout(false);

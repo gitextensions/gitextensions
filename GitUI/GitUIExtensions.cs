@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
+using GitUI.UserControls.RevisionGrid;
 using ICSharpCode.TextEditor.Util;
 using ResourceManager;
 
@@ -18,7 +19,7 @@ namespace GitUI
         public static SynchronizationContext UISynchronizationContext;
 
 
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked=true)
+        public static void OpenWithDifftool(this RevisionGridControl grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked=true)
         {
             //Note: Order in revisions is that first clicked is last in array
             string extraDiffArgs;

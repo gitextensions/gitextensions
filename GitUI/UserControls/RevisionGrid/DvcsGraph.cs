@@ -10,7 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     public sealed partial class DvcsGraph : DataGridView
     {

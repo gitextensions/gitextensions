@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     partial class DvcsGraph
     {

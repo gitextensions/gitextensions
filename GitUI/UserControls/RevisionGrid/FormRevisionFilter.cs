@@ -1,8 +1,7 @@
 ﻿using System;
 using GitCommands;
-using ResourceManager;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     public partial class FormRevisionFilter : GitExtensionsForm
     {

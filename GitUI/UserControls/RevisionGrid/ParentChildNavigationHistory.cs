@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGrid
 {
     class ParentChildNavigationHistory
     {
