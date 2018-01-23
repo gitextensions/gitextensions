@@ -2225,8 +2225,8 @@ namespace GitCommands
             }
 
             //fix refs slashes
-            firstRevision = firstRevision == null ? "" : firstRevision.ToPosixPath();
-            secondRevision = secondRevision == null ? "" : secondRevision.ToPosixPath();
+            firstRevision = firstRevision?.ToPosixPath();
+            secondRevision = secondRevision?.ToPosixPath();
             string diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
@@ -2334,6 +2334,7 @@ namespace GitCommands
             var list = tree
                 .Select(file => new GitItemStatus
                 {
+                    IsTracked = true,
                     IsNew = true,
                     IsChanged = false,
                     IsDeleted = false,

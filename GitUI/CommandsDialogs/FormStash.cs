@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (stashedItem != null)
             {
-                if (stashedItem.IsNew && !stashedItem.IsTracked)
+                if (stashedItem.IsNew)
                 {
                     if (!stashedItem.IsSubmodule)
                         View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, false);
+                        Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
                         if (patch == null)
                             return String.Empty;
                         if (stashedItem.IsSubmodule)
