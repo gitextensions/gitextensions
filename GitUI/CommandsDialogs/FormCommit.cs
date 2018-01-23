@@ -223,6 +223,10 @@ namespace GitUI.CommandsDialogs
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+
+            /* If not changed, by default show "no sign commit" */
+            if (this.gpgSignCommitToolStripComboBox.SelectedIndex == -1)
+                this.gpgSignCommitToolStripComboBox.SelectedIndex = 0;
         }
 
         private void ConfigureMessageBox()
@@ -1009,7 +1013,8 @@ namespace GitUI.CommandsDialogs
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
-                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage, noVerifyToolStripMenuItem.Checked));
+                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage, noVerifyToolStripMenuItem.Checked,
+                                                                                    (gpgSignCommitToolStripComboBox.SelectedIndex > 0), toolStripGpgKeyTextBox.Text));
 
                 UICommands.RepoChangedNotifier.Notify();
 
@@ -2411,6 +2416,21 @@ namespace GitUI.CommandsDialogs
             toolAuthor.Text = "";
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
             updateAuthorInfo();
+        }
+        
+        private void gpgSignCommitChanged(object sender, EventArgs e)
+        {
+            // Change the icon for commit button
+            if (gpgSignCommitToolStripComboBox.SelectedIndex > 0)
+            {
+                Commit.Image = GitUI.Properties.Resources.IconKey;
+            }
+            else
+            {
+                Commit.Image = GitUI.Properties.Resources.IconClean;
+            }
+
+            toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
         }
 
         private long _lastUserInputTime;

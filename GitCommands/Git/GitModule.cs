@@ -2085,7 +2085,7 @@ namespace GitCommands
             return patchFiles;
         }
 
-        public string CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false)
+        public string CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "")
         {
             string command = "commit";
             if (amend)
@@ -2102,6 +2102,14 @@ namespace GitCommands
                 author = author.Trim().Trim('"');
                 command += " --author=\"" + author + "\"";
             }                
+
+            if (gpgSign)
+            {
+                command += " -S";
+
+                if (!string.IsNullOrWhiteSpace(gpgKeyId))
+                    command += gpgKeyId;
+            }
 
             if (useExplicitCommitMessage)
             {
