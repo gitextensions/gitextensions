@@ -8,6 +8,7 @@ namespace GitUI
 {
     public class FilterBranchHelper : IDisposable
     {
+        private bool _applyingFilter;
         private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
         private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
         private RevisionGrid _NO_TRANSLATE_RevisionGrid;
@@ -43,12 +44,12 @@ namespace GitUI
             this.remoteToolStripMenuItem.Text = "Remote";        
         }
 
-        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid RevisionGrid)
+        public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid revisionGrid)
             : this()
         {
             this._NO_TRANSLATE_toolStripBranches = toolStripBranches;
             this._NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
-            this._NO_TRANSLATE_RevisionGrid = RevisionGrid;
+            this._NO_TRANSLATE_RevisionGrid = revisionGrid;
 
             this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
                 this.localToolStripMenuItem,
@@ -143,18 +144,35 @@ namespace GitUI
 
         private void ApplyBranchFilter(bool refresh)
         {
-            bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(_NO_TRANSLATE_toolStripBranches.Text);
-            if (success && refresh)
-                _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+            if (_applyingFilter)
+            {
+                return;
+            }
+            _applyingFilter = true;
+            try
+            {
+                string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
+                bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(filter);
+                if (success && refresh)
+                {
+                    _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+                }
+            }
+            finally
+            {
+                _applyingFilter = false;
+            }
         }
 
         private void UpdateBranchFilterItems()
         {
-            var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;
-            string filter = _NO_TRANSLATE_toolStripBranches.Text;
-            _NO_TRANSLATE_toolStripBranches.Items.Clear();
+            string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
             var branches = GetBranchAndTagRefs(localToolStripMenuItem.Checked, tagsToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-            _NO_TRANSLATE_toolStripBranches.Items.AddRange(branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray());
+            var matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
+
+            var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;
+            _NO_TRANSLATE_toolStripBranches.Items.Clear();
+            _NO_TRANSLATE_toolStripBranches.Items.AddRange(matches);
             _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
         }
 
