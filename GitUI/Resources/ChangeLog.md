@@ -2410,7 +2410,7 @@ Changelog
 [4058]:https://github.com/gitextensions/gitextensions/issues/4058
 [4031]:https://github.com/gitextensions/gitextensions/issues/4031
 
-[Version 2.51.00]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.00
+[Version 2.51.00]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51
 [4386]:https://github.com/gitextensions/gitextensions/pull/4386
 [4374]:https://github.com/gitextensions/gitextensions/issues/4374
 [4373]:https://github.com/gitextensions/gitextensions/issues/4373
