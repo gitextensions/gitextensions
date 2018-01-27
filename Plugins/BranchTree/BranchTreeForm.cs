@@ -9,10 +9,9 @@ namespace BranchTree
 {
     public partial class BranchTreeForm : GitExtensionsFormBase
     {
-        private GitUIBaseEventArgs gitUiCommands;
-
-        private readonly IGitModule _gitCommands;
-        private readonly string[] _remotes;
+        TreeNode _tagTreeNode, _localTreeNode, _remoteTreeNode;
+        private readonly IGitUICommands _gitUiCommands;
+               
 
         public BranchTreeForm()
         {
@@ -22,53 +21,94 @@ namespace BranchTree
 
         public BranchTreeForm(GitUIBaseEventArgs gitUiCommands) : this()
         {
-            this.gitUiCommands = gitUiCommands;
-            this._gitCommands = gitUiCommands != null ? gitUiCommands.GitModule : null;
-            _remotes = _gitCommands.GetRemotes();
+            _gitUiCommands = gitUiCommands.GitUICommands;
+            var gitModule = gitUiCommands != null ? gitUiCommands.GitModule : null;
+            
+            BranchesTreeView.BeginUpdate();
 
-            var br = _gitCommands.RunGitCmd("branch -r").Split('\n');
-            Branches.BeginUpdate();
-            Branches.Nodes.Clear();
+            BranchesTreeView.Nodes.Clear();
 
-            var a = new Dictionary<string, string[]>();
+            _localTreeNode = BranchesTreeView.Nodes.Add("Local");
+            _remoteTreeNode = BranchesTreeView.Nodes.Add("Remote");
+            _tagTreeNode = BranchesTreeView.Nodes.Add("Tag");
 
-            foreach (var branch in br)
-            {
-                if (string.IsNullOrWhiteSpace(branch))
-                    continue;
-                var path = branch.Split('/');
-                a.Add(branch, path);
-            }
-            var b = a.OrderByDescending(el => el.Value.Length);
-            foreach (var item in b)
-            {
-                addOrUpdateNode(Branches.Nodes, item.Value, item.Key);
-            }
-
-            Branches.EndUpdate();
-            Branches.NodeMouseDoubleClick += Branches_NodeMouseDoubleClick;
+            InitLocalBranches(_localTreeNode, gitModule);
+            InitRemoteBranches(_remoteTreeNode, gitModule);
+            InitTag(_tagTreeNode, gitModule);
+          
+            BranchesTreeView.EndUpdate();
+            BranchesTreeView.NodeMouseDoubleClick += Branches_NodeMouseDoubleClick;
         }
+
+        private void InitTag(TreeNode root, IGitModule _gitModule)
+        {
+            var tags = _gitModule.GetRefs(true, false)
+                .OrderBy(r => r.Name);
+
+            foreach (var tag in tags)
+            {
+                AddOrUpdateNode(root.Nodes, tag.Name.Split('/'), tag.CompleteName);
+            }
+        }
+
+        private void InitRemoteBranches(TreeNode root, IGitModule gitModule)
+        {
+            var branches = gitModule.GetRefs()
+                   .Where(branch => branch.IsRemote && !branch.IsTag)
+                   .OrderBy(r => r.Name);                   
+
+            var remotes = gitModule.GetRemotes(allowEmpty: true);
+            
+            foreach (var branch in branches)
+            {
+                var remote = branch.Name.Split('/').First();
+
+                if (!remotes.Contains(remote))
+                {
+                    continue;
+                }
+
+                AddOrUpdateNode(root.Nodes, branch.Name.Split('/'), branch.CompleteName);
+            }
+        }
+
+        private void InitLocalBranches(TreeNode root, IGitModule gitModule)
+        {
+            var localBranches = gitModule.RunGitCmd("branch")
+                .Split('\n')
+                .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
+                .OrderByDescending(branch => branch.Contains('*'))// * for current branch
+                .ThenBy(r => r)
+                .Select(line => line.Trim());// trim justify space
+            foreach (var localBranch in localBranches)
+            {
+                AddOrUpdateNode(root.Nodes, localBranch.Split('/'), localBranch);
+            }
+            
+        }
+                
 
         private void Branches_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            var branchTag = e.Node.Tag as string;
+            //var branchTag = e.Node.Tag as string;
 
-            if (string.IsNullOrEmpty(branchTag))
-            {
-                return;
-            }
+            //if (string.IsNullOrEmpty(branchTag))
+            //{
+            //    return;
+            //}
 
-            foreach (var item in _remotes)
-            {
-                if (branchTag.StartsWith(item+"/")) {
-                    branchTag = branchTag.Remove(0, item.Length + 1);
-                }
-            }
-            
-            _gitCommands.RunGitCmd("checkout "+ branchTag);
+            //foreach (var item in _remotes)
+            //{
+            //    if (branchTag.StartsWith(item + "/"))
+            //    {
+            //        branchTag = branchTag.Remove(0, item.Length + 1);
+            //    }
+            //}
+
+            //_gitModule
         }
 
-        private void addOrUpdateNode(TreeNodeCollection nodes, string[] children, string fullPath)
+        private void AddOrUpdateNode(TreeNodeCollection nodes, string[] children, string fullPath)
         {
             if (children.Length == 0)
             {
@@ -103,7 +143,7 @@ namespace BranchTree
 
             var nextLevelChildren = new string[children.Length - 1];
             Array.ConstrainedCopy(children, 1, nextLevelChildren, 0, children.Length - 1);
-            addOrUpdateNode(treeNode.Nodes, nextLevelChildren, fullPath);
+            AddOrUpdateNode(treeNode.Nodes, nextLevelChildren, fullPath);
         }
 
     }
