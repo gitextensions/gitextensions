@@ -25,7 +25,6 @@ namespace BranchTree
             var gitModule = gitUiCommands != null ? gitUiCommands.GitModule : null;
             
             BranchesTreeView.BeginUpdate();
-
             BranchesTreeView.Nodes.Clear();
 
             _localTreeNode = BranchesTreeView.Nodes.Add("Local");
@@ -90,22 +89,10 @@ namespace BranchTree
 
         private void Branches_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            //var branchTag = e.Node.Tag as string;
-
-            //if (string.IsNullOrEmpty(branchTag))
-            //{
-            //    return;
-            //}
-
-            //foreach (var item in _remotes)
-            //{
-            //    if (branchTag.StartsWith(item + "/"))
-            //    {
-            //        branchTag = branchTag.Remove(0, item.Length + 1);
-            //    }
-            //}
-
-            //_gitModule
+            if (e.Node.Tag != null)
+            {
+                MessageBox.Show("Quick switching coming soon!", "Sorry but", MessageBoxButtons.OK);
+            }
         }
 
         private void AddOrUpdateNode(TreeNodeCollection nodes, string[] children, string fullPath)

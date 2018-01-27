@@ -1,6 +1,5 @@
 ﻿using GitUIPluginInterfaces;
 using ResourceManager;
-using System;
 
 namespace BranchTree
 {
@@ -8,10 +7,11 @@ namespace BranchTree
     {
 
         public BranchTreePlugin()
-        {            
-            SetNameAndDescription ("BranchTree");
+        {
+            SetNameAndDescription("Branch tree");
             Translate();
         }
+
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             using (var frm = new BranchTreeForm(gitUiCommands))

@@ -32,11 +32,11 @@
             this.BranchesTreeView = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
-            // Branches
+            // BranchesTreeView
             // 
             this.BranchesTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BranchesTreeView.Location = new System.Drawing.Point(0, 0);
-            this.BranchesTreeView.Name = "Branches";
+            this.BranchesTreeView.Name = "BranchesTreeView";
             this.BranchesTreeView.Size = new System.Drawing.Size(368, 539);
             this.BranchesTreeView.TabIndex = 0;
             // 
@@ -48,7 +48,8 @@
             this.Controls.Add(this.BranchesTreeView);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BranchTreeForm";
-            this.Text = "BranchTreeForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Branch tree";
             this.ResumeLayout(false);
 
         }
