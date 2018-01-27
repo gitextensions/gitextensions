@@ -238,9 +238,7 @@ namespace Gource
 
                 var response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
 
-                //find http://gource.googlecode.com/files/gource-0.26b.win32.zip
-                //find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
-                var regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
+                var regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win64\.zip)""");
 
                 var matches = regEx.Matches(response);
 
@@ -249,9 +247,9 @@ namespace Gource
                     return "https://github.com" + match.Groups[1].Value;
                 }
 
-                response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.42");
+                response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.47");
 
-                regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
+                regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win64\.zip)""");
 
                 matches = regEx.Matches(response);
 
