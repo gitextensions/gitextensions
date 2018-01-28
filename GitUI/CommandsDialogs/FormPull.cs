@@ -101,6 +101,7 @@ namespace GitUI.CommandsDialogs
         private bool _bInternalUpdate;
         private const string AllRemotes = "[ All ]";
         private readonly IGitRemoteManager _remoteManager;
+        private readonly IFullPathResolver _fullPathResolver;
 
         private FormPull()
             : this(null, null, null)
@@ -142,6 +143,7 @@ namespace GitUI.CommandsDialogs
             bool isRepoShallow = File.Exists(aCommands.Module.ResolveGitInternalPath("shallow"));
             if (isRepoShallow)
                 Unshallow.Visible = true;
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
 
@@ -276,7 +278,7 @@ namespace GitUI.CommandsDialogs
 
         private bool InitModules()
         {
-            if (!File.Exists(Module.WorkingDir + ".gitmodules"))
+            if (!File.Exists(_fullPathResolver.Resolve(".gitmodules")))
                 return false;
             if (!IsSubmodulesInitialized())
             {

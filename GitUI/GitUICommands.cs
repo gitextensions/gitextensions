@@ -22,7 +22,7 @@ namespace GitUI
     {
         private readonly IAvatarService _gravatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
-
+        private readonly IFullPathResolver _fullPathResolver;
 
         public GitUICommands(GitModule module)
         {
@@ -33,6 +33,7 @@ namespace GitUI
 
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _gravatarService = new GravatarService(avatarCache);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         public GitUICommands(string workingDir)
@@ -1034,7 +1035,7 @@ namespace GitUI
             {
                 try
                 {
-                    string path = Path.Combine(Module.WorkingDir, fileName);
+                    string path = _fullPathResolver.Resolve(fileName);
                     if (File.Exists(path))
                         File.Delete(path);
                     else

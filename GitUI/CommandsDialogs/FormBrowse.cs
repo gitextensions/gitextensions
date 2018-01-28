@@ -1969,7 +1969,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in diffFiles.SelectedItems)
             {
-                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(module, item);
+                string filePath = Path.Combine(module.WorkingDir, item.Name.ToNativePath());
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }
