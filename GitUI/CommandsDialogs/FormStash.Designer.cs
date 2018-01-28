@@ -146,8 +146,8 @@ namespace GitUI.CommandsDialogs
             this.StashSelectedFiles.Name = "StashSelectedFiles";
             this.StashSelectedFiles.Size = new System.Drawing.Size(268, 25);
             this.StashSelectedFiles.TabIndex = 18;
-            this.StashSelectedFiles.Text = "Save Changes of selected files to New Stash";
-            this.toolTip.SetToolTip(this.StashSelectedFiles, "Save local changes in selected files to a new stash, then revert local changes");
+            this.StashSelectedFiles.Text = "Stash selected changes";
+            this.toolTip.SetToolTip(this.StashSelectedFiles, "Stash changes for the selected files, then revert them to the original state");
             this.StashSelectedFiles.UseVisualStyleBackColor = true;
             this.StashSelectedFiles.Click += new System.EventHandler(this.StashSelectedFiles_Click);
             // 
@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(268, 25);
             this.Stash.TabIndex = 15;
-            this.Stash.Text = "Save Changes to New Stash";
+            this.Stash.Text = "Stash all changes";
             this.toolTip.SetToolTip(this.Stash, "Save local changes to a new stash, then revert local changes");
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
