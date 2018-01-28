@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.Script;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -99,6 +100,7 @@ namespace GitUI.CommandsDialogs
         {
             Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
 
             var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
                                                                                                    fastForward.Checked,
@@ -113,6 +115,7 @@ namespace GitUI.CommandsDialogs
 
             if (successfullyMerged || wasConflict)
             {
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterMerge);
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }
