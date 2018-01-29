@@ -2098,7 +2098,10 @@ namespace GitCommands
                 command += " --signoff";
 
             if (!string.IsNullOrEmpty(author))
+            {
+                author = author.Trim().Trim('"');
                 command += " --author=\"" + author + "\"";
+            }                
 
             if (useExplicitCommitMessage)
             {
