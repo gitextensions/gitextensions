@@ -6,23 +6,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     internal class FormBrowseUtil
     {
-        public static string GetFullPathFromGitItem(GitModule gitModule, GitItem gitItem)
-        {
-            return GetFullPathFromFilename(gitModule, gitItem.FileName);
-        }
-
-        public static string GetFullPathFromGitItemStatus(GitModule gitModule, GitItemStatus gitItemStatus)
-        {
-            return GetFullPathFromFilename(gitModule, gitItemStatus.Name);
-        }
-
-        public static string GetFullPathFromFilename(GitModule gitModule, string filename)
-        {
-            var filePath = Path.Combine(gitModule.WorkingDir, filename.ToNativePath());
-
-            return filePath;
-        }
-
         public static bool FileOrParentDirectoryExists(string path)
         {
             var fileInfo = new FileInfo(path);

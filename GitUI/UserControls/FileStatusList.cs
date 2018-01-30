@@ -40,6 +40,7 @@ namespace GitUI
         private ToolStripItem _openSubmoduleMenuItem;
 
         public DescribeRevisionDelegate DescribeRevision;
+        private readonly IFullPathResolver _fullPathResolver;
 
         public FileStatusList()
         {
@@ -81,6 +82,7 @@ namespace GitUI
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _filter = new Regex(".*");
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         private void CreateOpenSubmoduleMenuItem()
@@ -324,7 +326,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = Path.Combine(Module.WorkingDir, item.Name);
+                        string fileName = _fullPathResolver.Resolve(item.Name);
 
                         fileList.Add(fileName.ToNativePath());
                     }
@@ -583,7 +585,7 @@ namespace GitUI
                     Process process = new Process();
                     process.StartInfo.FileName = Application.ExecutablePath;
                     process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                    process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, submoduleName.EnsureTrailingPathSeparator());
+                    process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
                     process.Start();
                 });
         }

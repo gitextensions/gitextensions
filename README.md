@@ -39,13 +39,8 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
 
 <table>
   <tr>
-    <td><strong><font="red">Release Candidate (v2.51.RC2)</strong></td>
-    <td><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.RC2">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md#version-251rc2-14-jan-2018">Changelog</a> <br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/2.51.RC2" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v2.51.RC2/total.svg?maxAge=86400" alt="Github Releases (RC)"></a></td>
-  </tr>
-  <tr>
-    <td><strong>Latest Release (v2.50.02)</strong></td>
-    <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md#version-25002-06-september-2017">Changelog</a><br />
+    <td><strong>Latest Release (v2.51.00)</strong></td>
+    <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md#version-25100-28-jan-2018">Changelog</a><br />
         GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="Github Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
   <tr>

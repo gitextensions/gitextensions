@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Publisher="GitExt Team" Version="2.50.90" Language="en-US" Id="GitExtensions..550013F4-337C-4750-8967-DDEEEC2EB497" />
+        <Identity Publisher="GitExt Team" Version="2.51.00" Language="en-US" Id="GitExtensions..550013F4-337C-4750-8967-DDEEEC2EB497" />
         <DisplayName>GitExtensions</DisplayName>
         <Description xml:space="preserve" >Git Extensions is a graphical user interface for Git that allows you to control Git without using the command-line</Description>
         <MoreInfo>http://gitextensions.github.io/</MoreInfo>
