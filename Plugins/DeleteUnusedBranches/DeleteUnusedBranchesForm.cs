@@ -25,10 +25,9 @@ namespace DeleteUnusedBranches
         private readonly TranslationString _searchBranches = new TranslationString("Search branches");
         private readonly TranslationString _loading = new TranslationString("Loading...");
         private readonly TranslationString _branchesSelected = new TranslationString("{0}/{1} branches selected.");
+        private readonly DeleteUnusedBranchesFormSettings _settings;
 
         private readonly SortableBranchesList _branches = new SortableBranchesList();
-        private int _days;
-        private string _referenceBranch;
         private readonly IGitModule _gitCommands;
         private readonly IGitUICommands _gitUiCommands;
         private readonly IGitPlugin _gitPlugin;
@@ -40,14 +39,11 @@ namespace DeleteUnusedBranches
             Translate();
         }
 
-        public DeleteUnusedBranchesForm(int days, string referenceBranch, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
+        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
+            : this()
         {
-            InitializeComponent();
-            Translate();
-
-            this._referenceBranch = referenceBranch;
-            this._days = days;
-            this._gitCommands = gitCommands;
+            _settings = settings;
+            _gitCommands = gitCommands;
             _gitUiCommands = gitUiCommands;
             _gitPlugin = gitPlugin;
             imgLoading.Image = IsMonoRuntime() ? Resources.loadingpanel_static : Resources.loadingpanel;
@@ -58,11 +54,17 @@ namespace DeleteUnusedBranches
         {
             base.OnLoad(e);
 
-            mergedIntoBranch.Text = _referenceBranch;
-            olderThanDays.Value = _days;
+            mergedIntoBranch.Text = _settings.MergedInBranch;
+            olderThanDays.Value = _settings.DaysOlderThan;
+            IncludeRemoteBranches.Checked = _settings.DeleteRemoteBranchesFromFlag;
+            _NO_TRANSLATE_Remote.Text = _settings.RemoteName;
+            useRegexFilter.Checked = _settings.UseRegexToFilterBranchesFlag;
+            regexFilter.Text = _settings.RegexFilter;
+            useRegexCaseInsensitive.Checked = _settings.RegexCaseInsensitiveFlag;
+            regexDoesNotMatch.Checked = _settings.RegexInvertedFlag;
+            includeUnmergedBranches.Checked = _settings.IncludeUnmergedBranchesFlag;
 
             BranchesGrid.DataSource = _branches;
-            ClearResults();
         }
 
         private static IEnumerable<Branch> GetObsoleteBranches(RefreshContext context, string curBranch)
@@ -168,49 +170,17 @@ namespace DeleteUnusedBranches
             _gitUiCommands.StartSettingsDialog(_gitPlugin);
         }
 
-        private void IncludeRemoteBranches_CheckedChanged(object sender, EventArgs e)
-        {
-            ClearResults();
-        }
-
-        private void useRegexFilter_CheckedChanged(object sender, EventArgs e)
-        {
-            ClearResults();
-        }
-
-        private void remote_TextChanged(object sender, EventArgs e)
-        {
-            ClearResults();
-        }
-
-        private void regexFilter_TextChanged(object sender, EventArgs e)
-        {
-            ClearResults();
-        }
-
-        private void mergedIntoBranch_TextChanged(object sender, EventArgs e)
-        {
-            _referenceBranch = mergedIntoBranch.Text;
-            ClearResults();
-        }
-
         private void includeUnmergedBranches_CheckedChanged(object sender, EventArgs e)
         {
-            ClearResults();
+            ClearResults(sender, e);
 
             if (includeUnmergedBranches.Checked)
                 MessageBox.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK);
         }
 
-        private void olderThanDays_ValueChanged(object sender, EventArgs e)
+        private void ClearResults(object sender, EventArgs e)
         {
-            _days = (int)olderThanDays.Value;
-            ClearResults();
-        }
-
-        private void ClearResults()
-        {
-            instructionLabel.Text = string.Format(_chooseBrancesToDelete.Text, _referenceBranch);
+            instructionLabel.Text = string.Format(_chooseBrancesToDelete.Text, mergedIntoBranch.Text);
             lblStatus.Text = string.Format(_pressToSearch.Text, RefreshBtn.Text);
             _branches.Clear();
             _branches.ResetBindings();
@@ -242,8 +212,17 @@ namespace DeleteUnusedBranches
 
             IsRefreshing = true;
             var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
-            var context = new RefreshContext(_gitCommands, IncludeRemoteBranches.Checked, includeUnmergedBranches.Checked, _referenceBranch, _NO_TRANSLATE_Remote.Text,
-                useRegexFilter.Checked ? regexFilter.Text : null, useRegexCaseInsensitive.Checked ? useRegexCaseInsensitive.Checked : false, regexDoesNotMatch.Checked ? regexDoesNotMatch.Checked : false, TimeSpan.FromDays(_days), _refreshCancellation.Token);
+            var context = new RefreshContext(
+                _gitCommands,
+                IncludeRemoteBranches.Checked,
+                includeUnmergedBranches.Checked,
+                mergedIntoBranch.Text,
+                _NO_TRANSLATE_Remote.Text,
+                useRegexFilter.Checked ? regexFilter.Text : null,
+                useRegexCaseInsensitive.Checked ? useRegexCaseInsensitive.Checked : false,
+                regexDoesNotMatch.Checked ? regexDoesNotMatch.Checked : false,
+                TimeSpan.FromDays((int)olderThanDays.Value),
+                _refreshCancellation.Token);
             Task.Factory.StartNew(() => GetObsoleteBranches(context, curBranch).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
                 .ContinueWith(task =>
                 {
