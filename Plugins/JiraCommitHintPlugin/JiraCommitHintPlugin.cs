@@ -76,7 +76,7 @@ namespace JiraCommitHintPlugin
                 GetMessageToCommit(localJira, localQuery, localStringTemplate).ContinueWith(t =>
                 {
                     var preview = t.Result.FirstOrDefault();
-                    MessageBox.Show($"First Task Preview:{Environment.NewLine}{Environment.NewLine}{(preview == null ? "[Empty Jira Query Result]" : preview.Text)}");
+                    MessageBox.Show(null, (preview == null ? "[Empty Jira Query Result]" : preview.Text), "First Task Preview");
                 });
             }
             catch (Exception ex)
