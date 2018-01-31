@@ -2660,12 +2660,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private int _alreadyLoadedTemplatesCount = -1;
         private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            if (_shouldReloadCommitTemplates)
+            var registeredTemplatesCount = _commitTemplateManager.RegisteredTemplates.Count();
+            if (_shouldReloadCommitTemplates || _alreadyLoadedTemplatesCount != registeredTemplatesCount)
             {
                 LoadCommitTemplates();
                 _shouldReloadCommitTemplates = false;
+                _alreadyLoadedTemplatesCount = registeredTemplatesCount;
             }
         }
 
