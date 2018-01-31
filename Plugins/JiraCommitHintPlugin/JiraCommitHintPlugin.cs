@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,6 +25,7 @@ namespace JiraCommitHintPlugin
         private readonly StringSetting jdlQuerySettings = new StringSetting("JDL Query", "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
         private readonly StringSetting stringTemplateSetting = new StringSetting("Jira Message Template", "Message Template", defaultFormat);
         private readonly StringSetting jiraFields = new StringSetting("Jira fields", $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
+        private readonly StringSetting jiraQueryHelpLink = new StringSetting("    ", "");
         private JiraTaskDTO[] currentMessages;
         private Button btnPreview;
 
@@ -61,6 +63,13 @@ namespace JiraCommitHintPlugin
             jdlQuerySettings.CustomControl = new TextBox();
             yield return jdlQuerySettings;
 
+            var queryHelperLink = new LinkLabel { Text = "Open the query helper inside Jira", Width = 300};
+            queryHelperLink.Click += QueryHelperLink_Click;
+            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = 300};
+            txtJiraQueryHelpLink.Controls.Add(queryHelperLink);
+            jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
+            yield return jiraQueryHelpLink;
+
             jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
             yield return jiraFields;
 
@@ -70,6 +79,23 @@ namespace JiraCommitHintPlugin
             txtTemplate.Controls.Add(btnPreview);
             stringTemplateSetting.CustomControl = txtTemplate;
             yield return stringTemplateSetting;
+        }
+
+        private void QueryHelperLink_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(urlSettings.CustomControl.Text))
+            {
+                MessageBox.Show(null, "A valid url is required to launch the Jira query helper", "Invalid Jira url", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            try
+            {
+                Process.Start(urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(null, ex.Message, "Unable to open Jira query helper", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnPreviewClick(object sender, EventArgs eventArgs)
