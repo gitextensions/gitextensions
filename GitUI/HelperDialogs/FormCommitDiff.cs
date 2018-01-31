@@ -38,7 +38,7 @@ namespace GitUI.HelperDialogs
 
                 commitInfo.Revision = _revision;
 
-                Text = "Diff - " + _revision.Guid.Substring(0, 10) + " - " + _revision.AuthorDate + " - " + _revision.Author + " - " + Module.WorkingDir; ;
+                Text = "Diff - " + GitRevision.ToShortSha(_revision.Guid) + " - " + _revision.AuthorDate + " - " + _revision.Author + " - " + Module.WorkingDir; ;
             }
         }
 

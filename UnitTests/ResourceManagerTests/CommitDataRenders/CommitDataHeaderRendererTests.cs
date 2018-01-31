@@ -21,6 +21,19 @@ namespace ResourceManagerTests.CommitDataRenders
         private ILinkFactory _linkFactory;
         private IDateFormatter _dateFormatter;
         private CommitDataHeaderRenderer _renderer;
+        private List<string> _childrenHashes = new List<string>
+        {
+            "3b6ce324e30ed7fda24483fd56a180c34a262202",
+            "2a8788ff15071a202505a96f80796dbff5750ddf",
+            "8e66fa8095a86138a7c7fb22318d2f819669831e"
+        };
+
+        private List<string> _parentHashes = new List<string>
+        {
+            "5542334ab518b329426783d74c8f4204c2d75a43",
+            "92bc4ad5e509f7dbe87dc4e679fcb879c3235788",
+            "bc911920838c15bcf86808904ecb897595b9ef5f"
+        };
 
         [SetUp]
         public void Setup()
@@ -165,14 +178,17 @@ namespace ResourceManagerTests.CommitDataRenders
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
-            data.ChildrenGuids = new List<string> { "3b6ce324e30ed7fda24483fd56a180c34a262202", "2a8788ff15071a202505a96f80796dbff5750ddf", "8e66fa8095a86138a7c7fb22318d2f819669831e" };
+            data.ChildrenGuids = _childrenHashes; 
 
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1{Environment.NewLine}Children:      3b6ce324e3 2a8788ff15 8e66fa8095");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1{Environment.NewLine}" +
+                $"Children:      {GitRevision.ToShortSha(_childrenHashes[0])} " +
+                $"{GitRevision.ToShortSha(_childrenHashes[1])} " +
+                $"{GitRevision.ToShortSha(_childrenHashes[2])}");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitHashText(), Arg.Any<int>());
@@ -190,7 +206,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
                 Guid.NewGuid().ToString("N"),
-                new ReadOnlyCollection<string>(new List<string> { "3b6ce324e30ed7fda24483fd56a180c34a262202", "2a8788ff15071a202505a96f80796dbff5750ddf", "8e66fa8095a86138a7c7fb22318d2f819669831e" }),
+                _parentHashes.AsReadOnly(),
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -199,7 +215,8 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1{Environment.NewLine}Parent(s):     3b6ce324e3 2a8788ff15 8e66fa8095");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1{Environment.NewLine}" +
+                $"Parent(s):     {GitRevision.ToShortSha(_parentHashes[0])} {GitRevision.ToShortSha(_parentHashes[1])} {GitRevision.ToShortSha(_parentHashes[2])}");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitHashText(), Arg.Any<int>());
@@ -218,7 +235,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             var data = new CommitData(artificialGuid,
                 Guid.NewGuid().ToString("N"),
-                new ReadOnlyCollection<string>(new List<string> { "3b6ce324e30ed7fda24483fd56a180c34a262202", "2a8788ff15071a202505a96f80796dbff5750ddf", "8e66fa8095a86138a7c7fb22318d2f819669831e" }),
+                _childrenHashes.AsReadOnly(),
                 author, authorDate,
                 committer, commitDate, "");
 

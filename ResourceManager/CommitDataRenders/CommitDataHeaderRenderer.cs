@@ -177,7 +177,7 @@ namespace ResourceManager.CommitDataRenders
             }
             else
             {
-                commitsString = hashes.Select(guid => guid.Substring(0, 10)).Join(" ");
+                commitsString = hashes.Select(guid => GitRevision.ToShortSha(guid)).Join(" ");
             }
             return commitsString;
         }
