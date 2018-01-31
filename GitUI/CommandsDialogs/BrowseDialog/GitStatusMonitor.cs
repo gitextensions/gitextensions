@@ -35,8 +35,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string _submodulesPath;
         //Timestamps to schedule status updates, limit the update interval dynamically
         private int _nextUpdateTime;
-        private int _prevUpdateTime;
-        private int _currUpdateInterval = MinUpdateInterval;
+        private int _previousUpdateTime;
+        private int _currentUpdateInterval = MinUpdateInterval;
         private GitStatusMonitorState _currentStatus;
         private HashSet<string> _ignoredFiles = new HashSet<string>();
 
@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public GitStatusMonitor()
         {
-            _prevUpdateTime = 0;
+            _previousUpdateTime = 0;
             InitializeComponent();
 
             ignoredFilesTimer.Interval = MaxUpdatePeriod;
@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _workTreeWatcher.EnableRaisingEvents = true;
                             _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
                             _globalIgnoreWatcher.EnableRaisingEvents = !string.IsNullOrWhiteSpace(_globalIgnoreWatcher.Path);
-                            ScheduleNext(UpdateDelay);
+                            CalculateNextUpdateTime(UpdateDelay);
                         }
                         break;
 
@@ -167,7 +167,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (e.FullPath == _globalIgnoreFilePath)
             {
                 _ignoredFilesAreStale = true;
-                ScheduleNext(UpdateDelay);
+                CalculateNextUpdateTime(UpdateDelay);
             }
         }
 
@@ -217,8 +217,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     }
                     _gitPath = Path.GetDirectoryName(gitDirPath);
                     _submodulesPath = Path.Combine(_gitPath, "modules");
-                    _currUpdateInterval = MinUpdateInterval;
-                    _prevUpdateTime = 0;
+                    _currentUpdateInterval = MinUpdateInterval;
+                    _previousUpdateTime = 0;
                     UpdateIgnoredFiles(true);
                     ignoredFilesTimer.Stop();
                     ignoredFilesTimer.Start();
@@ -282,14 +282,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 _commandIsRunning = true;
                 _statusIsUpToDate = true;
-                _prevUpdateTime = Environment.TickCount;
+                _previousUpdateTime = Environment.TickCount;
                 if (_ignoredFilesAreStale)
                 {
                     UpdateIgnoredFiles(false);
                 }
                 AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
                 // Schedule update every 5 min, even if we don't know that anything changed
-                ScheduleNext(MaxUpdatePeriod);
+                CalculateNextUpdateTime(MaxUpdatePeriod);
             }
         }
 
@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void UpdatedStatusReceived(string updatedStatus)
         {
             //Adjust the interval between updates. (This does not affect an update already scheculed).
-            _currUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _prevUpdateTime));
+            _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
             _commandIsRunning = false;
 
             if (CurrentStatus != GitStatusMonitorState.Running)
@@ -319,11 +319,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (!_statusIsUpToDate)
             {
                 //Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
-                ScheduleNext(UpdateDelay);
+                CalculateNextUpdateTime(UpdateDelay);
             }
         }
 
-        private void ScheduleNext(int delay)
+        private void CalculateNextUpdateTime(int delay)
         {
             var next = Environment.TickCount + delay;
             if(_nextUpdateTime > Environment.TickCount)
@@ -332,7 +332,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 next = Math.Min(_nextUpdateTime, next);
             }
             //Enforce a minimal time between updates, to not update too frequently
-            _nextUpdateTime = Math.Max(next, _prevUpdateTime + _currUpdateInterval);
+            _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
         }
 
         private void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
@@ -380,7 +380,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (e.FullPath.StartsWith(_submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
 
-            ScheduleNext(UpdateDelay);
+            CalculateNextUpdateTime(UpdateDelay);
          }
 
         private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
@@ -411,7 +411,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         // Called for instance at buffer overflow
         private void WorkTreeWatcherError(object sender, ErrorEventArgs e)
         {
-            ScheduleNext(UpdateDelay);
+            CalculateNextUpdateTime(UpdateDelay);
         }
 
         private void WorkTreeChanged(object sender, FileSystemEventArgs e)
@@ -440,7 +440,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
-            ScheduleNext(UpdateDelay);
+            CalculateNextUpdateTime(UpdateDelay);
         }
     }
 }
