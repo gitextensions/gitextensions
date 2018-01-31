@@ -145,7 +145,6 @@ namespace JiraCommitHintPlugin
                     e.GitUICommands.AddCommitTemplate(message.Title, () => message.Text);
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
-
         }
 
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -167,8 +166,7 @@ namespace JiraCommitHintPlugin
             {
                 var results = await jira.Issues.GetIssuesFromJqlAsync(query);
                 return results
-                    .Select(issue => new { title = issue.Key + " " + issue.Summary, message = StringTemplate.Format(stringTemplate, issue) })
-                    .Select(i => new JiraTaskDTO(i.title, i.message))
+                    .Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))
                     .ToArray();
             }
             catch (Exception ex)
