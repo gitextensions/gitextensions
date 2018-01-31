@@ -48,16 +48,22 @@ namespace JiraCommitHintPlugin
         public override IEnumerable<ISetting> GetSettings()
         {
             yield return enabledSettings;
-            jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
-            yield return jiraFields;
+
             urlSettings.CustomControl = new TextBox();
             yield return urlSettings;
+
             userSettings.CustomControl = new TextBox();
             yield return userSettings;
+
             passwordSettings.CustomControl = new TextBox { UseSystemPasswordChar = true };
             yield return passwordSettings;
+
             jdlQuerySettings.CustomControl = new TextBox();
             yield return jdlQuerySettings;
+
+            jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
+            yield return jiraFields;
+
             var txtTemplate = new TextBox { Height = 75, Multiline = true, ScrollBars = ScrollBars.Horizontal };
             btnPreview = new Button { Text = "Preview", Top = 45, Anchor = AnchorStyles.Right };
             btnPreview.Click += btnPreviewClick;
