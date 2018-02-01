@@ -17,5 +17,18 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
                 return false;
             }
         }
+
+        public static bool IsUrlValid(string url)
+        {
+            try
+            {
+                var uri = new Uri(url);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
