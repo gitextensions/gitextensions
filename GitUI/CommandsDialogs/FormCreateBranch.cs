@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Utils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -28,6 +29,9 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
             Translate();
+
+            // Mono is having troubles dynamically sizing the groupbox
+            groupBox1.AutoSize = !EnvUtils.IsMonoRuntime();
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)

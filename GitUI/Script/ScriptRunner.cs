@@ -56,11 +56,12 @@ namespace GitUI.Script
                     continue;
                 if (revisionGrid != null)
                     continue;
-                MessageBox.Show(owner, 
+                MessageBox.Show(owner,
                     string.Format("Option {0} is only supported when started from revision grid.", option),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+
             return RunScript(owner, aModule, scriptInfo, revisionGrid);
         }
 
@@ -78,8 +79,13 @@ namespace GitUI.Script
             return path;
         }
 
-        internal static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
+        private static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
         {
+            if (scriptInfo.AskConfirmation && DialogResult.No == MessageBox.Show(owner, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                return false;
+            }
+
             string originalCommand = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
 
@@ -355,7 +361,7 @@ namespace GitUI.Script
         private static string ExpandCommandVariables(string originalCommand, GitModule aModule)
         {
             return originalCommand.Replace("{WorkingDir}", aModule.WorkingDir);
-           
+
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<IGitRef> selectedRemoteBranches,

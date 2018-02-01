@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly AsyncLoader _asyncLoader;
         private readonly FormBrowseMenus _formBrowseMenus;
+        private readonly IFullPathResolver _fullPathResolver;
 
         private readonly TranslationString _buildReportTabCaption =
             new TranslationString("Build Report");
@@ -54,6 +55,7 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenus.InsertAdditionalMainMenuItems(toolStripSeparator4);
 
             _commitDataManager = new CommitDataManager(() => Module);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
@@ -69,14 +71,15 @@ namespace GitUI.CommandsDialogs
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
-            bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
-            if (revision != null && revision.IsArtificial() || isSubmodule) //no blame for artificial
+            bool isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
+            if (isSubmodule)
                 tabControl1.RemoveIfExists(BlameTab);
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
             UpdateFollowHistoryMenuItems();
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && tabControl1.Contains(BlameTab);
             saveAsToolStripMenuItem.Visible = !isSubmodule;
@@ -147,7 +150,7 @@ namespace GitUI.CommandsDialogs
             fileName = fileName.ToPosixPath();
 
             // we will need this later to look up proper casing for the file
-            var fullFilePath = Path.Combine(Module.WorkingDir, fileName);
+            var fullFilePath = _fullPathResolver.Resolve(fileName);
 
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
@@ -226,7 +229,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.RevisionFilter = string.Concat(" --full-history ", res.RevisionFilter);
+                res.RevisionFilter = string.Concat(" --full-history --simplify-merges ", res.RevisionFilter);
             }
 
 
@@ -243,16 +246,6 @@ namespace GitUI.CommandsDialogs
             View.SaveCurrentScrollPos();
             Diff.SaveCurrentScrollPos();
 
-            var selectedRows = FileChanges.GetSelectedRevisions();
-            if (selectedRows.Count > 0)
-            {
-                bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
-                GitRevision revision = selectedRows[0];
-                if (revision.IsArtificial() || isSubmodule)
-                    tabControl1.RemoveIfExists(BlameTab);
-                else
-                    tabControl1.InsertIfNotExists(2, BlameTab);
-            }
             UpdateSelectedFileViewers();
         }
 
@@ -296,7 +289,7 @@ namespace GitUI.CommandsDialogs
                 GitItemStatus file = new GitItemStatus();
                 file.IsTracked = true;
                 file.Name = fileName;
-                file.IsSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, fileName));
+                file.IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName));
                 Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
@@ -344,7 +337,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Module.WorkingDir + orgFileName.ToNativePath();
+                string fullName = _fullPathResolver.Resolve(orgFileName.ToNativePath());
 
                 using (var fileDialog = new SaveFileDialog
                 {
@@ -384,8 +377,19 @@ namespace GitUI.CommandsDialogs
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ToggleFullHistoryFlag();
+        }
+
+        private void ShowFullHistory_Click(object sender, EventArgs e)
+        {
+            ToggleFullHistoryFlag();
+        }
+
+        private void ToggleFullHistoryFlag()
+        {
             AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             LoadFileHistory();
         }
 
@@ -417,7 +421,8 @@ namespace GitUI.CommandsDialogs
             var selectedRevisions = FileChanges.GetSelectedRevisions();
 
             diffToolremotelocalStripMenuItem.Enabled =
-                selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.UnstagedGuid && File.Exists(FileName);
+                selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.UnstagedGuid &&
+                File.Exists(_fullPathResolver.Resolve(FileName));
             openWithDifftoolToolStripMenuItem.Enabled =
                 selectedRevisions.Count >= 1 && selectedRevisions.Count <= 2;
             manipuleerCommitToolStripMenuItem.Enabled =

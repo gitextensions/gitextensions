@@ -377,6 +377,12 @@ namespace GitCommands
             set { SetBool("AlwaysShowCheckoutBranchDlg", value); }
         }
 
+        public static bool CommitAndPushForcedWhenAmend
+        {
+            get { return GetBool("CommitAndPushForcedWhenAmend", false); }
+            set { SetBool("CommitAndPushForcedWhenAmend", value); }
+        }
+
         public static bool CommitInfoShowContainedInBranchesRemote
         {
             get { return GetBool("commitinfoshowcontainedinbranchesremote", false); }
@@ -762,6 +768,12 @@ namespace GitCommands
         {
             get { return GetBool("showRemoteBranches", true); }
             set { SetBool("showRemoteBranches", value); }
+        }
+
+        public static bool ShowReflogReferences
+        {
+            get { return GetBool("showReflogReferences", false); }
+            set { SetBool("showReflogReferences", value); }
         }
 
         public static bool ShowSuperprojectTags

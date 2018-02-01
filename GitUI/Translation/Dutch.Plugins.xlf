@@ -1,12 +1,14 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="nl">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
         <source>display github pull requests builds. GithubToken:</source>
+        <target>geef github pull requests builds zien. GithubToken:</target>
         
       </trans-unit>
       <trans-unit id="cbLoadTestResults.Text">
         <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <target>geef testresultaten weer in samenvatting build status voor ieder bouw resultaat (netwerk intensief!)</target>
         
       </trans-unit>
     </body>
@@ -74,6 +76,211 @@
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>Argumenten voor het git-commando</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="BitbucketBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Specificeer de base URL naar Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Deactiveer SSL verificatie</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Bitbucket Wachtwoord</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Btibucket Gebruikersnaam</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Bitbucket Server</source>
+        <target>Bitbucket Server</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target>Maak download verzoek</target>
+        
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target>Naam</target>
+        
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} gecommit
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Fout</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>Succes</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Uw respository wordt niet gehost in Bitbucket.</target>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target>Goedkeuren</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>Aanmaken</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>Samenvoegen</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        <target>Bron</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        <target>Doel</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        <target>Pull Request Info</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        <target>Bron</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        <target>Doel</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        <target>Pull Request Info</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        <target>Informatie</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target>Vertakking</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        <target>Reviewer (goedgekeurd)</target>
+        
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target>Auteur</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target>Omschrijving</target>
+        
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target>Titel</target>
+        
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        <target>Status</target>
+        
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target>Vertakking</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target>Vertakking</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target>Omschrijving</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target>Titel</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target>Vertakking</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        <target>Reviewer(s)</target>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Maak download verzoek</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Bekijk binnenhaal verzoek</target>
         
       </trans-unit>
     </body>
@@ -972,6 +1179,7 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
+        <target>OAuth Token</target>
         
       </trans-unit>
     </body>
@@ -1152,6 +1360,50 @@ Wilt het het pad opnieuw instellen?</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        <target>Jira Commit Hint</target>
+        
+      </trans-unit>
+      <trans-unit id="enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        <target>Jira hint plugin ge-enabled</target>
+        
+      </trans-unit>
+      <trans-unit id="jdlQuerySettings.Caption">
+        <source>JDL Query</source>
+        <target>JDL Query</target>
+        
+      </trans-unit>
+      <trans-unit id="jiraFields.Caption">
+        <source>Jira fields</source>
+        <target>Jira velden</target>
+        
+      </trans-unit>
+      <trans-unit id="passwordSettings.Caption">
+        <source>Jira password</source>
+        <target>Jira wachtwoord</target>
+        
+      </trans-unit>
+      <trans-unit id="stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        <target>Beheer Sjabloon</target>
+        
+      </trans-unit>
+      <trans-unit id="urlSettings.Caption">
+        <source>Jira URL</source>
+        <target>Jira URL</target>
+        
+      </trans-unit>
+      <trans-unit id="userSettings.Caption">
+        <source>Jira user</source>
+        <target>Jira user</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
@@ -1205,14 +1457,17 @@ Wilt het het pad opnieuw instellen?</target>
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
+        <target>HTTP proxy</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
+        <target>HTTP proxy port</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
+        <target>Wachtwoord</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
@@ -1229,9 +1484,24 @@ Wilt het het pad opnieuw instellen?</target>
         <target>Release Notes Generator</target>
         
       </trans-unit>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
+        <target>Ongeldige invoer</target>
+        
+      </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
         <target>Commit log van '{0}' tot '{1}' ({2}):</target>
+        
+      </trans-unit>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>'From' commit must be specified</source>
+        <target>Specificeer de van-commit</target>
+        
+      </trans-unit>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>'To' commit must be specified</source>
+        <target>Specificeer de naar-commit</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1348,22 +1618,27 @@ branch namen of tag namen zijn)</target>
     <body>
       <trans-unit id="Description.Text">
         <source>Create Bitbucket Pull Request</source>
+        <target>Maak Bitbucket Pull Request</target>
         
       </trans-unit>
       <trans-unit id="StashBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
+        <target>Specificeer de base URL naar Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="StashDisableSsl.Caption">
         <source>Disable SSL verification</source>
+        <target>Deactiveer SSL verificatie</target>
         
       </trans-unit>
       <trans-unit id="StashPassword.Caption">
         <source>Bitbucket Password</source>
+        <target>Bitbucket Wachtwoord</target>
         
       </trans-unit>
       <trans-unit id="StashUsername.Caption">
         <source>Bitbucket Username</source>
+        <target>Btibucket Gebruikersnaam</target>
         
       </trans-unit>
     </body>
@@ -1399,6 +1674,7 @@ branch namen of tag namen zijn)</target>
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
         <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Uw respository wordt niet gehost in Bitbucket.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1552,6 +1828,7 @@ branch namen of tag namen zijn)</target>
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
+        <target>Build url ongeldig</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1559,15 +1836,22 @@ branch namen of tag namen zijn)</target>
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>Het klembord bevat geen geldige build url.
+
+Kopieer a.u.b. eerst de url van de build naar het klembord.
+(De url bevat op zijn minst de &quot;buildTypeId&quot; parameter)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
+        <target>Fout tijdens het laden van de projecten en build lijst</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target>Laden van projecten en build lijst mislukt.
+Controleer a.u.b. de server url.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
@@ -1577,6 +1861,7 @@ Please verify the server url.</source>
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Haal de gegevens uit de build url op het klembord</target>
         
       </trans-unit>
     </body>

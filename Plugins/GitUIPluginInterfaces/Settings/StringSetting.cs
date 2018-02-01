@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
@@ -49,7 +50,14 @@ namespace GitUIPluginInterfaces
                     settingVal = Setting[settings];
                 }
 
-                control.Text = settingVal;
+                if (!control.Multiline)
+                {
+                    control.Text = settingVal;
+                }
+                else
+                {
+                    control.Text = settingVal.Replace("\n", Environment.NewLine);
+                }
             }
 
             public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)

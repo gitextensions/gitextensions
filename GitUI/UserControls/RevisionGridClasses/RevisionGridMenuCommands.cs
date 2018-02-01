@@ -254,6 +254,16 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowReflogReferences";
+                menuCommand.Text = "Show reflog references";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowReflogReferences_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowReflogReferences;
+
+                resultList.Add(menuCommand);
+            }
+
             resultList.Add(MenuCommand.CreateSeparator());
 
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -2109,7 +2109,10 @@ namespace GitCommands
                 command += " --signoff";
 
             if (!string.IsNullOrEmpty(author))
+            {
+                author = author.Trim().Trim('"');
                 command += " --author=\"" + author + "\"";
+            }                
 
             if (useExplicitCommitMessage)
             {
@@ -2224,7 +2227,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult)
+        public Patch GetSingleDiff(string firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked=true)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -2236,16 +2239,19 @@ namespace GitCommands
             }
 
             //fix refs slashes
-            from = from.ToPosixPath();
-            to = to == null ? "":to.ToPosixPath();
-            string commitRange = _revisionDiffProvider.Get(from, to);
+            firstRevision = firstRevision?.ToPosixPath();
+            secondRevision = secondRevision?.ToPosixPath();
+            string diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
             var patchManager = new PatchManager();
-            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange,
-                fileName.Quote(), oldFileName.Quote());
-            cacheResult = cacheResult && !GitRevision.IsArtificial(to) && !GitRevision.IsArtificial(from) && !to.IsNullOrEmpty() && !from.IsNullOrEmpty();
+            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
+            cacheResult = cacheResult &&
+                !GitRevision.IsArtificial(secondRevision) &&
+                !GitRevision.IsArtificial(firstRevision) &&
+                !secondRevision.IsNullOrEmpty() &&
+                !firstRevision.IsNullOrEmpty();
             string patch;
             if (cacheResult)
                 patch = RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
@@ -2274,35 +2280,35 @@ namespace GitCommands
             return RunGitCmd(cmd);
         }
 
-        public string GetDiffFilesText(string from, string to)
+        public string GetDiffFilesText(string firstRevision, string secondRevision)
         {
-            return GetDiffFilesText(from, to, false);
+            return GetDiffFilesText(firstRevision, secondRevision, false);
         }
 
-        public string GetDiffFilesText(string from, string to, bool noCache)
+        public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(from, to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
-        public List<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string from, string to)
+        public List<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision)
         {
-            var status = GetDiffFiles(from, to);
-            GetSubmoduleStatus(status, from, to);
+            var status = GetDiffFiles(firstRevision, secondRevision);
+            GetSubmoduleStatus(status, firstRevision, secondRevision);
             return status;
         }
 
-        public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
+        public List<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, bool noCache = false)
         {
-            noCache = noCache || GitRevision.IsArtificial(from) || GitRevision.IsArtificial(to);
-            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(from, to);
+            noCache = noCache || GitRevision.IsArtificial(firstRevision) || GitRevision.IsArtificial(secondRevision);
+            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
-            if (from == GitRevision.UnstagedGuid || to == GitRevision.UnstagedGuid)
+            if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
                 //For unstaged the untracked must be added too
                 var files = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
-                if (from == GitRevision.UnstagedGuid)
+                if (firstRevision == GitRevision.UnstagedGuid)
                 {
                     //The file is seen as "deleted" in 'to' revision
                     foreach (var item in files)
@@ -2342,6 +2348,7 @@ namespace GitCommands
             var list = tree
                 .Select(file => new GitItemStatus
                 {
+                    IsTracked = true,
                     IsNew = true,
                     IsChanged = false,
                     IsDeleted = false,
@@ -2408,7 +2415,7 @@ namespace GitCommands
                 }
         }
 
-        private void GetSubmoduleStatus(IList<GitItemStatus> status, string from, string to)
+        private void GetSubmoduleStatus(IList<GitItemStatus> status, string firstRevision, string secondRevision)
         {
             status.ForEach(item =>
             {
@@ -2416,7 +2423,7 @@ namespace GitCommands
                 {
                     item.SubmoduleStatus = Task.Factory.StartNew(() =>
                     {
-                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
+                        Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
                         var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text, this, item.Name);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)
@@ -3058,6 +3065,7 @@ namespace GitCommands
         {
             if (revision == GitRevision.UnstagedGuid) //working directory changes
             {
+                Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
             if (revision == GitRevision.IndexGuid) //index
@@ -3137,11 +3145,11 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "")
+        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.UnstagedGuid, string extraDiffArguments = "", bool isTracked=true)
         {
             var output = "";
 
-            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
+            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked));
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }

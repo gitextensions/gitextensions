@@ -38,7 +38,7 @@ namespace GitUI.HelperDialogs
 
                 commitInfo.Revision = _revision;
 
-                Text = "Diff - " + _revision.Guid.Substring(0, 10) + " - " + _revision.AuthorDate + " - " + _revision.Author + " - " + Module.WorkingDir; ;
+                Text = "Diff - " + GitRevision.ToShortSha(_revision.Guid) + " - " + _revision.AuthorDate + " - " + _revision.Author + " - " + Module.WorkingDir; ;
             }
         }
 
@@ -52,7 +52,7 @@ namespace GitUI.HelperDialogs
             if (DiffFiles.SelectedItem != null && _revision != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DiffText.ViewChanges(_revision.Guid, DiffFiles.SelectedItemParent, DiffFiles.SelectedItem, String.Empty);
+                DiffText.ViewChanges(DiffFiles.SelectedItemParent, _revision.Guid, DiffFiles.SelectedItem, String.Empty);
                 Cursor.Current = Cursors.Default;
             }
         }

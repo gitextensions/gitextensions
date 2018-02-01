@@ -307,7 +307,7 @@
             this.regexFilter.Size = new System.Drawing.Size(218, 23);
             this.regexFilter.TabIndex = 6;
             this.regexFilter.Text = "/(feature|develop)/";
-            this.regexFilter.TextChanged += new System.EventHandler(this.regexFilter_TextChanged);
+            this.regexFilter.TextChanged += new System.EventHandler(this.ClearResults);
             // 
             // IncludeRemoteBranches
             // 
@@ -318,7 +318,7 @@
             this.IncludeRemoteBranches.TabIndex = 3;
             this.IncludeRemoteBranches.Text = "Delete remote branches from";
             this.IncludeRemoteBranches.UseVisualStyleBackColor = true;
-            this.IncludeRemoteBranches.CheckedChanged += new System.EventHandler(this.IncludeRemoteBranches_CheckedChanged);
+            this.IncludeRemoteBranches.CheckedChanged += new System.EventHandler(this.ClearResults);
             // 
             // _NO_TRANSLATE_Remote
             // 
@@ -327,7 +327,7 @@
             this._NO_TRANSLATE_Remote.Size = new System.Drawing.Size(218, 23);
             this._NO_TRANSLATE_Remote.TabIndex = 4;
             this._NO_TRANSLATE_Remote.Text = "origin";
-            this._NO_TRANSLATE_Remote.TextChanged += new System.EventHandler(this.remote_TextChanged);
+            this._NO_TRANSLATE_Remote.TextChanged += new System.EventHandler(this.ClearResults);
             // 
             // useRegexFilter
             // 
@@ -338,7 +338,7 @@
             this.useRegexFilter.TabIndex = 5;
             this.useRegexFilter.Text = "Use regex to filter branches";
             this.useRegexFilter.UseVisualStyleBackColor = true;
-            this.useRegexFilter.CheckedChanged += new System.EventHandler(this.useRegexFilter_CheckedChanged);
+            this.useRegexFilter.CheckedChanged += new System.EventHandler(this.ClearResults);
             // 
             // label1
             // 
@@ -366,7 +366,7 @@
             this.mergedIntoBranch.Name = "mergedIntoBranch";
             this.mergedIntoBranch.Size = new System.Drawing.Size(218, 23);
             this.mergedIntoBranch.TabIndex = 12;
-            this.mergedIntoBranch.TextChanged += new System.EventHandler(this.mergedIntoBranch_TextChanged);
+            this.mergedIntoBranch.TextChanged += new System.EventHandler(this.ClearResults);
             // 
             // olderThanDays
             // 
@@ -379,7 +379,7 @@
             this.olderThanDays.Name = "olderThanDays";
             this.olderThanDays.Size = new System.Drawing.Size(120, 23);
             this.olderThanDays.TabIndex = 13;
-            this.olderThanDays.ValueChanged += new System.EventHandler(this.olderThanDays_ValueChanged);
+            this.olderThanDays.ValueChanged += new System.EventHandler(this.ClearResults);
             // 
             // RefreshBtn
             // 

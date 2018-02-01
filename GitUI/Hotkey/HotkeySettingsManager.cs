@@ -266,7 +266,7 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
                     hk(FormBrowse.Commands.Stash, Keys.Control | Keys.Alt | Keys.Up),
                     hk(FormBrowse.Commands.StashPop, Keys.Control | Keys.Alt | Keys.Down),
-                    hk(FormBrowse.Commands.CloseRepositry, Keys.Control | Keys.W),
+                    hk(FormBrowse.Commands.CloseRepository, Keys.Control | Keys.W),
                     hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),

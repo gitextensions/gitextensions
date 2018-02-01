@@ -66,13 +66,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />
+    <Compile Include="GitExtLinks\ExternalLinksParserTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="GitExtLinks\GitExtLinksTests.cs" />
+    <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
@@ -93,7 +96,6 @@
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
-    <Compile Include="GitModuleTestHelper.cs" />
     <Compile Include="Patch\PatchManagerTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />
@@ -102,6 +104,11 @@
     <Compile Include="SshPathLocatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GitExtLinks\MockData\level3_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="GitExtLinks\MockData\level1_GitExtensions.settings.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="GitExtLinks\MockData\level2_GitExtensions.settings.xml">
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Patch\testdata\big.patch">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -130,7 +137,12 @@
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj">
+      <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
+      <Name>CommonTestUtils</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

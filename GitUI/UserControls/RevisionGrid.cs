@@ -101,6 +101,9 @@ namespace GitUI
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
+        // tracks status for the artificial commits while the revision graph is reloading
+        private IList<GitItemStatus> _artificialStatus;
+
 
         private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
         /// <summary>
@@ -195,6 +198,9 @@ namespace GitUI
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
             }
             compareToBaseToolStripMenuItem.Enabled = false;
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
         private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
@@ -1070,9 +1076,6 @@ namespace GitUI
             return false;
         }
 
-        [Browsable(false)]
-        private Task<IList<GitItemStatus>> ChangedFiles { get; set; }
-
         private string _filtredCurrentCheckout;
 
         public void ForceRefreshRevisions()
@@ -1114,14 +1117,6 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                if (ArtificialCountEnabled)
-                {
-                    ChangedFiles = Task.Run(() => capturedModule.GetAllChangedFiles());
-                }
-                else
-                {
-                    ChangedFiles = null;
-                }
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -1660,6 +1655,7 @@ namespace GitUI
 
                             ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+                            drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
                             var superprojectRef = superprojectRefs.FirstOrDefault(spGitRef => gitRef.CompleteName == spGitRef.CompleteName);
                             if (superprojectRef != null)
@@ -1686,6 +1682,7 @@ namespace GitUI
 
                         ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                               gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+                        drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
                     }
@@ -2637,6 +2634,12 @@ namespace GitUI
             _revisionGridMenuCommands.TriggerMenuChanged(); // check/uncheck ToolStripMenuItem
         }
 
+        internal void ShowReflogReferences_ToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            AppSettings.ShowReflogReferences = !AppSettings.ShowReflogReferences;
+            ForceRefreshRevisions();
+        }
+
         internal void ShowSuperprojectTags_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.ShowSuperprojectTags = !AppSettings.ShowSuperprojectTags;
@@ -2741,38 +2744,43 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
-        private bool ArtificialCountEnabled
+        public void UpdateArtificialCommitCount(IList<GitItemStatus> status)
         {
-            get
+            GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);
+            GitRevision stagedRev = GetRevision(GitRevision.IndexGuid);
+            UpdateArtificialCommitCount(status, unstagedRev, stagedRev);
+        }
+
+        private void UpdateArtificialCommitCount(IList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
+        {
+            int staged = status.Count(item => item.IsStaged);
+            int unstaged = status.Count() - staged;
+            if (unstagedRev != null)
             {
-                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
-                //Do not activate if count on Commit button is set, the counters may be inconsistient
-                return AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse) != null;
+                unstagedRev.SubjectCount = "(" + unstaged + ") ";
             }
+            if (stagedRev != null)
+            {
+                stagedRev.SubjectCount = "(" + staged + ") ";
+            }
+            if (unstagedRev == null || stagedRev == null)
+            {
+                _artificialStatus = status;
+            }
+            else
+            {
+                _artificialStatus = null;
+            }
+            Revisions.Invalidate();
         }
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            string unstageCount;
-            string stageCount;
-            if (ChangedFiles != null)
-            {
-                int staged = ChangedFiles.Result.Count(item => item.IsStaged);
-                int unstaged = ChangedFiles.Result.Count() - staged;
-                unstageCount = "(" + unstaged + ") ";
-                stageCount = "(" + staged + ") ";
-            }
-            else
-            {
-                unstageCount = "";
-                stageCount = "";
-            }
-
             var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
             var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
             // Add working directory as virtual commit
-            var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
+            var unstagedRev = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
                 Author = userName,
                 AuthorDate = DateTime.MaxValue,
@@ -2780,14 +2788,13 @@ namespace GitUI
                 Committer = userName,
                 CommitDate = DateTime.MaxValue,
                 CommitterEmail = userEmail,
-                SubjectCount = unstageCount,
                 Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
-            Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+            Revisions.Add(unstagedRev.Guid, unstagedRev.ParentGuids, DvcsGraph.DataType.Normal, unstagedRev);
 
             // Add index as virtual commit
-            var index = new GitRevision(Module, GitRevision.IndexGuid)
+            var stagedRev = new GitRevision(Module, GitRevision.IndexGuid)
             {
                 Author = userName,
                 AuthorDate = DateTime.MaxValue,
@@ -2795,11 +2802,15 @@ namespace GitUI
                 Committer = userName,
                 CommitDate = DateTime.MaxValue,
                 CommitterEmail = userEmail,
-                SubjectCount = stageCount,
                 Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
-            Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+            Revisions.Add(stagedRev.Guid, stagedRev.ParentGuids, DvcsGraph.DataType.Normal, stagedRev);
+
+            if (_artificialStatus != null)
+            {
+                UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
+            }
         }
 
         internal void DrawNonrelativesGray_ToolStripMenuItemClick(object sender, EventArgs e)
@@ -3500,6 +3511,8 @@ namespace GitUI
                 formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", String.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(this);
             }
+
+            RefreshRevisions();
         }
     }
 }

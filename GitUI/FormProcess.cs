@@ -172,17 +172,21 @@ namespace GitUI
 
         private void processAbort(FormStatus form)
         {
-            ConsoleOutput.KillProcess();
+            KillProcess();
         }
 
-        protected void KillGitCommand()
+        protected void KillProcess()
         {
             try
             {
                 ConsoleOutput.KillProcess();
+
+                var module = new GitModule(WorkingDirectory);
+                module.UnlockIndex(true);
             }
             catch
             {
+                // no-op
             }
         }
 

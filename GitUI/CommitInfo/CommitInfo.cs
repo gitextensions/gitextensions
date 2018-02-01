@@ -11,8 +11,10 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.GitExtLinks;
 using GitCommands.Utils;
+using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
+using GitUI.Hotkey;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
@@ -67,6 +69,9 @@ namespace GitUI.CommitInfo
                 _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
             }
             _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
+            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Commands.AddNotes).ToShortcutKeyDisplayString();
         }
 
         [DefaultValue(false)]
@@ -167,7 +172,10 @@ namespace GitUI.CommitInfo
             ResetTextAndImage();
 
             if (string.IsNullOrEmpty(_revision.Guid))
-                return; //is it regular case or should throw an exception
+            {
+                Debug.Assert(false, "Unexpectedly called ReloadCommitInfo() with empty revision");
+                return;
+            }
 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
@@ -194,6 +202,10 @@ namespace GitUI.CommitInfo
 
             UpdateRevisionInfo();
             LoadAuthorImage(data.Author ?? data.Committer);
+
+            //No branch/tag data for artificial commands
+            if (GitRevision.IsArtificial(_revision.Guid))
+                return;
 
             if (AppSettings.CommitInfoShowContainedInBranches)
                 ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));

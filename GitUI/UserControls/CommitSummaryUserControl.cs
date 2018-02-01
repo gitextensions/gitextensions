@@ -54,7 +54,7 @@ namespace GitUI.UserControls
 
                 if (Revision != null)
                 {
-                    groupBox1.Text = Revision.Guid.Length > 10 ? Revision.Guid.Substring(0, 10) : Revision.Guid;
+                    groupBox1.Text = GitRevision.ToShortSha(Revision.Guid);
                     labelAuthor.Text = string.Format("{0}", Revision.Author);
                     labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
                     labelMessage.Text = string.Format("{0}", Revision.Subject);

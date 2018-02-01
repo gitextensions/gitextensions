@@ -93,7 +93,7 @@ namespace GitUI.HelperDialogs
 
             if(!flowLayoutPanelParents.Visible)
                 return;
-            _parents = SelectedRevision.ParentGuids.ToDictionary(p=> p.Substring(0, 10), p=> p);
+            _parents = SelectedRevision.ParentGuids.ToDictionary(p=> GitRevision.ToShortSha(p), p=> p);
             linkLabelParent.Text = _parents.Keys.ElementAt(0);
 
             linkLabelParent2.Visible = _parents.Count > 1;

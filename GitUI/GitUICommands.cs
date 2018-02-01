@@ -22,7 +22,7 @@ namespace GitUI
     {
         private readonly IAvatarService _gravatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
-
+        private readonly IFullPathResolver _fullPathResolver;
 
         public GitUICommands(GitModule module)
         {
@@ -32,6 +32,7 @@ namespace GitUI
                 () => InvokeEvent(null, PostRepositoryChanged));
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _gravatarService = new GravatarService(avatarCache);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
         public GitUICommands(string workingDir)
@@ -1038,7 +1039,7 @@ namespace GitUI
             {
                 try
                 {
-                    string path = Path.Combine(Module.WorkingDir, fileName);
+                    string path = _fullPathResolver.Resolve(fileName);
                     if (File.Exists(path))
                         File.Delete(path);
                     else
@@ -1584,12 +1585,21 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
         {
+            return StartPushDialog(owner, pushOnShow, false, out pushCompleted);
+        }
+
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted)
+        {
             bool pushed = false;
 
             Func<bool> action = () =>
             {
                 using (var form = new FormPush(this))
                 {
+                    if (forceWithLease)
+                    {
+                        form.CheckForceWithLease();
+                    }
                     DialogResult dlgResult;
                     if (pushOnShow)
                         dlgResult = form.PushAndShowDialogWhenFailed(owner);

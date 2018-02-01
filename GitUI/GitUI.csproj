@@ -127,6 +127,9 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
     <Compile Include="CommandsDialogs\BuildReportTabPageExtension.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
@@ -402,6 +405,10 @@
     <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.Designer.cs">
+      <DependentUpon>GitStatusMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1104,12 +1111,6 @@
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.Designer.cs">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-    </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
     <Compile Include="UserControls\FolderBrowserButton.cs">
       <SubType>UserControl</SubType>
@@ -1646,10 +1647,6 @@
     <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ToolStripGitStatus.resx">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchControl.resx">
       <DependentUpon>SearchControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1947,8 +1944,6 @@
     <Content Include="Resources\Icons\commit_error.png" />
     <Content Include="Resources\Icons\commit_ok.png" />
     <Content Include="Resources\Icons\commit_warning.png" />
-    <Content Include="Resources\Icons\certificate_error.png" />
-    <Content Include="Resources\Icons\certificate_ok.png" />
     <Content Include="Resources\Icons\14.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
@@ -1967,6 +1962,8 @@
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
     <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\eye_closed.png" />
+    <Content Include="Resources\Icons\eye_opened.png" />
     <Content Include="Resources\Icons\gitex.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
@@ -1974,6 +1971,7 @@
     <Content Include="Resources\Icons\HelpPullMerge.png" />
     <Content Include="Resources\Icons\HelpPullRebase.png" />
     <Content Include="Resources\Icons\IconArchiveRevision.png" />
+    <Content Include="Resources\Icons\IconBook.png" />
     <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
@@ -1987,11 +1985,9 @@
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
     <Content Include="Resources\Icons\IconUntrackedOnly.png" />
-    <None Include="Resources\Icons\ignore_whitespaces.ico" />
-    <None Include="Resources\Icons\ignore_all_whitespaces.ico" />
+    <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
+    <Content Include="Resources\Icons\ignore_whitespaces.png" />
     <Content Include="Resources\Icons\increase.png" />
-    <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
-    <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
     <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Resources\Icons\tag_error.png" />
     <Content Include="Resources\Icons\tag_ok.png" />
