@@ -1991,6 +1991,7 @@ namespace GitUI.CommandsDialogs
         {
             _splitterManager.AddSplitter(RevisionsSplitContainer, "RevisionsSplitContainer");
             _splitterManager.AddSplitter(MainSplitContainer, "MainSplitContainer");
+            _splitterManager.AddSplitter(RightSplitContainer, nameof(RightSplitContainer));
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
             //hide status in order to restore splitters against the full height (the most common case)
