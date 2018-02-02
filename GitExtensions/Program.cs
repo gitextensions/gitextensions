@@ -56,7 +56,7 @@ namespace GitExtensions
             string[] args = Environment.GetCommandLineArgs();
 
             //This form created for obtain UI synchronization context only
-            using (var empFormForSyncContext = new Form())
+            using (new Form())
             {
                 //Store here SynchronizationContext.Current, because later sometimes it can be null
                 //see http://stackoverflow.com/questions/11621372/synchronizationcontext-current-is-null-in-continuation-on-the-main-ui-thread
