@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.ExternalLinks;
@@ -11,7 +14,7 @@ using NUnit.Framework;
 namespace GitCommandsTests.ExternalLinks
 {
     [TestFixture]
-    public class GitExtLinksTests
+    public class GitRevisionExternalLinksParserTests
     {
         private IGitRemoteManager _remoteManager;
         private ExternalLinkDefinition _linkDef;
@@ -21,7 +24,7 @@ namespace GitCommandsTests.ExternalLinks
         [SetUp]
         public void Setup()
         {
-            _linkDef = GetGithubIssuesLinkDef();
+            _linkDef = Parse(GetGithubIssuesXmlDef()).First();
 
             _revision = new GitRevision(null, "");
 
@@ -122,7 +125,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void ParseLinkWithEmptyRemotePart()
         {
-            _linkDef = ExternalLinksParser.LoadFromXmlString(GetEmptyRemotePartXmlDef()).First();
+            _linkDef = Parse(GetEmptyRemotePartXmlDef()).First();
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             IEnumerable<ExternalLink> expectedLinks = new[]
             {
@@ -162,9 +165,16 @@ namespace GitCommandsTests.ExternalLinks
             return remotes;
         }
 
-        private static ExternalLinkDefinition GetGithubIssuesLinkDef()
+        private static IList<ExternalLinkDefinition> Parse(string xml)
         {
-            return ExternalLinksParser.LoadFromXmlString(GetGithubIssuesXmlDef()).First();
+            var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
+            using (var stringReader = new StringReader(xml))
+            {
+                using (var xmlReader = new XmlTextReader(stringReader))
+                {
+                    return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
+                }
+            }
         }
 
         private static string GetGithubIssuesXmlDef()

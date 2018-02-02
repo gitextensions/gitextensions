@@ -93,8 +93,11 @@
     <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="EnvironmentPathsProvider.cs" />
     <Compile Include="ExceptionUtils.cs" />
+    <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProvider.cs" />
     <Compile Include="ExternalLinks\ExternalLinkDefinition.cs" />
-    <Compile Include="ExternalLinks\ExternalLinksParser.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksLoader.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksManager.cs" />
+    <Compile Include="ExternalLinks\GitRevisionExternalLinksParser.cs" />
     <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="FullPathResolver.cs" />
