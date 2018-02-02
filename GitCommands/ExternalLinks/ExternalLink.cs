@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using GitCommands.Core;
 
-namespace GitCommands.GitExtLinks
+namespace GitCommands.ExternalLinks
 {
-    public class GitExtLink: SimpleStructured
+    public class ExternalLink: SimpleStructured
     {
         public string Caption { get; set; }
         public string URI { get; set; }

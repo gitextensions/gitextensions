@@ -71,11 +71,11 @@
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />
-    <Compile Include="GitExtLinks\ExternalLinksParserTests.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksParserTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
-    <Compile Include="GitExtLinks\GitExtLinksTests.cs" />
     <Compile Include="GitModuleTest.cs" />
+    <Compile Include="ExternalLinks\GitExtLinksTests.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
@@ -104,10 +104,10 @@
     <Compile Include="SshPathLocatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GitExtLinks\MockData\level3_GitExtensions.settings.xml" />
-    <EmbeddedResource Include="GitExtLinks\MockData\level1_GitExtensions.settings.xml">
+    <EmbeddedResource Include="ExternalLinks\MockData\level3_GitExtensions.settings.xml" />
+    <EmbeddedResource Include="ExternalLinks\MockData\level1_GitExtensions.settings.xml">
     </EmbeddedResource>
-    <EmbeddedResource Include="GitExtLinks\MockData\level2_GitExtensions.settings.xml">
+    <EmbeddedResource Include="ExternalLinks\MockData\level2_GitExtensions.settings.xml">
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Patch\testdata\big.patch">

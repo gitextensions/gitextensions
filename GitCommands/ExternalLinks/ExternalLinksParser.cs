@@ -7,18 +7,17 @@ using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Settings;
 
-
-namespace GitCommands.GitExtLinks
+namespace GitCommands.ExternalLinks
 {
-    public class GitExtLinksParser
+    public class ExternalLinksParser
     {
         private readonly RepoDistSettings Settings;
 
-        public List<GitExtLinkDef> LinkDefs;
+        public List<ExternalLinkDefinition> LinkDefs;
         
-        private readonly GitExtLinksParser LowerPriority;
+        private readonly ExternalLinksParser LowerPriority;
 
-        public GitExtLinksParser(RepoDistSettings aSettings)            
+        public ExternalLinksParser(RepoDistSettings aSettings)            
         {
             Settings = new RepoDistSettings(null, aSettings.SettingsCache);
             LoadFromSettings();
@@ -26,14 +25,14 @@ namespace GitCommands.GitExtLinks
             if (aSettings.LowerPriority == null)
                 LowerPriority = null;
             else
-                LowerPriority = new GitExtLinksParser(aSettings.LowerPriority);
+                LowerPriority = new ExternalLinksParser(aSettings.LowerPriority);
         }
 
-        public List<GitExtLinkDef> EffectiveLinkDefs
+        public List<ExternalLinkDefinition> EffectiveLinkDefs
         {
             get 
             {
-                HashSet<GitExtLinkDef> result = new HashSet<GitExtLinkDef>();
+                HashSet<ExternalLinkDefinition> result = new HashSet<ExternalLinkDefinition>();
 
                 foreach (var def in LinkDefs)
                     result.Add(def);
@@ -53,7 +52,7 @@ namespace GitCommands.GitExtLinks
             return LinkDefs.Any(linkDef => linkDef.Name.Equals(name));
         }
 
-        public void AddLinkDef(GitExtLinkDef linkDef)
+        public void AddLinkDef(ExternalLinkDefinition linkDef)
         {
             if (LowerPriority == null
                 || LowerPriority.LowerPriority == null
@@ -68,13 +67,13 @@ namespace GitCommands.GitExtLinks
             }
         }
 
-        public void RemoveLinkDef(GitExtLinkDef linkDef)
+        public void RemoveLinkDef(ExternalLinkDefinition linkDef)
         {
             if (!LinkDefs.Remove(linkDef) && LowerPriority != null)
                 LowerPriority.RemoveLinkDef(linkDef);
         }
 
-        public IEnumerable<GitExtLink> Parse(GitRevision revision)
+        public IEnumerable<ExternalLink> Parse(GitRevision revision)
         {
             return EffectiveLinkDefs.
                 Where(linkDef => linkDef.Enabled).
@@ -90,16 +89,16 @@ namespace GitCommands.GitExtLinks
             LinkDefs = LoadFromXmlString(xml);
         }
 
-        public static List<GitExtLinkDef> LoadFromXmlString(string xmlString)
+        public static List<ExternalLinkDefinition> LoadFromXmlString(string xmlString)
         {
             if (xmlString.IsNullOrWhiteSpace())
             {
-                return new List<GitExtLinkDef>();
+                return new List<ExternalLinkDefinition>();
             }
 
             try
             {
-                var serializer = new XmlSerializer(typeof(List<GitExtLinkDef>));
+                var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
                 StringReader stringReader = null;
                 try
                 {
@@ -107,7 +106,7 @@ namespace GitCommands.GitExtLinks
                     using (var xmlReader = new XmlTextReader(stringReader))
                     {
                         stringReader = null;
-                        return serializer.Deserialize(xmlReader) as List<GitExtLinkDef>;
+                        return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
                     }
                 }
                 finally
@@ -121,7 +120,7 @@ namespace GitCommands.GitExtLinks
                 Debug.WriteLine(ex.Message);
             }
 
-            return new List<GitExtLinkDef>();
+            return new List<ExternalLinkDefinition>();
         }
 
         public void SaveToSettings()
@@ -141,7 +140,7 @@ namespace GitCommands.GitExtLinks
                     LinkDefs.ForEach(linkDef => linkDef.RemoveEmptyFormats());
 
                     var sw = new StringWriter();
-                    var serializer = new XmlSerializer(typeof(List<GitExtLinkDef>));
+                    var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
                     serializer.Serialize(sw, LinkDefs);
                     xml = sw.ToString();                    
                 }

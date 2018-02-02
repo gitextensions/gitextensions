@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.GitExtLinks;
+using GitCommands.ExternalLinks;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class RevisionLinksSettingsPage : RepoDistSettingsPage
     {
-        private GitExtLinksParser parser;
+        private ExternalLinksParser parser;
 
         public RevisionLinksSettingsPage()
         {
@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void  SettingsToPage() 	
         {
-            parser = new GitExtLinksParser(CurrentSettings);
+            parser = new ExternalLinksParser(CurrentSettings);
             ReloadCategories();
             if (_NO_TRANSLATE_Categories.Items.Count > 0)
             {
@@ -62,11 +62,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private GitExtLinkDef SelectedCategory
+        private ExternalLinkDefinition SelectedCategory
         {
             get
             {
-                return _NO_TRANSLATE_Categories.SelectedItem as GitExtLinkDef;
+                return _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
             }
         }
 
@@ -94,14 +94,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 splitContainer1.Panel2.Enabled = true;
                 _NO_TRANSLATE_Name.Text = SelectedCategory.Name;
                 EnabledChx.Checked = SelectedCategory.Enabled;
-                MessageChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.Message);
-                LocalBranchChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.LocalBranches);
-                RemoteBranchChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.RemoteBranches);
+                MessageChx.Checked = SelectedCategory.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.Message);
+                LocalBranchChx.Checked = SelectedCategory.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.LocalBranches);
+                RemoteBranchChx.Checked = SelectedCategory.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.RemoteBranches);
                 _NO_TRANSLATE_SearchPatternEdit.Text = SelectedCategory.SearchPattern;
                 _NO_TRANSLATE_NestedPatternEdit.Text = SelectedCategory.NestedSearchPattern;
                 _NO_TRANSLATE_RemotePatern.Text = SelectedCategory.RemoteSearchPattern;
-                chxURL.Checked = SelectedCategory.RemoteSearchInParts.Contains(GitExtLinkDef.RemotePart.URL);
-                chxPushURL.Checked = SelectedCategory.RemoteSearchInParts.Contains(GitExtLinkDef.RemotePart.PushURL);
+                chxURL.Checked = SelectedCategory.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.URL);
+                chxPushURL.Checked = SelectedCategory.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.PushURL);
                 _NO_TRANSLATE_UseRemotes.Text = SelectedCategory.UseRemotesPattern;
                 chkOnlyFirstRemote.Checked = SelectedCategory.UseOnlyFirstRemote;
                 LinksGrid.DataSource = SelectedCategory.LinkFormats;
@@ -110,10 +110,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void Add_Click(object sender, EventArgs e)
         {
-            GitExtLinkDef newCategory = new GitExtLinkDef();
+            ExternalLinkDefinition newCategory = new ExternalLinkDefinition();
             newCategory.Name = "<new>";
-            newCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
-            newCategory.RemoteSearchInParts.Add(GitExtLinkDef.RemotePart.URL);
+            newCategory.SearchInParts.Add(ExternalLinkDefinition.RevisionPart.Message);
+            newCategory.RemoteSearchInParts.Add(ExternalLinkDefinition.RemotePart.URL);
             newCategory.Enabled = true;
             newCategory.UseRemotesPattern = "upstream|origin";
             newCategory.UseOnlyFirstRemote = true;
@@ -167,11 +167,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (MessageChx.Checked)
                 {
-                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
+                    SelectedCategory.SearchInParts.Add(ExternalLinkDefinition.RevisionPart.Message);
                 }
                 else
                 {
-                    SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.Message);
+                    SelectedCategory.SearchInParts.Remove(ExternalLinkDefinition.RevisionPart.Message);
                 }
             }
         }
@@ -198,11 +198,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (LocalBranchChx.Checked)
                 {
-                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.LocalBranches);
+                    SelectedCategory.SearchInParts.Add(ExternalLinkDefinition.RevisionPart.LocalBranches);
                 }
                 else
                 {
-                    SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.LocalBranches);
+                    SelectedCategory.SearchInParts.Remove(ExternalLinkDefinition.RevisionPart.LocalBranches);
                 }
             }
         }
@@ -213,11 +213,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (RemoteBranchChx.Checked)
                 {
-                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.RemoteBranches);
+                    SelectedCategory.SearchInParts.Add(ExternalLinkDefinition.RevisionPart.RemoteBranches);
                 }
                 else
                 {
-                    SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.RemoteBranches);
+                    SelectedCategory.SearchInParts.Remove(ExternalLinkDefinition.RevisionPart.RemoteBranches);
                 }
             }
         }
@@ -236,11 +236,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (chxURL.Checked)
                 {
-                    SelectedCategory.RemoteSearchInParts.Add(GitExtLinkDef.RemotePart.URL);
+                    SelectedCategory.RemoteSearchInParts.Add(ExternalLinkDefinition.RemotePart.URL);
                 }
                 else
                 {
-                    SelectedCategory.RemoteSearchInParts.Remove(GitExtLinkDef.RemotePart.URL);
+                    SelectedCategory.RemoteSearchInParts.Remove(ExternalLinkDefinition.RemotePart.URL);
                 }
             }
         }
@@ -251,11 +251,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (chxPushURL.Checked)
                 {
-                    SelectedCategory.RemoteSearchInParts.Add(GitExtLinkDef.RemotePart.PushURL);
+                    SelectedCategory.RemoteSearchInParts.Add(ExternalLinkDefinition.RemotePart.PushURL);
                 }
                 else
                 {
-                    SelectedCategory.RemoteSearchInParts.Remove(GitExtLinkDef.RemotePart.PushURL);
+                    SelectedCategory.RemoteSearchInParts.Remove(ExternalLinkDefinition.RemotePart.PushURL);
                 }
             }
         }

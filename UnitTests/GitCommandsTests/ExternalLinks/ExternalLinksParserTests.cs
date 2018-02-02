@@ -2,11 +2,11 @@ using System.Linq;
 using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
-using GitCommands.GitExtLinks;
+using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using NUnit.Framework;
 
-namespace GitCommandsTests.GitExtLinks
+namespace GitCommandsTests.ExternalLinks
 {
     [TestFixture]
     public class ExternalLinksParserTests
@@ -16,7 +16,7 @@ namespace GitCommandsTests.GitExtLinks
         private RepoDistSettings _userRoaming;
         private RepoDistSettings _repoDistributed;
         private RepoDistSettings _repoLocal;
-        private GitExtLinksParser _parser;
+        private ExternalLinksParser _parser;
 
 
         [SetUp]
@@ -51,7 +51,7 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void Can_load_1_layers_of_settings()
         {
-            _parser = new GitExtLinksParser(_userRoaming);
+            _parser = new ExternalLinksParser(_userRoaming);
 
             var effectiveSettings = _parser.EffectiveLinkDefs;
 
@@ -61,7 +61,7 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void Can_load_2_layers_of_settings()
         {
-            _parser = new GitExtLinksParser(_repoDistributed);
+            _parser = new ExternalLinksParser(_repoDistributed);
 
             var effectiveSettings = _parser.EffectiveLinkDefs;
 
@@ -73,7 +73,7 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void Can_load_3_layers_of_settings()
         {
-            _parser = new GitExtLinksParser(_repoLocal);
+            _parser = new ExternalLinksParser(_repoLocal);
 
             var effectiveSettings = _parser.EffectiveLinkDefs;
 
@@ -86,8 +86,8 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void Remove_should_add_definition_to_collection()
         {
-            _parser = new GitExtLinksParser(_repoLocal);
-            var definition = new GitExtLinkDef
+            _parser = new ExternalLinksParser(_repoLocal);
+            var definition = new ExternalLinkDefinition
             {
                 Name = "test",
                 SearchPattern = "pattern"
@@ -104,7 +104,7 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void Remove_should_remove_definition_from_collection()
         {
-            _parser = new GitExtLinksParser(_repoLocal);
+            _parser = new ExternalLinksParser(_repoLocal);
             var effectiveSettings = _parser.EffectiveLinkDefs;
 
             var definition = effectiveSettings[0]; // comes from the local
@@ -120,8 +120,8 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void Remove_should_save_definition_to_lowest_settings()
         {
-            _parser = new GitExtLinksParser(_repoLocal);
-            var definition = new GitExtLinkDef
+            _parser = new ExternalLinksParser(_repoLocal);
+            var definition = new ExternalLinkDefinition
             {
                 Name = "test",
                 SearchPattern = "pattern"
@@ -134,7 +134,7 @@ namespace GitCommandsTests.GitExtLinks
             _userRoaming.SettingsCache.Save();
 
             var settings = new RepoDistSettings(null, new GitExtSettingsCache(_level3));
-            var parser = new GitExtLinksParser(settings);
+            var parser = new ExternalLinksParser(settings);
             parser.EffectiveLinkDefs.Count.Should().Be(2);
             var item = parser.EffectiveLinkDefs.Last();
             item.Name.Should().Be(definition.Name);

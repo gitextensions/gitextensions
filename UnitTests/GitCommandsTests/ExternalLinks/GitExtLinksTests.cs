@@ -3,18 +3,18 @@ using System.ComponentModel;
 using System.Linq;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.GitExtLinks;
+using GitCommands.ExternalLinks;
 using GitCommands.Remote;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GitCommandsTests.GitExtLinks
+namespace GitCommandsTests.ExternalLinks
 {
     [TestFixture]
     public class GitExtLinksTests
     {
         private IGitRemoteManager _remoteManager;
-        private GitExtLinkDef _linkDef;
+        private ExternalLinkDefinition _linkDef;
         private GitRevision _revision;
 
 
@@ -34,9 +34,9 @@ namespace GitCommandsTests.GitExtLinks
         public void ParseGithubIssueForUpstreamLink()
         {
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<GitExtLink> expectedLinks = new[]
+            IEnumerable<ExternalLink> expectedLinks = new[]
             {
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/gitextensions/gitextensions/issues/3657"
@@ -52,9 +52,9 @@ namespace GitCommandsTests.GitExtLinks
         {
             _linkDef.UseRemotesPattern = "origin|upstream";
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<GitExtLink> expectedLinks = new[]
+            IEnumerable<ExternalLink> expectedLinks = new[]
             {
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/jbialobr/gitextensions/issues/3657"
@@ -71,14 +71,14 @@ namespace GitCommandsTests.GitExtLinks
         {
             _linkDef.UseOnlyFirstRemote = false;
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<GitExtLink> expectedLinks = new[]
+            IEnumerable<ExternalLink> expectedLinks = new[]
             {
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/gitextensions/gitextensions/issues/3657"
                 },
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/jbialobr/gitextensions/issues/3657"
@@ -95,19 +95,19 @@ namespace GitCommandsTests.GitExtLinks
             _linkDef.UseRemotesPattern = string.Empty;
             _linkDef.UseOnlyFirstRemote = false;
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<GitExtLink> expectedLinks = new[]
+            IEnumerable<ExternalLink> expectedLinks = new[]
             {
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/jbialobr/gitextensions/issues/3657"
                 },
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/gitextensions/gitextensions/issues/3657"
                 },
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/russkie/gitextensions/issues/3657"
@@ -122,11 +122,11 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void ParseLinkWithEmptyRemotePart()
         {
-            _linkDef = GitExtLinksParser.LoadFromXmlString(GetEmptyRemotePartXmlDef()).First();
+            _linkDef = ExternalLinksParser.LoadFromXmlString(GetEmptyRemotePartXmlDef()).First();
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<GitExtLink> expectedLinks = new[]
+            IEnumerable<ExternalLink> expectedLinks = new[]
             {
-                new GitExtLink()
+                new ExternalLink()
                 {
                     Caption = "Issue 3657",
                     URI = "https://github.com/gitextensions/gitextensions/issues/3657"
@@ -162,9 +162,9 @@ namespace GitCommandsTests.GitExtLinks
             return remotes;
         }
 
-        private static GitExtLinkDef GetGithubIssuesLinkDef()
+        private static ExternalLinkDefinition GetGithubIssuesLinkDef()
         {
-            return GitExtLinksParser.LoadFromXmlString(GetGithubIssuesXmlDef()).First();
+            return ExternalLinksParser.LoadFromXmlString(GetGithubIssuesXmlDef()).First();
         }
 
         private static string GetGithubIssuesXmlDef()

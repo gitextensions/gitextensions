@@ -7,9 +7,10 @@ using System.Xml.Serialization;
 using GitCommands.Core;
 using GitCommands.Remote;
 
-namespace GitCommands.GitExtLinks
+namespace GitCommands.ExternalLinks
 {
-    public class GitExtLinkDef : SimpleStructured
+    [XmlType("GitExtLinkDef")]
+    public class ExternalLinkDefinition : SimpleStructured
     {
         //revision's parts that can be searched for candidates for a link
         public enum RevisionPart
@@ -177,26 +178,26 @@ namespace GitCommands.GitExtLinks
         /// </summary>
         public BindingList<GitExtLinkFormat> LinkFormats = new BindingList<GitExtLinkFormat>();
 
-        public GitExtLinkDef()
+        public ExternalLinkDefinition()
         {
         }
 
-        public IEnumerable<GitExtLink> Parse(GitRevision revision)
+        public IEnumerable<ExternalLink> Parse(GitRevision revision)
         {
             GitRemoteManager remoteManager = new GitRemoteManager(revision.Module);
             return Parse(revision, remoteManager);
         }
 
-        internal IEnumerable<GitExtLink> Parse(GitRevision revision, IGitRemoteManager remoteManager)
+        internal IEnumerable<ExternalLink> Parse(GitRevision revision, IGitRemoteManager remoteManager)
         {
             IEnumerable<Match> remoteMatches = ParseRemotes(remoteManager);
 
             return remoteMatches.SelectMany(remoteMatch => ParseRevision(remoteMatch, revision));
         }
 
-        public IEnumerable<GitExtLink> ParseRevision(Match remoteMatch, GitRevision revision)
+        public IEnumerable<ExternalLink> ParseRevision(Match remoteMatch, GitRevision revision)
         {
-            List<IEnumerable<GitExtLink>> links = new List<IEnumerable<GitExtLink>>();
+            List<IEnumerable<ExternalLink>> links = new List<IEnumerable<ExternalLink>>();
 
             if (SearchInParts.Contains(RevisionPart.LocalBranches))
             {
@@ -294,7 +295,7 @@ namespace GitCommands.GitExtLinks
             return remotes.OrderBy(r => UseRemotesPattern.IndexOf(r.Name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IEnumerable<GitExtLink> ParseRevisionPart(Match remoteMatch, string part, GitRevision revision)
+        public IEnumerable<ExternalLink> ParseRevisionPart(Match remoteMatch, string part, GitRevision revision)
         {
             if (SearchPattern.IsNullOrEmpty() || SearchPatternRegex.Value == null || part == null)
                 yield break;
@@ -362,9 +363,9 @@ namespace GitCommands.GitExtLinks
         [XmlIgnore]
         public bool IsValid { get; private set; }
 
-        public GitExtLink ToGitExtLink(Match remoteMatch, Match revisionMatch, GitRevision revision)
+        public ExternalLink ToGitExtLink(Match remoteMatch, Match revisionMatch, GitRevision revision)
         {
-            GitExtLink link = new GitExtLink();
+            ExternalLink link = new ExternalLink();
 
             var groups = new List<string>();
             AddGroupsFromMatches(remoteMatch, groups);

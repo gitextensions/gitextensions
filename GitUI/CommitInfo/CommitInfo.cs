@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.GitExtLinks;
+using GitCommands.ExternalLinks;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
@@ -551,7 +551,7 @@ namespace GitUI.CommitInfo
 
         private string GetLinksForRevision(GitRevision revision)
         {
-            GitExtLinksParser parser = new GitExtLinksParser(Module.EffectiveSettings);
+            ExternalLinksParser parser = new ExternalLinksParser(Module.EffectiveSettings);
             var links = parser.Parse(revision).Distinct();
             var linksString = string.Empty;
 
