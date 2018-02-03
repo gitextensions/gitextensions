@@ -251,6 +251,22 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
+        [TestMethod]
+        public void ShouldExtractOldVersionOfDetachedHeadOutput()
+        {
+            string sha1;
+            Assert.True(GitModule.TryParseDetachedHead("(detached from c299581)", out sha1));
+            Assert.AreEqual("c299581", sha1);
+        }
+
+        [TestMethod]
+        public void ShouldExtractNewVersionOfDetachedHeadOutput()
+        {
+            string sha1;
+            Assert.True(GitModule.TryParseDetachedHead("(HEAD detached at c299582)", out sha1));
+            Assert.AreEqual("c299582", sha1);
+        }
+
 		[TestMethod]
 		public void GetSubmoduleNamesFromDiffTest()
 		{

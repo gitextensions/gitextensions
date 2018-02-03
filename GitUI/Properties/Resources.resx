@@ -607,6 +607,12 @@
   <data name="HelpCommandMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/HelpCommandMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="CollapseAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CollapseAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExpandAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\ExpandAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="HelpPullMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/HelpPullMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -627,6 +633,24 @@
   </data>
   <data name="IconGotoCurrentRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconGotoCurrentRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\Branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\DeleteRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LocalRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\LocalRepo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RemoteBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RemoteBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchFrom" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchFrom.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RemoteRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RemoteRepo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconFileStatusUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconFileStatusUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -726,12 +726,12 @@ namespace GitUI.RevisionGridClasses
                         }
                     }
 
-                    // When 'git log --first-parent' filtration is enabled and when only current 
+                    // When 'git log --first-parent' filtration is enabled and when only current
                     // branch needed to be rendered (and this filter actually works),
                     // it is much more readable to limit max lanes to 1.
-                    int maxLanes = 
-                        (AppSettings.ShowFirstParent && 
-                        AppSettings.ShowCurrentBranchOnly && 
+                    int maxLanes =
+                        (AppSettings.ShowFirstParent &&
+                        AppSettings.ShowCurrentBranchOnly &&
                         AppSettings.BranchFilterEnabled) ? 1: MaxLanes;
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
@@ -1264,6 +1264,10 @@ namespace GitUI.RevisionGridClasses
         public int? TryGetRevisionIndex(string guid)
         {
             Node node;
+            if (Rows.Count == 0)
+            {
+                return null;
+            }
 
             if (guid != null)
             {

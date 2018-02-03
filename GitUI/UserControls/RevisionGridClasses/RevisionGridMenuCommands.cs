@@ -393,7 +393,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showIsMessageMultilineToolStripMenuItem";
                 menuCommand.Text = "Show indicator for multiline message";
-                menuCommand.ExecuteAction = () => 
+                menuCommand.ExecuteAction = () =>
                 {
                     AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
                     _revisionGrid.ForceRefreshRevisions();
@@ -446,6 +446,15 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;
                 menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.RevisionFilter);
                 menuCommand.ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null);
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ToggleLeftPanel";
+                menuCommand.Text = "Toggle left panel";
+                menuCommand.ExecuteAction = () => _revisionGrid.OnToggleLeftPanelRequested();
 
                 resultList.Add(menuCommand);
             }

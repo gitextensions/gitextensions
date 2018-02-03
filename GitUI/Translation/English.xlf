@@ -2454,6 +2454,10 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Tag</source>
         <target />
       </trans-unit>
+      <trans-unit id="toggleLeftPanel.ToolTipText">
+        <source>Toggle left panel</source>
+          <target />
+        </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
         <source>Toggle split view layout</source>
         <target />
@@ -7578,6 +7582,10 @@ help</source>
   </file>
   <file datatype="plaintext" original="MessageBoxes" source-language="en">
     <body>
+      <trans-unit id="_confirmDeleteRemoteBranch.Text">
+        <source>Do you want to delete the branch {0} from {1}?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target />
@@ -8126,6 +8134,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
         <source>Highlight selected branch (until refresh)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ToggleLeftPanel.Text">
+        <source>Toggle left panel</source>
         <target />
       </trans-unit>
       <trans-unit id="ToggleRevisionCardLayout.Text">

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -84,6 +85,16 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {_workingDir} )")]
     public sealed class GitModule : IGitModule
     {
+        /// <summary>'/' : ref path separator</summary>
+        public const char RefSeparator = '/';
+        /// <summary>"/" : ref path separator</summary>
+        public static readonly string RefSep = RefSeparator.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>'\n' : new-line separator</summary>
+        const char LineSeparator = '\n';
+        /// <summary>"*" indicates the current branch</summary>
+        public static char ActiveBranchIndicator = '*';
+
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
@@ -2169,6 +2180,7 @@ namespace GitCommands
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>Gets the local config file.</summary>
         public IEnumerable<string> GetSettings(string setting)
         {
             return LocalConfigFile.GetValues(setting);
@@ -2212,7 +2224,6 @@ namespace GitCommands
                     stashes.Add(new GitStash(stashString, i));
                 }
             }
-
             return stashes;
         }
 
@@ -2600,6 +2611,24 @@ namespace GitCommands
             return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
 
+        private static Regex detachedHeadRegex = new Regex(@"^\(.* (?<sha1>.*)\)$");
+
+        public static bool TryParseDetachedHead(string text, out string sha1)
+        {
+            sha1 = null;
+            if (!IsDetachedHead(text))
+                return false;
+
+            var sha1Match = detachedHeadRegex.Match(text);
+            if (!sha1Match.Success)
+            {
+                return false;
+            }
+
+            sha1 = sha1Match.Groups["sha1"].Value;
+            return true;
+        }
+
         /// <summary>Gets the remote of the current branch; or "origin" if no remote is configured.</summary>
         public string GetCurrentRemote()
         {
@@ -2795,6 +2824,18 @@ namespace GitCommands
             gitRefs.AddRange(defaultHeads.Values);
 
             return gitRefs;
+        }
+
+        /// <summary>Gets the branch names, with the active branch, if applicable, listed first.
+        /// <remarks>A bit quicker than <see cref="GetHeads()"/>.
+        /// The active branch will be indicated by a "*", so ensure to Trim before processing.</remarks></summary>
+        public IEnumerable<string> GetBranchNames()
+        {
+            return RunGitCmd("branch", SystemEncoding)
+                .Split(LineSeparator)
+                .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
+                .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator))// * for current branch
+                .ThenBy(r => r).Select(line => line.Trim());// trim justify space
         }
 
         /// <summary>

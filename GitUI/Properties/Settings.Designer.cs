@@ -82,7 +82,7 @@ namespace GitUI.Properties {
                 this["Dashboard_CommonSplitContainer_SplitterDistance"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("96")]
@@ -109,7 +109,7 @@ namespace GitUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("213")]
         public int FormBrowse_MainSplitContainer_SplitterDistance {
             get {
                 return ((int)(this["FormBrowse_MainSplitContainer_SplitterDistance"]));
@@ -119,6 +119,18 @@ namespace GitUI.Properties {
             }
         }
         
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FormBrowse_LeftPanel_Collapsed {
+            get {
+                return ((bool)(this["FormBrowse_LeftPanel_Collapsed"]));
+            }
+            set {
+                this["FormBrowse_LeftPanel_Collapsed"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]

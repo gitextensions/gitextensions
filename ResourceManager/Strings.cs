@@ -4,6 +4,7 @@ using SmartFormat;
 
 namespace ResourceManager
 {
+    /// <summary>Contains common string literals which are translated.</summary>
     public class Strings : Translate
     {
         // public only because of FormTranslate
@@ -12,25 +13,16 @@ namespace ResourceManager
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static Strings _instance;
+        private static Lazy<Strings> _instance = new Lazy<Strings>();
 
-        private static Strings Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new Strings();
-                }
-                return _instance;
-            }
-        }
+        /// <summary>Lazy-initialized instance of the <see cref="Strings"/> class.</summary>
+        public static Strings Instance { get { return _instance.Value; } }
 
         public static void Reinit()
         {
-            if (_instance != null)
+            if (_instance.IsValueCreated)
             {
-                _instance = new Strings();
+                _instance = new Lazy<Strings>();
             }
         }
 
@@ -94,25 +86,31 @@ namespace ResourceManager
             return Instance._loadingData.Text;
         }
 
+        /// <summary>"branches" translation.</summary>
+        public static readonly TranslationString branches = new TranslationString("Branches");
+        /// <summary>"remotes" translation.</summary>
+        public static readonly TranslationString remotes = new TranslationString("Remotes");
+        /// <summary>"tags" translation.</summary>
+        public static readonly TranslationString tags = new TranslationString("Tags");
+
         public static string GetUninterestingDiffOmitted()
         {
             return Instance._uninterestingDiffOmitted.Text;
         }
 
-        private readonly TranslationString _dateText       = new TranslationString("Date");
-        private readonly TranslationString _authorText     = new TranslationString("Author");
-        private readonly TranslationString _authorDateText = new TranslationString("Author date");
-        private readonly TranslationString _committerText  = new TranslationString("Committer");
-        private readonly TranslationString _commitDateText = new TranslationString("Commit date");
-        private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
-        private readonly TranslationString _messageText    = new TranslationString("Message");
-        private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
+        private readonly TranslationString _dateText               = new TranslationString("Date");
+        private readonly TranslationString _authorText             = new TranslationString("Author");
+        private readonly TranslationString _authorDateText         = new TranslationString("Author date");
+        private readonly TranslationString _committerText          = new TranslationString("Committer");
+        private readonly TranslationString _commitDateText         = new TranslationString("Commit date");
+        private readonly TranslationString _commitHashText         = new TranslationString("Commit hash");
+        private readonly TranslationString _messageText            = new TranslationString("Message");
+        private readonly TranslationString _parentsText            = new TranslationString("Parent(s)");
         private readonly TranslationString _childrenText   = new TranslationString("Children");
         private readonly TranslationString _currentUnstagedChanges = new TranslationString("Current unstaged changes");
         private readonly TranslationString _currentIndex   = new TranslationString("Commit index");
         private readonly TranslationString _loadingData    = new TranslationString("Loading data...");
         private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
-
 
         public static string GetNSecondsAgoText(int value)
         {
