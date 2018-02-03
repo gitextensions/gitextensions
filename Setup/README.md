@@ -23,5 +23,3 @@ Building installers for Git Extensions
 5. Run BuildInstallers.VS2015.cmd or BuildInstallers.VS2017.cmd. This will generate two msi installers:
     * GitExtensions250.msi - the standard install with only Git Extensions
     * GitExtensions250Complete.msi - also includes Git for Windows and KDiff3
-
-6. Run BuildInstallers.Mono.cmd. This will generate a ZIP archive

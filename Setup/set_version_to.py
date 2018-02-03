@@ -105,7 +105,7 @@ if __name__ == '__main__':
     outfile = open(filename, "w")
     outfile.writelines(makeInstallers)
     
-    filename = "MakeMonoArchive.cmd"
+    filename = "MakePortableArchive.cmd"
     makeInstallers = open(filename, "r").readlines()
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
