@@ -35,9 +35,6 @@ namespace Bitbucket
             _plugin = plugin;
             _settingsContainer = settings;
             _gitUiCommands = gitUiCommands;
-            //Reviewers are not implemented
-            lblReviewers.Visible = false;
-            ReviewersDataGrid.Visible = false;
 
             _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer, _plugin);
             if (_settings == null)
@@ -63,7 +60,6 @@ namespace Bitbucket
             if (_settings == null)
                 return;
 
-            //_bitbucketUsers.AddRange(GetBitbucketUsers().Select(a => a.Slug));
             ThreadPool.QueueUserWorkItem(state =>
             {
                 var repositories = GetRepositories();
@@ -112,12 +108,7 @@ namespace Bitbucket
             var defaultRepo = getDefaultRepo.Send();
             if (defaultRepo.Success)
                 list.Add(defaultRepo.Result);
-            //var getRelatedRepos = new GetRelatedRepoRequest(_settings);
-            //var result = getRelatedRepos.Send();
-            //if (result.Success)
-            //{
-            //    list.AddRange(result.Result);
-            //}
+
             return list;
         }
 
@@ -165,23 +156,6 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        //Users/reviewers are not implemented and hidden
-        /*
-        private IEnumerable<BitbucketUser> GetBitbucketUsers()
-        {
-            var list = new List<BitbucketUser>();
-            var getUser = new GetUserRequest(_settings);
-            var result = getUser.Send();
-            if (result.Success)
-            {
-                foreach (var value in result.Result["values"])
-                {
-                    list.Add(new BitbucketUser { Slug = value["slug"].ToString() });
-                }
-            }
-            return list;
-        }
-        */
         Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
