@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblReviewers = new System.Windows.Forms.Label();
@@ -49,9 +50,9 @@
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.createPullLinkLabel = new System.Windows.Forms.LinkLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabCreate = new System.Windows.Forms.TabPage();
             this.tabView = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lbxPullRequests = new System.Windows.Forms.ListBox();
@@ -63,6 +64,7 @@
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnApprove = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.viewPullLinkLabel = new System.Windows.Forms.LinkLabel();
             this.txtPRDescription = new System.Windows.Forms.TextBox();
             this.txtPRTitle = new System.Windows.Forms.TextBox();
             this.txtPRReviewers = new System.Windows.Forms.TextBox();
@@ -80,6 +82,8 @@
             this.label17 = new System.Windows.Forms.Label();
             this.lblPRDestRepo = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
+            this.tabCreate = new System.Windows.Forms.TabPage();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -89,7 +93,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabCreate.SuspendLayout();
             this.tabView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -103,6 +106,7 @@
             this.splitContainer2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.tabCreate.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -326,6 +330,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.createPullLinkLabel);
             this.groupBox3.Controls.Add(this.lblReviewers);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.txtDescription);
@@ -338,6 +343,17 @@
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pull Request Info";
+            // 
+            // createPullLinkLabel
+            // 
+            this.createPullLinkLabel.AutoSize = true;
+            this.createPullLinkLabel.Location = new System.Drawing.Point(128, 382);
+            this.createPullLinkLabel.Name = "createPullLinkLabel";
+            this.createPullLinkLabel.Size = new System.Drawing.Size(53, 13);
+            this.createPullLinkLabel.TabIndex = 12;
+            this.createPullLinkLabel.TabStop = true;
+            this.createPullLinkLabel.Text = "linkLabel1";
+            this.createPullLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // splitContainer1
             // 
@@ -360,26 +376,13 @@
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabCreate);
             this.tabControl1.Controls.Add(this.tabView);
+            this.tabControl1.Controls.Add(this.tabCreate);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(803, 643);
             this.tabControl1.TabIndex = 3;
-            // 
-            // tabCreate
-            // 
-            this.tabCreate.Controls.Add(this.splitContainer1);
-            this.tabCreate.Controls.Add(this.btnCreate);
-            this.tabCreate.Controls.Add(this.groupBox3);
-            this.tabCreate.Location = new System.Drawing.Point(4, 22);
-            this.tabCreate.Name = "tabCreate";
-            this.tabCreate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCreate.Size = new System.Drawing.Size(795, 617);
-            this.tabCreate.TabIndex = 0;
-            this.tabCreate.Text = "Create Pull Request";
-            this.tabCreate.UseVisualStyleBackColor = true;
             // 
             // tabView
             // 
@@ -492,6 +495,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.viewPullLinkLabel);
             this.groupBox6.Controls.Add(this.txtPRDescription);
             this.groupBox6.Controls.Add(this.txtPRTitle);
             this.groupBox6.Controls.Add(this.txtPRReviewers);
@@ -504,6 +508,17 @@
             this.groupBox6.TabIndex = 4;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Pull Request Info";
+            // 
+            // viewPullLinkLabel
+            // 
+            this.viewPullLinkLabel.AutoSize = true;
+            this.viewPullLinkLabel.Location = new System.Drawing.Point(17, 382);
+            this.viewPullLinkLabel.Name = "viewPullLinkLabel";
+            this.viewPullLinkLabel.Size = new System.Drawing.Size(53, 13);
+            this.viewPullLinkLabel.TabIndex = 15;
+            this.viewPullLinkLabel.TabStop = true;
+            this.viewPullLinkLabel.Text = "linkLabel1";
+            this.viewPullLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // txtPRDescription
             // 
@@ -678,6 +693,19 @@
             this.label18.TabIndex = 4;
             this.label18.Text = "Branch";
             // 
+            // tabCreate
+            // 
+            this.tabCreate.Controls.Add(this.splitContainer1);
+            this.tabCreate.Controls.Add(this.btnCreate);
+            this.tabCreate.Controls.Add(this.groupBox3);
+            this.tabCreate.Location = new System.Drawing.Point(4, 22);
+            this.tabCreate.Name = "tabCreate";
+            this.tabCreate.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCreate.Size = new System.Drawing.Size(795, 617);
+            this.tabCreate.TabIndex = 0;
+            this.tabCreate.Text = "Create Pull Request";
+            this.tabCreate.UseVisualStyleBackColor = true;
+            // 
             // BitbucketPullRequestForm
             // 
             this.AcceptButton = this.btnCreate;
@@ -686,9 +714,7 @@
             this.ClientSize = new System.Drawing.Size(827, 667);
             this.Controls.Add(this.tabControl1);
             this.Name = "BitbucketPullRequestForm";
-            this.Text = "Create Pull Request";
-            this.Load += BitbucketPullRequestFormLoad;
-            this.Load += BitbucketViewPullRequestFormLoad;
+            this.Text = "Bitbucket Server";
             ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -701,7 +727,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.tabCreate.ResumeLayout(false);
             this.tabView.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
@@ -719,6 +744,7 @@
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.tabCreate.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -777,5 +803,8 @@
         private System.Windows.Forms.Label lblPRState;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.LinkLabel createPullLinkLabel;
+        private System.Windows.Forms.LinkLabel viewPullLinkLabel;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
