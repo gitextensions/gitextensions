@@ -105,17 +105,6 @@ if __name__ == '__main__':
     outfile = open(filename, "w")
     outfile.writelines(makeInstallers)
     
-    filename = "MakePortableArchive.cmd"
-    makeInstallers = open(filename, "r").readlines()
-    for i in range(len(makeInstallers)):
-        line = makeInstallers[i]
-        if line.find("set version=") == 0:
-            data = line.split('=')
-            data[1] = args.text + '\n'
-            makeInstallers[i] = '='.join(data)
-    outfile = open(filename, "w")
-    outfile.writelines(makeInstallers)
-
     filename = "..\GitExtensionsDoc\source\conf.py"
     docoConf = open(filename, "r").readlines()
     for i in range(len(docoConf)):

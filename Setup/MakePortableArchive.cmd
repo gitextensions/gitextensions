@@ -2,14 +2,9 @@
 
 cd /d "%~p0"
 
-rem
-rem Update this version number with every release
-rem
-setlocal
-set version=2.51
-
 SET Configuration=%1
 IF "%Configuration%"=="" SET Configuration=Release
+SET version=%2
 if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
 set normal=GitExtensions-Portable-%version%.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"

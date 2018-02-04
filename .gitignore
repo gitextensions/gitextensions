@@ -30,8 +30,8 @@ GitExtensionsShellEx/Generated/
 *.opensdf
 *.ipch
 *.iml
-*.VS2015.VC.db
-*.VS2015.sqlite
+*.VC.db
+*.sqlite
 *.aps
 *.bak
 *.[Cc]ache
