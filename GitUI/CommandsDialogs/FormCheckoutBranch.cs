@@ -168,42 +168,23 @@ namespace GitUI.CommandsDialogs
                 localChangesPanel
             };
 
-            if (EnvUtils.IsMonoRuntime())
-            {
-                var margin = flowLayoutPanel2.Controls[0].Margin;
-                flowLayoutPanel2.Height = flowLayoutPanel2.Controls.OfType<Control>().Max(c => c.Height) + margin.Top + margin.Bottom;
-                localChangesGB.Height = flowLayoutPanel2.Height * 2 + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
-                localChangesPanel.Height = localChangesGB.Height + localChangesGB.Margin.Top + localChangesGB.Margin.Bottom;
+            Ok.Anchor = AnchorStyles.Right;
 
-                Ok.AutoSize = false;
-                var buttonWidth = TextRenderer.MeasureText(Ok.Text, AppSettings.Font).Width + 10;
+            flowLayoutPanel2.AutoSize = true;
+            flowLayoutPanel2.Dock = DockStyle.Fill;
+            localChangesGB.AutoSize = true;
+            localChangesGB.Height = flowLayoutPanel2.Height * 2 + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
+            localChangesPanel.ColumnStyles[1].Width = Ok.Width + 10;
+            var height = localChangesGB.Height + localChangesGB.Margin.Top + localChangesGB.Margin.Bottom;
+            localChangesPanel.RowStyles[0].Height = height;
+            localChangesPanel.Height = height;
 
-                localChangesPanel.ColumnStyles[1].Width = buttonWidth + Ok.Margin.Left + Ok.Margin.Right;
-                Ok.Width = buttonWidth;
-
-                localChangesGB.Width = localChangesPanel.Width - (int)localChangesPanel.ColumnStyles[1].Width;
-                flowLayoutPanel2.Width = localChangesGB.Width - 2 * localChangesGB.Padding.Left - 2 * localChangesGB.Padding.Right;
-            }
-            else
-            {
-                Ok.Anchor = AnchorStyles.Right;
-
-                flowLayoutPanel2.AutoSize = true;
-                flowLayoutPanel2.Dock = DockStyle.Fill;
-                localChangesGB.AutoSize = true;
-                localChangesGB.Height = flowLayoutPanel2.Height * 2 + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
-                localChangesPanel.ColumnStyles[1].Width = Ok.Width + 10;
-                var height = localChangesGB.Height + localChangesGB.Margin.Top + localChangesGB.Margin.Bottom;
-                localChangesPanel.RowStyles[0].Height = height;
-                localChangesPanel.Height = height;
-
-                Width = tableLayoutPanel1.PreferredSize.Width + 40;
-            }
+            Width = tableLayoutPanel1.PreferredSize.Width + 40;
 
             for (var i = 0; i < controls1.Length; i++)
             {
                 var margin = controls1[i].Margin;
-                var height = controls1[i].Height + margin.Top + margin.Bottom;
+                height = controls1[i].Height + margin.Top + margin.Bottom;
                 _controls.Add(controls1[i], height);
 
                 tableLayoutPanel1.RowStyles[i].Height = height;
@@ -520,29 +501,15 @@ namespace GitUI.CommandsDialogs
 
         private void RecalculateSizeConstraints()
         {
-            if (!EnvUtils.IsMonoRuntime())
-            {
-                MinimumSize = MaximumSize = new Size(0, 0);
-            }
+            MinimumSize = MaximumSize = new Size(0, 0);
 
             remoteOptionsPanel.Visible = Remotebranch.Checked;
             tableLayoutPanel1.RowStyles[2].Height = Remotebranch.Checked ? _controls[remoteOptionsPanel] : 0;
             tableLayoutPanel1.Height = _controls.Select(c => c.Key.Visible ? c.Value : 0).Sum() + tableLayoutPanel1.Padding.Top + tableLayoutPanel1.Padding.Bottom;
             Height = tableLayoutPanel1.Height + tableLayoutPanel1.Margin.Top + tableLayoutPanel1.Margin.Bottom + 40;
 
-            if (EnvUtils.IsMonoRuntime())
-            {
-                var minWidth = tableLayoutPanel1.PreferredSize.Width;
-                if (Width < minWidth)
-                {
-                    Width = minWidth;
-                }
-            }
-            else
-            {
-                MinimumSize = new Size(tableLayoutPanel1.PreferredSize.Width + 40, Height);
-                MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, Height);
-            }
+            MinimumSize = new Size(tableLayoutPanel1.PreferredSize.Width + 40, Height);
+            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, Height);
         }
 
         private void rbReset_CheckedChanged(object sender, EventArgs e)

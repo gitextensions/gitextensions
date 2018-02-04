@@ -2,9 +2,7 @@
 {
     using System.Diagnostics;
     using System.Windows.Forms;
-#if !__MonoCS__
     using Microsoft.WindowsAPICodePack.Dialogs;
-#endif
 
     public static class OsShellUtil
     {
@@ -48,7 +46,6 @@
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
         public static string PickFolder(IWin32Window ownerWindow, string selectedPath = null)
         {
-#if !__MonoCS__
             if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
             {
                 // use Vista+ dialog
@@ -67,7 +64,6 @@
             }
             else
             {
-#endif
                 // use XP-era dialog
                 using (var dialog = new FolderBrowserDialog())
                 {
@@ -79,9 +75,7 @@
                     if (result == DialogResult.OK)
                         return dialog.SelectedPath;
                 }
-#if !__MonoCS__
             }
-#endif
 
             // return null if the user cancelled
             return null;

@@ -16,11 +16,6 @@ namespace GitCommandsTests
         [SetUp]
         public void Setup()
         {
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                _workingDir = "/home/user/repo";
-            }
-
             _resolver = new FullPathResolver(() => _workingDir);
         }
 
@@ -33,35 +28,18 @@ namespace GitCommandsTests
             ((Action)(() => _resolver.Resolve(path))).ShouldThrow<ArgumentNullException>();
         }
 
-        [Platform(Include = "Win")]
         [TestCase(@"c:\")]
         public void Resolve_should_return_original_path_if_rooted(string path)
         {
             _resolver.Resolve(path).Should().Be(path);
         }
 
-        [Platform(Exclude = "Win")]
-        [TestCase(@"/home/user")]
-        public void Resolve_should_return_original_path_if_rooted_Mono(string path)
-        {
-            _resolver.Resolve(path).Should().Be(path);
-        }
-
-        [Platform(Include = "Win")]
         [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
         public void Resolve_should_throw_PathTooLongException(string path)
         {
             ((Action)(() => _resolver.Resolve(path))).ShouldThrow<PathTooLongException>();
         }
 
-        [Platform(Exclude = "Win")]
-        [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
-        public void Resolve_should_not_throw_PathTooLongException_Mono(string path)
-        {
-            ((Action)(() => _resolver.Resolve(path))).ShouldNotThrow<PathTooLongException>();
-        }
-
-        [Platform(Include = "Win")]
         [TestCase(@"file")]
         [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
         public void Resolve_should_return_full_path(string path)

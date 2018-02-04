@@ -53,13 +53,6 @@ namespace GitCommands
         /// </remarks>
         public Icon Get(string workingDirectory, string relativeFilePath)
         {
-            if (EnvUtils.IsMonoRuntime())
-            {
-                // Mono does not support icon extraction
-                // https://github.com/mono/mono/blob/master/mcs/class/System.Drawing/System.Drawing/Icon.cs#L314
-                return null;
-            }
-
             var extension = Path.GetExtension(relativeFilePath);
             if (string.IsNullOrWhiteSpace(extension))
             {

@@ -29,11 +29,6 @@ namespace GravatarTests
         [SetUp]
         public void Setup()
         {
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                _folderPath = "/home/user/gitextensions/images";
-            }
-
             _fileSystem = Substitute.For<IFileSystem>();
             _directory = Substitute.For<DirectoryBase>();
             _fileSystem.Directory.Returns(_directory);

@@ -32,9 +32,7 @@ namespace GitUI.Editor.Diff
                 else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
-                    // Workaround that right most numbers get clipped when using mono.
-                    var monoTextWidthAdjustment = EnvUtils.IsMonoRuntime() ? 10 : 0;
-                    _lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
+                    _lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin, 0);
                 }
 
                 return _lastSize;

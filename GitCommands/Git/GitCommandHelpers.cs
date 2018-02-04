@@ -1251,7 +1251,6 @@ namespace GitCommands
             return FindRenamesOpt() + findCopies;
         }
 
-#if !__MonoCS__
         static class NativeMethods
         {
             [DllImport("kernel32.dll")]
@@ -1266,11 +1265,9 @@ namespace GitCommands
             public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
                int dwProcessGroupId);
         }
-#endif
 
         public static void TerminateTree(this Process process)
         {
-#if !__MonoCS__
             if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
@@ -1280,7 +1277,6 @@ namespace GitCommands
                 if (!process.HasExited)
                     System.Threading.Thread.Sleep(500);
             }
-#endif
             if (!process.HasExited)
                 process.Kill();
         }

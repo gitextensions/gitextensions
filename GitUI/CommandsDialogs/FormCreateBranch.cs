@@ -30,8 +30,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            // Mono is having troubles dynamically sizing the groupbox
-            groupBox1.AutoSize = !EnvUtils.IsMonoRuntime();
+            groupBox1.AutoSize = true;
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)

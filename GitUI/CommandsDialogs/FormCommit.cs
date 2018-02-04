@@ -525,10 +525,8 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                         Close();
-#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
                     //trying to properly dispose loading image issue #1037
                     Loading.Image.Dispose();
-#endif
                 }, false
             );
         }

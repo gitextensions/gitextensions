@@ -459,7 +459,6 @@ namespace AppVeyorIntegration
 
         private Task<Stream> GetStreamFromHttpResponseAsync(HttpClient httpClient, Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
-#if !__MonoCS__
             var retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
 
             if (retry)
@@ -469,9 +468,6 @@ namespace AppVeyorIntegration
                 return task.Result.Content.ReadAsStreamAsync();
 
             return null;
-#else
-            return null;
-#endif
         }
 
         private Task<string> GetResponseAsync(HttpClient httpClient, string relativePath, CancellationToken cancellationToken)

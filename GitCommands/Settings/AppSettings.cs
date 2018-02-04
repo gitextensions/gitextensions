@@ -327,8 +327,8 @@ namespace GitCommands
 
         public static bool ShowRevisionInfoNextToRevisionGrid
         {
-            get { return !EnvUtils.IsMonoRuntime() && DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid", false); }
-            set { DetailedSettingsPath.SetBool("ShowRevisionInfoNextToRevisionGrid", !EnvUtils.IsMonoRuntime() && value); }
+            get { return DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid", false); }
+            set { DetailedSettingsPath.SetBool("ShowRevisionInfoNextToRevisionGrid", value); }
         }
 
         public static bool ProvideAutocompletion

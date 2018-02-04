@@ -65,11 +65,6 @@ namespace GitCommands.Utils
             }
         }
 
-        public static bool IsMonoRuntime()
-        {
-            return Type.GetType("Mono.Runtime") != null;
-        }
-
         public static bool IsNet4FullOrHigher()
         {
             if (System.Environment.Version.Major > 4)
