@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,18 +13,35 @@ namespace JiraCommitHintPlugin
 {
     public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
     {
+        private static readonly string EnablePluginLabel = new TranslationString("Jira hint plugin enabled").Text;
+        private static readonly string JiraUrlLabel = new TranslationString("Jira URL").Text;
+        private static readonly string JiraUserLabel = new TranslationString("Jira user").Text;
+        private static readonly string JiraPasswordLabel = new TranslationString("Jira password").Text;
+        private static readonly string JiraQueryLabel = new TranslationString("JQL Query").Text;
+        private static readonly string MessageTemplateLabel = new TranslationString("Message Template").Text;
+        private static readonly string JiraFieldsLabel = new TranslationString("Jira fields").Text;
+        private static readonly string QueryHelperLinkText = new TranslationString("Open the query helper inside Jira").Text;
+        private static readonly string InvalidUrlMessage = new TranslationString("A valid url is required to launch the Jira query helper").Text;
+        private static readonly string InvalidUrlCaption = new TranslationString("Invalid Jira url").Text;
+        private static readonly string PreviewButtionText = new TranslationString("Preview").Text;
+        private static readonly string QueryHelperOpenErrorText = new TranslationString("Unable to open Jira query helper").Text;
+        private static readonly string EmptyQueryResultMessage = new TranslationString("[Empty Jira Query Result]").Text;
+        private static readonly string EmptyQueryResultCaption = new TranslationString("First Task Preview").Text;
+
         private const string description = "Jira Commit Hint";
         private const string defaultFormat = "{Key} {Summary}";
         private Jira jira;
         private string query;
         private string stringTemplate = defaultFormat;
-        private readonly BoolSetting enabledSettings = new BoolSetting("Jira hint plugin enabled", false);
-        private readonly StringSetting urlSettings = new StringSetting("Jira URL", @"https://jira.atlassian.com");
-        private readonly StringSetting userSettings = new StringSetting("Jira user", string.Empty);
-        private readonly PasswordSetting passwordSettings = new PasswordSetting("Jira password", string.Empty);
-        private readonly StringSetting jdlQuerySettings = new StringSetting("JDL Query", "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
-        private readonly StringSetting stringTemplateSetting = new StringSetting("Jira Message Template", "Message Template", defaultFormat);
-        private readonly StringSetting jiraFields = new StringSetting("Jira fields", $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
+        private readonly BoolSetting enabledSettings = new BoolSetting("Jira hint plugin enabled", EnablePluginLabel, false);
+        private readonly StringSetting urlSettings = new StringSetting("Jira URL", JiraUrlLabel, @"https://jira.atlassian.com");
+        private readonly StringSetting userSettings = new StringSetting("Jira user", JiraUserLabel, string.Empty);
+        private readonly PasswordSetting passwordSettings = new PasswordSetting("Jira password", JiraPasswordLabel, string.Empty);
+        // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
+        private readonly StringSetting jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
+        private readonly StringSetting stringTemplateSetting = new StringSetting("Jira Message Template", MessageTemplateLabel, defaultFormat);
+        private readonly StringSetting jiraFields = new StringSetting("Jira fields", JiraFieldsLabel, $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
+        private readonly StringSetting jiraQueryHelpLink = new StringSetting("    ", "");
         private JiraTaskDTO[] currentMessages;
         private Button btnPreview;
 
@@ -48,22 +66,52 @@ namespace JiraCommitHintPlugin
         public override IEnumerable<ISetting> GetSettings()
         {
             yield return enabledSettings;
-            jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
-            yield return jiraFields;
+
             urlSettings.CustomControl = new TextBox();
             yield return urlSettings;
+
             userSettings.CustomControl = new TextBox();
             yield return userSettings;
+
             passwordSettings.CustomControl = new TextBox { UseSystemPasswordChar = true };
             yield return passwordSettings;
-            jdlQuerySettings.CustomControl = new TextBox();
-            yield return jdlQuerySettings;
+
+            jqlQuerySettings.CustomControl = new TextBox();
+            yield return jqlQuerySettings;
+
+            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = 300};
+            queryHelperLink.Click += QueryHelperLink_Click;
+            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = 300};
+            txtJiraQueryHelpLink.Controls.Add(queryHelperLink);
+            jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
+            yield return jiraQueryHelpLink;
+
+            jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
+            yield return jiraFields;
+
             var txtTemplate = new TextBox { Height = 75, Multiline = true, ScrollBars = ScrollBars.Horizontal };
-            btnPreview = new Button { Text = "Preview", Top = 45, Anchor = AnchorStyles.Right };
+            btnPreview = new Button { Text = PreviewButtionText, Top = 45, Anchor = AnchorStyles.Right };
             btnPreview.Click += btnPreviewClick;
             txtTemplate.Controls.Add(btnPreview);
             stringTemplateSetting.CustomControl = txtTemplate;
             yield return stringTemplateSetting;
+        }
+
+        private void QueryHelperLink_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(urlSettings.CustomControl.Text))
+            {
+                MessageBox.Show(null, InvalidUrlMessage, InvalidUrlCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            try
+            {
+                Process.Start(urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(null, ex.Message, QueryHelperOpenErrorText, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnPreviewClick(object sender, EventArgs eventArgs)
@@ -71,12 +119,12 @@ namespace JiraCommitHintPlugin
             try
             {
                 var localJira = Jira.CreateRestClient(urlSettings.CustomControl.Text, userSettings.CustomControl.Text, passwordSettings.CustomControl.Text);
-                var localQuery = jdlQuerySettings.CustomControl.Text;
+                var localQuery = jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = stringTemplateSetting.CustomControl.Text;
                 GetMessageToCommit(localJira, localQuery, localStringTemplate).ContinueWith(t =>
                 {
                     var preview = t.Result.FirstOrDefault();
-                    MessageBox.Show(null, (preview == null ? "[Empty Jira Query Result]" : preview.Text), "First Task Preview");
+                    MessageBox.Show(null, preview == null ? EmptyQueryResultMessage : preview.Text ,EmptyQueryResultCaption);
                 });
             }
             catch (Exception ex)
@@ -108,7 +156,7 @@ namespace JiraCommitHintPlugin
                 return;
 
             jira = Jira.CreateRestClient(url, userName, password);
-            query = jdlQuerySettings.ValueOrDefault(Settings);
+            query = jqlQuerySettings.ValueOrDefault(Settings);
             stringTemplate = stringTemplateSetting.ValueOrDefault(Settings);
             if (btnPreview == null)
                 return;
