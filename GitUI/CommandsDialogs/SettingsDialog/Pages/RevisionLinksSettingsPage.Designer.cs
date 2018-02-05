@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    partial class RevisionLinksSettingsPage
+    sealed partial class RevisionLinksSettingsPage
     {
         /// <summary> 
         /// Required designer variable.

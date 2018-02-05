@@ -93,6 +93,11 @@
     <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="EnvironmentPathsProvider.cs" />
     <Compile Include="ExceptionUtils.cs" />
+    <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProvider.cs" />
+    <Compile Include="ExternalLinks\ExternalLinkDefinition.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksLoader.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksManager.cs" />
+    <Compile Include="ExternalLinks\GitRevisionExternalLinksParser.cs" />
     <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="FullPathResolver.cs" />
@@ -135,9 +140,7 @@
     <Compile Include="Settings\SettingsContainer.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
-    <Compile Include="GitExtLinks\GitExtLink.cs" />
-    <Compile Include="GitExtLinks\GitExtLinkDef.cs" />
-    <Compile Include="GitExtLinks\GitExtLinksParser.cs" />
+    <Compile Include="ExternalLinks\ExternalLink.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />

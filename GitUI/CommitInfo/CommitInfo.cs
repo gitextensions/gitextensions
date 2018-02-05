@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.GitExtLinks;
+using GitCommands.ExternalLinks;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
@@ -34,6 +34,9 @@ namespace GitUI.CommitInfo
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
+        private readonly IExternalLinksLoader _externalLinksLoader;
+        private readonly ConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
+        private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
 
 
         public CommitInfo()
@@ -62,6 +65,9 @@ namespace GitUI.CommitInfo
 
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
+            _externalLinksLoader = new ExternalLinksLoader();
+            _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksLoader);
+            _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider);
 
             RevisionInfo.Font = AppSettings.Font;
             using (Graphics g = CreateGraphics())
@@ -551,8 +557,7 @@ namespace GitUI.CommitInfo
 
         private string GetLinksForRevision(GitRevision revision)
         {
-            GitExtLinksParser parser = new GitExtLinksParser(Module.EffectiveSettings);
-            var links = parser.Parse(revision).Distinct();
+            var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings).Distinct();
             var linksString = string.Empty;
 
             foreach (var link in links)
