@@ -19,7 +19,7 @@ It also integrates with Windows Explorer and Microsoft Visual Studio (2010/2012/
   <tr>
     <td>Requirement</td>
     <td>MS Windows 7SP1+ <br/>MS .NET Framework 4.6.1+</td>
-    <td><a href="http://www.mono-project.com/download/">Mono 5.0+</a> <br /><small>(depreciated support due to Mono WinForms implementation)</s,all></td>
+    <td><a href="http://www.mono-project.com/download/">Mono 5.0+</a> <br /><small>(deprecated support due to Mono WinForms implementation)</small></td>
   </tr>
   <tr>
     <td>Current dev status</td>
