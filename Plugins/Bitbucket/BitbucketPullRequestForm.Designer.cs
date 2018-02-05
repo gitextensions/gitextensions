@@ -29,109 +29,109 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblSourceBranch = new System.Windows.Forms.Label();
+            this.lblTargetBranch = new System.Windows.Forms.Label();
+            this.lblDescription = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
             this.GridColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtTitle = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblSourceRepository = new System.Windows.Forms.Label();
+            this.groupBoxSource = new System.Windows.Forms.GroupBox();
             this.ddlRepositorySource = new System.Windows.Forms.ComboBox();
             this.ddlBranchSource = new System.Windows.Forms.ComboBox();
             this.lblCommitInfoSource = new System.Windows.Forms.Label();
             this.ddlBranchTarget = new System.Windows.Forms.ComboBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBoxTarget = new System.Windows.Forms.GroupBox();
             this.ddlRepositoryTarget = new System.Windows.Forms.ComboBox();
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lblTargetRepository = new System.Windows.Forms.Label();
+            this.groupBoxCreatePullRequest = new System.Windows.Forms.GroupBox();
             this.lblLinkCreatePull = new System.Windows.Forms.LinkLabel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainerCreate = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabView = new System.Windows.Forms.TabPage();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.splitContainerView1 = new System.Windows.Forms.SplitContainer();
             this.lbxPullRequests = new System.Windows.Forms.ListBox();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.groupBoxInformation = new System.Windows.Forms.GroupBox();
             this.lblPRState = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
+            this.lblAuthor = new System.Windows.Forms.Label();
+            this.lblState = new System.Windows.Forms.Label();
             this.lblPRAuthor = new System.Windows.Forms.Label();
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnApprove = new System.Windows.Forms.Button();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBoxPullRequestInfo = new System.Windows.Forms.GroupBox();
             this.lblLinkViewPull = new System.Windows.Forms.LinkLabel();
             this.txtPRDescription = new System.Windows.Forms.TextBox();
             this.txtPRTitle = new System.Windows.Forms.TextBox();
             this.txtPRReviewers = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.lblReviewerView = new System.Windows.Forms.Label();
+            this.lblDescriptionView = new System.Windows.Forms.Label();
+            this.lblTitleView = new System.Windows.Forms.Label();
+            this.splitContainerView2 = new System.Windows.Forms.SplitContainer();
+            this.groupBoxSourceRepoView = new System.Windows.Forms.GroupBox();
             this.lblPRSourceBranch = new System.Windows.Forms.Label();
             this.lblPRSourceRepo = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.lblSourceRepoView = new System.Windows.Forms.Label();
+            this.lblTargetRepoView = new System.Windows.Forms.Label();
+            this.groupBoxTargetRepoView = new System.Windows.Forms.GroupBox();
             this.lblPRDestBranch = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
+            this.lblRepositoryView = new System.Windows.Forms.Label();
             this.lblPRDestRepo = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
+            this.lblBranchView = new System.Windows.Forms.Label();
             this.tabCreate = new System.Windows.Forms.TabPage();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.toolTipLink = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBoxSource.SuspendLayout();
+            this.groupBoxTarget.SuspendLayout();
+            this.groupBoxCreatePullRequest.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerCreate)).BeginInit();
+            this.splitContainerCreate.Panel1.SuspendLayout();
+            this.splitContainerCreate.Panel2.SuspendLayout();
+            this.splitContainerCreate.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabView.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
-            this.groupBox9.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerView1)).BeginInit();
+            this.splitContainerView1.Panel1.SuspendLayout();
+            this.splitContainerView1.Panel2.SuspendLayout();
+            this.splitContainerView1.SuspendLayout();
+            this.groupBoxInformation.SuspendLayout();
+            this.groupBoxPullRequestInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerView2)).BeginInit();
+            this.splitContainerView2.Panel1.SuspendLayout();
+            this.splitContainerView2.Panel2.SuspendLayout();
+            this.splitContainerView2.SuspendLayout();
+            this.groupBoxSourceRepoView.SuspendLayout();
+            this.groupBoxTargetRepoView.SuspendLayout();
             this.tabCreate.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
+            // lblBranch
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 59);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Branch";
+            this.lblSourceBranch.AutoSize = true;
+            this.lblSourceBranch.Location = new System.Drawing.Point(14, 59);
+            this.lblSourceBranch.Name = "lblSourceBranch";
+            this.lblSourceBranch.Size = new System.Drawing.Size(40, 13);
+            this.lblSourceBranch.TabIndex = 0;
+            this.lblSourceBranch.Text = "Branch";
             // 
-            // label2
+            // lblTargetBranch
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 59);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Branch";
+            this.lblTargetBranch.AutoSize = true;
+            this.lblTargetBranch.Location = new System.Drawing.Point(14, 59);
+            this.lblTargetBranch.Name = "lblTargetBranch";
+            this.lblTargetBranch.Size = new System.Drawing.Size(40, 13);
+            this.lblTargetBranch.TabIndex = 1;
+            this.lblTargetBranch.Text = "Branch";
             // 
-            // label3
+            // lblDescription
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 224);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Description";
+            this.lblDescription.AutoSize = true;
+            this.lblDescription.Location = new System.Drawing.Point(14, 224);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(60, 13);
+            this.lblDescription.TabIndex = 6;
+            this.lblDescription.Text = "Description";
             // 
             // txtDescription
             // 
@@ -172,38 +172,38 @@
             this.txtTitle.Size = new System.Drawing.Size(593, 21);
             this.txtTitle.TabIndex = 1;
             // 
-            // label4
+            // lblTitle
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 192);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(27, 13);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "Title";
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Location = new System.Drawing.Point(15, 192);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(27, 13);
+            this.lblTitle.TabIndex = 11;
+            this.lblTitle.Text = "Title";
             // 
-            // label5
+            // lblSourceRepository
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 29);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(59, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Repository";
+            this.lblSourceRepository.AutoSize = true;
+            this.lblSourceRepository.Location = new System.Drawing.Point(14, 29);
+            this.lblSourceRepository.Name = "lblSourceRepository";
+            this.lblSourceRepository.Size = new System.Drawing.Size(59, 13);
+            this.lblSourceRepository.TabIndex = 0;
+            this.lblSourceRepository.Text = "Repository";
             // 
-            // groupBox1
+            // groupBoxSource
             // 
-            this.groupBox1.Controls.Add(this.ddlRepositorySource);
-            this.groupBox1.Controls.Add(this.ddlBranchSource);
-            this.groupBox1.Controls.Add(this.lblCommitInfoSource);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(382, 169);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Source";
+            this.groupBoxSource.Controls.Add(this.ddlRepositorySource);
+            this.groupBoxSource.Controls.Add(this.ddlBranchSource);
+            this.groupBoxSource.Controls.Add(this.lblCommitInfoSource);
+            this.groupBoxSource.Controls.Add(this.lblSourceRepository);
+            this.groupBoxSource.Controls.Add(this.lblSourceBranch);
+            this.groupBoxSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxSource.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSource.Name = "groupBoxSource";
+            this.groupBoxSource.Size = new System.Drawing.Size(382, 169);
+            this.groupBoxSource.TabIndex = 0;
+            this.groupBoxSource.TabStop = false;
+            this.groupBoxSource.Text = "Source";
             // 
             // ddlRepositorySource
             // 
@@ -255,20 +255,20 @@
             this.ddlBranchTarget.TabIndex = 0;
             this.ddlBranchTarget.SelectedValueChanged += new System.EventHandler(this.DdlBranchTargetSelectedValueChanged);
             // 
-            // groupBox2
+            // groupBoxTarget
             // 
-            this.groupBox2.Controls.Add(this.ddlRepositoryTarget);
-            this.groupBox2.Controls.Add(this.lblCommitInfoTarget);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.ddlBranchTarget);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(390, 169);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Target";
+            this.groupBoxTarget.Controls.Add(this.ddlRepositoryTarget);
+            this.groupBoxTarget.Controls.Add(this.lblCommitInfoTarget);
+            this.groupBoxTarget.Controls.Add(this.lblTargetRepository);
+            this.groupBoxTarget.Controls.Add(this.lblTargetBranch);
+            this.groupBoxTarget.Controls.Add(this.ddlBranchTarget);
+            this.groupBoxTarget.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxTarget.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxTarget.Name = "groupBoxTarget";
+            this.groupBoxTarget.Size = new System.Drawing.Size(390, 169);
+            this.groupBoxTarget.TabIndex = 0;
+            this.groupBoxTarget.TabStop = false;
+            this.groupBoxTarget.Text = "Target";
             // 
             // ddlRepositoryTarget
             // 
@@ -294,55 +294,55 @@
             this.lblCommitInfoTarget.Size = new System.Drawing.Size(237, 62);
             this.lblCommitInfoTarget.TabIndex = 2;
             // 
-            // label6
+            // lblTargetRepository
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(14, 29);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Repository";
+            this.lblTargetRepository.AutoSize = true;
+            this.lblTargetRepository.Location = new System.Drawing.Point(14, 29);
+            this.lblTargetRepository.Name = "lblTargetRepository";
+            this.lblTargetRepository.Size = new System.Drawing.Size(59, 13);
+            this.lblTargetRepository.TabIndex = 12;
+            this.lblTargetRepository.Text = "Repository";
             // 
-            // groupBox3
+            // groupBoxCreatePullRequest
             // 
-            this.groupBox3.Controls.Add(this.lblLinkCreatePull);
-            this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Controls.Add(this.txtDescription);
-            this.groupBox3.Controls.Add(this.txtTitle);
-            this.groupBox3.Controls.Add(this.label4);
-            this.groupBox3.Location = new System.Drawing.Point(6, 181);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(776, 401);
-            this.groupBox3.TabIndex = 1;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Pull Request Info";
+            this.groupBoxCreatePullRequest.Controls.Add(this.lblLinkCreatePull);
+            this.groupBoxCreatePullRequest.Controls.Add(this.lblDescription);
+            this.groupBoxCreatePullRequest.Controls.Add(this.txtDescription);
+            this.groupBoxCreatePullRequest.Controls.Add(this.txtTitle);
+            this.groupBoxCreatePullRequest.Controls.Add(this.lblTitle);
+            this.groupBoxCreatePullRequest.Location = new System.Drawing.Point(6, 181);
+            this.groupBoxCreatePullRequest.Name = "groupBoxCreatePullRequest";
+            this.groupBoxCreatePullRequest.Size = new System.Drawing.Size(776, 401);
+            this.groupBoxCreatePullRequest.TabIndex = 1;
+            this.groupBoxCreatePullRequest.TabStop = false;
+            this.groupBoxCreatePullRequest.Text = "Pull Request Info";
             // 
             // lblLinkCreatePull
             // 
             this.lblLinkCreatePull.AutoSize = true;
             this.lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
-            this.lblLinkCreatePull.Name = "createPullLinkLabel";
+            this.lblLinkCreatePull.Name = "lblLinkCreatePull";
             this.lblLinkCreatePull.Size = new System.Drawing.Size(53, 13);
             this.lblLinkCreatePull.TabIndex = 12;
             this.lblLinkCreatePull.TabStop = true;
-            this.lblLinkCreatePull.Text = "linkLabel1";
+            this.lblLinkCreatePull.Text = "";
             this.lblLinkCreatePull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
-            // splitContainer1
+            // splitContainerCreate
             // 
-            this.splitContainer1.Location = new System.Drawing.Point(6, 6);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainerCreate.Location = new System.Drawing.Point(6, 6);
+            this.splitContainerCreate.Name = "splitContainerCreate";
             // 
-            // splitContainer1.Panel1
+            // splitContainerCreate.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainerCreate.Panel1.Controls.Add(this.groupBoxSource);
             // 
-            // splitContainer1.Panel2
+            // splitContainerCreate.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(776, 169);
-            this.splitContainer1.SplitterDistance = 382;
-            this.splitContainer1.TabIndex = 0;
+            this.splitContainerCreate.Panel2.Controls.Add(this.groupBoxTarget);
+            this.splitContainerCreate.Size = new System.Drawing.Size(776, 169);
+            this.splitContainerCreate.SplitterDistance = 382;
+            this.splitContainerCreate.TabIndex = 0;
             // 
             // tabControl1
             // 
@@ -359,11 +359,11 @@
             // 
             // tabView
             // 
-            this.tabView.Controls.Add(this.splitContainer3);
+            this.tabView.Controls.Add(this.splitContainerView1);
             this.tabView.Controls.Add(this.btnMerge);
             this.tabView.Controls.Add(this.btnApprove);
-            this.tabView.Controls.Add(this.groupBox6);
-            this.tabView.Controls.Add(this.splitContainer2);
+            this.tabView.Controls.Add(this.groupBoxPullRequestInfo);
+            this.tabView.Controls.Add(this.splitContainerView2);
             this.tabView.Location = new System.Drawing.Point(4, 22);
             this.tabView.Name = "tabView";
             this.tabView.Padding = new System.Windows.Forms.Padding(3);
@@ -372,21 +372,21 @@
             this.tabView.Text = "View Pull Requests";
             this.tabView.UseVisualStyleBackColor = true;
             // 
-            // splitContainer3
+            // splitContainerView1
             // 
-            this.splitContainer3.Location = new System.Drawing.Point(6, 3);
-            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainerView1.Location = new System.Drawing.Point(6, 3);
+            this.splitContainerView1.Name = "splitContainerView1";
             // 
-            // splitContainer3.Panel1
+            // splitContainerView1.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.lbxPullRequests);
+            this.splitContainerView1.Panel1.Controls.Add(this.lbxPullRequests);
             // 
-            // splitContainer3.Panel2
+            // splitContainerView1.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.groupBox9);
-            this.splitContainer3.Size = new System.Drawing.Size(776, 83);
-            this.splitContainer3.SplitterDistance = 382;
-            this.splitContainer3.TabIndex = 8;
+            this.splitContainerView1.Panel2.Controls.Add(this.groupBoxInformation);
+            this.splitContainerView1.Size = new System.Drawing.Size(776, 83);
+            this.splitContainerView1.SplitterDistance = 382;
+            this.splitContainerView1.TabIndex = 8;
             // 
             // lbxPullRequests
             // 
@@ -398,19 +398,19 @@
             this.lbxPullRequests.TabIndex = 1;
             this.lbxPullRequests.SelectedIndexChanged += new System.EventHandler(this.PullRequestChanged);
             // 
-            // groupBox9
+            // groupBoxInformation
             // 
-            this.groupBox9.Controls.Add(this.lblPRState);
-            this.groupBox9.Controls.Add(this.label12);
-            this.groupBox9.Controls.Add(this.label16);
-            this.groupBox9.Controls.Add(this.lblPRAuthor);
-            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(0, 0);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(390, 83);
-            this.groupBox9.TabIndex = 0;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Information";
+            this.groupBoxInformation.Controls.Add(this.lblPRState);
+            this.groupBoxInformation.Controls.Add(this.lblAuthor);
+            this.groupBoxInformation.Controls.Add(this.lblState);
+            this.groupBoxInformation.Controls.Add(this.lblPRAuthor);
+            this.groupBoxInformation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxInformation.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxInformation.Name = "groupBoxInformation";
+            this.groupBoxInformation.Size = new System.Drawing.Size(390, 83);
+            this.groupBoxInformation.TabIndex = 0;
+            this.groupBoxInformation.TabStop = false;
+            this.groupBoxInformation.Text = "Information";
             // 
             // lblPRState
             // 
@@ -420,23 +420,23 @@
             this.lblPRState.Size = new System.Drawing.Size(0, 13);
             this.lblPRState.TabIndex = 10;
             // 
-            // label12
+            // lblAuthor
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(16, 23);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(40, 13);
-            this.label12.TabIndex = 7;
-            this.label12.Text = "Author";
+            this.lblAuthor.AutoSize = true;
+            this.lblAuthor.Location = new System.Drawing.Point(16, 23);
+            this.lblAuthor.Name = "lblAuthor";
+            this.lblAuthor.Size = new System.Drawing.Size(40, 13);
+            this.lblAuthor.TabIndex = 7;
+            this.lblAuthor.Text = "Author";
             // 
-            // label16
+            // lblState
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(16, 53);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(33, 13);
-            this.label16.TabIndex = 8;
-            this.label16.Text = "State";
+            this.lblState.AutoSize = true;
+            this.lblState.Location = new System.Drawing.Point(16, 53);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(33, 13);
+            this.lblState.TabIndex = 8;
+            this.lblState.Text = "State";
             // 
             // lblPRAuthor
             // 
@@ -466,21 +466,21 @@
             this.btnApprove.UseVisualStyleBackColor = true;
             this.btnApprove.Click += new System.EventHandler(this.BtnApproveClick);
             // 
-            // groupBox6
+            // groupBoxPullRequestInfo
             // 
-            this.groupBox6.Controls.Add(this.lblLinkViewPull);
-            this.groupBox6.Controls.Add(this.txtPRDescription);
-            this.groupBox6.Controls.Add(this.txtPRTitle);
-            this.groupBox6.Controls.Add(this.txtPRReviewers);
-            this.groupBox6.Controls.Add(this.label10);
-            this.groupBox6.Controls.Add(this.label13);
-            this.groupBox6.Controls.Add(this.label14);
-            this.groupBox6.Location = new System.Drawing.Point(6, 181);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(776, 401);
-            this.groupBox6.TabIndex = 4;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Pull Request Info";
+            this.groupBoxPullRequestInfo.Controls.Add(this.lblLinkViewPull);
+            this.groupBoxPullRequestInfo.Controls.Add(this.txtPRDescription);
+            this.groupBoxPullRequestInfo.Controls.Add(this.txtPRTitle);
+            this.groupBoxPullRequestInfo.Controls.Add(this.txtPRReviewers);
+            this.groupBoxPullRequestInfo.Controls.Add(this.lblReviewerView);
+            this.groupBoxPullRequestInfo.Controls.Add(this.lblDescriptionView);
+            this.groupBoxPullRequestInfo.Controls.Add(this.lblTitleView);
+            this.groupBoxPullRequestInfo.Location = new System.Drawing.Point(6, 181);
+            this.groupBoxPullRequestInfo.Name = "groupBoxPullRequestInfo";
+            this.groupBoxPullRequestInfo.Size = new System.Drawing.Size(776, 401);
+            this.groupBoxPullRequestInfo.TabIndex = 4;
+            this.groupBoxPullRequestInfo.TabStop = false;
+            this.groupBoxPullRequestInfo.Text = "Pull Request Info";
             // 
             // lblLinkViewPull
             // 
@@ -527,62 +527,62 @@
             this.txtPRReviewers.Size = new System.Drawing.Size(594, 138);
             this.txtPRReviewers.TabIndex = 12;
             // 
-            // label10
+            // lblReviewerView
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(15, 38);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(109, 13);
-            this.label10.TabIndex = 4;
-            this.label10.Text = "Reviewer (approved)";
+            this.lblReviewerView.AutoSize = true;
+            this.lblReviewerView.Location = new System.Drawing.Point(15, 38);
+            this.lblReviewerView.Name = "lblReviewerView";
+            this.lblReviewerView.Size = new System.Drawing.Size(109, 13);
+            this.lblReviewerView.TabIndex = 4;
+            this.lblReviewerView.Text = "Reviewer (approved)";
             // 
-            // label13
+            // lblDescriptionView
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(14, 224);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(60, 13);
-            this.label13.TabIndex = 6;
-            this.label13.Text = "Description";
+            this.lblDescriptionView.AutoSize = true;
+            this.lblDescriptionView.Location = new System.Drawing.Point(14, 224);
+            this.lblDescriptionView.Name = "lblDescriptionView";
+            this.lblDescriptionView.Size = new System.Drawing.Size(60, 13);
+            this.lblDescriptionView.TabIndex = 6;
+            this.lblDescriptionView.Text = "Description";
             // 
-            // label14
+            // lblTitleView
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(15, 192);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(27, 13);
-            this.label14.TabIndex = 11;
-            this.label14.Text = "Title";
+            this.lblTitleView.AutoSize = true;
+            this.lblTitleView.Location = new System.Drawing.Point(15, 192);
+            this.lblTitleView.Name = "lblTitleView";
+            this.lblTitleView.Size = new System.Drawing.Size(27, 13);
+            this.lblTitleView.TabIndex = 11;
+            this.lblTitleView.Text = "Title";
             // 
-            // splitContainer2
+            // splitContainerView2
             // 
-            this.splitContainer2.Location = new System.Drawing.Point(6, 92);
-            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainerView2.Location = new System.Drawing.Point(6, 92);
+            this.splitContainerView2.Name = "splitContainerView2";
             // 
-            // splitContainer2.Panel1
+            // splitContainerView2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.groupBox4);
+            this.splitContainerView2.Panel1.Controls.Add(this.groupBoxSourceRepoView);
             // 
-            // splitContainer2.Panel2
+            // splitContainerView2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
-            this.splitContainer2.Size = new System.Drawing.Size(776, 83);
-            this.splitContainer2.SplitterDistance = 382;
-            this.splitContainer2.TabIndex = 2;
+            this.splitContainerView2.Panel2.Controls.Add(this.groupBoxTargetRepoView);
+            this.splitContainerView2.Size = new System.Drawing.Size(776, 83);
+            this.splitContainerView2.SplitterDistance = 382;
+            this.splitContainerView2.TabIndex = 2;
             // 
-            // groupBox4
+            // groupBoxSourceRepoView
             // 
-            this.groupBox4.Controls.Add(this.lblPRSourceBranch);
-            this.groupBox4.Controls.Add(this.lblPRSourceRepo);
-            this.groupBox4.Controls.Add(this.label8);
-            this.groupBox4.Controls.Add(this.label9);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox4.Location = new System.Drawing.Point(0, 0);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(382, 83);
-            this.groupBox4.TabIndex = 0;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Source";
+            this.groupBoxSourceRepoView.Controls.Add(this.lblPRSourceBranch);
+            this.groupBoxSourceRepoView.Controls.Add(this.lblPRSourceRepo);
+            this.groupBoxSourceRepoView.Controls.Add(this.lblSourceRepoView);
+            this.groupBoxSourceRepoView.Controls.Add(this.lblTargetRepoView);
+            this.groupBoxSourceRepoView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxSourceRepoView.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxSourceRepoView.Name = "groupBoxSourceRepoView";
+            this.groupBoxSourceRepoView.Size = new System.Drawing.Size(382, 83);
+            this.groupBoxSourceRepoView.TabIndex = 0;
+            this.groupBoxSourceRepoView.TabStop = false;
+            this.groupBoxSourceRepoView.Text = "Source";
             // 
             // lblPRSourceBranch
             // 
@@ -600,37 +600,37 @@
             this.lblPRSourceRepo.Size = new System.Drawing.Size(0, 13);
             this.lblPRSourceRepo.TabIndex = 1;
             // 
-            // label8
+            // lblSourceRepoView
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(14, 25);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(59, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Repository";
+            this.lblSourceRepoView.AutoSize = true;
+            this.lblSourceRepoView.Location = new System.Drawing.Point(14, 25);
+            this.lblSourceRepoView.Name = "lblSourceRepoView";
+            this.lblSourceRepoView.Size = new System.Drawing.Size(59, 13);
+            this.lblSourceRepoView.TabIndex = 0;
+            this.lblSourceRepoView.Text = "Repository";
             // 
-            // label9
+            // lblTargetRepoView
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(14, 55);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(40, 13);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "Branch";
+            this.lblTargetRepoView.AutoSize = true;
+            this.lblTargetRepoView.Location = new System.Drawing.Point(14, 55);
+            this.lblTargetRepoView.Name = "lblTargetRepoView";
+            this.lblTargetRepoView.Size = new System.Drawing.Size(40, 13);
+            this.lblTargetRepoView.TabIndex = 0;
+            this.lblTargetRepoView.Text = "Branch";
             // 
-            // groupBox5
+            // groupBoxTargetRepoView
             // 
-            this.groupBox5.Controls.Add(this.lblPRDestBranch);
-            this.groupBox5.Controls.Add(this.label17);
-            this.groupBox5.Controls.Add(this.lblPRDestRepo);
-            this.groupBox5.Controls.Add(this.label18);
-            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox5.Location = new System.Drawing.Point(0, 0);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(390, 83);
-            this.groupBox5.TabIndex = 0;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Target";
+            this.groupBoxTargetRepoView.Controls.Add(this.lblPRDestBranch);
+            this.groupBoxTargetRepoView.Controls.Add(this.lblRepositoryView);
+            this.groupBoxTargetRepoView.Controls.Add(this.lblPRDestRepo);
+            this.groupBoxTargetRepoView.Controls.Add(this.lblBranchView);
+            this.groupBoxTargetRepoView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxTargetRepoView.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxTargetRepoView.Name = "groupBoxTargetRepoView";
+            this.groupBoxTargetRepoView.Size = new System.Drawing.Size(390, 83);
+            this.groupBoxTargetRepoView.TabIndex = 0;
+            this.groupBoxTargetRepoView.TabStop = false;
+            this.groupBoxTargetRepoView.Text = "Target";
             // 
             // lblPRDestBranch
             // 
@@ -640,14 +640,14 @@
             this.lblPRDestBranch.Size = new System.Drawing.Size(0, 13);
             this.lblPRDestBranch.TabIndex = 6;
             // 
-            // label17
+            // lblRepositoryView
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(16, 25);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(59, 13);
-            this.label17.TabIndex = 3;
-            this.label17.Text = "Repository";
+            this.lblRepositoryView.AutoSize = true;
+            this.lblRepositoryView.Location = new System.Drawing.Point(16, 25);
+            this.lblRepositoryView.Name = "lblRepositoryView";
+            this.lblRepositoryView.Size = new System.Drawing.Size(59, 13);
+            this.lblRepositoryView.TabIndex = 3;
+            this.lblRepositoryView.Text = "Repository";
             // 
             // lblPRDestRepo
             // 
@@ -657,20 +657,20 @@
             this.lblPRDestRepo.Size = new System.Drawing.Size(0, 13);
             this.lblPRDestRepo.TabIndex = 5;
             // 
-            // label18
+            // lblBranchView
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(16, 55);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(40, 13);
-            this.label18.TabIndex = 4;
-            this.label18.Text = "Branch";
+            this.lblBranchView.AutoSize = true;
+            this.lblBranchView.Location = new System.Drawing.Point(16, 55);
+            this.lblBranchView.Name = "lblBranchView";
+            this.lblBranchView.Size = new System.Drawing.Size(40, 13);
+            this.lblBranchView.TabIndex = 4;
+            this.lblBranchView.Text = "Branch";
             // 
             // tabCreate
             // 
-            this.tabCreate.Controls.Add(this.splitContainer1);
+            this.tabCreate.Controls.Add(this.splitContainerCreate);
             this.tabCreate.Controls.Add(this.btnCreate);
-            this.tabCreate.Controls.Add(this.groupBox3);
+            this.tabCreate.Controls.Add(this.groupBoxCreatePullRequest);
             this.tabCreate.Location = new System.Drawing.Point(4, 22);
             this.tabCreate.Name = "tabCreate";
             this.tabCreate.Padding = new System.Windows.Forms.Padding(3);
@@ -688,34 +688,34 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "BitbucketPullRequestForm";
             this.Text = "Bitbucket Server";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.groupBoxSource.ResumeLayout(false);
+            this.groupBoxSource.PerformLayout();
+            this.groupBoxTarget.ResumeLayout(false);
+            this.groupBoxTarget.PerformLayout();
+            this.groupBoxCreatePullRequest.ResumeLayout(false);
+            this.groupBoxCreatePullRequest.PerformLayout();
+            this.splitContainerCreate.Panel1.ResumeLayout(false);
+            this.splitContainerCreate.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerCreate)).EndInit();
+            this.splitContainerCreate.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabView.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
+            this.splitContainerView1.Panel1.ResumeLayout(false);
+            this.splitContainerView1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerView1)).EndInit();
+            this.splitContainerView1.ResumeLayout(false);
+            this.groupBoxInformation.ResumeLayout(false);
+            this.groupBoxInformation.PerformLayout();
+            this.groupBoxPullRequestInfo.ResumeLayout(false);
+            this.groupBoxPullRequestInfo.PerformLayout();
+            this.splitContainerView2.Panel1.ResumeLayout(false);
+            this.splitContainerView2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerView2)).EndInit();
+            this.splitContainerView2.ResumeLayout(false);
+            this.groupBoxSourceRepoView.ResumeLayout(false);
+            this.groupBoxSourceRepoView.PerformLayout();
+            this.groupBoxTargetRepoView.ResumeLayout(false);
+            this.groupBoxTargetRepoView.PerformLayout();
             this.tabCreate.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -723,58 +723,58 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblSourceBranch;
+        private System.Windows.Forms.Label lblTargetBranch;
+        private System.Windows.Forms.Label lblDescription;
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.TextBox txtTitle;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.DataGridViewTextBoxColumn GridColumnName;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label lblSourceRepository;
+        private System.Windows.Forms.GroupBox groupBoxSource;
+        private System.Windows.Forms.GroupBox groupBoxTarget;
+        private System.Windows.Forms.Label lblTargetRepository;
+        private System.Windows.Forms.GroupBox groupBoxCreatePullRequest;
         private System.Windows.Forms.Label lblCommitInfoSource;
         private System.Windows.Forms.Label lblCommitInfoTarget;
         private System.Windows.Forms.ComboBox ddlRepositorySource;
         private System.Windows.Forms.ComboBox ddlBranchSource;
         private System.Windows.Forms.ComboBox ddlBranchTarget;
         private System.Windows.Forms.ComboBox ddlRepositoryTarget;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainerCreate;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabCreate;
         private System.Windows.Forms.TabPage tabView;
         private System.Windows.Forms.ListBox lbxPullRequests;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.SplitContainer splitContainerView2;
+        private System.Windows.Forms.GroupBox groupBoxSourceRepoView;
+        private System.Windows.Forms.Label lblSourceRepoView;
+        private System.Windows.Forms.Label lblTargetRepoView;
+        private System.Windows.Forms.GroupBox groupBoxTargetRepoView;
+        private System.Windows.Forms.GroupBox groupBoxPullRequestInfo;
         private System.Windows.Forms.TextBox txtPRDescription;
         private System.Windows.Forms.TextBox txtPRTitle;
         private System.Windows.Forms.TextBox txtPRReviewers;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblReviewerView;
+        private System.Windows.Forms.Label lblDescriptionView;
+        private System.Windows.Forms.Label lblTitleView;
         private System.Windows.Forms.Label lblPRSourceBranch;
         private System.Windows.Forms.Label lblPRSourceRepo;
         private System.Windows.Forms.Label lblPRDestBranch;
-        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label lblRepositoryView;
         private System.Windows.Forms.Label lblPRDestRepo;
-        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label lblBranchView;
         private System.Windows.Forms.Label lblPRAuthor;
         private System.Windows.Forms.Button btnMerge;
         private System.Windows.Forms.Button btnApprove;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.SplitContainer splitContainerView1;
+        private System.Windows.Forms.GroupBox groupBoxInformation;
         private System.Windows.Forms.Label lblPRState;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label lblAuthor;
+        private System.Windows.Forms.Label lblState;
         private System.Windows.Forms.LinkLabel lblLinkCreatePull;
         private System.Windows.Forms.LinkLabel lblLinkViewPull;
-        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip toolTipLink;
     }
 }

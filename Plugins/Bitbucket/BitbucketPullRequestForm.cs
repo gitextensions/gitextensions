@@ -48,11 +48,11 @@ namespace Bitbucket
 
             lblLinkCreatePull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests?create",
                                       _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-            toolTip1.SetToolTip(lblLinkCreatePull, _linkLabelToolTip.Text);
+            toolTipLink.SetToolTip(lblLinkCreatePull, _linkLabelToolTip.Text);
 
             lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests",
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-            toolTip1.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
+            toolTipLink.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
         }
 
         private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
