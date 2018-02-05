@@ -93,7 +93,7 @@
   <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Create Pull Request</source>
+        <source>Bitbucket Server</source>
         <target />
       </trans-unit>
       <trans-unit id="GridColumnName.HeaderText">

@@ -112,7 +112,7 @@ namespace Bitbucket
         {
             get
             {
-                return string.Format("/rest/api/latest/projects/{0}/repos/{1}/pull-requests?directions=incoming&order=oldest",
+                return string.Format("/rest/api/latest/projects/{0}/repos/{1}/pull-requests?directions=incoming",
                                      _projectKey, _repoName);
             }
         }

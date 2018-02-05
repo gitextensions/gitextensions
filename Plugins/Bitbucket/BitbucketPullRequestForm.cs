@@ -17,6 +17,7 @@ namespace Bitbucket
         private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
+        private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
         private Settings _settings;
         private readonly BitbucketPlugin _plugin;
@@ -34,12 +35,10 @@ namespace Bitbucket
             _plugin = plugin;
             _settingsContainer = settings;
             _gitUiCommands = gitUiCommands;
-            //TODO Retrieve all users and set default reviewers
+            //Reviewers are not implemented
+            lblReviewers.Visible = false;
             ReviewersDataGrid.Visible = false;
-        }
 
-        private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
-        {
             _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer, _plugin);
             if (_settings == null)
             {
@@ -47,6 +46,23 @@ namespace Bitbucket
                 Close();
                 return;
             }
+            Load += BitbucketViewPullRequestFormLoad;
+            Load += BitbucketPullRequestFormLoad;
+
+            lblLinkCreatePull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests?create",
+                                      _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
+            toolTip1.SetToolTip(lblLinkCreatePull, _linkLabelToolTip.Text);
+
+            lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests",
+                _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
+            toolTip1.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
+        }
+
+        private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
+        {
+            if (_settings == null)
+                return;
+
             //_bitbucketUsers.AddRange(GetBitbucketUsers().Select(a => a.Slug));
             ThreadPool.QueueUserWorkItem(state =>
             {
@@ -71,6 +87,7 @@ namespace Bitbucket
         {
             if (_settings == null)
                 return;
+
             ThreadPool.QueueUserWorkItem(state =>
             {
                 var pullReqs = GetPullRequests();
@@ -85,7 +102,6 @@ namespace Bitbucket
                 catch(System.InvalidOperationException){
                     return;
                 }
-
             });
         }
 
@@ -149,6 +165,8 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        //Users/reviewers are not implemented and hidden
+        /*
         private IEnumerable<BitbucketUser> GetBitbucketUsers()
         {
             var list = new List<BitbucketUser>();
@@ -163,7 +181,7 @@ namespace Bitbucket
             }
             return list;
         }
-
+        */
         Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
@@ -300,6 +318,9 @@ namespace Bitbucket
             lblPRSourceBranch.Text = curItem.SrcBranch;
             lblPRDestRepo.Text = curItem.DestDisplayName;
             lblPRDestBranch.Text = curItem.DestBranch;
+
+            lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests/{3}/overview",
+                _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug, curItem.Id);
         }
 
         private void BtnMergeClick(object sender, EventArgs e)
@@ -351,6 +372,26 @@ namespace Bitbucket
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void textLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                var link = (sender as LinkLabel).Text;
+                if (e.Button == MouseButtons.Right)
+                {
+                    //Just copy the text
+                    Clipboard.SetText(link);
+                }
+                else
+                {
+                    System.Diagnostics.Process.Start(link);
+                }
+            }
+            catch
+            {
+            }
         }
     }
 }
