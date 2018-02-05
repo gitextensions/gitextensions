@@ -95,6 +95,7 @@
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProvider.cs" />
     <Compile Include="ExternalLinks\ExternalLinkDefinition.cs" />
+    <Compile Include="ExternalLinks\ExternalLinkFormat.cs" />
     <Compile Include="ExternalLinks\ExternalLinksLoader.cs" />
     <Compile Include="ExternalLinks\ExternalLinksManager.cs" />
     <Compile Include="ExternalLinks\GitRevisionExternalLinksParser.cs" />

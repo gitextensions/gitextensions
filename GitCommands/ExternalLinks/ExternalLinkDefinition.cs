@@ -26,44 +26,25 @@ namespace GitCommands.ExternalLinks
             PushURL
         }
 
+        private string _searchPattern;
+        private string _nestedSearchPattern;
+        private string _remoteSearchPattern;
+        private string _useRemotesPattern;
+
+
+        /// <summary>
+        /// Non-local link def can be locally disabled
+        /// </summary>
+        public bool Enabled { get; set; }
+
+        /// <summary>
+        /// List of formats to be applied for each revision part matched by SearchPattern
+        /// </summary>
+        public BindingList<ExternalLinkFormat> LinkFormats = new BindingList<ExternalLinkFormat>();
+
         /// <summary>Short name for this link def</summary>
         public string Name { get; set; }
-        /// <summary></summary>
-        public HashSet<RevisionPart> SearchInParts = new HashSet<RevisionPart>();
 
-        private string _SearchPattern;
-        /// <summary>
-        /// RegEx for revision parts that have to be transformed into links
-        /// empty string stands for unconditionally always added link
-        /// </summary>
-        public string SearchPattern
-        {
-            get
-            {
-                return _SearchPattern;
-            }
-            set
-            {
-                _SearchPattern = value;
-                SearchPatternRegex = new Lazy<Regex>(() =>
-                    {
-                        try
-                        {
-                            return new Regex(SearchPattern, RegexOptions.Compiled);
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.Print(e.ToStringWithData());
-                            return null;
-                        }
-                    }
-                        );
-            }
-        }
-        /// <summary>Compiled SearchPattern</summary>
-        [XmlIgnore]
-        public Lazy<Regex> SearchPatternRegex { get; private set; }
-        private string _NestedSearchPattern;
         /// <summary>
         /// RegEx for revision parts that have to be transformed into links
         /// empty string stands for unconditionally always added link
@@ -72,11 +53,11 @@ namespace GitCommands.ExternalLinks
         {
             get
             {
-                return _NestedSearchPattern;
+                return _nestedSearchPattern;
             }
             set
             {
-                _NestedSearchPattern = value;
+                _nestedSearchPattern = value;
                 NestedSearchPatternRegex = new Lazy<Regex>(() =>
                 {
                     try
@@ -94,20 +75,9 @@ namespace GitCommands.ExternalLinks
 
             }
         }
-        /// <summary>Compiled SearchPattern</summary>
-        [XmlIgnore]
-        public Lazy<Regex> NestedSearchPatternRegex { get; private set; }
-        /// <summary>
-        /// Non-local link def can be locally disabled
-        /// </summary>
-        public bool Enabled { get; set; }
 
         public HashSet<RemotePart> RemoteSearchInParts = new HashSet<RemotePart>();
 
-        /// <summary>Compiled RemoteSearchPattern</summary>
-        [XmlIgnore]
-        public Lazy<Regex> RemoteSearchPatternRegex { get; private set; }
-        private string _RemoteSearchPattern;
         /// <summary>
         /// RegEx for remote parts that have to be transformed into links
         /// empty string stands for unconditionally always added link
@@ -116,11 +86,11 @@ namespace GitCommands.ExternalLinks
         {
             get
             {
-                return _RemoteSearchPattern;
+                return _remoteSearchPattern;
             }
             set
             {
-                _RemoteSearchPattern = value;
+                _remoteSearchPattern = value;
                 RemoteSearchPatternRegex = new Lazy<Regex>(() =>
                 {
                     try
@@ -137,10 +107,37 @@ namespace GitCommands.ExternalLinks
             }
         }
 
-        /// <summary>Compiled UseRemotesPattern</summary>
-        [XmlIgnore]
-        public Lazy<Regex> UseRemotesRegex { get; private set; }
-        private string _UseRemotesPattern;
+        public HashSet<RevisionPart> SearchInParts = new HashSet<RevisionPart>();
+
+        /// <summary>
+        /// RegEx for revision parts that have to be transformed into links
+        /// empty string stands for unconditionally always added link
+        /// </summary>
+        public string SearchPattern
+        {
+            get
+            {
+                return _searchPattern;
+            }
+            set
+            {
+                _searchPattern = value;
+                SearchPatternRegex = new Lazy<Regex>(() =>
+                    {
+                        try
+                        {
+                            return new Regex(SearchPattern, RegexOptions.Compiled);
+                        }
+                        catch (Exception e)
+                        {
+                            System.Diagnostics.Debug.Print(e.ToStringWithData());
+                            return null;
+                        }
+                    }
+                        );
+            }
+        }
+
         /// <summary>
         /// RegEx for remotes that have to be use to search in
         /// empty string stands for an unconditionally use of the all remotes
@@ -149,23 +146,23 @@ namespace GitCommands.ExternalLinks
         {
             get
             {
-                return _UseRemotesPattern;
+                return _useRemotesPattern;
             }
             set
             {
-                _UseRemotesPattern = value;
+                _useRemotesPattern = value;
                 UseRemotesRegex = new Lazy<Regex>(() =>
-                {
-                    try
                     {
-                        return new Regex(UseRemotesPattern, RegexOptions.Compiled);
+                        try
+                        {
+                            return new Regex(UseRemotesPattern, RegexOptions.Compiled);
+                        }
+                        catch (Exception e)
+                        {
+                            System.Diagnostics.Debug.Print(e.ToStringWithData());
+                            return null;
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        System.Diagnostics.Debug.Print(e.ToStringWithData());
-                        return null;
-                    }
-                }
                 );
             }
         }
@@ -173,14 +170,23 @@ namespace GitCommands.ExternalLinks
         /// <summary>Indicates if only the first among the matching remotes should be used</summary>
         public bool UseOnlyFirstRemote { get; set; }
 
-        /// <summary>
-        /// List of formats to be applied for each revision part matched by SearchPattern
-        /// </summary>
-        public BindingList<GitExtLinkFormat> LinkFormats = new BindingList<GitExtLinkFormat>();
 
-        public ExternalLinkDefinition()
-        {
-        }
+        /// <summary>Compiled SearchPattern</summary>
+        [XmlIgnore]
+        public Lazy<Regex> SearchPatternRegex { get; private set; }
+
+        /// <summary>Compiled SearchPattern</summary>
+        [XmlIgnore]
+        public Lazy<Regex> NestedSearchPatternRegex { get; private set; }
+
+        /// <summary>Compiled RemoteSearchPattern</summary>
+        [XmlIgnore]
+        public Lazy<Regex> RemoteSearchPatternRegex { get; private set; }
+
+        /// <summary>Compiled UseRemotesPattern</summary>
+        [XmlIgnore]
+        public Lazy<Regex> UseRemotesRegex { get; private set; }
+
 
         public IEnumerable<ExternalLink> Parse(GitRevision revision)
         {
@@ -328,19 +334,9 @@ namespace GitCommands.ExternalLinks
             {
                 foreach (var format in LinkFormats)
                 {
-                    yield return format.ToGitExtLink(remoteMatch, match, revision);
+                    yield return format.Apply(remoteMatch, match, revision);
                 }
             }
-        }
-
-        protected internal override IEnumerable<object> InlinedStructure()
-        {
-            yield return Name;
-            yield return SearchPattern;
-            yield return SearchInParts;
-            yield return NestedSearchPattern;
-            yield return Enabled;
-            yield return LinkFormats;
         }
 
         public override int GetHashCode()
@@ -354,55 +350,14 @@ namespace GitCommands.ExternalLinks
             toRemove.ForEach(f => LinkFormats.Remove(f));
         }
 
-    }
-
-    public class GitExtLinkFormat : SimpleStructured
-    {
-        public string Caption { get; set; }
-        public string Format { get; set; }
-        [XmlIgnore]
-        public bool IsValid { get; private set; }
-
-        public ExternalLink ToGitExtLink(Match remoteMatch, Match revisionMatch, GitRevision revision)
-        {
-            ExternalLink link = new ExternalLink();
-
-            var groups = new List<string>();
-            AddGroupsFromMatches(remoteMatch, groups);
-            AddGroupsFromMatches(revisionMatch, groups);
-            string[] groupsArray = groups.ToArray();
-
-            try
-            {
-                link.Caption = string.Format(Caption, groupsArray);
-                link.URI = Format.Replace("%COMMIT_HASH%", revision.Guid);
-                link.URI = string.Format(link.URI, groupsArray);
-                IsValid = true;
-            }
-            catch (Exception e)
-            {
-                link.URI = e.Message + ": " + Format + " " + groupsArray;
-                IsValid = false;
-            }
-
-            return link;
-        }
-
-        private void AddGroupsFromMatches(Match match, List<string> groups)
-        {
-            if (match != null)
-            {
-                for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
-                {
-                    groups.Add(match.Groups[i].Value);
-                }
-            }
-        }
-
         protected internal override IEnumerable<object> InlinedStructure()
         {
-            yield return Caption;
-            yield return Format;
+            yield return Name;
+            yield return SearchPattern;
+            yield return SearchInParts;
+            yield return NestedSearchPattern;
+            yield return Enabled;
+            yield return LinkFormats;
         }
     }
 }
