@@ -50,7 +50,7 @@
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.createPullLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.lblLinkCreatePull = new System.Windows.Forms.LinkLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabView = new System.Windows.Forms.TabPage();
@@ -64,7 +64,7 @@
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnApprove = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.viewPullLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.lblLinkViewPull = new System.Windows.Forms.LinkLabel();
             this.txtPRDescription = new System.Windows.Forms.TextBox();
             this.txtPRTitle = new System.Windows.Forms.TextBox();
             this.txtPRReviewers = new System.Windows.Forms.TextBox();
@@ -330,7 +330,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.createPullLinkLabel);
+            this.groupBox3.Controls.Add(this.lblLinkCreatePull);
             this.groupBox3.Controls.Add(this.lblReviewers);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.txtDescription);
@@ -346,14 +346,14 @@
             // 
             // createPullLinkLabel
             // 
-            this.createPullLinkLabel.AutoSize = true;
-            this.createPullLinkLabel.Location = new System.Drawing.Point(128, 382);
-            this.createPullLinkLabel.Name = "createPullLinkLabel";
-            this.createPullLinkLabel.Size = new System.Drawing.Size(53, 13);
-            this.createPullLinkLabel.TabIndex = 12;
-            this.createPullLinkLabel.TabStop = true;
-            this.createPullLinkLabel.Text = "linkLabel1";
-            this.createPullLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
+            this.lblLinkCreatePull.AutoSize = true;
+            this.lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
+            this.lblLinkCreatePull.Name = "createPullLinkLabel";
+            this.lblLinkCreatePull.Size = new System.Drawing.Size(53, 13);
+            this.lblLinkCreatePull.TabIndex = 12;
+            this.lblLinkCreatePull.TabStop = true;
+            this.lblLinkCreatePull.Text = "linkLabel1";
+            this.lblLinkCreatePull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // splitContainer1
             // 
@@ -495,7 +495,7 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.viewPullLinkLabel);
+            this.groupBox6.Controls.Add(this.lblLinkViewPull);
             this.groupBox6.Controls.Add(this.txtPRDescription);
             this.groupBox6.Controls.Add(this.txtPRTitle);
             this.groupBox6.Controls.Add(this.txtPRReviewers);
@@ -511,14 +511,14 @@
             // 
             // viewPullLinkLabel
             // 
-            this.viewPullLinkLabel.AutoSize = true;
-            this.viewPullLinkLabel.Location = new System.Drawing.Point(17, 382);
-            this.viewPullLinkLabel.Name = "viewPullLinkLabel";
-            this.viewPullLinkLabel.Size = new System.Drawing.Size(53, 13);
-            this.viewPullLinkLabel.TabIndex = 15;
-            this.viewPullLinkLabel.TabStop = true;
-            this.viewPullLinkLabel.Text = "linkLabel1";
-            this.viewPullLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
+            this.lblLinkViewPull.AutoSize = true;
+            this.lblLinkViewPull.Location = new System.Drawing.Point(17, 382);
+            this.lblLinkViewPull.Name = "viewPullLinkLabel";
+            this.lblLinkViewPull.Size = new System.Drawing.Size(53, 13);
+            this.lblLinkViewPull.TabIndex = 15;
+            this.lblLinkViewPull.TabStop = true;
+            this.lblLinkViewPull.Text = "linkLabel1";
+            this.lblLinkViewPull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // txtPRDescription
             // 
@@ -803,8 +803,8 @@
         private System.Windows.Forms.Label lblPRState;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.LinkLabel createPullLinkLabel;
-        private System.Windows.Forms.LinkLabel viewPullLinkLabel;
+        private System.Windows.Forms.LinkLabel lblLinkCreatePull;
+        private System.Windows.Forms.LinkLabel lblLinkViewPull;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }
