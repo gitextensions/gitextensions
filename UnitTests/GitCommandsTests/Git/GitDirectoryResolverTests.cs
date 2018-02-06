@@ -24,10 +24,6 @@ namespace GitCommandsTests.Git
         [SetUp]
         public void Setup()
         {
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                _workingDir = "/home/user/repo";
-            }
             _gitFile = Path.Combine(_workingDir, ".git");
             _gitWorkingDir = _gitFile.EnsureTrailingPathSeparator();
 
@@ -87,19 +83,6 @@ namespace GitCommandsTests.Git
             _directory.DidNotReceive().Exists(_gitWorkingDir);
         }
 
-        [Platform(Exclude = "Win")]
-        [Test]
-        public void Resolve_should_return_path_from_git_file_if_present_Mono()
-        {
-            _file.Exists(_gitFile).Returns(true);
-            _file.ReadLines(_gitFile).Returns(new[] { "", " ", @"gitdir: /home/user/repo/.git/modules/Externals/Git.hub", "text" });
-
-            _resolver.Resolve(_workingDir).Should().Be(@"/home/user/repo/.git/modules/Externals/Git.hub/");
-
-            _directory.DidNotReceive().Exists(_gitWorkingDir);
-        }
-
-        [Platform(Include = "Win")]
         [Test]
         public void Resolve_should_return_resolved_full_path_from_git_file_if_present()
         {
@@ -107,18 +90,6 @@ namespace GitCommandsTests.Git
             _file.ReadLines(_gitFile).Returns(new[] { "", " ", @"gitdir: ../.git/modules/Externals/Git.hub", "text" });
 
             _resolver.Resolve(_workingDir).Should().Be(@"c:\dev\.git\modules\Externals\Git.hub\");
-
-            _directory.DidNotReceive().Exists(_gitWorkingDir);
-        }
-
-        [Platform(Exclude = "Win")]
-        [Test]
-        public void Resolve_should_return_resolved_full_path_from_git_file_if_present_Mono()
-        {
-            _file.Exists(_gitFile).Returns(true);
-            _file.ReadLines(_gitFile).Returns(new[] { "", " ", @"gitdir: ../.git/modules/Externals/Git.hub", "text" });
-
-            _resolver.Resolve(_workingDir).Should().Be(@"/home/user/.git/modules/Externals/Git.hub/");
 
             _directory.DidNotReceive().Exists(_gitWorkingDir);
         }
@@ -133,7 +104,6 @@ namespace GitCommandsTests.Git
             }
         }
 
-        [Platform(Include = "Win")]
         [Test]
         public void Resolve_submodule_real_filsystem()
         {
@@ -145,20 +115,6 @@ namespace GitCommandsTests.Git
 
                 _resolver.Resolve(submodulePath).Should().Be($@"{helper.Module.WorkingDirGitDir}modules\Externals\Git.hub\");
                 _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
-            }
-        }
-
-        [Platform(Exclude = "Win")]
-        [Test]
-        public void Resolve_submodule_real_filsystem_Mono()
-        {
-            using (var helper = new GitModuleTestHelper())
-            {
-                var submodulePath = Path.Combine(helper.Module.WorkingDir, "External", "Git.hub");
-                helper.CreateFile(submodulePath, ".git", "\r \r\ngitdir: ../../.git/modules/Externals/Git.hub\r\ntext");
-                _resolver = new GitDirectoryResolver();
-
-                _resolver.Resolve(submodulePath).Should().Be($@"{helper.Module.WorkingDirGitDir}modules/Externals/Git.hub/");
             }
         }
     }

@@ -65,15 +65,6 @@ namespace GitCommandsTests
             EnvironmentPathsProvider.IsValidPath(given).Should().Be(expected);
         }
 
-        [Platform(Exclude = "Win")]
-        [TestCase("//my-pc/Work/GitExtensions/", true)]
-        [TestCase("/my-pc/Work/GitExtensions/", true)]
-        [TestCase("/my-pc/Work/GitExtensions", true)]
-        public void IsValidPath_Mono(string given, bool expected)
-        {
-            EnvironmentPathsProvider.IsValidPath(given).Should().Be(expected);
-        }
-
         private static IEnumerable<string> GetInvalidPaths()
         {
             if (Path.DirectorySeparatorChar == '\\')

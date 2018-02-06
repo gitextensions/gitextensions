@@ -293,13 +293,10 @@ namespace GitUI.CommandsDialogs
                 Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
-            if (!EnvUtils.IsMonoRuntime())
-            {
-                if (_buildReportTabPageExtension == null)
-                    _buildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1, _buildReportTabCaption.Text);
+            if (_buildReportTabPageExtension == null)
+                _buildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1, _buildReportTabCaption.Text);
 
-                _buildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
-            }
+            _buildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
         }
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;

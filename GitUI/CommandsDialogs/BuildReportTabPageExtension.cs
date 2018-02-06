@@ -30,9 +30,6 @@ namespace GitUI.CommandsDialogs
 
         public void FillBuildReport(GitRevision revision)
         {
-            if (EnvUtils.IsMonoRuntime())
-                return;
-
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
             selectedGitRevision = revision;
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged += RevisionPropertyChanged;

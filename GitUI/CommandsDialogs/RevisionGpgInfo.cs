@@ -54,36 +54,19 @@ namespace GitUI.CommandsDialogs
             var heightRowCommit = 0f;
             var heightRowTag = 0f;
 
-            if (EnvUtils.IsMonoRuntime())
+            if (txtTagGpgInfo.Visible)
             {
-                if (txtTagGpgInfo.Visible)
-                {
-                    heightRowCommit =
-                        heightRowTag = (float)tableLayoutPanel1.Height / 2;
-                }
-                else
-                {
-                    heightRowCommit = tableLayoutPanel1.Height;
-                }
-
-                tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
-                tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
+                heightRowCommit = 50f;
+                heightRowTag = 50f;
             }
             else
             {
-                if (txtTagGpgInfo.Visible)
-                {
-                    heightRowCommit = 50f;
-                    heightRowTag = 50f;
-                }
-                else
-                {
-                    heightRowCommit = 100f;
-                }
-
-                tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
-                tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
+                heightRowCommit = 100f;
             }
+
+            tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
+            tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
+
             tableLayoutPanel1.RowStyles[0].Height = heightRowCommit;
             tableLayoutPanel1.RowStyles[1].Height = heightRowTag;
         }

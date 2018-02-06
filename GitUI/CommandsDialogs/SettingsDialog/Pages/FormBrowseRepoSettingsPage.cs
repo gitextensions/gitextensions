@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             chkShowRevisionInfoNextToRevisionGrid.Checked = AppSettings.ShowRevisionInfoNextToRevisionGrid;
-            chkShowRevisionInfoNextToRevisionGrid.Visible = !EnvUtils.IsMonoRuntime();
+            chkShowRevisionInfoNextToRevisionGrid.Visible = true;
             base.SettingsToPage();
         }
 

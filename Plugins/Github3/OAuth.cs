@@ -26,7 +26,7 @@ namespace Github3
             }
             catch (NullReferenceException)
             {
-                MessageBox.Show(this, "Mono doesn't have installed WebBrowser.");
+                MessageBox.Show(this, "Failure starting WebBrowser.");
             }
         }
 

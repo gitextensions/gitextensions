@@ -10,9 +10,7 @@ using JetBrains.Annotations;
 
 using ResourceManager;
 using System.Windows.Threading;
-#if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
-#endif
 
 namespace GitUI
 {
@@ -104,7 +102,6 @@ namespace GitUI
                             ProgressBar.Style = ProgressBarStyle.Blocks;
                         ProgressBar.Value = Math.Min(100, progressValue);
 
-#if !__MonoCS__
                         if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                         {
                             try
@@ -116,7 +113,6 @@ namespace GitUI
                             {
                             }
                         }
-#endif
                     }
                     // Show last progress message in the title, unless it's showin in the control body already
                     if(!ConsoleOutput.IsDisplayingFullProcessOutput)
@@ -151,7 +147,6 @@ namespace GitUI
                 Ok.Focus();
                 AcceptButton = Ok;
                 Abort.Enabled = false;
-#if !__MonoCS__
                 if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                 {
                     try
@@ -164,7 +159,6 @@ namespace GitUI
                     }
                     catch (InvalidOperationException) { }
                 }
-#endif
 
                 if (isSuccess)
                     picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
@@ -259,7 +253,6 @@ namespace GitUI
 
             StartPosition = FormStartPosition.CenterParent;
 
-#if !__MonoCS__
             if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
@@ -268,7 +261,6 @@ namespace GitUI
                 }
                 catch (InvalidOperationException) { }
             }
-#endif
             Reset();
             ProcessCallback(this);
         }
@@ -301,7 +293,6 @@ namespace GitUI
 
         internal void AfterClosed()
         {
-#if !__MonoCS__
             if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
@@ -310,7 +301,6 @@ namespace GitUI
                 }
                 catch (InvalidOperationException) { }
             }
-#endif
         }
     }
 

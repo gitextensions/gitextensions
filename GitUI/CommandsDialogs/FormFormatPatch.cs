@@ -179,7 +179,6 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-#pragma warning disable 618 // Mono marked SmtpClient obsolete
         private bool SendMail(string dir)
         {
             try
@@ -222,7 +221,6 @@ namespace GitUI.CommandsDialogs
             }
             return true;
         }
-#pragma warning restore 618 // Mono marked SmtpClient obsolete
 
         private void SaveToDir_CheckedChanged(object sender, EventArgs e)
         {

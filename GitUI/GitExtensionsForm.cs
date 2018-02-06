@@ -8,9 +8,7 @@ using System.Windows.Forms;
 using GitUI.Properties;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
-#if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
-#endif
 
 namespace GitUI
 {
@@ -58,7 +56,6 @@ namespace GitUI
             if (_enablePositionRestore)
                 SavePosition(GetType().Name);
 
-#if !__MonoCS__
             if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
@@ -67,7 +64,6 @@ namespace GitUI
                 }
                 catch (InvalidOperationException) { }
             }
-#endif
         }
 
         #region icon

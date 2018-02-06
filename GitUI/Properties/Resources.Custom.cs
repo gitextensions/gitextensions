@@ -16,11 +16,7 @@
         {
             get
             {
-                if(GitCommands.Utils.EnvUtils.IsMonoRuntime())
-                    return loadingpanel_static;
-                else
-                    return loadingpanel_animated;
-
+                return loadingpanel_animated;
             }
         }
     }

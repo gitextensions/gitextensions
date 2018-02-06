@@ -374,7 +374,6 @@ namespace JenkinsIntegration
 
         private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
-#if !__MonoCS__
             bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
                                 task.Result.StatusCode == HttpStatusCode.Unauthorized;
 
@@ -423,9 +422,6 @@ namespace JenkinsIntegration
             }
 
             throw new HttpRequestException(task.Result.ReasonPhrase);
-#else
-            return null;
-#endif
         }
 
         private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)

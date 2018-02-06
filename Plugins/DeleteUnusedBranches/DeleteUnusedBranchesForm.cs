@@ -46,7 +46,7 @@ namespace DeleteUnusedBranches
             _gitCommands = gitCommands;
             _gitUiCommands = gitUiCommands;
             _gitPlugin = gitPlugin;
-            imgLoading.Image = IsMonoRuntime() ? Resources.loadingpanel_static : Resources.loadingpanel;
+            imgLoading.Image = Resources.loadingpanel;
             RefreshObsoleteBranches();
         }
 
@@ -261,11 +261,6 @@ namespace DeleteUnusedBranches
         private string GetDefaultStatusText()
         {
             return string.Format(_branchesSelected.Text, _branches.Count(b => b.Delete), _branches.Count);
-        }
-
-        private static bool IsMonoRuntime()
-        {
-            return Type.GetType("Mono.Runtime") != null;
         }
 
         private struct RefreshContext

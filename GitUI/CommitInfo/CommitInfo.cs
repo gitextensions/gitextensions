@@ -52,17 +52,9 @@ namespace GitUI.CommitInfo
 
             IHeaderRenderStyleProvider headerRenderer;
             IHeaderLabelFormatter labelFormatter;
-            if (EnvUtils.IsMonoRuntime())
-            {
-                labelFormatter = new MonospacedHeaderLabelFormatter();
-                headerRenderer = new MonospacedHeaderRenderStyleProvider();
-            }
-            else
-            {
-                labelFormatter = new TabbedHeaderLabelFormatter();
-                headerRenderer = new TabbedHeaderRenderStyleProvider();
-            }
-
+            labelFormatter = new TabbedHeaderLabelFormatter();
+            headerRenderer = new TabbedHeaderRenderStyleProvider();
+ 
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
             _externalLinksLoader = new ExternalLinksLoader();
@@ -225,9 +217,6 @@ namespace GitUI.CommitInfo
 
         private int GetRevisionHeaderHeight()
         {
-            if (EnvUtils.IsMonoRuntime())
-                return (int)(_RevisionHeader.Lines.Length * (0.8 + _RevisionHeader.Font.GetHeight()));
-
             return _headerResize.Height;
         }
 
@@ -585,15 +574,7 @@ namespace GitUI.CommitInfo
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var commitInfo = string.Empty;
-            if (EnvUtils.IsMonoRuntime())
-            {
-                commitInfo = $"{_RevisionHeader.Text}{Environment.NewLine}{RevisionInfo.Text}";
-            }
-            else
-            {
-                commitInfo = $"{_RevisionHeader.GetPlaintText()}{Environment.NewLine}{RevisionInfo.GetPlaintText()}";
-            }
+            var commitInfo = $"{_RevisionHeader.GetPlaintText()}{Environment.NewLine}{RevisionInfo.GetPlaintText()}";
             Clipboard.SetText(commitInfo);
         }
 
