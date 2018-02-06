@@ -31,11 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.lblReviewers = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
-            this.ReviewersDataGrid = new System.Windows.Forms.DataGridView();
             this.GridColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtTitle = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -84,7 +82,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.tabCreate = new System.Windows.Forms.TabPage();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -127,15 +124,6 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Branch";
             // 
-            // lblReviewers
-            // 
-            this.lblReviewers.AutoSize = true;
-            this.lblReviewers.Location = new System.Drawing.Point(15, 38);
-            this.lblReviewers.Name = "lblReviewers";
-            this.lblReviewers.Size = new System.Drawing.Size(65, 13);
-            this.lblReviewers.TabIndex = 4;
-            this.lblReviewers.Text = "Reviewer(s)";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -165,19 +153,6 @@
             this.btnCreate.Text = "Create";
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.BtnCreateClick);
-            // 
-            // ReviewersDataGrid
-            // 
-            this.ReviewersDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ReviewersDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ReviewersDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.GridColumnName});
-            this.ReviewersDataGrid.Location = new System.Drawing.Point(129, 38);
-            this.ReviewersDataGrid.Name = "ReviewersDataGrid";
-            this.ReviewersDataGrid.Size = new System.Drawing.Size(593, 137);
-            this.ReviewersDataGrid.TabIndex = 0;
-            this.ReviewersDataGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.ReviewersDataGridEditingControlShowing);
             // 
             // GridColumnName
             // 
@@ -331,11 +306,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.lblLinkCreatePull);
-            this.groupBox3.Controls.Add(this.lblReviewers);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.txtDescription);
             this.groupBox3.Controls.Add(this.txtTitle);
-            this.groupBox3.Controls.Add(this.ReviewersDataGrid);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Location = new System.Drawing.Point(6, 181);
             this.groupBox3.Name = "groupBox3";
@@ -344,7 +317,7 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pull Request Info";
             // 
-            // createPullLinkLabel
+            // lblLinkCreatePull
             // 
             this.lblLinkCreatePull.AutoSize = true;
             this.lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
@@ -509,7 +482,7 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Pull Request Info";
             // 
-            // viewPullLinkLabel
+            // lblLinkViewPull
             // 
             this.lblLinkViewPull.AutoSize = true;
             this.lblLinkViewPull.Location = new System.Drawing.Point(17, 382);
@@ -715,7 +688,6 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "BitbucketPullRequestForm";
             this.Text = "Bitbucket Server";
-            ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -753,11 +725,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblReviewers;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Button btnCreate;
-        private System.Windows.Forms.DataGridView ReviewersDataGrid;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridViewTextBoxColumn GridColumnName;
