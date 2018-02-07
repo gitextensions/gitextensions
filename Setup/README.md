@@ -20,6 +20,6 @@ Building installers for Git Extensions
     set_version_to.py -t 2.50 -v 2.50
     ```
 
-5. Run BuildInstallers.VS2015.cmd or BuildInstallers.VS2017.cmd. This will generate two msi installers:
+5. Run BuildInstallers.cmd. This will generate two msi installers:
     * GitExtensions250.msi - the standard install with only Git Extensions
     * GitExtensions250Complete.msi - also includes Git for Windows and KDiff3
