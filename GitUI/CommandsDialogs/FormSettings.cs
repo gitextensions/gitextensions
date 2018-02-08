@@ -75,8 +75,11 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<StartPageSettingsPage>(this), gitExtPageRef);
 
-            var globalSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
+            var gitConfigSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(gitConfigSettingsSettingsPage, gitExtPageRef);
+
+            var gitConfigAdvancedSettingsPage = SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(gitConfigAdvancedSettingsPage, gitConfigSettingsSettingsPage.PageReference);
 
             var buildServerIntegrationSettingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this);
             settingsTreeView.AddSettingsPage(buildServerIntegrationSettingsPage, gitExtPageRef);
