@@ -363,6 +363,7 @@ namespace GitUI.UserControls.RevisionGridClasses
               var menuCommand = new MenuCommand();
               menuCommand.Name = "showTagsToolStripMenuItem";
               menuCommand.Text = "Show tags";
+              menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowTags);
               menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
               menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
 
