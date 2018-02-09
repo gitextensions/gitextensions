@@ -3242,6 +3242,7 @@ namespace GitUI
             SelectAsBaseToCompare,
             CompareToBase,
             CreateFixupCommit,
+            ToggleShowTags,
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -3259,6 +3260,7 @@ namespace GitUI
                 case Commands.ToggleShowGitNotes: ShowGitNotes_ToolStripMenuItemClick(null, null); break;
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ToggleShowMergeCommits: ShowMergeCommits_ToolStripMenuItemClick(null, null); break;
+                case Commands.ToggleShowTags: ShowTags_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowAllBranches: ShowAllBranches_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowFilteredBranches: ShowFilteredBranches_ToolStripMenuItemClick(null, null); break;
