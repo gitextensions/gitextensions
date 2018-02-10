@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 
@@ -26,6 +27,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private bool _commandIsRunning;
         private bool _statusIsUpToDate = true;
+        private bool _ignoredFilesPending;
+
         private readonly FileSystemWatcher _workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _globalIgnoreWatcher = new FileSystemWatcher();
@@ -219,7 +222,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     _submodulesPath = Path.Combine(_gitPath, "modules");
                     _currentUpdateInterval = MinUpdateInterval;
                     _previousUpdateTime = 0;
-                    UpdateIgnoredFiles(true);
+                    _ignoredFilesAreStale = true;
+                    _ignoredFiles = new HashSet<string>();
                     ignoredFilesTimer.Stop();
                     ignoredFilesTimer.Start();
                     CurrentStatus = GitStatusMonitorState.Running;
@@ -233,29 +237,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 // no-op
             }
-        }
-
-        private HashSet<string> LoadIgnoredFiles()
-        {
-            string lsOutput = Module.RunGitCmd("ls-files -o -i --exclude-standard");
-            string[] tab = lsOutput.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            return new HashSet<string>(tab);
-        }
-
-        private void UpdateIgnoredFiles(bool clearImmediately)
-        {
-            if (clearImmediately)
-                _ignoredFiles = new HashSet<string>();
-
-            AsyncLoader.DoAsync(
-                LoadIgnoredFiles,
-                (ignoredSet) =>
-                {
-                    _ignoredFiles = ignoredSet;
-                    _ignoredFilesAreStale = false;
-                },
-                (e) => { _ignoredFiles = new HashSet<string>(); }
-            );
         }
 
         private void Update()
@@ -283,10 +264,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _commandIsRunning = true;
                 _statusIsUpToDate = true;
                 _previousUpdateTime = Environment.TickCount;
-                if (_ignoredFilesAreStale)
-                {
-                    UpdateIgnoredFiles(false);
-                }
                 AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
                 // Schedule update every 5 min, even if we don't know that anything changed
                 CalculateNextUpdateTime(MaxUpdatePeriod);
@@ -295,7 +272,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private string RunStatusCommand()
         {
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default);
+            _ignoredFilesPending = _ignoredFilesAreStale;
+            //git-status with ignored files when needed only
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default);
             return Module.RunGitCmd(command);
         }
 
@@ -315,7 +294,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
 
             var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
-            OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles));
+            OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
+            if (_ignoredFilesPending)
+            {
+                _ignoredFilesPending = false;
+                _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name).ToArray());
+                if (_statusIsUpToDate)
+                {
+                    _ignoredFilesAreStale = false;
+                }
+            }
             if (!_statusIsUpToDate)
             {
                 //Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
@@ -395,12 +383,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void GitUICommands_PostEditGitIgnore(object sender, GitUIBaseEventArgs e)
         {
-            UpdateIgnoredFiles(true);
+            _ignoredFiles = new HashSet<string>();
+            _ignoredFilesAreStale = true;
         }
 
         private void ignoredFilesTimer_Tick(object sender, EventArgs e)
         {
-            UpdateIgnoredFiles(false);
+            _ignoredFilesAreStale = true;
         }
 
         private void timerRefresh_Tick(object sender, EventArgs e)
@@ -420,8 +409,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (_nextUpdateTime < Environment.TickCount + UpdateDelay)
                 return;
 
-            //TODO Smarter detection of ignored files created since the files were created
-            //Parse .gitignore?
             var fileName = e.FullPath.Substring(_workTreeWatcher.Path.Length).ToPosixPath();
             if (_ignoredFiles.Contains(fileName))
                 return;
