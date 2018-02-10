@@ -118,9 +118,10 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            //if there is no destination directory, then use current working directory
+            //if there is no destination directory, then use the parent of the current working directory
+            //this would clone the new repo at the same level as the current one by default
             if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
-                _NO_TRANSLATE_To.Text = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
+                _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
 
             FromTextUpdate(null, null);
 
