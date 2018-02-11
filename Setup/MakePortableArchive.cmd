@@ -11,6 +11,9 @@ set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 rd /q /s GitExtensions\ 2>nul
 del %normal% 2>nul
+
+REM Some plugins are not included, like TeamFoundation/TfsIntegration with related dlls
+
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\ConEmu GitExtensions\ConEmu
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\ConEmu.WinForms.dll GitExtensions\
@@ -33,8 +36,6 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.dll GitExten
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\Gravatar.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.TextEditor.dll GitExtensions\
@@ -53,7 +54,10 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\PSTaskDialog.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\ResourceManager.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\Github3\bin\%Configuration%\RestSharp.dll GitExtensions\
+
+xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Core.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -63,9 +67,13 @@ xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.Linq.dll
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\System.Reactive.PlatformServices.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\%Configuration%\AppVeyorIntegration.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\%Configuration%\JenkinsIntegration.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\CreateLocalBranches\bin\%Configuration%\CreateLocalBranches.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -79,20 +87,29 @@ xcopy /y ..\Plugins\Gerrit\bin\%Configuration%\Newtonsoft.Json.dll GitExtensions
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\GitFlow\bin\%Configuration%\GitFlow.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\Github3\bin\%Configuration%\RestSharp.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Github3\bin\%Configuration%\Github3.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\Gource\bin\%Configuration%\Gource.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\Atlassian.Jira.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\netstandard.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\NString.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Statistics\GitImpact\bin\%Configuration%\GitImpact.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Statistics\GitStatistics\bin\%Configuration%\GitStatistics.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\Gource\bin\%Configuration%\Gource.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
+
 xcopy /y ..\GitUI\Translation\English.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\English.xlf GitExtensions\Translation\
@@ -171,12 +188,14 @@ REM xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Transl
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
+
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Diff-Scripts\merge-* GitExtensions\Diff-Scripts\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Diff-Scripts\*.txt GitExtensions\Diff-Scripts\
 IF ERRORLEVEL 1 EXIT /B 1
+
 xcopy /y ..\bin\pageant.exe GitExtensions\PuTTY\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\plink.exe GitExtensions\PuTTY\
@@ -203,17 +222,24 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.pdb GitExten
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\Gravatar.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.pdb GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\NBug.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\NetSpell.SpellChecker.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\ResourceManager.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\%Configuration%\AppVeyorIntegration.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\%Configuration%\JenkinsIntegration.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\CreateLocalBranches\bin\%Configuration%\CreateLocalBranches.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -223,19 +249,21 @@ xcopy /y ..\Plugins\FindLargeFiles\bin\%Configuration%\FindLargeFiles.pdb GitExt
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Gerrit\bin\%Configuration%\Gerrit.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\GitFlow\bin\%Configuration%\GitFlow.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Github3\bin\%Configuration%\Github3.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\Gource\bin\%Configuration%\Gource.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Statistics\GitImpact\bin\%Configuration%\GitImpact.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\Statistics\GitStatistics\bin\%Configuration%\GitStatistics.pdb GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\Gource\bin\%Configuration%\Gource.pdb GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.pdb GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.pdb GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 
 :create_archive
