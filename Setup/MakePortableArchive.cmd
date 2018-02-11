@@ -185,8 +185,6 @@ xcopy /y ..\bin\puttygen.exe GitExtensions\PuTTY\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Logo\git-extensions-logo-final-256.ico GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\gitext.sh GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
 
 IF "%ARCHIVE_WITH_PDB%"=="" GOTO create_archive
 xcopy /y ..\GitExtensions\bin\%Configuration%\ConEmu.WinForms.pdb GitExtensions\
