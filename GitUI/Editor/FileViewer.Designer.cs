@@ -25,6 +25,7 @@
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ignoreAllWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descreaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +45,7 @@
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.ignoreAllWhitespaces = new System.Windows.Forms.ToolStripButton();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.revertSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
@@ -63,6 +65,7 @@
             this.findToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceChangesToolStripMenuItem,
+            this.ignoreAllWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
             this.descreaseNumberOfLinesToolStripMenuItem,
             this.showEntireFileToolStripMenuItem,
@@ -71,7 +74,7 @@
             this.showNonprintableCharactersToolStripMenuItem,
             this.goToLineToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(244, 324);
+            this.contextMenu.Size = new System.Drawing.Size(244, 346);
             // 
             // copyToolStripMenuItem
             // 
@@ -127,8 +130,15 @@
             // 
             this.ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
             this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore whitespace changes";
+            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore leading and trailing whitespace changes";
             this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
+            // 
+            // ignoreAllWhitespaceChangesToolStripMenuItem
+            // 
+            this.ignoreAllWhitespaceChangesToolStripMenuItem.Name = "ignoreAllWhitespaceChangesToolStripMenuItem";
+            this.ignoreAllWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.ignoreAllWhitespaceChangesToolStripMenuItem.Text = "Ignore all whitespace changes";
+            this.ignoreAllWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.ignoreAllWhitespaceChangesToolStripMenuItem_Click);
             // 
             // increaseNumberOfLinesToolStripMenuItem
             // 
@@ -192,12 +202,13 @@
             this.showEntireFileButton,
             this.showNonPrintChars,
             this.ignoreWhiteSpaces,
+            this.ignoreAllWhitespaces,
             this.encodingToolStripComboBox,
             this.settingsButton});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(535, 0);
+            this.fileviewerToolbar.Location = new System.Drawing.Point(458, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(316, 23);
+            this.fileviewerToolbar.Size = new System.Drawing.Size(393, 23);
             this.fileviewerToolbar.TabIndex = 4;
             this.fileviewerToolbar.Visible = false;
             this.fileviewerToolbar.VisibleChanged += new System.EventHandler(this.fileviewerToolbar_VisibleChanged);
@@ -275,12 +286,17 @@
             // ignoreWhiteSpaces
             // 
             this.ignoreWhiteSpaces.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ignoreWhiteSpaces.Image = global::GitUI.Properties.Resources.whitespace;
             this.ignoreWhiteSpaces.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
-            this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 20);
-            this.ignoreWhiteSpaces.ToolTipText = "Ignore whitespaces";
+            this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 4);
+            this.ignoreWhiteSpaces.ToolTipText = "Ignore leading and trailing whitespace changes";
             this.ignoreWhiteSpaces.Click += new System.EventHandler(this.ignoreWhiteSpaces_Click);
+            // 
+            // encodingToolStripComboBox
+            // 
+            this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
+            this.encodingToolStripComboBox.Size = new System.Drawing.Size(140, 23);
+            this.encodingToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.encodingToolStripComboBox_SelectedIndexChanged);
             // 
             // settingsButton
             // 
@@ -292,11 +308,14 @@
             this.settingsButton.ToolTipText = "Settings";
             this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
             // 
-            // encodingToolStripComboBox
+            // ignoreAllWhitespaces
             // 
-            this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
-            this.encodingToolStripComboBox.Size = new System.Drawing.Size(140, 23);
-            this.encodingToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.encodingToolStripComboBox_SelectedIndexChanged);
+            this.ignoreAllWhitespaces.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ignoreAllWhitespaces.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ignoreAllWhitespaces.Name = "ignoreAllWhitespaces";
+            this.ignoreAllWhitespaces.Size = new System.Drawing.Size(23, 4);
+            this.ignoreAllWhitespaces.ToolTipText = "Ignore all whitespace changes";
+            this.ignoreAllWhitespaces.Click += new System.EventHandler(this.ignoreAllWhitespaceChangesToolStripMenuItem_Click);
             // 
             // PictureBox
             // 
@@ -369,5 +388,7 @@
         private System.Windows.Forms.ToolStripMenuItem copyOldVersionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherrypickSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem revertSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton ignoreAllWhitespaces;
+        private System.Windows.Forms.ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
     }
 }

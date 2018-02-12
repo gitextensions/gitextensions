@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -76,6 +76,211 @@
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>Arguments pour l’exécution de la commande git</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="BitbucketBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Spécifier l'URL de base de Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Désactiver la vérification SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Mot de passe Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Utilisateur Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Bitbucket Server</source>
+        <target>Serveur Bitbucket</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target>Créer une demande de pull</target>
+        
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target>Nom</target>
+        
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} commité
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Erreur</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>Réussite</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Votre dépôt n'est pas hébergé dans Bitbucket.</target>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target>Approuver</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>Créer</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>Fusionner (Merge)</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        <target>Source</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        <target>Cible</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        <target>Information sur la demande de pull</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        <target>Source</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        <target>Cible</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        <target>Information sur la demande de pull</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        <target>Information</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target>Branche</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        <target>Relecteur (approuvé)</target>
+        
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target>Auteur</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target>Description</target>
+        
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target>Titre</target>
+        
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        <target>État</target>
+        
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target>Dépôt</target>
+        
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target>Branche</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target>Branche</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target>Description</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target>Titre</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target>Dépôt</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target>Dépôt</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target>Dépôt</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target>Branche</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        <target>Relecteur(s)</target>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Créer une demande de pull</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Voir les demandes de Pull</target>
         
       </trans-unit>
     </body>
@@ -1156,6 +1361,50 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        <target>Lien commit-Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        <target>Plugin lien commit-Jira activé</target>
+        
+      </trans-unit>
+      <trans-unit id="jdlQuerySettings.Caption">
+        <source>JDL Query</source>
+        <target>Requête JDL</target>
+        
+      </trans-unit>
+      <trans-unit id="jiraFields.Caption">
+        <source>Jira fields</source>
+        <target>Champs Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="passwordSettings.Caption">
+        <source>Jira password</source>
+        <target>Mot de passe Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        <target>Modèle de mesage</target>
+        
+      </trans-unit>
+      <trans-unit id="urlSettings.Caption">
+        <source>Jira URL</source>
+        <target>URL Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="userSettings.Caption">
+        <source>Jira user</source>
+        <target>Identifiant Jira</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
@@ -1236,9 +1485,24 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Générateur de Notes de Release</target>
         
       </trans-unit>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
+        <target>Saisie invalide</target>
+        
+      </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
         <target>Faire un commit des log de '{0}' à '{1}' ({2}):</target>
+        
+      </trans-unit>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>'From' commit must be specified</source>
+        <target>Le commit 'de départ' doit être spécifié</target>
+        
+      </trans-unit>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>'To' commit must be specified</source>
+        <target>Le commit 'd'arrivé' doit être spécifié</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">

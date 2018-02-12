@@ -4,3 +4,11 @@ os: linux
 
 install:
   - nuget restore GitExtensionsMono.sln
+  - nuget install NUnit.Runners -Version 3.7.0 -OutputDirectory testrunner
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+script:
+  - msbuild /p:Configuration=Debug GitExtensionsMono.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe GitExtensionsMono.sln

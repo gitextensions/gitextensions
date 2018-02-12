@@ -155,35 +155,35 @@ namespace GitCommands.Repository
         private static BindingList<RepositoryCategory> DeserializeRepositories(string xml)
         {
             BindingList<RepositoryCategory> repositories = null;
+            StringReader stringReader = null;
             try
             {
                 var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-                StringReader stringReader = null;
-                try
+                stringReader = new StringReader(xml);
+                using (var xmlReader = new XmlTextReader(stringReader))
                 {
-                    stringReader = new StringReader(xml);
-                    using (var xmlReader = new XmlTextReader(stringReader))
+                    var repos = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                    if (repos != null)
                     {
-                        stringReader = null;
-                        repositories = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-                        if (repositories != null)
+                        repositories = new BindingList<RepositoryCategory>();
+                        foreach (var repositoryCategory in repos.Where(r => r.CategoryType == RepositoryCategoryType.Repositories))
                         {
-                            foreach (var repositoryCategory in repositories)
-                            {
-                                repositoryCategory.SetIcon();
-                            }
+                            repositoryCategory.SetIcon();
+                            repositories.Add(repositoryCategory);
                         }
                     }
-                }
-                finally
-                {
-                    if (stringReader != null)
-                        stringReader.Dispose();
                 }
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
+            }
+            finally
+            {
+                if (stringReader != null)
+                {
+                    stringReader.Dispose();
+                }
             }
             return repositories;
         }

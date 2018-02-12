@@ -12,9 +12,9 @@ namespace GitCommandsTests.Patch
     [TestClass]
     public class PatchManagerTest
     {
-        private const string BigPatchFile = @"Patch/testdata/big.patch";
-        private const string BigBinPatchFile = @"Patch/testdata/bigBin.patch";
-        private const string RebaseDiffFile = @"Patch/testdata/rebase.diff";
+        private string BigPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/big.patch");
+        private string BigBinPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/bigBin.patch");
+        private string RebaseDiffFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/rebase.diff");
 
         [TestMethod]
         public void TestPatchManagerInstanceNotNull()
@@ -35,20 +35,35 @@ namespace GitCommandsTests.Patch
             return patchBytes;
         }
 
-        public TestPatch CreateSmallPatchExample()
+        public TestPatch CreateSmallPatchExample(bool reverse = false)
         {
             TestPatch testPatch = new TestPatch();
             Encoding fileEncoding = Encoding.UTF8;
             testPatch.Patch.Type = PatchApply.Patch.PatchType.ChangeFile;
             testPatch.Patch.Apply = true;
-            testPatch.Patch.PatchHeader = "diff --git a/thisisatest.txt b/thisisatest.txt";
+            if (reverse)
+            {
+                testPatch.Patch.PatchHeader = "diff --git b/thisisatestb.txt a/thisisatesta.txt";
+            }
+            else
+            {
+                testPatch.Patch.PatchHeader = "diff --git a/thisisatesta.txt b/thisisatestb.txt";
+            }
             testPatch.Patch.PatchIndex = "index 5e4dce2..5eb1e6f 100644";
-            testPatch.Patch.FileNameA = "thisisatest.txt";
-            testPatch.Patch.FileNameB = "thisisatest.txt";
+            testPatch.Patch.FileNameA = "thisisatesta.txt";
+            testPatch.Patch.FileNameB = "thisisatestb.txt";
             testPatch.AppendHeaderLine(testPatch.Patch.PatchHeader);
             testPatch.AppendHeaderLine(testPatch.Patch.PatchIndex);
-            testPatch.AppendHeaderLine("--- a/" + testPatch.Patch.FileNameA);
-            testPatch.AppendHeaderLine("+++ b/" + testPatch.Patch.FileNameB);
+            if (reverse)
+            {
+                testPatch.AppendHeaderLine("--- b/" + testPatch.Patch.FileNameB);
+                testPatch.AppendHeaderLine("+++ a/" + testPatch.Patch.FileNameA);
+            }
+            else
+            {
+                testPatch.AppendHeaderLine("--- a/" + testPatch.Patch.FileNameA);
+                testPatch.AppendHeaderLine("+++ b/" + testPatch.Patch.FileNameB);
+            }
             testPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
             testPatch.AppendDiffLine(" iiiiii", fileEncoding);
             testPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);
@@ -69,6 +84,25 @@ namespace GitCommandsTests.Patch
 
             Assert.AreEqual(expectedPatch.Patch.PatchHeader, createdPatch.PatchHeader);
             Assert.AreEqual(expectedPatch.Patch.FileNameA, createdPatch.FileNameA);
+            Assert.AreEqual(expectedPatch.Patch.PatchIndex, createdPatch.PatchIndex);
+            Assert.AreEqual(expectedPatch.Patch.Rate, createdPatch.Rate);
+            Assert.AreEqual(expectedPatch.Patch.Type, createdPatch.Type);
+            Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
+        }
+
+
+        [TestMethod]
+        public void TestCorrectlyLoadReversePatch()
+        {
+            PatchManager manager = NewManager();
+            TestPatch expectedPatch = CreateSmallPatchExample(true);
+
+            manager.LoadPatch(expectedPatch.PatchOutput.ToString(), false, Encoding.UTF8);
+
+            PatchApply.Patch createdPatch = manager.Patches.First();
+
+            Assert.AreEqual(expectedPatch.Patch.PatchHeader, createdPatch.PatchHeader, "header");
+            Assert.AreEqual(expectedPatch.Patch.FileNameB, createdPatch.FileNameA, "fileA");
             Assert.AreEqual(expectedPatch.Patch.PatchIndex, createdPatch.PatchIndex);
             Assert.AreEqual(expectedPatch.Patch.Rate, createdPatch.Rate);
             Assert.AreEqual(expectedPatch.Patch.Type, createdPatch.Type);

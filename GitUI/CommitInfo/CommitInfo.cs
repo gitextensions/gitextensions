@@ -1,18 +1,22 @@
-﻿﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitCommands.GitExtLinks;
-using GitUI.Editor.RichTextBoxExtension;
-using ResourceManager;
+using GitCommands.Utils;
+using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.Editor.RichTextBoxExtension;
+using GitUI.Hotkey;
+using ResourceManager;
+using ResourceManager.CommitDataRenders;
 
 namespace GitUI.CommitInfo
 {
@@ -25,7 +29,12 @@ namespace GitUI.CommitInfo
         private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
         private const int MaximumDisplayedRefs = 20;
-        private LinkFactory _linkFactory = new LinkFactory();
+        private readonly ILinkFactory _linkFactory = new LinkFactory();
+        private readonly IDateFormatter _dateFormatter = new DateFormatter();
+        private readonly ICommitDataManager _commitDataManager;
+        private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
+        private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
+
 
         public CommitInfo()
         {
@@ -35,6 +44,34 @@ namespace GitUI.CommitInfo
             {
                 _sortedRefs = null;
             };
+
+            _commitDataManager = new CommitDataManager(() => Module);
+
+            IHeaderRenderStyleProvider headerRenderer;
+            IHeaderLabelFormatter labelFormatter;
+            if (EnvUtils.IsMonoRuntime())
+            {
+                labelFormatter = new MonospacedHeaderLabelFormatter();
+                headerRenderer = new MonospacedHeaderRenderStyleProvider();
+            }
+            else
+            {
+                labelFormatter = new TabbedHeaderLabelFormatter();
+                headerRenderer = new TabbedHeaderRenderStyleProvider();
+            }
+
+            _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
+            _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
+
+            RevisionInfo.Font = AppSettings.Font;
+            using (Graphics g = CreateGraphics())
+            {
+                _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
+            }
+            _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
+            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Commands.AddNotes).ToShortcutKeyDisplayString();
         }
 
         [DefaultValue(false)]
@@ -124,7 +161,7 @@ namespace GitUI.CommitInfo
 
         private void ReloadCommitInfo()
         {
-            _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(this.BackColor);
+            _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(BackColor);
 
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
@@ -137,15 +174,13 @@ namespace GitUI.CommitInfo
             if (string.IsNullOrEmpty(_revision.Guid))
                 return; //is it regular case or should throw an exception
 
-            _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops();
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
-
             string error = "";
-            CommitData data = CommitData.CreateFromRevision(_revision);
+            CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
-                CommitData.UpdateCommitMessage(data, Module, _revision.Guid, ref error);
+                _commitDataManager.UpdateCommitMessage(data, _revision.Guid, ref error);
                 _revision.Body = data.Body;
             }
 
@@ -155,12 +190,14 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, _linkFactory, CommandClick != null, Module);
+            var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
+            var body = _commitDataBodyRenderer.Render(data, CommandClick != null);
 
-            _RevisionHeader.SetXHTMLText(commitInformation.Header);
+            _RevisionHeader.SetXHTMLText(header);
             _RevisionHeader.Height = GetRevisionHeaderHeight();
-            _revisionInfo = commitInformation.Body;
-            updateText();
+            _revisionInfo = body;
+
+            UpdateRevisionInfo();
             LoadAuthorImage(data.Author ?? data.Committer);
 
             if (AppSettings.CommitInfoShowContainedInBranches)
@@ -171,36 +208,6 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInTags)
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
-        }
-
-        /// <summary>
-        /// Returns an array of strings contains titles of fields field returned by GetHeader.
-        /// Used to calculate layout in advance
-        /// </summary>
-        /// <returns></returns>
-        private static string[] GetPossibleHeaders()
-        {
-            return new string[]
-                   {
-                       Strings.GetAuthorText(), Strings.GetAuthorDateText(), Strings.GetCommitterText(),
-                       Strings.GetCommitDateText(), Strings.GetCommitHashText(), Strings.GetChildrenText(),
-                       Strings.GetParentsText()
-                   };
-        }
-
-        private int[] _revisionHeaderTabStops;
-        private int[] GetRevisionHeaderTabStops()
-        {
-            if (_revisionHeaderTabStops != null)
-                return _revisionHeaderTabStops;
-            int tabStop = 0;
-            foreach (string s in GetPossibleHeaders())
-            {
-                tabStop = Math.Max(tabStop, TextRenderer.MeasureText(s + "  ", _RevisionHeader.Font).Width);
-            }
-            // simulate a two column layout even when there's more then one tab used
-            _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
-            return _revisionHeaderTabStops;
         }
 
         private int GetRevisionHeaderHeight()
@@ -214,13 +221,13 @@ namespace GitUI.CommitInfo
         private void loadSortedRefs()
         {
             _sortedRefs = Module.GetSortedRefs();
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private void loadAnnotatedTagInfo(GitRevision revision)
         {
             _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
@@ -233,18 +240,18 @@ namespace GitUI.CommitInfo
             foreach (GitRef gitRef in revision.Refs)
             {
                 #region Note on annotated tags
-                // Notice that for the annotated tags, gitRef's come in pairs because they're produced 
-                // by the "show-ref --dereference" command. GitRef's in such pair have the same Name, 
+                // Notice that for the annotated tags, gitRef's come in pairs because they're produced
+                // by the "show-ref --dereference" command. GitRef's in such pair have the same Name,
                 // a bit different CompleteName's, and completely different checksums:
                 //      GitRef_1:
-                //      { 
+                //      {
                 //          Name: "some_tag"
                 //          CompleteName: "refs/tags/some_tag"
                 //          Guid: <some_tag_checksum>
                 //      },
-                //       
+                //
                 //      GitRef_2:
-                //      { 
+                //      {
                 //          Name: "some_tag"
                 //          CompleteName: "refs/tags/some_tag^{}"   <- by "^{}", IsDereference is true.
                 //          Guid: <target_object_checksum>
@@ -252,7 +259,7 @@ namespace GitUI.CommitInfo
                 //
                 // The 2nd one is a dereference: a link between the tag and the object which it references.
                 // GitRevions.Refs by design contains GitRef's where Guid's are equal to the GitRevision.Guid,
-                // so this collection contains only derefencing GitRef's - just because GitRef_2 has the same 
+                // so this collection contains only derefencing GitRef's - just because GitRef_2 has the same
                 // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
                 // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
                 #endregion
@@ -272,8 +279,9 @@ namespace GitUI.CommitInfo
         private void loadTagInfo(string revision)
         {
             _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
+
 
         private void loadBranchInfo(string revision)
         {
@@ -284,7 +292,7 @@ namespace GitUI.CommitInfo
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private void loadLinksForRevision(GitRevision revision)
@@ -293,7 +301,7 @@ namespace GitUI.CommitInfo
                 return;
 
             _linksInfo = GetLinksForRevision(revision);
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private class ItemTpComparer : IComparer<string>
@@ -323,22 +331,48 @@ namespace GitUI.CommitInfo
             }
         }
 
-        public void DisplayAvatarOnRight()
+        private void DisplayAvatarSetup(bool right)
         {
             tableLayout.SuspendLayout();
-            this.tableLayout.ColumnStyles.Clear();
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayout.SetColumn(gravatar1, 1);
-            tableLayout.SetColumn(_RevisionHeader, 0);
-            tableLayout.SetColumn(RevisionInfo, 0);
-            tableLayout.SetRowSpan(gravatar1, 1);
-            tableLayout.SetColumnSpan(RevisionInfo, 2);
+            tableLayout.ColumnStyles.Clear();
+            int gravatarIndex, revInfoIndex, gravatarSpan, revInfoSpan;
+            if (right)
+            {
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                gravatarIndex = 1;
+                revInfoIndex = 0;
+                gravatarSpan = 1;
+                revInfoSpan = 2;
+            }
+            else
+            {
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                gravatarIndex = 0;
+                revInfoIndex = 1;
+                gravatarSpan = 2;
+                revInfoSpan = 1;
+            }
+            tableLayout.SetColumn(gravatar1, gravatarIndex);
+            tableLayout.SetColumn(_RevisionHeader, revInfoIndex);
+            tableLayout.SetColumn(RevisionInfo, revInfoIndex);
+            tableLayout.SetRowSpan(gravatar1, gravatarSpan);
+            tableLayout.SetColumnSpan(RevisionInfo, revInfoSpan);
             tableLayout.ResumeLayout(true);
-
         }
 
-        private void updateText()
+        public void DisplayAvatarOnRight()
+        {
+            DisplayAvatarSetup(true);
+        }
+
+        public void DisplayAvatarOnLeft()
+        {
+            DisplayAvatarSetup(false);
+        }
+
+        private void UpdateRevisionInfo()
         {
             if (_sortedRefs != null)
             {
@@ -382,8 +416,15 @@ namespace GitUI.CommitInfo
                     _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
                 }
             }
+
+            string body = _revisionInfo;
+            if (Revision != null && !Revision.IsArtificial())
+            {
+                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo;
+            }
+
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(body);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);
@@ -420,7 +461,7 @@ namespace GitUI.CommitInfo
             _annotatedTagsMessages = null;
             _tags = null;
             _linkFactory.Clear();
-            updateText();
+            UpdateRevisionInfo();
             gravatar1.Visible = AppSettings.ShowAuthorGravatar;
             if (AppSettings.ShowAuthorGravatar)
             {
@@ -593,6 +634,5 @@ namespace GitUI.CommitInfo
             // Cache desired size for commit header
             _headerResize = e.NewRectangle;
         }
-
     }
 }

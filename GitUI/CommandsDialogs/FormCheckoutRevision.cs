@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Script;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -44,21 +44,27 @@ namespace GitUI.CommandsDialogs
             try
             {
                 var commitHash = commitPickerSmallControl1.SelectedCommitHash;
-
                 if (commitHash.IsNullOrEmpty())
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                     return;
                 }
 
+                var originalHash = Module.GetCurrentCheckout();
+                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+
                 string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
+                if (FormProcess.ShowDialog(this, command))
+                {
+                    if (!string.Equals(commitHash, originalHash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        UICommands.UpdateSubmodules(this);
+                    }
+                }
 
-                FormProcess.ShowDialog(this, command);
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
 
-                UICommands.UpdateSubmodules(this);
-
-                DialogResult = System.Windows.Forms.DialogResult.OK;
-
+                DialogResult = DialogResult.OK;
                 Close();
             }
             catch (Exception ex)

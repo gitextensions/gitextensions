@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
-
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -130,7 +130,7 @@
   <data name="x_with_arrow_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../../Bin/Logo/x-with-arrow_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconSettingsTools" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/71.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="HelpPullRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -187,7 +187,7 @@
   <data name="SplitViewLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/SplitViewLayout.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconTag2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="putty" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -235,7 +235,7 @@
   <data name="git_extensions_logo_final_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../../Bin/Logo/git-extensions-logo-final_blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_50" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconSolveMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/50.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -256,7 +256,7 @@
   <data name="git_extensions_logo_final_mixed_lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../../Bin/Logo/git-extensions-logo-final_mixed_lightblue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconPull" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pageant_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -340,7 +340,7 @@
   <data name="Cow_xmass" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Cow_xmass.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconPush" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="git_extensions_logo_final_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -379,7 +379,7 @@
   <data name="git_extensions_logo_final_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../../Bin/Logo/git-extensions-logo-final_purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconTag1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Modified" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -391,7 +391,7 @@
   <data name="cow_head" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../../Bin/Logo/cow-head.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_82" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="IconMaintenance" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/82.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="git_extensions_logo_final_mixed_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -429,6 +429,9 @@
   </data>
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBranchCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/BranchCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -515,7 +518,7 @@
     <value>../Resources/Icons/IconFileTree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconConsole" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\IconConsole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/IconConsole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconFilter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -640,14 +643,8 @@
   <data name="IconSubmoduleRevisionSemiUpDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconSubmoduleRevisionSemiUpDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="light_bulb_icon_on_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../Resources/Icons/light_bulb_icon_on_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="light_bulb_icon_off_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../Resources/Icons/light_bulb_icon_off_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Coders" xml:space="preserve">
-    <value>Arkady Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, RussKie, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
 Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
 Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
 Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
@@ -671,9 +668,14 @@ Dmitry Oksenchuk, Andrew Orlov, BinSys, careri, Alan Nelson, Alexander Kostikov,
 Ashod Nakashian, Bastian Eicher, Benjamin Burgy, Bernd Herzog, BinSys, Carbenium, Christian Schuster,
 Christophe Chevalier, Clay Anderson, Cristian Stoica, David Kemp, Dmitri Suvorov, Drew Noakes, Eben Zhang,
 Fernsehkind, James Johnston, Joe Flynn, Joe Hayes, Johannes Linke, KSACEK, Kim Gybels, Klas Mellbourn,
-Lazar Sumar, Luis G, Marc Brooks, Matthias Koch, Max Kirillov, Michael Karmazin, Michal Kuncl, Noguai, Patrik Gustavssonm, Per Erik Stendahl, Phil Richards, Quppa, Ralf Wagner, Robert Schmidt-Cisternas, RussKie,
+Lazar Sumar, Luis G, Marc Brooks, Matthias Koch, Max Kirillov, Michael Karmazin, Michal Kuncl, Noguai,
+Patrik Gustavssonm, Per Erik Stendahl, Phil Richards, Quppa, Ralf Wagner, Robert Schmidt-Cisternas,
 Sam Harwell, Seto, Tachikawa, Tomas Deml, Oleg Ovcharenko, Valery Petrov, hypersw, idealist1508,
-j-a-b, ksemenenko, lodici, m08pvv, maadani, maxbog, mgorbulsky, mnz, wangzq</value>
+j-a-b, ksemenenko, lodici, m08pvv, maadani, maxbog, mgorbulsky, mnz, wangzq, Amit.Joshi, Arnaud, David Frey,
+EbenZhang, Erik Leo, Gabriele Pongelli, GavriYashar, Gerhard Olsson, Julius Vitkauskas,
+Katelyn Gigante, Levente Koncz, Lucas Trzesniewski, Lysogorskiy Aleksey, Matt Si, Matthias Serfling,
+Oleksandr Redko, Ondrej Novak, Orgad Shaneh, RaMMicHaeL, Rui Lopes, Sebastien ROBERT, Tao Gomez Gil,
+agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123</value>
   </data>
   <data name="Designers" xml:space="preserve">
     <value>Andréj Telle, Oliver Friedrich</value>
@@ -688,15 +690,57 @@ diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Vic
 Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
   <data name="IconShowFirstParent" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\IconShowFirstParent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/IconShowFirstParent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Icon_86" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\86.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IconDeleteRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/86.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBlank" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\IconBlank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/IconBlank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="gitex" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\gitex.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUntrackedOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconUntrackedOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commit_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/commit_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commit_ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/commit_ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commit_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/commit_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_many" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_many.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconKey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ignore_all_whitespaces" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/ignore_all_whitespaces.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ignore_whitespaces" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/ignore_whitespaces.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBook" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconBook.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="eye_closed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\eye_closed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="eye_opened" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\eye_opened.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

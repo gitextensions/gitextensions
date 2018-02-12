@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="cbLoadTestResults.Text">
         <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <target>mostrar los resultados de las pruebas en el resumen de estado de compilación para cada resultado de compilación (¡uso intensivo de la red!)</target>
         
       </trans-unit>
     </body>
@@ -78,18 +79,226 @@
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="BitbucketBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Especifique la URL base de Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Des habilitar verificación SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Contraseña de Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Nombre de usuario de Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Bitbucket Server</source>
+        <target>Servidor Bitbucket</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target>Crear pedido de Pull</target>
+        
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target>Nombre</target>
+        
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} Commiteado
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Error</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>Exito</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Su repositorio no está alojado en Bitbucket.</target>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target>Aprobar</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>Crear</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>Fusionar</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        <target>Fuente</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        <target>Destino</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        <target>Información de las Pull Request.</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        <target>Fuente</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        <target>Destino</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        <target>Información de las Pull Request.</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        <target>Información</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target>Rama</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        <target>Revisor (aprovado)</target>
+        
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target>Autor</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target>Descripción</target>
+        
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target>Título</target>
+        
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        <target>Estado</target>
+        
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target>Repositorio</target>
+        
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target>Rama</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target>Rama</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target>Descripción</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target>Título</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target>Repositorio</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target>Repositorio</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target>Repositorio</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target>Rama</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        <target>Revisor(es)</target>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Crear pedido de Pull</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Ver pedidos de Pull</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="es">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Remoto para el cual crear ramas de tracking</target>
         
       </trans-unit>
     </body>
@@ -98,6 +307,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
     </body>
@@ -163,6 +373,8 @@
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
+        <target>¡ACCIÓN PELIGROSA!
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. ¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -177,6 +389,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Eliminar ramas sin fusionar resultará en commits colgados. ¡Use con cuidado!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -196,6 +409,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target>Selecciona las ramas a borrar usando los Checkbox en la columna '{0}'.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -220,6 +434,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
+        <target>Eliminar ramas más antiguas de x días.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -257,6 +472,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="DaysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
+        <target>Eliminar ramas obsoletas anteriores a (días)</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
@@ -315,10 +531,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Deshaga los cambios locales antes de eliminar los archivos. Seleccione los archivos a eliminar. Fuerce un push para reemplazar los datos en el repositorio remoto.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
+        <target>Fecha del último Commit.</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -606,6 +824,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>Commits totales.</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
@@ -630,6 +849,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0} Comment lines ({1})</source>
+        <target>{0} Líneas comentadas ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -659,6 +879,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0} Lines in designer files ({1})</source>
+        <target>{0} Líneas en archivos de diseño ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
@@ -832,6 +1053,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
+        <target>Un buen modelo de ramas para tu proyecto con Git...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -896,6 +1118,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
+        <target>Nombre esperado:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -905,6 +1128,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
+        <target>Remoto a pullear:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
@@ -929,6 +1153,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
+        <target>Resultado de ejecutar el commando git flow</target>
         
       </trans-unit>
     </body>
@@ -951,6 +1176,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
+        <target>Token OAuth</target>
         
       </trans-unit>
     </body>
@@ -959,6 +1185,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>Gráfico de Impacto</target>
         
       </trans-unit>
     </body>
@@ -1012,6 +1239,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>No se ha encontrado Gourge. Por favor, descargue Gourge e incluye la dirección de instalación en el diálogo de configuración de plugins.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1027,6 +1255,9 @@ Gource sólo puede ser iniciado desde un repositorio válido de git.</target>
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
+        <target>No hay una ruta de Gourge configurada
+
+¿Desea que se descargue Gourge automáticamente?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
@@ -1037,6 +1268,8 @@ Do you want to automatically download Gource?</source>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Descarga fallida.
+Por favor, descargue Gourge y configure la dirección de instalación en el diálogo de configuración de plugins.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1053,6 +1286,9 @@ Please download Gource and set the path in the plugins settings dialog.</source>
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>No se ha podido encontrar Gourge en la ruta de configuración: {0}
+
+¿Desea reiniciar la ruta de configuración?</target>
         
       </trans-unit>
     </body>
@@ -1096,10 +1332,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
+        <target>Proyecto Gourge.</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
+        <target>Línea de comandos de Gourge.</target>
         
       </trans-unit>
     </body>
@@ -1114,6 +1352,45 @@ Do you want to reset the configured path?</source>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
         <target>Nombre del proyecto</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        
+      </trans-unit>
+      <trans-unit id="enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        
+      </trans-unit>
+      <trans-unit id="jdlQuerySettings.Caption">
+        <source>JDL Query</source>
+        
+      </trans-unit>
+      <trans-unit id="jiraFields.Caption">
+        <source>Jira fields</source>
+        
+      </trans-unit>
+      <trans-unit id="passwordSettings.Caption">
+        <source>Jira password</source>
+        <target>Contraseña de Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        
+      </trans-unit>
+      <trans-unit id="urlSettings.Caption">
+        <source>Jira URL</source>
+        <target>URL de Jira</target>
+        
+      </trans-unit>
+      <trans-unit id="userSettings.Caption">
+        <source>Jira user</source>
+        <target>Usuario de Jira</target>
         
       </trans-unit>
     </body>
@@ -1171,10 +1448,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
+        <target>Proxy HTTP</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
+        <target>Puerto del proxy HTTP</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
@@ -1193,10 +1472,27 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
+        <target>Generador de Notas de Versión.</target>
+        
+      </trans-unit>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
+        <target>Entrada no válida</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target>Log de commit desde '{0}' a '{1}' ({2}):</target>
+        
+      </trans-unit>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>'From' commit must be specified</source>
+        <target>El campo &quot;Desde&quot; debe ser especificado</target>
+        
+      </trans-unit>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>'To' commit must be specified</source>
+        <target>El campo &quot;Hacia&quot; debe ser especificado</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1236,6 +1532,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Expresión de commit &quot;Hasta&quot; (inclusive):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1251,6 +1548,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Expresión de commit &quot;Desde&quot; (exclusive):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1260,6 +1558,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
+        <target>{0} = desde; {1} = hasta</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -1300,6 +1599,7 @@ nombres de ramas, ó nombres de tags)</target>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
+        <target>Generador de Notas de Versión.</target>
         
       </trans-unit>
     </body>
@@ -1308,10 +1608,12 @@ nombres de ramas, ó nombres de tags)</target>
     <body>
       <trans-unit id="Description.Text">
         <source>Create Bitbucket Pull Request</source>
+        <target>Crear Bitbucket Pull Request</target>
         
       </trans-unit>
       <trans-unit id="StashBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
+        <target>Especifique la URL base de Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="StashDisableSsl.Caption">
@@ -1346,6 +1648,8 @@ nombres de ramas, ó nombres de tags)</target>
       <trans-unit id="_commited.Text">
         <source>{0} committed
 {1}</source>
+        <target>{0} Commiteado
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -1360,6 +1664,7 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
         <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Su repositorio no está alojado en Bitbucket.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1389,6 +1694,7 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="groupBox3.Text">
         <source>Pull Request Info</source>
+        <target>Información de las Pull Request.</target>
         
       </trans-unit>
       <trans-unit id="groupBox4.Text">
@@ -1403,6 +1709,7 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="groupBox6.Text">
         <source>Pull Request Info</source>
+        <target>Información de las Pull Request.</target>
         
       </trans-unit>
       <trans-unit id="groupBox9.Text">
@@ -1417,6 +1724,7 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Reviewer (approved)</source>
+        <target>Revisor (aprovado)</target>
         
       </trans-unit>
       <trans-unit id="label12.Text">
@@ -1486,6 +1794,7 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="lblReviewers.Text">
         <source>Reviewer(s)</source>
+        <target>Revisor(es)</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -1504,10 +1813,12 @@ nombres de ramas, ó nombres de tags)</target>
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>Logueese como invitado para visualizar el informe de Builds</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
+        <target>Url de Build no válida</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1519,19 +1830,24 @@ Please copy in the clipboard the url of the build before retrying.
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
+        <target>Se ha producido un error cuando se cargaban los proyectos y la lista de Builds</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target>Se produjo un fallo al cargar los proyecto y la lista de Builds.
+Por favor, verifique la url del servidor.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <target>¡La expresión regular &quot;Build Id Filter no es valido y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Extraer la información de la ruta de compilación copiada en el portapapeles</target>
         
       </trans-unit>
     </body>
@@ -1540,6 +1856,7 @@ Please verify the server url.</source>
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>¡La expresión regular 'Build definition name' no es válida y no será guardada!</target>
         
       </trans-unit>
     </body>

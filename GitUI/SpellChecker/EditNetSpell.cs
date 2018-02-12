@@ -52,6 +52,8 @@ namespace GitUI.SpellChecker
                                                                              { Keys.Home, "{HOME}" }
                                                                      };
 
+        private readonly IWordAtCursorExtractor _wordAtCursorExtractor;
+
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
@@ -64,6 +66,8 @@ namespace GitUI.SpellChecker
 
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
             TextBoxFont = TextBox.Font;
+
+            _wordAtCursorExtractor = new WordAtCursorExtractor();
         }
 
 
@@ -619,6 +623,7 @@ namespace GitUI.SpellChecker
         }
 
         private bool skipSelectionUndo = false;
+
         private void UndoHighlighting()
         {
             if (!skipSelectionUndo)
@@ -787,7 +792,7 @@ namespace GitUI.SpellChecker
             {
                 var bullet = addBullet ? " - " : String.Empty;
                 var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
-                var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+                var newLine = Environment.NewLine;
                 var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
                 TextBox.SelectionLength = 0;
                 TextBox.SelectionStart = indexOfLine;
@@ -867,22 +872,10 @@ namespace GitUI.SpellChecker
 
         private string GetWordAtCursor()
         {
-            if (TextBox.Text.Length > TextBox.SelectionStart && IsSeparatorChar(TextBox.Text[TextBox.SelectionStart]))
+            if (TextBox.Text.Length > TextBox.SelectionStart && TextBox.Text[TextBox.SelectionStart].IsSeparator())
                 return null;
 
-            var sb = new StringBuilder();
-
-            int i = TextBox.SelectionStart - 1;
-
-            while (i >= 0 && !IsSeparatorChar(TextBox.Text[i]))
-                sb.Insert(0, TextBox.Text[i--]);
-
-            return sb.ToString();
-        }
-
-        private bool IsSeparatorChar(char c)
-        {
-            return char.IsWhiteSpace(c) || c == '.';
+            return _wordAtCursorExtractor.Extract(TextBox.Text, TextBox.SelectionStart - 1);
         }
 
         private void CloseAutoComplete()

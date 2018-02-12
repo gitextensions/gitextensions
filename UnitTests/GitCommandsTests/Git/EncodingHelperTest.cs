@@ -13,10 +13,9 @@ namespace GitCommandsTests.Git
         #region Unit tests of single methods
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void GetStringEncodingNull()
         {
-            EncodingHelper.GetString(new byte[] { 0x30 }, new byte[] { 0x31 }, null);
+            Assert.Throws<ArgumentNullException>(() => EncodingHelper.GetString(new byte[] { 0x30 }, new byte[] { 0x31 }, null));
         }
 
         [TestMethod]
@@ -69,10 +68,9 @@ namespace GitCommandsTests.Git
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void ConvertToTestEncodingNull()
         {
-            EncodingHelper.ConvertTo(null, "abcd");
+            Assert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null, "abcd"));
         }
 
         [TestMethod]
@@ -104,11 +102,10 @@ namespace GitCommandsTests.Git
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DecodeStringTestEncodingNull()
         {
             Encoding enc = null;
-            EncodingHelper.DecodeString(new byte[] { 0x30 }, new byte[] { 0x31 }, ref enc);
+            Assert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString(new byte[] { 0x30 }, new byte[] { 0x31 }, ref enc));
         }
 
         [TestMethod]

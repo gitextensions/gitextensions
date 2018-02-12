@@ -4057,9 +4057,11 @@ obj/
 _ReSharper*/</source>
 
       </trans-unit>
+      <trans-unit id="lnkGitIgnoreGenerate.Text">
+        <source>Generate a custom ignore file for git</source>
+      </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
-        <source>More gitignore patterns</source>
-
+        <source>Example ignore patterns</source>
       </trans-unit>
     </body>
   </file>
@@ -4560,7 +4562,7 @@ Do you want to continue?</source>
 
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
-        <source>Do you want deletes all stale remote-tracking branches?</source>
+        <source>Do you want to delete all stale remote-tracking branches?</source>
 
       </trans-unit>
       <trans-unit id="_pruneBranchesButtons.Text">
@@ -6512,7 +6514,7 @@ global settings.
 
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes in revision graph (slow!)</source>
+        <source>Show current working directory changes in revision graph</source>
 
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">

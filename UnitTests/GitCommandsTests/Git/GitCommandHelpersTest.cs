@@ -59,6 +59,44 @@ namespace GitCommandsTests.Git
         }
 
         [TestMethod]
+        public void TestFetchArguments()
+        {
+            GitModule module = new GitModule(null);
+            { // Specifying a remote and a local branch creates a local branch
+                var fetchCmd = module.FetchCmd("origin", "some-branch", "local");
+                Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
+            }
+            {
+                var fetchCmd = module.FetchCmd("origin", "some-branch", "local", true);
+                Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
+            }
+            { // Using a URL as remote and passing a local branch creates the branch
+                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local");
+                Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
+            }
+            { // Using a URL as remote and not passing a local branch
+                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null);
+                Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
+            }
+            { // No remote branch -> No local branch
+                var fetchCmd = module.FetchCmd("origin", "", "local");
+                Assert.AreEqual("fetch --progress \"origin\" --no-tags", fetchCmd);
+            }
+            { // Pull doesn't accept a local branch ever
+                var fetchCmd = module.PullCmd("origin", "some-branch", false);
+                Assert.AreEqual("pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
+            }
+            { // Not even for URL remote
+                var fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false);
+                Assert.AreEqual("pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
+            }
+            { // Pull with rebase
+                var fetchCmd = module.PullCmd("origin", "some-branch", true);
+                Assert.AreEqual("pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
+            }
+        }
+
+        [TestMethod]
         public void TestGetAllChangedFilesFromString()
         {
             GitModule module = new GitModule(null);
@@ -242,6 +280,18 @@ namespace GitCommandsTests.Git
 			Assert.AreEqual(status.OldCommit, "2fb88514cfdc37a2708c24f71eca71c424b8d402");
 			Assert.AreEqual(status.OldName, fileName);
 
-		}
+            // Submodule name in reverse diff, rename
+
+            text = "diff --git b/Externals/conemu-inside-b a/Externals/conemu-inside-a\nindex a17ea0c..b5a3d51 160000\n--- b/Externals/conemu-inside-b\n+++ a/Externals/conemu-inside-a\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
+            fileName = "Externals/conemu-inside-b";
+
+            status = GitCommandHelpers.GetSubmoduleStatus(text, testModule, fileName);
+
+            Assert.AreEqual(status.Commit, "b5a3d51777c85a9aeee534c382b5ccbb86b485d3");
+            Assert.AreEqual(status.Name, fileName);
+            Assert.AreEqual(status.OldCommit, "a17ea0c8ebe9d8cd7e634ba44559adffe633c11d");
+            fileName = "Externals/conemu-inside-a";
+            Assert.AreEqual(status.OldName, fileName);
+        }
     }
 }

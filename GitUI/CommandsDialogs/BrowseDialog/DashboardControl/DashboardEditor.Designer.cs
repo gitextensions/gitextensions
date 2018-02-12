@@ -41,16 +41,9 @@
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.RepositoriesType = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Caption = new System.Windows.Forms.TextBox();
-            this._NO_TRANSLATE_RssFeed = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.RssFeedType = new System.Windows.Forms.RadioButton();
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -92,11 +85,11 @@
             this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 460);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 463);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 32);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 29);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // Remove
@@ -105,10 +98,10 @@
             this.Remove.AutoSize = true;
             this.Remove.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Remove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Remove.Location = new System.Drawing.Point(126, 3);
+            this.Remove.Location = new System.Drawing.Point(134, 3);
             this.Remove.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(64, 26);
+            this.Remove.Size = new System.Drawing.Size(56, 23);
             this.Remove.TabIndex = 4;
             this.Remove.Text = "Remove";
             this.Remove.UseVisualStyleBackColor = true;
@@ -123,7 +116,7 @@
             this.Add.Location = new System.Drawing.Point(2, 3);
             this.Add.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Add.Name = "Add";
-            this.Add.Size = new System.Drawing.Size(40, 26);
+            this.Add.Size = new System.Drawing.Size(36, 23);
             this.Add.TabIndex = 3;
             this.Add.Text = "Add";
             this.Add.UseVisualStyleBackColor = true;
@@ -134,7 +127,6 @@
             this._NO_TRANSLATE_Categories.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Categories.FormattingEnabled = true;
             this._NO_TRANSLATE_Categories.IntegralHeight = false;
-            this._NO_TRANSLATE_Categories.ItemHeight = 16;
             this._NO_TRANSLATE_Categories.Location = new System.Drawing.Point(0, 27);
             this._NO_TRANSLATE_Categories.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
@@ -163,14 +155,14 @@
             this.descriptionDataGridViewTextBoxColumn});
             this.RepositoriesGrid.DataSource = this.repositoryBindingSource;
             this.RepositoriesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RepositoriesGrid.Location = new System.Drawing.Point(0, 131);
+            this.RepositoriesGrid.Location = new System.Drawing.Point(0, 42);
             this.RepositoriesGrid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RepositoriesGrid.MultiSelect = false;
             this.RepositoriesGrid.Name = "RepositoriesGrid";
             this.RepositoriesGrid.RowHeadersVisible = false;
             this.RepositoriesGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.RepositoriesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.RepositoriesGrid.Size = new System.Drawing.Size(584, 361);
+            this.RepositoriesGrid.Size = new System.Drawing.Size(584, 450);
             this.RepositoriesGrid.TabIndex = 0;
             this.RepositoriesGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.RepositoriesGrid_CellValidating);
             this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
@@ -202,31 +194,13 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.RepositoriesType);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this._NO_TRANSLATE_Caption);
-            this.panel2.Controls.Add(this._NO_TRANSLATE_RssFeed);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.RssFeedType);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(584, 131);
+            this.panel2.Size = new System.Drawing.Size(584, 42);
             this.panel2.TabIndex = 6;
-            // 
-            // RepositoriesType
-            // 
-            this.RepositoriesType.AutoSize = true;
-            this.RepositoriesType.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.RepositoriesType.Location = new System.Drawing.Point(102, 69);
-            this.RepositoriesType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.RepositoriesType.Name = "RepositoriesType";
-            this.RepositoriesType.Size = new System.Drawing.Size(96, 20);
-            this.RepositoriesType.TabIndex = 8;
-            this.RepositoriesType.Text = "Repositories";
-            this.RepositoriesType.UseVisualStyleBackColor = true;
-            this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
             // 
             // label1
             // 
@@ -235,7 +209,7 @@
             this.label1.Location = new System.Drawing.Point(2, 10);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 16);
+            this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Caption";
             // 
@@ -246,58 +220,10 @@
             this._NO_TRANSLATE_Caption.Location = new System.Drawing.Point(102, 8);
             this._NO_TRANSLATE_Caption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
-            this._NO_TRANSLATE_Caption.Size = new System.Drawing.Size(480, 23);
+            this._NO_TRANSLATE_Caption.Size = new System.Drawing.Size(480, 21);
             this._NO_TRANSLATE_Caption.TabIndex = 9;
             this._NO_TRANSLATE_Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
             this._NO_TRANSLATE_Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
-            // 
-            // _NO_TRANSLATE_RssFeed
-            // 
-            this._NO_TRANSLATE_RssFeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_RssFeed.Location = new System.Drawing.Point(102, 99);
-            this._NO_TRANSLATE_RssFeed.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this._NO_TRANSLATE_RssFeed.Name = "_NO_TRANSLATE_RssFeed";
-            this._NO_TRANSLATE_RssFeed.Size = new System.Drawing.Size(480, 23);
-            this._NO_TRANSLATE_RssFeed.TabIndex = 12;
-            this._NO_TRANSLATE_RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
-            this._NO_TRANSLATE_RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label2.Location = new System.Drawing.Point(2, 43);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 16);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Type";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label3.Location = new System.Drawing.Point(2, 101);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 16);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "RSS feed";
-            // 
-            // RssFeedType
-            // 
-            this.RssFeedType.AutoSize = true;
-            this.RssFeedType.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.RssFeedType.Location = new System.Drawing.Point(102, 41);
-            this.RssFeedType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.RssFeedType.Name = "RssFeedType";
-            this.RssFeedType.Size = new System.Drawing.Size(82, 20);
-            this.RssFeedType.TabIndex = 7;
-            this.RssFeedType.Text = "RSS Feed";
-            this.RssFeedType.UseVisualStyleBackColor = true;
-            this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
-            this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             // 
             // DashboardEditor
             // 
@@ -309,9 +235,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -336,13 +260,8 @@
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button Add;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.RadioButton RepositoriesType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Caption;
-        private System.Windows.Forms.TextBox _NO_TRANSLATE_RssFeed;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.RadioButton RssFeedType;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

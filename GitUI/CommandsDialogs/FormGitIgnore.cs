@@ -4,31 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs.GitIgnoreDialog;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormGitIgnore : GitModuleForm
     {
-        private readonly TranslationString _editLocalExcludeTitle =
-            new TranslationString("Edit .git/info/exclude");
-
-        private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
-            new TranslationString(".gitignore is only supported when there is a working directory.");
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
             new TranslationString("No working directory");
 
-        private readonly TranslationString _cannotAccessGitignore =
-            new TranslationString("Failed to save .gitignore." + Environment.NewLine + "Check if file is accessible.");
-        private readonly TranslationString _cannotAccessGitignoreCaption =
-            new TranslationString("Failed to save .gitignore");
-
-        private readonly TranslationString _saveFileQuestion =
-            new TranslationString("Save changes to .gitignore?");
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
 
-        private bool _localExclude;
+        private readonly bool _localExclude;
         private string _originalGitIgnoreFileContent = string.Empty;
 
         #region default patterns
@@ -67,6 +56,9 @@ namespace GitUI.CommandsDialogs
             "#Nuget packages folder",
             "packages/"
         };
+
+        private IGitIgnoreDialogModel _dialogModel;
+
         #endregion
 
         public FormGitIgnore(GitUICommands aCommands, bool localExclude)
@@ -76,25 +68,22 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            if (localExclude)
-            {
-                Text = _editLocalExcludeTitle.Text;
-            }
+            _dialogModel = CreateGitIgnoreDialogModel(localExclude);
+
+            Text = _dialogModel.FormCaption;
+        }
+
+        private IGitIgnoreDialogModel CreateGitIgnoreDialogModel(bool localExclude)
+        {
+            if(localExclude)
+                return new GitLocalExcludeModel(Module);
+
+            return new GitIgnoreModel(Module);
         }
 
         private string ExcludeFile
         {
-            get
-            {
-                if (!_localExclude)
-                {
-                    return Path.Combine(Module.WorkingDir, ".gitignore");
-                }
-                else
-                {
-                    return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
-                }
-            }
+            get { return _dialogModel.ExcludeFile; }
         }
 
 
@@ -157,8 +146,8 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _cannotAccessGitignore.Text + Environment.NewLine + ex.Message,
-                    _cannotAccessGitignoreCaption.Text);
+                MessageBox.Show(this, _dialogModel.CannotAccessFile + Environment.NewLine + ex.Message,
+                    _dialogModel.CannotAccessFileCaption);
                 return false;
             }
         }
@@ -167,7 +156,7 @@ namespace GitUI.CommandsDialogs
         {
             if (HasUnsavedChanges())
             {
-                switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text,
+                switch (MessageBox.Show(this, _dialogModel.SaveFileQuestion, _saveFileQuestionCaption.Text,
                                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 {
                     case DialogResult.Yes:
@@ -188,7 +177,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.IsBareRepository())
                 return;
-            MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 

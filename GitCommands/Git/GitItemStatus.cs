@@ -14,6 +14,7 @@ namespace GitCommands
             IsCopied = false;
             IsConflict = false;
             IsAssumeUnchanged = false;
+            IsSkipWorktree = false;
             IsNew = false;
             IsStaged = true;
             IsSubmodule = false;
@@ -35,6 +36,7 @@ namespace GitCommands
                 else if (IsConflict) return "Conflict";
                 else if (IsCopied) return "Copied";
                 else if (IsAssumeUnchanged) return "Unchanged";
+                else if (IsSkipWorktree) return "SkipWorktree";
                 else return "";
             }
         }
@@ -47,6 +49,7 @@ namespace GitCommands
         public bool IsCopied { get; set; }
         public bool IsConflict { get; set; }
         public bool IsAssumeUnchanged { get; set; }
+        public bool IsSkipWorktree { get; set; }
         public bool IsStaged { get; set; }
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }

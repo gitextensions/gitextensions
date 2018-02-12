@@ -34,10 +34,6 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -166,9 +162,9 @@
       <Name>ReleaseNotesGenerator</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Plugins\Stash\Stash.csproj">
+    <ProjectReference Include="..\Plugins\Bitbucket\Bitbucket.csproj">
       <Project>{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}</Project>
-      <Name>Stash</Name>
+      <Name>Bitbucket</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Statistics\GitImpact\GitImpact.csproj">
       <Project>{0B131F9D-BB10-4C3E-9656-5AB858158DE5}</Project>
@@ -230,15 +226,30 @@
   </ItemGroup>
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>"$(ProjectDir)copy_plugins.cmd" $(ConfigurationName)</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
+    <ItemGroup>
+      <!-- Plugin binaries-->
+      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.dll" />
+      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.dll" />
+      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.dll" />
+      <!-- Plugin symbols-->
+      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.pdb" />
+      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.pdb" />
+      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.pdb" />
+      <!-- Plugin satellite assemblies -->
+      <PluginSatelliteBinary Include="..\Plugins\*\bin\$(Configuration)\*\*.dll" />
+      <PluginSatelliteBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*\*.dll" />
+      <PluginSatelliteBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*\*.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="@(PluginBinary)" Exclude="..\Plugins\**\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll;..\Plugins\**\Microsoft.WITDataStore.dll">
+        <Link>Plugins\%(Filename)%(Extension)</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Include="@(PluginSatelliteBinary)">
+        <Link>Plugins\$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName(%(Identity)))))\%(Filename)%(Extension)</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

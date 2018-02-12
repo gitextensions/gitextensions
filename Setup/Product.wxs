@@ -194,6 +194,20 @@
           <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
         </RegistryKey>
       </Component>
+      <Component Id="Protocol.github_mac" Guid="*">
+        <RegistryKey Key="github-mac" Root="HKCR">
+          <RegistryValue Value="URL: Github for Mac Protocol" Type="string" />
+          <RegistryValue Name="URL Protocol" Value="" Type="string" />
+        </RegistryKey>
+        <RegistryKey Key="github-mac\DefaultIcon" Root="HKCR">
+          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+        </RegistryKey>
+        <RegistryKey Root="HKCR" Key="github-mac\shell" />
+        <RegistryKey Root="HKCR" Key="github-mac\shell\open" />
+        <RegistryKey Root="HKCR" Key="github-mac\shell\open\command">
+          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+        </RegistryKey>
+      </Component>
       <Component Id="VS2015_VSIX" Guid="*">
         <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="no" Permanent="no" />
         <File Source="..\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix" />
@@ -266,8 +280,10 @@
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll" />
       </Component>
-      <Component Id="Stash.dll" Guid="*">
-        <File Source="..\Plugins\Stash\bin\Release\Stash.dll" />
+      <Component Id="Bitbucket.dll" Guid="*">
+        <File Source="..\Plugins\Bitbucket\bin\Release\Bitbucket.dll" />
+        <!--Renamed dll, installed in versions <= 2.50.02-->
+        <RemoveFile Name="Stash.dll" Id="Stash.dll" On="both" />
       </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
@@ -391,7 +407,7 @@
       <Component Id="English.Plugins.xlf" Guid="*">
         <File Source="..\GitUI\Translation\English.Plugins.xlf" />
       </Component>
-      <Component Id="Czech.xlf" Guid="*">
+      <!--Component Id="Czech.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Czech.xlf" />
       </Component>
       <Component Id="Czech.Plugins.xlf" Guid="*">
@@ -399,7 +415,7 @@
       </Component>
       <Component Id="Czech.gif" Guid="*">
         <File Source="..\GitUI\Translation\Czech.gif" />
-      </Component>
+      </Component> -->
       <Component Id="Dutch.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Dutch.xlf" />
       </Component>
@@ -435,16 +451,16 @@
             </Component>
             <Component Id="Italian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.gif" />
-            </Component
-            <Component Id="Japanese.xlf" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.xlf" />
-            </Component>
-            <Component Id="Japanese.Plugins.xlf" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
-            </Component>
-            <Component Id="Japanese.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.gif" />
-            </Component>-->
+            </Component-->
+      <Component Id="Japanese.xlf" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.xlf" />
+      </Component>
+      <Component Id="Japanese.Plugins.xlf" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
+      </Component>
+      <Component Id="Japanese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Japanese.gif" />
+      </Component>
       <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
@@ -472,15 +488,15 @@
       <Component Id="Russian.gif" Guid="*">
         <File Source="..\GitUI\Translation\Russian.gif" />
       </Component>
-      <!--<Component Id="SimplifiedChinese.xlf" Guid="*">
-                <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
-            </Component>
-            <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
-                <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
-            </Component>
-            <Component Id="SimplifiedChinese.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-            </Component>-->
+      <Component Id="SimplifiedChinese.xlf" Guid="*">
+	    <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
+	  </Component>
+	  <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+	    <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
+	  </Component>
+	  <Component Id="SimplifiedChinese.gif" Guid="*">
+	    <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
+	  </Component>
       <Component Id="Spanish.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xlf" />
       </Component>
@@ -723,8 +739,8 @@
         <Feature Id="ReleaseNotesGenerator" Title="Release notes generator" Level="1">
           <ComponentRef Id="ReleaseNotesGenerator.dll" />
         </Feature>
-        <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
-          <ComponentRef Id="Stash.dll" />
+        <Feature Id="Bitbucket" Title="Atlassian Bitbucket Server integration" Level="1">
+          <ComponentRef Id="Bitbucket.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
@@ -818,11 +834,11 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="Czech" Title="Czech" Level="1">
+        <!--<Feature Id="Czech" Title="Czech" Level="1">
           <ComponentRef Id="Czech.xlf" />
           <ComponentRef Id="Czech.Plugins.xlf" />
           <ComponentRef Id="Czech.gif" />
-        </Feature>
+        </Feature>-->
         <Feature Id="Dutch" Title="Dutch" Level="1">
           <ComponentRef Id="Dutch.xlf" />
           <ComponentRef Id="Dutch.Plugins.xlf" />
@@ -843,11 +859,11 @@
                     <ComponentRef Id="Italian.Plugins.xlf" />
                     <ComponentRef Id="Italian.gif" />
                 </Feature-->
-        <!--<Feature Id="Japanese" Title="Japanese" Level="1">
-                    <ComponentRef Id="Japanese.xlf" />
-                    <ComponentRef Id="Japanese.Plugins.xlf" />
-                    <ComponentRef Id="Japanese.gif" />
-                </Feature>-->
+        <Feature Id="Japanese" Title="Japanese" Level="1">
+          <ComponentRef Id="Japanese.xlf" />
+          <ComponentRef Id="Japanese.Plugins.xlf" />
+          <ComponentRef Id="Japanese.gif" />
+        </Feature>
         <!--<Feature Id="Korean" Title="Korean" Level="1">
                     <ComponentRef Id="Korean.xlf" />
                     <ComponentRef Id="Korean.Plugins.xlf" />
@@ -863,17 +879,17 @@
           <ComponentRef Id="Russian.Plugins.xlf" />
           <ComponentRef Id="Russian.gif" />
         </Feature>
-        <!--<Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
-                    <ComponentRef Id="SimplifiedChinese.xlf" />
-                    <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
-                    <ComponentRef Id="SimplifiedChinese.gif" />
-                </Feature>-->
+        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+          <ComponentRef Id="SimplifiedChinese.xlf" />
+          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
+          <ComponentRef Id="SimplifiedChinese.gif" />
+        </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xlf" />
           <ComponentRef Id="Spanish.Plugins.xlf" />
           <ComponentRef Id="Spanish.gif" />
         </Feature>
-        <!--Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+        <!-- <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
                     <ComponentRef Id="TraditionalChinese.xlf" />
                     <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
                     <ComponentRef Id="TraditionalChinese.gif" />
@@ -896,7 +912,7 @@
           <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
         </Feature>
         <?endforeach ?>
-        <Feature Id="VS2015FeatureId" Title="Visual Studio 2015 integration" Level="1">
+        <Feature Id="VS2015FeatureId" Title="Visual Studio 2015/2017 integration" Level="1">
           <Condition Level="2">NOT VS2015DEVENV</Condition>
           <ComponentRef Id="VS2015_VSIX" />
         </Feature>
@@ -906,6 +922,7 @@
       </Feature>
       <Feature Id="Protocol.github_windows" Title="Assign with github-windows://-links" Level="1">
         <ComponentRef Id="Protocol.github_windows" />
+        <ComponentRef Id="Protocol.github_mac" />
       </Feature>
     </Feature>
     <?if $(var.IncludeRequiredSoftware) = 1 ?>

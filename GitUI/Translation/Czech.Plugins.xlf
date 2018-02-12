@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="cbGitHubPullRequest.Text">
@@ -74,6 +74,208 @@
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>Parametry pro spuštění příkazu git</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="BitbucketBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Vypnout SSL ověření</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Heslo k Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Uživatelské jméno na Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Bitbucket Server</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target>Vytvořit žádost o stažení</target>
+        
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target>Název</target>
+        
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} odevzdal
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Chyba</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>Úspěšné</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in Bitbucket.</source>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target>Schválit</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>Vytvořit</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>Sloučit</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        <target>Zdroj</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        <target>Cíl</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        <target>Informace o žádosti ke stažení</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        <target>Zdroj</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        <target>Cíl</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        <target>Informace o žádosti ke stažení</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        <target>Informace</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target>Větev</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        <target>Kontrolor (schválený)</target>
+        
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target>Autor</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target>Popis</target>
+        
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target>Titulek</target>
+        
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        <target>Stav</target>
+        
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target>Repozitář</target>
+        
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target>Větev</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target>Větev</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target>Popis</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target>Titulek</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target>Repozitář</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target>Repozitář</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target>Repozitář</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target>Větev</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        <target>Kontrolor(ři)</target>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Vytvořit žádost o stažení</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Zobrazit žádosti o stažení</target>
         
       </trans-unit>
     </body>
@@ -1081,6 +1283,9 @@ Prosím stáhněte Gource ručně a nastavte cestu v dialogu nastavení zásuvn�
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>Nemohu najít Gource v nastavené cestě: {0}.
+
+Chcete znovu nastavit cestu?</target>
         
       </trans-unit>
     </body>
@@ -1144,6 +1349,42 @@ Do you want to reset the configured path?</source>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
         <target>Název projektu</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        
+      </trans-unit>
+      <trans-unit id="enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        
+      </trans-unit>
+      <trans-unit id="jdlQuerySettings.Caption">
+        <source>JDL Query</source>
+        
+      </trans-unit>
+      <trans-unit id="jiraFields.Caption">
+        <source>Jira fields</source>
+        
+      </trans-unit>
+      <trans-unit id="passwordSettings.Caption">
+        <source>Jira password</source>
+        
+      </trans-unit>
+      <trans-unit id="stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        
+      </trans-unit>
+      <trans-unit id="urlSettings.Caption">
+        <source>Jira URL</source>
+        
+      </trans-unit>
+      <trans-unit id="userSettings.Caption">
+        <source>Jira user</source>
         
       </trans-unit>
     </body>
@@ -1228,9 +1469,21 @@ Do you want to reset the configured path?</source>
         <target>Generátor poznámek k vydání</target>
         
       </trans-unit>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
+        
+      </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
         <target>Záznam odevzdání od '{0}' do '{1}' ({2}):</target>
+        
+      </trans-unit>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>'From' commit must be specified</source>
+        
+      </trans-unit>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>'To' commit must be specified</source>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1355,6 +1608,7 @@ název větve, nebo značky)</target>
       </trans-unit>
       <trans-unit id="StashDisableSsl.Caption">
         <source>Disable SSL verification</source>
+        <target>Vypnout SSL ověření</target>
         
       </trans-unit>
       <trans-unit id="StashPassword.Caption">

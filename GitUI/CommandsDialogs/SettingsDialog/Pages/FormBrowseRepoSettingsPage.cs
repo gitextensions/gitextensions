@@ -1,12 +1,5 @@
 ﻿using GitCommands;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -25,13 +18,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             BindSettingsWithControls();
         }
 
+        protected override void SettingsToPage()
+        {
+            chkShowRevisionInfoNextToRevisionGrid.Checked = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+            chkShowRevisionInfoNextToRevisionGrid.Visible = !EnvUtils.IsMonoRuntime();
+            base.SettingsToPage();
+        }
+
+        protected override void PageToSettings()
+        {
+            AppSettings.ShowRevisionInfoNextToRevisionGrid = chkShowRevisionInfoNextToRevisionGrid.Checked;
+            base.PageToSettings();
+        }
+
         private void BindSettingsWithControls()
         {
             AddSettingBinding(AppSettings.ShowConEmuTab, chkChowConsoleTab);
             AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
             AddSettingBinding(AppSettings.ConEmuTerminal, cboTerminal);
             AddSettingBinding(AppSettings.ConEmuFontSize, cboFontSize);
-            AddSettingBinding(AppSettings.ShowRevisionInfoNextToRevisionGrid, chkShowRevisionInfoNextToRevisionGrid);
+            AddSettingBinding(AppSettings.ShowGpgInformation, chkShowGpgInformation);
         }
 
         private void chkChowConsoleTab_CheckedChanged(object sender, System.EventArgs e)

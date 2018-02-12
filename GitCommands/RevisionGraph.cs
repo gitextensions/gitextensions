@@ -156,6 +156,11 @@ namespace GitCommands
                 logParam = " --topo-order";
             }
 
+            if (AppSettings.ShowReflogReferences)
+            {
+                logParam += " --reflog";
+            }
+
             if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
                 logParam += " --all";
             else
@@ -300,7 +305,7 @@ namespace GitCommands
             }
             else
             {
-                return _refs.Values.Unwrap();
+                return _refs.SelectMany(entry => entry.Value);
             }
         }
 

@@ -149,15 +149,6 @@ namespace PatchApply
             return patch;
         }
 
-        public static Patch CreatePatchFromString(string patchText, Encoding filesContentEncoding)
-        {
-            var processor = new PatchProcessor(filesContentEncoding);
-            string[] lines = patchText.Split('\n');
-            int i = 0;
-            Patch patch = processor.CreatePatchFromString(lines, ref i);
-            return patch;
-        }
-
         /// <summary>
         /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
         /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
@@ -208,7 +199,7 @@ namespace PatchApply
             else if (input.StartsWith("--- "))
             {
                 input = GitModule.UnquoteFileName(input);
-                Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[aiwco12]/(.*)[\\\"]?");
+                Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
 
                 if (regexMatch.Success)
                     patch.FileNameA = regexMatch.Groups[1].Value.Trim();
@@ -225,7 +216,7 @@ namespace PatchApply
             else if (input.StartsWith("+++ "))
             {
                 input = GitModule.UnquoteFileName(input);
-                Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[biwco12]/(.*)[\\\"]?");
+                Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
 
                 if (regexMatch.Success)
                     patch.FileNameB = regexMatch.Groups[1].Value.Trim();

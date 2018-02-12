@@ -158,8 +158,11 @@ namespace GitUI.Hotkey
             {
                 foreach (HotkeyCommand command in setting.Commands)
                 {
-                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                    dict.Add(dictKey, command);
+                    if (command != null)
+                    {
+                        string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                        dict.Add(dictKey, command);
+                    }
                 }
             }
         }
@@ -263,7 +266,7 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
                     hk(FormBrowse.Commands.Stash, Keys.Control | Keys.Alt | Keys.Up),
                     hk(FormBrowse.Commands.StashPop, Keys.Control | Keys.Alt | Keys.Down),
-                    hk(FormBrowse.Commands.CloseRepositry, Keys.Control | Keys.W),
+                    hk(FormBrowse.Commands.CloseRepository, Keys.Control | Keys.W),
                     hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
@@ -305,6 +308,8 @@ namespace GitUI.Hotkey
                     hk(FormResolveConflicts.Commands.ChooseRemote, Keys.R),
                     hk(FormResolveConflicts.Commands.Merge, Keys.M),
                     hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
+                new HotkeySettings(RevisionDiff.HotkeySettingsName,
+                    hk(RevisionDiff.Commands.DeleteSelectedFiles, Keys.Delete)),
                 new HotkeySettings(FormSettings.HotkeySettingsName,
                     scriptsHotkeys)
               };
@@ -321,16 +326,10 @@ namespace GitUI.Hotkey
              * therefore execute the 'default' action
              */
 
-            int i=0;
-            foreach (GitUI.Script.ScriptInfo s in curScripts)
-            {
-                if (!string.IsNullOrEmpty(s.Name))
-                {
-                    scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) };
-                    i++;
-                }
-            }
-            return scriptKeys;
+            return curScripts.
+                Where(s => !s.Name.IsNullOrEmpty()).
+                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) }
+            ).ToArray();
         }
 
     }

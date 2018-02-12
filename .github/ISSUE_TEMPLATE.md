@@ -1,7 +1,4 @@
-**What is the issue kind?**
-
-- feature request
-- bug report
+**Do you want to request a *feature* or report a *bug*?**
 
 **What is the current behavior?**
 

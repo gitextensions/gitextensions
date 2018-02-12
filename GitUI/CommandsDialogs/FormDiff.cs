@@ -119,27 +119,25 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            GitUIExtensions.DiffWithRevisionKind diffKind;
+            GitUI.RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffALocal;
+                diffKind = GitUI.RevisionDiffKind.DiffALocal;
             else if (sender == bLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
             else if (sender == parentOfALocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAParentLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
             else if (sender == parentOfBLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBParentLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
             else
             {
                 Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
+                diffKind = GitUI.RevisionDiffKind.DiffAB;
             }
-
-            string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? DiffFiles.SelectedItemParent : null;
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
             }
         }
 
@@ -159,12 +157,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], false);
+                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, false);
             }
         }
 
@@ -174,12 +167,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name, null, false, true);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
+                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, true, true);
             }
         }
 
@@ -240,6 +228,16 @@ namespace GitUI.CommandsDialogs
             PickAnotherCommit(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
         }
 
+        private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            aLocalToolStripMenuItem.Enabled = _baseRevision != null && _baseRevision.Guid != GitRevision.UnstagedGuid && !Module.IsBareRepository();
+            bLocalToolStripMenuItem.Enabled = _headRevision != null && _headRevision.Guid != GitRevision.UnstagedGuid && !Module.IsBareRepository();
+            parentOfALocalToolStripMenuItem.Enabled = parentOfBLocalToolStripMenuItem.Enabled = !Module.IsBareRepository();
+
+            bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            blameToolStripMenuItem.Visible = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsSubmodule || _baseRevision.IsArtificial());
+        }
+
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)
         {
             using (var form = new FormCompareToBranch(UICommands, preSelectCommit.Guid))
@@ -255,7 +253,7 @@ namespace GitUI.CommandsDialogs
 
         private void PickAnotherCommit(GitRevision preSelect, ref string displayStr, ref GitRevision revision)
         {
-            using (var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid))
+            using (var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid, showArtificial: true))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GitUIPluginInterfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GitCommands
@@ -9,19 +10,18 @@ namespace GitCommands
     /// here we can introduce methods which can operate on command structure
     /// instead of command string
     /// </summary>
-    public abstract class GitCommand
+    public abstract class GitCommand : IGitCommand
     {
         /// <summary>
         /// here commands should add theirs arguments
         /// </summary>
-        public abstract IEnumerable<string> CollectArguments();
+        protected abstract IEnumerable<string> CollectArguments();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns>name of git command eg. push, pull</returns>
         public abstract string GitComandName();
-
 
         /// <summary>
         /// 
@@ -41,12 +41,21 @@ namespace GitCommands
         /// <returns>git command arguments as single line</returns>
         public virtual string ToLine()
         {
+            Validate();
             return GitComandName() + " " + CollectArguments().Join(" ");
         }
 
         public override string ToString()
         {
-            return ToLine();
+            return GitComandName() + " " + CollectArguments().Join(" ");
+        }
+
+        /// <summary>
+        /// Validates if the supplied arguments are correct
+        /// </summary>
+        public virtual void Validate()
+        {
+
         }
 
     }

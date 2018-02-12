@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -94,6 +95,18 @@ namespace ResourceManager
             TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
+        protected void TranslateItem(string itemName, object item)
+        {
+            var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            if (translation.Count == 0)
+                return;
+            foreach (var pair in translation)
+            {
+                IEnumerable<Tuple<string, object>> itemsToTranslate = new[] { new Tuple<string, object>(itemName, item) };
+                TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
+            }
+        }
+
         #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
@@ -115,6 +128,20 @@ namespace ResourceManager
                 }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        protected Keys GetShortcutKeys(int commandCode)
+        {
+            var hotkey = GetHotkeyCommand(commandCode);
+            return hotkey == null ? Keys.None : hotkey.KeyData;
+        }
+
+        protected HotkeyCommand GetHotkeyCommand(int commandCode)
+        {
+            if (Hotkeys == null)
+                return null;
+
+            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         /// <summary>

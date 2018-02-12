@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -15,9 +16,14 @@ namespace ReleaseNotesGenerator
     public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
     {
         private readonly TranslationString _commitLogFrom = new TranslationString("Commit log from '{0}' to '{1}' ({2}):");
+        private readonly TranslationString _fromCommitNotSpecified = new TranslationString("'From' commit must be specified");
+        private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' commit must be specified");
+        private readonly TranslationString _caption = new TranslationString("Invalid input");
 
+        const string MostRecentHint = "most recent changes are listed on top";
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
+        private readonly IGitLogLineParser _gitLogLineParser;
 
         public ReleaseNotesGeneratorForm(GitUIBaseEventArgs gitUiCommands)
         {
@@ -25,7 +31,9 @@ namespace ReleaseNotesGenerator
             Translate();
 
             _gitUiCommands = gitUiCommands;
-            Icon = _gitUiCommands != null ? _gitUiCommands.GitUICommands.FormIcon : null;
+            _gitLogLineParser = new GitLogLineParser();
+
+            Icon = _gitUiCommands?.GitUICommands.FormIcon;
         }
 
         private void ReleaseNotesGeneratorForm_Load(object sender, EventArgs e)
@@ -35,28 +43,39 @@ namespace ReleaseNotesGenerator
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
+            textBoxResult.Text = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(textBoxRevFrom.Text))
+            {
+                MessageBox.Show(this, _fromCommitNotSpecified.Text, _caption.Text);
+                textBoxRevFrom.Focus();
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(textBoxRevTo.Text))
+            {
+                MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text);
+                textBoxRevTo.Focus();
+                return;
+            }
+
             string logArgs = string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
             string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs);
 
-            if (!result.Contains("\r\n"))
+            if (EnvUtils.RunningOnWindows())
             {
-                // if result does not contain \r\n we have to assume that line separator is only \n
-                // but \r\n is needed for correctly shown in text box
-                result = result.Replace("\n", "\r\n");
+                result = string.Join(Environment.NewLine, result.Split(new[] { Environment.NewLine }, StringSplitOptions.None).SelectMany(l => l.Split('\n')));
             }
 
             textBoxResult.Text = result;
-
             try
             {
-                _lastGeneratedLogLines = CreateLogLinesFromGitOutput(textBoxResult.Lines);
+                _lastGeneratedLogLines = _gitLogLineParser.Parse(textBoxResult.Lines);
                 labelRevCount.Text = _lastGeneratedLogLines.Count().ToString();
             }
             catch
             {
                 labelRevCount.Text = "n/a";
             }
-
             textBoxResult_TextChanged(null, null);
         }
 
@@ -82,56 +101,18 @@ namespace ReleaseNotesGenerator
             Clipboard.SetText(result);
         }
 
-        const string mostRecentHint = "most recent changes are listed on top";
 
         private void buttonCopyAsHtml_Click(object sender, EventArgs e)
         {
-            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}' ({2}):</p>",
-                textBoxRevFrom.Text, textBoxRevTo.Text, mostRecentHint);
+            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}' ({2}):</p>", textBoxRevFrom.Text, textBoxRevTo.Text, MostRecentHint);
             string tableHtml = CreateHtmlTable(_lastGeneratedLogLines);
             HtmlFragment.CopyToClipboard(headerHtml + tableHtml);
-            ////HtmlFragment.CopyToClipboard("<table><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></table>");
-        }
-
-        private IEnumerable<LogLine> CreateLogLinesFromGitOutput(string[] lines)
-        {
-            var resultList = new List<LogLine>();
-
-            LogLine logLine = null;
-            foreach (string line in lines)
-            {
-                // 2e4cfb3@ (the very first line MUST start with something like this!)
-                if (line.Length > 8 && line[7] == '@')
-                {
-                    if (logLine != null)
-                    {
-                        resultList.Add(logLine);
-                        logLine = null;
-                    }
-
-                    logLine = new LogLine();
-                    logLine.Commit = line.Substring(0, 7);
-                    logLine.MessageLines.Add(line.Substring(8));
-                }
-                else
-                {
-                    logLine.MessageLines.Add(line);
-                }
-            }
-
-            if (logLine != null)
-            {
-                resultList.Add(logLine);
-                logLine = null;
-            }
-
-            return resultList;
         }
 
         private string CreateTextTable(IEnumerable<LogLine> logLines, bool suppressEmptyLines = true, bool separateColumnWithTabInsteadOfSpaces = true)
         {
             string headerText = string.Format(_commitLogFrom.Text,
-                textBoxRevFrom.Text, textBoxRevTo.Text, mostRecentHint);
+                textBoxRevFrom.Text, textBoxRevTo.Text, MostRecentHint);
 
             string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";
             string colSeparatorRestLines = separateColumnWithTabInsteadOfSpaces ? "\t" : "        ";
@@ -162,18 +143,5 @@ namespace ReleaseNotesGenerator
             stringBuilder.Append("</table>");
             return stringBuilder.ToString();
         }
-    }
-
-    public class LogLine
-    {
-        /// <summary>
-        /// one revision
-        /// </summary>
-        public LogLine()
-        {
-            MessageLines = new List<string>();
-        }
-        public string Commit;
-        public IList<string> MessageLines;
     }
 }

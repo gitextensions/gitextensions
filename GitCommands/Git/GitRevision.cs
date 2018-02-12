@@ -22,7 +22,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
 
         public string[] ParentGuids;
-        private IList<IGitItem> _subItems;
         private readonly List<IGitRef> _refs = new List<IGitRef>();
         public readonly GitModule Module;
         private BuildInfo _buildStatus;
@@ -31,6 +30,7 @@ namespace GitCommands
         {
             Guid = guid;
             Subject = "";
+            SubjectCount = "";
             Module = aModule;
         }
 
@@ -57,6 +57,8 @@ namespace GitCommands
         }
 
         public string Subject { get; set; }
+        //Count for artificial commits (could be changed to object lists)
+        public string SubjectCount { get; set; }
         public string Body { get; set; }
         //UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
@@ -65,11 +67,6 @@ namespace GitCommands
 
         public string Guid { get; set; }
         public string Name { get; set; }
-
-        public IEnumerable<IGitItem> SubItems
-        {
-            get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
-        }
 
         #endregion
 
@@ -80,7 +77,7 @@ namespace GitCommands
             {
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
-            return String.Format("{0}:{1}", sha, Subject);
+            return String.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
         }
 
         public static string ToShortSha(String sha)
@@ -118,9 +115,20 @@ namespace GitCommands
                     guid == IndexGuid;
         }
 
-        public bool HasParent()
+        public bool HasParent
         {
-            return ParentGuids != null && ParentGuids.Length > 0;
+            get
+            {
+                return ParentGuids != null && ParentGuids.Length > 0;
+            }
+        }
+
+        public string FirstParentGuid
+        {
+            get
+            {
+                return HasParent ? ParentGuids[0] : null;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

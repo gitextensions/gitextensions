@@ -11,19 +11,30 @@ using NUnit.Framework;
 namespace GitCommandsTests.GitExtLinks
 {
     [TestFixture]
-    class GitExtLinksTests
+    public class GitExtLinksTests
     {
+        private IGitRemoteManager _remoteManager;
+        private GitExtLinkDef _linkDef;
+        private GitRevision _revision;
+
+
+        [SetUp]
+        public void Setup()
+        {
+            _linkDef = GetGithubIssuesLinkDef();
+
+            _revision = new GitRevision(null, "");
+
+            _remoteManager = Substitute.For<IGitRemoteManager>();
+            _remoteManager.LoadRemotes(false).Returns(GetDefaultRemotes());
+        }
+
 
         [Test]
         public void ParseGithubIssueForUpstreamLink()
         {
-            GitExtLinkDef linkDef = GetGithubIssuesLinkDef();
-            GitRevision revision = new GitRevision(null, "");
-            revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
-            IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
-            IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
+            _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
+            IEnumerable<GitExtLink> expectedLinks = new[]
             {
                 new GitExtLink()
                 {
@@ -32,20 +43,16 @@ namespace GitCommandsTests.GitExtLinks
                 }
             };
 
+            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
             actualLinks.Should().Equal(expectedLinks);
         }
 
         [Test]
         public void ParseGithubIssueForOriginLink()
         {
-            GitExtLinkDef linkDef = GetGithubIssuesLinkDef();
-            linkDef.UseRemotesPattern = "origin|upstream";
-            GitRevision revision = new GitRevision(null, "");
-            revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
-            IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
-            IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
+            _linkDef.UseRemotesPattern = "origin|upstream";
+            _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
+            IEnumerable<GitExtLink> expectedLinks = new[]
             {
                 new GitExtLink()
                 {
@@ -54,6 +61,7 @@ namespace GitCommandsTests.GitExtLinks
                 }
             };
 
+            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -61,14 +69,9 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void ParseGithubIssueForUpstreamAndOriginLink()
         {
-            GitExtLinkDef linkDef = GetGithubIssuesLinkDef();
-            linkDef.UseOnlyFirstRemote = false;
-            GitRevision revision = new GitRevision(null, "");
-            revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
-            IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
-            IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
+            _linkDef.UseOnlyFirstRemote = false;
+            _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
+            IEnumerable<GitExtLink> expectedLinks = new[]
             {
                 new GitExtLink()
                 {
@@ -82,21 +85,17 @@ namespace GitCommandsTests.GitExtLinks
                 }
             };
 
+            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
             actualLinks.Should().Equal(expectedLinks);
         }
 
         [Test]
         public void ParseGithubIssueForAllRemotesLink()
         {
-            GitExtLinkDef linkDef = GetGithubIssuesLinkDef();
-            linkDef.UseRemotesPattern = string.Empty;
-            linkDef.UseOnlyFirstRemote = false;
-            GitRevision revision = new GitRevision(null, "");
-            revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
-            IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
-            IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
+            _linkDef.UseRemotesPattern = string.Empty;
+            _linkDef.UseOnlyFirstRemote = false;
+            _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
+            IEnumerable<GitExtLink> expectedLinks = new[]
             {
                 new GitExtLink()
                 {
@@ -115,6 +114,7 @@ namespace GitCommandsTests.GitExtLinks
                 }
             };
 
+            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -122,13 +122,9 @@ namespace GitCommandsTests.GitExtLinks
         [Test]
         public void ParseLinkWithEmptyRemotePart()
         {
-            GitExtLinkDef linkDef = GitExtLinksParser.LoadFromXmlString(GetEmptyRemotePartXmlDef()).First();
-            GitRevision revision = new GitRevision(null, "");
-            revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
-            IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
-            IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
+            _linkDef = GitExtLinksParser.LoadFromXmlString(GetEmptyRemotePartXmlDef()).First();
+            _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
+            IEnumerable<GitExtLink> expectedLinks = new[]
             {
                 new GitExtLink()
                 {
@@ -137,6 +133,7 @@ namespace GitCommandsTests.GitExtLinks
                 }
             };
 
+            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
             actualLinks.Should().Equal(expectedLinks);
         }
 

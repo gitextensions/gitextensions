@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dictionary>
+  <item>
+    <key>
+      <string>RevisionLinkDefs</string>
+    </key>
+    <value>
+      <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfGitExtLinkDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;RemoteSearchInParts&gt;
+      &lt;RemotePart&gt;URL&lt;/RemotePart&gt;
+    &lt;/RemoteSearchInParts&gt;
+    &lt;LinkFormats /&gt;
+    &lt;Name&gt;Stash&lt;/Name&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;RemoteSearchPattern&gt;HELIXS-(\d{4})&lt;/RemoteSearchPattern&gt;
+    &lt;UseRemotesPattern&gt;upstream|origin&lt;/UseRemotesPattern&gt;
+    &lt;UseOnlyFirstRemote&gt;true&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+&lt;/ArrayOfGitExtLinkDef&gt;</string>
+    </value>
+  </item>
+</dictionary>

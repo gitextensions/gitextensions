@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 
 namespace GitCommands
 {
     public static class PathUtil
     {
+        private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
+        private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
+
+
         /// <summary>Replaces native path separator with posix path separator.</summary>
         public static string ToPosixPath(this string path)
         {
@@ -65,7 +66,16 @@ namespace GitCommands
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
-                fileName = fileName.Substring(0, pos);
+            {
+                if (pos == 0 && fileName[0] == AppSettings.PosixPathSeparator)
+                {
+                    return fileName.Length == 1 ? string.Empty : AppSettings.PosixPathSeparator.ToString();
+                }
+                else
+                {
+                    fileName = fileName.Substring(0, pos);
+                }
+            }
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
                 return "";
             return fileName;
@@ -79,38 +89,6 @@ namespace GitCommands
                 return false;
             posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
             return true;
-        }
-
-        public static bool Equal(string path1, string path2)
-        {
-            path1 = Path.GetFullPath(path1).TrimEnd('\\');
-            path2 = Path.GetFullPath(path2).TrimEnd('\\');
-            StringComparison comprasion = EnvUtils.RunningOnUnix()
-                                              ? StringComparison.InvariantCulture
-                                              : StringComparison.InvariantCultureIgnoreCase;
-
-            return String.Compare(path1, path2, comprasion) == 0;
-        }
-
-        private class PathEqualityComparer : IEqualityComparer<string>
-        {
-            public bool Equals(string path1, string path2)
-            {
-                return Equal(path1, path2);
-            }
-
-            public int GetHashCode(string path)
-            {
-                path = Path.GetFullPath(path).TrimEnd('\\');
-                if (!EnvUtils.RunningOnUnix())
-                    path = path.ToLower();
-                return path.GetHashCode();
-            }
-        }
-
-        public static IEqualityComparer<string> CreatePathEqualityComparer()
-        {
-            return new PathEqualityComparer();
         }
 
         public static string GetRepositoryName(string repositoryUrl)
@@ -132,112 +110,57 @@ namespace GitCommands
             return name;
         }
 
-        public static IEnumerable<string> GetEnvironmentValidPaths()
-        {
-            return GetValidPaths(GetEnvironmentPaths());
-        }
-
-        public static IEnumerable<string> GetValidPaths(IEnumerable<string> paths)
-        {
-            return paths.Where(aPath => IsValidPath(aPath));
-        }
-
-        static IEnumerable<string> GetEnvironmentPaths()
-        {
-            string pathVariable = Environment.GetEnvironmentVariable("PATH");
-            return GetEnvironmentPaths(pathVariable);
-        }
-
-        public static IEnumerable<string> GetEnvironmentPaths(string aPathVariable)
-        {
-            if (aPathVariable.IsNullOrWhiteSpace())
-                yield break;
-
-            foreach (string rawdir in aPathVariable.Split(';'))
-            {
-                string dir = rawdir;
-                // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
-                // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)
-                dir = dir.Trim(new char[] { ' ', '"', '\t' });
-                if (dir.Length == 0)
-                    continue;
-                yield return dir;
-            }
-        }
-
-        public static bool IsValidPath(string aPath)
-        {
-            FileInfo fi = null;
-            try
-            {
-                fi = new FileInfo(aPath);
-            }
-            catch (ArgumentException) { }
-            catch (PathTooLongException) { }
-            catch (NotSupportedException) { }
-
-            return fi != null;
-        }
                 
-        public static bool PathExists(string aPath)
-        {
-            FileInfo fi = null;
-            try
-            {
-                fi = new FileInfo(aPath);
-            }
-            catch (ArgumentException) { }
-            catch (PathTooLongException) { }
-            catch (NotSupportedException) { }
-
-            return fi != null && fi.Exists;
-        }
-
-        public static bool DirectoryExists(string aPath)
+        public static bool TryFindFullPath(string fileName, out string fullPath)
         {
             try
             {
-                DirectoryInfo di = new DirectoryInfo(aPath);
-                return di.Exists;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public static bool TryFindFullPath(string aFileName, out string fullPath)
-        {
-            if (PathUtil.PathExists(aFileName))
-            {
-                fullPath = Path.GetFullPath(aFileName);
-                return true;
-            }
-
-            foreach (var path in PathUtil.GetEnvironmentValidPaths())
-            {
-                fullPath = Path.Combine(path, aFileName);
-                if (PathUtil.PathExists(fullPath))
+                if (File.Exists(fileName))
+                {
+                    fullPath = Path.GetFullPath(fileName);
                     return true;
-            }
+                }
 
+                foreach (var path in EnvironmentPathsProvider.GetEnvironmentValidPaths())
+                {
+                    fullPath = Path.Combine(path, fileName);
+                    if (File.Exists(fullPath))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                // do nothing 
+            }
             fullPath = null;
             return false;
         }
 
         public static bool TryFindShellPath(string shell, out string shellPath)
         {
-            shellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
-            if (PathUtil.PathExists(shellPath))
-                return true;
-
-            shellPath = Path.Combine(AppSettings.GitBinDir, shell);
-            if (PathUtil.PathExists(shellPath))
-                return true;
-
-            if (PathUtil.TryFindFullPath(shell, out shellPath))
-                return true;
-
+            try
+            {
+                shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
+                shellPath = Path.Combine(AppSettings.GitBinDir, shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
+                if (TryFindFullPath(shell, out shellPath))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                // do nothing 
+            }
             shellPath = null;
             return false;
         }

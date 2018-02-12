@@ -21,11 +21,13 @@ namespace GitUI
     public sealed class GitUICommands : IGitUICommands
     {
         private readonly IAvatarService _gravatarService;
+        private readonly ICommitTemplateManager _commitTemplateManager;
 
 
         public GitUICommands(GitModule module)
         {
             Module = module;
+            _commitTemplateManager = new CommitTemplateManager(module);
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
 
@@ -43,6 +45,9 @@ namespace GitUI
 
         public event GitUIEventHandler PreDeleteBranch;
         public event GitUIPostActionEventHandler PostDeleteBranch;
+
+        public event GitUIEventHandler PreDeleteRemoteBranch;
+        public event GitUIPostActionEventHandler PostDeleteRemoteBranch;
 
         public event GitUIEventHandler PreCheckoutRevision;
         public event GitUIPostActionEventHandler PostCheckoutRevision;
@@ -242,7 +247,7 @@ namespace GitUI
             return StartBatchFileProcessDialog(null, batchFile);
         }
 
-        public bool StartCommandLineProcessDialog(GitCommand cmd, IWin32Window parentForm)
+        public bool StartCommandLineProcessDialog(IGitCommand cmd, IWin32Window parentForm)
         {
             bool executed;
 
@@ -290,6 +295,19 @@ namespace GitUI
                 {
                     using (var form = new FormDeleteBranch(this, branch))
                         form.ShowDialog(owner);
+                    return true;
+                }
+            );
+        }
+
+        public bool StartDeleteRemoteBranchDialog(IWin32Window owner, string remoteBranch)
+        {
+            return DoActionOnRepo(owner, true, false, PreDeleteRemoteBranch, PostDeleteRemoteBranch, () =>
+                {
+                    using (var form = new FormDeleteRemoteBranch(this, remoteBranch))
+                    {
+                        form.ShowDialog(owner);
+                    }
                     return true;
                 }
             );
@@ -917,15 +935,14 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
         }
 
-        private readonly CommitTemplateManager commitTemplateManager = new CommitTemplateManager();
         public void AddCommitTemplate(string key, Func<string> addingText)
         {
-            commitTemplateManager.Register(key, addingText);
+            _commitTemplateManager.Register(key, addingText);
         }
 
         public void RemoveCommitTemplate(string key)
         {
-            commitTemplateManager.Unregister(key);
+            _commitTemplateManager.Unregister(key);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)
@@ -1005,7 +1022,7 @@ namespace GitUI
             if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
-        }
+            }
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1039,7 +1056,7 @@ namespace GitUI
 
         public bool StartResetChangesDialog()
         {
-            return StartResetChangesDialog((IWin32Window) null);
+            return StartResetChangesDialog((IWin32Window)null);
         }
 
         public bool StartRevertCommitDialog(IWin32Window owner, GitRevision revision)
@@ -1522,6 +1539,8 @@ namespace GitUI
 
                     if (showBlame)
                         form.SelectBlameTab();
+                    else
+                        form.SelectDiffTab();
 
                     return form;
                 };
@@ -1561,12 +1580,21 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
         {
+            return StartPushDialog(owner, pushOnShow, false, out pushCompleted);
+        }
+
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted)
+        {
             bool pushed = false;
 
             Func<bool> action = () =>
             {
                 using (var form = new FormPush(this))
                 {
+                    if (forceWithLease)
+                    {
+                        form.CheckForceWithLease();
+                    }
                     DialogResult dlgResult;
                     if (pushOnShow)
                         dlgResult = form.PushAndShowDialogWhenFailed(owner);
@@ -1757,7 +1785,7 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster,
                                 gh =>
                                 {
-                                    var frm = new ViewPullRequestsForm(this, gitHoster) {ShowInTaskbar = true};
+                                    var frm = new ViewPullRequestsForm(this, gitHoster) { ShowInTaskbar = true };
                                     frm.Show();
                                 });
         }
@@ -1979,6 +2007,11 @@ namespace GitUI
                     if (args[1].StartsWith("github-windows://openRepo/"))
                     {
                         StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true, null);
+                        return;
+                    }
+                    if (args[1].StartsWith("github-mac://openRepo/"))
+                    {
+                        StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true, null);
                         return;
                     }
                     break;

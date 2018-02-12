@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Threading;
+using FluentAssertions;
 using NUnit.Framework;
 using ReleaseNotesGenerator;
 
@@ -14,6 +15,7 @@ namespace ReleaseNotesGeneratorTests
         }
 
         [Test]
+        [Platform("Win")]
         public void CreateHtmlFormatClipboardDataObjectTest()
         {
             var dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
@@ -30,7 +32,7 @@ namespace ReleaseNotesGeneratorTests
                 "</body></html>");
         }
 
-        [Test, RequiresSTA]
+        [Test, Apartment(ApartmentState.STA)]
         public void CopyToClipboard()
         {
             HtmlFragment.CopyToClipboard("<p>Hallo</p>");

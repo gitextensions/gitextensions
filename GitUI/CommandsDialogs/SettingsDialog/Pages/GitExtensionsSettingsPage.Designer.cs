@@ -356,7 +356,7 @@
             this.chkShowCurrentChangesInRevisionGraph.Name = "chkShowCurrentChangesInRevisionGraph";
             this.chkShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(337, 17);
             this.chkShowCurrentChangesInRevisionGraph.TabIndex = 2;
-            this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working directory changes in revision graph (slow!)";
+            this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working directory changes as an artificial commit";
             this.chkShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 
             // label12

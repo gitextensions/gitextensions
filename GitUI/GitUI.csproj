@@ -33,12 +33,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,6 +59,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -130,13 +127,32 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\GitWorkingDirectoryStatusEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorStateEventArgs.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitorState.cs" />
     <Compile Include="CommandsDialogs\BuildReportTabPageExtension.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
-    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateManager.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseController.cs" />
+    <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
+    <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
+    <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
+    <Compile Include="CommandsDialogs\RevisionDiff.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionDiff.Designer.cs">
+      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionDiffController.cs" />
+    <Compile Include="CommandsDialogs\RevisionFileTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionFileTree.Designer.cs">
+      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +172,12 @@
       <DependentUpon>FormReflog.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormSparseWorkingCopyViewModel.cs" />
+    <Compile Include="CommandsDialogs\FormDeleteRemoteBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormDeleteRemoteBranch.Designer.cs">
+      <DependentUpon>FormDeleteRemoteBranch.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -183,6 +205,13 @@
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
+    <Compile Include="CommandsDialogs\RevisionGpgInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionGpgInfo.Designer.cs">
+      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.cs">
       <SubType>Form</SubType>
@@ -221,12 +250,20 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.Designer.cs">
+      <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="RevisionDiffInfoProvider.cs" />
+    <Compile Include="RevisionDiffKind.cs" />
     <Compile Include="FormStatusOutputLog.cs" />
     <Compile Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.cs">
       <SubType>Form</SubType>
@@ -294,6 +331,8 @@
     <Compile Include="RepoHosts.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="SplitterManager.cs" />
+    <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
+    <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -320,7 +359,6 @@
     <Compile Include="UserControls\CommitSummaryUserControl.Designer.cs">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -354,6 +392,11 @@
     </Compile>
     <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
+    <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.Designer.cs">
+      <DependentUpon>GitStatusMonitor.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1061,12 +1104,6 @@
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\ToolStripGitStatus.Designer.cs">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-    </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
     <Compile Include="UserControls\FolderBrowserButton.cs">
       <SubType>UserControl</SubType>
@@ -1093,8 +1130,18 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionDiff.resx">
+      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionFileTree.resx">
+      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
       <DependentUpon>FormCompareToBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormDeleteRemoteBranch.resx">
+      <DependentUpon>FormDeleteRemoteBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormDiff.resx">
       <DependentUpon>FormDiff.cs</DependentUpon>
@@ -1119,6 +1166,9 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfo.resx">
+      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.resx">
       <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
     </EmbeddedResource>
@@ -1136,6 +1186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.resx">
+      <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.resx">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
@@ -1566,10 +1619,6 @@
     <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ToolStripGitStatus.resx">
-      <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1861,6 +1910,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Icons\commit_error.png" />
+    <Content Include="Resources\Icons\commit_ok.png" />
+    <Content Include="Resources\Icons\commit_warning.png" />
     <Content Include="Resources\Icons\14.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
@@ -1879,6 +1931,8 @@
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
     <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\eye_closed.png" />
+    <Content Include="Resources\Icons\eye_opened.png" />
     <Content Include="Resources\Icons\gitex.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
@@ -1886,20 +1940,31 @@
     <Content Include="Resources\Icons\HelpPullMerge.png" />
     <Content Include="Resources\Icons\HelpPullRebase.png" />
     <Content Include="Resources\Icons\IconArchiveRevision.png" />
+    <Content Include="Resources\Icons\IconBook.png" />
+    <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
     <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
     <Content Include="Resources\Icons\IconConsole.png" />
     <Content Include="Resources\Icons\IconFolderSubmodule.png" />
+    <Content Include="Resources\Icons\IconKey.png" />
     <Content Include="Resources\Icons\IconManageRemotes.png" />
     <Content Include="Resources\Icons\IconMerge.png" />
     <Content Include="Resources\Icons\IconRebase.png" />
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
+    <Content Include="Resources\Icons\IconUntrackedOnly.png" />
+    <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
+    <Content Include="Resources\Icons\ignore_whitespaces.png" />
     <Content Include="Resources\Icons\increase.png" />
-    <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
-    <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
     <Content Include="Resources\Icons\whitespace.png" />
+    <Content Include="Resources\Icons\tag_error.png" />
+    <Content Include="Resources\Icons\tag_ok.png" />
+    <Content Include="Resources\Icons\tag_many.png" />
+    <Content Include="Resources\Icons\tag_error.png" />
+    <Content Include="Resources\Icons\tag_many.png" />
+    <Content Include="Resources\Icons\tag_ok.png" />
+    <Content Include="Resources\Icons\tag_warning.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2063,7 +2128,6 @@
   <ItemGroup />
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>

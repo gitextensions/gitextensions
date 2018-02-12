@@ -188,7 +188,7 @@ namespace GitUI.CommandsDialogs
             // Sha
             // 
             this.Sha.DataPropertyName = "Sha";
-            this.Sha.HeaderText = "Sha-1";
+            this.Sha.HeaderText = "SHA-1";
             this.Sha.Name = "Sha";
             this.Sha.ReadOnly = true;
             this.Sha.Width = 5;
@@ -223,7 +223,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.copySha1ToolStripMenuItem.Name = "copySha1ToolStripMenuItem";
             this.copySha1ToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.copySha1ToolStripMenuItem.Text = "Copy Sha1";
+            this.copySha1ToolStripMenuItem.Text = "Copy SHA-1";
             this.copySha1ToolStripMenuItem.Click += new System.EventHandler(this.copySha1ToolStripMenuItem_Click);
             // 
             // createABranchOnThisCommitToolStripMenuItem
@@ -253,7 +253,7 @@ namespace GitUI.CommandsDialogs
             this.lblDirtyWorkingDirectory.TabIndex = 34;
             this.lblDirtyWorkingDirectory.Text = "Warning: you\'ve got changes in your working directory that could be lost if you w" +
     "ant to reset the current branch to another commit.\r\nStash them before if you don" +
-    "\'t want to lost them.";
+    "\'t want to lose them.";
             this.lblDirtyWorkingDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormReflog
