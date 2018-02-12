@@ -178,13 +178,11 @@ namespace GitUI.CommandsDialogs
 
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
             {
-
-                string nameAsLower = name.ToLower();
-
+                var predicate = GitUICommands.GetFindFilePredicate(name, Module.WorkingDir);
                 return candidates.Where(item =>
                 {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                    return item.Name != null && predicate(item.Name)
+                        || item.OldName != null && predicate(item.OldName);
                 }
                     ).ToList();
             };

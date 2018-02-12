@@ -223,10 +223,9 @@ See the changes in the commit form.");
         private IList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
+            var predicate = GitUICommands.GetFindFilePredicate(name, Module.WorkingDir);
 
-            var nameAsLower = name.ToLower();
-
-            return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
+            return candidates.Where(predicate).ToList();
         }
 
         private void OnItemActivated()
