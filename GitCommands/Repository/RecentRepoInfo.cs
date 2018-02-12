@@ -115,7 +115,7 @@ namespace GitCommands.Repository
                 }
             }
 
-            Action<bool, List<RecentRepoInfo>> addSortedRepos = delegate(bool mostRecent, List<RecentRepoInfo> addToList)
+            void AddSortedRepos(bool mostRecent, List<RecentRepoInfo> addToList)
             {
                 foreach (string caption in orderedRepos.Keys)
                 {
@@ -124,23 +124,23 @@ namespace GitCommands.Repository
                         if (repo.MostRecent == mostRecent)
                             addToList.Add(repo);
                 }
-            };
+            }
 
-            Action<List<RecentRepoInfo>, List<RecentRepoInfo>> addNotSortedRepos = delegate(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
+            void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
                 foreach (RecentRepoInfo repo in list)
                     addToList.Add(repo);
-            };
+            }
 
             if (SortMostRecentRepos)
-                addSortedRepos(true, mostRecentRepoList);
+                AddSortedRepos(true, mostRecentRepoList);
             else
-                addNotSortedRepos(mostRecentRepos, mostRecentRepoList);
+                AddNotSortedRepos(mostRecentRepos, mostRecentRepoList);
 
             if (SortLessRecentRepos)
-                addSortedRepos(false, lessRecentRepoList);
+                AddSortedRepos(false, lessRecentRepoList);
             else
-                addNotSortedRepos(lessRecentRepos, lessRecentRepoList);
+                AddNotSortedRepos(lessRecentRepos, lessRecentRepoList);
         }
 
         private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
@@ -249,7 +249,7 @@ namespace GitCommands.Repository
                         root = dirInfo.Parent.Name;
                 }
 
-                Func<int, bool> shortenPathWithCompany = delegate(int skipCount)
+                bool ShortenPathWithCompany(int skipCount)
                 {
                     bool result = false;
                     string c = null;
@@ -280,17 +280,16 @@ namespace GitCommands.Repository
                     repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
 
                     return result && addDots;
-                };
+                }
 
 
-                Func<int, bool> shortenPath = delegate(int skipCount)
+                bool ShortenPath(int skipCount)
                 {
                     string path = repoInfo.Repo.Path;
                     string fistDir = (root ?? company) ?? repository;
                     string lastDir = workingDir;
                     if (fistDir != null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
                     {
-
                         int middle = (path.Length - lastDir.Length) / 2 + (path.Length - lastDir.Length) % 2;
                         int leftEnd = middle - skipCount / 2;
                         int rightStart = middle + skipCount / 2 + skipCount % 2;
@@ -303,14 +302,14 @@ namespace GitCommands.Repository
                     }
 
                     return false;
-                };
+                }
 
                 //if fixed width is not set then short as in pull request vccp's example
                 //full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
                 //short "E:\CompanyName\...\RepositoryName\WorkingDirName"
                 if (this.RecentReposComboMinWidth == 0)
                 {
-                    shortenPathWithCompany(0);
+                    ShortenPathWithCompany(0);
                 }
                 //else skip symbols beginning from the middle to both sides,
                 //so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
@@ -321,7 +320,7 @@ namespace GitCommands.Repository
                     int skipCount = 0;
                     do
                     {
-                        canShorten = shortenPath(skipCount);
+                        canShorten = ShortenPath(skipCount);
                         skipCount++;
                         captionSize = Graphics.MeasureString(repoInfo.Caption, MeasureFont);
                     }

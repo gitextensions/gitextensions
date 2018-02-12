@@ -605,22 +605,22 @@ namespace PatchApply
 
         public string ToResetUnstagedLinesPatch()
         {
-            SubChunkToPatchFnc subChunkToPatch = (SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines) =>
-                {
-                    return subChunk.ToResetUnstagedLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
-                };
+            string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
+            {
+                return subChunk.ToResetUnstagedLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
+            }
 
-            return ToPatch(subChunkToPatch);
+            return ToPatch(SubChunkToPatch);
         }
 
         public string ToStagePatch(bool staged, bool isWholeFile)
         {
-            SubChunkToPatchFnc subChunkToPatch = (SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines) =>
+            string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
             {
                 return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged, isWholeFile);
-            };
+            }
 
-            return ToPatch(subChunkToPatch);
+            return ToPatch(SubChunkToPatch);
         }
 
         protected string ToPatch(SubChunkToPatchFnc subChunkToPatch)

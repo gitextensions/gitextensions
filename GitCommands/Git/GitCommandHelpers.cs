@@ -153,18 +153,18 @@ namespace GitCommands
             var startProcess = Process.Start(startInfo);
             startProcess.EnableRaisingEvents = true;
 
-            EventHandler processExited = null;
-            processExited = (sender, args) =>
+            void ProcessExited(object sender, EventArgs args)
             {
-                startProcess.Exited -= processExited;
+                startProcess.Exited -= ProcessExited;
 
                 string quotedCmd = fileName;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
                 var executionEndTimestamp = DateTime.Now;
                 AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
-            };
-            startProcess.Exited += processExited;
+            }
+
+            startProcess.Exited += ProcessExited;
 
             return startProcess;
         }
