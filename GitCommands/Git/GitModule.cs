@@ -322,41 +322,14 @@ namespace GitCommands
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
 
-        public Encoding FilesEncoding
-        {
-            get
-            {
-                Encoding result = EffectiveConfigFile.FilesEncoding;
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
+        public Encoding FilesEncoding => EffectiveConfigFile.FilesEncoding ?? new UTF8Encoding(false);
 
-        public Encoding CommitEncoding
-        {
-            get
-            {
-                Encoding result = EffectiveConfigFile.CommitEncoding;
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
+        public Encoding CommitEncoding => EffectiveConfigFile.CommitEncoding ?? new UTF8Encoding(false);
 
         /// <summary>
         /// Encoding for commit header (message, notes, author, committer, emails)
         /// </summary>
-        public Encoding LogOutputEncoding
-        {
-            get
-            {
-                Encoding result = EffectiveConfigFile.LogOutputEncoding;
-                if (result == null)
-                    result = CommitEncoding;
-                return result;
-            }
-        }
+        public Encoding LogOutputEncoding => EffectiveConfigFile.LogOutputEncoding ?? CommitEncoding;
 
         /// <summary>"(no branch)"</summary>
         public static readonly string DetachedBranch = "(no branch)";

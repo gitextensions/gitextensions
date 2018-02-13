@@ -77,10 +77,7 @@ namespace GitUI.CommandsDialogs
             cboTo.DataSource = refs;
             cboTo.DisplayMember = "Name";
 
-            if (_defaultToBranch != null)
-                cboTo.Text = _defaultToBranch;
-            else
-                cboTo.Text = selectedHead;
+            cboTo.Text = _defaultToBranch ?? selectedHead;
 
             rebasePanel.Visible = !Module.InTheMiddleOfRebase();
             EnableButtons();
