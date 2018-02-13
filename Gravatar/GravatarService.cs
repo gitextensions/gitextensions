@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Gravatar
@@ -30,6 +31,7 @@ namespace Gravatar
         private readonly IImageCache _cache;
         private readonly IImageNameProvider _avatarImageNameProvider;
 
+        private const string GitHubPrivateEmailSuffix = "@users.noreply.github.com";
 
         public GravatarService(IImageCache imageCache, IImageNameProvider avatarImageNameProvider)
         {
@@ -52,8 +54,16 @@ namespace Gravatar
             var image = await _cache.GetImageAsync(imageFileName, null);
             if (image == null)
             {
-                image = await LoadFromGravatarAsync(imageFileName, email, imageSize, GetDefaultImageType(defaultImageType));
+                if (email.EndsWith(GitHubPrivateEmailSuffix, StringComparison.OrdinalIgnoreCase))
+                {
+                    image = await LoadFromGitHubAsync(imageFileName, email, imageSize);
+                }
+                else
+                {
+                    image = await LoadFromGravatarAsync(imageFileName, email, imageSize, GetDefaultImageType(defaultImageType));
+                }
             }
+
             return image;
         }
 
@@ -77,6 +87,7 @@ namespace Gravatar
             {
                 defaultImageType = DefaultImageType.None;
             }
+
             return defaultImageType;
         }
 
@@ -97,6 +108,7 @@ namespace Gravatar
             {
                 builder.Scheme = "https";
             }
+
             builder.Path += HashEmail(email);
 
             var query = string.Format("s={0}&r={1}&d={2}",
@@ -137,11 +149,46 @@ namespace Gravatar
             return MD5.CalcMD5(email.Trim().ToLowerInvariant());
         }
 
-        private async Task<Image> LoadFromGravatarAsync(string imageFileName, string email, int imageSize, DefaultImageType defaultImageType)
+        private async Task<Image> LoadFromGitHubAsync(string imageFileName, string email, int imageSize)
+        {
+            string imageUrl = null;
+            try
+            {
+                int suffixPosition = email.IndexOf(GitHubPrivateEmailSuffix, StringComparison.OrdinalIgnoreCase);
+                string username = email.Substring(0, suffixPosition);
+                var client = new Git.hub.Client();
+                var user = client.GetUser(username);
+                if (!string.IsNullOrEmpty(user?.AvatarUrl))
+                {
+                    var builder = new UriBuilder(user.AvatarUrl);
+                    var query = new StringBuilder(builder.Query.TrimStart('?'));
+                    query.Append(query.Length == 0 ? "?" : "&");
+                    query.AppendFormat("s={0}", imageSize);
+                    builder.Query = query.ToString();
+                    imageUrl = builder.Uri.AbsoluteUri;
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+
+            if (string.IsNullOrEmpty(imageUrl))
+                return null;
+
+            return await DownloadImage(new Uri(imageUrl), imageFileName);
+        }
+
+        private Task<Image> LoadFromGravatarAsync(string imageFileName, string email, int imageSize, DefaultImageType defaultImageType)
+        {
+            var imageUrl = BuildGravatarUrl(email, imageSize, false, Rating.G, defaultImageType);
+            return DownloadImage(imageUrl, imageFileName);
+        }
+
+        private async Task<Image> DownloadImage(Uri imageUrl, string imageFileName)
         {
             try
             {
-                var imageUrl = BuildGravatarUrl(email, imageSize, false, Rating.G, defaultImageType);
                 using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
                 {
                     webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
@@ -149,6 +196,7 @@ namespace Gravatar
                     {
                         await _cache.AddImageAsync(imageFileName, imageStream);
                     }
+
                     return await _cache.GetImageAsync(imageFileName, null);
                 }
             }
@@ -157,8 +205,8 @@ namespace Gravatar
                 //catch IO errors
                 Trace.WriteLine(ex.Message);
             }
+
             return null;
         }
-
     }
 }

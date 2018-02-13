@@ -95,5 +95,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
+      <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
+      <Name>Git.hub</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
