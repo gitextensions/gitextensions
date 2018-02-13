@@ -12,11 +12,13 @@ namespace GitCommands.ExternalLinks
     public sealed class GitRevisionExternalLinksParser : IGitRevisionExternalLinksParser
     {
         private readonly IConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
+        private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
 
 
-        public GitRevisionExternalLinksParser(IConfiguredLinkDefinitionsProvider effectiveLinkDefinitionsProvider)
+        public GitRevisionExternalLinksParser(IConfiguredLinkDefinitionsProvider effectiveLinkDefinitionsProvider, IExternalLinkRevisionParser externalLinkRevisionParser)
         {
             _effectiveLinkDefinitionsProvider = effectiveLinkDefinitionsProvider;
+            _externalLinkRevisionParser = externalLinkRevisionParser;
         }
 
 
@@ -24,7 +26,7 @@ namespace GitCommands.ExternalLinks
         {
             var definitions = _effectiveLinkDefinitionsProvider.Get(settings);
             return definitions.Where(definition => definition.Enabled)
-                              .SelectMany(linkDef => linkDef.Parse(revision));
+                              .SelectMany(definition => _externalLinkRevisionParser.Parse(revision, definition));
         }
     }
 }

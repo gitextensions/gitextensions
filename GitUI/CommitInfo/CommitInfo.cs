@@ -10,7 +10,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.ExternalLinks;
-using GitCommands.Utils;
+using GitCommands.Remote;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
@@ -35,8 +35,10 @@ namespace GitUI.CommitInfo
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
         private readonly IExternalLinksLoader _externalLinksLoader;
-        private readonly ConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
+        private readonly IConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
+        private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
+        private readonly IGitRemoteManager _gitRemoteManager;
 
 
         public CommitInfo()
@@ -54,12 +56,14 @@ namespace GitUI.CommitInfo
             IHeaderLabelFormatter labelFormatter;
             labelFormatter = new TabbedHeaderLabelFormatter();
             headerRenderer = new TabbedHeaderRenderStyleProvider();
- 
+
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
             _externalLinksLoader = new ExternalLinksLoader();
             _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksLoader);
-            _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider);
+            _gitRemoteManager = new GitRemoteManager(() => Module);
+            _externalLinkRevisionParser = new ExternalLinkRevisionParser(_gitRemoteManager);
+            _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
 
             RevisionInfo.Font = AppSettings.Font;
             using (Graphics g = CreateGraphics())

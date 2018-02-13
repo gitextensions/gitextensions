@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
-            _remoteManager = new GitRemoteManager(Module);
+            _remoteManager = new GitRemoteManager(() => Module);
             Init(defaultRemote);
 
             Merge.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Merge;

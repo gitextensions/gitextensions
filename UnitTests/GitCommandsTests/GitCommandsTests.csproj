@@ -72,12 +72,12 @@
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />
     <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProviderTests.cs" />
+    <Compile Include="ExternalLinks\ExternalLinkRevisionParserTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinksLoaderIntegrationTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinksManagerIntegrationTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="GitModuleTest.cs" />
-    <Compile Include="ExternalLinks\GitRevisionExternalLinksParserTests.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />

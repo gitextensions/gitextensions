@@ -61,12 +61,12 @@ namespace GitCommands.Remote
     {
         internal static readonly string DisabledSectionPrefix = "-";
         internal static readonly string SectionRemote = "remote";
-        private readonly IGitModule _module;
+        private readonly Func<IGitModule> _getModule;
 
 
-        public GitRemoteManager(IGitModule module)
+        public GitRemoteManager(Func<IGitModule> getModule)
         {
-            _module = module;
+            _getModule = getModule;
         }
 
 
@@ -74,6 +74,7 @@ namespace GitCommands.Remote
         [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
         public void ConfigureRemotes(string remoteName)
         {
+            var _module = GetModule();
             var localConfig = _module.LocalConfigFile;
 
             foreach (var remoteHead in _module.GetRefs(true, true))
@@ -111,6 +112,7 @@ namespace GitCommands.Remote
                 throw new ArgumentNullException("remote");
             }
 
+            var _module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
             {
                 var head = new GitRef(_module, string.Empty, setting);
@@ -132,6 +134,7 @@ namespace GitCommands.Remote
         /// </summary>
         public string[] GetDisabledRemotes()
         {
+            var _module = GetModule();
             return _module.LocalConfigFile.GetConfigSections()
                                           .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
                                           .Select(s => s.SubSection)
@@ -145,7 +148,8 @@ namespace GitCommands.Remote
         public IEnumerable<GitRemote> LoadRemotes(bool loadDisabled)
         {
             var remotes = new List<GitRemote>();
-            if (_module == null)
+            var module = _getModule();
+            if (module == null)
             {
                 return remotes;
             }
@@ -171,13 +175,14 @@ namespace GitCommands.Remote
                 throw new ArgumentNullException(nameof(remote));
             }
 
+            var module = GetModule();
             if (!remote.Disabled)
             {
-                return _module.RemoveRemote(remote.Name);
+                return module.RemoveRemote(remote.Name);
             }
 
             var sectionName = $"{DisabledSectionPrefix}{SectionRemote}.{remote.Name}";
-            _module.LocalConfigFile.RemoveConfigSection(sectionName, true);
+            module.LocalConfigFile.RemoveConfigSection(sectionName, true);
             return string.Empty;
         }
 
@@ -210,11 +215,12 @@ namespace GitCommands.Remote
             // if operation return anything back, relay that to the user
             var output = string.Empty;
 
+            var module = GetModule();
             bool creatingNew = remote == null;
             bool remoteDisabled = false;
             if (creatingNew)
             {
-                output = _module.AddRemote(remoteName, remoteUrl);
+                output = module.AddRemote(remoteName, remoteUrl);
                 updateRemoteRequired = true;
             }
             else
@@ -231,7 +237,7 @@ namespace GitCommands.Remote
                 if (!string.Equals(remote.Name, remoteName, StringComparison.OrdinalIgnoreCase))
                 {
                     // the name of the remote changed - perform rename
-                    output = _module.RenameRemote(remote.Name, remoteName);
+                    output = module.RenameRemote(remote.Name, remoteName);
                 }
 
                 if (!string.Equals(remote.Url, remoteUrl, StringComparison.OrdinalIgnoreCase))
@@ -241,9 +247,9 @@ namespace GitCommands.Remote
                 }
             }
 
-            UpdateSettings(remoteName, remoteDisabled, SettingKeyString.RemoteUrl, remoteUrl);
-            UpdateSettings(remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
-            UpdateSettings(remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
+            UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemoteUrl, remoteUrl);
+            UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
+            UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
 
             return new GitRemoteSaveResult(output, updateRemoteRequired);
         }
@@ -263,7 +269,8 @@ namespace GitCommands.Remote
             // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
             var sectionName = (disabled ? "" : DisabledSectionPrefix) + SectionRemote;
 
-            var sections = _module.LocalConfigFile.GetConfigSections();
+            var module = GetModule();
+            var sections = module.LocalConfigFile.GetConfigSections();
             var section = sections.FirstOrDefault(s => s.SectionName == sectionName && s.SubSection == remoteName);
             if (section == null)
             {
@@ -273,28 +280,29 @@ namespace GitCommands.Remote
 
             if (disabled)
             {
-                _module.RemoveRemote(remoteName);
+                module.RemoveRemote(remoteName);
             }
             else
             {
-                _module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
+                module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
             }
 
             // rename the remote
             section.SectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
 
-            _module.LocalConfigFile.AddConfigSection(section);
-            _module.LocalConfigFile.Save();
+            module.LocalConfigFile.AddConfigSection(section);
+            module.LocalConfigFile.Save();
         }
 
 
         // pass the list in to minimise allocations
         private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
+            var module = GetModule();
             Func<string[]> func;
             if (enabled)
             {
-                func = _module.GetRemotes;
+                func = module.GetRemotes;
             }
             else
             {
@@ -309,12 +317,22 @@ namespace GitCommands.Remote
                 {
                     Disabled = !enabled,
                     Name = remote,
-                    Url = _module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
-                    Push = _module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
-                    PushUrl = _module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
-                    PuttySshKey = _module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled)),
+                    Url = module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
+                    Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
+                    PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
+                    PuttySshKey = module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled)),
                 }));
             }
+        }
+
+        private IGitModule GetModule()
+        {
+            var module = _getModule();
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+            return module;
         }
 
         private string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
@@ -323,18 +341,18 @@ namespace GitCommands.Remote
             return remoteEnabled ? key : DisabledSectionPrefix + key;
         }
 
-        private void UpdateSettings(string remoteName, bool remoteDisabled, string settingName, string value)
+        private void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
         {
             var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
             var fullSettingName = preffix + string.Format(settingName, remoteName);
 
             if (!string.IsNullOrWhiteSpace(value))
             {
-                _module.SetSetting(fullSettingName, value);
+                module.SetSetting(fullSettingName, value);
             }
             else
             {
-                _module.UnsetSetting(fullSettingName);
+                module.UnsetSetting(fullSettingName);
             }
         }
     }

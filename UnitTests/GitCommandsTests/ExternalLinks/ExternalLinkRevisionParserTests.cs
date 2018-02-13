@@ -14,9 +14,10 @@ using NUnit.Framework;
 namespace GitCommandsTests.ExternalLinks
 {
     [TestFixture]
-    public class GitRevisionExternalLinksParserTests
+    public class ExternalLinkRevisionParserTests
     {
         private IGitRemoteManager _remoteManager;
+        private ExternalLinkRevisionParser _parser;
         private ExternalLinkDefinition _linkDef;
         private GitRevision _revision;
 
@@ -30,6 +31,8 @@ namespace GitCommandsTests.ExternalLinks
 
             _remoteManager = Substitute.For<IGitRemoteManager>();
             _remoteManager.LoadRemotes(false).Returns(GetDefaultRemotes());
+
+            _parser = new ExternalLinkRevisionParser(_remoteManager);
         }
 
 
@@ -46,7 +49,7 @@ namespace GitCommandsTests.ExternalLinks
                 }
             };
 
-            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
+            var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -64,7 +67,7 @@ namespace GitCommandsTests.ExternalLinks
                 }
             };
 
-            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
+            var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -88,7 +91,7 @@ namespace GitCommandsTests.ExternalLinks
                 }
             };
 
-            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
+            var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -117,7 +120,7 @@ namespace GitCommandsTests.ExternalLinks
                 }
             };
 
-            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
+            var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -136,7 +139,7 @@ namespace GitCommandsTests.ExternalLinks
                 }
             };
 
-            var actualLinks = _linkDef.Parse(_revision, _remoteManager);
+            var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
 
@@ -238,7 +241,5 @@ namespace GitCommandsTests.ExternalLinks
 </ArrayOfGitExtLinkDef>
        ";
         }
-
-
     }
 }
