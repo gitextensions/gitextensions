@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             _gitcommands = gitcommands;
             if(gitcommands == null)
-                throw new ArgumentNullException("gitcommands");
+                throw new ArgumentNullException(nameof(gitcommands));
             _isSparseCheckoutEnabled = _isSparseCheckoutEnabledAsSaved = GetCurrentSparseEnabledState();
         }
 
@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs
         public void SetRulesTextAsOnDisk([NotNull] string text)
         {
             if(text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             _sRulesTextAsOnDisk = text;
         }
 

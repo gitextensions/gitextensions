@@ -60,7 +60,7 @@ namespace GitCommands
         public string Filename;
     }
 
-    [DebuggerDisplay("{Filename}")]
+    [DebuggerDisplay("{" + nameof(Filename) + "}")]
     public struct ConflictData
     {
         public ConflictData(ConflictedFileData _base, ConflictedFileData _local,
@@ -82,7 +82,7 @@ namespace GitCommands
 
     /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
-    [DebuggerDisplay("GitModule ( {_workingDir} )")]
+    [DebuggerDisplay("GitModule ( {" + nameof(_workingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
@@ -3185,7 +3185,7 @@ namespace GitCommands
         public bool CheckBranchFormat([NotNull] string branchName)
         {
             if (branchName == null)
-                throw new ArgumentNullException("branchName");
+                throw new ArgumentNullException(nameof(branchName));
 
             if (branchName.IsNullOrWhiteSpace())
                 return false;
@@ -3204,7 +3204,7 @@ namespace GitCommands
         public string FormatBranchName([NotNull] string branchName)
         {
             if (branchName == null)
-                throw new ArgumentNullException("branchName");
+                throw new ArgumentNullException(nameof(branchName));
 
             string fullBranchName = GitCommandHelpers.GetFullBranchName(branchName);
             if (String.IsNullOrEmpty(RevParse(fullBranchName)))

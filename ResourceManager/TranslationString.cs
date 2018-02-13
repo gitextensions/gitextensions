@@ -3,7 +3,7 @@
 namespace ResourceManager
 {
     /// <summary>Provides translated text.</summary>
-    [DebuggerDisplay("{Text}")]
+    [DebuggerDisplay("{" + nameof(Text) + "}")]
     public class TranslationString
     {
         /// <summary>Creates a new <see cref="TranslationString"/> with the specified <paramref name="text"/>.</summary>

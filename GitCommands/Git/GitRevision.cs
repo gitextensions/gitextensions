@@ -52,7 +52,7 @@ namespace GitCommands
             {
                 if (Equals(value, _buildStatus)) return;
                 _buildStatus = value;
-                OnPropertyChanged("BuildStatus");
+                OnPropertyChanged(nameof(BuildStatus));
             }
         }
 
@@ -83,7 +83,7 @@ namespace GitCommands
         public static string ToShortSha(String sha)
         {
             if (sha == null)
-                throw new ArgumentNullException("sha");
+                throw new ArgumentNullException(nameof(sha));
             const int maxShaLength = 10;
             if (sha.Length > maxShaLength)
             {

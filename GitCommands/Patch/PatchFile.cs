@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PatchApply
 {
-    [DebuggerDisplay("PatchFile( {Subject} )")]
+    [DebuggerDisplay("PatchFile( {" + nameof(Subject) + "} )")]
     public class PatchFile
     {
         public string FullName { get; set; }

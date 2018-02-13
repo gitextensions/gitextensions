@@ -109,7 +109,7 @@ namespace GitCommands.Remote
         {
             if (remote == null)
             {
-                throw new ArgumentNullException("remote");
+                throw new ArgumentNullException(nameof(remote));
             }
 
             var _module = GetModule();

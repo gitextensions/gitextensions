@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    [DebuggerDisplay("{_name}")]
+    [DebuggerDisplay("{" + nameof(_name) + "}")]
     public class TranslationCategory : IComparable<TranslationCategory>
     {
         public TranslationCategory()

@@ -83,7 +83,7 @@ namespace GitPlugin
         public void RegisterCommand(string commandName, CommandBase command)
         {
             if (commandName.IndexOf('.') >= 0)
-                throw new ArgumentException("Command name cannot contain dot symbol.", "commandName");
+                throw new ArgumentException("Command name cannot contain dot symbol.", nameof(commandName));
             if (!_commands.ContainsKey(commandName))
                 _commands.Add(commandName, command);
         }

@@ -66,7 +66,7 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
-                throw new ArgumentNullException("sha1");
+                throw new ArgumentNullException(nameof(sha1));
 
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -102,7 +102,7 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
-                throw new ArgumentNullException("sha1");
+                throw new ArgumentNullException(nameof(sha1));
 
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -142,7 +142,7 @@ namespace GitCommands
         public CommitData CreateFromFormatedData(string data)
         {
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             var module = GetModule();
 
             var lines = data.Split('\n');
@@ -186,7 +186,7 @@ namespace GitCommands
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             var module = GetModule();
 
             var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -211,7 +211,7 @@ namespace GitCommands
         public CommitData CreateFromRevision(GitRevision revision)
         {
             if (revision == null)
-                throw new ArgumentNullException("revision");
+                throw new ArgumentNullException(nameof(revision));
 
             CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
                 String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,

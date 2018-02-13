@@ -4,7 +4,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
-    [DebuggerDisplay("GitItem( {FileName} )")]
+    [DebuggerDisplay("GitItem( {" + nameof(FileName) + "} )")]
     public class GitItem : IGitItem
     {
         public GitItem(string mode, string objectType, string guid, string name)
