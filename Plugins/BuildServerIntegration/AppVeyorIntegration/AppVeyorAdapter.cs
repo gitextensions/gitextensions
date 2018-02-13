@@ -494,14 +494,8 @@ namespace AppVeyorIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (_httpClientAppVeyor != null)
-            {
-                _httpClientAppVeyor.Dispose();
-            }
-            if (_httpClientGitHub != null)
-            {
-                _httpClientGitHub.Dispose();
-            }
+            _httpClientAppVeyor?.Dispose();
+            _httpClientGitHub?.Dispose();
         }
     }
 

@@ -457,10 +457,7 @@ namespace GitStatistics.PieChart
         /// </param>
         internal void DrawVisibleStartSide(Graphics graphics)
         {
-            if (StartSide != null)
-            {
-                StartSide.Draw(graphics, Pen, BrushStartSide);
-            }
+            StartSide?.Draw(graphics, Pen, BrushStartSide);
         }
 
         /// <summary>
@@ -471,10 +468,7 @@ namespace GitStatistics.PieChart
         /// </param>
         internal void DrawVisibleEndSide(Graphics graphics)
         {
-            if (EndSide != null)
-            {
-                EndSide.Draw(graphics, Pen, BrushEndSide);
-            }
+            EndSide?.Draw(graphics, Pen, BrushEndSide);
         }
 
         /// <summary>

@@ -195,8 +195,7 @@ namespace TfsInterop
         public void Dispose()
         {
             _buildServer = null;
-            if (_tfsCollection != null)
-                _tfsCollection.Dispose();
+            _tfsCollection?.Dispose();
             _buildDefinitions = null;
             GC.Collect();
         }

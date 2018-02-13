@@ -139,8 +139,7 @@ namespace GitUI.Script
                     showSplit = value;
                     Invalidate();
 
-                    if (Parent != null)
-                        Parent.PerformLayout();
+                    Parent?.PerformLayout();
                 }
             }
         }
@@ -792,9 +791,9 @@ namespace GitUI.Script
             {
                 m_SplitMenu.Show(this, new Point(0, Height));
             }
-            else if (m_SplitMenuStrip != null)
+            else
             {
-                m_SplitMenuStrip.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
+                m_SplitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
             }
         }
 

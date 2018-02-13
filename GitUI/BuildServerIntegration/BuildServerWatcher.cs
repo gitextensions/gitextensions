@@ -97,10 +97,7 @@ namespace GitUI.BuildServerIntegration
         {
             var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
 
-            if (cancellationToken != null)
-            {
-                cancellationToken.Dispose();
-            }
+            cancellationToken?.Dispose();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]

@@ -520,8 +520,7 @@ namespace GitUI.CommandsDialogs
                 _filterBranchHelper.Dispose();
                 _formBrowseMenus.Dispose();
 
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

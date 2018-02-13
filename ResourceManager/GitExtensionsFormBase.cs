@@ -51,10 +51,7 @@ namespace ResourceManager
 
         protected HotkeyCommand GetHotkeyCommand(int commandCode)
         {
-            if (Hotkeys == null)
-                return null;
-
-            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+            return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         /// <summary>Override this method to handle form-specific Hotkey commands.</summary>

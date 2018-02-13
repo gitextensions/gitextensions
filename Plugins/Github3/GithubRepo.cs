@@ -74,15 +74,12 @@ namespace Github3
 
         public List<IPullRequestInformation> GetPullRequests()
         {
-            if (repo != null)
+            var pullRequests = repo?.GetPullRequests();
+            if (pullRequests != null)
             {
-                var pullRequests = repo.GetPullRequests();
-                if (pullRequests != null)
-                {
-                    return pullRequests
-                        .Select(pr => (IPullRequestInformation)new GithubPullRequest(pr))
-                        .ToList();
-                }
+                return pullRequests
+                    .Select(pr => (IPullRequestInformation)new GithubPullRequest(pr))
+                    .ToList();
             }
 
             return new List<IPullRequestInformation>();

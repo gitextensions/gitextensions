@@ -33,9 +33,7 @@ namespace Gerrit
 
         private void OnGitUICommandsChanged(GitUICommands oldcommands)
         {
-            EventHandler<GitUICommandsChangedEventArgs> handler = GitUICommandsChanged;
-            if (handler != null)
-                handler(this, new GitUICommandsChangedEventArgs(oldcommands));
+            GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldcommands));
         }
 
         private GitUICommands _uiCommands;

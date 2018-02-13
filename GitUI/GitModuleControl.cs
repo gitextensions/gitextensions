@@ -143,9 +143,7 @@ namespace GitUI
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>
         protected virtual void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
-            var handler = GitUICommandsSourceSet;
-            if (handler != null)
-                handler(this, new GitUICommandsSourceEventArgs(newSource));
+            GitUICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(newSource));
         }
     }
 }

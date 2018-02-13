@@ -314,10 +314,8 @@ namespace GitUI.RevisionGridClasses
                     _graphBitmap.Dispose();
                     _graphBitmap = null;
                 }
-                if (_backgroundEvent != null)
-                {
-                    _backgroundEvent.Dispose();
-                }
+
+                _backgroundEvent?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -429,11 +427,7 @@ namespace GitUI.RevisionGridClasses
             lock (_graphData)
             {
                 Graph.ILaneRow row = _graphData[aRow];
-                if (row == null)
-                {
-                    return null;
-                }
-                return row.Node.Id;
+                return row?.Node.Id;
             }
         }
 
@@ -658,10 +652,7 @@ namespace GitUI.RevisionGridClasses
             {
                 //All rows that the user is viewing are loaded. We now can hide the loading
                 //animation that is shown. (the event Loading(bool) triggers this!)
-                if (Loading != null)
-                {
-                    Loading(this, new LoadingEventArgs(false));
-                }
+                Loading?.Invoke(this, new LoadingEventArgs(false));
             }
 
             if (_visibleBottom >= _graphData.Count)
@@ -726,12 +717,12 @@ namespace GitUI.RevisionGridClasses
                         }
                     }
 
-                    // When 'git log --first-parent' filtration is enabled and when only current 
+                    // When 'git log --first-parent' filtration is enabled and when only current
                     // branch needed to be rendered (and this filter actually works),
                     // it is much more readable to limit max lanes to 1.
-                    int maxLanes = 
-                        (AppSettings.ShowFirstParent && 
-                        AppSettings.ShowCurrentBranchOnly && 
+                    int maxLanes =
+                        (AppSettings.ShowFirstParent &&
+                        AppSettings.ShowCurrentBranchOnly &&
                         AppSettings.BranchFilterEnabled) ? 1: MaxLanes;
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
@@ -1154,10 +1145,8 @@ namespace GitUI.RevisionGridClasses
                     }
                     finally
                     {
-                        if (brushLineColorPen != null)
-                            ((IDisposable)brushLineColorPen).Dispose();
-                        if (brushLineColor != null)
-                            ((IDisposable)brushLineColor).Dispose();
+                        ((IDisposable)brushLineColorPen)?.Dispose();
+                        ((IDisposable)brushLineColor)?.Dispose();
                     }
                 }
             }

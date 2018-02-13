@@ -178,7 +178,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var hostedRepo = _searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
             try
             {
-                if (hostedRepo != null) hostedRepo.Fork();
+                hostedRepo?.Fork();
             }
             catch (Exception ex)
             {
@@ -301,8 +301,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }
 
-            if (GitModuleChanged != null)
-                GitModuleChanged(this, new GitModuleEventArgs(module));
+            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Close();
         }

@@ -54,8 +54,7 @@ namespace GitExtensionsVSIX
             }
             catch (Exception ex)
             {
-                if (OutputPane != null)
-                    OutputPane.OutputString("Error adding commands: " + ex);
+                OutputPane?.OutputString("Error adding commands: " + ex);
             }
         }
 

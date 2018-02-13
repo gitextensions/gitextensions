@@ -81,8 +81,7 @@ namespace NetSpell.SpellChecker.Dictionary
                 }
                 finally
                 {
-                    if (fs != null)
-                        fs.Dispose();
+                    fs?.Dispose();
                 }
 
                 TraceWriter.TraceInfo("Loaded User Dictionary; Words:{0}", UserWords.Count);
@@ -125,8 +124,7 @@ namespace NetSpell.SpellChecker.Dictionary
             }
             finally
             {
-                if (fs != null)
-                    fs.Dispose();
+                fs?.Dispose();
             }
 
             TraceWriter.TraceInfo("Saved User Dictionary; Words:{0}", UserWords.Count);
@@ -488,8 +486,7 @@ namespace NetSpell.SpellChecker.Dictionary
             }
             finally
             {
-                if (fs != null)
-                    fs.Dispose();
+                fs?.Dispose();
             }
 
             TraceWriter.TraceInfo("Dictionary Loaded BaseWords:{0}; PrefixRules:{1}; SuffixRules:{2}; PhoneticRules:{3}",
@@ -600,10 +597,7 @@ namespace NetSpell.SpellChecker.Dictionary
         {
             if (disposing)
             {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

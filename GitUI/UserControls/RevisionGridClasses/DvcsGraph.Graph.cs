@@ -248,10 +248,7 @@ namespace GitUI.RevisionGridClasses
                     lanes.CacheTo(lastLane);
 
                     // We need to signal the DvcsGraph object that it needs to redraw everything.
-                    if (Updated != null)
-                    {
-                        Updated(this);
-                    }
+                    Updated?.Invoke(this);
                 }
                 else
                 {
@@ -293,10 +290,8 @@ namespace GitUI.RevisionGridClasses
                         }
 
                         // Signal that these rows have changed
-                        if (isChanged && Updated != null)
-                        {
-                            Updated(this);
-                        }
+                        if (isChanged)
+                            Updated?.Invoke(this);
 
                         processedNodes++;
                         break;

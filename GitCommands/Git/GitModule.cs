@@ -1252,9 +1252,7 @@ namespace GitCommands
         {
             var configFile = GetSubmoduleConfigFile();
             var submodule = configFile.ConfigSections.FirstOrDefault(configSection => configSection.GetValue("path").Trim() == localPath);
-            if (submodule != null)
-                return submodule.SubSection.Trim();
-            return null;
+            return submodule?.SubSection.Trim();
         }
 
         public string GetSubmoduleRemotePath(string name)
@@ -1601,10 +1599,8 @@ namespace GitCommands
             remote = remote.ToPosixPath();
 
             //Remove spaces...
-            if (remoteBranch != null)
-                remoteBranch = remoteBranch.Replace(" ", "");
-            if (localBranch != null)
-                localBranch = localBranch.Replace(" ", "");
+            remoteBranch = remoteBranch?.Replace(" ", "");
+            localBranch = localBranch?.Replace(" ", "");
 
             string branchArguments = "";
 
@@ -1696,7 +1692,7 @@ namespace GitCommands
             if (String.IsNullOrEmpty(fromBranch) && !String.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
 
-            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
+            toBranch = toBranch?.Replace(" ", "");
 
             var sforce = GitCommandHelpers.GetForcePushArgument(force);
 

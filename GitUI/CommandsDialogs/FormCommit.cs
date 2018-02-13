@@ -779,8 +779,7 @@ namespace GitUI.CommandsDialogs
 
             RestoreSelectedFiles(unStagedFiles, stagedFiles, lastSelection);
 
-            if (OnStageAreaLoaded != null)
-                OnStageAreaLoaded();
+            OnStageAreaLoaded?.Invoke();
 
             if (_loadUnstagedOutputFirstTime)
             {
@@ -2126,21 +2125,18 @@ namespace GitUI.CommandsDialogs
         }
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
-            list = null;
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item == null)
-                return false;
+            ContextMenuStrip menu = item?.Owner as ContextMenuStrip;
+            ListView lv = menu?.SourceControl as ListView;
 
-            ContextMenuStrip menu = item.Owner as ContextMenuStrip;
-            if (menu == null)
-                return false;
-
-            ListView lv = menu.SourceControl as ListView;
             if (lv == null)
+            {
+                list = null;
                 return false;
+            }
 
             list = lv.Parent as FileStatusList;
-            return (list != null);
+            return list != null;
         }
 
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
@@ -2150,9 +2146,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             if (list.SelectedItems.Count() == 1)
-            {
                 UICommands.StartFileHistoryDialog(this, list.SelectedItem.Name, null);
-            }
             else
                 MessageBox.Show(this, _selectOnlyOneFile.Text, _selectOnlyOneFileCaption.Text);
         }
@@ -2415,7 +2409,7 @@ namespace GitUI.CommandsDialogs
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
             updateAuthorInfo();
         }
-        
+
         private void gpgSignCommitChanged(object sender, EventArgs e)
         {
             // Change the icon for commit button
@@ -2797,10 +2791,8 @@ namespace GitUI.CommandsDialogs
                     _interactiveAddBashCloseWaitCts.Dispose();
                     _interactiveAddBashCloseWaitCts = null;
                 }
-                if (components != null)
-                {
-                    components.Dispose();
-                }
+
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

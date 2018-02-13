@@ -35,11 +35,7 @@ namespace GitCommands.Settings
         public void Save()
         {
             SettingsCache.Save();
-
-            if (LowerPriority != null)
-            {
-                LowerPriority.Save();
-            }
+            LowerPriority?.Save();
         }
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)

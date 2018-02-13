@@ -34,8 +34,7 @@ namespace GitCommands.Repository
                 ShortName = DirInfo.Name;
 
 
-            if (DirInfo != null)
-                DirInfo = DirInfo.Parent;
+            DirInfo = DirInfo?.Parent;
 
             DirName = DirInfo == null ? "" : DirInfo.FullName;
         }
@@ -254,22 +253,16 @@ namespace GitCommands.Repository
                     bool result = false;
                     string c = null;
                     string r = null;
-                    if (company != null)
+                    if (company?.Length > skipCount)
                     {
-                        if (company.Length > skipCount)
-                        {
-                            c = company.Substring(0, company.Length - skipCount);
-                            result = true;
-                        }
+                        c = company.Substring(0, company.Length - skipCount);
+                        result = true;
                     }
 
-                    if (repository != null)
+                    if (repository?.Length > skipCount)
                     {
-                        if (repository.Length > skipCount)
-                        {
-                            r = repository.Substring(skipCount, repository.Length - skipCount);
-                            result = true;
-                        }
+                        r = repository.Substring(skipCount, repository.Length - skipCount);
+                        result = true;
                     }
 
                     repoInfo.Caption = MakePath(root, c);

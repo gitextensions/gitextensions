@@ -451,10 +451,8 @@ namespace GitUI.CommandsDialogs
         private void ItemClick(object sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
-            if (menuItem == null)
-                return;
 
-            var plugin = menuItem.Tag as IGitPlugin;
+            var plugin = menuItem?.Tag as IGitPlugin;
             if (plugin == null)
                 return;
 
@@ -1535,10 +1533,7 @@ namespace GitUI.CommandsDialogs
             Repositories.RepositoryHistory.Repositories.Clear();
             Repositories.SaveSettings();
             // Force clear recent repositories list from dashboard.
-            if (_dashboard != null)
-            {
-                _dashboard.ShowRecentRepositories();
-            }
+            _dashboard?.ShowRecentRepositories();
         }
 
         private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
@@ -2723,25 +2718,16 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                if (_commitButton != null)
-                    _commitButton.Dispose();
-                if (_pushButton != null)
-                    _pushButton.Dispose();
-                if (_pullButton != null)
-                    _pullButton.Dispose();
-                if (_submodulesStatusCts != null)
-                    _submodulesStatusCts.Dispose();
-                if (_formBrowseMenus != null)
-                    _formBrowseMenus.Dispose();
-                if (_filterRevisionsHelper != null)
-                    _filterRevisionsHelper.Dispose();
-                if (_filterBranchHelper != null)
-                    _filterBranchHelper.Dispose();
+                _commitButton?.Dispose();
+                _pushButton?.Dispose();
+                _pullButton?.Dispose();
+                _submodulesStatusCts?.Dispose();
+                _formBrowseMenus?.Dispose();
+                _filterRevisionsHelper?.Dispose();
+                _filterBranchHelper?.Dispose();
 
-                if (components != null)
-                    components.Dispose();
-                if (_gitStatusMonitor != null)
-                    _gitStatusMonitor.Dispose();
+                components?.Dispose();
+                _gitStatusMonitor?.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -26,8 +26,7 @@ namespace GitUI
             {
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
-                if (GitUICommandsChanged != null)
-                    GitUICommandsChanged(this, new GitUICommandsChangedEventArgs(oldCommands));
+                GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
 

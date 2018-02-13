@@ -59,22 +59,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Client github = new Client();
                 Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
-                if (gitExtRepo == null)
-                    return;
 
-                var configData = gitExtRepo.GetRef("heads/configdata");
-                if (configData == null)
-                    return;
+                var configData = gitExtRepo?.GetRef("heads/configdata");
 
-                var tree = configData.GetTree();
+                var tree = configData?.GetTree();
                 if (tree == null)
                     return;
 
                 var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                if (releases != null && releases.Blob.Value != null)
-                {
+
+                if (releases?.Blob.Value != null)
                     CheckForNewerVersion(releases.Blob.Value.GetContent());
-                }
             }
             catch (InvalidAsynchronousStateException)
             {

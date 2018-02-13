@@ -227,11 +227,8 @@ namespace GitUI.CommandsDialogs
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if(disposing)
-            {
-                if(_disposable1 != null)
-                    _disposable1.Dispose();
-            }
+            if (disposing)
+                _disposable1?.Dispose();
         }
 
         private class Globalized : Translate

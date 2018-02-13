@@ -167,10 +167,7 @@ namespace GitUI
             }
             finally
             {
-                if (ModalControler != null)
-                {
-                    ModalControler.EndModal(isSuccess);
-                }
+                ModalControler?.EndModal(isSuccess);
             }
         }
 
@@ -222,7 +219,7 @@ namespace GitUI
             if (ModalControler != null)
             {
                 return;
-            }            
+            }
 
             Start();
         }

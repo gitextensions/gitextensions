@@ -45,8 +45,7 @@ namespace GitUI.Blame
 
         private void commitInfo_CommandClick(object sender, CommandEventArgs e)
         {
-            if (CommandClick != null)
-                CommandClick(sender, e);
+            CommandClick?.Invoke(sender, e);
         }
 
         public event EventHandler<CommandEventArgs> CommandClick;
@@ -198,8 +197,7 @@ namespace GitUI.Blame
             if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
-            if (controlToMask != null)
-                controlToMask.Mask();
+            controlToMask?.Mask();
 
             var scrollpos = BlameFile.ScrollPos;
 
@@ -250,8 +248,7 @@ namespace GitUI.Blame
             _blameHash = revision.Guid;
             CommitInfo.SetRevisionWithChildren(revision, children);
 
-            if (controlToMask != null)
-                controlToMask.UnMask();
+            controlToMask?.UnMask();
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
@@ -350,9 +347,7 @@ namespace GitUI.Blame
         {
             if (disposing)
             {
-                if (components != null)
-                    components.Dispose();
-
+                components?.Dispose();
                 blameLoader.Dispose();
             }
             base.Dispose(disposing);

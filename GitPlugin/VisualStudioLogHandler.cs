@@ -15,10 +15,7 @@ namespace GitPlugin
 
         public void OnMessage(Log.Level level, string message, string formattedLine)
         {
-            if (null == _outputWindowPane)
-                return;
-
-            _outputWindowPane.OutputString(formattedLine);
+            _outputWindowPane?.OutputString(formattedLine);
         }
 
         #endregion

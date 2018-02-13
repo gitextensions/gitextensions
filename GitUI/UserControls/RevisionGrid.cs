@@ -2127,8 +2127,7 @@ namespace GitUI
         {
             SelectionTimer.Enabled = false;
             SelectionTimer.Stop();
-            if (SelectionChanged != null)
-                SelectionChanged(this, e);
+            SelectionChanged?.Invoke(this, e);
         }
 
         private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
@@ -3002,18 +3001,14 @@ namespace GitUI
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
 
-            var handler = ShowFirstParentsToggled;
-            if (handler != null)
-                handler(this, e);
+            ShowFirstParentsToggled?.Invoke(this, e);
 
             ForceRefreshRevisions();
         }
 
         public void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            var handler = GitModuleChanged;
-            if (handler != null)
-                handler(this, e);
+            GitModuleChanged?.Invoke(this, e);
         }
 
         private void InitRepository_Click(object sender, EventArgs e)
@@ -3337,11 +3332,8 @@ namespace GitUI
         private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item != null)
-            {
-                if (item.DropDown != null && item.DropDown.Items.Count == 1)
-                    item.DropDown.Items[0].PerformClick();
-            }
+            if (item?.DropDown != null && item.DropDown.Items.Count == 1)
+                item.DropDown.Items[0].PerformClick();
         }
 
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)

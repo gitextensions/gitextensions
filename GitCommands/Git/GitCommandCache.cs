@@ -94,10 +94,8 @@ namespace GitCommands
         public static void CleanCache()
         {
             lock (queue)
-            {
-                if (queue != null)
-                    queue.Clear();
-            }
+                queue?.Clear();
+
             CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }
     }

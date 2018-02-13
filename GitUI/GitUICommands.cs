@@ -1146,10 +1146,7 @@ namespace GitUI
                 }
                 finally
                 {
-                    if (prevForm != null)
-                    {
-                        prevForm.Dispose();
-                    }
+                    prevForm?.Dispose();
                 }
             };
 
@@ -1710,8 +1707,7 @@ namespace GitUI
             try
             {
                 var e = new GitUIEventArgs(ownerForm, this);
-                if (gitUIEventHandler != null)
-                    gitUIEventHandler(sender, e);
+                gitUIEventHandler?.Invoke(sender, e);
 
                 return !e.Cancel;
             }
@@ -2233,8 +2229,7 @@ namespace GitUI
 
         public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
         {
-            if (BrowseRepo != null)
-                BrowseRepo.GoToRef(refName, showNoRevisionMsg);
+            BrowseRepo?.GoToRef(refName, showNoRevisionMsg);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()
@@ -2292,8 +2287,7 @@ namespace GitUI
 
                 var e = new GitRemoteCommandCompletedEventArgs(this, isError, false);
 
-                if (Completed != null)
-                    Completed(form, e);
+                Completed?.Invoke(form, e);
 
                 isError = e.IsError;
 

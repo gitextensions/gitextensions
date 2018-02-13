@@ -176,15 +176,9 @@ namespace GitUI.CommandsDialogs
             // don't forget to clear old associated menu items
             if (_itemsRegisteredWithMenuCommand != null)
             {
-                if (_navigateMenuCommands != null)
-                {
-                    _navigateMenuCommands.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
-                }
+                _navigateMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
 
-                if (_viewMenuCommands != null)
-                {
-                    _viewMenuCommands.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
-                }
+                _viewMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
 
                 _itemsRegisteredWithMenuCommand.Clear();
             }

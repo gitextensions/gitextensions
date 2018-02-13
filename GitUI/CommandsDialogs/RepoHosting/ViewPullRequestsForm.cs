@@ -92,10 +92,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
             var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
-            if (hostedRemote == null)
-                return;
 
-            var hostedRepo = hostedRemote.GetHostedRepository();
+            var hostedRepo = hostedRemote?.GetHostedRepository();
             if (hostedRepo == null)
                 return;
 
@@ -437,9 +435,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 loader.Cancel();
                 loader.Dispose();
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);
