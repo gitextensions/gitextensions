@@ -43,12 +43,7 @@ namespace GitExtensionsVSIX
         /// <param name="package">Owner package, not null.</param>
         private GitExtCommands(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException(nameof(package));
-            }
-
-            _package = package;
+            _package = package ?? throw new ArgumentNullException(nameof(package));
             _application = (DTE2)ServiceProvider.GetService(typeof(DTE));
             _commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
