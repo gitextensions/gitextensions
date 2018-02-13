@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using GitCommands.Utils;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {

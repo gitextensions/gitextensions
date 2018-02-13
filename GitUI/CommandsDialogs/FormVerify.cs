@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager;
-using GitCommands.Git;
 using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs

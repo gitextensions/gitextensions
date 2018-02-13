@@ -1,6 +1,5 @@
 ﻿using System;
 using GitCommands;
-using ResourceManager;
 
 namespace GitUI.RevisionGridClasses
 {

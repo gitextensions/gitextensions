@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.IO.Abstractions;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -13,7 +12,6 @@ using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
 using System.Linq;
-using GitCommands.Utils;
 
 namespace GitCommands
 {

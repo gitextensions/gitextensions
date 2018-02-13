@@ -1,6 +1,4 @@
-﻿using GitUIPluginInterfaces;
-
-namespace GitCommands.Settings
+﻿namespace GitCommands.Settings
 {
 
     public class StringSetting : Setting<string>

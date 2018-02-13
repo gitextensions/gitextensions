@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using ICSharpCode.TextEditor.Util;
 using ResourceManager;
 
 namespace GitUI

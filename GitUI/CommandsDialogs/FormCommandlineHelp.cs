@@ -1,6 +1,4 @@
-﻿using ResourceManager;
-
-namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs
 {
     public partial class FormCommandlineHelp : GitExtensionsForm
     {

@@ -1,15 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
-using FluentAssertions;
 using GitCommands;
-using GitCommands.Git;
 using GitUI;
-using GitUI.Properties;
-using GitUIPluginInterfaces;
-using NSubstitute;
 using NUnit.Framework;
-using static GitUI.GitUIExtensions;
 
 namespace GitUITests.Helpers
 {

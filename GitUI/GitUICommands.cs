@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs;
-using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;

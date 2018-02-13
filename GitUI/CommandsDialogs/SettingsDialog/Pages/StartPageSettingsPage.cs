@@ -1,7 +1,4 @@
-﻿using GitCommands;
-using GitUIPluginInterfaces;
-
-namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class StartPageSettingsPage : SettingsPageWithHeader
     {

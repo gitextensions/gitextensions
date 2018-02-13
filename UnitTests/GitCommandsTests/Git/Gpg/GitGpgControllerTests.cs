@@ -4,9 +4,7 @@ using GitCommands.Gpg;
 using NUnit.Framework;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using FluentAssertions;
 
 
