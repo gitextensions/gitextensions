@@ -313,9 +313,7 @@ namespace GitFlow
             lblHead.Text = head;
             var currentRef = head.StartsWith(RefHeads) ? head.Substring(RefHeads.Length) : head;
 
-            string branchTypes;
-            string branchName;
-            if (TryExtractBranchFromHead(currentRef, out branchTypes, out branchName))
+            if (TryExtractBranchFromHead(currentRef, out var branchTypes, out var branchName))
             {
                 cbManageType.SelectedItem = branchTypes;
                 CurrentBranch = branchName;

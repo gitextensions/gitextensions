@@ -51,12 +51,12 @@ namespace System.Linq
                     throw ex;
                 }
 
-                List<TSource> list;
-                if (!result.TryGetValue(key, out list))
+                if (!result.TryGetValue(key, out var list))
                 {
                     list = new List<TSource>();
                     result[key] = list;
                 }
+
                 list.Add(sourceElement);
             }
 

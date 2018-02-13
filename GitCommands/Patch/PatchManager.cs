@@ -19,10 +19,7 @@ namespace PatchApply
 
         public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
-
-            string header;
-
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
                 return null;
@@ -42,10 +39,7 @@ namespace PatchApply
 
         public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
         {
-
-            string header;
-
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
                 return null;
@@ -58,8 +52,7 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         private static string CorrectHeaderForNewFile(string header)

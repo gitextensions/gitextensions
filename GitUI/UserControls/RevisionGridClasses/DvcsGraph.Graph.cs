@@ -118,9 +118,7 @@ namespace GitUI.RevisionGridClasses
 
             public bool IsRevisionRelative(string aGuid)
             {
-                Node startNode;
-
-                if (Nodes.TryGetValue(aGuid, out startNode))
+                if (Nodes.TryGetValue(aGuid, out var startNode))
                 {
                     return startNode.Ancestors.Any(a => a.IsRelative);
                 }
@@ -130,9 +128,7 @@ namespace GitUI.RevisionGridClasses
 
             public void HighlightBranchRecursive(string aId)
             {
-                Node startNode;
-
-                if (Nodes.TryGetValue(aId, out startNode))
+                if (Nodes.TryGetValue(aId, out var startNode))
                 {
                     foreach (Junction junction in startNode.Ancestors)
                     {
@@ -151,8 +147,7 @@ namespace GitUI.RevisionGridClasses
             public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
             {
                 // If we haven't seen this node yet, create a new junction.
-                Node node;
-                if (!GetNode(aId, out node) && (aParentIds == null || aParentIds.Length == 0))
+                if (!GetNode(aId, out var node) && (aParentIds == null || aParentIds.Length == 0))
                 {
                     var newJunction = new Junction(node, node);
                     junctions.Add(newJunction);
@@ -165,8 +160,8 @@ namespace GitUI.RevisionGridClasses
 
                 foreach (string parentId in aParentIds)
                 {
-                    Node parent;
-                    GetNode(parentId, out parent);
+                    GetNode(parentId, out var parent);
+
                     if (parent.Index < node.Index)
                     {
                         // TODO: We might be able to recover from this with some work, but

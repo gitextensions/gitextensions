@@ -354,8 +354,7 @@ namespace GitCommands
 
                     _revision.Guid = lines[1];
                     {
-                        List<IGitRef> gitRefs;
-                        if (_refs.TryGetValue(_revision.Guid, out gitRefs))
+                        if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
                             _revision.Refs.AddRange(gitRefs);
                     }
 
@@ -366,16 +365,14 @@ namespace GitCommands
                     _revision.Author = lines[4];
                     _revision.AuthorEmail = lines[5];
                     {
-                        DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(lines[6], out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[6], out var dateTime))
                             _revision.AuthorDate = dateTime;
                     }
 
                     _revision.Committer = lines[7];
                     _revision.CommitterEmail = lines[8];
                     {
-                        DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(lines[9], out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[9], out var dateTime))
                             _revision.CommitDate = dateTime;
                     }
 

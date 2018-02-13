@@ -1237,39 +1237,22 @@ namespace GitUI.RevisionGridClasses
 
         public GitRevision GetRevision(string guid)
         {
-            Node node;
-
-            if (_graphData.Nodes.TryGetValue(guid, out node))
-                return node.Data;
-
-            return null;
+            return _graphData.Nodes.TryGetValue(guid, out var node) ? node.Data : null;
         }
 
         public int? TryGetRevisionIndex(string guid)
         {
-            Node node;
-
-            if (guid != null)
-            {
-                if (_graphData.Nodes.TryGetValue(guid, out node))
-                {
-                    return node.Index;
-                }
-            }
-
-            return null;
+            return guid != null && _graphData.Nodes.TryGetValue(guid, out var node) ? (int?)node.Index : null;
         }
 
         public List<string> GetRevisionChildren(string guid)
         {
-            Node node;
-
-            List<string> childrenIds = new List<string>();
+            var childrenIds = new List<string>();
 
             //We do not need a lock here since we load the data from the first commit and walkt through all
             //parents. Children are always loaded, since we start at the newest commit.
             //With lock, loading the commit info slows down terrible.
-            if (_graphData.Nodes.TryGetValue(guid, out node))
+            if (_graphData.Nodes.TryGetValue(guid, out var node))
             {
                 foreach (var descendant in node.Descendants)
                 {

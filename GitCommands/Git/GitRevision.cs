@@ -134,7 +134,6 @@ namespace GitCommands
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         public static bool IsFullSha1Hash(string id)
         {
             return Regex.IsMatch(id, GitRevision.Sha1HashPattern);

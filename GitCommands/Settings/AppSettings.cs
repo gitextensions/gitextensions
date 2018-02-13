@@ -444,8 +444,7 @@ namespace GitCommands
         {
             get
             {
-                string code;
-                if (_languageCodes.TryGetValue(CurrentTranslation, out code))
+                if (_languageCodes.TryGetValue(CurrentTranslation, out var code))
                     return code;
                 return "en";
             }

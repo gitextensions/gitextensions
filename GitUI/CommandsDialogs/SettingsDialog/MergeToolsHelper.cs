@@ -15,8 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static string GetFullPath(string fileName)
         {
-            string fullPath;
-            PathUtil.TryFindFullPath(fileName, out fullPath);
+            PathUtil.TryFindFullPath(fileName, out var fullPath);
 
             return fullPath;
         }

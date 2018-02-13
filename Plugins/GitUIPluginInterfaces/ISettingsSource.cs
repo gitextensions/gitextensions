@@ -40,11 +40,8 @@ namespace GitUIPluginInterfaces
         {
             return GetValue<int?>(name, null, x =>
             {
-                int result;
-                if (int.TryParse(x, out result))
-                {
+                if (int.TryParse(x, out var result))
                     return result;
-                }
 
                 return null;
             });
@@ -59,11 +56,8 @@ namespace GitUIPluginInterfaces
         {
             return GetValue<float?>(name, null, x =>
             {
-                float result;
-                if (float.TryParse(x, out result))
-                {
+                if (float.TryParse(x, out var result))
                     return result;
-                }
 
                 return null;
             });
@@ -83,8 +77,7 @@ namespace GitUIPluginInterfaces
         {
             return GetValue<DateTime?>(name, null, x =>
             {
-                DateTime result;
-                if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
                     return result;
 
                 return null;
@@ -132,8 +125,7 @@ namespace GitUIPluginInterfaces
             {
                 var val = x.ToString();
 
-                T result;
-                if (Enum.TryParse(val, true, out result))
+                if (Enum.TryParse(val, true, out T result))
                     return result;
 
                 return defaultValue;
@@ -154,8 +146,7 @@ namespace GitUIPluginInterfaces
                 if (string.IsNullOrEmpty(val))
                     return null;
 
-                T result;
-                if (Enum.TryParse(val, true, out result))
+                if (Enum.TryParse(val, true, out T result))
                     return result;
 
                 return null;

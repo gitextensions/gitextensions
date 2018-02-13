@@ -628,8 +628,7 @@ namespace GitCommands
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public CmdResult RunCmdResult(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            byte[] output, error;
-            int exitCode = GitCommandHelpers.RunCmdByte(cmd, arguments, WorkingDir, stdInput, out output, out error);
+            int exitCode = GitCommandHelpers.RunCmdByte(cmd, arguments, WorkingDir, stdInput, out var output, out var error);
             if (encoding == null)
                 encoding = SystemEncoding;
             return new CmdResult
@@ -896,8 +895,7 @@ namespace GitCommands
                 string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
-                int stage;
-                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out var stage) && stage >= 1 && stage <= 3)
                 {
                     var itemName = fileStage.Substring(2);
                     if (prevItemName != itemName && prevItemName != null)
@@ -962,8 +960,7 @@ namespace GitCommands
         public int? GetCommitCount(string parentHash, string childHash)
         {
             string result = RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
-            int commitCount;
-            if (int.TryParse(result, out commitCount))
+            if (int.TryParse(result, out var commitCount))
                 return commitCount;
             return null;
         }
@@ -1970,9 +1967,7 @@ namespace GitCommands
 
             var nextFile = GetNextRebasePatch();
 
-            int next;
-            int.TryParse(nextFile, out next);
-
+            int.TryParse(nextFile, out var next);
 
             var files = new string[0];
             if (Directory.Exists(GetRebaseDir()))
@@ -1980,9 +1975,8 @@ namespace GitCommands
 
             foreach (var fullFileName in files)
             {
-                int n;
                 var file = PathUtil.GetFileName(fullFileName);
-                if (!int.TryParse(file, out n))
+                if (!int.TryParse(file, out var n))
                     continue;
 
                 var patchFile =

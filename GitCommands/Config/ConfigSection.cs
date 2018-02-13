@@ -102,9 +102,7 @@ namespace GitCommands.Config
 
         public string GetValue(string key, string defaultValue)
         {
-            IList<string> list;
-
-            if (_configKeys.TryGetValue(key, out list))
+            if (_configKeys.TryGetValue(key, out var list))
             {
                 if (list.Count > 0)
                     return list[list.Count-1];

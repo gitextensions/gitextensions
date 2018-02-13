@@ -404,10 +404,8 @@ namespace GitUI.Script
         private void PaintTextandImage(Graphics g, Rectangle bounds)
         {
             // Figure out where our text and image should go
-            Rectangle text_rectangle;
-            Rectangle image_rectangle;
 
-            CalculateButtonTextAndImageLayout(ref bounds, out text_rectangle, out image_rectangle);
+            CalculateButtonTextAndImageLayout(ref bounds, out var text_rectangle, out var image_rectangle);
 
             //draw the image
             if (Image != null)

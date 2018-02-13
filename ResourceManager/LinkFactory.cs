@@ -79,17 +79,13 @@ namespace ResourceManager
 
         public string ParseLink(string aLinkText)
         {
-            string linkUri;
-            if (_linksMap.TryGetValue(aLinkText, out linkUri))
-            {
+            if (_linksMap.TryGetValue(aLinkText, out var linkUri))
                 return linkUri;
-            }
 
             string uriCandidate = aLinkText;
             while (uriCandidate != null)
             {
-                Uri uri;
-                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
                     return uri.AbsoluteUri;
                 uriCandidate = uriCandidate.SkipStr("#");
             }
