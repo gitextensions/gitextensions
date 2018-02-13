@@ -11,12 +11,12 @@ namespace GitCommands
     public interface ICommitDataManager
     {
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
+        /// Creates a CommitData object from formatted commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <param name="data">Formatted commit data from git.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
-        CommitData CreateFromFormatedData(string data);
+        CommitData CreateFromFormattedData(string data);
 
         /// <summary>
         /// Creates a CommitData object from Git revision.
@@ -31,11 +31,11 @@ namespace GitCommands
         CommitData GetCommitData(string sha1, ref string error);
 
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
+        /// Creates a CommitData object from formatted commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
         /// <param name="commitData"></param>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <param name="data">Formatted commit data from git.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
@@ -128,18 +128,18 @@ namespace GitCommands
                 return null;
             }
 
-            CommitData commitInformation = CreateFromFormatedData(info);
+            CommitData commitInformation = CreateFromFormattedData(info);
 
             return commitInformation;
         }
 
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
+        /// Creates a CommitData object from formatted commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <param name="data">Formatted commit data from git.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
-        public CommitData CreateFromFormatedData(string data)
+        public CommitData CreateFromFormattedData(string data)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
@@ -165,7 +165,7 @@ namespace GitCommands
             string commitEncoding = lines[7];
 
             const int startIndex = 8;
-            string message = ProccessDiffNotes(startIndex, lines);
+            string message = ProcessDiffNotes(startIndex, lines);
 
             //commit message is not reencoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
@@ -177,11 +177,11 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
+        /// Creates a CommitData object from formatted commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
         /// <param name="commitData"></param>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <param name="data">Formatted commit data from git.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
@@ -196,7 +196,7 @@ namespace GitCommands
             string commitEncoding = lines[1];
 
             const int startIndex = 2;
-            string message = ProccessDiffNotes(startIndex, lines);
+            string message = ProcessDiffNotes(startIndex, lines);
 
             //commit message is not reencoded by git when format is given
             Debug.Assert(commitData.Guid == guid);
@@ -231,7 +231,7 @@ namespace GitCommands
             return module;
         }
 
-        private static string ProccessDiffNotes(int startIndex, string[] lines)
+        private static string ProcessDiffNotes(int startIndex, string[] lines)
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")

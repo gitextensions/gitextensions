@@ -11,7 +11,7 @@ using GitUIPluginInterfaces;
 namespace GitCommands
 {
     [Flags]
-    public enum RefsFiltringOptions
+    public enum RefsFilteringOptions
     {
         Branches = 1,               // --branches
         Remotes = 2,                // --remotes
@@ -103,7 +103,7 @@ namespace GitCommands
             }
         }
 
-        public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        public RefsFilteringOptions RefsOptions = RefsFilteringOptions.All | RefsFilteringOptions.Boundary;
         public string RevisionFilter = String.Empty;
         public string PathFilter = String.Empty;
         public string BranchFilter = String.Empty;
@@ -113,10 +113,10 @@ namespace GitCommands
 
         public void Execute()
         {
-            _backgroundLoader.Load(ProccessGitLog, ProccessGitLogExecuted);
+            _backgroundLoader.Load(ProcessGitLog, ProcessGitLogExecuted);
         }
 
-        private void ProccessGitLog(CancellationToken taskState)
+        private void ProcessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
             Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
@@ -160,29 +160,29 @@ namespace GitCommands
                 logParam += " --reflog";
             }
 
-            if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
+            if ((RefsOptions & RefsFilteringOptions.All) == RefsFilteringOptions.All)
                 logParam += " --all";
             else
             {
-                if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
+                if ((RefsOptions & RefsFilteringOptions.Branches) == RefsFilteringOptions.Branches)
                     logParam = " --branches";
-                if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
+                if ((RefsOptions & RefsFilteringOptions.Remotes) == RefsFilteringOptions.Remotes)
                     logParam += " --remotes";
-                if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
+                if ((RefsOptions & RefsFilteringOptions.Tags) == RefsFilteringOptions.Tags)
                     logParam += " --tags";
             }
-            if ((RefsOptions & RefsFiltringOptions.Boundary) == RefsFiltringOptions.Boundary)
+            if ((RefsOptions & RefsFilteringOptions.Boundary) == RefsFilteringOptions.Boundary)
                 logParam += " --boundary";
-            if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
+            if ((RefsOptions & RefsFilteringOptions.ShowGitNotes) == RefsFilteringOptions.ShowGitNotes)
                 logParam += " --not --glob=notes --not";
 
-            if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
+            if ((RefsOptions & RefsFilteringOptions.NoMerges) == RefsFilteringOptions.NoMerges)
                 logParam += " --no-merges";
 
-            if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
+            if ((RefsOptions & RefsFilteringOptions.FirstParent) == RefsFilteringOptions.FirstParent)
                 logParam += " --first-parent";
 
-            if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
+            if ((RefsOptions & RefsFilteringOptions.SimplifyByDecoration) == RefsFilteringOptions.SimplifyByDecoration)
                 logParam += " --simplify-by-decoration";
 
             string branchFilter = BranchFilter;
@@ -241,7 +241,7 @@ namespace GitCommands
 
                 int lastDataBlockIndex = dataBlocks.Length - 1;
 
-                // Return all the blocks until the last one 
+                // Return all the blocks until the last one
                 for (int i = 1; i < lastDataBlockIndex; i++)
                 {
                     yield return dataBlocks[i];
@@ -257,7 +257,7 @@ namespace GitCommands
             }
         }
 
-        private void ProccessGitLogExecuted()
+        private void ProcessGitLogExecuted()
         {
             FinishRevision();
             _previousFileName = null;
@@ -291,7 +291,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>Refs loaded while the latest processing of git log</returns>
         public IEnumerable<IGitRef> LatestRefs()
@@ -393,7 +393,7 @@ namespace GitCommands
                 case ReadStep.FileName:
                     if (!string.IsNullOrEmpty(data))
                     {
-                        // Git adds \n between the format string (ends with \0 in our case) 
+                        // Git adds \n between the format string (ends with \0 in our case)
                         // and the first file name. So, we need to remove it from the file name.
                         data = GitModule.ReEncodeFileNameFromLossless(data);
                         _revision.Name = data.TrimStart(new char[] { '\n' });

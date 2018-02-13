@@ -867,7 +867,7 @@ namespace GitUI.CommandsDialogs
             this.selectionFilterToolStripMenuItem.Name = "selectionFilterToolStripMenuItem";
             this.selectionFilterToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.selectionFilterToolStripMenuItem.Text = "Selection filter";
-            this.selectionFilterToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToogleShowSelectionFilter);
+            this.selectionFilterToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToggleShowSelectionFilter);
             //
             // toolStripProgressBar1
             //

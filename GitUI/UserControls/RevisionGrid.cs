@@ -72,7 +72,7 @@ namespace GitUI
         private readonly ICommitDataManager _commitDataManager;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
-        private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        private RefsFilteringOptions _refsOptions = RefsFilteringOptions.All | RefsFilteringOptions.Boundary;
 
         private bool _initialLoad = true;
         private string _initialSelectedRevision;
@@ -1144,20 +1144,20 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!AppSettings.ShowGitNotes && (_refsOptions & (RefsFiltringOptions.All | RefsFiltringOptions.Boundary)) == (RefsFiltringOptions.All | RefsFiltringOptions.Boundary))
-                    _refsOptions |= RefsFiltringOptions.ShowGitNotes;
+                if (!AppSettings.ShowGitNotes && (_refsOptions & (RefsFilteringOptions.All | RefsFilteringOptions.Boundary)) == (RefsFilteringOptions.All | RefsFilteringOptions.Boundary))
+                    _refsOptions |= RefsFilteringOptions.ShowGitNotes;
 
                 if (AppSettings.ShowGitNotes)
-                    _refsOptions &= ~RefsFiltringOptions.ShowGitNotes;
+                    _refsOptions &= ~RefsFilteringOptions.ShowGitNotes;
 
                 if (!AppSettings.ShowMergeCommits)
-                    _refsOptions |= RefsFiltringOptions.NoMerges;
+                    _refsOptions |= RefsFilteringOptions.NoMerges;
 
                 if (AppSettings.ShowFirstParent)
-                    _refsOptions |= RefsFiltringOptions.FirstParent;
+                    _refsOptions |= RefsFilteringOptions.FirstParent;
 
                 if (AppSettings.ShowSimplifyByDecoration)
-                    _refsOptions |= RefsFiltringOptions.SimplifyByDecoration;
+                    _refsOptions |= RefsFilteringOptions.SimplifyByDecoration;
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
@@ -2259,13 +2259,13 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!AppSettings.BranchFilterEnabled)
-                _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+                _refsOptions = RefsFilteringOptions.All | RefsFilteringOptions.Boundary;
             else if (AppSettings.ShowCurrentBranchOnly)
                 _refsOptions = 0;
             else
                 _refsOptions = BranchFilter.Length > 0
                                ? 0
-                               : RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+                               : RefsFilteringOptions.All | RefsFilteringOptions.Boundary;
 
             _revisionGridMenuCommands.TriggerMenuChanged(); // apply checkboxes changes also to FormBrowse main menu
         }

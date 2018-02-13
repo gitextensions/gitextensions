@@ -2320,7 +2320,7 @@ namespace GitUI.CommandsDialogs
 
         private bool DidFormattedLineChange(int lineNumber)
         {
-            //line not formated yet
+            //line not formatted yet
             if (formattedLines.Count <= lineNumber)
                 return true;
 
@@ -2335,7 +2335,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetFormattedLine(int lineNumber)
         {
-            //line not formated yet
+            //line not formatted yet
             if (formattedLines.Count <= lineNumber)
             {
                 Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
@@ -2393,7 +2393,7 @@ namespace GitUI.CommandsDialogs
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void signOffToolStripMenuItem_Click(object snder, EventArgs e)
+        private void signOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             signOffToolStripMenuItem.Checked = !signOffToolStripMenuItem.Checked;
         }
@@ -2488,15 +2488,15 @@ namespace GitUI.CommandsDialogs
             Unstaged.SetSelectionFilter(selectionFilter.Text);
         }
 
-        private void ToogleShowSelectionFilter(object sender, EventArgs e)
+        private void ToggleShowSelectionFilter(object sender, EventArgs e)
         {
             toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
         }
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Name.EnsureTrailingPathSeparator()));
-            submodulCommands.StartCommitDialog(this, false);
+            GitUICommands submoduleCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Name.EnsureTrailingPathSeparator()));
+            submoduleCommands.StartCommitDialog(this, false);
             Initialize();
         }
 

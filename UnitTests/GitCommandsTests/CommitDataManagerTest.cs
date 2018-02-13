@@ -28,7 +28,7 @@ namespace GitCommandsTests
 
 
         [Test]
-        public void CreateFromFormatedData()
+        public void CreateFromFormattedData()
         {
             var body = "\tI made a really neato change.\n\n" +
                        "Notes (p4notes):\n" +
@@ -44,7 +44,7 @@ namespace GitCommandsTests
                           "\n" +
                           body;
 
-            var data = _commitDataManager.CreateFromFormatedData(rawData);
+            var data = _commitDataManager.CreateFromFormattedData(rawData);
 
             data.Should().NotBeNull();
             data.Author.Should().Be("John Doe (Acme Inc) <John.Doe@test.com>");

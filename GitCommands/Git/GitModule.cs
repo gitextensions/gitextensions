@@ -98,10 +98,10 @@ namespace GitCommands
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
 
-        public GitModule(string workingdir)
+        public GitModule(string workingDir)
         {
             _superprojectInit = false;
-            _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
+            _workingDir = (workingDir ?? "").EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
@@ -495,7 +495,7 @@ namespace GitCommands
             return startDir;
         }
 
-        private static Process StartProccess(string fileName, string arguments, string workingDir, bool showConsole)
+        private static Process StartProcess(string fileName, string arguments, string workingDir, bool showConsole)
         {
             GitCommandHelpers.SetEnvironmentVariable();
 
@@ -541,7 +541,7 @@ namespace GitCommands
         {
             try
             {
-                return StartProccess(cmd, arguments, _workingDir, showConsole: true);
+                return StartProcess(cmd, arguments, _workingDir, showConsole: true);
             }
             catch (Exception ex)
             {
@@ -558,7 +558,7 @@ namespace GitCommands
         {
             try
             {
-                using (var process = StartProccess(cmd, arguments, _workingDir, showConsole: true))
+                using (var process = StartProcess(cmd, arguments, _workingDir, showConsole: true))
                     process.WaitForExit();
             }
             catch (Exception ex)
@@ -574,7 +574,7 @@ namespace GitCommands
         {
             try
             {
-                return StartProccess(fileName, arguments, workingDir, showConsole: false);
+                return StartProcess(fileName, arguments, workingDir, showConsole: false);
             }
             catch (Exception ex)
             {
@@ -1090,7 +1090,7 @@ namespace GitCommands
             return parents.Length > 1;
         }
 
-        private static string ProccessDiffNotes(int startIndex, string[] lines)
+        private static string ProcessDiffNotes(int startIndex, string[] lines)
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
@@ -1145,7 +1145,7 @@ namespace GitCommands
             }
             else
             {
-                string message = ProccessDiffNotes(10, lines);
+                string message = ProcessDiffNotes(10, lines);
 
                 //commit message is not reencoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
@@ -1512,7 +1512,7 @@ namespace GitCommands
             {
                 revision = "";
             }
-            else 
+            else
             {
                 revision = revision.QuoteNE();
             }
@@ -2070,7 +2070,7 @@ namespace GitCommands
             {
                 author = author.Trim().Trim('"');
                 command += " --author=\"" + author + "\"";
-            }                
+            }
 
             if (gpgSign)
             {

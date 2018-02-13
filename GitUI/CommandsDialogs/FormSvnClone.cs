@@ -51,15 +51,15 @@ namespace GitUI.CommandsDialogs
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
-                bool resetauthorsfile = false;
-                if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
+                var authorsFile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
+                bool resetAuthorsFile = false;
+                if (!String.IsNullOrEmpty(authorsFile) && !File.Exists(authorsFile) && !(resetAuthorsFile = AskContinueWithoutAuthorsFile(authorsFile)))
                 {
                     return;
                 }
-                if (resetauthorsfile)
+                if (resetAuthorsFile)
                 {
-                    authorsfile = null;
+                    authorsFile = null;
                 }
                 int from;
                 if (!int.TryParse(tbFrom.Text, out from))
@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs
 
                 var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand,
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_SvnFrom.Text, dirTo,
-                    tbUsername.Text, authorsfile, from,
+                    tbUsername.Text, authorsFile, from,
                     cbTrunk.Checked ? _NO_TRANSLATE_tbTrunk.Text : null,
                     cbTags.Checked ? _NO_TRANSLATE_tbTags.Text : null,
                     cbBranches.Checked ? _NO_TRANSLATE_tbBranches.Text : null));
@@ -85,10 +85,10 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool AskContinutWithoutAuthorsFile(string authorsfile)
+        private bool AskContinueWithoutAuthorsFile(string authorsFile)
         {
             return MessageBox.Show(
-                this, string.Format(_questionContinueWithoutAuthors.Text, authorsfile), this._questionContinueWithoutAuthorsCaption.Text,
+                this, string.Format(_questionContinueWithoutAuthors.Text, authorsFile), this._questionContinueWithoutAuthorsCaption.Text,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes;
         }
