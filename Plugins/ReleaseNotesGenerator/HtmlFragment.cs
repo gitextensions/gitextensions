@@ -64,7 +64,7 @@ namespace ReleaseNotesGenerator
                 {
                     // Version number of the clipboard. Starting version is 0.9. 
                     case "version":
-                        _version = val;
+                        Version = val;
                         break;
 
                     // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
@@ -78,7 +78,7 @@ namespace ReleaseNotesGenerator
                         if (startHmtl == 0) throw new FormatException("StartHTML must be declared before endHTML");
                         int endHtml = int.Parse(val);
 
-                        _fullText = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
+                        Context = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
                         break;
 
                     //  Byte count from the beginning of the clipboard to the start of the fragment.
@@ -91,17 +91,17 @@ namespace ReleaseNotesGenerator
                     case "endfragment":
                         if (startFragment == 0) throw new FormatException("StartFragment must be declared before EndFragment");
                         int endFragment = int.Parse(val);
-                        _fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
+                        Fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
                         break;
 
                     // Optional Source URL, used for resolving relative links.
                     case "sourceurl":
-                        _source = new System.Uri(val);
+                        SourceUrl = new System.Uri(val);
                         break;
                 }
             } // end for
 
-            if (_fullText == null && _fragment == null)
+            if (Context == null && Fragment == null)
             {
                 throw new FormatException("No data specified");
             }
@@ -109,46 +109,30 @@ namespace ReleaseNotesGenerator
 
 
         // Data. See properties for descriptions.
-        readonly string _version;
-        readonly string _fullText;
-        readonly string _fragment;
-        readonly System.Uri _source;
 
         /// <summary>
         /// Get the Version of the html. Usually something like "1.0".
         /// </summary>
-        public string Version
-        {
-            get { return _version; }
-        }
+        public string Version { get; }
 
 
         /// <summary>
         /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is enclosed in.
         /// May be null if context is not specified.
         /// </summary>
-        public string Context
-        {
-            get { return _fullText; }
-        }
+        public string Context { get; }
 
 
         /// <summary>
         /// Get just the fragment of HTML text.
         /// </summary>
-        public string Fragment
-        {
-            get { return _fragment; }
-        }
+        public string Fragment { get; }
 
 
         /// <summary>
         /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
         /// </summary>
-        public System.Uri SourceUrl
-        {
-            get { return _source; }
-        }
+        public System.Uri SourceUrl { get; }
 
         #endregion // Read and decode from clipboard
 

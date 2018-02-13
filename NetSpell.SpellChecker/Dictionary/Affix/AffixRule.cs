@@ -9,36 +9,19 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 	/// </summary>
 	public class AffixRule
 	{
-		private bool _AllowCombine;
-		private AffixEntryCollection _AffixEntries = new AffixEntryCollection();
-		private string _Name = "";
-
 	    /// <summary>
 		///     Allow combining prefix and suffix
 		/// </summary>
-		public bool AllowCombine
-		{
-			get {return _AllowCombine;}
-			set {_AllowCombine = value;}
-		}
+		public bool AllowCombine { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		///     Collection of text entries that make up this rule
 		/// </summary>
-		public AffixEntryCollection AffixEntries
-		{
-			get {return _AffixEntries;}
-			set {_AffixEntries = value;}
-		}
+		public AffixEntryCollection AffixEntries { get; set; } = new AffixEntryCollection();
 
-		/// <summary>
+	    /// <summary>
 		///     Name of the Affix rule
 		/// </summary>
-		public string Name
-		{
-			get {return _Name;}
-			set {_Name = value;}
-		}
-
+		public string Name { get; set; } = "";
 	}
 }

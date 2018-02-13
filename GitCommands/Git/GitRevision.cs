@@ -22,7 +22,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
 
         public string[] ParentGuids;
-        private readonly List<IGitRef> _refs = new List<IGitRef>();
         public readonly GitModule Module;
         private BuildInfo _buildStatus;
 
@@ -34,7 +33,7 @@ namespace GitCommands
             Module = aModule;
         }
 
-        public List<IGitRef> Refs { get { return _refs; } }
+        public List<IGitRef> Refs { get; } = new List<IGitRef>();
 
         public string TreeGuid { get; set; }
 

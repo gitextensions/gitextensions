@@ -29,7 +29,7 @@ namespace NetSpell.SpellChecker
         private Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
         private Regex _wordEx = new Regex(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
         private MatchCollection _words;
-        private SuggestionEnum _suggestionMode = SuggestionEnum.PhoneticNearMiss;
+
         #endregion
 
         #region private variables
@@ -254,11 +254,11 @@ namespace NetSpell.SpellChecker
             {
                 return false;
             }
-            if(_ignoreAllCapsWords && !_upperRegex.IsMatch(characters))
+            if(IgnoreAllCapsWords && !_upperRegex.IsMatch(characters))
             {
                 return false;
             }
-            if(_ignoreWordsWithDigits && _digitRegex.IsMatch(characters))
+            if(IgnoreWordsWithDigits && _digitRegex.IsMatch(characters))
             {
                 return false;
             }
@@ -266,7 +266,7 @@ namespace NetSpell.SpellChecker
             {
                 return false;
             }
-            if(_ignoreHtml)
+            if(IgnoreHtml)
             {
                 int startIndex = GetWordIndex();
                 
@@ -311,7 +311,7 @@ namespace NetSpell.SpellChecker
         {
             WordIndex = 0; // reset word index
             _replacementWord = "";
-            _suggestions.Clear();
+            Suggestions.Clear();
         }
 
         #endregion
@@ -674,7 +674,7 @@ namespace NetSpell.SpellChecker
             }
 
             // Add current word to ignore list
-            _ignoreList.Add(CurrentWord);
+            IgnoreList.Add(CurrentWord);
             IgnoreWord();
         }
 
@@ -714,9 +714,9 @@ namespace NetSpell.SpellChecker
             }
 
             // if not in list and replacement word has length
-            if(!_replaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0) 
+            if(!ReplaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0) 
             {
-                _replaceList.Add(CurrentWord, _replacementWord);
+                ReplaceList.Add(CurrentWord, _replacementWord);
             }
             
             ReplaceWord();
@@ -871,12 +871,12 @@ namespace NetSpell.SpellChecker
                 {
                     if(!TestWord()) 
                     {
-                        if(_replaceList.ContainsKey(currentWord)) 
+                        if(ReplaceList.ContainsKey(currentWord)) 
                         {
-                            ReplacementWord = _replaceList[currentWord];
+                            ReplacementWord = ReplaceList[currentWord];
                             ReplaceWord();
                         }
-                        else if(!_ignoreList.Contains(currentWord))
+                        else if(!IgnoreList.Contains(currentWord))
                         {
                             misspelledWord = true;
                             OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
@@ -1000,8 +1000,8 @@ namespace NetSpell.SpellChecker
 
             List<Word> tempSuggestion = new List<Word>();
 
-            if ((_suggestionMode == SuggestionEnum.PhoneticNearMiss 
-                || _suggestionMode == SuggestionEnum.Phonetic)
+            if ((SuggestionMode == SuggestionEnum.PhoneticNearMiss 
+                || SuggestionMode == SuggestionEnum.Phonetic)
                 && _dictionary.PhoneticRules.Count > 0)
             {
                 // generate phonetic code for possible root word
@@ -1032,8 +1032,8 @@ namespace NetSpell.SpellChecker
                 TraceWriter.TraceVerbose("Suggestiongs Found with Phonetic Stratagy: {0}" , tempSuggestion.Count);
             }
 
-            if (_suggestionMode == SuggestionEnum.PhoneticNearMiss 
-                || _suggestionMode == SuggestionEnum.NearMiss)
+            if (SuggestionMode == SuggestionEnum.PhoneticNearMiss 
+                || SuggestionMode == SuggestionEnum.NearMiss)
             {
                 // suggestions for a typical fault of spelling, that
                 // differs with more, than 1 letter from the right form.
@@ -1060,19 +1060,19 @@ namespace NetSpell.SpellChecker
             TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}" , tempSuggestion.Count);
 
             tempSuggestion.Sort();  // sorts by edit score
-            _suggestions.Clear(); 
+            Suggestions.Clear(); 
 
             for (int i = 0; i < tempSuggestion.Count; i++)
             {
                 string word = tempSuggestion[i].Text;
                 // looking for duplicates
-                if (!_suggestions.Contains(word))
+                if (!Suggestions.Contains(word))
                 {
                     // populating the suggestion list
-                    _suggestions.Add(word);
+                    Suggestions.Add(word);
                 }
 
-                if (_suggestions.Count >= _maxSuggestions && _maxSuggestions > 0)
+                if (Suggestions.Count >= MaxSuggestions && MaxSuggestions > 0)
                 {
                     break;
                 }
@@ -1148,21 +1148,11 @@ namespace NetSpell.SpellChecker
 
         #region public properties
 
-        private bool _alertComplete = true;
         private WordDictionary _dictionary;
-        private HashSet<string> _autoCompleteWords = new HashSet<string>(); 
-        private bool _ignoreAllCapsWords = true;
-        private bool _ignoreHtml = true;
-        private List<string> _ignoreList = new List<string>();
-        private bool _ignoreWordsWithDigits;
-        private int _maxSuggestions = 25;
-        private Dictionary<string, string> _replaceList = new Dictionary<string, string>();
+        private HashSet<string> _autoCompleteWords = new HashSet<string>();
         private string _replacementWord = "";
-        private bool _showDialog = true;
-        private List<string> _suggestions = new List<string>();
         private StringBuilder _text = new StringBuilder();
         private int _wordIndex;
-        private string _currentWord = string.Empty;
 
 
         /// <summary>
@@ -1199,21 +1189,14 @@ namespace NetSpell.SpellChecker
         [DefaultValue(true)]
         [Category("Options")]
         [Description("Display the 'Spell Check Complete' alert.")]
-        public bool AlertComplete
-        {
-            get { return _alertComplete; }
-            set { _alertComplete = value; }
-        }
+        public bool AlertComplete { get; set; } = true;
 
         /// <summary>
         ///     The current word being spell checked from the text property
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string CurrentWord
-        {
-            get { return _currentWord; }
-        }
+        public string CurrentWord { get; private set; } = string.Empty;
 
         /// <summary>
         ///     The WordDictionary object to use when spell checking
@@ -1244,11 +1227,7 @@ namespace NetSpell.SpellChecker
         [DefaultValue(true)]
         [Category("Options")]
         [Description("Ignore words with all capital letters when spell checking")]
-        public bool IgnoreAllCapsWords
-        {
-            get {return _ignoreAllCapsWords;}
-            set {_ignoreAllCapsWords = value;}
-        }
+        public bool IgnoreAllCapsWords { get; set; } = true;
 
         /// <summary>
         ///     Ignore html tags when spell checking
@@ -1256,11 +1235,7 @@ namespace NetSpell.SpellChecker
         [DefaultValue(true)]
         [Category("Options")]
         [Description("Ignore html tags when spell checking")]
-        public bool IgnoreHtml
-        {
-            get {return _ignoreHtml;}
-            set {_ignoreHtml = value;}
-        }
+        public bool IgnoreHtml { get; set; } = true;
 
         /// <summary>
         ///     List of words to automatically ignore
@@ -1270,10 +1245,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<string> IgnoreList
-        {
-            get {return _ignoreList;}
-        }
+        public List<string> IgnoreList { get; } = new List<string>();
 
         /// <summary>
         ///     Ignore words with digits when spell checking
@@ -1281,11 +1253,7 @@ namespace NetSpell.SpellChecker
         [DefaultValue(false)]
         [Category("Options")]
         [Description("Ignore words with digits when spell checking")]
-        public bool IgnoreWordsWithDigits
-        {
-            get {return _ignoreWordsWithDigits;}
-            set {_ignoreWordsWithDigits = value;}
-        }
+        public bool IgnoreWordsWithDigits { get; set; }
 
         /// <summary>
         ///     The maximum number of suggestions to generate
@@ -1293,11 +1261,7 @@ namespace NetSpell.SpellChecker
         [DefaultValue(25)]
         [Category("Options")]
         [Description("The maximum number of suggestions to generate")]
-        public int MaxSuggestions
-        {
-            get {return _maxSuggestions;}
-            set {_maxSuggestions = value;}
-        }
+        public int MaxSuggestions { get; set; } = 25;
 
         /// <summary>
         ///     List of words and replacement values to automatically replace
@@ -1307,10 +1271,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Dictionary<string, string> ReplaceList
-        {
-            get {return _replaceList;}
-        }
+        public Dictionary<string, string> ReplaceList { get; } = new Dictionary<string, string>();
 
         /// <summary>
         ///     The word to used when replacing the misspelled word
@@ -1332,14 +1293,7 @@ namespace NetSpell.SpellChecker
         [DefaultValue(true)]
         [Category("Options")]
         [Description("Determines if the spell checker should use its internal dialogs")]
-        public bool ShowDialog
-        {
-            get {return _showDialog;}
-            set 
-            {
-                _showDialog = value;
-            }
-        }
+        public bool ShowDialog { get; set; } = true;
 
 
         /// <summary>
@@ -1348,11 +1302,7 @@ namespace NetSpell.SpellChecker
         [DefaultValue(SuggestionEnum.PhoneticNearMiss)]
         [Category("Options")]
         [Description("The suggestion strategy to use when generating suggestions")]
-        public SuggestionEnum SuggestionMode
-        {
-            get {return _suggestionMode;}
-            set {_suggestionMode = value;}
-        }
+        public SuggestionEnum SuggestionMode { get; set; } = SuggestionEnum.PhoneticNearMiss;
 
         /// <summary>
         ///     An array of word suggestions for the correct spelling of the misspelled word
@@ -1362,10 +1312,7 @@ namespace NetSpell.SpellChecker
         /// <seealso cref="MaxSuggestions"/>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<string> Suggestions
-        {
-            get {return _suggestions;}
-        }
+        public List<string> Suggestions { get; } = new List<string>();
 
         /// <summary>
         ///     The text to spell check
@@ -1435,9 +1382,9 @@ namespace NetSpell.SpellChecker
                 _wordIndex = value;
 
                 if (_words == null || _words.Count == 0)
-                    _currentWord = string.Empty;
+                    CurrentWord = string.Empty;
                 else
-                    _currentWord = _words[WordIndex].Value;
+                    CurrentWord = _words[WordIndex].Value;
             }
         }
 
