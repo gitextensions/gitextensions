@@ -6,19 +6,8 @@ namespace ResourceManager
 {
     public abstract class GitPluginBase : IGitPlugin, ITranslate
     {
-        private string _description;
-
-        public string Description
-        {
-            get { return _description; }
-            protected set { _description = value; }
-        }
-
-        public string Name
-        {
-            get;
-            protected set;
-        }
+        public string Description { get; protected set; }
+        public string Name { get; protected set; }
 
         protected void SetNameAndDescription(string aName)
         {

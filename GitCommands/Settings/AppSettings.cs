@@ -37,8 +37,8 @@ namespace GitCommands
         public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static RepoDistSettings _SettingsContainer;
-        public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
+        public static RepoDistSettings SettingsContainer { get; private set; }
+
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
         public static readonly int BranchDropDownMinWidth = 300;
@@ -60,7 +60,7 @@ namespace GitCommands
             }
             );
 
-            _SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
 
@@ -107,12 +107,12 @@ namespace GitCommands
                     var oldSC = SettingsContainer;
                     try
                     {
-                        _SettingsContainer = aSettingsContainer;
+                        SettingsContainer = aSettingsContainer;
                         action();
                     }
                     finally
                     {
-                        _SettingsContainer = oldSC;
+                        SettingsContainer = oldSC;
                         //refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    [DebuggerDisplay("{_name}.{_property}={_value}")]
+    [DebuggerDisplay("{Name}.{Property}={Value}")]
     public class TranslationItem : IComparable<TranslationItem>, ICloneable
     {
         public TranslationItem()
@@ -14,89 +14,42 @@ namespace ResourceManager.Xliff
 
         public TranslationItem(string name, string property, string source)
         {
-            _name = name;
-            _property = property;
-            _source = source;
+            Name = name;
+            Property = property;
+            Source = source;
         }
 
         public TranslationItem(string name, string property, string source, string value)
         {
-            _name = name;
-            _property = property;
-            _source = source;
-            _value = value;
+            Name = name;
+            Property = property;
+            Source = source;
+            Value = value;
         }
 
-        private string _name;
         [XmlIgnore]
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
-        }
+        public string Name { get; set; }
 
-        private string _property;
         [XmlIgnore]
-        public string Property
-        {
-            get
-            {
-                return _property;
-            }
-            set
-            {
-                _property = value;
-            }
-        }
+        public string Property { get; set; }
 
         [XmlAttribute("id")]
         public string Id
         {
-            get
-            {
-                return _name + "." + _property;
-            }
+            get => Name + "." + Property;
             set
             {
                 var vals = value.Split(new[] {'.'}, 2);
-                _name = vals[0];
-                _property = vals.Length > 1 ? vals[1] : "";
+                Name = vals[0];
+                Property = vals.Length > 1 ? vals[1] : "";
             }
         }
 
-        private string _source;
         [XmlElement("source")]
-        public string Source
-        {
-            get
-            {
-                return _source;
-            }
-            set
-            {
-                _source = value;
-            }
-        }
+        public string Source { get; set; }
 
-        private string _value;
         [XmlElement("target")]
-        public string Value
-        {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-            }
-        }
+        public string Value { get; set; }
 
         public int CompareTo(TranslationItem other)
         {
@@ -112,7 +65,7 @@ namespace ResourceManager.Xliff
 
         public TranslationItem Clone()
         {
-            return new TranslationItem(_name, _property, _source, _value);
+            return new TranslationItem(Name, Property, Source, Value);
         }
     }
 }

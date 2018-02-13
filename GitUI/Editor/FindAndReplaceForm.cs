@@ -354,7 +354,6 @@ namespace GitUI
 
         public bool MatchWholeWordOnly;
         private IDocument _document;
-        private string _lookFor;
         private string _lookFor2; // uppercase in case-insensitive mode
 
         // I would have used the TextAnchor class to represent the beginning and 
@@ -408,11 +407,7 @@ namespace GitUI
             }
         }
 
-        public string LookFor
-        {
-            get { return _lookFor; }
-            set { _lookFor = value; }
-        }
+        public string LookFor { get; set; }
 
         #region IDisposable Members
 
@@ -464,13 +459,13 @@ namespace GitUI
         /// <returns>Region of document that matches the search string</returns>
         public TextRange FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
         {
-            Debug.Assert(!string.IsNullOrEmpty(_lookFor));
+            Debug.Assert(!string.IsNullOrEmpty(LookFor));
             loopedAround = false;
 
             int startAt = BeginOffset, endAt = EndOffset;
             int curOffs = Globals.InRange(beginAtOffset, startAt, endAt);
 
-            _lookFor2 = MatchCase ? _lookFor : _lookFor.ToUpperInvariant();
+            _lookFor2 = MatchCase ? LookFor : LookFor.ToUpperInvariant();
 
             TextRange result;
             if (searchBackward)
@@ -508,7 +503,7 @@ namespace GitUI
         private TextRange FindNextIn(int offset1, int offset2, bool searchBackward)
         {
             Debug.Assert(offset2 >= offset1);
-            offset2 -= _lookFor.Length;
+            offset2 -= LookFor.Length;
 
 
             // Search
@@ -521,7 +516,7 @@ namespace GitUI
                         &&
                         ((IsWholeWordMatch(offset)) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
-                        return new TextRange(_document, offset, _lookFor.Length);
+                        return new TextRange(_document, offset, LookFor.Length);
                 }
             }
             else
@@ -532,7 +527,7 @@ namespace GitUI
                         &&
                         ((IsWholeWordMatch(offset)) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
-                        return new TextRange(_document, offset, _lookFor.Length);
+                        return new TextRange(_document, offset, LookFor.Length);
                 }
             }
             return null;
@@ -540,7 +535,7 @@ namespace GitUI
 
         private bool IsWholeWordMatch(int offset)
         {
-            if (IsWordBoundary(offset) && IsWordBoundary(offset + _lookFor.Length))
+            if (IsWordBoundary(offset) && IsWordBoundary(offset + LookFor.Length))
                 return IsPartWordMatch(offset);
             return false;
         }
@@ -559,7 +554,7 @@ namespace GitUI
 
         private bool IsPartWordMatch(int offset)
         {
-            string substr = _document.GetText(offset, _lookFor.Length);
+            string substr = _document.GetText(offset, LookFor.Length);
             if (!MatchCase)
                 substr = substr.ToUpperInvariant();
             return substr == _lookFor2;

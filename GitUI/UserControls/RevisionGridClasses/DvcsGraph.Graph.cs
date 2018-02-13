@@ -439,20 +439,15 @@ namespace GitUI.RevisionGridClasses
 
             public struct LaneInfo
             {
-                private int connectLane;
                 private List<Junction> junctions;
 
                 public LaneInfo(int aConnectLane, Junction aJunction)
                 {
-                    connectLane = aConnectLane;
+                    ConnectLane = aConnectLane;
                     junctions = new List<Junction>(1) { aJunction };
                 }
 
-                public int ConnectLane
-                {
-                    get { return connectLane; }
-                    set { connectLane = value; }
-                }
+                public int ConnectLane { get; set; }
 
                 public IEnumerable<Junction> Junctions
                 {
@@ -461,7 +456,7 @@ namespace GitUI.RevisionGridClasses
 
                 public LaneInfo Clone()
                 {
-                    var other = new LaneInfo { connectLane = connectLane, junctions = new List<Junction>(junctions) };
+                    var other = new LaneInfo { ConnectLane = ConnectLane, junctions = new List<Junction>(junctions) };
                     return other;
                 }
 

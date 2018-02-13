@@ -6,22 +6,17 @@ namespace NetSpell.SpellChecker
 	/// </summary>
 	public class ReplaceWordEventArgs : SpellingEventArgs
 	{
-		private string _ReplacementWord;
-
-		/// <summary>
+	    /// <summary>
 		///     Class sent to the event handler when the ReplacedWord Event is fired
 		/// </summary>
 		public ReplaceWordEventArgs(string replacementWord, string word, int wordIndex, int textIndex) : base (word, wordIndex, textIndex)
 		{
-			_ReplacementWord = replacementWord;
+			ReplacementWord = replacementWord;
 		}
 
 		/// <summary>
 		///     The word to use in replacing the misspelled word
 		/// </summary>
-		public string ReplacementWord
-		{
-			get {return _ReplacementWord;}
-		}
+		public string ReplacementWord { get; }
 	}
 }
