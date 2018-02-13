@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.TeamFoundation.Build.WebApi;
-using Microsoft.VisualStudio.Services.Client;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
 using System.Text.RegularExpressions;

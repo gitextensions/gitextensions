@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
-using ICSharpCode.TextEditor.Util;
 using PatchApply;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;

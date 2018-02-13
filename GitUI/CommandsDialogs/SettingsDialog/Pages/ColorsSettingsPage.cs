@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

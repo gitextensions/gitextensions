@@ -1,5 +1,4 @@
-﻿using System.IO;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitStatistics

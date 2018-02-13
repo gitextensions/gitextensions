@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using GitCommands;
-using GitCommands.Utils;
 using ICSharpCode.TextEditor;
 
 namespace GitUI.Editor.Diff

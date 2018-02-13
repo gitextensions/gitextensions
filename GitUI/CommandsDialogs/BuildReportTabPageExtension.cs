@@ -7,7 +7,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs

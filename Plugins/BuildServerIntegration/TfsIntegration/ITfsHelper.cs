@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GitUIPluginInterfaces.BuildServerIntegration;
 using System.Text.RegularExpressions;
 
 namespace TfsInterop.Interface

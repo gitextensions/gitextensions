@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration

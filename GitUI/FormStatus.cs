@@ -7,8 +7,6 @@ using GitCommands;
 using GitUI.UserControls;
 
 using JetBrains.Annotations;
-
-using ResourceManager;
 using System.Windows.Threading;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
