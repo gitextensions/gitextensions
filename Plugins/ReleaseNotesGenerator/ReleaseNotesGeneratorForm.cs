@@ -137,7 +137,7 @@ namespace ReleaseNotesGenerator
             stringBuilder.Append("<table>\r\n");
             foreach (var logLine in logLines)
             {
-                string message = string.Join("<br/>", logLine.MessageLines.Select(a => WebUtility.HtmlEncode(a)));
+                string message = string.Join("<br/>", logLine.MessageLines.Select(WebUtility.HtmlEncode));
                 stringBuilder.AppendFormat("<tr>\r\n  <td>{0}</td>\r\n  <td>{1}</td>\r\n</tr>\r\n", logLine.Commit, message);
             }
             stringBuilder.Append("</table>");

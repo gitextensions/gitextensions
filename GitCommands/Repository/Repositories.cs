@@ -19,7 +19,7 @@ namespace GitCommands.Repository
         {
             if (_repositoryHistory != null)
                 return _repositoryHistory;
-            _repositoryHistory = Task.Factory.StartNew(() => LoadRepositoryHistory());
+            _repositoryHistory = Task.Factory.StartNew(LoadRepositoryHistory);
             return _repositoryHistory;
         }
 

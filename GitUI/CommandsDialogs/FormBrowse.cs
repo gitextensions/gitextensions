@@ -1636,7 +1636,7 @@ namespace GitUI.CommandsDialogs
             ToolStripMenuItem toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text);
             toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
-            toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);
+            toolStripItem.Click += OpenToolStripMenuItemClick;
 
             toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);

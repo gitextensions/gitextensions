@@ -135,7 +135,7 @@ namespace AppVeyorIntegration
             }
             var builds = Projects.Where(p => useAllProjets || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
             _allBuilds =
-                FilterBuilds(builds.SelectMany(project => QueryBuildsResults(project)));
+                FilterBuilds(builds.SelectMany(QueryBuildsResults));
         }
 
         private void FillProjectsFromSettings(string accountName, string[] projectNames)

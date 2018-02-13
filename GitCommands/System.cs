@@ -139,7 +139,7 @@ namespace System
         /// <returns>true if any starts element matches the beginning of this string; otherwise, false.</returns>
         public static bool StartsWithAny([CanBeNull] this string value, string[] starts)
         {
-            return value != null && starts.Any(s => value.StartsWith(s));
+            return value != null && starts.Any(value.StartsWith);
         }
 
         public static string RemoveLines(this string value, Func<string, bool> shouldRemoveLine)

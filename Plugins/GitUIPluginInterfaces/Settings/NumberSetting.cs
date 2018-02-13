@@ -104,15 +104,12 @@ namespace GitUIPluginInterfaces
         {
             get 
             {
-                return settings.GetValue(Name, null, s =>
-                    {
-                        return ConvertFromString(s);
-                    });
+                return settings.GetValue(Name, null, ConvertFromString);
             }
 
             set 
             {
-                settings.SetValue(Name, value, i => { return ConvertToString(i); });
+                settings.SetValue(Name, value, ConvertToString);
             }
         }
 
