@@ -156,7 +156,7 @@ namespace GitUI.UserControls
         private void AppendMessage([NotNull] string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             if (InvokeRequired)
                 throw new InvalidOperationException("This operation must be called on the GUI thread.");
             //if not disposed

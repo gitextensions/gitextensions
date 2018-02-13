@@ -13,7 +13,7 @@ namespace GitCommands
         {
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             StringBuilder sb = new StringBuilder();
@@ -43,7 +43,7 @@ namespace GitCommands
         {
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
             
             string outputString = "";

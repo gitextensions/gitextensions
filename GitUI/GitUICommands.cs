@@ -1118,7 +1118,7 @@ namespace GitUI
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
             if (revisions == null)
-                throw new ArgumentNullException("revisions");
+                throw new ArgumentNullException(nameof(revisions));
             Func<bool> action = () =>
             {
                 FormCherryPick prevForm = null;

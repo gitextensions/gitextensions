@@ -5,7 +5,7 @@ using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class TranslationItemWithCategory : INotifyPropertyChanged, ICloneable
     {
         public TranslationItemWithCategory()

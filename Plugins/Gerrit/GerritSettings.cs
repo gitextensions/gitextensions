@@ -59,7 +59,7 @@ namespace Gerrit
         public static GerritSettings Load([CanBeNull] IWin32Window owner, [NotNull] IGitModule aModule)
         {
             if (aModule == null)
-                throw new ArgumentNullException("aModule");
+                throw new ArgumentNullException(nameof(aModule));
 
             string path = aModule.WorkingDir + ".gitreview";
 

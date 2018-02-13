@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
             if(sparse == null)
-                throw new ArgumentNullException("sparse");
+                throw new ArgumentNullException(nameof(sparse));
             Closing += (sender, args) =>
             {
                 try
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
         private void BindToViewModelGlobal([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
             if(sparse == null)
-                throw new ArgumentNullException("sparse");
+                throw new ArgumentNullException(nameof(sparse));
             sparse.ComfirmAdjustingRulesOnDeactRequested += (sender, args) =>
             {
                 if(!args.Cancel)

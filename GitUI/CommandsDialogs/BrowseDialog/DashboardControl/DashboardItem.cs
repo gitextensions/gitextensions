@@ -167,7 +167,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 case RepositoryType.History:
                     return Resources.history;
                 default:
-                    throw new ArgumentException("Repository type is not supported.", "repository");
+                    throw new ArgumentException("Repository type is not supported.", nameof(repository));
             }
         }
 

@@ -45,7 +45,7 @@ namespace GitUI.UserControls
         protected void FireDataReceived([NotNull] TextEventArgs args)
         {
             if(args == null)
-                throw new ArgumentNullException("args");
+                throw new ArgumentNullException(nameof(args));
             EventHandler<TextEventArgs> evt = DataReceived;
             if(evt != null)
                 evt.Invoke(this, args);
