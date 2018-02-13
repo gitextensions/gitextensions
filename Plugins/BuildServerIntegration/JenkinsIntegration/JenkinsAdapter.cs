@@ -503,10 +503,7 @@ namespace JenkinsIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (_httpClient != null)
-            {
-                _httpClient.Dispose();
-            }
+            _httpClient?.Dispose();
         }
     }
 }

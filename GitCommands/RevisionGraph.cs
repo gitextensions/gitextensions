@@ -119,8 +119,7 @@ namespace GitCommands
         private void ProccessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
-            if (Updated != null)
-                Updated(this, new RevisionGraphUpdatedEventArgs(null));
+            Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             string formatString =
@@ -205,8 +204,7 @@ namespace GitCommands
                 return;
 
             _previousFileName = null;
-            if (BeginUpdate != null)
-                BeginUpdate(this, EventArgs.Empty);
+            BeginUpdate?.Invoke(this, EventArgs.Empty);
 
             _nextStep = ReadStep.Commit;
             foreach (string data in ReadDataBlocks(p.StandardOutput))
@@ -264,8 +262,7 @@ namespace GitCommands
             FinishRevision();
             _previousFileName = null;
 
-            if (Exited != null)
-                Exited(this, EventArgs.Empty);
+            Exited?.Invoke(this, EventArgs.Empty);
         }
 
         private IList<IGitRef> GetRefs()
@@ -330,8 +327,7 @@ namespace GitCommands
                     _revision.Body = null;
 
                     RevisionCount++;
-                    if (Updated != null)
-                        Updated(this, new RevisionGraphUpdatedEventArgs(_revision));
+                    Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(_revision));
                 }
             }
         }

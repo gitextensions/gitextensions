@@ -78,8 +78,7 @@ namespace GitImpact
 
         public void Stop()
         {
-            if (_impactLoader != null)
-                _impactLoader.Stop();
+            _impactLoader?.Stop();
         }
 
         void ImpactControl_MouseWheel(object sender, MouseEventArgs e)

@@ -76,7 +76,7 @@ namespace GitUIPluginInterfaces
 
         public void SetDate(string name, DateTime? value)
         {
-            SetValue<DateTime?>(name, value, (DateTime? b) => b.HasValue ? b.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
+            SetValue<DateTime?>(name, value, (DateTime? b) => b?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
         }
 
         public DateTime? GetDate(string name)

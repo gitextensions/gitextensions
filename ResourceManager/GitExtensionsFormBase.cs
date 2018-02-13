@@ -45,16 +45,12 @@ namespace ResourceManager
 
         protected Keys GetShortcutKeys(int commandCode)
         {
-            var hotkey = GetHotkeyCommand(commandCode);
-            return hotkey == null ? Keys.None : hotkey.KeyData;
+            return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
         protected HotkeyCommand GetHotkeyCommand(int commandCode)
         {
-            if (Hotkeys == null)
-                return null;
-
-            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+            return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         /// <summary>Override this method to handle form-specific Hotkey commands.</summary>
@@ -71,12 +67,12 @@ namespace ResourceManager
         /// <summary>Indicates whether this is a valid <see cref="IComponent"/> running in design mode.</summary>
         protected static bool CheckComponent(object value)
         {
-            var component = value as IComponent;
-            if (component == null)
-                return false;
+            if (value is IComponent component)
+            {
+                return component.Site != null && component.Site.DesignMode;
+            }
 
-            var site = component.Site;
-            return (site != null) && site.DesignMode;
+            return false;
         }
 
         /// <summary>Sets <see cref="AutoScaleMode"/>,

@@ -227,10 +227,7 @@ namespace GitCommands.Config
 
             var configSection = FindConfigSection(configSectionName);
 
-            if (configSection == null)
-                return;
-
-            configSection.SetValue(keyName, null);
+            configSection?.SetValue(keyName, null);
         }
 
         public IConfigSection FindOrCreateConfigSection(string name)

@@ -34,8 +34,7 @@ namespace ResourceManager.Xliff
             }
             finally
             {
-                if (stringReader != null)
-                    stringReader.Dispose();
+                stringReader?.Dispose();
             }
         }
     }

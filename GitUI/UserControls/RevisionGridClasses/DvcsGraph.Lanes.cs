@@ -816,7 +816,7 @@ namespace GitUI.RevisionGridClasses
                     {
                         if (node != null)
                             return 1 - index;
-                        return Junction == null ? 0 : Junction.NodesCount - index;
+                        return Junction?.NodesCount - index ?? 0;
                     }
                 }
 

@@ -17,7 +17,7 @@ namespace Bitbucket
                 Version = json["version"].ToString(),
                 State = json["state"].ToString(),
                 Title = json["title"].ToString(),
-                Description = json["description"] != null ? json["description"].ToString() : "",
+                Description = json["description"]?.ToString() ?? "",
                 Author = json["author"]["user"]["displayName"].ToString(),
                 SrcProjectName = json["fromRef"]["repository"]["project"]["name"].ToString(),
                 SrcRepo = json["fromRef"]["repository"]["name"].ToString(),

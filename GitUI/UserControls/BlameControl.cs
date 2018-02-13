@@ -45,8 +45,7 @@ namespace GitUI.Blame
 
         private void commitInfo_CommandClick(object sender, CommandEventArgs e)
         {
-            if (CommandClick != null)
-                CommandClick(sender, e);
+            CommandClick?.Invoke(sender, e);
         }
 
         public event EventHandler<CommandEventArgs> CommandClick;
@@ -188,7 +187,7 @@ namespace GitUI.Blame
         {
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
-        
+
         private AsyncLoader blameLoader = new AsyncLoader();
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
@@ -198,8 +197,7 @@ namespace GitUI.Blame
             if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
-            if (controlToMask != null)
-                controlToMask.Mask();
+            controlToMask?.Mask();
 
             var scrollpos = BlameFile.ScrollPos;
 
@@ -250,8 +248,7 @@ namespace GitUI.Blame
             _blameHash = revision.Guid;
             CommitInfo.SetRevisionWithChildren(revision, children);
 
-            if (controlToMask != null)
-                controlToMask.UnMask();
+            controlToMask?.UnMask();
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
@@ -342,7 +339,7 @@ namespace GitUI.Blame
                 frm.ShowDialog(this);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -352,7 +349,6 @@ namespace GitUI.Blame
             {
                 if (components != null)
                     components.Dispose();
-
                 blameLoader.Dispose();
             }
             base.Dispose(disposing);

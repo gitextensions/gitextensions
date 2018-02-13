@@ -91,10 +91,7 @@ namespace GitUI.SpellChecker
 
         private void OnTextAssigned()
         {
-            if (TextAssigned != null)
-            {
-                TextAssigned(this, EventArgs.Empty);
-            }
+            TextAssigned?.Invoke(this, EventArgs.Empty);
         }
 
         public string Line(int line)
@@ -1040,12 +1037,8 @@ namespace GitUI.SpellChecker
                 CancelAutoComplete();
                 SpellCheckTimer.Stop();
                 _autoCompleteCancellationTokenSource.Dispose();
-                if (_customUnderlines != null)
-                {
-                    _customUnderlines.Dispose();
-                }
-                if (components != null)
-                    components.Dispose();
+                _customUnderlines?.Dispose();
+                components?.Dispose();
                 if (_autoCompleteListTask != null && _autoCompleteListTask.Status == TaskStatus.Canceled)
                 {
                     _autoCompleteListTask.Dispose();

@@ -49,8 +49,7 @@ namespace GitUI.UserControls
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            if (_timer != null)
-                _timer.Append(text);
+            _timer?.Append(text);
         }
 
         public override void KillProcess()

@@ -169,8 +169,7 @@ namespace TfsIntegration
 
         public void Dispose()
         {
-            if (_tfsHelper != null)
-                _tfsHelper.Dispose();
+            _tfsHelper?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

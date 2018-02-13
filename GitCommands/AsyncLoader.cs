@@ -79,8 +79,7 @@ namespace GitCommands
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Dispose();
+            _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
             return Task.Factory.StartNew(() =>
@@ -126,8 +125,7 @@ namespace GitCommands
         public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             Cancel();
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Dispose();
+            _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
             return Task.Factory.StartNew(() => 
@@ -171,8 +169,7 @@ namespace GitCommands
 
         public void Cancel()
         {
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Cancel();
+            _cancelledTokenSource?.Cancel();
         }
 
         private bool OnLoadingError(Exception exception)
@@ -185,8 +182,7 @@ namespace GitCommands
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-                if (_cancelledTokenSource != null)
-                    _cancelledTokenSource.Dispose();
+                _cancelledTokenSource?.Dispose();
         }
 
         public void Dispose()

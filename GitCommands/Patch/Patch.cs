@@ -45,10 +45,7 @@ namespace PatchApply
 
         public PatchType Type { get; set; }
 
-        public string Text
-        {
-            get { return _textBuilder == null ? null : _textBuilder.ToString(); }
-        }
+        public string Text => _textBuilder?.ToString();
 
         public void AppendText(string text)
         {

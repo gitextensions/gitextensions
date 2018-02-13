@@ -234,8 +234,7 @@ namespace GitUI
             // Prevent dispose, as this form can be re-used
             if (e.CloseReason != CloseReason.FormOwnerClosing)
             {
-                if (Owner != null)
-                    Owner.Select(); // prevent another app from being activated instead
+                Owner?.Select(); // prevent another app from being activated instead
 
                 e.Cancel = true;
                 Hide();
@@ -329,9 +328,7 @@ namespace GitUI
             if (disposing)
             {
                 _search.Dispose();
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

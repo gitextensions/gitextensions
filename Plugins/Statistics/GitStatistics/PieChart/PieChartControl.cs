@@ -219,8 +219,7 @@ namespace GitStatistics.PieChart
             // if the width or height if <=0 an exception would be thrown -> exit method..
             if (width <= 0 || height <= 0)
                 return;
-            if (_pieChart != null)
-                _pieChart.Dispose();
+            _pieChart?.Dispose();
             if (_colors != null && _colors.Length > 0)
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _colors,
                                            _sliceRelativeHeight);
@@ -296,10 +295,8 @@ namespace GitStatistics.PieChart
                     else
                         _toolTip.SetToolTip(this, ToolTips[index]);
 
-                    if (SliceSelected != null)
-                        SliceSelected(this,
-                                      new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this),
-                                                            (_tags != null ? _tags[index] : null)));
+                    SliceSelected?.Invoke(this,
+                        new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this), _tags?[index]));
                 }
                 else
                 {

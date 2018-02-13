@@ -56,8 +56,8 @@ namespace GitUI
         {
             lock (textToAdd)
             {
-                if (textToAdd.Length > 0 && doOutput != null)
-                    doOutput(textToAdd.ToString());
+                if (textToAdd.Length > 0)
+                    doOutput?.Invoke(textToAdd.ToString());
                 Clear();
             }
         }

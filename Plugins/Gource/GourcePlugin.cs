@@ -221,7 +221,7 @@ namespace Gource
                 // Close the response and streams objects here
                 // to make sure they're closed even if an exception
                 // is thrown at some point
-                if (localStream != null) localStream.Close();
+                localStream?.Close();
             }
 
             // Return total bytes processed to caller.

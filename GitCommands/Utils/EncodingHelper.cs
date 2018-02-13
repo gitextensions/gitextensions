@@ -65,8 +65,7 @@ namespace GitCommands
                 }
                 finally
                 {
-                    if (ms != null)
-                        ms.Dispose();
+                    ms?.Dispose();
                 }
                 outputString = outputString + Environment.NewLine;
             }
@@ -91,8 +90,7 @@ namespace GitCommands
                 }
                 finally
                 {
-                    if (ms != null)
-                        ms.Dispose();
+                    ms?.Dispose();
                 }
             }
 

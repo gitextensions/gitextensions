@@ -84,10 +84,9 @@ namespace GitCommands
                         _myProcess.Exited -= ProcessExited;
                         _myProcess.TerminateTree();
                     }
-                    if (_myProcess != null) // process is null here if filter is a slow diff
-                    {
-                        _myProcess.Close();
-                    }
+
+                    // _myProcess is null here if filter is a slow diff
+                    _myProcess?.Close();
                 }
                 catch (Exception ex)
                 {
@@ -116,7 +115,7 @@ namespace GitCommands
                         //The process is exited already, but this command waits also until all output is received.
                         //Only WaitForExit when someone is connected to the exited event. For some reason a
                         //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                        //we wait for exit, probably a timing issue... 
+                        //we wait for exit, probably a timing issue...
                         _myProcess.WaitForExit();
 
                         Exited(this, e);
@@ -135,14 +134,12 @@ namespace GitCommands
 
         private void ProcessErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (DataReceived != null)
-                DataReceived(this, e);
+            DataReceived?.Invoke(this, e);
         }
 
         private void ProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (DataReceived != null)
-                DataReceived(this, e);
+            DataReceived?.Invoke(this, e);
         }
 
         public int ExitCode { get; set; }

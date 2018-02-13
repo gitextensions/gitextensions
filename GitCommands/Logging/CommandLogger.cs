@@ -30,9 +30,7 @@ namespace GitCommands.Logging
                 _logQueue.Enqueue(commandLogEntry);
             }
 
-            var handler = CommandsChanged;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
+            CommandsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public override string ToString()

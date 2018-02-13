@@ -80,8 +80,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            if (bw != null)
-                bw.CancelAsync();
+            bw?.CancelAsync();
             UseWaitCursor = true;
             _oldSubmoduleInfo = null;
             if (Submodules.SelectedRows.Count == 1)

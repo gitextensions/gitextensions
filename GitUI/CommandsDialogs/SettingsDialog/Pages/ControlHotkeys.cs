@@ -106,7 +106,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void UpdateTextBox(HotkeyCommand command)
         {
-            txtHotkey.KeyData = (command != null) ? command.KeyData : Keys.None;
+            txtHotkey.KeyData = command?.KeyData ?? Keys.None;
         }
 
         private void ControlHotkeys_Load(object sender, EventArgs e)

@@ -139,8 +139,7 @@ namespace GitUI.Script
                     showSplit = value;
                     Invalidate();
 
-                    if (Parent != null)
-                        Parent.PerformLayout();
+                    Parent?.PerformLayout();
                 }
             }
         }
@@ -471,7 +470,7 @@ namespace GitUI.Script
         {
             Size ret_size = Size.Empty;
             Size text_size = TextRenderer.MeasureText(Text, Font);
-            Size image_size = Image == null ? Size.Empty : Image.Size;
+            Size image_size = Image?.Size ?? Size.Empty;
 
             // Pad the text size
             if (Text.Length != 0)
@@ -518,7 +517,7 @@ namespace GitUI.Script
         private void CalculateButtonTextAndImageLayout(ref Rectangle content_rect, out Rectangle textRectangle, out Rectangle imageRectangle)
         {
             Size text_size = TextRenderer.MeasureText(Text, Font, content_rect.Size, textFormatFlags);
-            Size image_size = Image == null ? Size.Empty : Image.Size;
+            Size image_size = Image?.Size ?? Size.Empty;
 
             textRectangle = Rectangle.Empty;
             imageRectangle = Rectangle.Empty;
@@ -792,9 +791,9 @@ namespace GitUI.Script
             {
                 m_SplitMenu.Show(this, new Point(0, Height));
             }
-            else if (m_SplitMenuStrip != null)
+            else
             {
-                m_SplitMenuStrip.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
+                m_SplitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
             }
         }
 

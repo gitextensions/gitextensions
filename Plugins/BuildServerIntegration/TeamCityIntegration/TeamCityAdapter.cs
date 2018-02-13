@@ -534,10 +534,7 @@ namespace TeamCityIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (httpClient != null)
-            {
-                httpClient.Dispose();
-            }
+            httpClient?.Dispose();
         }
 
         public Project GetProjectsTree()

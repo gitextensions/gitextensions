@@ -42,7 +42,7 @@ namespace Gerrit
 
             const string fromBranch = "HEAD";
 
-            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
+            toBranch = toBranch?.Replace(" ", "");
 
             var sprogressOption = "";
             if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)

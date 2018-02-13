@@ -787,9 +787,7 @@ namespace GitUI
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
         private int FindRevisionIndex(string revision)
         {
-            int? revIdx = Revisions.TryGetRevisionIndex(revision);
-
-            return revIdx.HasValue ? revIdx.Value : -1;
+            return Revisions.TryGetRevisionIndex(revision) ?? -1;
         }
 
         public bool SetSelectedRevision(string revision)
@@ -809,7 +807,7 @@ namespace GitUI
 
         public bool SetSelectedRevision(GitRevision revision)
         {
-            return SetSelectedRevision(revision != null ? revision.Guid : null);
+            return SetSelectedRevision(revision?.Guid);
         }
 
         public void HighlightBranch(string aId)
@@ -997,8 +995,9 @@ namespace GitUI
                                    bool ignoreCase)
             {
                 RegexOptions opts = RegexOptions.None;
-                if (ignoreCase) opts = opts | RegexOptions.IgnoreCase;
-                filterStr = filterValue != null ? filterValue.Trim() : string.Empty;
+                if (ignoreCase)
+                    opts = opts | RegexOptions.IgnoreCase;
+                filterStr = filterValue?.Trim() ?? string.Empty;
                 try
                 {
                     filterRegEx = new Regex(filterStr, opts);
@@ -2089,11 +2088,8 @@ namespace GitUI
         {
             if (e.Button != MouseButtons.Left)
                 return;
-            if (DoubleClickRevision != null)
-            {
-                var selectedRevisions = GetSelectedRevisions();
-                DoubleClickRevision(this, new DoubleClickRevisionEventArgs(selectedRevisions.FirstOrDefault()));
-            }
+
+            DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisions().FirstOrDefault()));
 
             if (!DoubleClickDoesNotOpenCommitInfo)
             {
@@ -2123,8 +2119,7 @@ namespace GitUI
         {
             SelectionTimer.Enabled = false;
             SelectionTimer.Stop();
-            if (SelectionChanged != null)
-                SelectionChanged(this, e);
+            SelectionChanged?.Invoke(this, e);
         }
 
         private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
@@ -3006,18 +3001,14 @@ namespace GitUI
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
 
-            var handler = ShowFirstParentsToggled;
-            if (handler != null)
-                handler(this, e);
+            ShowFirstParentsToggled?.Invoke(this, e);
 
             ForceRefreshRevisions();
         }
 
         public void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            var handler = GitModuleChanged;
-            if (handler != null)
-                handler(this, e);
+            GitModuleChanged?.Invoke(this, e);
         }
 
         private void InitRepository_Click(object sender, EventArgs e)
@@ -3341,11 +3332,8 @@ namespace GitUI
         private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
-            if (item != null)
-            {
-                if (item.DropDown != null && item.DropDown.Items.Count == 1)
-                    item.DropDown.Items[0].PerformClick();
-            }
+            if (item?.DropDown != null && item.DropDown.Items.Count == 1)
+                item.DropDown.Items[0].PerformClick();
         }
 
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
