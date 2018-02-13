@@ -191,11 +191,11 @@ namespace GitUI.Blame
         
         private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null)
+        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
             //refresh only when something changed
             string guid = revision.Guid;
-            if (guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+            if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)

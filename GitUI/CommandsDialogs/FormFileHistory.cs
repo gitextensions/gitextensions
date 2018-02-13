@@ -77,12 +77,22 @@ namespace GitUI.CommandsDialogs
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
+            bool blameTabExists = tabControl1.Contains(BlameTab);
+
             UpdateFollowHistoryMenuItems();
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
-            loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && tabControl1.Contains(BlameTab);
+            loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && blameTabExists;
             saveAsToolStripMenuItem.Visible = !isSubmodule;
+
+            toolStripBlameOptions.Visible = blameTabExists;
+            if (blameTabExists)
+            {
+                ignoreWhitespaceToolStripMenuItem.Checked = AppSettings.IgnoreWhitespaceOnBlame;
+                detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
+                detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
+            }
 
             if (filterByRevision && revision != null && revision.Guid != null)
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
@@ -258,7 +268,7 @@ namespace GitUI.CommandsDialogs
             Text += " - " + Module.WorkingDir;
         }
 
-        private void UpdateSelectedFileViewers()
+        private void UpdateSelectedFileViewers(bool force = false)
         {
             var selectedRows = FileChanges.GetSelectedRevisions();
 
@@ -275,7 +285,7 @@ namespace GitUI.CommandsDialogs
             SetTitle(fileName);
 
             if (tabControl1.SelectedTab == BlameTab)
-                Blame.LoadBlame(revision, children, fileName, FileChanges, BlameTab, Diff.Encoding);
+                Blame.LoadBlame(revision, children, fileName, FileChanges, BlameTab, Diff.Encoding, force: force);
             else if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
@@ -519,6 +529,27 @@ namespace GitUI.CommandsDialogs
         private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
         {
             toolStripBranchFilterComboBox.DroppedDown = true;
+        }
+
+        private void ignoreWhitespaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.IgnoreWhitespaceOnBlame = !AppSettings.IgnoreWhitespaceOnBlame;
+            ignoreWhitespaceToolStripMenuItem.Checked = AppSettings.IgnoreWhitespaceOnBlame;
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void detectMoveAndCopyInAllFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.DetectCopyInFileOnBlame = !AppSettings.DetectCopyInFileOnBlame;
+            detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void detectMoveAndCopyInThisFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.DetectCopyInAllOnBlame = !AppSettings.DetectCopyInAllOnBlame;
+            detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
+            UpdateSelectedFileViewers(true);
         }
     }
 }
