@@ -111,16 +111,16 @@ namespace GitCommands.Remote
                 throw new ArgumentNullException("remote");
             }
 
-            Func<string, string, bool> isSettingForBranch = (setting, branchName) =>
+            bool IsSettingForBranch(string setting, string branchName)
             {
                 var head = new GitRef(_module, string.Empty, setting);
                 return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
-            };
+            }
 
             var remoteHead = remote.Push
                                    .Select(s => s.Split(':'))
                                    .Where(t => t.Length == 2)
-                                   .Where(t => isSettingForBranch(t[0], branch))
+                                   .Where(t => IsSettingForBranch(t[0], branch))
                                    .Select(t => new GitRef(_module, string.Empty, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 

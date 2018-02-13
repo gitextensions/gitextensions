@@ -198,7 +198,7 @@ namespace GitCommandsTests.Remote
 
             _controller.SaveRemote(remote, remote.Name, remoteUrl, remotePushUrl, remotePuttySshKey);
 
-            Action<string, string> ensure = (setting, value) =>
+            void Ensure(string setting, string value)
             {
                 setting = string.Format(setting, remote.Name);
                 if (!string.IsNullOrWhiteSpace(value))
@@ -209,10 +209,11 @@ namespace GitCommandsTests.Remote
                 {
                     _module.Received(1).UnsetSetting(setting);
                 }
-            };
-            ensure(SettingKeyString.RemoteUrl, remoteUrl);
-            ensure(SettingKeyString.RemotePushUrl, remotePushUrl);
-            ensure(SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
+            }
+
+            Ensure(SettingKeyString.RemoteUrl, remoteUrl);
+            Ensure(SettingKeyString.RemotePushUrl, remotePushUrl);
+            Ensure(SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
         }
 
         [Test]

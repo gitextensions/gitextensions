@@ -155,9 +155,9 @@ namespace ResourceManager.Xliff
                             var listValue = list[index] as string;
                             if (listValue != null)
                             {
-                                Func<string> provideDefaultValue = () => listValue;
+                                string ProvideDefaultValue() => listValue;
                                 string value = translation.TranslateItem(category, itemName, propertyName,
-                                    provideDefaultValue);
+                                    ProvideDefaultValue);
 
                                 if (!string.IsNullOrEmpty(value))
                                 {
@@ -168,8 +168,8 @@ namespace ResourceManager.Xliff
                     }
                     else if (property.PropertyType.IsEquivalentTo(typeof(string)))
                     {
-                        Func<string> provideDefaultValue = () => (string)property.GetValue(itemObj, null);
-                        string value = translation.TranslateItem(category, itemName, propertyName, provideDefaultValue);
+                        string ProvideDefaultValue() => (string)property.GetValue(itemObj, null);
+                        string value = translation.TranslateItem(category, itemName, propertyName, ProvideDefaultValue);
 
                         if (!string.IsNullOrEmpty(value))
                         {
@@ -179,7 +179,7 @@ namespace ResourceManager.Xliff
                         else if (property.Name == "ToolTipText" &&
                                  !string.IsNullOrEmpty((string)property.GetValue(itemObj, null)))
                         {
-                            value = translation.TranslateItem(category, itemName, "Text", provideDefaultValue);
+                            value = translation.TranslateItem(category, itemName, "Text", ProvideDefaultValue);
                             if (!string.IsNullOrEmpty(value))
                             {
                                 if (property.CanWrite)
@@ -204,8 +204,8 @@ namespace ResourceManager.Xliff
                 return;
             }
 
-            Func<string> provideDefaultValue = () => "";
-            string value = translation.TranslateItem(category, propName, "Text", provideDefaultValue);
+            string ProvideDefaultValue() => "";
+            string value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
             if (!String.IsNullOrEmpty(value))
             {
                 if (propertyInfo.CanWrite)
