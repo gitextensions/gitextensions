@@ -20,22 +20,19 @@ namespace GitUITests.Helpers
         public void DiffKindRevisionTests_error()
         {
             IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            Assert.AreNotEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            Assert.AreNotEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "null rev");
             revisions = new List<GitRevision> { null };
-            Assert.AreNotEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out extraDiffArgs, out firstRevision, out secondRevision), "1 null rev");
+            Assert.AreNotEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "1 null rev");
             revisions = new List<GitRevision> { null, null };
-            Assert.AreNotEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out extraDiffArgs, out firstRevision, out secondRevision), "2 null rev");
+            Assert.AreNotEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "2 null rev");
         }
 
         [Test]
         public void DiffKindRevisionTests_AB_1p()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
             revisions[0].ParentGuids = new string[] { "parent" };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("parent", firstRevision, "first");
             Assert.AreEqual("HEAD", secondRevision, "second");
         }
@@ -43,10 +40,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_AB_1h()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out var extraDiffArgs, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("-M -C", extraDiffArgs);
             Assert.AreEqual("HEAD^", firstRevision, "first");
             Assert.AreEqual("HEAD", secondRevision, "second");
@@ -55,10 +50,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_AB_2()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD^"), new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD^"), new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD", firstRevision, "first");
             Assert.AreEqual("HEAD^", secondRevision, "second");
         }
@@ -66,10 +59,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_AL_1()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffALocal, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffALocal, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD^", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
@@ -77,10 +68,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_AL_2()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD^"), new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffALocal, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD^"), new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffALocal, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
@@ -88,10 +77,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_ApL_1()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAParentLocal, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAParentLocal, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD^^", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
@@ -99,10 +86,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_BL_1()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffBLocal, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffBLocal, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
@@ -110,10 +95,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_BL_2()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD^"), new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffBLocal, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD^"), new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffBLocal, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD^", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
@@ -121,10 +104,8 @@ namespace GitUITests.Helpers
         [Test]
         public void DiffKindRevisionTests_BpL_1()
         {
-            IList<GitRevision> revisions = null;
-            string extraDiffArgs, firstRevision, secondRevision;
-            revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
-            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffBParentLocal, out extraDiffArgs, out firstRevision, out secondRevision), "null rev");
+            IList<GitRevision> revisions = new List<GitRevision> { new GitRevision(_module, "HEAD") };
+            Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffBParentLocal, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("HEAD^", firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }

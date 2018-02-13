@@ -37,8 +37,7 @@ namespace PatchApply
                 return null;
 
             string input = lines[lineIndex];
-            bool combinedDiff;
-            if (!IsStartOfANewPatch(input, out combinedDiff))
+            if (!IsStartOfANewPatch(input, out var combinedDiff))
                 return null;
 
             PatchProcessorState state = PatchProcessorState.InHeader;

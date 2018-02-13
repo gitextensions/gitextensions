@@ -146,12 +146,8 @@ namespace GitCommands
 
             foreach (var number in numbers)
             {
-                int value;
-
-                if (Int32.TryParse(number, out value))
-                {
+                if (Int32.TryParse(number, out var value))
                     yield return value;
-                }
             }
         }
 

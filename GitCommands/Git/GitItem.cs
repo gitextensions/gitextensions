@@ -10,8 +10,7 @@ namespace GitCommands.Git
         public GitItem(string mode, string objectType, string guid, string name)
         {
             Mode = mode;
-            GitObjectType type;
-            Enum.TryParse(objectType, true, out type);
+            Enum.TryParse(objectType, true, out GitObjectType type);
             ObjectType = type;
             Guid = guid;
             FileName = Name = name;

@@ -74,8 +74,7 @@ namespace DeleteUnusedBranches
                 context.CancellationToken.ThrowIfCancellationRequested();
 
                 var commitLog = context.Commands.RunGitCmd(string.Concat("log --pretty=%ci\n%an\n%s ", branchName, "^1..", branchName)).Split('\n');
-                DateTime commitDate;
-                DateTime.TryParse(commitLog[0], out commitDate);
+                DateTime.TryParse(commitLog[0], out var commitDate);
                 var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
                 var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 

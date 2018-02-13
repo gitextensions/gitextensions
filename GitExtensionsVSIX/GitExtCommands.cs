@@ -109,10 +109,8 @@ namespace GitExtensionsVSIX
         private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand guiCommand = (OleMenuCommand)sender;
-            VsixCommandBase command;
-            if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
-                return;
-            command.BeforeQueryStatus(_application, guiCommand);
+            if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+                command.BeforeQueryStatus(_application, guiCommand);
         }
 
         /// <summary>
@@ -152,10 +150,8 @@ namespace GitExtensionsVSIX
         private void MenuItemCallback(object sender, EventArgs e)
         {
             var guiCommand = (MenuCommand)sender;
-            VsixCommandBase command;
-            if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
-                return;
-            command.BaseCommand.OnCommand(_application, OutputPane);
+            if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+                command.BaseCommand.OnCommand(_application, OutputPane);
         }
     }
 }

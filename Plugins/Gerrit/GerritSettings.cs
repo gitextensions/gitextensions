@@ -109,8 +109,7 @@ namespace Gerrit
                             case "defaultrebase": result.DefaultRebase = !parts[1].Equals("0"); break;
 
                             case "port":
-                                int value;
-                                if (!int.TryParse(parts[1], out value))
+                                if (!int.TryParse(parts[1], out var value))
                                     throw new GerritSettingsException(result._settingsErrorPortNotNumeric.Text);
                                 result.Port = value;
                                 break;

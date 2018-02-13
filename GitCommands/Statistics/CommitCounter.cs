@@ -40,15 +40,14 @@ namespace GitCommands.Statistics
                 if (tab <= 0)
                     continue;
 
-                int count;
-                if (!int.TryParse(commitCount.Substring(0, tab), out count))
+                if (!int.TryParse(commitCount.Substring(0, tab), out var count))
                     continue;
 
                 var contributor = commitCount.Substring(tab + 1);
 
                 totalCommits += count;
-                int oldCount;
-                if (!commitsPerContributor.TryGetValue(contributor, out oldCount))
+
+                if (!commitsPerContributor.TryGetValue(contributor, out var oldCount))
                     commitsPerContributor.Add(contributor, count);
                 else
                     // Sometimes this happen because of wrong encoding

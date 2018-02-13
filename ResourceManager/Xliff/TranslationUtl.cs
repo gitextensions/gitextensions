@@ -296,8 +296,7 @@ namespace ResourceManager.Xliff
                     if (type.IsClass && typeof (ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
                         var val = !assembly.IsPlugin() ? "" : ".Plugins";
-                        List<Type> list;
-                        if (!dictionary.TryGetValue(val, out list))
+                        if (!dictionary.TryGetValue(val, out var list))
                         {
                             list = new List<Type>();
                             dictionary.Add(val, list);

@@ -108,9 +108,7 @@ namespace Gerrit
 
             lock (_syncRoot)
             {
-                bool isValid;
-
-                if (!force && _validatedHooks.TryGetValue(path, out isValid))
+                if (!force && _validatedHooks.TryGetValue(path, out var isValid))
                     return isValid;
 
                 try

@@ -37,10 +37,7 @@ namespace GitCommands.Settings
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
-            T value;
-
-            TryGetValue(name, defaultValue, decode, out value);
-
+            TryGetValue(name, defaultValue, decode, out var value);
             return value;
         }
 

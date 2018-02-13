@@ -143,11 +143,8 @@ namespace GitCommands
         {
             if (!sha1.IsNullOrWhiteSpace() && sha1.Length < 40)
             {
-                string fullSha1;
-                if (aModule.IsExistingCommitHash(sha1, out fullSha1))
-                {
+                if (aModule.IsExistingCommitHash(sha1, out var fullSha1))
                     sha1 = fullSha1;
-                }
             }
 
             return new GitRevision(aModule, sha1);

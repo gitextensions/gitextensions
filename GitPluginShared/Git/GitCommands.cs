@@ -138,8 +138,7 @@ namespace GitPluginShared.Git
                     }
                     else
                     {
-                        int exitCode;
-                        head = RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out exitCode);
+                        head = RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out var exitCode);
                         if (exitCode == 1)
                             head = "no branch";
                     }

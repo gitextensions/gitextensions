@@ -65,8 +65,7 @@ namespace TranslationApp
 
         private static List<T> Find<T>(this IDictionary<string, List<T>> dictionary, string key)
         {
-            List<T> list;
-            if (!dictionary.TryGetValue(key, out list))
+            if (!dictionary.TryGetValue(key, out var list))
             {
                 list = new List<T>();
                 dictionary.Add(key, list);

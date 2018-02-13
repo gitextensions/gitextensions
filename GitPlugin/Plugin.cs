@@ -105,8 +105,7 @@ namespace GitPlugin
             if (array.Length != 3)
                 return null;
             var commandKey = array[2];
-            CommandBase result;
-            return _commands.TryGetValue(commandKey, out result) ? result : null;
+            return _commands.TryGetValue(commandKey, out var result) ? result : null;
         }
 
         public bool OnCommand(string commandName)
