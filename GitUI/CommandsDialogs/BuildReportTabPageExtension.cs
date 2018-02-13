@@ -33,8 +33,7 @@ namespace GitUI.CommandsDialogs
             selectedGitRevision = revision;
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
 
-            var buildInfoIsAvailable =
-                !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
+            var buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
 
             tabControl.SuspendLayout();
 

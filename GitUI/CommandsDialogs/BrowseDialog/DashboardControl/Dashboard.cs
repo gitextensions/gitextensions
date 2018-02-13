@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void dashboardItem_Click(object sender, EventArgs e)
         {
             var label = sender as DashboardItem;
-            if (label == null || string.IsNullOrEmpty(label.Path))
+            if (string.IsNullOrEmpty(label?.Path))
                 return;
 
             //Open urls in browser, but open directories in GitExtensions

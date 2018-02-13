@@ -58,7 +58,7 @@ namespace GitCommands.Settings
 
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            bool isEffectiveLevel = LowerPriority != null && LowerPriority.LowerPriority != null;
+            bool isEffectiveLevel = LowerPriority?.LowerPriority != null;
             bool isDetachedOrGlobal = LowerPriority == null;
 
             if (isDetachedOrGlobal || //there is no lower level

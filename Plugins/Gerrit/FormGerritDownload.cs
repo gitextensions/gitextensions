@@ -66,7 +66,7 @@ namespace Gerrit
 
             var reviewInfo = LoadReviewInfo();
 
-            if (reviewInfo == null || reviewInfo["id"] == null)
+            if (reviewInfo?["id"] == null)
             {
                 MessageBox.Show(owner, _cannotGetChangeDetails.Text);
                 return false;

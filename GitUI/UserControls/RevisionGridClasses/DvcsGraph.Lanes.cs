@@ -137,8 +137,7 @@ namespace GitUI.RevisionGridClasses
 
                     // NOTE: We could also compare with sourceGraph sourceGraph.AddedNodes[sourceGraph.processedNodes],
                     // since it should always be the same value
-                    if (currentRow.Node == null ||
-                        currentRow.Node.Data == null ||
+                    if (currentRow.Node?.Data == null ||
                         (lane.Current.Data != null && lane.Current.Index < currentRow.Node.Index))
                     {
                         currentRow.Node = lane.Current;
@@ -164,8 +163,8 @@ namespace GitUI.RevisionGridClasses
 
                 #endregion
 
-                // Check for multiple junctions with this node at the top. Remove the 
-                // node from that junction as well. This will happen when there is a branch 
+                // Check for multiple junctions with this node at the top. Remove the
+                // node from that junction as well. This will happen when there is a branch
 
                 #region Check for branches
 
@@ -186,7 +185,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Remove the item from the lane, since it is being drawn now.
-                    // We need to draw the graph line for this lane. If there are no items 
+                    // We need to draw the graph line for this lane. If there are no items
                     // left in the lane we don't draw it.
                     int intoLane = AdvanceLane(curLane);
                     if (intoLane < curLane)
@@ -254,7 +253,7 @@ namespace GitUI.RevisionGridClasses
                 //            if (currentRow.LaneInfoCount(laneInfo.ConnectLane) == 0)
                 //            {
                 //                // Remove the row laneInfo.ConnectLane and insert
-                //                // it at currentRow.NodeLane+1. 
+                //                // it at currentRow.NodeLane+1.
                 //                // Then start over searching for others if i != mergeFromCount-1?
                 //                int adjacentLane = currentRow.NodeLane + 1;
                 //                if (adjacentLane >= laneNodes.Count) Debugger.Break();
@@ -575,7 +574,7 @@ namespace GitUI.RevisionGridClasses
                     private readonly List<int> countEnd = new List<int>();
                     private readonly List<int> countStart = new List<int>();
                     private readonly List<Edge> edges = new List<Edge>();
-                    
+
                     #pragma warning disable 0649
                     private readonly Graph.LaneInfo emptyItem;
                     #pragma warning restore 0649

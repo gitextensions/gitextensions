@@ -7,12 +7,13 @@ namespace GitUI
     public sealed class ProcessOutputTimer : IDisposable
     {
         public delegate void DoOutputCallback(string text);
-        private readonly Timer _timer; 
+
+        private readonly Timer _timer;
         private readonly StringBuilder textToAdd = new StringBuilder();
         private DoOutputCallback doOutput;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="doOutput">Will be called on the home thread.</param>
         public ProcessOutputTimer(DoOutputCallback doOutput)
@@ -46,7 +47,7 @@ namespace GitUI
         /// </summary>
         public void Append(string text)
         {
-            lock(textToAdd)
+            lock (textToAdd)
             {
                 textToAdd.Append(text);
             }
