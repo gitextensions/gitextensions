@@ -150,7 +150,7 @@ namespace GitUI
 
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
-                    throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");	// Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
+                    throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");    // Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
 /*
                     Thread.Sleep(500);
                     Process.StandardInput.Write(ProcessInput);

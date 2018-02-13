@@ -489,14 +489,14 @@
         <File Source="..\GitUI\Translation\Russian.gif" />
       </Component>
       <Component Id="SimplifiedChinese.xlf" Guid="*">
-	    <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
-	  </Component>
-	  <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
-	    <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
-	  </Component>
-	  <Component Id="SimplifiedChinese.gif" Guid="*">
-	    <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-	  </Component>
+        <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
+      </Component>
+      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+        <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
+      </Component>
+      <Component Id="SimplifiedChinese.gif" Guid="*">
+        <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
+      </Component>
       <Component Id="Spanish.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Spanish.xlf" />
       </Component>

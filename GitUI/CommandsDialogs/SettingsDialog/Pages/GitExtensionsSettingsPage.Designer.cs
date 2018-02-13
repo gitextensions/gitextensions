@@ -574,5 +574,5 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelEmailSettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSmtpServer;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistoryExact;
-	}
+    }
 }

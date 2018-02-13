@@ -620,6 +620,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel rebasePanel;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
-        private System.Windows.Forms.CheckBox chkStash;		
+        private System.Windows.Forms.CheckBox chkStash;        
     }
 }
