@@ -26,7 +26,6 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private readonly CommonLogic _commonLogic;
-        private readonly CheckSettingsLogic _checkSettingsLogic;
         private IEnumerable<ISettingsPage> SettingsPages => settingsTreeView.SettingsPages;
         private readonly string _translatedTitle;
 
@@ -55,7 +54,7 @@ namespace GitUI.CommandsDialogs
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
 
             _commonLogic = new CommonLogic(Module);
-            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic);
+            CheckSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
             var checklistSettingsPage = SettingsPageBase.Create <ChecklistSettingsPage>(this);
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, true); // as root
@@ -222,7 +221,7 @@ namespace GitUI.CommandsDialogs
 
         private bool Save()
         {
-            if (!_checkSettingsLogic.CanFindGitCmd())
+            if (!CheckSettingsLogic.CanFindGitCmd())
             {
                 if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -307,6 +306,6 @@ namespace GitUI.CommandsDialogs
             LoadSettings();
         }
 
-        public CheckSettingsLogic CheckSettingsLogic => _checkSettingsLogic;
+        public CheckSettingsLogic CheckSettingsLogic { get; }
     }
 }

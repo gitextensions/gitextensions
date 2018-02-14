@@ -12,17 +12,11 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        private List<Patch> _patches = new List<Patch>();
-
         public string PatchFileName { get; set; }
 
         public string DirToPatch { get; set; }
 
-        public List<Patch> Patches
-        {
-            get => _patches;
-            set => _patches = value;
-        }
+        public List<Patch> Patches { get; set; } = new List<Patch>();
 
         public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
@@ -155,12 +149,12 @@ namespace PatchApply
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            _patches = patchProcessor.CreatePatchesFromString(text).ToList();
+            Patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
                 return;
 
-            foreach (Patch patchApply in _patches)
+            foreach (Patch patchApply in Patches)
             {
                 if (patchApply.Apply)
                     patchApply.ApplyPatch(filesContentEncoding);

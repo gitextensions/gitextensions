@@ -21,11 +21,9 @@ namespace GitPlugin
         private const string GitMainMenuName = "G&itExt";
 
         private readonly AddIn _addIn;
-        private readonly DTE2 _application;
 
         private readonly Dictionary<string, CommandBase> _commands = new Dictionary<string, CommandBase>();
         private readonly string _connectPath;
-        private readonly OutputWindowPane _outputPane;
         private readonly Dictionary<string, Command> _visualStudioCommands = new Dictionary<string, Command>();
 
         public Plugin(DTE2 application, AddIn addIn, string panelName, string connectPath)
@@ -33,16 +31,16 @@ namespace GitPlugin
             // TODO: This can be figured out from traversing the assembly and locating the Connect class...
             _connectPath = connectPath;
 
-            _application = application;
+            Application = application;
             _addIn = addIn;
-            _outputPane = PluginHelpers.AquireOutputPane(application, panelName);
+            OutputPane = PluginHelpers.AquireOutputPane(application, panelName);
         }
 
-        public OutputWindowPane OutputPane => _outputPane;
+        public OutputWindowPane OutputPane { get; }
 
-        public DTE2 Application => _application;
+        public DTE2 Application { get; }
 
-        public int LocaleId => _application.LocaleID;
+        public int LocaleId => Application.LocaleID;
 
         public void DeleteCommands()
         {
@@ -57,7 +55,7 @@ namespace GitPlugin
             return CommandBars["MenuBar"];
         }
 
-        public CommandBars CommandBars => (CommandBars)_application.CommandBars;
+        public CommandBars CommandBars => (CommandBars)Application.CommandBars;
 
         public void RegisterCommand(string commandName, CommandBase command)
         {
@@ -75,7 +73,7 @@ namespace GitPlugin
         public bool IsCommandEnabled(string commandName)
         {
             var command = TryGetCommand(commandName);
-            return command != null && command.IsEnabled(_application);
+            return command != null && command.IsEnabled(Application);
         }
 
         private CommandBase TryGetCommand(string commandName)
@@ -92,13 +90,13 @@ namespace GitPlugin
             var command = TryGetCommand(commandName);
             if (command == null)
                 return false;
-            command.OnCommand(_application, _outputPane);
+            command.OnCommand(Application, OutputPane);
             return true;
         }
 
         private Command GetCommand(string commandName)
         {
-            var commands = (Commands2)_application.Commands;
+            var commands = (Commands2)Application.Commands;
             string fullName = _connectPath + "." + commandName;
             foreach (Command command in commands)
             {
@@ -144,7 +142,7 @@ namespace GitPlugin
                     .FirstOrDefault(c => c.Name == PluginHelpers.GitCommandBarName);
             if (bar == null)
             {
-                bar = (CommandBar)_application.Commands.AddCommandBar(PluginHelpers.GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
+                bar = (CommandBar)Application.Commands.AddCommandBar(PluginHelpers.GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
                 bar.Position = position;
                 bar.RowIndex = -1;
             }
@@ -267,7 +265,7 @@ namespace GitPlugin
             CommandBar mainMenuBar = null;
             try
             {
-                mainMenuBar = (CommandBar)_application.Commands
+                mainMenuBar = (CommandBar)Application.Commands
                     .AddCommandBar("GitExt", vsCommandBarType.vsCommandBarTypeMenu, GetMenuBar(), 4);
 
                 ((CommandBarPopup)mainMenuBar.Parent).Caption = GitMainMenuName;
@@ -337,7 +335,7 @@ namespace GitPlugin
                 return;
 
             // Get commands collection
-            var commands = (Commands2)_application.Commands;
+            var commands = (Commands2)Application.Commands;
             var command = GetCommand(commandName, caption, tooltip, iconIndex, commandStyle, commands);
             if (command == null)
                 return;

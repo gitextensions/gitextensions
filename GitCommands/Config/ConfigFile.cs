@@ -10,8 +10,7 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        private readonly string _fileName;
-        public string FileName => _fileName;
+        public string FileName { get; }
 
         public bool Local { get; }
 
@@ -20,14 +19,14 @@ namespace GitCommands.Config
             ConfigSections = new List<IConfigSection>();
             Local = aLocal;
 
-            _fileName = fileName;
+            FileName = fileName;
             try
             {
                 Load();
             }
             catch (Exception ex)
             {
-                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + _fileName);
+                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + FileName);
                 throw;
             }
         }
@@ -46,7 +45,7 @@ namespace GitCommands.Config
 
         private void Load()
         {
-            if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
+            if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
                 return;
 
             ConfigFileParser parser = new ConfigFileParser(this);
@@ -77,7 +76,7 @@ namespace GitCommands.Config
 
         public void Save()
         {
-            Save(_fileName);
+            Save(FileName);
         }
 
         public string GetAsString()
@@ -293,7 +292,7 @@ namespace GitCommands.Config
             private ConfigFile _configFile;
             private string _fileContent;
             private IConfigSection _section;
-            private string FileName => _configFile._fileName;
+            private string FileName => _configFile.FileName;
 
             private string _key;
             //parsed char

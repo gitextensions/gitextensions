@@ -22,11 +22,9 @@ namespace GitUI.Script
 
     public class ScriptInfo
     {
-        private string _Icon;
-
         public ScriptInfo()
         {
-            _Icon = "bug";
+            Icon = "bug";
             Enabled = true;
         }
 
@@ -52,10 +50,8 @@ namespace GitUI.Script
         /// <summary>
         /// Gets or sets the icon name.
         /// </summary>
-        public string Icon {
-            get { return _Icon; }
-            set { _Icon = value; } 
-        }
+        public string Icon { get; set; }
+
         /// <summary>
         /// Gets the associated bitmap.
         /// </summary>
@@ -66,7 +62,7 @@ namespace GitUI.Script
                         = new System.Resources.ResourceManager("GitUI.Properties.Resources"
                             , Assembly.GetExecutingAssembly());
             // return icon
-                    return (Bitmap)rm.GetObject(_Icon);
+                    return (Bitmap)rm.GetObject(Icon);
         }
     }
 }
