@@ -4,6 +4,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
@@ -48,13 +49,13 @@ namespace GitUIPluginInterfaces
                     var exps = container.GetExports<T, TMetadataView>();
                     ret.AddRange(exps);
                 }
-                catch (System.Reflection.ReflectionTypeLoadException ex)
+                catch (ReflectionTypeLoadException ex)
                 {
                     Trace.TraceError("GetExports() failed {0}", string.Join(Environment.NewLine, ex.LoaderExceptions.Select(r => r.ToString())));
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError("Failed to get exports, {0}", ex.ToString());
+                    Trace.TraceError("Failed to get exports, {0}", ex);
                 }
             }
             return ret;

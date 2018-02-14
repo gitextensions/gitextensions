@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class BuildServerSettingsUserControlMetadata : BuildServerAdapterMetadataAttribute
     {
         public BuildServerSettingsUserControlMetadata(string buildServerType)

@@ -110,10 +110,8 @@ namespace GitUIPluginInterfaces
             {
                 return DefaultValue;
             }
-            else
-            {
-                return (T)settingVal;
-            }            
+
+            return (T)settingVal;
         }
 
     }
