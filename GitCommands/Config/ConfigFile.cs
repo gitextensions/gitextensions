@@ -289,7 +289,7 @@ namespace GitCommands.Config
         {
             private delegate ParsePart ParsePart(char c);
 
-            private ConfigFile _configFile;
+            private readonly ConfigFile _configFile;
             private string _fileContent;
             private IConfigSection _section;
             private string FileName => _configFile.FileName;
@@ -297,8 +297,8 @@ namespace GitCommands.Config
             private string _key;
             //parsed char
             private int pos;
-            private StringBuilder token = new StringBuilder();
-            private StringBuilder valueToken = new StringBuilder();
+            private readonly StringBuilder token = new StringBuilder();
+            private readonly StringBuilder valueToken = new StringBuilder();
 
             public ConfigFileParser(ConfigFile configFile)
             {

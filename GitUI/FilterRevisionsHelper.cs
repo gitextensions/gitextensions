@@ -7,19 +7,19 @@ namespace GitUI
 {
     public class FilterRevisionsHelper : IDisposable
     {
-        private ToolStripTextBox _NO_TRANSLATE_textBox;
-        private ToolStripDropDownButton _NO_TRANSLATE_dropDownButton;
-        private RevisionGrid _NO_TRANSLATE_revisionGrid;
-        private ToolStripLabel _NO_TRANSLATE_label;
-        private ToolStripButton _NO_TRANSLATE_showFirstParentButton;
+        private readonly ToolStripTextBox _NO_TRANSLATE_textBox;
+        private readonly ToolStripDropDownButton _NO_TRANSLATE_dropDownButton;
+        private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
+        private readonly ToolStripLabel _NO_TRANSLATE_label;
+        private readonly ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
-        private ToolStripMenuItem commitToolStripMenuItem;
-        private ToolStripMenuItem committerToolStripMenuItem;
-        private ToolStripMenuItem authorToolStripMenuItem;
-        private ToolStripMenuItem diffContainsToolStripMenuItem;
-        private ToolStripMenuItem hashToolStripMenuItem;
+        private readonly ToolStripMenuItem commitToolStripMenuItem;
+        private readonly ToolStripMenuItem committerToolStripMenuItem;
+        private readonly ToolStripMenuItem authorToolStripMenuItem;
+        private readonly ToolStripMenuItem diffContainsToolStripMenuItem;
+        private readonly ToolStripMenuItem hashToolStripMenuItem;
 
-        private Form _NO_TRANSLATE_form;
+        private readonly Form _NO_TRANSLATE_form;
 
         public FilterRevisionsHelper()
         {

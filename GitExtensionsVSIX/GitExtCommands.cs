@@ -34,7 +34,7 @@ namespace GitExtensionsVSIX
 
         private readonly DTE2 _application;
         private OutputWindowPane _outputPane;
-        private OleMenuCommandService _commandService;
+        private readonly OleMenuCommandService _commandService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitExtCommands"/> class.

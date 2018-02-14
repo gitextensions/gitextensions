@@ -189,7 +189,7 @@ namespace GitUI.Blame
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
         
-        private AsyncLoader blameLoader = new AsyncLoader();
+        private readonly AsyncLoader blameLoader = new AsyncLoader();
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {

@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
-        private AsyncLoader loader = new AsyncLoader();
+        private readonly AsyncLoader loader = new AsyncLoader();
 
         // only for translation
         private ViewPullRequestsForm()

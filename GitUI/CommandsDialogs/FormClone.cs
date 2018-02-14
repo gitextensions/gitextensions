@@ -26,9 +26,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
         private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
 
-        private bool openedFromProtocolHandler;
+        private readonly bool openedFromProtocolHandler;
         private readonly string url;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> GitModuleChanged;
         private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 

@@ -4,7 +4,7 @@ namespace GitCommands.Settings
 {
     public class MemorySettingsCache : SettingsCache
     {
-        private IDictionary<string, string> stringSettings = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> stringSettings = new Dictionary<string, string>();
 
         protected override void LoadImpl()
         {

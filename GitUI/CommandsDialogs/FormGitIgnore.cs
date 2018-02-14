@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
             "packages/"
         };
 
-        private IGitIgnoreDialogModel _dialogModel;
+        private readonly IGitIgnoreDialogModel _dialogModel;
 
         #endregion
 

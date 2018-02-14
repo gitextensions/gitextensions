@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        private List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
+        private readonly List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
         private ISettingsPageHost _PageHost;
         protected ISettingsPageHost PageHost
         {

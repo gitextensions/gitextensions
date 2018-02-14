@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private readonly IRepositoryHostPlugin _gitHost;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> GitModuleChanged;
 
         public ForkAndCloneForm(IRepositoryHostPlugin gitHost, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {

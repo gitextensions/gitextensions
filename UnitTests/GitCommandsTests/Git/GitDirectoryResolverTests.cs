@@ -13,7 +13,7 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class GitDirectoryResolverTests
     {
-        private string _workingDir = @"c:\dev\repo";
+        private readonly string _workingDir = @"c:\dev\repo";
         private string _gitWorkingDir;
         private string _gitFile;
         private FileBase _file;

@@ -293,9 +293,9 @@ namespace GitUI
 
     internal class DispatcherFrameModalControler
     {
-        private DispatcherFrame DispatcherFrame = new DispatcherFrame();
-        private FormStatus FormStatus;
-        private IWin32Window Owner;
+        private readonly DispatcherFrame DispatcherFrame = new DispatcherFrame();
+        private readonly FormStatus FormStatus;
+        private readonly IWin32Window Owner;
 
         public DispatcherFrameModalControler(FormStatus aFormStatus, IWin32Window aOwner)
         {

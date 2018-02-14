@@ -19,7 +19,7 @@ namespace Bitbucket
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
-        private Settings _settings;
+        private readonly Settings _settings;
         private readonly BitbucketPlugin _plugin;
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private readonly ISettingsSource _settingsContainer;
@@ -156,7 +156,7 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
+        private readonly Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (Branches.ContainsKey(selectedRepo))

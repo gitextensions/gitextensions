@@ -352,7 +352,7 @@ namespace PatchApply
     internal class Chunk
     {
         private int StartLine;
-        private List<SubChunk> SubChunks = new List<SubChunk>();
+        private readonly List<SubChunk> SubChunks = new List<SubChunk>();
         private SubChunk _CurrentSubChunk;
 
         public SubChunk CurrentSubChunk

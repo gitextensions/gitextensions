@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private class WrapperState
         {
-            private List<string> wordList = new List<string>();
+            private readonly List<string> wordList = new List<string>();
             private int wordsLength;
             private readonly int lineLimit;
 

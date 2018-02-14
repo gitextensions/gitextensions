@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
         public bool ManageStashes { get; set; }
 
 
-        private AsyncLoader _asyncLoader = new AsyncLoader();
+        private readonly AsyncLoader _asyncLoader = new AsyncLoader();
 
         private FormStash()
             : this(null)

@@ -77,8 +77,8 @@ namespace GitUI
             [StructLayout(LayoutKind.Sequential)]
             public struct POINT
             {
-                public int X;
-                public int Y;
+                public readonly int X;
+                public readonly int Y;
 
                 public POINT(int x, int y)
                 {

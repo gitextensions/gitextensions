@@ -468,7 +468,7 @@ namespace GitUI.Script
             }
         }
 
-        private static string PluginPrefix = "plugin:";
+        private static readonly string PluginPrefix = "plugin:";
 
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {

@@ -10,12 +10,12 @@ namespace GitUI
     public class FilterBranchHelper : IDisposable
     {
         private bool _applyingFilter;
-        private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
-        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
-        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
-        private ToolStripMenuItem localToolStripMenuItem;
-        private ToolStripMenuItem tagsToolStripMenuItem;
-        private ToolStripMenuItem remoteToolStripMenuItem;
+        private readonly ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
+        private readonly ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
+        private readonly RevisionGrid _NO_TRANSLATE_RevisionGrid;
+        private readonly ToolStripMenuItem localToolStripMenuItem;
+        private readonly ToolStripMenuItem tagsToolStripMenuItem;
+        private readonly ToolStripMenuItem remoteToolStripMenuItem;
         private GitModule Module => _NO_TRANSLATE_RevisionGrid.Module;
 
         public FilterBranchHelper()

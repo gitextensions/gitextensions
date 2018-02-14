@@ -8,7 +8,7 @@ namespace Github3
 {
     internal class GithubPullRequestDiscussion : IPullRequestDiscussion
     {
-        private PullRequest pullrequest;
+        private readonly PullRequest pullrequest;
 
         public GithubPullRequestDiscussion(PullRequest pullrequest)
         {

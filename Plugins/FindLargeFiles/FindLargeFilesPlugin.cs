@@ -12,7 +12,7 @@ namespace FindLargeFiles
             Translate();
         }
 
-        private NumberSetting<float> SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
+        private readonly NumberSetting<float> SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
 
         public override IEnumerable<ISetting> GetSettings()
         {
