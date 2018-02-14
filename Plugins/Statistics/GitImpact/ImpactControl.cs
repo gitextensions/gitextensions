@@ -56,8 +56,11 @@ namespace GitImpact
 
         public void Init(IGitModule Module)
         {
-            _impactLoader = new ImpactLoader(Module);
-            _impactLoader.RespectMailmap = true; // respect the .mailmap file
+            _impactLoader = new ImpactLoader(Module)
+            {
+                // respect the .mailmap file
+                RespectMailmap = true
+            };
             _impactLoader.Updated += OnImpactUpdate;
         }
 

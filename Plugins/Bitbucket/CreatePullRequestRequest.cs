@@ -39,41 +39,50 @@ namespace Bitbucket
 
         private string GetPullRequestBody()
         {
-            var resource = new JObject();
-            resource["title"] = _info.Title;
-            resource["description"] = _info.Description;
-
-            resource["fromRef"] = CreatePullRequestRef(
-                _info.SourceRepo.ProjectKey
-                , _info.SourceRepo.RepoName, _info.SourceBranch);
-
-            resource["toRef"] = CreatePullRequestRef(
-                _info.TargetRepo.ProjectKey
-                , _info.TargetRepo.RepoName, _info.TargetBranch);
+            var resource = new JObject
+            {
+                ["title"] = _info.Title,
+                ["description"] = _info.Description,
+                ["fromRef"] = CreatePullRequestRef(
+                    _info.SourceRepo.ProjectKey,
+                    _info.SourceRepo.RepoName,
+                    _info.SourceBranch),
+                ["toRef"] = CreatePullRequestRef(
+                    _info.TargetRepo.ProjectKey,
+                    _info.TargetRepo.RepoName,
+                    _info.TargetBranch)
+            };
 
             var reviewers = new JArray();
             foreach (var reviewer in _info.Reviewers)
             {
-                var r = new JObject();
-                r["user"] = new JObject();
-                r["user"]["name"] = reviewer.Slug;
-
-                reviewers.Add(r);
+                reviewers.Add(new JObject
+                {
+                    ["user"] = new JObject
+                    {
+                        ["name"] = reviewer.Slug
+                    }
+                });
             }
             resource["reviewers"] = reviewers;
 
             return resource.ToString();
-        }
 
-        private static JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
-        {
-            var reference = new JObject();
-            reference["id"] = branchName;
-            reference["repository"] = new JObject();
-            reference["repository"]["slug"] = repoName;
-            reference["repository"]["project"] = new JObject();
-            reference["repository"]["project"]["key"] = projectKey;
-            return reference;
+            JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
+            {
+                return new JObject
+                {
+                    ["id"] = branchName,
+                    ["repository"] = new JObject
+                    {
+                        ["slug"] = repoName,
+                        ["project"] = new JObject
+                        {
+                            ["key"] = projectKey
+                        }
+                    }
+                };
+            }
         }
     }
 }
