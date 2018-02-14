@@ -125,7 +125,7 @@ namespace GitCommands
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
-            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
+            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(RefsHeadsPrefix.Length) : merge;
         }
 
 
@@ -150,7 +150,7 @@ namespace GitCommands
         {
             if (IsRemote)
             {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + "remotes/".Length);
             }
             else if (IsTag)
             {
@@ -160,11 +160,11 @@ namespace GitCommands
                         ? CompleteName.Substring(0, CompleteName.Length - TagDereferenceSuffix.Length)
                         : CompleteName;
 
-                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
+                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + "tags/".Length);
             }
             else if (IsHead)
             {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + "heads/".Length);
             }
             else
             {
