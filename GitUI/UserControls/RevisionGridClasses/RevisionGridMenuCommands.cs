@@ -100,7 +100,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Text = "Go to commit...";
                 menuCommand.Image = Resources.IconGotoCommit;
                 menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToCommit);
-                menuCommand.ExecuteAction = GotoCommitExcecute;
+                menuCommand.ExecuteAction = GotoCommitExecute;
 
                 resultList.Add(menuCommand);
             }
@@ -455,7 +455,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         public event EventHandler MenuChanged;
 
         // taken from http://stackoverflow.com/questions/5058254/inotifypropertychanged-propertychangedeventhandler-event-is-always-null
-        // paramenter name not used
+        // parameter name not used
         protected void OnMenuChanged()
         {
             Debug.WriteLine("RevisionGridMenuCommands.OnPropertyChanged()");
@@ -484,7 +484,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             _revisionGrid.ExecuteCommand(RevisionGrid.Commands.SelectCurrentRevision);
         }
 
-        public void GotoCommitExcecute()
+        public void GotoCommitExecute()
         {
             using (FormGoToCommit formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
             {
