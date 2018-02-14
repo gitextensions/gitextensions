@@ -314,7 +314,7 @@ namespace TfsInterop
             return result;
         }
 
-        private string GetCommitFromSourceVersion(string sourceVersion)
+        private static string GetCommitFromSourceVersion(string sourceVersion)
         {
             if (sourceVersion.LastIndexOf(':') > 0)
             {

@@ -197,7 +197,7 @@ namespace GitUI
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
-        private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
         {
             foreach (var menuCommand in menuCommands)
             {
@@ -211,7 +211,7 @@ namespace GitUI
             }
         }
 
-        void Loading_Paint(object sender, PaintEventArgs e)
+        private void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
             if (Loading != null)
@@ -1199,7 +1199,7 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
+        private static SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
             if (gitModule.SuperprojectModule == null)
                 return null;
@@ -1764,7 +1764,7 @@ namespace GitUI
                                                                _revisionHighlighting.AuthorEmailToHighlight);
         }
 
-        private bool ShouldRenderAlternateBackColor(int rowIndex)
+        private static bool ShouldRenderAlternateBackColor(int rowIndex)
         {
             return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
@@ -1943,7 +1943,7 @@ namespace GitUI
             return AppSettings.OtherTagColor;
         }
 
-        private float RoundToEven(float value)
+        private static float RoundToEven(float value)
         {
             int result = ((int)value / 2) * 2;
             return result < value ? result + 2 : result;
@@ -1958,7 +1958,7 @@ namespace GitUI
 
         static readonly float[] dashPattern = { 4, 4 };
 
-        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
+        private static float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
         {
             float additionalOffset = arrowType != ArrowType.None ? GetArrowSize(height) : 0;
@@ -2009,12 +2009,12 @@ namespace GitUI
             return additionalOffset;
         }
 
-        private float GetArrowSize(float rowHeight)
+        private static float GetArrowSize(float rowHeight)
         {
             return rowHeight - 6;
         }
 
-        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
+        private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
             const float horShift = 4;
             const float verShift = 3;
@@ -2672,7 +2672,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private string TimeToString(DateTime time)
+        private static string TimeToString(DateTime time)
         {
             if (time == DateTime.MinValue || time == DateTime.MaxValue)
                 return "";
@@ -3032,7 +3032,7 @@ namespace GitUI
                 Refresh();
         }
 
-        private void ToggleRevisionGraph()
+        private static void ToggleRevisionGraph()
         {
             if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small)
                 AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
@@ -3443,7 +3443,7 @@ namespace GitUI
             OpenManual();
         }
 
-        private void OpenManual()
+        private static void OpenManual()
         {
             string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
             OsShellUtil.OpenUrlInDefaultBrowser(url);

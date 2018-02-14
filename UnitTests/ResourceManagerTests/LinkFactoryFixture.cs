@@ -26,7 +26,7 @@ namespace ResourceManagerTests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
-        private void TestCreateLink(string caption, string uri)
+        private static void TestCreateLink(string caption, string uri)
         {
             LinkFactory linkFactory = new LinkFactory();
             linkFactory.CreateLink(caption, uri);

@@ -227,8 +227,8 @@ namespace GitCommands.Remote
             {
                 if (remote.Disabled)
                 {
-                    // disabled branches can't updated as it poses to many problems, i.e. 
-                    // - verify that the branch name is valid, and 
+                    // disabled branches can't updated as it poses to many problems, i.e.
+                    // - verify that the branch name is valid, and
                     // - it does not duplicate an active branch name etc.
                     return new GitRemoteSaveResult(null, false);
                 }
@@ -335,13 +335,13 @@ namespace GitCommands.Remote
             return module;
         }
 
-        private string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
+        private static string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
         {
             var key = string.Format(settingKey, remoteName);
             return remoteEnabled ? key : DisabledSectionPrefix + key;
         }
 
-        private void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
+        private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
         {
             var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
             var fullSettingName = preffix + string.Format(settingName, remoteName);

@@ -149,7 +149,7 @@ namespace GitCommands.Config
             return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
-        private int FindAndCheckKeyIndex(string setting)
+        private static int FindAndCheckKeyIndex(string setting)
         {
             var keyIndex = FindKeyIndex(setting);
 
@@ -159,15 +159,14 @@ namespace GitCommands.Config
             return keyIndex;
         }
 
-        private int FindKeyIndex(string setting)
+        private static int FindKeyIndex(string setting)
         {
             return setting.LastIndexOf('.');
         }
 
         public bool HasConfigSection(string configSectionName)
         {
-            var configSection = FindConfigSection(configSectionName);
-            return configSection != null;
+            return FindConfigSection(configSectionName) != null;
         }
 
         private string GetStringValue(string setting)

@@ -272,7 +272,7 @@ namespace GitUI.CommandsDialogs
             Message.Text = _commitTemplate = string.Empty;
         }
 
-        private void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private static void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.Alt)
                 e.IsInputKey = true;
@@ -2119,11 +2119,9 @@ namespace GitUI.CommandsDialogs
         {
             _userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
             _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
-
-
-
         }
-        private bool SenderToFileStatusList(object sender, out FileStatusList list)
+
+        private static bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             ContextMenuStrip menu = item?.Owner as ContextMenuStrip;

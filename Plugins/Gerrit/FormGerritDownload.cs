@@ -142,7 +142,7 @@ namespace Gerrit
             return !command.ErrorOccurred;
         }
 
-        private string FetchCommand(string remote, string remoteBranch)
+        private static string FetchCommand(string remote, string remoteBranch)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)

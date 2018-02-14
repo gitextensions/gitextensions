@@ -65,7 +65,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             OnMenuChanged();
         }
 
-        private void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
+        private static void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
         {
             foreach (var sourceMc in sourceList.Where(mc => !mc.IsSeparator))
             {

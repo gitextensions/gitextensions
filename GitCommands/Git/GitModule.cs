@@ -910,7 +910,7 @@ namespace GitCommands
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
 
-        private string GetSortedRefsCommand()
+        private static string GetSortedRefsCommand()
         {
             if (AppSettings.ShowSuperprojectRemoteBranches)
                 return "for-each-ref --sort=-committerdate --format=\"%(objectname) %(refname)\" refs/";
@@ -1832,7 +1832,7 @@ namespace GitCommands
             return output.Combine(Environment.NewLine, error);
         }
 
-        private void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
+        private static void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
         {
             //process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
@@ -2191,7 +2191,7 @@ namespace GitCommands
             return GetPatch(patchManager, fileName, oldFileName);
         }
 
-        private Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
+        private static Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
         {
             foreach (Patch p in patchManager.Patches)
                 if (fileName == p.FileNameB &&

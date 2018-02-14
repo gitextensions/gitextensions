@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return "graph,visual studio,author,image,font,lang,language,spell,spelling";
         }
 
-        private int GetTruncatePathMethodIndex(string text)
+        private static int GetTruncatePathMethodIndex(string text)
         {
             switch (text.ToLowerInvariant())
             {
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private string GetTruncatePathMethodString(int index)
+        private static string GetTruncatePathMethodString(int index)
         {
             switch (index)
             {
@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SetFontButtonText(newFont, commitFontChangeButton);
         }
 
-        private void SetFontButtonText(Font font, Button button)
+        private static void SetFontButtonText(Font font, Button button)
         {
             button.Text = string.Format("{0}, {1}", font.FontFamily.Name, (int)(font.Size + 0.5f));
         }

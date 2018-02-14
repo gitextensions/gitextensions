@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             Translate();
         }
 
-        private TextBox getNewTextBox()
+        private static TextBox getNewTextBox()
         {
             TextBox tb = new TextBox();
             tb.BackColor = Color.White;
@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return tb;
         }
 
-        private TabPage getNewTabPage(TextBox tb, string caption)
+        private static TabPage getNewTabPage(TextBox tb, string caption)
         {
             TabPage tp = new TabPage();
             tp.Margin = new Padding(0);
@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return tp;
         }
 
-        private TabControl getNewTabControl()
+        private static TabControl getNewTabControl()
         {
             TabControl tc = new TabControl();
             tc.Dock = DockStyle.Fill;

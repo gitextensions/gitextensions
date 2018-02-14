@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs
                 cbLfs.Checked = false;
         }
 
-        private bool CanBeGitURL(string anURL)
+        private static bool CanBeGitURL(string anURL)
         {
             if (anURL == null)
             {

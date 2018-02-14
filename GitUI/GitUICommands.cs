@@ -2011,7 +2011,7 @@ namespace GitUI
             Application.Run(frmCmdLine);
         }
 
-        private void Uninstall()
+        private static void Uninstall()
         {
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
 

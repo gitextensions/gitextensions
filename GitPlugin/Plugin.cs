@@ -119,7 +119,7 @@ namespace GitPlugin
             }
         }
 
-        private bool HasCommand(CommandBar commandBar, string caption)
+        private static bool HasCommand(CommandBar commandBar, string caption)
         {
             caption = caption.Trim();
             return commandBar.Controls

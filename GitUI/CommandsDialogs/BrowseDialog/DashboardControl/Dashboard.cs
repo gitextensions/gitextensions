@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        private void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
+        private static void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
             var repository = e.Repository;
             if (repository != null)
@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <param name="form"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
+        private static T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
             return FindControl(form.Controls, predicate);
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <param name="controls"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {
             foreach (Control control in controls)
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _splitterManager.RestoreSplitters();
         }
 
-        private void TranslateItem_Click(object sender, EventArgs e)
+        private static void TranslateItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }

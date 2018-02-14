@@ -11,7 +11,7 @@ namespace GitCommandsTests.Git
     [TestClass]
     public class GitCheckoutBranchCmdTest
     {
-        private GitCheckoutBranchCmd GetInstance(bool remote)
+        private static GitCheckoutBranchCmd GetInstance(bool remote)
         {
             return new GitCheckoutBranchCmd("branchName", remote);
         }

@@ -121,9 +121,9 @@ namespace GitUI.Editor
             base.DisposeUICommandsSource();
         }
 
-        private bool RunTime()
+        private static bool RunTime()
         {
-            return (Process.GetCurrentProcess().ProcessName != "devenv");
+            return Process.GetCurrentProcess().ProcessName != "devenv";
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

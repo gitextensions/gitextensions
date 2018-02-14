@@ -131,7 +131,7 @@ namespace ReleaseNotesGenerator
             return result;
         }
 
-        private string CreateHtmlTable(IEnumerable<LogLine> logLines)
+        private static string CreateHtmlTable(IEnumerable<LogLine> logLines)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("<table>\r\n");

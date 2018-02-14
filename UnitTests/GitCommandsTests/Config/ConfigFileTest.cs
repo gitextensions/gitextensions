@@ -13,14 +13,13 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace GitCommandsTests.Config
 {
     /// <summary>
-    /// Tests for configfile class. 
+    /// Tests for configfile class.
     /// The configfile class should respond the same as "git config".
     /// Since .gitconfig is often hidden, also make sure this is tested.
     /// </summary>
     [TestClass]
     public class ConfigFileTest
     {
-
         private GitModule _Module;
         private GitModule Module
         {
@@ -32,17 +31,17 @@ namespace GitCommandsTests.Config
             }
         }
 
-        private string GetTempFolder()
+        private static string GetTempFolder()
         {
             return Path.GetTempPath();
         }
 
-        private string GetConfigFileName()
+        private static string GetConfigFileName()
         {
             return Path.Combine(GetTempFolder(), "testconfigfile");
         }
 
-        private string GetDefaultConfigFileContent()
+        private static string GetDefaultConfigFileContent()
         {
             StringBuilder content = new StringBuilder();
             content.AppendLine("[section1]");

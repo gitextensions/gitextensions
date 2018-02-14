@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
         public bool UserAbleToChangeRevision { get; set; }
         public bool CouldBeOrphan { get; set; }
 
-        private IEnumerable<T> FindControls<T>(Control control) where T : Control
+        private static IEnumerable<T> FindControls<T>(Control control) where T : Control
         {
             var controls = control.Controls.Cast<Control>().ToList();
             return controls.SelectMany(FindControls<T>)
@@ -50,7 +50,6 @@ namespace GitUI.CommandsDialogs
                            .Where(c => c.GetType() == typeof(T))
                            .Cast<T>();
         }
-
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {

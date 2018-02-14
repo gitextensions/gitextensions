@@ -218,7 +218,7 @@ namespace GitUI
                                   new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
 
-        private string AppendItemSubmoduleStatus(string text, GitItemStatus item)
+        private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
         {
             if (item.IsSubmodule &&
                 item.SubmoduleStatus != null &&
