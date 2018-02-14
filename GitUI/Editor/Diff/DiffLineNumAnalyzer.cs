@@ -15,7 +15,7 @@ namespace GitUI.Editor.Diff
         public class Result
         {
             public Dictionary<int, DiffLineNum> LineNumbers = new Dictionary<int, DiffLineNum>();
-            public int MaxLineNumber = 0;
+            public int MaxLineNumber;
         }
 
         private void AddToResult(Result result, DiffLineNum diffLine)
@@ -65,7 +65,7 @@ namespace GitUI.Editor.Diff
                     {
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNum = DiffLineNum.NotApplicableLineNum,
-                        RightLineNum = DiffLineNum.NotApplicableLineNum,
+                        RightLineNum = DiffLineNum.NotApplicableLineNum
                     };
 
                     if (IsMinusLineInCombinedDiff(line))
@@ -108,7 +108,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNum = DiffLineNum.NotApplicableLineNum,
                         RightLineNum = rightLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Plus,
+                        Style = DiffLineNum.DiffLineStyle.Plus
                     };
                     AddToResult(ret, meta);
                     rightLineNum++;
@@ -131,7 +131,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNum = leftLineNum,
                         RightLineNum = rightLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Context,
+                        Style = DiffLineNum.DiffLineStyle.Context
                     };
                     AddToResult(ret, meta);
 

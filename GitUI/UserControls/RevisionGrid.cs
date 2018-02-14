@@ -17,7 +17,7 @@ using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUI.Editor; // For ColorHelper
+using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -28,6 +28,7 @@ using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using Gravatar;
 using ResourceManager;
+// For ColorHelper
 
 namespace GitUI
 {
@@ -99,7 +100,7 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
-        private GitRevision _baseCommitToCompare = null;
+        private GitRevision _baseCommitToCompare;
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
 
@@ -127,7 +128,7 @@ namespace GitUI
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
 
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Resources.loadingpanel;
 
             Translate();
 
@@ -187,7 +188,7 @@ namespace GitUI
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
             IsMessageMultilineDataGridViewColumn.Resizable = DataGridViewTriState.False;
 
-            this.HotkeysEnabled = true;
+            HotkeysEnabled = true;
             try
             {
                 SetRevisionsLayout((RevisionGridLayout)AppSettings.RevisionGraphLayout);
@@ -206,7 +207,7 @@ namespace GitUI
         {
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
                 var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
                 if (toolStripMenuItem != null)
                 {
@@ -365,7 +366,7 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
         }
 
-        private bool _isRefreshingRevisions = false;
+        private bool _isRefreshingRevisions;
         private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
@@ -776,12 +777,10 @@ namespace GitUI
                 SetSelectedIndex(index);
                 return true;
             }
-            else
-            {
-                Revisions.ClearSelection();
-                Revisions.Select();
-                return false;
-            }
+
+            Revisions.ClearSelection();
+            Revisions.Select();
+            return false;
         }
 
         /// <summary>
@@ -848,7 +847,7 @@ namespace GitUI
             if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
                 _navigationHistory.Push(firstSelectedRevision.Guid);
 
-            if (this.Parent != null && !Revisions.UpdatingVisibleRows &&
+            if (Parent != null && !Revisions.UpdatingVisibleRows &&
                 _revisionHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions) ==
                 AuthorEmailBasedRevisionHighlighting.SelectionChangeAction.RefreshUserInterface)
             {
@@ -913,7 +912,7 @@ namespace GitUI
             if (direction.HasValue)
             {
                 int d = direction.Value == SortDirection.Ascending ? 1 : -1;
-                rows = rows.OrderBy((row) => row.Index, (r1, r2) => d * (r1 - r2));
+                rows = rows.OrderBy(row => row.Index, (r1, r2) => d * (r1 - r2));
             }
 
             return rows
@@ -1040,14 +1039,13 @@ namespace GitUI
                                                        committerFilter,
                                                        messageFilter,
                                                        ignoreCase);
-                else
-                    return null;
+                return null;
             }
         }
 
         public void ReloadHotkeys()
         {
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
         }
 
@@ -1091,7 +1089,7 @@ namespace GitUI
                 GitModule capturedModule = Module;
                 Task<SuperProjectInfo> newSuperPrjectInfo =
                     Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
-                newSuperPrjectInfo.ContinueWith((task) => Refresh(),
+                newSuperPrjectInfo.ContinueWith(task => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
@@ -1180,7 +1178,7 @@ namespace GitUI
                     BranchFilter = BranchFilter,
                     RefsOptions = _refsOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
-                    PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
+                    PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter
                 };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
@@ -1387,7 +1385,7 @@ namespace GitUI
             else
                 revListParams += "--topo-order ";
             if (AppSettings.MaxRevisionGraphCommits > 0)
-                revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
+                revListParams += string.Format("--max-count=\"{0}\" ", AppSettings.MaxRevisionGraphCommits);
 
             return Module.ReadGitOutputLines(revListParams + initRevision).ToArray();
         }
@@ -1965,7 +1963,7 @@ namespace GitUI
             NotFilled
         }
 
-        static readonly float[] dashPattern = new float[] { 4, 4 };
+        static readonly float[] dashPattern = { 4, 4 };
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
@@ -3237,7 +3235,7 @@ namespace GitUI
             SelectAsBaseToCompare,
             CompareToBase,
             CreateFixupCommit,
-            ToggleShowTags,
+            ToggleShowTags
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -3396,7 +3394,7 @@ namespace GitUI
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var headCommit = this.GetSelectedRevisions().First();
+            var headCommit = GetSelectedRevisions().First();
             using (var form = new FormCompareToBranch(UICommands, headCommit.Guid))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
@@ -3413,7 +3411,7 @@ namespace GitUI
 
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var baseCommit = this.GetSelectedRevisions().First();
+            var baseCommit = GetSelectedRevisions().First();
             var headBranch = Module.GetSelectedBranch();
             var headBranchName = Module.RevParse(headBranch);
             using (var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
@@ -3458,7 +3456,7 @@ namespace GitUI
 
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var revision = this.GetSelectedRevisions().First();
+            var revision = GetSelectedRevisions().First();
             if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
                 Process.Start(revision.BuildStatus.Url);
         }

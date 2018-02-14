@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.Properties;
+using GitUI.Script;
 using ResourceManager;
-using GitCommands;
 
 namespace GitUI.Hotkey
 {
@@ -204,10 +206,10 @@ namespace GitUI.Hotkey
         {
             if (AppSettings.SerializedHotkeys == null)
             {
-                Properties.Settings.Default.Upgrade();
-                if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
+                Settings.Default.Upgrade();
+                if (!string.IsNullOrWhiteSpace(Settings.Default.Hotkeys))
                 {
-                    HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
+                    HotkeySettings[] settings = LoadSerializedSettings(Settings.Default.Hotkeys);
                     if (settings == null)
                     {
                         AppSettings.SerializedHotkeys = " ";//mark settings as migrated
@@ -318,7 +320,7 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadScriptHotkeys()
         {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+            var curScripts = ScriptManager.GetScripts();
 
             HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
             /* define unusable int for identifying a shortcut for a custom script is pressed
@@ -329,7 +331,7 @@ namespace GitUI.Hotkey
 
             return curScripts.
                 Where(s => !s.Name.IsNullOrEmpty()).
-                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) }
+                Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) }
             ).ToArray();
         }
 

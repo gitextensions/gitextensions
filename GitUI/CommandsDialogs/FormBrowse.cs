@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Media;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +22,7 @@ using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
+using GitUI.CommitInfo;
 using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
@@ -26,8 +32,8 @@ using GitUI.UserControls.RevisionGridClasses;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
 using Microsoft.Win32;
-using ResourceManager;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -176,7 +182,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.UICommandsSource = this;
             Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
-                .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
+                .ContinueWith(task => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += SetGitModule;
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
@@ -410,7 +416,7 @@ namespace GitUI.CommandsDialogs
                 if (AppSettings.PlaySpecialStartupSound)
                 {
                     using (var cowMoo = Resources.cow_moo)
-                        new System.Media.SoundPlayer(cowMoo).Play();
+                        new SoundPlayer(cowMoo).Play();
                 }
             }
             catch
@@ -669,7 +675,7 @@ namespace GitUI.CommandsDialogs
                 };
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
 
-                RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
+                RecentRepoInfo ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
 
                 if (ri == null)
                     _NO_TRANSLATE_Workingdir.Text = Module.WorkingDir;
@@ -769,7 +775,7 @@ namespace GitUI.CommandsDialogs
 
                 CreateOrUpdateTaskBarButtons(validWorkingDir);
             }
-            catch (System.Runtime.InteropServices.COMException ex)
+            catch (COMException ex)
             {
                 Trace.WriteLine(ex.Message, "UpdateJumplist");
             }
@@ -791,7 +797,7 @@ namespace GitUI.CommandsDialogs
                     _pullButton.Click += PullToolStripMenuItemClick;
 
                     _toolbarButtonsCreated = true;
-                    ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
+                    ThumbnailToolBarButton[] buttons = { _commitButton, _pullButton, _pushButton };
 
                     //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
                     TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);
@@ -847,7 +853,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // make the image shrink nicely by using HighQualityBicubic mode
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.DrawImage(img, x, y, w, h); // draw image with specified dimensions
             g.Flush(); // make sure all drawing operations complete before we get the icon
 
@@ -861,7 +867,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.ShowStashCount)
             {
                 AsyncLoader.DoAsync(() => Module.GetStashes().Count,
-                    (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
+                    result => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
                         result != 1 ? _stashPlural.Text : _stashSingular.Text));
             }
             else
@@ -922,7 +928,7 @@ namespace GitUI.CommandsDialogs
             AsyncLoader.DoAsync(
                 () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
                       !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
-                (result) =>
+                result =>
                 {
                     if (result)
                     {
@@ -1233,7 +1239,7 @@ namespace GitUI.CommandsDialogs
 
         private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = RevisionGrid.GetSelectedRevisions(System.DirectoryServices.SortDirection.Descending);
+            var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
 
             UICommands.StartCherryPickDialog(this, revisions);
         }
@@ -1511,7 +1517,8 @@ namespace GitUI.CommandsDialogs
                     Repositories.RepositoryHistory.RemoveRecentRepository(path);
                     return;
                 }
-                else if (dialogResult == DialogResult.Cancel)
+
+                if (dialogResult == DialogResult.Cancel)
                     return;
             }
 
@@ -1576,7 +1583,7 @@ namespace GitUI.CommandsDialogs
             {
                 Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.51/");
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
             }
         }
@@ -1977,7 +1984,7 @@ namespace GitUI.CommandsDialogs
             _splitterManager.SaveSplitters();
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             SaveSplitterPositions();
@@ -1992,31 +1999,31 @@ namespace GitUI.CommandsDialogs
             base.OnClosed(e);
         }
 
-        private void CommandsToolStripMenuItem_DropDownOpening(object sender, System.EventArgs e)
+        private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             //Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
 
-            this.branchToolStripMenuItem.Enabled =
-            this.deleteBranchToolStripMenuItem.Enabled =
-            this.mergeBranchToolStripMenuItem.Enabled =
-            this.rebaseToolStripMenuItem.Enabled =
-            this.stashToolStripMenuItem.Enabled =
+            branchToolStripMenuItem.Enabled =
+            deleteBranchToolStripMenuItem.Enabled =
+            mergeBranchToolStripMenuItem.Enabled =
+            rebaseToolStripMenuItem.Enabled =
+            stashToolStripMenuItem.Enabled =
               selectedRevisions.Count > 0 && !Module.IsBareRepository();
 
-            this.resetToolStripMenuItem.Enabled =
-            this.checkoutBranchToolStripMenuItem.Enabled =
-            this.runMergetoolToolStripMenuItem.Enabled =
-            this.cherryPickToolStripMenuItem.Enabled =
-            this.checkoutToolStripMenuItem.Enabled =
-            this.toolStripMenuItemReflog.Enabled = 
-            this.bisectToolStripMenuItem.Enabled =
+            resetToolStripMenuItem.Enabled =
+            checkoutBranchToolStripMenuItem.Enabled =
+            runMergetoolToolStripMenuItem.Enabled =
+            cherryPickToolStripMenuItem.Enabled =
+            checkoutToolStripMenuItem.Enabled =
+            toolStripMenuItemReflog.Enabled = 
+            bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
-            this.tagToolStripMenuItem.Enabled =
-            this.deleteTagToolStripMenuItem.Enabled =
-            this.archiveToolStripMenuItem.Enabled =
+            tagToolStripMenuItem.Enabled =
+            deleteTagToolStripMenuItem.Enabled =
+            archiveToolStripMenuItem.Enabled =
               enabled;
         }
 
@@ -2182,7 +2189,7 @@ namespace GitUI.CommandsDialogs
                 CheckoutBranchToolStripMenuItemClick(sender, e);
         }
 
-        private void RevisionInfo_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        private void RevisionInfo_CommandClick(object sender, CommandEventArgs e)
         {
             if (e.Command == "gotocommit")
             {
@@ -2467,7 +2474,7 @@ namespace GitUI.CommandsDialogs
 
             // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
             // CreateSubmoduleMenuItem to update images with submodule status.
-            updateTask.ContinueWith((task) =>
+            updateTask.ContinueWith(task =>
             {
                 if (task.Result == null)
                     return;
@@ -2585,7 +2592,7 @@ namespace GitUI.CommandsDialogs
                 {
                     tabpage.Controls.Clear();
                     tabpage.Controls.Add(
-                        _terminal = new ConEmuControl()
+                        _terminal = new ConEmuControl
                         {
                             Dock = DockStyle.Fill,
                             AutoStartInfo = null,
@@ -2739,7 +2746,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripBranches_DropDown_ResizeDropDownWidth(object sender, EventArgs e)
         {
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            toolStripBranchFilterComboBox.ComboBox.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
-using GitUI.Properties;
+using GitCommands;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -10,8 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", new []{Coders, Translators,
-                Designers, Other})
+            _contributersList = string.Join(", ", Coders, Translators, Designers, Other)
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
@@ -38,7 +39,7 @@ namespace GitUI.CommandsDialogs
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(FormDonate.DonationUrl);
+            Process.Start(FormDonate.DonationUrl);
         }
 
         private void AboutBox_Load(object sender, EventArgs e)
@@ -58,7 +59,7 @@ namespace GitUI.CommandsDialogs
             base.OnLoad(e);
 
             _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text,
-                GitCommands.AppSettings.ProductVersion);
+                AppSettings.ProductVersion);
         }
 
         private readonly string[] _contributersList;

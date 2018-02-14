@@ -13,7 +13,7 @@ namespace GitUI.RevisionGridClasses
             {
                 Unprocessed,
                 Processing,
-                Processed,
+                Processed
             }
 
             #endregion
@@ -62,11 +62,10 @@ namespace GitUI.RevisionGridClasses
                 {
                     if (childIndex > 0)
                         return nodes[childIndex - 1];
-                    else
-                        throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
+                    throw new ArgumentException("Parent has no children:\n" + aParent);
                 }
 
-                throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent.ToString());
+                throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent);
             }
 
             public int NodesCount => nodes.Count;

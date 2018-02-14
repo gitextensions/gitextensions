@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
 using ConEmu.WinForms;
-
 using GitCommands;
 using GitCommands.Utils;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace GitUI.UserControls
 {
@@ -28,7 +26,7 @@ namespace GitUI.UserControls
 
         private void InitializeComponent()
         {
-            Controls.Add(_panel = new Panel() { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
+            Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
         }
 
         public override int ExitCode => _nLastExitCode;
@@ -56,7 +54,7 @@ namespace GitUI.UserControls
         {
             ConEmuControl oldTerminal = _terminal;
 
-            _terminal = new ConEmuControl()
+            _terminal = new ConEmuControl
             {
                 Dock = DockStyle.Fill,
                 AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
@@ -130,7 +128,7 @@ namespace GitUI.UserControls
     {
         private Action<TextEventArgs> _FireDataReceived;
         private int _commandLineCharsInOutput;
-        private string _lineChunk = null;
+        private string _lineChunk;
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> FireDataReceived)
         {

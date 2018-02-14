@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
-using GitCommands.Config;
 using GitCommands;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Process.Start(UpdateUrl);
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
             }
         }
@@ -171,18 +171,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e);
+                Debug.WriteLine(e);
                 return null;
             }
 
-            var version = new ReleaseVersion()
+            var version = new ReleaseVersion
             {
                 Version = ver,
                 ReleaseType = ReleaseType.Major,
                 DownloadPage = section.GetValue("DownloadPage")
             };
 
-            Enum.TryParse<ReleaseType>(section.GetValue("ReleaseType"), true, out version.ReleaseType);
+            Enum.TryParse(section.GetValue("ReleaseType"), true, out version.ReleaseType);
 
             return version;
 

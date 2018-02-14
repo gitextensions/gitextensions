@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -63,7 +64,7 @@ namespace GitUI
 
         protected bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
+            return ScriptRunner.ExecuteScriptCommand(this, Module, command);
         }
     }
 }

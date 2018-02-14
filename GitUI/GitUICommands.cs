@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using GitCommands.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
@@ -399,7 +401,7 @@ namespace GitUI
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
         {
-            form.FormClosed += (object o, FormClosedEventArgs ea) =>
+            form.FormClosed += (o, ea) =>
             {
                 InvokeEvent(form == null ? null : form.Owner, ev);
             };
@@ -777,7 +779,7 @@ namespace GitUI
 
         public bool StartInitializeDialog()
         {
-            return StartInitializeDialog((IWin32Window)null, null);
+            return StartInitializeDialog(null, null);
         }
 
         public bool StartInitializeDialog(IWin32Window owner, string dir, EventHandler<GitModuleEventArgs> GitModuleChanged)
@@ -1040,8 +1042,8 @@ namespace GitUI
                     else
                         Directory.Delete(path, true);
                 }
-                catch (System.IO.IOException) { }
-                catch (System.UnauthorizedAccessException) { }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
             }
 
             Cursor.Current = Cursors.Default;
@@ -1113,7 +1115,7 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
             if (revisions == null)
@@ -1496,7 +1498,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
@@ -1922,7 +1924,7 @@ namespace GitUI
                     return;
                 case "fileeditor":  // filename
                     if (!StartFileEditorDialog(args[2]))
-                        System.Environment.ExitCode = -1;
+                        Environment.ExitCode = -1;
                     return;
                 case "formatpatch":
                     StartFormatPatchDialog();
@@ -2066,7 +2068,7 @@ namespace GitUI
             {
                 if (File.Exists(args[2]))
                 {
-                    string path = File.ReadAllText(args[2]).Trim().Split(new char[] { '\n' }, 1).FirstOrDefault();
+                    string path = File.ReadAllText(args[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
                     if (Directory.Exists(path))
                     {
                         c = new GitUICommands(path);

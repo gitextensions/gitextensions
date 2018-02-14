@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -59,8 +60,8 @@ namespace GitUI.CommandsDialogs
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
 
-            this.Load += (sender, args) => PopulateDiffFiles();
-            this.DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
+            Load += (sender, args) => PopulateDiffFiles();
+            DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
         }
 
         private void DiffTextOnExtraDiffArgumentsChanged(object sender, EventArgs eventArgs)
@@ -119,20 +120,20 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            GitUI.RevisionDiffKind diffKind;
+            RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffALocal;
+                diffKind = RevisionDiffKind.DiffALocal;
             else if (sender == bLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+                diffKind = RevisionDiffKind.DiffBLocal;
             else if (sender == parentOfALocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+                diffKind = RevisionDiffKind.DiffAParentLocal;
             else if (sender == parentOfBLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+                diffKind = RevisionDiffKind.DiffBParentLocal;
             else
             {
                 Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
-                diffKind = GitUI.RevisionDiffKind.DiffAB;
+                diffKind = RevisionDiffKind.DiffAB;
             }
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
@@ -176,7 +177,7 @@ namespace GitUI.CommandsDialogs
 
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = name =>
             {
 
                 string nameAsLower = name.ToLower();
@@ -228,7 +229,7 @@ namespace GitUI.CommandsDialogs
             PickAnotherCommit(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
         }
 
-        private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, CancelEventArgs e)
         {
             aLocalToolStripMenuItem.Enabled = _baseRevision != null && _baseRevision.Guid != GitRevision.UnstagedGuid && !Module.IsBareRepository();
             bLocalToolStripMenuItem.Enabled = _headRevision != null && _headRevision.Guid != GitRevision.UnstagedGuid && !Module.IsBareRepository();

@@ -1,15 +1,15 @@
 ﻿﻿﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GitCommands;
-using GitCommands.Git;
+  using System.Collections.Generic;
+  using System.Drawing;
+  using System.Linq;
+  using System.Threading.Tasks;
+  using System.Windows.Forms;
+  using GitCommands;
+  using GitCommands.Git;
   using GitUI.Script;
-using GitUIPluginInterfaces;
-using PSTaskDialog;
-using ResourceManager;
+  using GitUIPluginInterfaces;
+  using PSTaskDialog;
+  using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

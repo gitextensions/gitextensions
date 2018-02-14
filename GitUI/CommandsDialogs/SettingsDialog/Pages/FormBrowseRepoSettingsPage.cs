@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -39,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AddSettingBinding(AppSettings.ShowGpgInformation, chkShowGpgInformation);
         }
 
-        private void chkChowConsoleTab_CheckedChanged(object sender, System.EventArgs e)
+        private void chkChowConsoleTab_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxConsoleSettings.Enabled = chkChowConsoleTab.Checked;
         }

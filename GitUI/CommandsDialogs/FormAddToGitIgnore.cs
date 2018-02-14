@@ -42,10 +42,8 @@ namespace GitUI.CommandsDialogs
                 {
                     return _fullPathResolver.Resolve(".gitignore");
                 }
-                else
-                {
-                    return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
-                }
+
+                return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
             }
         }
 

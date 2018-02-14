@@ -14,6 +14,7 @@ using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;
+using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI
 {
@@ -75,7 +76,7 @@ namespace GitUI
             FileStatusListView.LargeImageList = _images;
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
-            this.Controls.SetChildIndex(NoFiles, 0);
+            Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _filter = new Regex(".*");
@@ -277,7 +278,7 @@ namespace GitUI
                 FileStatusListView.ContextMenuStrip = value;
                 if (FileStatusListView.ContextMenuStrip != null)
                 {
-                    FileStatusListView.ContextMenuStrip.Opening += new CancelEventHandler(FileStatusListView_ContextMenu_Opening);
+                    FileStatusListView.ContextMenuStrip.Opening += FileStatusListView_ContextMenu_Opening;
                 }
             }
         }
@@ -368,10 +369,8 @@ namespace GitUI
             {
                 return 0;
             }
-            else
-            {
-                return _itemsDictionary.SelectMany(pair => pair.Value).Count();
-            }
+
+            return _itemsDictionary.SelectMany(pair => pair.Value).Count();
         }
 
         [Browsable(false)]
@@ -563,7 +562,7 @@ namespace GitUI
         {
             var submoduleName = SelectedItem.Name;
             SelectedItem.SubmoduleStatus.ContinueWith(
-                (t) =>
+                t =>
                 {
                     Process process = new Process();
                     process.StartInfo.FileName = Application.ExecutablePath;
@@ -783,7 +782,7 @@ namespace GitUI
                             if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                             {
                                 var capturedItem = item;
-                                item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(capturedItem),
+                                item.SubmoduleStatus.ContinueWith(task => listItem.ImageIndex = GetItemImageIndex(capturedItem),
                                                                   CancellationToken.None,
                                                                   TaskContinuationOptions.OnlyOnRanToCompletion,
                                                                   TaskScheduler.FromCurrentSynchronizationContext());
@@ -1070,7 +1069,7 @@ namespace GitUI
             if (_lastUserInputTime == 0)
             {
                 long timerLastChanged = currentTime;
-                var timer = new System.Windows.Forms.Timer { Interval = 250 };
+                var timer = new Timer { Interval = 250 };
                 timer.Tick += (s, a) =>
                 {
                     if (NoUserInput(timerLastChanged))

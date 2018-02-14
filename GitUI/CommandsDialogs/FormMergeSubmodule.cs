@@ -17,21 +17,21 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             lbSubmodule.Text = filename;
-            this._filename = filename;
+            _filename = filename;
         }
 
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
             var item = Module.GetConflict(_filename);
-            this.tbBase.Text = item.Base.Hash ?? _deleted.Text;
-            this.tbLocal.Text = item.Local.Hash ?? _deleted.Text;
-            this.tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
-            this.tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
+            tbBase.Text = item.Base.Hash ?? _deleted.Text;
+            tbLocal.Text = item.Local.Hash ?? _deleted.Text;
+            tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
         {
-            this.tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
         }
 
         private void StageSubmodule()
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
         {
             StageSubmodule();
             DialogResult = DialogResult.OK;
-            this.Close();
+            Close();
         }
 
         private void btOpenSubmodule_Click(object sender, EventArgs e)

@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Serialization;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.Hotkey
 {
@@ -22,8 +22,8 @@ namespace GitUI.Hotkey
         }
         public HotkeySettings(string name, params HotkeyCommand[] commands)
         {
-            this.Name = name;
-            this.Commands = commands;
+            Name = name;
+            Commands = commands;
         }
 
         public override bool Equals(object obj)

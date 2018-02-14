@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-
 using GitUI.UserControls;
-using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -63,7 +63,7 @@ namespace GitUI
 
         public static bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            return ShowDialog(owner, (string)null, arguments);
+            return ShowDialog(owner, null, arguments);
         }
 
         public static bool ShowDialog(GitModuleForm owner, string process, string arguments)
@@ -259,16 +259,16 @@ namespace GitUI
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             //
             // FormProcess
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(565, 326);
-            this.Name = "FormProcess";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(565, 326);
+            Name = "FormProcess";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
     }

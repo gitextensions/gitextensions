@@ -1,5 +1,5 @@
-﻿using GitUIPluginInterfaces;
-using System;
+﻿using System;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

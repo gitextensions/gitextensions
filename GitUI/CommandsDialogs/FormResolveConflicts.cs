@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
@@ -11,8 +14,6 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    using System.Linq;
-
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
@@ -119,8 +120,8 @@ namespace GitUI.CommandsDialogs
             merge.Focus();
             merge.Select();
 
-            this.HotkeysEnabled = true;
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            HotkeysEnabled = true;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -238,14 +239,14 @@ namespace GitUI.CommandsDialogs
             return (path ?? "").ToNativePath();
         }
 
-        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
-            {
+        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>
+        {
                 {".doc",  "merge-doc.js"},
                 {".docx", "merge-doc.js"},
                 {".docm", "merge-doc.js"},
                 {".ods",  "merge-ods.vbs"},
                 {".odt",  "merge-ods.vbs"},
-                {".sxw",  "merge-ods.vbs"},
+                {".sxw",  "merge-ods.vbs"}
             };
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string localFileName, string remoteFileName)
@@ -546,7 +547,7 @@ namespace GitUI.CommandsDialogs
                     int idx = _mergetoolCmd.IndexOf(executablePattern);
                     if (idx >= 0)
                     {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] {'\"', ' '});
+                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
                         _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
                     }
                 }
@@ -899,7 +900,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
                 
-                System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
+                Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
                 int LastRow = hti.RowIndex;
                 ConflictedFiles.ClearSelection();
@@ -1007,7 +1008,7 @@ namespace GitUI.CommandsDialogs
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            System.Diagnostics.Process.Start(_fullPathResolver.Resolve(fileName));
+            Process.Start(_fullPathResolver.Resolve(fileName));
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1075,11 +1076,11 @@ namespace GitUI.CommandsDialogs
 
             switch (command)
             {
-                case Commands.Merge: this.OpenMergetool_Click(null, null); break;
-                case Commands.Rescan: this.Rescan_Click(null, null); break;
-                case Commands.ChooseBase: this.ContextChooseBase_Click(null, null); break;
-                case Commands.ChooseLocal: this.ContextChooseLocal_Click(null, null); break;
-                case Commands.ChooseRemote: this.ContextChooseRemote_Click(null, null); break;
+                case Commands.Merge: OpenMergetool_Click(null, null); break;
+                case Commands.Rescan: Rescan_Click(null, null); break;
+                case Commands.ChooseBase: ContextChooseBase_Click(null, null); break;
+                case Commands.ChooseLocal: ContextChooseLocal_Click(null, null); break;
+                case Commands.ChooseRemote: ContextChooseRemote_Click(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
@@ -70,16 +75,16 @@ Current Branch:
             {
                 System.Resources.ResourceManager rm =
                     new System.Resources.ResourceManager("GitUI.Properties.Resources",
-                                System.Reflection.Assembly.GetExecutingAssembly());
+                                Assembly.GetExecutingAssembly());
 
                 // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
                 rm.GetObject("dummy");
 
-                System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
+                ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
 
                 contextMenuStrip_SplitButton.Items.Clear();
 
-                foreach (System.Collections.DictionaryEntry icon in resourceSet)
+                foreach (DictionaryEntry icon in resourceSet)
                 {
                     //add entry to toolstrip
                     if (icon.Value.GetType() == typeof(Icon))
@@ -260,7 +265,7 @@ Current Branch:
             UpdateIconVisibility();
         }
 
-        private void ScriptInfoEdit_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ScriptInfoEdit_Validating(object sender, CancelEventArgs e)
         {
             ScriptInfoFromEdits();
             ScriptList.Refresh();
@@ -287,7 +292,7 @@ Current Branch:
             IconName = ((ToolStripMenuItem)sender).Text;
 
             //store variables
-            ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
+            ScriptInfoEdit_Validating(sender, new CancelEventArgs());
         }
 
         private Bitmap ResizeForSplitButton(Bitmap b)
@@ -298,7 +303,7 @@ Current Branch:
         public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
         {
             Bitmap result = new Bitmap(nWidth, nHeight);
-            using (Graphics g = Graphics.FromImage((Image)result))
+            using (Graphics g = Graphics.FromImage(result))
                 g.DrawImage(b, 0, 0, nWidth, nHeight);
             return result;
         }
@@ -320,7 +325,7 @@ Current Branch:
         {
             var helpDisplayDialog = new SimpleHelpDisplayDialog();
             helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
-            helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
+            helpDisplayDialog.ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
         }

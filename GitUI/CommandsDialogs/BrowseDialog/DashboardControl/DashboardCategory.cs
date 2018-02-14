@@ -33,8 +33,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComponent();
 
             // Do this here, so that at design time, the form will keep its size.
-            this.flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             SetUpFonts();
             Translate();
@@ -251,15 +251,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         public void AddItem(DashboardItem dashboardItem)
         {
             dashboardItem.Margin = new Padding(10, 0, 0, 0);
-            this.flowLayoutPanel.Controls.Add(dashboardItem);
+            flowLayoutPanel.Controls.Add(dashboardItem);
         }
 
         public void Clear()
         {
-            var items = (from DashboardItem i in this.flowLayoutPanel.Controls
+            var items = (from DashboardItem i in flowLayoutPanel.Controls
                          select i).ToList();
 
-            this.flowLayoutPanel.Controls.Clear();
+            flowLayoutPanel.Controls.Clear();
 
             foreach (var item in items)
             {

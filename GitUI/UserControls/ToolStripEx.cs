@@ -21,12 +21,12 @@ namespace GitUI
         {
             get
             {
-                return this.clickThrough;
+                return clickThrough;
             }
 
             set
             {
-                this.clickThrough = value;
+                clickThrough = value;
             }
         }
 
@@ -34,7 +34,7 @@ namespace GitUI
         {
             base.WndProc(ref m);
 
-            if (this.clickThrough &&
+            if (clickThrough &&
                 m.Msg == NativeConstants.WM_MOUSEACTIVATE &&
                 m.Result == (IntPtr)NativeConstants.MA_ACTIVATEANDEAT)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -266,7 +267,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillFromDropDown()
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
+            BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
             if (_NO_TRANSLATE_From.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();
@@ -277,7 +278,7 @@ namespace GitUI.CommandsDialogs
 
         private void ToDropDown(object sender, EventArgs e)
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
             if (_NO_TRANSLATE_To.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();
@@ -326,7 +327,7 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
                 destinationPath += "[" + label2.Text + "]";
             else
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd('\\', '/');
 
             destinationPath += "\\";
 

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.HelperDialogs;
+using GitUI.Plugin;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -336,7 +338,7 @@ namespace GitUI.Script
             if (command.StartsWith(PluginPrefix))
             {
                 command = command.Replace(PluginPrefix, "");
-                foreach (var plugin in Plugin.LoadedPlugins.Plugins)
+                foreach (var plugin in LoadedPlugins.Plugins)
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands, argument);
@@ -485,7 +487,7 @@ namespace GitUI.Script
                 return "explorer";
 
             //Prefix should be {plugin:pluginname},{plugin=pluginname}
-            var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var match = Regex.Match(originalCommand, @"\{plugin.(.+)\}", RegexOptions.IgnoreCase);
             if (match.Success && match.Groups.Count > 1)
                 originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());
 

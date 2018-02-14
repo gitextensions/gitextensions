@@ -1,11 +1,11 @@
 ﻿
-using GitCommands;
-using GitUI.CommandsDialogs.BrowseDialog;
-using ResourceManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
+using GitUI.CommandsDialogs.BrowseDialog;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -199,14 +199,13 @@ namespace GitUI.CommandsDialogs
             {
                 return new List<MenuCommand>();
             }
-            else if (_navigateMenuCommands != null && _viewMenuCommands != null)
+
+            if (_navigateMenuCommands != null && _viewMenuCommands != null)
             {
                 return _navigateMenuCommands.Concat(_viewMenuCommands);
             }
-            else
-            {
-                throw new ApplicationException("this case is not allowed");
-            }
+
+            throw new ApplicationException("this case is not allowed");
         }
 
         public void Dispose()

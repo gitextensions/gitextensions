@@ -13,6 +13,7 @@ using GitCommands.Repository;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using PSTaskDialog;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -497,7 +498,7 @@ namespace GitUI.CommandsDialogs
                             buttons = string.Format(buttons, _pullActionNone.Text);
                             break;
                     }
-                    int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
+                    int idx = cTaskDialog.ShowCommandBox(owner,
                                     String.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
                                     _pullRepository.Text,
@@ -508,7 +509,7 @@ namespace GitUI.CommandsDialogs
                                     true,
                                     0,
                                     0);
-                    bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
+                    bool rememberDecision = cTaskDialog.VerificationChecked;
                     switch (idx)
                     {
                         case 0:
@@ -630,7 +631,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Branch.Text = curBranch;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Branch.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private IEnumerable<IGitRef> GetLocalBranches()
@@ -670,7 +671,7 @@ namespace GitUI.CommandsDialogs
                         RemoteBranch.Items.Add(head.LocalName);
             }
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            RemoteBranch.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -823,7 +824,7 @@ namespace GitUI.CommandsDialogs
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(TagComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            TagComboBox.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)

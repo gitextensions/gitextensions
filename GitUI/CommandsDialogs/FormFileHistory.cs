@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.CommitInfo;
+using GitUI.Properties;
 using ResourceManager;
-using System.ComponentModel;
 
 namespace GitUI.CommandsDialogs
 {
@@ -37,9 +39,9 @@ namespace GitUI.CommandsDialogs
                 var imageList = new ImageList();
                 tabControl1.ImageList = imageList;
                 imageList.ColorDepth = ColorDepth.Depth8Bit;
-                imageList.Images.Add(global::GitUI.Properties.Resources.IconViewFile);
-                imageList.Images.Add(global::GitUI.Properties.Resources.IconDiff);
-                imageList.Images.Add(global::GitUI.Properties.Resources.IconBlame);
+                imageList.Images.Add(Resources.IconViewFile);
+                imageList.Images.Add(Resources.IconDiff);
+                imageList.Images.Add(Resources.IconBlame);
                 tabControl1.TabPages[0].ImageIndex = 0;
                 tabControl1.TabPages[1].ImageIndex = 1;
                 tabControl1.TabPages[2].ImageIndex = 2;
@@ -131,7 +133,7 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.Visible = true;
 
-            _asyncLoader.Load(() => BuildFilter(FileName), (filter) =>
+            _asyncLoader.Load(() => BuildFilter(FileName), filter =>
             {
                 if (filter == null)
                     return;
@@ -330,7 +332,7 @@ namespace GitUI.CommandsDialogs
             {
                 orgFileName = selectedRows[0].Name;
             }
-            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUI.RevisionDiffKind.DiffAB);
+            FileChanges.OpenWithDifftool(FileName, orgFileName, RevisionDiffKind.DiffAB);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -456,7 +458,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUI.RevisionDiffKind.DiffBLocal);
+            FileChanges.OpenWithDifftool(FileName, string.Empty, RevisionDiffKind.DiffBLocal);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)
@@ -476,7 +478,7 @@ namespace GitUI.CommandsDialogs
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
         }
 
-        private void Blame_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        private void Blame_CommandClick(object sender, CommandEventArgs e)
         {
             if (e.Command == "gotocommit")
             {

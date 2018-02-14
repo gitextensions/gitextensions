@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            _translatedTitle = this.Text;
+            _translatedTitle = Text;
 
             settingsTreeView.SuspendLayout();
 
@@ -167,7 +167,7 @@ namespace GitUI.CommandsDialogs
                     title = "Plugin: " + title;
                 }
 
-                this.Text = _translatedTitle + " - " + title;
+                Text = _translatedTitle + " - " + title;
                 Application.DoEvents();
 
                 Cursor.Current = Cursors.WaitCursor;
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                this.Text = _translatedTitle;
+                Text = _translatedTitle;
             }
         }
 

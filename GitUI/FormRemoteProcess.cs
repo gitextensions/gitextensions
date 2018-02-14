@@ -2,9 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-
 using GitUI.UserControls;
-
 using ResourceManager;
 
 namespace GitUI
@@ -27,19 +25,18 @@ namespace GitUI
 
         // only for translation
         protected FormRemoteProcess()
-            : base()
         { }
 
         public FormRemoteProcess(GitModule module, string process, string arguments)
             : base(process, arguments, module.WorkingDir, null, true)
         {
-            this.Module = module;
+            Module = module;
         }
 
         public FormRemoteProcess(GitModule module, string arguments)
             : base(null, arguments, module.WorkingDir, null, true)
         {
-            this.Module = module;
+            Module = module;
         }
 
         public static new bool ShowDialog(GitModuleForm owner, string arguments)
@@ -105,9 +102,9 @@ namespace GitUI
                     if (FormPuttyError.AskForKey(this, out loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
-                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
+                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(Remote) && 
                             String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
-                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
 
                         // Retry the command.
                         Retry();

@@ -1,9 +1,10 @@
 ﻿﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
+ using System.Diagnostics;
+ using System.IO;
+ using System.Linq;
+ using System.Reflection;
+ using System.Windows.Forms;
+ using GitUI.Plugin;
 
 namespace GitUI
 {
@@ -11,9 +12,9 @@ namespace GitUI
     {
         public static void Load()
         {
-            lock (Plugin.LoadedPlugins.Plugins)
+            lock (LoadedPlugins.Plugins)
             {
-                if (Plugin.LoadedPlugins.Plugins.Count > 0)
+                if (LoadedPlugins.Plugins.Count > 0)
                     return;
 
                 var file = new FileInfo(Application.ExecutablePath);

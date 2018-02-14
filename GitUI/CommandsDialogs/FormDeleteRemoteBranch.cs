@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using GitUIPluginInterfaces;
-using System.IO;
 using GitUI.Script;
+using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

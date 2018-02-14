@@ -8,8 +8,10 @@
 // "In Suppression File".
 // You do not need to add suppressions to this file manually.
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1824:MarkAssembliesWithNeutralResourcesLanguage")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Westhuis", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Henk", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "henkwesthuis", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ppk", Scope = "member", Target = "GitUI.BrowseForPrivateKey.#Browse(System.Windows.Forms.IWin32Window)")]
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: SuppressMessage("Microsoft.Performance", "CA1824:MarkAssembliesWithNeutralResourcesLanguage")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Westhuis", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Henk", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "henkwesthuis", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ppk", Scope = "member", Target = "GitUI.BrowseForPrivateKey.#Browse(System.Windows.Forms.IWin32Window)")]

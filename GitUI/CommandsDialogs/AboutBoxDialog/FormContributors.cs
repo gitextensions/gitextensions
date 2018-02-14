@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs.AboutBoxDialog
@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
     public class FormContributors : GitExtensionsForm
     {
 
-        private readonly static string[] tabCaptions = new string[]{
+        private readonly static string[] tabCaptions = {
             "The Coders", "The Translators", "The Designers"
         };
 
@@ -26,11 +26,11 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             TextBox tb = new TextBox();
             tb.BackColor = Color.White;
             tb.Dock = DockStyle.Fill;
-            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-            tb.Margin = new System.Windows.Forms.Padding(0);
+            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            tb.Margin = new Padding(0);
             tb.Multiline = true;
             tb.ReadOnly = true;
-            tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            tb.ScrollBars = ScrollBars.Vertical;
             tb.TabStop = false;
             return tb;
         }
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         private TabPage getNewTabPage(TextBox tb, string caption)
         {
             TabPage tp = new TabPage();
-            tp.Margin = new System.Windows.Forms.Padding(0);
+            tp.Margin = new Padding(0);
             tp.Text = caption;
             tp.Controls.Add(tb);
             return tp;
@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         {
             TabControl tc = new TabControl();
             tc.Dock = DockStyle.Fill;
-            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             tc.ItemSize = new Size(150, 26);
             tc.Margin = new Padding(0);
             tc.Padding = new Point(0, 0);
@@ -75,16 +75,16 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
             Controls.Add(tabControl);
 
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.ClientSize = new Size(624, 442);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.Text = "Thanks to...";
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(624, 442);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Thanks to...";
 
-            this.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 

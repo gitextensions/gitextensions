@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -13,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             var autoNormaliseSymbols = new[] {
                 new { Key =  "_", Value = "_" },
                 new { Key =  "-", Value = "-" },
-                new { Key =  "(none)", Value = "" },
+                new { Key =  "(none)", Value = "" }
             };
             cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
             cboAutoNormaliseSymbol.SelectedIndex = 0;
@@ -52,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         }
 
 
-        private void chkAutoNormaliseBranchName_CheckedChanged(object sender, System.EventArgs e)
+        private void chkAutoNormaliseBranchName_CheckedChanged(object sender, EventArgs e)
         {
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
         }

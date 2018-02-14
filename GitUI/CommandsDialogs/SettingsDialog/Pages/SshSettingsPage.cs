@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using GitCommands;
 using GitCommands.Utils;
-using Microsoft.Win32;
 using GitUI.Editor;
+using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

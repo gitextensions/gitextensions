@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
-using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -17,9 +17,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             InitializeComponent();
             Translate();
-            this.flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.Icon.Width = this.Icon.Height;
+            flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Icon.Width = Icon.Height;
         }
 
         public DashboardItem(Repository repository)
@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _branchNameLoader = new AsyncLoader();
                 _branchNameLoader.Load(() =>
                 {
-                    if (!GitCommands.GitModule.IsBareRepository(repository.Path))
+                    if (!GitModule.IsBareRepository(repository.Path))
                     {
                         return GitModule.GetSelectedBranchFast(repository.Path);
                     }
@@ -129,19 +129,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
         {
-            this.BackColor = SystemColors.ControlLight;
+            BackColor = SystemColors.ControlLight;
         }
 
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             if ((sender == Icon || sender == _NO_TRANSLATE_Title) &&
-                this.ClientRectangle.Contains(this.PointToClient(Control.MousePosition)))
+                ClientRectangle.Contains(PointToClient(MousePosition)))
                 return;
 
-            this.BackColor = SystemColors.Control;
+            BackColor = SystemColors.Control;
         }
 
-        private void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        private void DashboardItem_VisibleChanged(object sender, EventArgs e)
         {
             if (!Visible)
             {

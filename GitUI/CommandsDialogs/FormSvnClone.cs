@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -31,7 +32,7 @@ namespace GitUI.CommandsDialogs
         {
             this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
-            this.Translate();
+            Translate();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -51,7 +52,7 @@ namespace GitUI.CommandsDialogs
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var authorsFile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
+                var authorsFile = _NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetAuthorsFile = false;
                 if (!String.IsNullOrEmpty(authorsFile) && !File.Exists(authorsFile) && !(resetAuthorsFile = AskContinueWithoutAuthorsFile(authorsFile)))
                 {
@@ -88,7 +89,7 @@ namespace GitUI.CommandsDialogs
         private bool AskContinueWithoutAuthorsFile(string authorsFile)
         {
             return MessageBox.Show(
-                this, string.Format(_questionContinueWithoutAuthors.Text, authorsFile), this._questionContinueWithoutAuthorsCaption.Text,
+                this, string.Format(_questionContinueWithoutAuthors.Text, authorsFile), _questionContinueWithoutAuthorsCaption.Text,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes;
         }
@@ -101,31 +102,31 @@ namespace GitUI.CommandsDialogs
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, this._NO_TRANSLATE_destinationComboBox.Text);
+            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_destinationComboBox.Text);
 
             if (userSelectedPath != null)
             {
-                this._NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
+                _NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
             }
         }
 
         private void authorsFileBrowseButton_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
+            using (var dialog = new OpenFileDialog { InitialDirectory = _NO_TRANSLATE_destinationComboBox.Text })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
-                    this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+                    _NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
             }
         }
 
         private void destinationComboBox_DropDown(object sender, EventArgs e)
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
-            if (this._NO_TRANSLATE_destinationComboBox.Items.Count != repos.Count)
+            BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            if (_NO_TRANSLATE_destinationComboBox.Items.Count != repos.Count)
             {
-                this._NO_TRANSLATE_destinationComboBox.Items.Clear();
+                _NO_TRANSLATE_destinationComboBox.Items.Clear();
                 foreach (Repository repo in repos)
-                    this._NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
+                    _NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
             }
         }
 
@@ -156,7 +157,7 @@ namespace GitUI.CommandsDialogs
         private void _NO_TRANSLATE_svnRepositoryComboBox_TextUpdate(object sender, EventArgs e)
         {
             var path = _NO_TRANSLATE_SvnFrom.Text;
-            path = path.TrimEnd(new[] { '\\', '/' });
+            path = path.TrimEnd('\\', '/');
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_subdirectoryTextBox.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);

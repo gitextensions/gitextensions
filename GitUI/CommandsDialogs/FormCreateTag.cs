@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Tag;
 using GitUI.Script;
 using ResourceManager;
-using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {
@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
                 Remote = _currentRemote,
-                Text = string.Format(_pushToCaption.Text, _currentRemote),
+                Text = string.Format(_pushToCaption.Text, _currentRemote)
             })
             {
 

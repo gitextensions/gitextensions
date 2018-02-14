@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using ResourceManager;
 using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            this.HotkeysEnabled = true;
+            HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
 
         public void RefreshArtificial()
         {
-            if (this.Visible)
+            if (Visible)
             {
                 var revisions = _revisionGrid.GetSelectedRevisions();
 
@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            DeleteSelectedFiles,
+            DeleteSelectedFiles
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -137,8 +137,8 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            this.diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             DiffText.ReloadHotkeys();
         }
 
@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs
             {
                 var submoduleName = DiffFiles.SelectedItem.Name;
                 DiffFiles.SelectedItem.SubmoduleStatus.ContinueWith(
-                    (t) =>
+                    t =>
                     {
                         Process process = new Process();
                         process.StartInfo.FileName = Application.ExecutablePath;
@@ -448,7 +448,7 @@ namespace GitUI.CommandsDialogs
 
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = name =>
             {
 
                 string nameAsLower = name.ToLower();
@@ -497,19 +497,19 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            GitUI.RevisionDiffKind diffKind;
+            RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffALocal;
+                diffKind = RevisionDiffKind.DiffALocal;
             else if (sender == bLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+                diffKind = RevisionDiffKind.DiffBLocal;
             else if (sender == parentOfALocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+                diffKind = RevisionDiffKind.DiffAParentLocal;
             else if (sender == parentOfBLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+                diffKind = RevisionDiffKind.DiffBParentLocal;
             else
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAB;
+                diffKind = RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)

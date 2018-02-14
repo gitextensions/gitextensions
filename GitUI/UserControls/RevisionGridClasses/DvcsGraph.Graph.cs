@@ -358,7 +358,7 @@ namespace GitUI.RevisionGridClasses
 
                 Visit visit = null;
                 Visit localVisit = visit;
-                visit = (Node n) =>
+                visit = n =>
                 {
                     if (!P.Contains(n))
                     {

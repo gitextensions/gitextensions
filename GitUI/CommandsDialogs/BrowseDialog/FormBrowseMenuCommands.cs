@@ -1,5 +1,5 @@
-﻿using GitUI.CommandsDialogs.BrowseDialog;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.CommandsDialogs
 {

@@ -8,12 +8,13 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
 using GitCommands.Remote;
+using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using PSTaskDialog;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -254,7 +255,7 @@ namespace GitUI.CommandsDialogs
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            Branches.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             Cursor.Current = Cursors.Default;
         }
@@ -313,7 +314,7 @@ namespace GitUI.CommandsDialogs
             bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
             if (messageBoxResult == null)
             {
-                DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                DialogResult res = cTaskDialog.MessageBox(
                     owner,
                     _applyShashedItemsAgainCaption.Text,
                     "",
@@ -321,11 +322,11 @@ namespace GitUI.CommandsDialogs
                     "",
                     "",
                     _dontShowAgain.Text,
-                    PSTaskDialog.eTaskDialogButtons.YesNo,
-                    PSTaskDialog.eSysIcons.Question,
-                    PSTaskDialog.eSysIcons.Question);
+                    eTaskDialogButtons.YesNo,
+                    eSysIcons.Question,
+                    eSysIcons.Question);
                 messageBoxResult = (res == DialogResult.Yes);
-                if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                if (cTaskDialog.VerificationChecked)
                     AppSettings.AutoPopStashAfterPull = messageBoxResult;
             }
             if ((bool)messageBoxResult)
@@ -347,7 +348,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Fetch.Checked && Branches.Text.IsNullOrWhiteSpace() && Module.IsDetachedHead())
             {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
+                int idx = cTaskDialog.ShowCommandBox(owner,
                                                         _notOnBranchCaption.Text,
                                                         _notOnBranchMainInstruction.Text,
                                                         _notOnBranch.Text,
@@ -509,7 +510,7 @@ namespace GitUI.CommandsDialogs
 
             if (isRefRemoved.IsMatch(form.GetOutputString()))
             {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(form,
+                int idx = cTaskDialog.ShowCommandBox(form,
                                 _pruneBranchesCaption.Text,
                                 _pruneBranchesMainInstruction.Text,
                                 _pruneBranchesBranch.Text,
@@ -578,7 +579,7 @@ namespace GitUI.CommandsDialogs
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
                 && !remote.Equals(currentBranchRemote.Value) && !Fetch.Checked)
             {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
+                int idx = cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
                                                         _noRemoteBranch.Text,
                                                         string.Format(_noRemoteBranchMainInstruction.Text, remote),
@@ -605,7 +606,7 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
+                int idx = cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
                                                         _noRemoteBranch.Text,
                                                         string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
@@ -642,8 +643,7 @@ namespace GitUI.CommandsDialogs
             string remoteBranchName = CalculateRemoteBranchNameBasedOnBranchesText();
             if (remoteBranchName.IsNullOrEmpty())
                 return remoteBranchName;
-            else
-                return _NO_TRANSLATE_Remotes.Text + "/" + remoteBranchName;
+            return _NO_TRANSLATE_Remotes.Text + "/" + remoteBranchName;
         }
 
         private string CalculateRemoteBranchNameBasedOnBranchesText()

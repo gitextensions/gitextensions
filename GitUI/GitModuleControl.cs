@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Script;
 using ResourceManager;
 
 namespace GitUI
@@ -128,7 +129,7 @@ namespace GitUI
         /// and returns true if any executed.</summary>
         protected bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
+            return ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>

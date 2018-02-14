@@ -4,10 +4,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Utils;
 using GitUI.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
-using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -32,7 +33,6 @@ namespace GitUI
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
         public GitExtensionsForm(bool enablePositionRestore)
-            : base()
         {
             _enablePositionRestore = enablePositionRestore;
 
@@ -55,7 +55,7 @@ namespace GitUI
             if (_enablePositionRestore)
                 SavePosition(GetType().Name);
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -275,10 +275,8 @@ namespace GitUI
             {
                 return distance.First().Value;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public int GetCurrentDeviceDpi()
@@ -287,7 +285,7 @@ namespace GitUI
             int deviceDpi = DeviceDpi;
 #else
             int deviceDpi;
-            using (Graphics g = this.CreateGraphics())
+            using (Graphics g = CreateGraphics())
             {
                 deviceDpi = (int)g.DpiX;
             }

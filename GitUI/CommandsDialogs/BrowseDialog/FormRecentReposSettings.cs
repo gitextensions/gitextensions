@@ -51,12 +51,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (dontShortenRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_None;
-            else if (mostSigDirRB.Checked)
+            if (mostSigDirRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_MostSignDir;
-            else if (middleDotRB.Checked)
+            if (middleDotRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_MiddleDots;
-            else
-                throw new Exception("Can not figure shortening strategy");
+            throw new Exception("Can not figure shortening strategy");
         }
 
         private void SetShorteningStrategy(string strategy)

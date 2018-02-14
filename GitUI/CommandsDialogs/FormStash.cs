@@ -6,8 +6,10 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUI.Properties;
 using GitUI.UserControls;
 using PatchApply;
+using PSTaskDialog;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -35,7 +37,7 @@ namespace GitUI.CommandsDialogs
             : base(aCommands)
         {
             InitializeComponent();
-            Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Resources.loadingpanel;
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
@@ -155,7 +157,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
-                    Encoding encoding = this.View.Encoding;
+                    Encoding encoding = View.Encoding;
                     View.ViewPatch(() =>
                     {
                         Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
@@ -176,7 +178,7 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
             }
 
@@ -192,7 +194,7 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
             }
 
@@ -210,7 +212,7 @@ namespace GitUI.CommandsDialogs
             var stashName = GetStashName();
             if (AppSettings.StashConfirmDropShow)
             {
-                DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                DialogResult res = cTaskDialog.MessageBox(
                                         this,
                                        stashDropConfirmTitle.Text,
                                        cannotBeUndone.Text,
@@ -218,9 +220,9 @@ namespace GitUI.CommandsDialogs
                                        "",
                                        "",
                                        dontShowAgain.Text,
-                                       PSTaskDialog.eTaskDialogButtons.OKCancel,
-                                       PSTaskDialog.eSysIcons.Information,
-                                       PSTaskDialog.eSysIcons.Information);
+                                       eTaskDialogButtons.OKCancel,
+                                       eSysIcons.Information,
+                                       eSysIcons.Information);
                 if (res == DialogResult.OK)
                 {
                     UICommands.StashDrop(this, stashName);
@@ -228,7 +230,7 @@ namespace GitUI.CommandsDialogs
                     Cursor.Current = Cursors.Default;
                 }
 
-                if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                if (cTaskDialog.VerificationChecked)
                 {
                     AppSettings.StashConfirmDropShow = false;
                 }
@@ -313,13 +315,13 @@ namespace GitUI.CommandsDialogs
             {
                 if (((ToolStripButton)sender).Checked)
                 {
-                    this.StashMessage.ReadOnly = false;
-                    this.StashMessage.Focus();
-                    this.StashMessage.SelectAll();
+                    StashMessage.ReadOnly = false;
+                    StashMessage.Focus();
+                    StashMessage.SelectAll();
                 }
                 else
                 {
-                    this.StashMessage.ReadOnly = true;
+                    StashMessage.ReadOnly = true;
                 }
             }
         }

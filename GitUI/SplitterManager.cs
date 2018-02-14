@@ -1,7 +1,7 @@
-﻿using GitUIPluginInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -19,7 +19,7 @@ namespace GitUI
 
         public void AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
         {
-            var data = new SplitterData()
+            var data = new SplitterData
             {
                 Splitter = splitter,
                 SettingName = settingName,

@@ -22,8 +22,7 @@ namespace GitUI.CommandsDialogs
 
         #region default patterns
         private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
-        private static readonly string[] DefaultIgnorePatterns = new[]
-        {
+        private static readonly string[] DefaultIgnorePatterns = {
             "#Ignore thumbnails created by Windows",
             "Thumbs.db",
             "#Ignore files built by Visual Studio",
@@ -160,7 +159,6 @@ namespace GitUI.CommandsDialogs
                         if (!SaveGitIgnore())
                         {
                             e.Cancel = true;
-                            return;
                         }
                         break;
                     case DialogResult.Cancel:

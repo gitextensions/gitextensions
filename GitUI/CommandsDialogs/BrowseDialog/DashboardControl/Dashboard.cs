@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             // Do this at runtime, because it is difficult to keep consistent at design time.
             pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - pictureBox1.Image.Width - 10, this.Height - pictureBox1.Image.Height - 10);
+            pictureBox1.Location = new Point(Width - pictureBox1.Image.Width - 10, Height - pictureBox1.Image.Height - 10);
 
             Load += Dashboard_Load;
         }
@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             //
             var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
             showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = GitCommands.AppSettings.DashboardShowCurrentBranch;
+            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
 
             var menuStrip = FindControl<MenuStrip>(Parent.Parent.Parent, p => true); // TODO: improve: Parent.Parent.Parent == FormBrowse
             var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void AddDashboardEntry(RepositoryCategory entry)
         {
             var dashboardCategory = new DashboardCategory(entry.Description, entry);
-            this.groupLayoutPanel.Controls.Add(dashboardCategory);
+            groupLayoutPanel.Controls.Add(dashboardCategory);
 
             dashboardCategory.DashboardItemClick += dashboardItem_Click;
             dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
@@ -200,9 +200,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!initialized)
             {
                 // Remove favorites
-                var categories = (from DashboardCategory i in this.groupLayoutPanel.Controls
+                var categories = (from DashboardCategory i in groupLayoutPanel.Controls
                                   select i).ToList();
-                this.groupLayoutPanel.Controls.Clear();
+                groupLayoutPanel.Controls.Clear();
                 foreach (var category in categories)
                 {
                     category.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
@@ -245,8 +245,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
         {
-            bool newValue = !GitCommands.AppSettings.DashboardShowCurrentBranch;
-            GitCommands.AppSettings.DashboardShowCurrentBranch = newValue;
+            bool newValue = !AppSettings.DashboardShowCurrentBranch;
+            AppSettings.DashboardShowCurrentBranch = newValue;
             ((ToolStripMenuItem)sender).Checked = newValue;
             Refresh();
         }

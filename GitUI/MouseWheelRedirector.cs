@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -66,7 +67,7 @@ namespace GitUI
         private static class NativeMethods
         {
             // P/Invoke declarations
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "0", Justification = "https://social.msdn.microsoft.com/Forums/en-US/180fcf90-ff90-45b2-839f-438eb17f2f07/is-this-a-bug-in-vs-code-analysis?forum=vstscode")]
+            [SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "0", Justification = "https://social.msdn.microsoft.com/Forums/en-US/180fcf90-ff90-45b2-839f-438eb17f2f07/is-this-a-bug-in-vs-code-analysis?forum=vstscode")]
             [DllImport("user32.dll")]
             public static extern IntPtr WindowFromPoint(POINT pt);
 
@@ -85,12 +86,12 @@ namespace GitUI
                     Y = y;
                 }
 
-                public static implicit operator System.Drawing.Point(POINT p)
+                public static implicit operator Point(POINT p)
                 {
-                    return new System.Drawing.Point(p.X, p.Y);
+                    return new Point(p.X, p.Y);
                 }
 
-                public static implicit operator POINT(System.Drawing.Point p)
+                public static implicit operator POINT(Point p)
                 {
                     return new POINT(p.X, p.Y);
                 }

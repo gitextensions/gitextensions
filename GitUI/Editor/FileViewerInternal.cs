@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
@@ -33,7 +34,7 @@ namespace GitUI.Editor
 
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
 
-            VRulerPosition = GitCommands.AppSettings.DiffVerticalRulerPosition;
+            VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
         public new Font Font

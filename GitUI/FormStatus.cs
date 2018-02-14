@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-
-using GitCommands;
-
-using GitUI.UserControls;
-
-using JetBrains.Annotations;
 using System.Windows.Threading;
+using GitCommands;
+using GitCommands.Utils;
+using GitUI.Properties;
+using GitUI.UserControls;
+using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
@@ -40,7 +39,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
             if (UseDialogSettings)
-                KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
             else
                 KeepDialogOpen.Hide();
         }
@@ -93,7 +92,7 @@ namespace GitUI
                             ProgressBar.Style = ProgressBarStyle.Blocks;
                         ProgressBar.Value = Math.Min(100, progressValue);
 
-                        if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                        if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                         {
                             try
                             {
@@ -138,7 +137,7 @@ namespace GitUI
                 Ok.Focus();
                 AcceptButton = Ok;
                 Abort.Enabled = false;
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                 {
                     try
                     {
@@ -152,9 +151,9 @@ namespace GitUI
                 }
 
                 if (isSuccess)
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
+                    picBoxSuccessFail.Image = Resources.success;
                 else
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+                    picBoxSuccessFail.Image = Resources.error;
 
                 errorOccurred = !isSuccess;
 
@@ -241,7 +240,7 @@ namespace GitUI
 
             StartPosition = FormStartPosition.CenterParent;
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -281,7 +280,7 @@ namespace GitUI
 
         internal void AfterClosed()
         {
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {

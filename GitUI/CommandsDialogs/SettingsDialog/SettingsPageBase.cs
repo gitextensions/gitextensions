@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using GitUIPluginInterfaces;
 using GitCommands.Settings;
-using System.Linq;
+using GitUIPluginInterfaces;
+using ResourceManager;
+using BoolSetting = GitUIPluginInterfaces.BoolSetting;
+using StringSetting = GitCommands.Settings.StringSetting;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -31,7 +33,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
 
-        protected GitModule Module => this.CommonLogic.Module;
+        protected GitModule Module => CommonLogic.Module;
 
         protected virtual void Init(ISettingsPageHost aPageHost)
         {
@@ -120,7 +122,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        protected void AddSettingBinding(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+        protected void AddSettingBinding(StringSetting aSetting, ComboBox aComboBox)
         {
             var adapter = new StringComboBoxAdapter(aSetting, aComboBox);
             AddControlBinding(adapter.CreateControlBinding());
@@ -171,7 +173,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
     }
 
-    public class BoolCheckBoxAdapter : GitUIPluginInterfaces.BoolSetting
+    public class BoolCheckBoxAdapter : BoolSetting
     {
         public BoolCheckBoxAdapter(BoolNullableSetting aSetting, CheckBox aCheckBox)
             : base(aSetting.FullPath, aSetting.DefaultValue.Value)
@@ -180,16 +182,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class StringComboBoxAdapter : GitUIPluginInterfaces.ChoiceSetting
+    public class StringComboBoxAdapter : ChoiceSetting
     {
-        public StringComboBoxAdapter(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+        public StringComboBoxAdapter(StringSetting aSetting, ComboBox aComboBox)
             : base(aSetting.FullPath, aComboBox.Items.Cast<string>().ToList(), aSetting.DefaultValue)
         {
             CustomControl = aComboBox;
         }
     }
 
-    public class IntTextBoxAdapter : GitUIPluginInterfaces.NumberSetting<int>
+    public class IntTextBoxAdapter : NumberSetting<int>
     {
         public IntTextBoxAdapter(IntNullableSetting aSetting, TextBox aControl)
             : base(aSetting.FullPath, aSetting.DefaultValue.Value)

@@ -56,7 +56,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
-        public bool IsUndoInProgress = false;
+        public bool IsUndoInProgress;
 
         public EditNetSpell()
         {
@@ -417,7 +417,7 @@ namespace GitUI.SpellChecker
                     foreach (var suggestion in _spelling.Suggestions)
                     {
                         var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
-                        si.Font = new System.Drawing.Font(si.Font, FontStyle.Bold);
+                        si.Font = new Font(si.Font, FontStyle.Bold);
                     }
 
                     AddContextMenuItem(addToDictionaryText.Text, AddToDictionaryClick)
@@ -608,7 +608,7 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
-        private bool skipSelectionUndo = false;
+        private bool skipSelectionUndo;
 
         private void UndoHighlighting()
         {

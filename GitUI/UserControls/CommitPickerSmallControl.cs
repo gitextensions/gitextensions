@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitUI.HelperDialogs;
 using GitCommands;
+using GitUI.HelperDialogs;
 
 namespace GitUI.UserControls
 {
@@ -47,7 +47,7 @@ namespace GitUI.UserControls
             else
             {
                 textBoxCommitHash.Text = GitRevision.ToShortSha(_selectedCommitHash);
-                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), _selectedCommitHash))
+                Task.Factory.StartNew(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), _selectedCommitHash))
                      .ContinueWith(t => lbCommits.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }

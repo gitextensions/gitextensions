@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitCommands;
+using PSTaskDialog;
 using ResourceManager;
 
 namespace GitUI
@@ -88,12 +89,12 @@ namespace GitUI
 
         public static bool CacheHostkey(IWin32Window owner)
         {
-            return MessageBox.Show(owner, Instance._serverHostkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes;
+            return MessageBox.Show(owner, Instance._serverHostkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         public static bool ConfirmUpdateSubmodules(IWin32Window win)
         {
-            var result = PSTaskDialog.cTaskDialog.ShowTaskDialogBox(
+            var result = cTaskDialog.ShowTaskDialogBox(
                 Owner: win,
                 Title: Instance._updateSubmodules.Text,
                 MainInstruction: Instance._theRepositorySubmodules.Text,
@@ -103,11 +104,11 @@ namespace GitUI
                 VerificationText: Instance._rememberChoice.Text,
                 RadioButtons: "",
                 CommandButtons: "",
-                Buttons: PSTaskDialog.eTaskDialogButtons.YesNo,
-                MainIcon: PSTaskDialog.eSysIcons.Question,
-                FooterIcon: PSTaskDialog.eSysIcons.Information) == DialogResult.Yes;
+                Buttons: eTaskDialogButtons.YesNo,
+                MainIcon: eSysIcons.Question,
+                FooterIcon: eSysIcons.Information) == DialogResult.Yes;
 
-            if (PSTaskDialog.cTaskDialog.VerificationChecked)
+            if (cTaskDialog.VerificationChecked)
                 AppSettings.UpdateSubmodulesOnCheckout = result;
 
             return result;

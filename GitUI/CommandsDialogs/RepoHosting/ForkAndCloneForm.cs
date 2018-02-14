@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -372,13 +373,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             return targetDir;
         }
 
-        private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void _destinationTB_Validating(object sender, CancelEventArgs e)
         {
             if (_destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 e.Cancel = true;
         }
 
-        private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void _createDirTB_Validating(object sender, CancelEventArgs e)
         {
             if (_createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 e.Cancel = true;

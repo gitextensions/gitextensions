@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using BoolSetting = GitUIPluginInterfaces.BoolSetting;
+using StringSetting = GitCommands.Settings.StringSetting;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -29,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 settingsLayout = CreateSettingsLayout();
                 if (settingsLayout.GetControl().Parent == null)
                 {
-                    this.Controls.Add(settingsLayout.GetControl());
+                    Controls.Add(settingsLayout.GetControl());
                 }
             }
 
@@ -207,13 +209,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             aLayout.AddSetting(new BoolNullableISettingAdapter(aCaption, aSetting));
         }
 
-        public static void AddStringSetting(this SettingsLayout aLayout, string aCaption, GitCommands.Settings.StringSetting aSetting)
+        public static void AddStringSetting(this SettingsLayout aLayout, string aCaption, StringSetting aSetting)
         {
             aLayout.AddSetting(new StringISettingAdapter(aCaption, aSetting));
         }
     }
 
-    public class BoolNullableISettingAdapter : GitUIPluginInterfaces.BoolSetting
+    public class BoolNullableISettingAdapter : BoolSetting
     {
         public BoolNullableISettingAdapter(string aCaption, BoolNullableSetting setting)
             : base(setting.FullPath, aCaption, setting.DefaultValue.Value)
@@ -222,7 +224,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class StringISettingAdapter : GitUIPluginInterfaces.StringSetting
     {
-        public StringISettingAdapter(string aCaption, GitCommands.Settings.StringSetting setting)
+        public StringISettingAdapter(string aCaption, StringSetting setting)
             : base(setting.FullPath, aCaption, setting.DefaultValue)
         { }
     }

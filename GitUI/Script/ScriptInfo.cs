@@ -1,4 +1,7 @@
 ﻿
+using System.Drawing;
+using System.Reflection;
+
 namespace GitUI.Script
 {
     public enum ScriptEvent
@@ -57,13 +60,13 @@ namespace GitUI.Script
         /// Gets the associated bitmap.
         /// </summary>
         /// <returns>Bitmap image</returns>
-        public System.Drawing.Bitmap GetIcon() {
+        public Bitmap GetIcon() {
             // Get all resources
                     System.Resources.ResourceManager rm 
                         = new System.Resources.ResourceManager("GitUI.Properties.Resources"
-                            , System.Reflection.Assembly.GetExecutingAssembly());
+                            , Assembly.GetExecutingAssembly());
             // return icon
-                    return (System.Drawing.Bitmap)rm.GetObject(_Icon);
+                    return (Bitmap)rm.GetObject(_Icon);
         }
     }
 }

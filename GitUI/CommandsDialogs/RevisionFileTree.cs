@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -210,9 +212,9 @@ See the changes in the commit form.");
             {
                 ColorDepth = ColorDepth.Depth32Bit
             };
-            tvGitTree.ImageList.Images.Add(Properties.Resources.New); //File
-            tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
-            tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); //Submodule
+            tvGitTree.ImageList.Images.Add(Resources.New); //File
+            tvGitTree.ImageList.Images.Add(Resources.Folder); //Folder
+            tvGitTree.ImageList.Images.Add(Resources.IconFolderSubmodule); //Submodule
 
             GotFocus += (s, e1) => tvGitTree.Focus();
 
@@ -470,7 +472,7 @@ See the changes in the commit form.");
             UICommands.StartCleanupRepositoryDialog(this, filePath);
         }
 
-        private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void FileTreeContextMenu_Opening(object sender, CancelEventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             var itemSelected = gitItem != null;

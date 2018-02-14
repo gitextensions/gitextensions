@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-
 using JetBrains.Annotations;
 
 namespace GitUI

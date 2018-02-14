@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -22,70 +23,70 @@ namespace GitUI
 
         public FilterRevisionsHelper()
         {
-            this.commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            commitToolStripMenuItem = new ToolStripMenuItem();
+            committerToolStripMenuItem = new ToolStripMenuItem();
+            authorToolStripMenuItem = new ToolStripMenuItem();
+            diffContainsToolStripMenuItem = new ToolStripMenuItem();
+            hashToolStripMenuItem = new ToolStripMenuItem();
 
             // 
             // commitToolStripMenuItem1
             // 
-            this.commitToolStripMenuItem.Checked = true;
-            this.commitToolStripMenuItem.CheckOnClick = true;
-            this.commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
-            this.commitToolStripMenuItem.Text = "Commit";
+            commitToolStripMenuItem.Checked = true;
+            commitToolStripMenuItem.CheckOnClick = true;
+            commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
+            commitToolStripMenuItem.Text = "Commit";
             // 
             // committerToolStripMenuItem
             // 
-            this.committerToolStripMenuItem.CheckOnClick = true;
-            this.committerToolStripMenuItem.Name = "committerToolStripMenuItem";
-            this.committerToolStripMenuItem.Text = "Committer";
+            committerToolStripMenuItem.CheckOnClick = true;
+            committerToolStripMenuItem.Name = "committerToolStripMenuItem";
+            committerToolStripMenuItem.Text = "Committer";
             // 
             // authorToolStripMenuItem
             // 
-            this.authorToolStripMenuItem.CheckOnClick = true;
-            this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            this.authorToolStripMenuItem.Text = "Author";
+            authorToolStripMenuItem.CheckOnClick = true;
+            authorToolStripMenuItem.Name = "authorToolStripMenuItem";
+            authorToolStripMenuItem.Text = "Author";
             // 
             // diffContainsToolStripMenuItem
             // 
-            this.diffContainsToolStripMenuItem.CheckOnClick = true;
-            this.diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
-            this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
-            this.diffContainsToolStripMenuItem.Click += this.diffContainsToolStripMenuItem_Click;
+            diffContainsToolStripMenuItem.CheckOnClick = true;
+            diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
+            diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
+            diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
             // 
             // hashToolStripMenuItem
             // 
-            this.hashToolStripMenuItem.CheckOnClick = true;
-            this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";        
+            hashToolStripMenuItem.CheckOnClick = true;
+            hashToolStripMenuItem.Name = "hashToolStripMenuItem";
+            hashToolStripMenuItem.Size = new Size(216, 24);
+            hashToolStripMenuItem.Text = "Hash";        
         }
 
         public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
             : this()
         {
-            this._NO_TRANSLATE_dropDownButton = dropDownButton;
-            this._NO_TRANSLATE_textBox = textBox;
-            this._NO_TRANSLATE_revisionGrid = revisionGrid;
-            this._NO_TRANSLATE_label = label;
-            this._NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
-            this._NO_TRANSLATE_form = form;
+            _NO_TRANSLATE_dropDownButton = dropDownButton;
+            _NO_TRANSLATE_textBox = textBox;
+            _NO_TRANSLATE_revisionGrid = revisionGrid;
+            _NO_TRANSLATE_label = label;
+            _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
+            _NO_TRANSLATE_form = form;
 
-            this._NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[] {
-                this.commitToolStripMenuItem,
-                this.committerToolStripMenuItem,
-                this.authorToolStripMenuItem,
-                this.diffContainsToolStripMenuItem});
+            _NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[] {
+                commitToolStripMenuItem,
+                committerToolStripMenuItem,
+                authorToolStripMenuItem,
+                diffContainsToolStripMenuItem});
 
-            this._NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
+            _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
-            this._NO_TRANSLATE_label.Click += this.ToolStripLabelClick;
-            this._NO_TRANSLATE_textBox.Leave += this.ToolStripTextBoxFilterLeave;
-            this._NO_TRANSLATE_textBox.KeyPress += this.ToolStripTextBoxFilterKeyPress;
-            this._NO_TRANSLATE_showFirstParentButton.Click += this.ToolStripShowFirstParentButtonClick;
-            this._NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += this.RevisionGridShowFirstParentsToggled;       
+            _NO_TRANSLATE_label.Click += ToolStripLabelClick;
+            _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
+            _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
+            _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
+            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += RevisionGridShowFirstParentsToggled;       
         }
 
         public void SetFilter(string filter)
@@ -154,12 +155,12 @@ namespace GitUI
 
         private void ToolStripShowFirstParentButtonClick(object sender, EventArgs e)
         {
-            this._NO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
+            _NO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
         }
 
         private void RevisionGridShowFirstParentsToggled(object sender, EventArgs e)
         {
-            this._NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
+            _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
         }
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)

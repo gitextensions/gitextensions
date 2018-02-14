@@ -74,8 +74,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 return StrLimit(str, characterCount); // Can’t do much with such a short limit
             if (str.Length <= characterCount - 3)
                 return str;
-            else
-                return str.Substring(0, characterCount - 3) + "...";
+            return str.Substring(0, characterCount - 3) + "...";
         }
 
         /// <summary>
@@ -88,8 +87,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             if (str.Length <= characterCount)
                 return str;
-            else
-                return str.Substring(0, characterCount).TrimEnd(' ');
+            return str.Substring(0, characterCount).TrimEnd(' ');
         }
     }
 }

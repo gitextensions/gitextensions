@@ -57,11 +57,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (chlMenuEntries.GetItemChecked(i))
                 {
-                    cascaded += "       " + chlMenuEntries.Items[i].ToString() + "\r\n";
+                    cascaded += "       " + chlMenuEntries.Items[i] + "\r\n";
                 }
                 else
                 {
-                    topLevel += "GitExt " + chlMenuEntries.Items[i].ToString() + "\r\n";
+                    topLevel += "GitExt " + chlMenuEntries.Items[i] + "\r\n";
                 }
             }
 

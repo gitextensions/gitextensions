@@ -1,8 +1,8 @@
-﻿using GitCommands;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 ListIncludedEncodings.EndUpdate();
             }
 
-            var availableEncoding = System.Text.Encoding.GetEncodings()
+            var availableEncoding = Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
                 .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
                 .ToList();

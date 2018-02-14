@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {
@@ -74,7 +74,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             if (comboBoxBranches.DataSource == null)
             {
-                return;
             }
         }
 
@@ -82,16 +81,15 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             if (comboBoxBranches.SelectedValue == null)
             {
-                return;
             }
         }
 
-        private void comboBoxBranches_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void GoIfEnterKey(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void GoIfEnterKey(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -134,7 +132,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }
 
             UICommands.StartGitCommandProcessDialog(arguments);
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private bool IsTargetFolderValid()
@@ -172,7 +170,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             if (createWorktreeButton.Enabled)
             {
                 createWorktreeButton.Enabled = IsTargetFolderValid();
-                return;
             }
         }
 

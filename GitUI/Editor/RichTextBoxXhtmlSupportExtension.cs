@@ -642,18 +642,17 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetUrl(this LinkClickedEventArgs e)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
                 return "";
-            else if (v.Length == 1)
+            if (v.Length == 1)
                 return v[0];
-            else
-                return v[1];
+            return v[1];
         }
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 url = "";
@@ -1154,7 +1153,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                         ProcessNode(rtb, handleRef, reader, cs);
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }
@@ -1469,7 +1468,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }

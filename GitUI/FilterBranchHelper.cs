@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -19,47 +20,47 @@ namespace GitUI
 
         public FilterBranchHelper()
         {
-            this.localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            localToolStripMenuItem = new ToolStripMenuItem();
+            tagsToolStripMenuItem = new ToolStripMenuItem();
+            remoteToolStripMenuItem = new ToolStripMenuItem();
             // 
             // localToolStripMenuItem
             // 
-            this.localToolStripMenuItem.Checked = true;
-            this.localToolStripMenuItem.CheckOnClick = true;
-            this.localToolStripMenuItem.Name = "localToolStripMenuItem";
-            this.localToolStripMenuItem.Text = "Local";
+            localToolStripMenuItem.Checked = true;
+            localToolStripMenuItem.CheckOnClick = true;
+            localToolStripMenuItem.Name = "localToolStripMenuItem";
+            localToolStripMenuItem.Text = "Local";
             //
             // tagsToolStripMenuItem
             //
-            this.tagsToolStripMenuItem.CheckOnClick = true;
-            this.tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
-            this.tagsToolStripMenuItem.Text = "Tag";
+            tagsToolStripMenuItem.CheckOnClick = true;
+            tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
+            tagsToolStripMenuItem.Text = "Tag";
             //
             // remoteToolStripMenuItem
             // 
-            this.remoteToolStripMenuItem.CheckOnClick = true;
-            this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
-            this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.remoteToolStripMenuItem.Text = "Remote";        
+            remoteToolStripMenuItem.CheckOnClick = true;
+            remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
+            remoteToolStripMenuItem.Size = new Size(115, 22);
+            remoteToolStripMenuItem.Text = "Remote";        
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid revisionGrid)
             : this()
         {
-            this._NO_TRANSLATE_toolStripBranches = toolStripBranches;
-            this._NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
-            this._NO_TRANSLATE_RevisionGrid = revisionGrid;
+            _NO_TRANSLATE_toolStripBranches = toolStripBranches;
+            _NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
+            _NO_TRANSLATE_RevisionGrid = revisionGrid;
 
-            this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
-                this.localToolStripMenuItem,
-                this.tagsToolStripMenuItem,
-                this.remoteToolStripMenuItem});
+            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
+                localToolStripMenuItem,
+                tagsToolStripMenuItem,
+                remoteToolStripMenuItem});
 
-            this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
-            this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
-            this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;           
+            _NO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
+            _NO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;
+            _NO_TRANSLATE_toolStripBranches.Leave += toolStripBranches_Leave;
+            _NO_TRANSLATE_toolStripBranches.KeyUp += toolStripBranches_KeyUp;           
         }
 
         public void InitToolStripBranchFilter()

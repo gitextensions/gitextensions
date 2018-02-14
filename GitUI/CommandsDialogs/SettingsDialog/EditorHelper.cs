@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "notepad",
                 GetNotepadPP(),
                 GetSublimeText3(),
-                GetVsCode(),
+                GetVsCode()
             };
         }
 

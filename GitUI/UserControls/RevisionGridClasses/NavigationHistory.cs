@@ -43,10 +43,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 nextItems.Push(curr);
                 return prev;
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            throw new InvalidOperationException();
         }
 
         /// <summary>
@@ -66,10 +64,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 prevItems.Push(next);
                 return next;
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            throw new InvalidOperationException();
         }
 
         /// <summary>

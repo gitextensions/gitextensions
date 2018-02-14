@@ -11,7 +11,7 @@ namespace GitUI.UserControls
         public enum SelectionChangeAction
         {
             NoAction,
-            RefreshUserInterface,
+            RefreshUserInterface
         }
 
         private GitRevision _currentSelectedRevision;

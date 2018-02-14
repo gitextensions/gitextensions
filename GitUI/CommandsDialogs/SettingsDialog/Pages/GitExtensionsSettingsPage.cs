@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        private bool loadedDefaultClone = false;
+        private bool loadedDefaultClone;
         private void defaultCloneDropDown(object sender, EventArgs e)
         {
             if (!loadedDefaultClone)
@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
         }
 
-        private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)
+        private void chkUseSSL_CheckedChanged(object sender, EventArgs e)
         {
             if (!chkUseSSL.Checked)
             {
