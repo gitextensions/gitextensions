@@ -17,7 +17,7 @@ namespace ResourceManager
 
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
-            if (!String.IsNullOrEmpty(category))
+            if (!string.IsNullOrEmpty(category))
                 Xliff.TranslationUtl.AddTranslationItemsFromFields(category, obj, translation);
         }
 
@@ -38,7 +38,7 @@ namespace ResourceManager
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
         {
-            if (!String.IsNullOrEmpty(category))
+            if (!string.IsNullOrEmpty(category))
                 Xliff.TranslationUtl.TranslateItemsFromFields(category, obj, translation);
         }
     }

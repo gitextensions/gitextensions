@@ -26,10 +26,10 @@ namespace GitUI.HelperDialogs
             revisionGrid.MultiSelect = false;
             revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
 
-            if (!String.IsNullOrEmpty(preselectCommit))
+            if (!string.IsNullOrEmpty(preselectCommit))
             {
                 string guid = Module.RevParse(preselectCommit);
-                if (!String.IsNullOrEmpty(guid))
+                if (!string.IsNullOrEmpty(guid))
                 {
                     revisionGrid.SetInitialRevision(new GitRevision(Module, guid));
                 }

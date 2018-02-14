@@ -210,7 +210,7 @@ namespace GitUI.CommandsDialogs
 
                 Repositories.AddMostRecentRepository(dirTo);
 
-                if (!String.IsNullOrEmpty(_puttySshKey))
+                if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);
                     clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);

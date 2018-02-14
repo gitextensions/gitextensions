@@ -283,9 +283,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             public int cbSize;
             public CFM dwMask;
             public CFE dwEffects;
-            public Int32 yHeight;
-            public Int32 yOffset;
-            public Int32 crTextColor;
+            public int yHeight;
+            public int yOffset;
+            public int crTextColor;
             public byte bCharSet;
             public byte bPitchAndFamily;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
@@ -294,7 +294,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             // CHARFORMAT2 from here onwards.
             public FW wWeight;
             public short sSpacing;
-            public Int32 crBackColor;
+            public int crBackColor;
             public uint lcid;
             public uint dwReserved;
             public short sStyle;
@@ -322,9 +322,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             internal const int WM_SETREDRAW = 11;
 
             // Defines for EM_SETCHARFORMAT/EM_GETCHARFORMAT
-            internal const Int32 SCF_SELECTION = 0x0001;
-            internal const Int32 SCF_WORD = 0x0002;
-            internal const Int32 SCF_ALL = 0x0004;
+            internal const int SCF_SELECTION = 0x0001;
+            internal const int SCF_WORD = 0x0002;
+            internal const int SCF_ALL = 0x0004;
 
             internal const int LF_FACESIZE = 32;
 
@@ -738,7 +738,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             ctformatStates bnumbering = ctformatStates.nctNone;
             bool fontSet = false;
             string strFont = "";
-            Int32 crFont = 0;
+            int crFont = 0;
             Color color = new Color();
             int yHeight = 0;
 

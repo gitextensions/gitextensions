@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
             AppSettings.RebaseAutoStash = chkStash.Checked;
 
             string rebaseCmd;
-            if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
+            if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,

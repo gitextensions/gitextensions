@@ -1078,7 +1078,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine)
                     {
-                        if (DialogResult.No == MessageBox.Show(this, String.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        if (DialogResult.No == MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
                             return false;
                     }
                 }
@@ -1380,7 +1380,7 @@ namespace GitUI.CommandsDialogs
         private void StageAllAccordingToFilter()
         {
             Stage(Unstaged.GitItemFilteredStatuses.Where(s => !s.IsAssumeUnchanged && !s.IsSkipWorktree).ToList());
-            Unstaged.SetFilter(String.Empty);
+            Unstaged.SetFilter(string.Empty);
             if (Unstaged.IsEmpty)
                 Message.Focus();
             else
@@ -1760,7 +1760,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (addNewlineToCommitMessageWhenMissing)
                         {
-                            if (lineNumber == 1 && !String.IsNullOrEmpty(line))
+                            if (lineNumber == 1 && !string.IsNullOrEmpty(line))
                                 textWriter.WriteLine();
                         }
 
@@ -1861,7 +1861,7 @@ namespace GitUI.CommandsDialogs
                 return;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
-                String.Join(", ", modules.Keys) + " updated");
+                string.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
             foreach (var item in modules)
             {
@@ -1871,7 +1871,7 @@ namespace GitUI.CommandsDialogs
                 const string subprojCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
-                if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
+                if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + item.Key + ":");
                     GitModule module = new GitModule(_fullPathResolver.Resolve(item.Value.EnsureTrailingPathSeparator()));
@@ -2279,7 +2279,7 @@ namespace GitUI.CommandsDialogs
             {
                 var oldText = Message.Line(line);
                 var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
-                if (!String.Equals(oldText, newText))
+                if (!string.Equals(oldText, newText))
                 {
                     Message.ReplaceLine(line, newText);
                     return true;

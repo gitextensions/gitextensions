@@ -59,7 +59,7 @@ namespace GitCommands
             return !(a == b);
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is GitSubmoduleInfo && this == (GitSubmoduleInfo)obj;
         }
@@ -71,7 +71,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            if (String.IsNullOrEmpty(Branch))
+            if (string.IsNullOrEmpty(Branch))
                 return LocalPath;
             return LocalPath + " [" + Branch + "]";
         }

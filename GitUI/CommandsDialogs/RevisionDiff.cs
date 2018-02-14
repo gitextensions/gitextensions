@@ -284,7 +284,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
             }
-            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, string.Empty);
         }
 
 
@@ -321,7 +321,7 @@ namespace GitUI.CommandsDialogs
         private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
         {
             if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
-                DiffText.ViewPatch(String.Empty);
+                DiffText.ViewPatch(string.Empty);
         }
 
         private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)

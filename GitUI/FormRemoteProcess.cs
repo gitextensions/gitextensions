@@ -102,8 +102,8 @@ namespace GitUI
                     if (FormPuttyError.AskForKey(this, out loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
-                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(Remote) && 
-                            String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
+                        if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) && 
+                            string.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
                             Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
 
                         // Retry the command.

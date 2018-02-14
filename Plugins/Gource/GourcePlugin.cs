@@ -136,7 +136,7 @@ namespace Gource
                     {
                         Directory.CreateDirectory(directoryName);
                     }
-                    if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
+                    if (fileName == string.Empty || theEntry.Name.IndexOf(".ini") >= 0)
                         continue;
 
                     var fullPath = Path.Combine(directoryName, theEntry.Name);
@@ -170,7 +170,7 @@ namespace Gource
             }
         }
 
-        public int DownloadFile(String remoteFilename, String localFilename)
+        public int DownloadFile(string remoteFilename, string localFilename)
         {
             // Function will return the number of bytes processed
             // to the caller. Initialize to 0 here.

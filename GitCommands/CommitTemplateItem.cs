@@ -31,8 +31,8 @@ namespace GitCommands
 
         public CommitTemplateItem()
         {
-            Name = String.Empty;
-            Text = String.Empty;
+            Name = string.Empty;
+            Text = string.Empty;
         }
 
         private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)

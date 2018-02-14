@@ -79,8 +79,8 @@ namespace TeamCityIntegration
             request.CookieContainer = cookieContainer;
 
             if (buildServerCredentials != null
-                && !String.IsNullOrEmpty(buildServerCredentials.Username)
-                && !String.IsNullOrEmpty(buildServerCredentials.Password))
+                && !string.IsNullOrEmpty(buildServerCredentials.Username)
+                && !string.IsNullOrEmpty(buildServerCredentials.Password))
             {
                 request.Credentials = new NetworkCredential(buildServerCredentials.Username, buildServerCredentials.Password);
             }

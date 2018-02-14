@@ -183,7 +183,7 @@ namespace GitExtensions
                     //assume that if we are having this error and the installation is not a portable one then the folder will exist.
                     if (Directory.Exists(localSettingsPath))
                     {
-                        string messageContent = String.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
+                        string messageContent = string.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
 
                         if (DialogResult.Yes.Equals(MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2)))
                         {
@@ -191,7 +191,7 @@ namespace GitExtensions
                             {
                                 Directory.Delete(localSettingsPath, true); //deletes all application settings not just for this instance - but should work
                                 //Restart GitExtensions with the same arguments after old config is deleted?
-                                if (DialogResult.OK.Equals(MessageBox.Show(String.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
+                                if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
                                     System.Diagnostics.Process p = new System.Diagnostics.Process();
@@ -199,21 +199,21 @@ namespace GitExtensions
                                     if (args.Length > 1)
                                     {
                                         args[0] = "";
-                                        p.StartInfo.Arguments = String.Join(" ", args);
+                                        p.StartInfo.Arguments = string.Join(" ", args);
                                     }
                                     p.Start();
                                 }
                             }
                             catch (IOException)
                             {
-                                MessageBox.Show(String.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(string.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                     }
                     //assuming that there is no localSettingsPath directory in existence we probably have a portable installation.
                     else
                     {
-                        string messageContent = String.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
+                        string messageContent = string.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
                         MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     exceptionHandled = true;

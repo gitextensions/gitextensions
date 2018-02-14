@@ -499,7 +499,7 @@ namespace GitUI.CommandsDialogs
                             break;
                     }
                     int idx = cTaskDialog.ShowCommandBox(owner,
-                                    String.Format(_pullRepositoryCaption.Text, destination),
+                                    string.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
                                     _pullRepository.Text,
                                     "",
@@ -639,7 +639,7 @@ namespace GitUI.CommandsDialogs
             return _gitRefs.Where(r => r.IsHead);
         }
 
-        private IEnumerable<IGitRef> GetRemoteBranches(String remoteName)
+        private IEnumerable<IGitRef> GetRemoteBranches(string remoteName)
         {
             return _gitRefs.Where(r => r.IsRemote && r.Remote == remoteName);
         }

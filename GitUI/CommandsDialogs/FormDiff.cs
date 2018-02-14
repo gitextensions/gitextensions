@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
             IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
             if (items.Count() == 1)
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
-            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, string.Empty);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)

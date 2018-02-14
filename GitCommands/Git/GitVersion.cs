@@ -85,7 +85,7 @@ namespace GitCommands
         private static string Fix(string version)
         {
             if (version == null)
-                return String.Empty;
+                return string.Empty;
 
             if (version.StartsWith(Prefix))
                 return version.Substring(Prefix.Length).Trim();
@@ -110,7 +110,7 @@ namespace GitCommands
 
             foreach (var number in numbers)
             {
-                if (Int32.TryParse(number, out var value))
+                if (int.TryParse(number, out var value))
                     yield return value;
             }
         }

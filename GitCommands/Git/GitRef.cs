@@ -43,7 +43,7 @@ namespace GitCommands
             ParseName();
 
             _remoteSettingName = RemoteSettingName(Name);
-            _mergeSettingName = String.Format("branch.{0}.merge", Name);
+            _mergeSettingName = string.Format("branch.{0}.merge", Name);
         }
 
         public static GitRef CreateBranchRef(GitModule module, string guid, string name)
@@ -77,7 +77,7 @@ namespace GitCommands
             get => GetTrackingRemote(Module.LocalConfigFile);
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     Module.UnsetSetting(_remoteSettingName);
                 else
                 {
@@ -92,7 +92,7 @@ namespace GitCommands
         /// <summary>Gets the setting name for a branch's remote.</summary>
         public static string RemoteSettingName(string branch)
         {
-            return String.Format(SettingKeyString.BranchRemote, branch);
+            return string.Format(SettingKeyString.BranchRemote, branch);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace GitCommands
             get => GetMergeWith(Module.LocalConfigFile);
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     Module.UnsetSetting(_mergeSettingName);
                 else
                     Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));

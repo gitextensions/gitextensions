@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             string gitpath = AppSettings.GitCommandValue;
-            if (!String.IsNullOrWhiteSpace(possibleNewPath))
+            if (!string.IsNullOrWhiteSpace(possibleNewPath))
             {
                 gitpath = possibleNewPath.Trim();
             }
@@ -102,14 +102,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private IEnumerable<string> GetGitLocations()
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
-            if (!String.IsNullOrEmpty(envVariable)) yield return envVariable;
+            if (!string.IsNullOrEmpty(envVariable)) yield return envVariable;
             yield return
                 CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
             if (8 == IntPtr.Size
-                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             if (programFilesX86 != null)
                 yield return programFilesX86 + @"\Git\";
@@ -255,7 +255,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string exeName;
             string exeFile = MergeToolsHelper.FindMergeToolFullPath(CommonLogic.ConfigFileSettingsSet, GetGlobalMergeToolText(), out exeName);
-            if (String.IsNullOrEmpty(exeFile))
+            if (string.IsNullOrEmpty(exeFile))
             {
                 SetMergetoolPathText("");
                 SetMergeToolCmdText("");

@@ -894,7 +894,7 @@ namespace GitUI
             {
                 using (var viewPatch = new FormViewPatch(this))
                 {
-                    if (!String.IsNullOrEmpty(patchFile))
+                    if (!string.IsNullOrEmpty(patchFile))
                         viewPatch.LoadPatch(patchFile);
                     viewPatch.ShowDialog(owner);
                 }
@@ -2104,7 +2104,7 @@ namespace GitUI
         {
             //Remove working directory from filename. This is to prevent filenames that are too
             //long while there is room left when the workingdir was not in the path.
-            string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
+            string fileHistoryFileName = string.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             StartFileHistoryDialog(fileHistoryFileName);

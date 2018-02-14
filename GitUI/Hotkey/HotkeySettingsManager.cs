@@ -169,7 +169,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        private static string CalcDictionaryKey(String settingName, int commandCode)
+        private static string CalcDictionaryKey(string settingName, int commandCode)
         {
             return settingName + ":" + commandCode;
         }

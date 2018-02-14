@@ -98,9 +98,9 @@ namespace GitCommands
         }
 
         public RefsFilteringOptions RefsOptions = RefsFilteringOptions.All | RefsFilteringOptions.Boundary;
-        public string RevisionFilter = String.Empty;
-        public string PathFilter = String.Empty;
-        public string BranchFilter = String.Empty;
+        public string RevisionFilter = string.Empty;
+        public string PathFilter = string.Empty;
+        public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
         private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
@@ -184,7 +184,7 @@ namespace GitCommands
                 (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
                 branchFilter = "--branches=" + BranchFilter;
 
-            string arguments = String.Format(CultureInfo.InvariantCulture,
+            string arguments = string.Format(CultureInfo.InvariantCulture,
                 "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
                 logParam,
                 formatString,

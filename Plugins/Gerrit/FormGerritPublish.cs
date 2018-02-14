@@ -48,7 +48,7 @@ namespace Gerrit
             if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
-            return String.Format("push {0}\"{1}\" {2}:{3}", sprogressOption, remote.Trim(), fromBranch, toBranch);
+            return string.Format("push {0}\"{1}\" {2}:{3}", sprogressOption, remote.Trim(), fromBranch, toBranch);
         }
 
         private bool PublishChange(IWin32Window owner)
@@ -135,7 +135,7 @@ namespace Gerrit
 
             if (branchParts.Length >= 3 && branchParts[0] == "review")
             {
-                branchName = String.Join("/", branchParts.Skip(2));
+                branchName = string.Join("/", branchParts.Skip(2));
 
                 // Don't use the Gerrit change number as a topic branch.
 

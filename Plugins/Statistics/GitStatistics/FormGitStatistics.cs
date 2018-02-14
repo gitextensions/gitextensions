@@ -105,7 +105,7 @@ namespace GitStatistics
 
                     var builder = new StringBuilder();
 
-                    var commitCountValues = new Decimal[commitsPerUser.Count];
+                    var commitCountValues = new decimal[commitsPerUser.Count];
                     var commitCountLabels = new string[commitsPerUser.Count];
                     var n = 0;
                     foreach (var keyValuePair in commitsPerUser)

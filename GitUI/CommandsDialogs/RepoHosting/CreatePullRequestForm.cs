@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 () => _currentHostedRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, true));
                     int selectItem = 0;
                     _remoteBranchesCB.Items.Clear();
                     for (int i = 0; i < branches.Count; i++)
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 () => MyRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, true));
                     int selectItem = 0;
                     for (int i = 0; i < branches.Count; i++)
                     {

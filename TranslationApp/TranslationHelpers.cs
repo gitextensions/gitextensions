@@ -105,11 +105,11 @@ namespace TranslationApp
                     curItem.Name = item.Name;
 
                     string source = curItem.NeutralValue ?? item.NeutralValue;
-                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
+                    if (!string.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
                         dict.Add(source, curItem.TranslatedValue);
 
                     // Source text changed
-                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue))
+                    if (!string.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue))
                     {
                         curItem.TranslatedValue = "";
                     }
@@ -120,7 +120,7 @@ namespace TranslationApp
                 foreach (var item in oldItems)
                 {
                     // Obsolete should be added only to dictionary
-                    if (!String.IsNullOrEmpty(item.TranslatedValue) &&
+                    if (!string.IsNullOrEmpty(item.TranslatedValue) &&
                         item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
                     {
                         dict.Add(item.NeutralValue, item.TranslatedValue);
@@ -130,7 +130,7 @@ namespace TranslationApp
                 // update untranslated items
                 var untranlatedItems =
                     from trItem in transItems
-                    where (String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
+                    where (string.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
                     select trItem;
 
                 foreach (var untranlatedItem in untranlatedItems)
@@ -153,7 +153,7 @@ namespace TranslationApp
                     var item = translateItem.GetTranslationItem();
 
                     var ti = new TranslationItem(item.Name, item.Property, item.Source, item.Value);
-                    ti.Value = ti.Value ?? String.Empty;
+                    ti.Value = ti.Value ?? string.Empty;
                     foreignTranslation.FindOrAddTranslationCategory(translateItem.Category)
                         .Body.AddTranslationItem(ti);
                 }

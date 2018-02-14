@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 string merge = Module.GetRemoteBranch(selectedHead);
-                if (!String.IsNullOrEmpty(merge))
+                if (!string.IsNullOrEmpty(merge))
                     Branches.SetSelectedText(merge);
             }
 

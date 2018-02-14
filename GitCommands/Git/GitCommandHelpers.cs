@@ -207,7 +207,7 @@ namespace GitCommands
                 fixedUrl += "-P " + uri.Port + " ";
             fixedUrl += "\"";
 
-            if (!String.IsNullOrEmpty(uri.UserInfo))
+            if (!string.IsNullOrEmpty(uri.UserInfo))
                 fixedUrl += uri.UserInfo + "@";
             fixedUrl += uri.Host;
             fixedUrl += ":" + uri.LocalPath.Substring(1) + "\"";
@@ -644,7 +644,7 @@ namespace GitCommands
             if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
-            var options = String.Concat(sforce, sprogressOption);
+            var options = string.Concat(sforce, sprogressOption);
 
             if (all)
                 return "push " + options + "\"" + path.Trim() + "\" --tags";

@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public bool GetCurrentSparseEnabledState()
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(_gitcommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), Boolean.TrueString);
+            return StringComparer.OrdinalIgnoreCase.Equals(_gitcommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), bool.TrueString);
         }
 
         /// <summary>

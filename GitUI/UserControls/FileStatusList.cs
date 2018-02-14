@@ -743,7 +743,7 @@ namespace GitUI
                 foreach (var pair in _itemsDictionary)
                 {
                     ListViewGroup group = null;
-                    if (!String.IsNullOrEmpty(pair.Key))
+                    if (!string.IsNullOrEmpty(pair.Key))
                     {
                         var groupName = "";
                         if (pair.Key == CombinedDiff.Text)

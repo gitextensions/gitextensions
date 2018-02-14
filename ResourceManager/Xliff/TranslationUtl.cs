@@ -14,7 +14,7 @@ namespace ResourceManager.Xliff
         {
             if (text == null)
                 return false;
-            return text.Any(Char.IsLetter);
+            return text.Any(char.IsLetter);
         }
 
         public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
@@ -206,7 +206,7 @@ namespace ResourceManager.Xliff
 
             string ProvideDefaultValue() => "";
             string value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
             {
                 if (propertyInfo.CanWrite)
                     propertyInfo.SetValue(obj, value, null);

@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
 
                 if (8 == IntPtr.Size
-                    || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+                    || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
                 {
                     programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 
@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private static string UnquoteString(string str)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
                 return str;
 
             int length = str.Length;
@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "tmerge":
                     exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
-                    if (String.IsNullOrEmpty(difftoolPath))
+                    if (string.IsNullOrEmpty(difftoolPath))
                     {
                         exeName = "TortoiseMerge.exe";
                         difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
@@ -334,7 +334,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     if (exeFile.ToLower().Contains("tortoisegit"))
                         command = command.Replace("/", "-");
 
-                    return String.Format(command, exeFile);
+                    return string.Format(command, exeFile);
                 case "vscode":
                     return "\"" + exeFile + "\" --wait \"$MERGED\" ";
                 case "vsdiffmerge":

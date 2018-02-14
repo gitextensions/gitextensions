@@ -68,7 +68,7 @@ namespace TfsInterop
                 else
                 {
                     url = "http://" + _hostname + ":8080/tfs/" + teamCollection;
-                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (String.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + "Build/Build.aspx?artifactMoniker=";
+                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (string.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + "Build/Build.aspx?artifactMoniker=";
                 }
 
                 _tfsCollection = new TfsTeamProjectCollection(new Uri(url), new TfsClientCredentials());
@@ -220,7 +220,7 @@ namespace TfsInterop
                 else
                 {
                     url = "http://" + _hostname + ":8080/tfs/" + teamCollection;
-                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (String.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + projectName + "/_build?_a=summary&buildId=";
+                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (string.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + projectName + "/_build?_a=summary&buildId=";
                 }
 
                 VssConnection connection = new VssConnection(new Uri(url), new VssCredentials(true));

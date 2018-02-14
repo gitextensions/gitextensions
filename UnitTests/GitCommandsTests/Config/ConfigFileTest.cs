@@ -114,7 +114,7 @@ namespace GitCommandsTests.Config
 
             byte[] expectedFileContent =
                 GitModule.SystemEncoding.GetBytes(
-                    String.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
+                    string.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
 
             Assert.IsTrue(File.Exists(GetConfigFileName()));
             byte[] fileContent = File.ReadAllBytes(GetConfigFileName());

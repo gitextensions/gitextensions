@@ -52,7 +52,7 @@ namespace GitUI.HelperDialogs
             if (DiffFiles.SelectedItem != null && _revision != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DiffText.ViewChanges(DiffFiles.SelectedItemParent, _revision.Guid, DiffFiles.SelectedItem, String.Empty);
+                DiffText.ViewChanges(DiffFiles.SelectedItemParent, _revision.Guid, DiffFiles.SelectedItem, string.Empty);
                 Cursor.Current = Cursors.Default;
             }
         }

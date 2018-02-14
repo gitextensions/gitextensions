@@ -87,12 +87,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private IEnumerable<string> GetPuttyLocations()
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
-            if (!String.IsNullOrEmpty(envVariable)) yield return envVariable;
+            if (!string.IsNullOrEmpty(envVariable)) yield return envVariable;
             yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
             if (8 == IntPtr.Size
-                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             yield return programFiles + @"\TortoiseGit\bin\";
             if (programFilesX86 != null)

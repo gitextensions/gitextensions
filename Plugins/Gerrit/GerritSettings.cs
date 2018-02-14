@@ -48,7 +48,7 @@ namespace Gerrit
             var remotes = Module.GetRemotes(true);
 
             if (!remotes.Contains(DefaultRemote))
-                throw new GerritSettingsException(String.Format(_settingsErrorDefaultRemoteNotPresent.Text, DefaultRemote));
+                throw new GerritSettingsException(string.Format(_settingsErrorDefaultRemoteNotPresent.Text, DefaultRemote));
         }
 
         public static GerritSettings Load([NotNull] IGitModule aModule)
