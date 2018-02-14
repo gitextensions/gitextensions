@@ -62,14 +62,14 @@ namespace JenkinsIntegration
 
             if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
             {
-                var baseAdress = hostName.Contains("://")
-                                     ? new Uri(hostName, UriKind.Absolute)
-                                     : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
+                var baseAddress = hostName.Contains("://")
+                    ? new Uri(hostName, UriKind.Absolute)
+                    : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
                 _httpClient = new HttpClient(new HttpClientHandler {UseDefaultCredentials = true})
                 {
                     Timeout = TimeSpan.FromMinutes(2),
-                    BaseAddress = baseAdress
+                    BaseAddress = baseAddress
                 };
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
@@ -77,7 +77,7 @@ namespace JenkinsIntegration
                 UpdateHttpClientOptions(buildServerCredentials);
 
                 string[] projectUrls = projectName.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var projectUrl in projectUrls.Select(s => baseAdress + "job/" + s.Trim() + "/"))
+                foreach (var projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
                 {
                     AddGetBuildUrl(projectUrl);
                 }

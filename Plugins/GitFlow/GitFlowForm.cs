@@ -42,7 +42,7 @@ namespace GitFlow
             get { return Enum.GetValues(typeof (Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
 
-        private bool IsGitFlowInited => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
+        private bool IsGitFlowInitialised => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
 
         public GitFlowForm(GitUIBaseEventArgs gitUiCommands)
         {
@@ -62,15 +62,15 @@ namespace GitFlow
 
         private void Init()
         {
-            var isGitFlowInited = IsGitFlowInited;
+            var isGitFlowInitialised = IsGitFlowInitialised;
 
-            btnInit.Visible = !isGitFlowInited;
-            gbStart.Enabled = isGitFlowInited;
-            gbManage.Enabled = isGitFlowInited;
-            lblCaptionHead.Visible = isGitFlowInited;
-            lblHead.Visible = isGitFlowInited;
+            btnInit.Visible = !isGitFlowInitialised;
+            gbStart.Enabled = isGitFlowInitialised;
+            gbManage.Enabled = isGitFlowInitialised;
+            lblCaptionHead.Visible = isGitFlowInitialised;
+            lblHead.Visible = isGitFlowInitialised;
 
-            if (isGitFlowInited)
+            if (isGitFlowInitialised)
             {
                 var remotes = _gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
@@ -112,9 +112,9 @@ namespace GitFlow
             cbManageType.Enabled = false;
             cbBranches.DataSource = new List<string> {_loading.Text};
             if (!Branches.ContainsKey(branchType))
-                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
+                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchData(); });
             else
-                DisplayBranchDatas();
+                DisplayBranchData();
         }
 
         private List<string> GetBranches(string typeBranch)
@@ -134,7 +134,7 @@ namespace GitFlow
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
-        private void DisplayBranchDatas()
+        private void DisplayBranchData()
         {
             var branchType = cbManageType.SelectedValue.ToString();
             var branches = Branches[branchType];

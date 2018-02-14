@@ -194,8 +194,7 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (string file in Directory.GetFiles(dir, "*.patch"))
                     {
-                        var attacheMent = new Attachment(file);
-                        mail.Attachments.Add(attacheMent);
+                        mail.Attachments.Add(new Attachment(file));
                     }
 
                     var smtpClient = new SmtpClient(AppSettings.SmtpServer)

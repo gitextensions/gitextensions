@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
     {
         private static readonly string[] tabCaptions = { "The Coders", "The Translators", "The Designers" };
 
-        private readonly TextBox[] textboxes = new TextBox[tabCaptions.Length];
+        private readonly TextBox[] textBoxes = new TextBox[tabCaptions.Length];
         private readonly TabPage[] tabPages = new TabPage[tabCaptions.Length];
         private TabControl tabControl;
 
@@ -68,8 +68,8 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
             for (int i = 0; i < tabCaptions.Length; i++)
             {
-                textboxes[i] = getNewTextBox();
-                tabPages[i] = getNewTabPage(textboxes[i], tabCaptions[i]);
+                textBoxes[i] = getNewTextBox();
+                tabPages[i] = getNewTabPage(textBoxes[i], tabCaptions[i]);
                 tabControl.Controls.Add(tabPages[i]);
             }
 
@@ -90,9 +90,9 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         public void LoadContributors(string coders, string translators, string designers, string others)
         {
             const string NEWLINES = @"\r\n?|\n";
-            textboxes[0].Text = Regex.Replace(coders, NEWLINES, " ");
-            textboxes[1].Text = Regex.Replace(translators, NEWLINES, " ");
-            textboxes[2].Text = Regex.Replace(designers, NEWLINES, " ");
+            textBoxes[0].Text = Regex.Replace(coders, NEWLINES, " ");
+            textBoxes[1].Text = Regex.Replace(translators, NEWLINES, " ");
+            textBoxes[2].Text = Regex.Replace(designers, NEWLINES, " ");
         }
     }
 }
