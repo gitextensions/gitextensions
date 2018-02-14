@@ -307,13 +307,7 @@ namespace GitUI.Editor
             return _isGotoLineUIApplicable;
         }
 
-        public int LineAtCaret
-        {
-            get
-            {
-                return TextEditor.ActiveTextAreaControl.Caret.Position.Line;
-            }
-        }
+        public int LineAtCaret => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
 
         public void HighlightLine(int line, Color color)
         {
@@ -331,10 +325,7 @@ namespace GitUI.Editor
             document.MarkerStrategy.RemoveAll(t => true);
         }
 
-        public int TotalNumberOfLines
-        {
-            get { return TextEditor.Document.TotalNumberOfLines; }
-        }
+        public int TotalNumberOfLines => TextEditor.Document.TotalNumberOfLines;
 
         public void FocusTextArea()
         {

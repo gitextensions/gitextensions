@@ -151,13 +151,7 @@ namespace GitUI
             }
         }
 
-        public override bool Focused
-        {
-            get
-            {
-                return FileStatusListView.Focused;
-            }
-        }
+        public override bool Focused => FileStatusListView.Focused;
 
         public new void Focus()
         {
@@ -638,10 +632,7 @@ namespace GitUI
 
         [Browsable(false)]
         [DefaultValue(true)]
-        public bool IsEmpty
-        {
-            get { return GitItemStatuses == null || !GitItemStatuses.Any(); }
-        }
+        public bool IsEmpty => GitItemStatuses == null || !GitItemStatuses.Any();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]

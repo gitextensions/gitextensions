@@ -52,10 +52,7 @@ namespace Github3
 
         public static string OAuthToken
         {
-            get
-            {
-                return Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
-            }
+            get => Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
             set
             {
                 _username = null;
@@ -131,7 +128,8 @@ namespace Github3
             return github.getRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
-        public bool ConfigurationOk { get { return true; } }
+        public bool ConfigurationOk => true;
+
         public bool GitModuleIsRelevantToMe(IGitModule aModule)
         {
             return GetHostedRemotesForModule(aModule).Count > 0;

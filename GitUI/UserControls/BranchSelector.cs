@@ -30,20 +30,11 @@ namespace GitUI.UserControls
 
         public string CommitToCompare;
 
-        public bool IsRemoteBranchChecked
-        {
-            get { return Remotebranch.Checked; }
-        }
+        public bool IsRemoteBranchChecked => Remotebranch.Checked;
 
-        public string SelectedBranchName
-        {
-            get { return Branches.Text; }
-        }
+        public string SelectedBranchName => Branches.Text;
 
-        public override string Text
-        {
-            get { return Branches.Text; }
-        }
+        public override string Text => Branches.Text;
 
         public void Initialize(bool remote, string[] containRevisons)
         {

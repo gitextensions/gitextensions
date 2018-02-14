@@ -62,13 +62,7 @@ Current Branch:
             Translate();
         }
 
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsInstantSavePage => true;
 
         public override void OnPageShown()
         {

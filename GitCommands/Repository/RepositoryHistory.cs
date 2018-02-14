@@ -22,10 +22,7 @@ namespace GitCommands.Repository
         [XmlIgnore]
         public int MaxCount
         {
-            get
-            {
-                return _maxCount;
-            }
+            get => _maxCount;
             set
             {
                 _maxCount = value;

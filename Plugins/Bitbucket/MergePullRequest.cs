@@ -21,24 +21,12 @@ namespace Bitbucket
             _info = info;
         }
 
-        protected override object RequestBody
-        {
-            get { return ""; }
-        }
+        protected override object RequestBody => "";
 
-        protected override Method RequestMethod
-        {
-            get { return Method.POST; }
-        }
+        protected override Method RequestMethod => Method.POST;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("rest/api/1.0/projects/{0}/repos/{1}/pull-requests/{2}/merge?version={3}",
-                                     _info.ProjectKey, _info.TargetRepo, _info.Id, _info.Version);
-            }
-        }
+        protected override string ApiUrl => string.Format("rest/api/1.0/projects/{0}/repos/{1}/pull-requests/{2}/merge?version={3}",
+            _info.ProjectKey, _info.TargetRepo, _info.Id, _info.Version);
 
         protected override JObject ParseResponse(JObject json)
         {

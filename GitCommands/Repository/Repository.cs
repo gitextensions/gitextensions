@@ -30,23 +30,14 @@ namespace GitCommands.Repository
         private string _path;
         public string Path
         {
-            get
-            {
-                return _path ?? string.Empty;
-            }
-            set
-            {
-                _path = value;
-            }
+            get => _path ?? string.Empty;
+            set => _path = value;
         }
         public string Description { get; set; }
         public RepositoryAnchor Anchor { get; set; }
 
         [XmlIgnore]
-        public bool IsRemote
-        {
-            get { return PathIsUrl(Path); }
-        }
+        public bool IsRemote => PathIsUrl(Path);
 
         [XmlIgnore]
         public RepositoryType RepositoryType { get; set; }

@@ -31,10 +31,7 @@ namespace GitCommands.Statistics
         {
             public int Commits, AddedLines, DeletedLines;
 
-            public int ChangedLines
-            {
-                get { return AddedLines + DeletedLines; }
-            }
+            public int ChangedLines => AddedLines + DeletedLines;
 
             public DataPoint(int commits, int added, int deleted)
             {
@@ -107,7 +104,7 @@ namespace GitCommands.Statistics
         private bool showSubmodules;
         public bool ShowSubmodules
         {
-            get { return showSubmodules; }
+            get => showSubmodules;
             set { Stop(); showSubmodules = value; }
         }
 

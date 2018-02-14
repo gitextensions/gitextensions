@@ -333,10 +333,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Gets ending angle (in degrees) of the pie slice.
         /// </summary>
-        public float EndAngle
-        {
-            get { return (StartAngle + SweepAngle)%360; }
-        }
+        public float EndAngle => (StartAngle + SweepAngle)%360;
 
         /// <summary>
         ///   Gets or sets the bounding rectangle.

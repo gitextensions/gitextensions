@@ -274,10 +274,7 @@ namespace AppVeyorIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return _httpClientAppVeyor.BaseAddress.Host; }
-        }
+        public string UniqueKey => _httpClientAppVeyor.BaseAddress.Host;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -506,7 +503,7 @@ namespace AppVeyorIntegration
         public string BuildId { get; set; }
         public string CommitId { get; set; }
         public string AppVeyorBuildReportUrl { get; set; }
-        public bool IsRunning { get { return Status == BuildStatus.InProgress; } }
+        public bool IsRunning => Status == BuildStatus.InProgress;
         public string Branch { get; set; }
         public string BaseApiUrl { get; set; }
         public string BaseWebUrl { get; set; }

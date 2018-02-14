@@ -20,10 +20,7 @@ namespace GitUI.UserControls
         private string _selectedCommitHash;
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string SelectedCommitHash
-        {
-            get { return _selectedCommitHash; }
-        }
+        public string SelectedCommitHash => _selectedCommitHash;
 
         /// <summary>
         /// shows a message box if commitHash is invalid

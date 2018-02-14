@@ -143,6 +143,6 @@ namespace GitCommands
         }
 
         public int ExitCode { get; set; }
-        public bool IsRunning { get { return _myProcess != null && !_myProcess.HasExited; } }
+        public bool IsRunning => _myProcess != null && !_myProcess.HasExited;
     }
 }

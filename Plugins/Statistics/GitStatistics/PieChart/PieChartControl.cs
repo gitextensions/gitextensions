@@ -52,7 +52,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public float InitialAngle
         {
-            get { return _initialAngle; }
+            get => _initialAngle;
             set
             {
                 _initialAngle = value;

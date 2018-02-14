@@ -98,15 +98,9 @@ namespace GitUIPluginInterfaces
 
         public object this[ISettingsSource settings]
         {
-            get 
-            {
-                return settings.GetValue(Name, null, ConvertFromString);
-            }
+            get => settings.GetValue(Name, null, ConvertFromString);
 
-            set 
-            {
-                settings.SetValue(Name, value, ConvertToString);
-            }
+            set => settings.SetValue(Name, value, ConvertToString);
         }
 
         public T ValueOrDefault(ISettingsSource settings)

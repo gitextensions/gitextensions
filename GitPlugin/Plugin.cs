@@ -38,26 +38,11 @@ namespace GitPlugin
             _outputPane = PluginHelpers.AquireOutputPane(application, panelName);
         }
 
-        public OutputWindowPane OutputPane
-        {
-            get { return _outputPane; }
-        }
+        public OutputWindowPane OutputPane => _outputPane;
 
-        public DTE2 Application
-        {
-            get
-            {
-                return _application;
-            }
-        }
+        public DTE2 Application => _application;
 
-        public int LocaleId
-        {
-            get
-            {
-                return _application.LocaleID;
-            }
-        }
+        public int LocaleId => _application.LocaleID;
 
         public void DeleteCommands()
         {
@@ -72,13 +57,7 @@ namespace GitPlugin
             return CommandBars["MenuBar"];
         }
 
-        public CommandBars CommandBars
-        {
-            get
-            {
-                return (CommandBars)_application.CommandBars;
-            }
-        }
+        public CommandBars CommandBars => (CommandBars)_application.CommandBars;
 
         public void RegisterCommand(string commandName, CommandBase command)
         {

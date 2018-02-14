@@ -42,10 +42,7 @@ namespace GitFlow
             get { return Enum.GetValues(typeof (Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
 
-        private bool IsGitFlowInited
-        {
-            get { return !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master")); }
-        }
+        private bool IsGitFlowInited => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
 
         public GitFlowForm(GitUIBaseEventArgs gitUiCommands)
         {

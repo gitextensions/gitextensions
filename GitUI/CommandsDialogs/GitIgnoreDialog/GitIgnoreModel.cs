@@ -33,34 +33,16 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
             _fullPathResolver = new FullPathResolver(() => _module.WorkingDir);
         }
 
-        public string FormCaption
-        {
-            get { return _editGitignoreTitle.Text; }
-        }
+        public string FormCaption => _editGitignoreTitle.Text;
 
-        public string ExcludeFile
-        {
-            get { return _fullPathResolver.Resolve(".gitignore"); }
-        }
+        public string ExcludeFile => _fullPathResolver.Resolve(".gitignore");
 
-        public string FileOnlyInWorkingDirSupported
-        {
-            get { return _gitignoreOnlyInWorkingDirSupported.Text; }
-        }
+        public string FileOnlyInWorkingDirSupported => _gitignoreOnlyInWorkingDirSupported.Text;
 
-        public string CannotAccessFile
-        {
-            get { return _cannotAccessGitignore.Text; }
-        }
+        public string CannotAccessFile => _cannotAccessGitignore.Text;
 
-        public string CannotAccessFileCaption
-        {
-            get { return _cannotAccessGitignoreCaption.Text; }
-        }
+        public string CannotAccessFileCaption => _cannotAccessGitignoreCaption.Text;
 
-        public string SaveFileQuestion
-        {
-            get { return _saveFileQuestion.Text; }
-        }
+        public string SaveFileQuestion => _saveFileQuestion.Text;
     }
 }

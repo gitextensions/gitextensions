@@ -20,15 +20,9 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private readonly IGitUICommandsSource UICommandsSource;
 
-        private GitUICommands UICommands
-        {
-            get
-            {
-                return UICommandsSource.UICommands;
-            }
-        }
+        private GitUICommands UICommands => UICommandsSource.UICommands;
 
-        private GitModule Module { get { return UICommands.Module; } }
+        private GitModule Module => UICommands.Module;
 
         public IndexWatcher(IGitUICommandsSource aUICommandsSource)
         {

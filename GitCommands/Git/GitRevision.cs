@@ -46,7 +46,7 @@ namespace GitCommands
 
         public BuildInfo BuildStatus
         {
-            get { return _buildStatus; }
+            get => _buildStatus;
             set
             {
                 if (Equals(value, _buildStatus)) return;
@@ -115,21 +115,9 @@ namespace GitCommands
                     guid == IndexGuid;
         }
 
-        public bool HasParent
-        {
-            get
-            {
-                return ParentGuids != null && ParentGuids.Length > 0;
-            }
-        }
+        public bool HasParent => ParentGuids != null && ParentGuids.Length > 0;
 
-        public string FirstParentGuid
-        {
-            get
-            {
-                return HasParent ? ParentGuids[0] : null;
-            }
-        }
+        public string FirstParentGuid => HasParent ? ParentGuids[0] : null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

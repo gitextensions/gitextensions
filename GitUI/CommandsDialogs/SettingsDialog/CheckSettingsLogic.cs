@@ -12,8 +12,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public class CheckSettingsLogic
     {
         public readonly CommonLogic CommonLogic;
-        private GitModule Module { get { return CommonLogic.Module; } }
-        private ConfigFileSettings GlobalConfigFileSettings { get { return CommonLogic.ConfigFileSettingsSet.GlobalSettings; } }
+        private GitModule Module => CommonLogic.Module;
+        private ConfigFileSettings GlobalConfigFileSettings => CommonLogic.ConfigFileSettingsSet.GlobalSettings;
 
         public CheckSettingsLogic(CommonLogic commonLogic)
         {

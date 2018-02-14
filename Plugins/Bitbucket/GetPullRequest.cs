@@ -68,18 +68,12 @@ namespace Bitbucket
         public string DestRepo { get; set; }
         public string DestBranch { get; set; }
         public double CreatedDate { get; set; }
-        public string SrcDisplayName
-        {
-            get { return string.Format("{0}/{1}", SrcProjectName, SrcRepo); }
-        }
-        public string DestDisplayName
-        {
-            get { return string.Format("{0}/{1}", DestProjectName, DestRepo); }
-        }
-        public string DisplayName
-        {
-            get { return string.Format("#{0}: {1}, {2}", Id, Title, (ConvertFromUnixTimestamp(CreatedDate)).ToString("yyyy-MM-dd")); }
-        }
+        public string SrcDisplayName => string.Format("{0}/{1}", SrcProjectName, SrcRepo);
+
+        public string DestDisplayName => string.Format("{0}/{1}", DestProjectName, DestRepo);
+
+        public string DisplayName => string.Format("#{0}: {1}, {2}", Id, Title, (ConvertFromUnixTimestamp(CreatedDate)).ToString("yyyy-MM-dd"));
+
         public static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
@@ -98,24 +92,12 @@ namespace Bitbucket
             _repoName = repoName;
         }
 
-        protected override object RequestBody
-        {
-            get { return null; }
-        }
+        protected override object RequestBody => null;
 
-        protected override Method RequestMethod
-        {
-            get { return Method.GET; }
-        }
+        protected override Method RequestMethod => Method.GET;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/rest/api/latest/projects/{0}/repos/{1}/pull-requests?directions=incoming",
-                                     _projectKey, _repoName);
-            }
-        }
+        protected override string ApiUrl => string.Format("/rest/api/latest/projects/{0}/repos/{1}/pull-requests?directions=incoming",
+            _projectKey, _repoName);
 
         protected override List<PullRequest> ParseResponse(JObject json)
         {

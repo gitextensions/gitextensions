@@ -7,7 +7,7 @@ namespace GitUI.Script
     {
         private string _UserInput = "";
 
-        public string UserInput { get{ return _UserInput;} }
+        public string UserInput => _UserInput;
 
         public SimplePrompt()
         {

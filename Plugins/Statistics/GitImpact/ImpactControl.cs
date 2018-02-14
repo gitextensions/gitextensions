@@ -147,7 +147,7 @@ namespace GitImpact
         [DefaultValue(false)]
         public bool ShowSubmodules
         {
-            get { return _showSubmodules; }
+            get => _showSubmodules;
             set
             {
                 _showSubmodules = value;

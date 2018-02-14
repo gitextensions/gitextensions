@@ -10,15 +10,9 @@
 
         public override string Value
         {
-            get
-            {
-                return SettingsSource.GetString(Name, null);
-            }
+            get => SettingsSource.GetString(Name, null);
 
-            set
-            {
-                SettingsSource.SetString(Name, value);
-            }
+            set => SettingsSource.SetString(Name, value);
         }
     }
 
@@ -30,24 +24,12 @@
 
         public override bool? Value
         {
-            get
-            {
-                return SettingsSource.GetBool(Name);
-            }
+            get => SettingsSource.GetBool(Name);
 
-            set
-            {
-                SettingsSource.SetBool(Name, value);
-            }
+            set => SettingsSource.SetBool(Name, value);
         }
 
-        public new bool ValueOrDefault
-        {
-            get
-            {
-                return base.ValueOrDefault.Value;
-            }
-        }
+        public new bool ValueOrDefault => base.ValueOrDefault.Value;
     }
 
     public class IntNullableSetting : Setting<int?>
@@ -58,24 +40,12 @@
 
         public override int? Value
         {
-            get
-            {
-                return SettingsSource.GetInt(Name);
-            }
+            get => SettingsSource.GetInt(Name);
 
-            set
-            {
-                SettingsSource.SetInt(Name, value);
-            }
+            set => SettingsSource.SetInt(Name, value);
         }
 
-        public new int ValueOrDefault
-        {
-            get
-            {
-                return base.ValueOrDefault.Value;
-            }
-        }
+        public new int ValueOrDefault => base.ValueOrDefault.Value;
     }
 
     public class BoolSetting : Setting<bool>
@@ -86,15 +56,9 @@
 
         public override bool Value
         {
-            get
-            {
-                return SettingsSource.GetBool(Name, DefaultValue);
-            }
+            get => SettingsSource.GetBool(Name, DefaultValue);
 
-            set
-            {
-                SettingsSource.SetBool(Name, value);
-            }
+            set => SettingsSource.SetBool(Name, value);
         }
     }
 
@@ -106,15 +70,9 @@
 
         public override T Value
         {
-            get
-            {
-                return SettingsSource.GetEnum(Name, DefaultValue);
-            }
+            get => SettingsSource.GetEnum(Name, DefaultValue);
 
-            set
-            {
-                SettingsSource.SetEnum(Name, value);
-            }
+            set => SettingsSource.SetEnum(Name, value);
         }
     }
 
@@ -126,15 +84,9 @@
 
         public override T? Value
         {
-            get
-            {
-                return SettingsSource.GetNullableEnum<T>(Name);
-            }
+            get => SettingsSource.GetNullableEnum<T>(Name);
 
-            set
-            {
-                SettingsSource.SetNullableEnum(Name, value);
-            }
+            set => SettingsSource.SetNullableEnum(Name, value);
         }
     }
 }

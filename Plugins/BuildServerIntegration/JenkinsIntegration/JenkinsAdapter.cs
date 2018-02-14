@@ -85,10 +85,7 @@ namespace JenkinsIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return _httpClient.BaseAddress.Host; }
-        }
+        public string UniqueKey => _httpClient.BaseAddress.Host;
 
         private void AddGetBuildUrl(string projectUrl)
         {

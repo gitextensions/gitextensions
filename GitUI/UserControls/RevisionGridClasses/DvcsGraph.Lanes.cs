@@ -45,15 +45,9 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public int Count
-            {
-                get { return sourceGraph.Count; }
-            }
+            public int Count => sourceGraph.Count;
 
-            public int CachedCount
-            {
-                get { return laneRows.Count; }
-            }
+            public int CachedCount => laneRows.Count;
 
             #region IEnumerable<LaneRow> Members
 
@@ -426,10 +420,7 @@ namespace GitUI.RevisionGridClasses
                 private Node node;
                 private int nodeLane = -1;
 
-                public Edge[] EdgeList
-                {
-                    get { return edges.EdgeList.ToArray(); }
-                }
+                public Edge[] EdgeList => edges.EdgeList.ToArray();
 
                 #region LaneRow Members
 
@@ -445,20 +436,14 @@ namespace GitUI.RevisionGridClasses
                     set { node = value; }
                 }
 
-                public int Count
-                {
-                    get { return edges.CountCurrent(); }
-                }
+                public int Count => edges.CountCurrent();
 
                 public int LaneInfoCount(int lane)
                 {
                     return edges.CountCurrent(lane);
                 }
 
-                public Graph.LaneInfo this[int col, int row]
-                {
-                    get { return edges.Current(col, row); }
-                }
+                public Graph.LaneInfo this[int col, int row] => edges.Current(col, row);
 
                 #endregion
 
@@ -579,10 +564,7 @@ namespace GitUI.RevisionGridClasses
                     private readonly Graph.LaneInfo emptyItem;
                     #pragma warning restore 0649
 
-                    public List<Edge> EdgeList
-                    {
-                        get { return edges; }
-                    }
+                    public List<Edge> EdgeList => edges;
 
                     public Graph.LaneInfo Current(int lane, int item)
                     {
@@ -742,10 +724,7 @@ namespace GitUI.RevisionGridClasses
                     Start = start;
                 }
 
-                public int End
-                {
-                    get { return Data.ConnectLane; }
-                }
+                public int End => Data.ConnectLane;
 
                 public override string ToString()
                 {
@@ -779,15 +758,9 @@ namespace GitUI.RevisionGridClasses
                 {
                 }
 
-                object IEnumerator.Current
-                {
-                    get { return Current; }
-                }
+                object IEnumerator.Current => Current;
 
-                public Graph.ILaneRow Current
-                {
-                    get { return lanes[index]; }
-                }
+                public Graph.ILaneRow Current => lanes[index];
 
                 public bool MoveNext()
                 {
@@ -834,20 +807,11 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
 
-                public Junction Junction
-                {
-                    get { return junction; }
-                }
+                public Junction Junction => junction;
 
-                public Node Current
-                {
-                    get { return node ?? (index < junction.NodesCount ? junction[index] : null); }
-                }
+                public Node Current => node ?? (index < junction.NodesCount ? junction[index] : null);
 
-                public bool IsClear
-                {
-                    get { return (junction == null && node == null); }
-                }
+                public bool IsClear => (junction == null && node == null);
 
                 public void Clear()
                 {
@@ -907,15 +871,9 @@ namespace GitUI.RevisionGridClasses
 
                 #region LaneRow Members
 
-                public int NodeLane
-                {
-                    get { return nodeLane; }
-                }
+                public int NodeLane => nodeLane;
 
-                public Node Node
-                {
-                    get { return node; }
-                }
+                public Node Node => node;
 
                 public Graph.LaneInfo this[int col, int row]
                 {

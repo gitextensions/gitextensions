@@ -13,15 +13,9 @@ namespace GitCommands
             _module = module;
         }
 
-        public string Name
-        {
-            get { return _module.GetSubmoduleNameByPath(LocalPath); }
-        }
+        public string Name => _module.GetSubmoduleNameByPath(LocalPath);
 
-        public string RemotePath
-        {
-            get { return _module.GetSubmoduleRemotePath(Name); }
-        }
+        public string RemotePath => _module.GetSubmoduleRemotePath(Name);
 
         public string CurrentCommitGuid { get; set; }
         public string Branch { get; set; }

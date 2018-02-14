@@ -76,10 +76,7 @@ namespace GitUI.CommandsDialogs
             Width = listBox1.Width + 15;
         }
 
-        public T SelectedItem
-        {
-            get { return (T)listBox1.SelectedItem; }
-        }
+        public T SelectedItem => (T)listBox1.SelectedItem;
 
         private void SearchWindow_FormClosing(object sender, FormClosingEventArgs e)
         {

@@ -25,24 +25,12 @@ namespace Bitbucket
             _info = info;
         }
 
-        protected override object RequestBody
-        {
-            get { return GetPullRequestBody(); }
-        }
+        protected override object RequestBody => GetPullRequestBody();
 
-        protected override Method RequestMethod
-        {
-            get { return Method.POST; }
-        }
+        protected override Method RequestMethod => Method.POST;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/projects/{0}/repos/{1}/pull-requests",
-                                     _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
-            }
-        }
+        protected override string ApiUrl => string.Format("/projects/{0}/repos/{1}/pull-requests",
+            _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
 
         protected override JObject ParseResponse(JObject json)
         {

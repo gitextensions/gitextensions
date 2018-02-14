@@ -2244,9 +2244,9 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal bool ShowCurrentBranchOnly_ToolStripMenuItemChecked { get { return _showCurrentBranchOnlyToolStripMenuItemChecked; } }
-        internal bool ShowAllBranches_ToolStripMenuItemChecked { get { return _showAllBranchesToolStripMenuItemChecked; } }
-        internal bool ShowFilteredBranches_ToolStripMenuItemChecked { get { return _showFilteredBranchesToolStripMenuItemChecked; } }
+        internal bool ShowCurrentBranchOnly_ToolStripMenuItemChecked => _showCurrentBranchOnlyToolStripMenuItemChecked;
+        internal bool ShowAllBranches_ToolStripMenuItemChecked => _showAllBranchesToolStripMenuItemChecked;
+        internal bool ShowFilteredBranches_ToolStripMenuItemChecked => _showFilteredBranchesToolStripMenuItemChecked;
 
         private void SetShowBranches()
         {
@@ -3392,7 +3392,7 @@ namespace GitUI
             return GetShortcutKeys((int)cmd);
         }
 
-        internal RevisionGridMenuCommands MenuCommands { get { return _revisionGridMenuCommands; } }
+        internal RevisionGridMenuCommands MenuCommands => _revisionGridMenuCommands;
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {

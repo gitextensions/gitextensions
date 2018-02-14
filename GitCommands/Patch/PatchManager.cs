@@ -19,8 +19,8 @@ namespace PatchApply
 
         public List<Patch> Patches
         {
-            get { return _patches; }
-            set { _patches = value; }
+            get => _patches;
+            set => _patches = value;
         }
 
         public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)

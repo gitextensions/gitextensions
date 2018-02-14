@@ -31,37 +31,22 @@ namespace ResourceManager.Xliff
         [XmlIgnore]
         public string Name
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
+            get => _name;
+            set => _name = value;
         }
 
         private string _property;
         [XmlIgnore]
         public string Property
         {
-            get
-            {
-                return _property;
-            }
-            set
-            {
-                _property = value;
-            }
+            get => _property;
+            set => _property = value;
         }
 
         [XmlAttribute("id")]
         public string Id
         {
-            get
-            {
-                return _name + "." + _property;
-            }
+            get => _name + "." + _property;
             set
             {
                 var vals = value.Split(new[] {'.'}, 2);
@@ -74,28 +59,16 @@ namespace ResourceManager.Xliff
         [XmlElement("source")]
         public string Source
         {
-            get
-            {
-                return _source;
-            }
-            set
-            {
-                _source = value;
-            }
+            get => _source;
+            set => _source = value;
         }
 
         private string _value;
         [XmlElement("target")]
         public string Value
         {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-            }
+            get => _value;
+            set => _value = value;
         }
 
         public int CompareTo(TranslationItem other)

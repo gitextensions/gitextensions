@@ -21,26 +21,14 @@ namespace Bitbucket
             _targetCommit = targetCommit;
         }
 
-        protected override object RequestBody
-        {
-            get { return null; }
-        }
+        protected override object RequestBody => null;
 
-        protected override Method RequestMethod
-        {
-            get { return Method.GET; }
-        }
+        protected override Method RequestMethod => Method.GET;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format(
-                    "/projects/{0}/repos/{1}/commits?until={2}&since={3}&secondaryRepositoryId={4}&start=0&limit=10",
-                    _sourceRepo.ProjectKey, _sourceRepo.RepoName, 
-                    _sourceCommit.Hash, _targetCommit.Hash, _targetRepo.Id);
-            }
-        }
+        protected override string ApiUrl => string.Format(
+            "/projects/{0}/repos/{1}/commits?until={2}&since={3}&secondaryRepositoryId={4}&start=0&limit=10",
+            _sourceRepo.ProjectKey, _sourceRepo.RepoName, 
+            _sourceCommit.Hash, _targetCommit.Hash, _targetRepo.Id);
 
         protected override List<Commit> ParseResponse(JObject json)
         {

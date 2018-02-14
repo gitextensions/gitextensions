@@ -35,15 +35,9 @@ namespace GitCommands
         public event EventHandler Exited;
         public event EventHandler<AsyncErrorEventArgs> Error
         {
-            add
-            {
-                _backgroundLoader.LoadingError += value;
-            }
+            add => _backgroundLoader.LoadingError += value;
 
-            remove
-            {
-                _backgroundLoader.LoadingError -= value;
-            }
+            remove => _backgroundLoader.LoadingError -= value;
         }
         public event EventHandler Updated;
         public event EventHandler BeginUpdate;

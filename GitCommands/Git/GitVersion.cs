@@ -37,65 +37,29 @@ namespace GitCommands
             d = Get(numbers, 3);
         }
 
-        public bool FetchCanAskForProgress
-        {
-            get { return this >= v1_7_1; }
-        }
+        public bool FetchCanAskForProgress => this >= v1_7_1;
 
-        public bool LogFormatRecodesCommitMessage
-        {
-            get { return this >= v1_8_4; }
-        }
+        public bool LogFormatRecodesCommitMessage => this >= v1_8_4;
 
-        public bool PushCanAskForProgress
-        {
-            get { return this >= v1_7_1; }
-        }
+        public bool PushCanAskForProgress => this >= v1_7_1;
 
-        public bool StashUntrackedFilesSupported
-        {
-            get { return this >= v1_7_7; }
-        }
+        public bool StashUntrackedFilesSupported => this >= v1_7_7;
 
-        public bool SupportPushWithRecursiveSubmodulesCheck
-        {
-            get { return this >= v1_7_7; }
-        }
+        public bool SupportPushWithRecursiveSubmodulesCheck => this >= v1_7_7;
 
-        public bool SupportPushWithRecursiveSubmodulesOnDemand
-        {
-            get { return this >= v1_7_11; }
-        }
+        public bool SupportPushWithRecursiveSubmodulesOnDemand => this >= v1_7_11;
 
-        public bool SupportPushForceWithLease
-        {
-            get { return this >= v1_8_5; }
-        }
+        public bool SupportPushForceWithLease => this >= v1_8_5;
 
-        public bool RaceConditionWhenGitStatusIsUpdatingIndex
-        {
-            get { return this < v2_0_1; }
-        }
+        public bool RaceConditionWhenGitStatusIsUpdatingIndex => this < v2_0_1;
 
-        public bool SupportWorktree
-        {
-            get { return this >= v2_5_1; }
-        }
+        public bool SupportWorktree => this >= v2_5_1;
 
-        public bool SupportWorktreeList
-        {
-            get { return this >= v2_7_0; }
-        }
+        public bool SupportWorktreeList => this >= v2_7_0;
 
-        public bool SupportMergeUnrelatedHistory
-        {
-            get { return this >= v2_9_0; }
-        }
+        public bool SupportMergeUnrelatedHistory => this >= v2_9_0;
 
-        public bool IsUnknown
-        {
-            get { return a == 0 && b == 0 && c == 0 && d == 0; }
-        }
+        public bool IsUnknown => a == 0 && b == 0 && c == 0 && d == 0;
 
         // Returns true if it's possible to pass given string as command line
         // argument to git for searching.

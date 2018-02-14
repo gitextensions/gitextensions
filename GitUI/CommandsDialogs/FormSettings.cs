@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly CommonLogic _commonLogic;
         private readonly CheckSettingsLogic _checkSettingsLogic;
-        private IEnumerable<ISettingsPage> SettingsPages { get { return settingsTreeView.SettingsPages; } }
+        private IEnumerable<ISettingsPage> SettingsPages => settingsTreeView.SettingsPages;
         private readonly string _translatedTitle;
 
         private FormSettings()
@@ -307,6 +307,6 @@ namespace GitUI.CommandsDialogs
             LoadSettings();
         }
 
-        public CheckSettingsLogic CheckSettingsLogic { get { return _checkSettingsLogic; } }
+        public CheckSettingsLogic CheckSettingsLogic => _checkSettingsLogic;
     }
 }

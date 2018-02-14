@@ -16,20 +16,14 @@ namespace DeleteUnusedBranches
             Branches.AddRange(branches);
         }
 
-        protected override bool SupportsSortingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSortingCore => true;
 
         protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
         {
             Branches.Sort(BranchesComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
         }
 
-        private List<Branch> Branches
-        {
-            get { return (List<Branch>)Items; }
-        }
+        private List<Branch> Branches => (List<Branch>)Items;
 
         private static class BranchesComparer
         {

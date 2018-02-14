@@ -99,14 +99,14 @@ namespace GitCommands.Settings
 
         public bool NoFastForwardMerge
         {
-            get { return this.GetBool("NoFastForwardMerge", false); }
-            set { this.SetBool("NoFastForwardMerge", value); }
+            get => this.GetBool("NoFastForwardMerge", false);
+            set => this.SetBool("NoFastForwardMerge", value);
         }
 
         public string Dictionary
         {
-            get { return this.GetString("dictionary", "en-US"); }
-            set { this.SetString("dictionary", value); }
+            get => this.GetString("dictionary", "en-US");
+            set => this.SetString("dictionary", value);
         }
 
     }
@@ -126,13 +126,7 @@ namespace GitCommands.Settings
             ShowBuildSummaryInGrid = new BoolNullableSetting("ShowBuildSummaryInGrid", this, true);
         }
 
-        public SettingsPath TypeSettings
-        {
-            get
-            {
-                return new SettingsPath(this, Type.ValueOrDefault);
-            }
-        }
+        public SettingsPath TypeSettings => new SettingsPath(this, Type.ValueOrDefault);
     }
 
     public class DetailedGroup : SettingsPath

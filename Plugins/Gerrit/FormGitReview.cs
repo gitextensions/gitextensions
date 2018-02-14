@@ -27,7 +27,7 @@ namespace Gerrit
             new TranslationString("Save changes?");
 
         private string _originalGitReviewFileContent = string.Empty;
-        private IGitModule Module { get { return UICommands.GitModule; } }
+        private IGitModule Module => UICommands.GitModule;
 
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
@@ -39,7 +39,7 @@ namespace Gerrit
         private GitUICommands _uiCommands;
         public GitUICommands UICommands
         {
-            get { return _uiCommands; }
+            get => _uiCommands;
             set
             {
                 var oldcommands = _uiCommands;

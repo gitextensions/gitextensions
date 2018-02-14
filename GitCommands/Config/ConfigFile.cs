@@ -11,7 +11,7 @@ namespace GitCommands.Config
     public class ConfigFile
     {
         private readonly string _fileName;
-        public string FileName { get { return _fileName; } }
+        public string FileName => _fileName;
 
         public bool Local { get; private set; }
 
@@ -293,7 +293,8 @@ namespace GitCommands.Config
             private ConfigFile _configFile;
             private string _fileContent;
             private IConfigSection _section = null;
-            private string FileName { get { return _configFile._fileName; } }
+            private string FileName => _configFile._fileName;
+
             private string _key = null;
             //parsed char
             private int pos;

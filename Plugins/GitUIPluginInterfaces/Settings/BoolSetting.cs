@@ -29,15 +29,9 @@ namespace GitUIPluginInterfaces
 
         public bool? this[ISettingsSource settings]
         {
-            get
-            {
-                return settings.GetBool(Name);
-            }
+            get => settings.GetBool(Name);
 
-            set
-            {
-                settings.SetBool(Name, value);
-            }
+            set => settings.SetBool(Name, value);
         }
 
         public bool ValueOrDefault(ISettingsSource settings)

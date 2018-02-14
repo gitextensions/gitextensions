@@ -9,9 +9,6 @@ namespace GitPluginShared.Commands
             RunGitEx("merge", fileName);
         }
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.Any; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.Any;
     }
 }

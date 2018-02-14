@@ -120,32 +120,14 @@ namespace GitCommands.Settings
 
         public Encoding FilesEncoding
         {
-            get
-            {
-                return GetEncoding("i18n.filesEncoding");
-            }
+            get => GetEncoding("i18n.filesEncoding");
 
-            set
-            {
-                SetEncoding("i18n.filesEncoding", value);
-            }
+            set => SetEncoding("i18n.filesEncoding", value);
         }
 
-        public Encoding CommitEncoding
-        {
-            get
-            {
-                return GetEncoding("i18n.commitEncoding");
-            }
-        }
+        public Encoding CommitEncoding => GetEncoding("i18n.commitEncoding");
 
-        public Encoding LogOutputEncoding
-        {
-            get
-            {
-                return GetEncoding("i18n.logoutputencoding");
-            }
-        }
+        public Encoding LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
 
         private Encoding GetEncoding(string settingName)
         {

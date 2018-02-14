@@ -5,7 +5,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class RepoDistSettingsPage : SettingsPageWithHeader, IRepoDistSettingsPage
     {
-        protected RepoDistSettingsSet RepoDistSettingsSet { get { return CommonLogic.RepoDistSettingsSet; } }
+        protected RepoDistSettingsSet RepoDistSettingsSet => CommonLogic.RepoDistSettingsSet;
         protected RepoDistSettings CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost aPageHost)
@@ -15,10 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CurrentSettings = RepoDistSettingsSet.EffectiveSettings;
         }
 
-        protected override bool AreEffectiveSettings
-        {
-            get { return CurrentSettings == RepoDistSettingsSet.EffectiveSettings; }
-        }
+        protected override bool AreEffectiveSettings => CurrentSettings == RepoDistSettingsSet.EffectiveSettings;
 
         protected override ISettingsSource GetCurrentSettings()
         {
