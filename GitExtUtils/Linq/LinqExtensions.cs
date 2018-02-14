@@ -46,7 +46,7 @@ namespace System.Linq
                 TKey key = keySelector(sourceElement);
                 if (key == null)
                 {
-                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    var ex = new InvalidOperationException("KeySelector produced a key that is null. See exception data for source.");
                     ex.Data.Add("source", sourceElement);
                     throw ex;
                 }
@@ -75,7 +75,7 @@ namespace System.Linq
                 TKey key = keySelector(sourceElement);
                 if (key == null)
                 {
-                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    var ex = new InvalidOperationException("KeySelector produced a key that is null. See exception data for source.");
                     ex.Data.Add("source", sourceElement);
                     throw ex;
                 }

@@ -90,7 +90,7 @@ namespace Gerrit
         private static bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force = false)
         {
             if (gitModule == null)
-                throw new ArgumentNullException("gitDirectory");
+                throw new ArgumentNullException(nameof(gitModule));
 
             string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
 
