@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", Coders, Translators, Designers, Other)
+            _contributorsList = string.Join(", ", Coders, Translators, Designers, Other)
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
@@ -54,12 +54,12 @@ namespace GitUI.CommandsDialogs
                 AppSettings.ProductVersion);
         }
 
-        private readonly string[] _contributersList;
+        private readonly string[] _contributorsList;
         private readonly Random _random = new Random();
 
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_thanksToTicker.Text = _contributersList[_random.Next(_contributersList.Length - 1)].Trim();
+            _NO_TRANSLATE_thanksToTicker.Text = _contributorsList[_random.Next(_contributorsList.Length - 1)].Trim();
         }
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)

@@ -123,10 +123,10 @@ namespace GitUI.CommandsDialogs
             tagMessage.Enabled = tagOperation.CanProvideMessage();
         }
 
-        private static TagOperation GetSelectedOperation(int dropdownSelection)
+        private static TagOperation GetSelectedOperation(int dropDownSelection)
         {
             TagOperation returnValue;
-            switch (dropdownSelection)
+            switch (dropDownSelection)
             {
                 case 0:
                     returnValue = TagOperation.Lightweight;
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
                     returnValue = TagOperation.SignWithSpecificKey;
                     break;
                 default:
-                    throw new NotSupportedException("Invalid dropdownSelection");
+                    throw new NotSupportedException("Invalid dropDownSelection");
             }
             return returnValue;
         }
