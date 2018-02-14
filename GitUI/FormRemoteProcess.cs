@@ -39,12 +39,12 @@ namespace GitUI
             Module = module;
         }
 
-        public static new bool ShowDialog(GitModuleForm owner, string arguments)
+        public new static bool ShowDialog(GitModuleForm owner, string arguments)
         {
             return ShowDialog(owner, owner.Module, arguments);
         }
 
-        public static new bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
+        public new static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
         {
             using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
             {

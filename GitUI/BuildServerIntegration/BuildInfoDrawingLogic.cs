@@ -7,7 +7,7 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.BuildServerIntegration
 {
-    static internal class BuildInfoDrawingLogic
+    internal static class BuildInfoDrawingLogic
     {
         public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
         {
