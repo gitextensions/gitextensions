@@ -57,10 +57,15 @@ namespace GitUI.CommandsDialogs
 
         private void btOpenSubmodule_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = Application.ExecutablePath;
-            process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.GetSubmoduleFullPath(_filename);
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = Application.ExecutablePath,
+                    Arguments = "browse",
+                    WorkingDirectory = Module.GetSubmoduleFullPath(_filename)
+                }
+            };
             process.Start();
         }
 

@@ -14,9 +14,8 @@ namespace Gerrit
 
         public static void ShowSubmitted(IWin32Window owner, string change)
         {
-            var form = new FormGerritChangeSubmitted();
+            var form = new FormGerritChangeSubmitted {_NO_TRANSLATE_TargetLabel = {Text = change}};
 
-            form._NO_TRANSLATE_TargetLabel.Text = change;
             form._NO_TRANSLATE_TargetLabel.Click += (s, e) => Process.Start(change);
 
             form.ShowDialog(owner);

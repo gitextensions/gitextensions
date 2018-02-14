@@ -101,12 +101,10 @@ namespace GitUI
             }
         }
 
-
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
-            FormProcess formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings);
+            var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings) {ControlBox = true};
 
-            formProcess.ControlBox = true;
             formProcess.Show(owner);
 
             return formProcess;

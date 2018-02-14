@@ -66,9 +66,11 @@ namespace JenkinsIntegration
                                      ? new Uri(hostName, UriKind.Absolute)
                                      : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
-                _httpClient = new HttpClient(new HttpClientHandler(){ UseDefaultCredentials = true});
-                _httpClient.Timeout = TimeSpan.FromMinutes(2);
-                _httpClient.BaseAddress = baseAdress;
+                _httpClient = new HttpClient(new HttpClientHandler {UseDefaultCredentials = true})
+                {
+                    Timeout = TimeSpan.FromMinutes(2),
+                    BaseAddress = baseAdress
+                };
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
@@ -179,7 +181,7 @@ namespace JenkinsIntegration
 
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            //Note that 'running' is ignored (attempt to fetch data when updated) 
+            //Note that 'running' is ignored (attempt to fetch data when updated)
             //Similar for 'sinceDate', not supported in Jenkins API
             try
             {

@@ -31,8 +31,8 @@ namespace GitUI.UserControls.RevisionGridClasses
             var branchNameItemInsertAfter = captionItem;
             gitNameList.ForEach(branchName =>
             {
-                var branchNameItem = new ToolStripMenuItem(branchName);
-                branchNameItem.Tag = itemFlag; // to delete items from previous opening
+                var branchNameItem = new ToolStripMenuItem(branchName) {Tag = itemFlag};
+                // to delete items from previous opening
                 branchNameItem.Click += CopyToClipBoard;
                 int insertAfterIndex = targetMenu.DropDownItems.IndexOf(branchNameItemInsertAfter);
                 targetMenu.DropDownItems.Insert(insertAfterIndex + 1, branchNameItem);

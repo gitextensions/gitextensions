@@ -143,29 +143,26 @@ namespace GitCommandsTests.ExternalLinks
             actualLinks.Should().Equal(expectedLinks);
         }
 
-
         private static BindingList<GitRemote> GetDefaultRemotes()
         {
-            var remotes = new BindingList<GitRemote>();
-            remotes.Add(new GitRemote()
+            return new BindingList<GitRemote>
             {
-                Name = "origin",
-                Url = "https://github.com/jbialobr/gitextensions.git"
-            });
-
-            remotes.Add(new GitRemote()
-            {
-                Name = "upstream",
-                Url = "https://github.com/gitextensions/gitextensions.git"
-            });
-
-            remotes.Add(new GitRemote()
-            {
-                Name = "RussKie",
-                Url = "https://github.com/russkie/gitextensions.git"
-            });
-
-            return remotes;
+                new GitRemote()
+                {
+                    Name = "origin",
+                    Url = "https://github.com/jbialobr/gitextensions.git"
+                },
+                new GitRemote()
+                {
+                    Name = "upstream",
+                    Url = "https://github.com/gitextensions/gitextensions.git"
+                },
+                new GitRemote()
+                {
+                    Name = "RussKie",
+                    Url = "https://github.com/russkie/gitextensions.git"
+                }
+            };
         }
 
         private static IList<ExternalLinkDefinition> Parse(string xml)

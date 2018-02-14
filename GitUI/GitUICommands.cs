@@ -1824,8 +1824,10 @@ namespace GitUI
             WrapRepoHostingCall("Create pull request", gitHoster,
                                 gh =>
                                 {
-                                    CreatePullRequestForm form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch);
-                                    form.ShowInTaskbar = true;
+                                    var form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch)
+                                    {
+                                        ShowInTaskbar = true
+                                    };
                                     form.Show();
                                 });
         }
@@ -2006,9 +2008,8 @@ namespace GitUI
                     }
                     break;
             }
-            var frmCmdLine = new FormCommandlineHelp();
-            frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
-            Application.Run(frmCmdLine);
+
+            Application.Run(new FormCommandlineHelp {StartPosition = FormStartPosition.CenterScreen});
         }
 
         private static void Uninstall()

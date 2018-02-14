@@ -215,9 +215,8 @@ namespace NetSpell.SpellChecker.Dictionary
             // Step 3 Remove suffix, Search BaseWords
 
             // save suffixed words for use when removing prefix
-            List<string> suffixWords = new List<string>();
+            List<string> suffixWords = new List<string> {word};
             // Add word to suffix word list
-            suffixWords.Add(word);
 
             foreach (AffixRule rule in SuffixRules.Values)
             {

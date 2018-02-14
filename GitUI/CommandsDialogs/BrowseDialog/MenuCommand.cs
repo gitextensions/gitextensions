@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     /// From a MenuCommand a (theoretically) unlimited number of actual ToolStripItems can
     /// be created that all behave the same.
     /// A MenuCommand can also be a separator
-    /// 
+    ///
     /// Purpose: have methods from specific context menus also available in main menu
     /// </summary>
     internal class MenuCommand
@@ -29,12 +29,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return new ToolStripSeparator();
             }
 
-            var toolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem.Name = menuCommand.Name;
-            toolStripMenuItem.Text = menuCommand.Text;
-            toolStripMenuItem.Image = menuCommand.Image;
-            toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
-            toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
+            var toolStripMenuItem = new ToolStripMenuItem
+            {
+                Name = menuCommand.Name,
+                Text = menuCommand.Text,
+                Image = menuCommand.Image,
+                ShortcutKeys = menuCommand.ShortcutKeys,
+                ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString
+            };
+
             toolStripMenuItem.Click += (obj, sender) =>
             {
                 if (menuCommand.ExecuteAction != null)

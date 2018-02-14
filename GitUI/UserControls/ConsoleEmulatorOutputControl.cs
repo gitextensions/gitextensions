@@ -88,8 +88,7 @@ namespace GitUI.UserControls
             }
             cmdl.Append(arguments /* expecting to be already escaped */);
 
-            var startinfo = new ConEmuStartInfo();
-            startinfo.ConsoleProcessCommandLine = cmdl.ToString();
+            var startinfo = new ConEmuStartInfo {ConsoleProcessCommandLine = cmdl.ToString()};
             if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
             {
                 startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";

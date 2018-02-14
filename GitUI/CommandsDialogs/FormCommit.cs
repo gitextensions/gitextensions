@@ -2504,10 +2504,15 @@ namespace GitUI.CommandsDialogs
             Unstaged.SelectedItem.SubmoduleStatus.ContinueWith(
                     t =>
                     {
-                        Process process = new Process();
-                        process.StartInfo.FileName = Application.ExecutablePath;
-                        process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                        process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
+                        Process process = new Process
+                        {
+                            StartInfo =
+                            {
+                                FileName = Application.ExecutablePath,
+                                Arguments = "browse -commit=" + t.Result.Commit,
+                                WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
+                            }
+                        };
                         process.Start();
                     });
         }

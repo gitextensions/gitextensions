@@ -11,9 +11,9 @@ namespace FindLargeFiles
             Path = path;
             sizeInBytes = size;
             compressedSizeInBytes = -1;
-            Commit = new HashSet<string>();
-            Commit.Add(commit);
+            Commit = new HashSet<string> {commit};
         }
+
         public string SHA { get; set; }
         public string Path { get; set; }
         internal int sizeInBytes { get; set; }

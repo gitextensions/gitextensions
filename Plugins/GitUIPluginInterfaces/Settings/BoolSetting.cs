@@ -30,7 +30,6 @@ namespace GitUIPluginInterfaces
         public bool? this[ISettingsSource settings]
         {
             get => settings.GetBool(Name);
-
             set => settings.SetBool(Name, value);
         }
 
@@ -47,36 +46,19 @@ namespace GitUIPluginInterfaces
 
             public override CheckBox CreateControl()
             {
-                CheckBox result = new CheckBox();
-                result.ThreeState = true;
-                return result;
+                return new CheckBox {ThreeState = true};
             }
 
             public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
-                bool? settingVal;
-                if (areSettingsEffective)
-                {
-                    settingVal = Setting.ValueOrDefault(settings);
-                }
-                else
-                {
-                    settingVal = Setting[settings];
-                }
-
-                control.SetNullableChecked(settingVal);
+                control.SetNullableChecked(areSettingsEffective ? Setting.ValueOrDefault(settings) : Setting[settings]);
             }
 
             public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
                 var controlValue = control.GetNullableChecked();
-                if (areSettingsEffective)
-                {
-                    if (Setting.ValueOrDefault(settings) == controlValue)
-                    {
-                        return;
-                    }
-                }
+                if (areSettingsEffective && Setting.ValueOrDefault(settings) == controlValue)
+                    return;
 
                 Setting[settings] = controlValue;
             }

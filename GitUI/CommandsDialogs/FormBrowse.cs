@@ -708,25 +708,22 @@ namespace GitUI.CommandsDialogs
             if (scripts.Count == 0)
                 return;
 
-            ToolStripSeparator toolstripseparator = new ToolStripSeparator();
-            toolstripseparator.Tag = "userscript";
-            ToolStrip.Items.Add(toolstripseparator);
+            ToolStrip.Items.Add(new ToolStripSeparator {Tag = "userscript"});
 
             foreach (ScriptInfo scriptInfo in scripts)
             {
-                ToolStripButton tempButton = new ToolStripButton();
-                //store scriptname
-                tempButton.Text = scriptInfo.Name;
-                tempButton.Tag = "userscript";
-                //add handler
-                tempButton.Click += UserMenu_Click;
-                tempButton.Enabled = true;
-                tempButton.Visible = true;
+                ToolStripButton tempButton = new ToolStripButton
+                {
+                    Text = scriptInfo.Name,
+                    Tag = "userscript",
+                    Enabled = true,
+                    Visible = true,
+                    Image = scriptInfo.GetIcon(),
+                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                };
                 //tempButton.Image = GitUI.Properties.Resources.bug;
                 //scriptInfo.Icon = "Cow";
-                tempButton.Image = scriptInfo.GetIcon();
-                tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                //add to toolstrip
+                tempButton.Click += UserMenu_Click;
                 ToolStrip.Items.Add(tempButton);
             }
         }

@@ -1482,12 +1482,12 @@ namespace GitUI
 
             e.Handled = true;
 
-            var drawRefArgs = new DrawRefArgs();
-
-            drawRefArgs.Graphics = e.Graphics;
-            drawRefArgs.CellBounds = e.CellBounds;
-
-            drawRefArgs.IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
+            var drawRefArgs = new DrawRefArgs
+            {
+                Graphics = e.Graphics,
+                CellBounds = e.CellBounds,
+                IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+            };
 
             // Determine background colour for cell
             Brush cellBackgroundBrush;
@@ -2308,15 +2308,13 @@ namespace GitUI
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             foreach (var head in gitRefListsForRevision.AllTags)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = head.Name;
-                toolStripItem.Click += ToolStripItemClickDeleteTag;
-                deleteTagDropDown.Items.Add(toolStripItem);
+                var deleteItem = new ToolStripMenuItem(head.Name) {Tag = head.Name};
+                deleteItem.Click += ToolStripItemClickDeleteTag;
+                deleteTagDropDown.Items.Add(deleteItem);
 
-                toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = GetRefUnambiguousName(head);
-                toolStripItem.Click += ToolStripItemClickMergeBranch;
-                mergeBranchDropDown.Items.Add(toolStripItem);
+                var mergeItem = new ToolStripMenuItem(head.Name) {Tag = GetRefUnambiguousName(head)};
+                mergeItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(mergeItem);
             }
 
             //For now there is no action that could be done on currentBranch
@@ -2327,26 +2325,25 @@ namespace GitUI
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
                 if (head.CompleteName.Equals(currentBranchRef))
+                {
                     currentBranchPointsToRevision = !revision.IsArtificial();
+                }
                 else
                 {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = GetRefUnambiguousName(head);
-                    toolStripItem.Click += ToolStripItemClickMergeBranch;
-                    mergeBranchDropDown.Items.Add(toolStripItem);
+                    var mergeItem = new ToolStripMenuItem(head.Name) {Tag = GetRefUnambiguousName(head)};
+                    mergeItem.Click += ToolStripItemClickMergeBranch;
+                    mergeBranchDropDown.Items.Add(mergeItem);
 
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = GetRefUnambiguousName(head);
-                    toolStripItem.Click += ToolStripItemClickRebaseBranch;
-                    rebaseDropDown.Items.Add(toolStripItem);
+                    var rebaseItem = new ToolStripMenuItem(head.Name) {Tag = GetRefUnambiguousName(head)};
+                    rebaseItem.Click += ToolStripItemClickRebaseBranch;
+                    rebaseDropDown.Items.Add(rebaseItem);
                 }
             }
 
             //if there is no branch to rebase on, then allow user to rebase on selected commit
             if (rebaseDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
-                toolStripItem.Tag = revision.Guid;
+                var toolStripItem = new ToolStripMenuItem(revision.Guid) {Tag = revision.Guid};
                 toolStripItem.Click += ToolStripItemClickRebaseBranch;
                 rebaseDropDown.Items.Add(toolStripItem);
             }
@@ -2354,8 +2351,7 @@ namespace GitUI
             //if there is no branch to merge, then let user to merge selected commit into current branch
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
-                toolStripItem.Tag = revision.Guid;
+                var toolStripItem = new ToolStripMenuItem(revision.Guid) {Tag = revision.Guid};
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
@@ -2379,33 +2375,29 @@ namespace GitUI
             var allBranches = gitRefListsForRevision.AllBranches;
             foreach (var head in allBranches)
             {
-                ToolStripItem toolStripItem;
-
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
                     if (!head.CompleteName.Equals(currentBranchRef))
                     {
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Tag = head.Name;
-                        toolStripItem.Click += ToolStripItemClickDeleteBranch;
-                        deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
+                        var deleteItem = new ToolStripMenuItem(head.Name) {Tag = head.Name};
+                        deleteItem.Click += ToolStripItemClickDeleteBranch;
+                        deleteBranchDropDown.Items.Add(deleteItem); //Add to delete branch
                     }
 
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = head.Name;
-                    toolStripItem.Click += ToolStripItemClickRenameBranch;
-                    renameDropDown.Items.Add(toolStripItem); //Add to rename branch
+                    var renameItem = new ToolStripMenuItem(head.Name) {Tag = head.Name};
+                    renameItem.Click += ToolStripItemClickRenameBranch;
+                    renameDropDown.Items.Add(renameItem); //Add to rename branch
                 }
 
                 if (!head.CompleteName.Equals(currentBranchRef))
                 {
-                    toolStripItem = new ToolStripMenuItem(head.Name);
+                    var checkoutItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)
-                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
+                        checkoutItem.Click += ToolStripItemClickCheckoutRemoteBranch;
                     else
-                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                    checkoutBranchDropDown.Items.Add(toolStripItem);
+                        checkoutItem.Click += ToolStripItemClickCheckoutBranch;
+                    checkoutBranchDropDown.Items.Add(checkoutItem);
                 }
             }
 

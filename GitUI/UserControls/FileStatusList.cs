@@ -564,10 +564,15 @@ namespace GitUI
             SelectedItem.SubmoduleStatus.ContinueWith(
                 t =>
                 {
-                    Process process = new Process();
-                    process.StartInfo.FileName = Application.ExecutablePath;
-                    process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                    process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
+                    var process = new Process
+                    {
+                        StartInfo =
+                        {
+                            FileName = Application.ExecutablePath,
+                            Arguments = "browse -commit=" + t.Result.Commit,
+                            WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
+                        }
+                    };
                     process.Start();
                 });
         }
@@ -755,8 +760,7 @@ namespace GitUI
                             groupName = _DiffWithParent.Text + " " + GetDescriptionForRevision(pair.Key);
                         }
 
-                        group = new ListViewGroup(groupName);
-                        group.Tag = pair.Key;
+                        group = new ListViewGroup(groupName) {Tag = pair.Key};
                         FileStatusListView.Groups.Add(group);
                     }
                     foreach (var item in pair.Value)
@@ -777,8 +781,13 @@ namespace GitUI
                                 text = AppendItemSubmoduleStatus(text, item);
                             }
 
-                            var listItem = new ListViewItem(text, group);
-                            listItem.ImageIndex = GetItemImageIndex(item);
+                            var listItem = new ListViewItem(text, group)
+                            {
+                                ImageIndex = GetItemImageIndex(item),
+                                Tag = item,
+                                Selected = previouslySelectedItems.Contains(item)
+                            };
+
                             if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                             {
                                 var capturedItem = item;
@@ -787,11 +796,6 @@ namespace GitUI
                                                                   TaskContinuationOptions.OnlyOnRanToCompletion,
                                                                   TaskScheduler.FromCurrentSynchronizationContext());
                             }
-                            if (previouslySelectedItems.Contains(item))
-                            {
-                                listItem.Selected = true;
-                            }
-                            listItem.Tag = item;
                             list.Add(listItem);
                         }
                     }
