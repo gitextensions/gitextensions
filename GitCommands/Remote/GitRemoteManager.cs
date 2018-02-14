@@ -16,7 +16,7 @@ namespace GitCommands.Remote
         /// </summary>
         /// <param name="remote"></param>
         /// <param name="branch"></param>
-        /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
+        /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
         string GetDefaultPushRemote(GitRemote remote, string branch);
 
         /// <summary>
@@ -309,7 +309,6 @@ namespace GitCommands.Remote
                 func = GetDisabledRemotes;
             }
 
-
             var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())
             {
@@ -343,8 +342,8 @@ namespace GitCommands.Remote
 
         private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
         {
-            var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
-            var fullSettingName = preffix + string.Format(settingName, remoteName);
+            var prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
+            var fullSettingName = prefix + string.Format(settingName, remoteName);
 
             if (!string.IsNullOrWhiteSpace(value))
             {

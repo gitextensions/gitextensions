@@ -1061,7 +1061,7 @@ namespace GitUI
             return false;
         }
 
-        private string _filtredCurrentCheckout;
+        private string _filteredCurrentCheckout;
 
         public void ForceRefreshRevisions()
         {
@@ -1080,9 +1080,9 @@ namespace GitUI
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
-                Task<SuperProjectInfo> newSuperPrjectInfo =
+                Task<SuperProjectInfo> newSuperProjectInfo =
                     Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
-                newSuperPrjectInfo.ContinueWith(task => Refresh(),
+                newSuperProjectInfo.ContinueWith(task => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
@@ -1099,9 +1099,9 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
-                _filtredCurrentCheckout = null;
+                _filteredCurrentCheckout = null;
                 _currentCheckoutParents = null;
-                SuperprojectCurrentCheckout = newSuperPrjectInfo;
+                SuperprojectCurrentCheckout = newSuperProjectInfo;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -1336,7 +1336,7 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
+            string filtredCurrentCheckout = _filteredCurrentCheckout;
             string[] lastSelectedRows = LastSelectedRows ?? new string[0];
 
             //filter out all unavailable commits from LastSelectedRows.
@@ -2699,11 +2699,11 @@ namespace GitUI
                 return;
             }
 
-            if (_filtredCurrentCheckout == null)
+            if (_filteredCurrentCheckout == null)
             {
                 if (rev.Guid == CurrentCheckout)
                 {
-                    _filtredCurrentCheckout = CurrentCheckout;
+                    _filteredCurrentCheckout = CurrentCheckout;
                 }
                 else
                 {
@@ -2711,10 +2711,10 @@ namespace GitUI
                     {
                         _currentCheckoutParents = GetAllParents(CurrentCheckout);
                     }
-                    _filtredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
+                    _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
                 }
             }
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
+            string filtredCurrentCheckout = _filteredCurrentCheckout;
 
             if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
             {

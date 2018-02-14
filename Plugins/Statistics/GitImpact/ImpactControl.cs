@@ -194,7 +194,7 @@ namespace GitImpact
             }
         }
 
-        private void UpdateScrollbar()
+        private void UpdateScrollBar()
         {
             lock (_dataLock)
             {
@@ -213,7 +213,7 @@ namespace GitImpact
         {
             // White background
             e.Graphics.Clear(Color.White);
-            UpdateScrollbar();
+            UpdateScrollBar();
             lock (_dataLock)
             {
                 // Nothing to draw
@@ -288,7 +288,7 @@ namespace GitImpact
         private void OnResize(object sender, EventArgs e)
         {
             UpdatePathsAndLabels();
-            UpdateScrollbar();
+            UpdateScrollBar();
             Invalidate();
         }
 

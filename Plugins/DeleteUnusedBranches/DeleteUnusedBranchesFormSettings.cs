@@ -7,7 +7,7 @@
             string mergedInBranch,
             bool removeDeleteRemoteBranchesFromFlag,
             string remoteName,
-            bool userRegexToFIlterBranchesFlag,
+            bool userRegexToFilterBranchesFlag,
             string regexFilter,
             bool regexCaseInsensitiveFlag,
             bool regexInvertedFlag,
@@ -17,7 +17,7 @@
             DaysOlderThan = daysOlderThan;
             DeleteRemoteBranchesFromFlag = removeDeleteRemoteBranchesFromFlag;
             RemoteName = remoteName;
-            UseRegexToFilterBranchesFlag = userRegexToFIlterBranchesFlag;
+            UseRegexToFilterBranchesFlag = userRegexToFilterBranchesFlag;
             RegexFilter = regexFilter;
             RegexCaseInsensitiveFlag = regexCaseInsensitiveFlag;
             RegexInvertedFlag = regexInvertedFlag;
