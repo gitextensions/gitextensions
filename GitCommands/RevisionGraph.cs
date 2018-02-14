@@ -154,33 +154,33 @@ namespace GitCommands
             if (AppSettings.ShowReflogReferences)
                 arguments.Append(" --reflog");
 
-            if ((RefsOptions & RefsFilteringOptions.All) == RefsFilteringOptions.All)
+            if (RefsOptions.HasFlag(RefsFilteringOptions.All))
             {
                 arguments.Append(" --all");
             }
             else
             {
-                if ((RefsOptions & RefsFilteringOptions.Branches) == RefsFilteringOptions.Branches)
+                if (RefsOptions.HasFlag(RefsFilteringOptions.Branches))
                     arguments.Append(" --branches");
-                if ((RefsOptions & RefsFilteringOptions.Remotes) == RefsFilteringOptions.Remotes)
+                if (RefsOptions.HasFlag(RefsFilteringOptions.Remotes))
                     arguments.Append(" --remotes");
-                if ((RefsOptions & RefsFilteringOptions.Tags) == RefsFilteringOptions.Tags)
+                if (RefsOptions.HasFlag(RefsFilteringOptions.Tags))
                     arguments.Append(" --tags");
             }
 
-            if ((RefsOptions & RefsFilteringOptions.Boundary) == RefsFilteringOptions.Boundary)
+            if (RefsOptions.HasFlag(RefsFilteringOptions.Boundary))
                 arguments.Append(" --boundary");
 
-            if ((RefsOptions & RefsFilteringOptions.ShowGitNotes) == RefsFilteringOptions.ShowGitNotes)
+            if (RefsOptions.HasFlag(RefsFilteringOptions.ShowGitNotes))
                 arguments.Append(" --not --glob=notes --not");
 
-            if ((RefsOptions & RefsFilteringOptions.NoMerges) == RefsFilteringOptions.NoMerges)
+            if (RefsOptions.HasFlag(RefsFilteringOptions.NoMerges))
                 arguments.Append(" --no-merges");
 
-            if ((RefsOptions & RefsFilteringOptions.FirstParent) == RefsFilteringOptions.FirstParent)
+            if (RefsOptions.HasFlag(RefsFilteringOptions.FirstParent))
                 arguments.Append(" --first-parent");
 
-            if ((RefsOptions & RefsFilteringOptions.SimplifyByDecoration) == RefsFilteringOptions.SimplifyByDecoration)
+            if (RefsOptions.HasFlag(RefsFilteringOptions.SimplifyByDecoration))
                 arguments.Append(" --simplify-by-decoration");
 
             arguments.Append(" ").Append(RevisionFilter).Append(" -- ").Append(PathFilter);
