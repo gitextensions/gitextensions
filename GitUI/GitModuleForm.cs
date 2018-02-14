@@ -36,7 +36,7 @@ namespace GitUI
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module => _uiCommands != null ? _uiCommands.Module : null;
+        public GitModule Module => _uiCommands?.Module;
 
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 

@@ -15,8 +15,8 @@ namespace Gource
             Translate();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
-            GitWorkingDir = gitUIArgs != null ? gitUIArgs.GitModule.WorkingDir : null;
-            AvatarsDir = gitUIArgs != null ? gitUIArgs.GitModule.GravatarCacheDir : null;
+            GitWorkingDir = gitUIArgs?.GitModule.WorkingDir;
+            AvatarsDir = gitUIArgs?.GitModule.GravatarCacheDir;
             GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
@@ -34,7 +34,7 @@ namespace Gource
 
         public string GourceArguments { get; set; }
 
-        private void RunRealCmdDetatched(string cmd, string arguments)
+        private void RunRealCmdDetached(string cmd, string arguments)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Gource
             PathToGource = GourcePath.Text;
             GitWorkingDir = WorkingDir.Text;
 
-            RunRealCmdDetatched(GourcePath.Text, arguments);
+            RunRealCmdDetached(GourcePath.Text, arguments);
             Close();
         }
 

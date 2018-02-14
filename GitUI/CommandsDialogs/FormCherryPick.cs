@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, Revision != null ? Revision.Guid : null))
+            using (var chooseForm = new FormChooseCommit(UICommands, Revision?.Guid))
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {

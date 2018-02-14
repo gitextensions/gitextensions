@@ -36,7 +36,7 @@ namespace GitCommands.Repository
 
             DirInfo = DirInfo?.Parent;
 
-            DirName = DirInfo == null ? "" : DirInfo.FullName;
+            DirName = DirInfo?.FullName ?? "";
         }
 
         public bool FullPath => DirInfo == null;

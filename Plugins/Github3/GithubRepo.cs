@@ -15,7 +15,7 @@ namespace Github3
             this.repo = repo;
         }
 
-        public string Owner => repo.Owner != null ? repo.Owner.Login : null;
+        public string Owner => repo.Owner?.Login;
         public string Name => repo.Name;
         public string Description => repo.Description;
         public bool IsAFork => repo.Fork;
@@ -38,7 +38,7 @@ namespace Github3
 
                     repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
-                return repo.Parent == null ? null : repo.Parent.GitUrl;
+                return repo.Parent?.GitUrl;
             }
         }
 
@@ -57,9 +57,10 @@ namespace Github3
                     repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
 
-                return repo.Parent == null ? null : repo.Parent.Owner.Login;
+                return repo.Parent?.Owner.Login;
             }
         }
+
         public string CloneReadWriteUrl => repo.SshUrl;
         public string CloneReadOnlyUrl => repo.GitUrl;
 

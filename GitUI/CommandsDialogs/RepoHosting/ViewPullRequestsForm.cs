@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
         {
-            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion != null ? discussion.Entries : null);
+            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
         }
 

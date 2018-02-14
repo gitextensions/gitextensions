@@ -411,19 +411,13 @@ namespace GitUI.RevisionGridClasses
         public GitRevision GetRowData(int aRow)
         {
             lock (_graphData)
-            {
-                Graph.ILaneRow row = _graphData[aRow];
-                return row == null ? null : row.Node.Data;
-            }
+                return _graphData[aRow]?.Node.Data;
         }
 
         public string GetRowId(int aRow)
         {
             lock (_graphData)
-            {
-                Graph.ILaneRow row = _graphData[aRow];
-                return row?.Node.Id;
-            }
+                return _graphData[aRow]?.Node.Id;
         }
 
         public int FindRow(string aId)
@@ -630,7 +624,7 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateData()
         {
-            _visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
+            _visibleTop = FirstDisplayedCell?.RowIndex ?? 0;
             _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
 
             //Add 5 for safe merge (1 for rounding and 1 for whitespace)....

@@ -458,7 +458,7 @@ namespace GitUI
             get
             {
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                    return item.Group != null ? (string)item.Group.Tag : null;
+                    return (string)item.Group?.Tag;
                 return null;
             }
         }

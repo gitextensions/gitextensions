@@ -357,7 +357,7 @@ namespace GitUI
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
-            _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
+            _initialSelectedRevision = initialSelectedRevision?.Guid;
         }
 
         private bool _isRefreshingRevisions;
@@ -784,9 +784,7 @@ namespace GitUI
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
         private int FindRevisionIndex(string revision)
         {
-            int? revIdx = Revisions.TryGetRevisionIndex(revision);
-
-            return revIdx.HasValue ? revIdx.Value : -1;
+            return Revisions.TryGetRevisionIndex(revision) ?? -1;
         }
 
         public bool SetSelectedRevision(string revision)
@@ -806,7 +804,7 @@ namespace GitUI
 
         public bool SetSelectedRevision(GitRevision revision)
         {
-            return SetSelectedRevision(revision != null ? revision.Guid : null);
+            return SetSelectedRevision(revision?.Guid);
         }
 
         public void HighlightBranch(string aId)
@@ -994,8 +992,9 @@ namespace GitUI
                                    bool ignoreCase)
             {
                 RegexOptions opts = RegexOptions.None;
-                if (ignoreCase) opts = opts | RegexOptions.IgnoreCase;
-                filterStr = filterValue != null ? filterValue.Trim() : string.Empty;
+                if (ignoreCase)
+                    opts = opts | RegexOptions.IgnoreCase;
+                filterStr = filterValue?.Trim() ?? string.Empty;
                 try
                 {
                     filterRegEx = new Regex(filterStr, opts);

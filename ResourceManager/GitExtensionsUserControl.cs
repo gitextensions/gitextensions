@@ -129,8 +129,7 @@ namespace ResourceManager
 
         protected Keys GetShortcutKeys(int commandCode)
         {
-            var hotkey = GetHotkeyCommand(commandCode);
-            return hotkey == null ? Keys.None : hotkey.KeyData;
+            return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
         protected HotkeyCommand GetHotkeyCommand(int commandCode)

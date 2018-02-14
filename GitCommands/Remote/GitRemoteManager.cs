@@ -126,7 +126,7 @@ namespace GitCommands.Remote
                                    .Select(t => new GitRef(_module, string.Empty, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
-            return remoteHead == null ? null : remoteHead.Name;
+            return remoteHead?.Name;
         }
 
         /// <summary>
