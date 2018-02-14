@@ -80,7 +80,6 @@ namespace PatchApply
             if (Type == PatchType.ChangeFile)
             {
                 HandleChangeFilePatchType(filesContentEncoding);
-                return;
             }
         }
 

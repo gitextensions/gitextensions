@@ -27,7 +27,7 @@ namespace GitCommands
                         {
                             if (!hasSeenAtLeastOneWord || currentSurroundingText.ToString().Trim().Length > 0)
                             {
-                                sb.Append(currentSurroundingText.ToString());
+                                sb.Append(currentSurroundingText);
                             }
                             currentSurroundingText = new StringBuilder();
                             hasSeenAtLeastOneWord = true;
@@ -64,7 +64,7 @@ namespace GitCommands
                     i++;
                 }
             }
-            sb.Append(currentSurroundingText.ToString());
+            sb.Append(currentSurroundingText);
             return sb.ToString();
         }
         private static string ParseEncodedWord(string input)

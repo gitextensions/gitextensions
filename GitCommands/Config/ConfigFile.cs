@@ -53,7 +53,7 @@ namespace GitCommands.Config
             parser.Parse();
         }
 
-        public static readonly char[] CommentChars = new char[] { ';', '#' };
+        public static readonly char[] CommentChars = { ';', '#' };
 
         public void LoadFromString(string str)
         {
@@ -292,10 +292,10 @@ namespace GitCommands.Config
 
             private ConfigFile _configFile;
             private string _fileContent;
-            private IConfigSection _section = null;
+            private IConfigSection _section;
             private string FileName => _configFile._fileName;
 
-            private string _key = null;
+            private string _key;
             //parsed char
             private int pos;
             private StringBuilder token = new StringBuilder();
@@ -308,7 +308,7 @@ namespace GitCommands.Config
 
             public void Parse(string aFileContent = null)
             {
-                _fileContent = aFileContent ?? File.ReadAllText(FileName, ConfigFile.GetEncoding());
+                _fileContent = aFileContent ?? File.ReadAllText(FileName, GetEncoding());
 
                 ParsePart parseFunc = ReadUnknown;
 
@@ -361,8 +361,8 @@ namespace GitCommands.Config
                 _key = null;
             }
 
-            private bool _escapedSection = false;
-            private bool _quotedStringInSection = false;
+            private bool _escapedSection;
+            private bool _quotedStringInSection;
 
             private ParsePart ReadSection(char c)
             {
@@ -383,27 +383,25 @@ namespace GitCommands.Config
                     _escapedSection = false;
                     return ReadSection;
                 }
-                else
+
+                // closing square bracket not in quoted section lead to start new section
+                if(c == ']' && !_quotedStringInSection)
                 {
-                    // closing square bracket not in quoted section lead to start new section
-                    if(c == ']' && !_quotedStringInSection)
-                    {
-                        NewSection();
-                        return ReadUnknown;
-                    }
+                    NewSection();
+                    return ReadUnknown;
+                }
 
-                    if (c == '"')
-                        _quotedStringInSection = !_quotedStringInSection;
+                if (c == '"')
+                    _quotedStringInSection = !_quotedStringInSection;
 
-                    switch (c)
-                    {
-                        case '\\':
-                            _escapedSection = true;
-                            return ReadSection;
-                        default:
-                            token.Append(c);
-                            return ReadSection;
-                    }
+                switch (c)
+                {
+                    case '\\':
+                        _escapedSection = true;
+                        return ReadSection;
+                    default:
+                        token.Append(c);
+                        return ReadSection;
                 }
             }
 
@@ -444,8 +442,8 @@ namespace GitCommands.Config
                 }
             }
 
-            private bool _quotedValue = false;
-            private bool _escapedValue = false;
+            private bool _quotedValue;
+            private bool _escapedValue;
 
             private ParsePart ReadValue(char c)
             {
@@ -475,43 +473,41 @@ namespace GitCommands.Config
                     _escapedValue = false;
                     return ReadValue;
                 }
-                else
+
+                switch (c)
                 {
-                    switch (c)
-                    {
-                        case '\\':
-                            _escapedValue = true;
-                            return ReadValue;
-                        case '"':
-                            if (_quotedValue)
-                            {
-                                token.Append(valueToken.ToString());
-                            }
-                            else
-                            {
-                                token.Append(valueToken.ToString().Trim());
-                            }
-                            valueToken.Clear();
-                            _quotedValue = !_quotedValue;
-                            return ReadValue;
-                        case ';':
-                        case '#':
-                            if (_quotedValue)
-                            {
-                                valueToken.Append(c);
-                                return ReadValue;
-                            }
-                            NewValue();
-                            return ReadComment;
-                        case '\r':
-                            return ReadValue;
-                        case '\n':
-                            NewValue();
-                            return ReadUnknown;
-                        default:
+                    case '\\':
+                        _escapedValue = true;
+                        return ReadValue;
+                    case '"':
+                        if (_quotedValue)
+                        {
+                            token.Append(valueToken);
+                        }
+                        else
+                        {
+                            token.Append(valueToken.ToString().Trim());
+                        }
+                        valueToken.Clear();
+                        _quotedValue = !_quotedValue;
+                        return ReadValue;
+                    case ';':
+                    case '#':
+                        if (_quotedValue)
+                        {
                             valueToken.Append(c);
                             return ReadValue;
-                    }
+                        }
+                        NewValue();
+                        return ReadComment;
+                    case '\r':
+                        return ReadValue;
+                    case '\n':
+                        NewValue();
+                        return ReadUnknown;
+                    default:
+                        valueToken.Append(c);
+                        return ReadValue;
                 }
             }
 

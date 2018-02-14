@@ -1,6 +1,6 @@
-﻿using GitUIPluginInterfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {

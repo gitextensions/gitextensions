@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace GitCommands
@@ -24,12 +26,12 @@ namespace GitCommands
 
         #region IXmlSerializable Members
 
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public XmlSchema GetSchema()
         {
             return null;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
@@ -38,13 +40,13 @@ namespace GitCommands
             
             
             reader.Read();
-            if (reader.NodeType == System.Xml.XmlNodeType.XmlDeclaration)
+            if (reader.NodeType == XmlNodeType.XmlDeclaration)
                 reader.Read();
             if (wasEmpty || reader.IsEmptyElement)
                 return;
             if (reader.ReadToDescendant("item"))
             {
-                while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+                while (reader.NodeType != XmlNodeType.EndElement)
                 {
 
                     reader.ReadStartElement("item");
@@ -73,7 +75,7 @@ namespace GitCommands
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer)
+        public void WriteXml(XmlWriter writer)
         {
 
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
@@ -81,7 +83,7 @@ namespace GitCommands
 
 
 
-            foreach (TKey key in from k in this.Keys orderby k select k)
+            foreach (TKey key in from k in Keys orderby k select k)
             {
                 writer.WriteStartElement("item");
 

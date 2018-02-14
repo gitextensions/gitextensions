@@ -73,7 +73,7 @@ namespace GitCommands
 
         public Task Load(Action loadContent, Action onLoaded)
         {
-            return Load((token) => loadContent(), onLoaded);
+            return Load(token => loadContent(), onLoaded);
         }
 
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
@@ -93,7 +93,7 @@ namespace GitCommands
                         loadContent(token);
                     }
                 }, token)
-                .ContinueWith((task) =>
+                .ContinueWith(task =>
                     {
                         if (task.IsFaulted)
                         {
@@ -119,7 +119,7 @@ namespace GitCommands
 
         public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            return Load((token) => loadContent(), onLoaded);
+            return Load(token => loadContent(), onLoaded);
         }
 
         public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
@@ -141,7 +141,7 @@ namespace GitCommands
                     return loadContent(token);
 
                 }, token)
-                .ContinueWith((task) =>
+                .ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {

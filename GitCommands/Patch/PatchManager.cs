@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -39,8 +40,7 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
@@ -63,7 +63,7 @@ namespace PatchApply
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
                 if (line.StartsWith("+++"))
@@ -118,8 +118,7 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         public static byte[] GetPatchBytes(string header, string body, Encoding fileContentEncoding)
@@ -135,7 +134,7 @@ namespace PatchApply
         public string GetMD5Hash(string input)
         {
             IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
-            var s = new System.Text.StringBuilder();
+            var s = new StringBuilder();
             foreach (byte b in bs)
             {
                 s.Append(b.ToString("x2").ToLower());
@@ -145,8 +144,8 @@ namespace PatchApply
 
         private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
         {
-            var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+            var x = new MD5CryptoServiceProvider();
+            byte[] bs = Encoding.UTF8.GetBytes(input);
             bs = x.ComputeHash(bs);
             return bs;
         }
@@ -207,8 +206,8 @@ namespace PatchApply
         public List<PatchLine> RemovedLines = new List<PatchLine>();
         public List<PatchLine> AddedLines = new List<PatchLine>();
         public List<PatchLine> PostContext = new List<PatchLine>();
-        public string WasNoNewLineAtTheEnd = null;
-        public string IsNoNewLineAtTheEnd = null;
+        public string WasNoNewLineAtTheEnd;
+        public string IsNoNewLineAtTheEnd;
 
 
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
@@ -360,7 +359,7 @@ namespace PatchApply
     {
         private int StartLine;
         private List<SubChunk> SubChunks = new List<SubChunk>();
-        private SubChunk _CurrentSubChunk = null;
+        private SubChunk _CurrentSubChunk;
 
         public SubChunk CurrentSubChunk
         {
@@ -422,7 +421,7 @@ namespace PatchApply
                 string line = lines[i];
                 if (inPatch)
                 {
-                    PatchLine patchLine = new PatchLine()
+                    PatchLine patchLine = new PatchLine
                     {
                         Text = line
                     };
@@ -477,14 +476,14 @@ namespace PatchApply
 
             int eolLength = eol.Length;
 
-            string[] lines = fileText.Split(new string[] { eol }, StringSplitOptions.None);
+            string[] lines = fileText.Split(new[] { eol }, StringSplitOptions.None);
             int i = 0;
 
             while (i < lines.Length)
             {
                 string line = lines[i];
                 string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
-                PatchLine patchLine = new PatchLine()
+                PatchLine patchLine = new PatchLine
                 {
                     Text = (reset ? "-" : "+") + preamble + line
                 };
@@ -565,7 +564,7 @@ namespace PatchApply
             header = text.Substring(0, patchPos);
             string diff = text.Substring(patchPos - 1);
 
-            string[] chunks = diff.Split(new string[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
             ChunkList selectedChunks = new ChunkList();
             int i = 0;
             int currentPos = patchPos - 1;

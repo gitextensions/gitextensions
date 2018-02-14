@@ -8,7 +8,7 @@ namespace System
     public static class StringExtensions
     {
         /// <summary>'\n'</summary>
-        private static readonly char[] NewLineSeparator = new char[] { '\n' };
+        private static readonly char[] NewLineSeparator = { '\n' };
 
         public static string SkipStr(this string str, string toSkip)
         {
@@ -19,8 +19,7 @@ namespace System
             idx = str.IndexOf(toSkip);
             if (idx != -1)
                 return str.Substring(idx + toSkip.Length);
-            else
-                return null;
+            return null;
         }
 
         public static String TakeUntilStr(this string str, String untilStr)
@@ -32,8 +31,7 @@ namespace System
             idx = str.IndexOf(untilStr);
             if (idx != -1)
                 return str.Substring(0, idx);
-            else
-                return str;
+            return str;
         }
 
         public static string CommonPrefix(this string s, string other)
@@ -64,10 +62,9 @@ namespace System
         {
             if (left.IsNullOrEmpty())
                 return right;
-            else if (right.IsNullOrEmpty())
+            if (right.IsNullOrEmpty())
                 return left;
-            else
-                return left + sep + right;
+            return left + sep + right;
         }
 
         /// <summary>
@@ -215,8 +212,7 @@ namespace System
 
             if (str.Length <= maxLength)
                 return str;
-            else
-                return str.Substring(0, maxLength - 3) + "...";
+            return str.Substring(0, maxLength - 3) + "...";
         }
 
     }

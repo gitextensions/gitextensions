@@ -2,13 +2,12 @@
 using System.Threading;
 using GitUIPluginInterfaces;
 
-
 namespace GitCommands
 {
     public abstract class LockableNotifier : ILockableNotifier
     {
-        private int lockCount = 0;
-        private bool notifyRequested = false;
+        private int lockCount;
+        private bool notifyRequested;
 
         protected abstract void InternalNotify();
 

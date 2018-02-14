@@ -40,17 +40,14 @@ namespace GitCommands.Core
         {
             if (x == null)
                 return y == null;
-            else
+            if (!(x is string))
             {
-                if (!(x is string))
-                {
-                    IEnumerable ex = x as IEnumerable;
-                    IEnumerable ey = y as IEnumerable;
-                    if (ex != null && ey != null)
-                        return ex.Cast<object>().SequenceEqual(ey.Cast<object>(), this);
-                }
-                return x.Equals(y);
+                IEnumerable ex = x as IEnumerable;
+                IEnumerable ey = y as IEnumerable;
+                if (ex != null && ey != null)
+                    return ex.Cast<object>().SequenceEqual(ey.Cast<object>(), this);
             }
+            return x.Equals(y);
         }
 
         public int GetHashCode(object obj)
@@ -67,21 +64,18 @@ namespace GitCommands.Core
         {
             if (obj == null)
                 return indent + "[null]";
-            else
+            if (!(obj is string))
             {
-                if (!(obj is string))
-                {
-                    IEnumerable eo = obj as IEnumerable;
-                    if (eo != null)
-                        return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
+                IEnumerable eo = obj as IEnumerable;
+                if (eo != null)
+                    return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
 
-                }
-                SimpleStructured ss = obj as SimpleStructured;
-                if (ss != null)
-                    return ToString(ss.InlinedStructure(), indent);
-
-                return indent + obj.ToString();
             }
+            SimpleStructured ss = obj as SimpleStructured;
+            if (ss != null)
+                return ToString(ss.InlinedStructure(), indent);
+
+            return indent + obj;
         }
     }
 }

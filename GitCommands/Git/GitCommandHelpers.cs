@@ -7,10 +7,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using PatchApply;
 
 namespace GitCommands
 {
@@ -585,10 +587,8 @@ namespace GitCommands
             {
                 return cmd;
             }
-            else
-            {
-                return cmd + string.Format(" \"{0}\"", revision);
-            }
+
+            return cmd + string.Format(" \"{0}\"", revision);
         }
 
         public static string MergedBranches(bool includeRemote = false)
@@ -597,10 +597,8 @@ namespace GitCommands
             {
                 return "branch -a --merged";
             }
-            else
-            {
-                return "branch --merged";
-            }
+
+            return "branch --merged";
         }
 
         /// <summary>Un-sets the git SSH command path.</summary>
@@ -816,16 +814,14 @@ namespace GitCommands
         {
             if (IsDiffFile(patchFile))
                 return "apply \"" + patchFile.ToPosixPath() + "\"";
-            else
-                return "am --3way --signoff \"" + patchFile.ToPosixPath() + "\"";
+            return "am --3way --signoff \"" + patchFile.ToPosixPath() + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
             if (IsDiffFile(patchFile))
                 return "apply --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
-            else
-                return "am --3way --signoff --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
+            return "am --3way --signoff --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
         }
 
         public static string PatchDirCmd()
@@ -905,7 +901,7 @@ namespace GitCommands
         [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
-            PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
             string text = patch != null ? patch.Text : "";
             return GetSubmoduleStatus(text, module, fileName);
         }
@@ -1015,13 +1011,13 @@ namespace GitCommands
             IList<string> Submodules = module.GetSubmodulesLocalPaths();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
-            var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var files = trimmedStatus.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
                     continue;
 
-                int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
+                int splitIndex = files[n].IndexOfAny(new[] { '\0', '\t', ' ' }, 1);
 
                 string status = string.Empty;
                 string fileName = string.Empty;
@@ -1276,7 +1272,7 @@ namespace GitCommands
                 NativeMethods.SetConsoleCtrlHandler(IntPtr.Zero, true);
                 NativeMethods.GenerateConsoleCtrlEvent(0, 0);
                 if (!process.HasExited)
-                    System.Threading.Thread.Sleep(500);
+                    Thread.Sleep(500);
             }
             if (!process.HasExited)
                 process.Kill();

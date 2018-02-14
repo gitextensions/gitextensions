@@ -71,10 +71,8 @@ namespace GitCommands
                 {
                     return fileName.Length == 1 ? string.Empty : AppSettings.PosixPathSeparator.ToString();
                 }
-                else
-                {
-                    fileName = fileName.Substring(0, pos);
-                }
+
+                fileName = fileName.Substring(0, pos);
             }
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
                 return "";
@@ -98,7 +96,7 @@ namespace GitCommands
             if (repositoryUrl != null)
             {
                 const string standardRepositorySuffix = ".git";
-                string path = repositoryUrl.TrimEnd(new[] { '\\', '/' });
+                string path = repositoryUrl.TrimEnd('\\', '/');
 
                 if (path.EndsWith(standardRepositorySuffix))
                     path = path.Substring(0, path.Length - standardRepositorySuffix.Length);

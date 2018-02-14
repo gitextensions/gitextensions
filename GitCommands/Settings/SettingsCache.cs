@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
         private readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
-
-        public SettingsCache()
-        {
-        }
 
         public void Dispose()
         {
@@ -114,7 +109,7 @@ namespace GitCommands
 
         private string GetValue(string name)
         {
-            return LockedAction<string>(() =>
+            return LockedAction(() =>
             {
                 EnsureSettingsAreUpToDate();
                 return GetValueImpl(name);
@@ -135,7 +130,7 @@ namespace GitCommands
             else
                 s = encode(value);
 
-            return LockedAction<bool>(() =>
+            return LockedAction(() =>
             {
                 string inMemValue = GetValue(name);
                 return inMemValue != null && !string.Equals(inMemValue, s);
@@ -170,7 +165,7 @@ namespace GitCommands
             object o;
             T val = defaultValue;
 
-            bool result = LockedAction<bool>(() =>
+            bool result = LockedAction(() =>
             {
                 EnsureSettingsAreUpToDate();
 
@@ -181,33 +176,30 @@ namespace GitCommands
                         val = defaultValue;
                         return false;
                     }
-                    else if (o is T)
+
+                    if (o is T)
                     {
                         val = (T)o;
                         return true;
                     }
-                    else
-                    {
-                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                    }
+
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                 }
-                else
+
+                if (decode == null)
+                    throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
+
+                string s = GetValue(name);
+
+                if (s == null)
                 {
-                    if (decode == null)
-                        throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
-
-                    string s = GetValue(name);
-
-                    if (s == null)
-                    {
-                        val = defaultValue;
-                        return false;
-                    }
-
-                    val = decode(s);
-                    ByNameMap[name] = val;
-                    return true;
+                    val = defaultValue;
+                    return false;
                 }
+
+                val = decode(s);
+                ByNameMap[name] = val;
+                return true;
             });
             value = val;
             return result;

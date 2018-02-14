@@ -26,10 +26,8 @@ namespace GitCommands.Settings
                 {
                     return DefaultValue;
                 }
-                else
-                {
-                    return v;
-                }
+
+                return v;
             }
         }
 

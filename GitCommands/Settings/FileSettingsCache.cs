@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Timers;
 using GitCommands.Utils;
 
 namespace GitCommands.Settings
@@ -14,7 +16,7 @@ namespace GitCommands.Settings
         private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
         private readonly bool _canEnableFileWatcher;
 
-        private System.Timers.Timer _saveTimer = new System.Timers.Timer(SaveTime);
+        private Timer _saveTimer = new Timer(SaveTime);
         private readonly bool _autoSave;
 
         public string SettingsFilePath { get; }
@@ -55,8 +57,8 @@ namespace GitCommands.Settings
             FileChanged();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "SaveTimer", Justification = "SaveTimer is disposed inside lambda but Code Analysis could not determine that")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_fileWatcher", Justification = "_fileWtcher is disposed inside lambda but Code Analysis could not determine that")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "SaveTimer", Justification = "SaveTimer is disposed inside lambda but Code Analysis could not determine that")]
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_fileWatcher", Justification = "_fileWtcher is disposed inside lambda but Code Analysis could not determine that")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -194,9 +196,9 @@ namespace GitCommands.Settings
         }
 
         //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
-        private void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
+        private void OnSaveTimer(object source, ElapsedEventArgs e)
         {
-            System.Timers.Timer t = (System.Timers.Timer)source;
+            Timer t = (Timer)source;
             t.Stop();
             Save();
         }

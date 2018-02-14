@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -11,7 +12,6 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
-using System.Linq;
 
 namespace GitCommands
 {
@@ -50,11 +50,9 @@ namespace GitCommands
                 {
                     return GetGitExtensionsDirectory();
                 }
-                else
-                {
-                    //Make applicationdatapath version independent
-                    return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
-                }
+
+                //Make applicationdatapath version independent
+                return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
             }
             );
 
@@ -217,8 +215,7 @@ namespace GitCommands
             {
                 if (IsPortable())
                     return GetString("gitcommand", "");
-                else
-                    return ReadStringRegValue("gitcommand", "");
+                return ReadStringRegValue("gitcommand", "");
             }
             set
             {
@@ -450,7 +447,7 @@ namespace GitCommands
                     return CultureInfo.GetCultureInfo(CurrentLanguageCode);
 
                 }
-                catch (System.Globalization.CultureNotFoundException)
+                catch (CultureNotFoundException)
                 {
                     Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
                     return CultureInfo.GetCultureInfo("en");
@@ -720,7 +717,7 @@ namespace GitCommands
         public static PullAction? AutoPullOnPushRejectedAction
         {
             get => GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction");
-            set => SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value);
+            set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
         }
 
         public static bool DontConfirmPushNewBranch

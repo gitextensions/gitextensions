@@ -50,7 +50,7 @@ namespace GitCommands
             ".jpeg",
             ".png",
             ".tif",
-            ".tiff",
+            ".tiff"
         };
 
         public static bool IsBinaryFile(GitModule aModule, string fileName)
@@ -67,7 +67,7 @@ namespace GitCommands
             string[] diffvals = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
             string cmd = "check-attr -z diff text crlf eol -- " + fileName.Quote();
             string result = aModule.RunGitCmd(cmd);
-            var lines = result.Split(new[] { '\n', '\0' });
+            var lines = result.Split('\n', '\0');
             var attributes = new Dictionary<string, string>();
             for (int i = 0; i < lines.Length - 2; i += 3)
             {

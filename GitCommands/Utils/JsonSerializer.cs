@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace GitCommands.Utils
@@ -7,7 +8,7 @@ namespace GitCommands.Utils
     {
         public static string Serialize<T>(T myObject)
         {
-            var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
+            var json = new DataContractJsonSerializer(typeof(T));
             var stream = new MemoryStream();
             json.WriteObject(stream, myObject);
             return Encoding.UTF8.GetString(stream.ToArray());
@@ -15,7 +16,7 @@ namespace GitCommands.Utils
 
         public static T Deserialize<T>(string myString)
         {
-            var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
+            var json = new DataContractJsonSerializer(typeof(T));
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(myString));
             return (T)json.ReadObject(stream);
         }

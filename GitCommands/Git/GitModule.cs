@@ -45,7 +45,7 @@ namespace GitCommands
     {
         DoNotForce,
         Force,
-        ForceWithLease,
+        ForceWithLease
     }
 
     public struct ConflictedFileData
@@ -357,7 +357,7 @@ namespace GitCommands
         public string ResolveGitInternalPath(string relativePath)
         {
             string gitPath = RunGitCmd("rev-parse --git-path " + relativePath.Quote());
-            string systemPath = PathUtil.ToNativePath(gitPath.Trim());
+            string systemPath = gitPath.Trim().ToNativePath();
             if (systemPath.StartsWith(".git\\"))
             {
                 systemPath = Path.Combine(GetGitDirectory(), systemPath.Substring(".git\\".Length));
@@ -377,7 +377,7 @@ namespace GitCommands
                 if (_GitCommonDirectory == null)
                 {
                     var commDir = RunGitCmdResult("rev-parse --git-common-dir");
-                    _GitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
+                    _GitCommonDirectory = commDir.StdOutput.Trim().ToNativePath();
                     if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !Directory.Exists(_GitCommonDirectory))
                     {
                         _GitCommonDirectory = GetGitDirectory();
@@ -1164,11 +1164,9 @@ namespace GitCommands
                 fullSha1 = revParseResult;
                 return true;
             }
-            else
-            {
-                fullSha1 = null;
-                return false;
-            }
+
+            fullSha1 = null;
+            return false;
         }
 
         public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
@@ -1196,7 +1194,7 @@ namespace GitCommands
 
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
-            Func<string, bool> ex = (string parents) =>
+            Func<string, bool> ex = parents =>
                 {
                     string[] tab = parents.Split(' ');
                     return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
@@ -1266,7 +1264,7 @@ namespace GitCommands
             if (localPath.Contains("("))
             {
                 gitSubmodule.LocalPath = localPath.Substring(0, localPath.IndexOf("(")).TrimEnd();
-                gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
+                gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim('(', ')', ' ');
             }
             else
                 gitSubmodule.LocalPath = localPath;
@@ -1900,7 +1898,7 @@ namespace GitCommands
         public IList<PatchFile> GetInteractiveRebasePatchFiles()
         {
             string todoFile = GetRebaseDir() + "git-rebase-todo";
-            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
+            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
 
             IList<PatchFile> patchFiles = new List<PatchFile>();
 
@@ -2110,7 +2108,7 @@ namespace GitCommands
         public string[] GetRemotes(bool allowEmpty)
         {
             string remotes = RunGitCmd("remote show");
-            return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return allowEmpty ? remotes.Split('\n') : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public IEnumerable<string> GetSettings(string setting)
@@ -2195,7 +2193,7 @@ namespace GitCommands
             return GetPatch(patchManager, fileName, oldFileName);
         }
 
-        private Patch GetPatch(PatchApply.PatchManager patchManager, string fileName, string oldFileName)
+        private Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
         {
             foreach (Patch p in patchManager.Patches)
                 if (fileName == p.FileNameB &&
@@ -2221,7 +2219,7 @@ namespace GitCommands
         public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache)
         {
             string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
+            return noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
         public List<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision)
@@ -2235,7 +2233,7 @@ namespace GitCommands
         {
             noCache = noCache || GitRevision.IsArtificial(firstRevision) || GitRevision.IsArtificial(secondRevision);
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
+            string result = noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
             if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
@@ -2568,7 +2566,7 @@ namespace GitCommands
 
         public RemoteActionResult<IList<IGitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
         {
-            var result = new RemoteActionResult<IList<IGitRef>>()
+            var result = new RemoteActionResult<IList<IGitRef>>
             {
                 AuthenticationFail = false,
                 HostKeyFail = false,
@@ -2842,16 +2840,14 @@ namespace GitCommands
                     .Distinct()
                     .ToList();
             }
-            else
-            {
-                return new string[] { };
-            }
+
+            return new string[] { };
         }
 
         public string[] GetFullTree(string id)
         {
-            string tree = this.RunCacheableCmd(AppSettings.GitCommand, String.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
-            return tree.Split(new char[] { '\0', '\n' });
+            string tree = RunCacheableCmd(AppSettings.GitCommand, String.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
+            return tree.Split('\0', '\n');
         }
 
         public IEnumerable<IGitItem> GetTree(string id, bool full)
@@ -2864,11 +2860,11 @@ namespace GitCommands
 
             if (GitRevision.IsFullSha1Hash(id))
             {
-                tree = this.RunCacheableCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+                tree = RunCacheableCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
             }
             else
             {
-                tree = this.RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+                tree = RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
             }
 
             return _gitTreeParser.Parse(tree);
@@ -2913,7 +2909,7 @@ namespace GitCommands
                     if (line.StartsWith("\t"))
                     {
                         blameLine.LineText = line.Substring(1) //trim ONLY first tab
-                                                 .Trim(new char[] { '\r' }); //trim \r, this is a workaround for a \r\n bug
+                                                 .Trim('\r'); //trim \r, this is a workaround for a \r\n bug
                         blameLine.LineText = ReEncodeStringFromLossless(blameLine.LineText, encoding);
                     }
                     else if (line.StartsWith("author-mail"))
@@ -2980,7 +2976,7 @@ namespace GitCommands
             if (revision == GitRevision.IndexGuid) //index
             {
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
-                string[] s = blob.Split(new char[] { ' ', '\t' });
+                string[] s = blob.Split(' ', '\t');
                 if (s.Length >= 2)
                     return s[1];
 
@@ -2988,7 +2984,7 @@ namespace GitCommands
             else
             {
                 string blob = RunGitCmd(string.Format("ls-tree -r {0} \"{1}\"", revision, fileName));
-                string[] s = blob.Split(new char[] { ' ', '\t' });
+                string[] s = blob.Split(' ', '\t');
                 if (s.Length >= 3)
                     return s[2];
             }
@@ -3038,10 +3034,10 @@ namespace GitCommands
         {
             string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
             string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
-            string[] messages = output.Split(new string[] { sep }, StringSplitOptions.RemoveEmptyEntries);
+            string[] messages = output.Split(new[] { sep }, StringSplitOptions.RemoveEmptyEntries);
 
             if (messages.Length == 0)
-                return new string[] { string.Empty };
+                return new[] { string.Empty };
 
             return messages.Select(cm =>
                 {
@@ -3086,7 +3082,7 @@ namespace GitCommands
             string baseCommit = GetMergeBase(commit, oldCommit);
             if (baseCommit == oldCommit)
                 return SubmoduleStatus.FastForward;
-            else if (baseCommit == commit)
+            if (baseCommit == commit)
                 return SubmoduleStatus.Rewind;
 
             string error = "";
@@ -3100,9 +3096,9 @@ namespace GitCommands
                 return SubmoduleStatus.Unknown;
             if (data.CommitDate > olddata.CommitDate)
                 return SubmoduleStatus.NewerTime;
-            else if (data.CommitDate < olddata.CommitDate)
+            if (data.CommitDate < olddata.CommitDate)
                 return SubmoduleStatus.OlderTime;
-            else if (data.CommitDate == olddata.CommitDate)
+            if (data.CommitDate == olddata.CommitDate)
                 return SubmoduleStatus.SameTime;
             return SubmoduleStatus.Unknown;
         }
@@ -3247,12 +3243,9 @@ namespace GitCommands
         {
             if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
                 return s;
-            else
-            {
-                byte[] bytes = fromEncoding.GetBytes(s);
-                s = toEncoding.GetString(bytes);
-                return s;
-            }
+            byte[] bytes = fromEncoding.GetBytes(s);
+            s = toEncoding.GetString(bytes);
+            return s;
         }
 
         /// <summary>
@@ -3415,7 +3408,7 @@ namespace GitCommands
                     IsDeleted = false,
                     IsStaged = false,
                     IsNew = false,
-                    Name = file,
+                    Name = file
                 };
                 ret.Add(item);
             }

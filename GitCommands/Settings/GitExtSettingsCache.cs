@@ -2,7 +2,6 @@
 using System.Text;
 using System.Xml;
 
-
 namespace GitCommands.Settings
 {
     public class GitExtSettingsCache : FileSettingsCache
@@ -21,15 +20,14 @@ namespace GitCommands.Settings
                     return new GitExtSettingsCache(aSettingsFilePath, true);
                 });
 
-            return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
+            return FromCache(aSettingsFilePath, createSettingsCache);
         }
 
         public static GitExtSettingsCache Create(string aSettingsFilePath, bool allowCache = true)
         {
             if (allowCache)
                 return FromCache(aSettingsFilePath);
-            else
-                return new GitExtSettingsCache(aSettingsFilePath, false);
+            return new GitExtSettingsCache(aSettingsFilePath, false);
         }
 
         protected override void ClearImpl()
@@ -39,7 +37,7 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(fileName, Encoding.UTF8))
+            using (XmlTextWriter xtw = new XmlTextWriter(fileName, Encoding.UTF8))
             {
                 xtw.Formatting = Formatting.Indented;
                 xtw.WriteStartDocument();
@@ -58,7 +56,7 @@ namespace GitCommands.Settings
                 CheckCharacters = false
             };
 
-            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))
+            using (XmlReader xr = XmlReader.Create(fileName, rSettings))
             {
                 EncodedNameMap.ReadXml(xr);
             }

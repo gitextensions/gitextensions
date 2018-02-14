@@ -12,8 +12,8 @@ namespace GitCommands.Gpg
         NoSignature = 0,
         GoodSignature = 1,
         SignatureError = 2,
-        MissingPublicKey = 3,
-    };
+        MissingPublicKey = 3
+    }
 
     public enum TagStatus
     {
@@ -23,7 +23,7 @@ namespace GitCommands.Gpg
         Many = 3,
         NoPubKey = 4,
         TagNotSigned = 5
-    };
+    }
 
     public interface IGitGpgController
     {
@@ -147,7 +147,7 @@ namespace GitCommands.Gpg
             TagStatus tagStatus = TagStatus.NoTag;
 
             /* No Tag present, exit */
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
+            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
             if (usefulTagRefs.Count == 0)
             {
                 return tagStatus;
@@ -229,7 +229,7 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
+            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
@@ -240,7 +240,7 @@ namespace GitCommands.Gpg
             if (string.IsNullOrWhiteSpace(tagName))
                 return null;
 
-            string rawFlag = raw == true ? "--raw" : "";
+            string rawFlag = raw ? "--raw" : "";
 
             var module = GetModule();
             return module.RunGitCmd($"verify-tag {rawFlag} {tagName}");
