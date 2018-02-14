@@ -207,13 +207,14 @@ namespace GitUI.CommandsDialogs
                         _toolStripGitStatus.Visible = false;
                         _toolStripGitStatus.Text = String.Empty;
                     }
-                    else if(status == GitStatusMonitorState.Running)
+                    else if (status == GitStatusMonitorState.Running)
                     {
                         _toolStripGitStatus.Visible = true;
                     }
                 };
 
-                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) => {
+                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
+                {
                     var status = e.ItemStatuses.ToList();
                     _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
 
@@ -316,7 +317,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormBrowse(GitUICommands aCommands, string filter, string selectCommit) : this(aCommands, filter)
+        public FormBrowse(GitUICommands aCommands, string filter, string selectCommit)
+            : this(aCommands, filter)
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
@@ -2017,7 +2019,7 @@ namespace GitUI.CommandsDialogs
             this.runMergetoolToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
-            this.toolStripMenuItemReflog.Enabled = 
+            this.toolStripMenuItemReflog.Enabled =
             this.bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 

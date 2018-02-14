@@ -1,15 +1,12 @@
-﻿using GitUI.CommandsDialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitUI.Hotkey;
-using System.Windows.Forms;
-using System.ComponentModel;
-using GitUI.CommandsDialogs.BrowseDialog;
-using ResourceManager;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -360,24 +357,24 @@ namespace GitUI.UserControls.RevisionGridClasses
             }
 
             {
-              var menuCommand = new MenuCommand();
-              menuCommand.Name = "showTagsToolStripMenuItem";
-              menuCommand.Text = "Show tags";
-              menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowTags);
-              menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
-              menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showTagsToolStripMenuItem";
+                menuCommand.Text = "Show tags";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowTags);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
 
-              resultList.Add(menuCommand);
+                resultList.Add(menuCommand);
             }
 
             {
-              var menuCommand = new MenuCommand();
-              menuCommand.Name = "showIdsToolStripMenuItem";
-              menuCommand.Text = "Show SHA-1";
-              menuCommand.ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null);
-              menuCommand.IsCheckedFunc = () => AppSettings.ShowIds;
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showIdsToolStripMenuItem";
+                menuCommand.Text = "Show SHA-1";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowIds;
 
-              resultList.Add(menuCommand);
+                resultList.Add(menuCommand);
             }
 
             {
@@ -394,7 +391,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showIsMessageMultilineToolStripMenuItem";
                 menuCommand.Text = "Show indicator for multiline message";
-                menuCommand.ExecuteAction = () => 
+                menuCommand.ExecuteAction = () =>
                 {
                     AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
                     _revisionGrid.ForceRefreshRevisions();
