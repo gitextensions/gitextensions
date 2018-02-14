@@ -125,7 +125,6 @@
             this._NO_TRANSLATE_labelVersionInfo.TabIndex = 0;
             this._NO_TRANSLATE_labelVersionInfo.Text = "Version ";
             this._NO_TRANSLATE_labelVersionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this._NO_TRANSLATE_labelVersionInfo.Click += new System.EventHandler(this.labelVersion_Click);
             // 
             // pictureDonate
             // 
