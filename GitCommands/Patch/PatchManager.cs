@@ -476,7 +476,7 @@ namespace PatchApply
             while (i < lines.Length)
             {
                 string line = lines[i];
-                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
+                string preamble = i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty;
                 PatchLine patchLine = new PatchLine
                 {
                     Text = (reset ? "-" : "+") + preamble + line

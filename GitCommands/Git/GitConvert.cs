@@ -159,7 +159,7 @@ namespace GitCommands
             if (bufStatistic.cntNul > 0)
                 return true;
 
-            if ((bufStatistic.cntPrintable / 128) < bufStatistic.cntNonPrintable)
+            if (bufStatistic.cntPrintable / 128 < bufStatistic.cntNonPrintable)
                 return true;
 
             return false;

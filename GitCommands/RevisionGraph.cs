@@ -180,8 +180,8 @@ namespace GitCommands
                 logParam += " --simplify-by-decoration";
 
             string branchFilter = BranchFilter;
-            if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
-                (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
+            if (!string.IsNullOrWhiteSpace(BranchFilter) &&
+                BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0)
                 branchFilter = "--branches=" + BranchFilter;
 
             string arguments = string.Format(CultureInfo.InvariantCulture,

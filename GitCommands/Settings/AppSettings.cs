@@ -78,7 +78,7 @@ namespace GitCommands
             get
             {
                 var value = GetString("AutoNormaliseSymbol", "_");
-                return (value == "+") ? "" : value;
+                return value == "+" ? "" : value;
             }
             set
             {

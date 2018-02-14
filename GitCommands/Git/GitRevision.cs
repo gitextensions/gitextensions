@@ -97,10 +97,10 @@ namespace GitCommands
             if (Refs.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
                 return true;
 
-            if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
+            if (searchString.Length > 2 && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                 return true;
 
-            return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
+            return Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
                     Subject.ToLower().Contains(searchString);
         }
 

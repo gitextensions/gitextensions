@@ -948,8 +948,8 @@ namespace GitCommands
                 return "=";
 
             return
-                (removed > 0 ? ("-" + removed) : "") +
-                (added > 0 ? ("+" + added) : "");
+                (removed > 0 ? "-" + removed : "") +
+                (added > 0 ? "+" + added : "");
         }
 
         public string GetMergeMessage()
@@ -2766,7 +2766,7 @@ namespace GitCommands
             {
                 string item = result[i].Trim();
                 int idx;
-                if (getRemote && ((idx = item.IndexOf(" ->")) >= 0))
+                if (getRemote && (idx = item.IndexOf(" ->")) >= 0)
                 {
                     item = item.Substring(0, idx);
                 }
@@ -3348,7 +3348,7 @@ namespace GitCommands
             if (obj == this) { return true; }
 
             GitModule other = obj as GitModule;
-            return (other != null) && Equals(other);
+            return other != null && Equals(other);
         }
 
         private bool Equals(GitModule other)

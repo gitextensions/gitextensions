@@ -36,8 +36,8 @@
                 (RemovedCommits == 0 && AddedCommits == 0))
                 return "";
             return " (" +
-                ((RemovedCommits == 0) ? "" : ("-" + RemovedCommits)) +
-                ((AddedCommits == 0) ? "" : ("+" + AddedCommits)) +
+                (RemovedCommits == 0 ? "" : "-" + RemovedCommits) +
+                (AddedCommits == 0 ? "" : "+" + AddedCommits) +
                 ")";
         }
     }

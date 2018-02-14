@@ -22,7 +22,7 @@ namespace GitCommands
                 switch (currentChar)
                 {
                     case '=':
-                        peekAhead = (i == input.Length - 1) ? ' ' : input[i + 1];
+                        peekAhead = i == input.Length - 1 ? ' ' : input[i + 1];
                         if (!readingWord && peekAhead == '?')
                         {
                             if (!hasSeenAtLeastOneWord || currentSurroundingText.ToString().Trim().Length > 0)
@@ -39,7 +39,7 @@ namespace GitCommands
                         if (readingWord)
                         {
                             wordQuestionMarkCount++;
-                            peekAhead = (i == input.Length - 1) ? ' ' : input[i + 1];
+                            peekAhead = i == input.Length - 1 ? ' ' : input[i + 1];
                             if (wordQuestionMarkCount > 3 && peekAhead == '=')
                             {
                                 readingWord = false;
@@ -55,7 +55,7 @@ namespace GitCommands
                 }
                 if (readingWord)
                 {
-                    currentWord.Append(('_' == currentChar) ? ' ' : currentChar);
+                    currentWord.Append('_' == currentChar ? ' ' : currentChar);
                     i++;
                 }
                 else
@@ -117,7 +117,7 @@ namespace GitCommands
                 switch (currentByte)
                 {
                     case (byte)'=':
-                        bool canPeekAhead = (i < workingBytes.Length - 2);
+                        bool canPeekAhead = i < workingBytes.Length - 2;
                         if (!canPeekAhead)
                         {
                             workingBytes[outputPos] = workingBytes[i];
