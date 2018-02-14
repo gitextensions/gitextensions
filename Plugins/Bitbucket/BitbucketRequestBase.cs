@@ -10,14 +10,14 @@ using RestSharp.Authenticators;
 
 namespace Bitbucket
 {
-    class BitbucketResponse<T>
+    internal class BitbucketResponse<T>
     {
         public bool Success { get; set; }
         public IEnumerable<string> Messages { get; set; }
         public T Result { get; set; }
     }
 
-    abstract class BitbucketRequestBase<T>
+    internal abstract class BitbucketRequestBase<T>
     {
         protected Settings Settings { get; }
 

@@ -151,7 +151,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        HttpClient GetHttpClient(string baseUrl, string accountToken)
+        private HttpClient GetHttpClient(string baseUrl, string accountToken)
         {
             var httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
             {

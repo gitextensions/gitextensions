@@ -6,7 +6,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
-    class GithubPullRequestDiscussion : IPullRequestDiscussion
+    internal class GithubPullRequestDiscussion : IPullRequestDiscussion
     {
         private PullRequest pullrequest;
 
@@ -43,14 +43,14 @@ namespace Github3
         }
     }
 
-    class GithubDiscussionComment : IDiscussionEntry
+    internal class GithubDiscussionComment : IDiscussionEntry
     {
         public string Author { get; internal set; }
         public DateTime Created { get; internal set; }
         public string Body { get; internal set; }
     }
 
-    class GithubDiscussionCommit : GithubDiscussionComment, ICommitDiscussionEntry
+    internal class GithubDiscussionCommit : GithubDiscussionComment, ICommitDiscussionEntry
     {
         public string Sha { get; internal set; }
     }

@@ -15,7 +15,7 @@ namespace GitUI.UserControls
 
         public string SelectedRemote { get { return comboBoxRemotes.Text; } set { comboBoxRemotes.Text = value; } }
 
-        bool _allowMultiselect;
+        private bool _allowMultiselect;
         public bool AllowMultiselect
         {
             get { return _allowMultiselect; }

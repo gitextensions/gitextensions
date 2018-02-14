@@ -6,7 +6,7 @@ using System;
 
 namespace Bitbucket
 {
-    class PullRequest
+    internal class PullRequest
     {
         //public string Ref { get; set; }
         public static PullRequest Parse(JObject json)
@@ -81,7 +81,7 @@ namespace Bitbucket
         }
     }
 
-    class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
+    internal class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
     {
         private readonly string _projectKey;
         private readonly string _repoName;

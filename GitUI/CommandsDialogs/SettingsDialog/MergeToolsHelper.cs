@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    static class MergeToolsHelper
+    internal static class MergeToolsHelper
     {
         private static string GetGlobalSetting(ConfigFileSettingsSet settings, string setting)
         {

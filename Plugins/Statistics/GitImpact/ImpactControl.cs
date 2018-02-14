@@ -81,14 +81,14 @@ namespace GitImpact
             _impactLoader?.Stop();
         }
 
-        void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
+        private void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
             this._scrollBar.Value = Math.Min(this._scrollBar.Maximum, Math.Max(this._scrollBar.Minimum, this._scrollBar.Value + e.Delta));
             // Redraw when we've scrolled
             Invalidate();
         }
 
-        void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
+        private void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
         {
             var commit = e.Commit;
 

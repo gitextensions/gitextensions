@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         }
 
-        void CheckForNewerVersion(string releases)
+        private void CheckForNewerVersion(string releases)
         {
             var versions = ReleaseVersion.Parse(releases);
             var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);

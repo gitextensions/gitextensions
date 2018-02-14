@@ -106,7 +106,7 @@ namespace GitUI.Editor
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+        private void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
             UICommandsSource.GitUICommandsChanged += UICommandsSourceChanged;
             UICommandsSourceChanged(UICommandsSource, null);
@@ -217,28 +217,28 @@ namespace GitUI.Editor
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
-        void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             copyToolStripMenuItem.Enabled = (_internalFileViewer.GetSelectionLength() > 0);
             ContextMenuOpening?.Invoke(sender, e);
         }
 
-        void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
+        private void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             this.OnMouseMove(e);
         }
 
-        void _internalFileViewer_MouseEnter(object sender, EventArgs e)
+        private void _internalFileViewer_MouseEnter(object sender, EventArgs e)
         {
             this.OnMouseEnter(e);
         }
 
-        void _internalFileViewer_MouseLeave(object sender, EventArgs e)
+        private void _internalFileViewer_MouseLeave(object sender, EventArgs e)
         {
             this.OnMouseLeave(e);
         }
 
-        void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
+        private void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             SelectedLineChanged?.Invoke(sender, e);
         }
@@ -271,7 +271,7 @@ namespace GitUI.Editor
             RequestDiffView?.Invoke(this, args);
         }
 
-        void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
+        private void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
         {
             ScrollPosChanged?.Invoke(sender, e);
         }
@@ -281,7 +281,7 @@ namespace GitUI.Editor
             _internalFileViewer.EnableScrollBars(enable);
         }
 
-        void TextEditor_TextChanged(object sender, EventArgs e)
+        private void TextEditor_TextChanged(object sender, EventArgs e)
         {
             if (patchHighlighting)
                 _internalFileViewer.AddPatchHighlighting();

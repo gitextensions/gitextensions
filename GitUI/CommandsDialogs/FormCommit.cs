@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs
             Message.Text = _commitTemplate = string.Empty;
         }
 
-        void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.Alt)
                 e.IsInputKey = true;
@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs
             AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
         }
 
-        void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _stageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches() || _currentItem != null && _currentItem.IsNew;
             _resetSelectedLinesToolStripMenuItem.Enabled = _stageSelectedLinesToolStripMenuItem.Enabled;
@@ -1134,7 +1134,7 @@ namespace GitUI.CommandsDialogs
             Unstage();
         }
 
-        void Staged_DoubleClick(object sender, EventArgs e)
+        private void Staged_DoubleClick(object sender, EventArgs e)
         {
             if (Module.IsBareRepository()) return;
             _currentFilesList = Staged;
@@ -1369,7 +1369,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        void Unstaged_DoubleClick(object sender, EventArgs e)
+        private void Unstaged_DoubleClick(object sender, EventArgs e)
         {
             _currentFilesList = Unstaged;
             Stage(Unstaged.SelectedItems.ToList());

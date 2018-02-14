@@ -12,7 +12,7 @@ using GitCommands;
 
 namespace GitUI.Hotkey
 {
-    class HotkeySettingsManager
+    internal class HotkeySettingsManager
     {
         #region Serializer
         private static XmlSerializer _Serializer;

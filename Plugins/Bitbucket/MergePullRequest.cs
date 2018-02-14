@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class MergeRequestInfo
+    internal class MergeRequestInfo
     {
         public string Id { get; set; }
         public string Version { get; set; }
@@ -11,7 +11,7 @@ namespace Bitbucket
         public string TargetRepo { get; set; }
     }
 
-    class MergePullRequest : BitbucketRequestBase<JObject>
+    internal class MergePullRequest : BitbucketRequestBase<JObject>
     {
         private readonly MergeRequestInfo _info;
 

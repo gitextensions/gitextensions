@@ -103,7 +103,7 @@ namespace GitCommands
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        static char[] ShellGlobCharacters = new[] { '?', '*', '[' };
+        private static char[] ShellGlobCharacters = new[] { '?', '*', '[' };
 
         public void Execute()
         {
@@ -302,7 +302,7 @@ namespace GitCommands
 
         private string _previousFileName;
 
-        void FinishRevision()
+        private void FinishRevision()
         {
             if (_revision != null && _revision.Guid == null)
                 _revision = null;
@@ -326,7 +326,7 @@ namespace GitCommands
             }
         }
 
-        void DataReceived(string data)
+        private void DataReceived(string data)
         {
             if (data.StartsWith(CommitBegin))
             {

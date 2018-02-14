@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
 
-        ToolTip _toolTipControl = new ToolTip();
+        private ToolTip _toolTipControl = new ToolTip();
 
         private readonly TranslationString anotherBranchTooltip =
             new TranslationString("Select another branch");

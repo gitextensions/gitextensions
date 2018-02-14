@@ -35,23 +35,23 @@ namespace GitUI.Script
 {
     public class SplitButton : Button
     {
-        PushButtonState _state;
+        private PushButtonState _state;
 
 
-        const int SplitSectionWidth = 18;
+        private const int SplitSectionWidth = 18;
 
-        static int BorderSize = SystemInformation.Border3DSize.Width * 2;
-        bool skipNextOpen;
-        Rectangle dropDownRectangle;
-        bool showSplit;
+        private static int BorderSize = SystemInformation.Border3DSize.Width * 2;
+        private bool skipNextOpen;
+        private Rectangle dropDownRectangle;
+        private bool showSplit;
 
-        bool isSplitMenuVisible;
+        private bool isSplitMenuVisible;
 
 
-        ContextMenuStrip m_SplitMenuStrip;
-        ContextMenu m_SplitMenu;
+        private ContextMenuStrip m_SplitMenuStrip;
+        private ContextMenu m_SplitMenu;
 
-        TextFormatFlags textFormatFlags = TextFormatFlags.Default;
+        private TextFormatFlags textFormatFlags = TextFormatFlags.Default;
 
         public SplitButton()
         {
@@ -246,7 +246,7 @@ namespace GitUI.Script
             }
         }
 
-        bool isMouseEntered;
+        private bool isMouseEntered;
 
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -797,12 +797,12 @@ namespace GitUI.Script
             }
         }
 
-        void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
+        private void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             isSplitMenuVisible = true;
         }
 
-        void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        private void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             isSplitMenuVisible = false;
 
@@ -815,7 +815,7 @@ namespace GitUI.Script
         }
 
 
-        void SplitMenu_Popup(object sender, EventArgs e)
+        private void SplitMenu_Popup(object sender, EventArgs e)
         {
             isSplitMenuVisible = true;
         }

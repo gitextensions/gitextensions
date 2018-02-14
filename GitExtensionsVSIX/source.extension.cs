@@ -5,7 +5,7 @@
 // ------------------------------------------------------------------------------
 namespace GitExtensionsVSIX
 {
-    static class Vsix
+    internal static class Vsix
     {
         public const string Id = "GitExtensions..550013F4-337C-4750-8967-DDEEEC2EB497";
         public const string Name = "GitExtensions";

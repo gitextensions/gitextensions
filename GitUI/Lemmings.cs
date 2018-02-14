@@ -4,7 +4,7 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    static class Lemmings
+    internal static class Lemmings
     {
         public static Bitmap GetPictureBoxImage(DateTime currentDate)
         {

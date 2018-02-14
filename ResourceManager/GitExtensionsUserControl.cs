@@ -66,7 +66,7 @@ namespace ResourceManager
 
         private bool translated;
 
-        void GitExtensionsControl_Load(object sender, EventArgs e)
+        private void GitExtensionsControl_Load(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
             bool isComponentInDesignMode = CheckComponent(this);

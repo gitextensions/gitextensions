@@ -13,7 +13,7 @@ namespace GitCommandsTests.Remote
     [SetCulture("")]
     [SetUICulture("")]
     [TestFixture]
-    class GitRemoteManagerTests
+    internal class GitRemoteManagerTests
     {
         private IGitModule _module;
         private IConfigFileSettings _configFile;

@@ -7,9 +7,9 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormResetCurrentBranch : GitModuleForm
     {
-        readonly TranslationString branchInfo = new TranslationString("Reset branch '{0}' to revision:");
-        readonly TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
-        readonly TranslationString resetCaption = new TranslationString("Reset branch");
+        private readonly TranslationString branchInfo = new TranslationString("Reset branch '{0}' to revision:");
+        private readonly TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
+        private readonly TranslationString resetCaption = new TranslationString("Reset branch");
 
         public enum ResetType
         {

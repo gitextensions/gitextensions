@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace GitUI
 {
-    delegate void DataCallback(string text);
+    internal delegate void DataCallback(string text);
     /// <summary>
     ///
     /// </summary>

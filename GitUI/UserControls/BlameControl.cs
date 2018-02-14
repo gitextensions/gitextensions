@@ -50,15 +50,16 @@ namespace GitUI.Blame
 
         public event EventHandler<CommandEventArgs> CommandClick;
 
-        void BlameCommitter_MouseLeave(object sender, EventArgs e)
+        private void BlameCommitter_MouseLeave(object sender, EventArgs e)
         {
             blameTooltip.Hide(this);
         }
 
-        int lastTooltipX = -100;
-        int lastTooltipY = -100;
-        string lastTooltip = "";
-        void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
+        private int lastTooltipX = -100;
+        private int lastTooltipY = -100;
+        private string lastTooltip = "";
+
+        private void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
         {
             if (!BlameFile.Focused)
                 BlameFile.Focus();
@@ -87,9 +88,9 @@ namespace GitUI.Blame
             }
         }
 
-        GitBlameHeader _lastBlameHeader;
+        private GitBlameHeader _lastBlameHeader;
 
-        void BlameFile_MouseMove(object sender, MouseEventArgs e)
+        private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
             if (_blame == null)
                 return;
@@ -134,7 +135,7 @@ namespace GitUI.Blame
             }
         }
 
-        void SelectedLineChanged(object sender, SelectedLineEventArgs e)
+        private void SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             int selectedLine = e.SelectedLine;
             if (_blame == null || selectedLine >= _blame.Lines.Count)
@@ -149,9 +150,9 @@ namespace GitUI.Blame
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.CommitGuid);
         }
 
-        bool _bChangeScrollPosition;
+        private bool _bChangeScrollPosition;
 
-        void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
             if (!_bChangeScrollPosition)
             {
@@ -174,7 +175,7 @@ namespace GitUI.Blame
             BlameFile.ScrollPos = BlameCommitter.ScrollPos;
         }
 
-        void BlameFile_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameFile_ScrollPosChanged(object sender, EventArgs e)
         {
             if (_bChangeScrollPosition)
                 return;

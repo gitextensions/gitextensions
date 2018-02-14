@@ -42,10 +42,10 @@ namespace TfsIntegration
     {
         private IBuildServerWatcher _buildServerWatcher;
         private ITfsHelper _tfsHelper;
-        string _tfsServer;
-        string _tfsTeamCollectionName;
-        string _projectName;
-        Regex _tfsBuildDefinitionNameFilter;
+        private string _tfsServer;
+        private string _tfsTeamCollectionName;
+        private string _projectName;
+        private Regex _tfsBuildDefinitionNameFilter;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {

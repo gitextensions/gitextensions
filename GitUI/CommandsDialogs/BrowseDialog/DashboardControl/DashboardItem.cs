@@ -108,12 +108,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _branchNameLoader?.Cancel();
         }
 
-        void Title_Click(object sender, EventArgs e)
+        private void Title_Click(object sender, EventArgs e)
         {
             OnClick(e);
         }
 
-        void Title_MouseDown(object sender, MouseEventArgs e)
+        private void Title_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
                 ContextMenuStrip?.Show((Control)sender, e.Location);
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.BackColor = SystemColors.Control;
         }
 
-        void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        private void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
         {
             if (!Visible)
             {

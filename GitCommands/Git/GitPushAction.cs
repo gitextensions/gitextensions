@@ -71,9 +71,9 @@ namespace GitCommands
     /// <summary>Part of a 'git push', which specifies the local and/or remote branch.</summary>
     public class GitPushAction
     {
-        string _localBranch;
-        string _remoteBranch;
-        bool _force;
+        private string _localBranch;
+        private string _remoteBranch;
+        private bool _force;
 
         /// <summary>
         /// Push a local branch to a remote one, optionally forcing a non-fast-forward commit.

@@ -13,21 +13,23 @@ namespace TranslationApp
     public partial class FormTranslate : GitExtensionsForm
     {
         //TranslationStrings
-        readonly TranslationString translateProgressText = new TranslationString("Translated {0} out of {1}");
-        readonly TranslationString allText = new TranslationString("All");
-        readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
-        readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
-        readonly TranslationString saveAsText = new TranslationString("Save as");
-        readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xlf)");
-        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no language code selected." +
+        private readonly TranslationString translateProgressText = new TranslationString("Translated {0} out of {1}");
+        private readonly TranslationString allText = new TranslationString("All");
+        private readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
+        private readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
+        private readonly TranslationString saveAsText = new TranslationString("Save as");
+        private readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xlf)");
+
+        private readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no language code selected." +
             Environment.NewLine + "Do you want to select a language code first?");
-        readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
-        readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
+
+        private readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
+        private readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
 
         private IDictionary<string, List<TranslationItemWithCategory>> translationItems;
 
-        readonly IDictionary<string, TranslationFile> _neutralTranslation = new Dictionary<string, TranslationFile>();
-        IDictionary<string, TranslationFile> _translation = new Dictionary<string, TranslationFile>();
+        private readonly IDictionary<string, TranslationFile> _neutralTranslation = new Dictionary<string, TranslationFile>();
+        private IDictionary<string, TranslationFile> _translation = new Dictionary<string, TranslationFile>();
         private readonly TranslationCategory _allCategories = new TranslationCategory();
 
         private bool _changesMade;
@@ -64,7 +66,7 @@ namespace TranslationApp
             FormClosing += FormTranslate_FormClosing;
         }
 
-        void FormTranslate_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormTranslate_FormClosing(object sender, FormClosingEventArgs e)
         {
             AskForSave();
         }
@@ -403,7 +405,7 @@ namespace TranslationApp
             }
         }
 
-        TranslationItemWithCategory _translationItemWithCategoryInEditing;
+        private TranslationItemWithCategory _translationItemWithCategoryInEditing;
 
         private void translatedText_Enter(object sender, System.EventArgs e)
         {

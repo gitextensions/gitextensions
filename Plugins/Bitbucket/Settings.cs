@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Bitbucket
 {
-    class Settings
+    internal class Settings
     {
         private const string BitbucketHttpRegex =
             @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([\w\-]+?))\/(?<repo>([\w\-]+)).git";

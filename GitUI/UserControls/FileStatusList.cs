@@ -229,7 +229,7 @@ namespace GitUI
             return text;
         }
 
-        void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
+        private void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
         {
             //SELECT
             if (e.Button == MouseButtons.Right)
@@ -296,7 +296,7 @@ namespace GitUI
 
         private Rectangle dragBoxFromMouseDown;
 
-        void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
+        private void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
         {
             ListView listView = sender as ListView;
 
@@ -542,7 +542,7 @@ namespace GitUI
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
 
-        void FileStatusListView_DoubleClick(object sender, EventArgs e)
+        private void FileStatusListView_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
             {
@@ -573,7 +573,7 @@ namespace GitUI
                 });
         }
 
-        void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
+        private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             var cm = sender as ContextMenuStrip;
             if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
@@ -593,7 +593,7 @@ namespace GitUI
             }
         }
 
-        void FileStatusListView_SelectedIndexChanged()
+        private void FileStatusListView_SelectedIndexChanged()
         {
             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
         }

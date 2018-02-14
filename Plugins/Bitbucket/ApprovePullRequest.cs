@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class ApprovePullRequest : BitbucketRequestBase<JObject>
+    internal class ApprovePullRequest : BitbucketRequestBase<JObject>
     {
         private readonly MergeRequestInfo _info;
 

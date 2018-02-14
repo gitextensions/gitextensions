@@ -2,7 +2,7 @@
 
 namespace GitUI.UserControls
 {
-    class WebBrowserCtrl : WebBrowser
+    internal class WebBrowserCtrl : WebBrowser
     {
         public WebBrowserCtrl()
         {

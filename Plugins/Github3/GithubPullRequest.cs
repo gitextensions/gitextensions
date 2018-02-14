@@ -7,7 +7,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
-    class GithubPullRequest : IPullRequestInformation
+    internal class GithubPullRequest : IPullRequestInformation
     {
         private PullRequest pullrequest;
 

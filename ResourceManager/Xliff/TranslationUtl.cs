@@ -256,7 +256,7 @@ namespace ResourceManager.Xliff
             return false;
         }
 
-        static readonly string[] UnTranslatableDLLs =
+        private static readonly string[] UnTranslatableDLLs =
         {
             "mscorlib",
             "Microsoft",

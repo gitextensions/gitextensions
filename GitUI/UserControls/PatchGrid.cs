@@ -17,7 +17,7 @@ namespace GitUI
             Patches.CellPainting += Patches_CellPainting;
         }
 
-        static void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        private static void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
 
         }

@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         /// <summary>Highlights a <see cref="TreeNode"/> or returns it to the default colors.</summary>
-        static void HighlightNode(TreeNode treeNode, bool highlight)
+        private static void HighlightNode(TreeNode treeNode, bool highlight)
         {
             treeNode.ForeColor = highlight ? Color.White : Color.Black;
             treeNode.BackColor = highlight ? Color.SeaGreen : new Color();
