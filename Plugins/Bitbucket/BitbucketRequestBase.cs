@@ -19,7 +19,7 @@ namespace Bitbucket
 
     abstract class BitbucketRequestBase<T>
     {
-        protected Settings Settings { get; private set; }
+        protected Settings Settings { get; }
 
         protected BitbucketRequestBase(Settings settings)
         {

@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             IsIndexChanged = isIndexChanged;
         }
 
-        public bool IsIndexChanged { get; private set; }
+        public bool IsIndexChanged { get; }
     }
 
     public sealed class IndexWatcher : IDisposable
@@ -97,8 +97,8 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private bool enabled;
         private string _gitDirPath;
-        private FileSystemWatcher GitIndexWatcher { get; set; }
-        private FileSystemWatcher RefsWatcher { get; set; }
+        private FileSystemWatcher GitIndexWatcher { get; }
+        private FileSystemWatcher RefsWatcher { get; }
 
         private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {

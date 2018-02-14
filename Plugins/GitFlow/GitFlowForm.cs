@@ -19,7 +19,7 @@ namespace GitFlow
 
         readonly GitUIBaseEventArgs _gitUiCommands;
 
-        Dictionary<string,List<string>> Branches { get; set; }
+        Dictionary<string,List<string>> Branches { get; }
 
         readonly AsyncLoader _task = new AsyncLoader();
 

@@ -162,8 +162,8 @@ namespace JetBrains.Annotations
             ForceFullStates = forceFullStates;
         }
 
-        public string FDT { get; private set; }
-        public bool ForceFullStates { get; private set; }
+        public string FDT { get; }
+        public bool ForceFullStates { get; }
     }
 
     /// <summary>
@@ -204,7 +204,7 @@ namespace JetBrains.Annotations
         /// <summary>
         /// Gets enumerations of specified base types
         /// </summary>
-        public Type[] BaseTypes { get; private set; }
+        public Type[] BaseTypes { get; }
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ namespace GitCommands.Statistics
                 Commit = commit;
             }
 
-            public Commit Commit { get; private set; }
+            public Commit Commit { get; }
         }
 
         /// <summary>

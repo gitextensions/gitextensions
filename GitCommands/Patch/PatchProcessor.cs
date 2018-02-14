@@ -8,7 +8,7 @@ namespace PatchApply
 {
     public class PatchProcessor
     {
-        public Encoding FilesContentEncoding { get; private set; }
+        public Encoding FilesContentEncoding { get; }
 
         public PatchProcessor(Encoding filesContentEncoding)
         {

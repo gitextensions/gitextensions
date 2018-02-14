@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs
             /// <summary>
             /// Empty rule set vs. got some stuff there
             /// </summary>
-            public bool IsCurrentRuleSetEmpty { get; private set; }
+            public bool IsCurrentRuleSetEmpty { get; }
         }
     }
 }

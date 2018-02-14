@@ -238,7 +238,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 Repository = repository;
             }
 
-            public Repository Repository { get; private set; }
+            public Repository Repository { get; }
         }
 
         public event EventHandler<RepositoryEventArgs> RepositoryRemoved;

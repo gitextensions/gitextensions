@@ -13,7 +13,7 @@ namespace GitCommands.Config
         private readonly string _fileName;
         public string FileName => _fileName;
 
-        public bool Local { get; private set; }
+        public bool Local { get; }
 
         public ConfigFile(string fileName, bool aLocal)
         {
@@ -32,7 +32,7 @@ namespace GitCommands.Config
             }
         }
 
-        public IList<IConfigSection> ConfigSections { get; private set; }
+        public IList<IConfigSection> ConfigSections { get; }
 
         public IEnumerable<IConfigSection> GetConfigSections(string sectionName)
         {

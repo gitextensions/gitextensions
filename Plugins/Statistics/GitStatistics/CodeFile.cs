@@ -23,7 +23,7 @@ namespace GitStatistics
             IsTestFile = false;
         }
 
-        public FileInfo File { get; private set; }
+        public FileInfo File { get; }
 
         protected internal int NumberLines { get; protected set; }
 

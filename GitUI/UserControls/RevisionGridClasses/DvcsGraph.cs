@@ -23,7 +23,7 @@ namespace GitUI.RevisionGridClasses
                 IsLoading = isLoading;
             }
 
-            public bool IsLoading { get; private set; }
+            public bool IsLoading { get; }
         }
 
         #endregion
