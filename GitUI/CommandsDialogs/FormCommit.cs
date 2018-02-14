@@ -680,7 +680,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _initialized;
 
-        private void Initialize(bool loadUnstaged)
+        private void Initialize(bool loadUnstaged = true)
         {
             _initialized = true;
 
@@ -707,11 +707,6 @@ namespace GitUI.CommandsDialogs
             Message.TextBoxFont = AppSettings.CommitFont;
 
             Cursor.Current = Cursors.Default;
-        }
-
-        private void Initialize()
-        {
-            Initialize(true);
         }
 
         private void UpdateMergeHead()

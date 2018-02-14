@@ -2017,7 +2017,7 @@ namespace GitUI.CommandsDialogs
             runMergetoolToolStripMenuItem.Enabled =
             cherryPickToolStripMenuItem.Enabled =
             checkoutToolStripMenuItem.Enabled =
-            toolStripMenuItemReflog.Enabled = 
+            toolStripMenuItemReflog.Enabled =
             bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
@@ -2288,7 +2288,7 @@ namespace GitUI.CommandsDialogs
             return string.Format("[{0}]", GitModule.IsDetachedHead(branch) ? _noBranchTitle.Text : branch);
         }
 
-        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat)
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat = "{0}")
         {
             var spmenu = new ToolStripMenuItem(string.Format(textFormat, info.Text));
             spmenu.Click += SubmoduleToolStripButtonClick;
@@ -2298,11 +2298,6 @@ namespace GitUI.CommandsDialogs
                 spmenu.Font = new Font(spmenu.Font, FontStyle.Bold);
             spmenu.Image = GetItemImage(info);
             return spmenu;
-        }
-
-        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info)
-        {
-            return CreateSubmoduleMenuItem(info, "{0}");
         }
 
         private DateTime _previousUpdateTime;
