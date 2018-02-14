@@ -1022,8 +1022,7 @@ namespace GitUI.Editor
                 encod = Encoding.Default;
             else
                 encod = AppSettings.AvailableEncodings.Values
-                      .Where(en => en.EncodingName == encodingToolStripComboBox.Text)
-                      .FirstOrDefault() ?? Module.FilesEncoding;
+                      .FirstOrDefault(en => en.EncodingName == encodingToolStripComboBox.Text) ?? Module.FilesEncoding;
             if (!encod.Equals(Encoding))
             {
                 Encoding = encod;

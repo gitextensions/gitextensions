@@ -387,7 +387,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showIsMessageMultilineToolStripMenuItem";
                 menuCommand.Text = "Show indicator for multiline message";
-                menuCommand.ExecuteAction = () => 
+                menuCommand.ExecuteAction = () =>
                 {
                     AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
                     _revisionGrid.ForceRefreshRevisions();
