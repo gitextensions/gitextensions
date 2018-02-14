@@ -81,106 +81,76 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
-            var resultList = new List<MenuCommand>();
-
+            return new List<MenuCommand>
             {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "GotoCurrentRevision";
-                menuCommand.Text = "Go to current revision";
-                menuCommand.Image = Resources.IconGotoCurrentRevision;
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.SelectCurrentRevision);
-                menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "GotoCommit";
-                menuCommand.Text = "Go to commit...";
-                menuCommand.Image = Resources.IconGotoCommit;
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToCommit);
-                menuCommand.ExecuteAction = GotoCommitExecute;
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "GotoChildCommit";
-                menuCommand.Text = "Go to child commit";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToChild);
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.GoToChild);
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "GotoParentCommit";
-                menuCommand.Text = "Go to parent commit";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToParent);
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.GoToParent);
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "NavigateBackward";
-                menuCommand.Text = "Navigate backward";
-                menuCommand.ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString();
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NavigateBackward);
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "NavigateForward";
-                menuCommand.Text = "Navigate forward";
-                menuCommand.ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString();
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NavigateForward);
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "QuickSearch";
-                menuCommand.Text = "Quick search";
-                menuCommand.ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text);
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "PrevQuickSearch";
-                menuCommand.Text = "Quick search previous";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.PrevQuickSearch);
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.PrevQuickSearch);
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "NextQuickSearch";
-                menuCommand.Text = "Quick search next";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.NextQuickSearch);
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NextQuickSearch);
-
-                resultList.Add(menuCommand);
-            }
-
-            return resultList;
+                new MenuCommand
+                {
+                    Name = "GotoCurrentRevision",
+                    Text = "Go to current revision",
+                    Image = Resources.IconGotoCurrentRevision,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.SelectCurrentRevision),
+                    ExecuteAction = SelectCurrentRevisionExecute
+                },
+                new MenuCommand
+                {
+                    Name = "GotoCommit",
+                    Text = "Go to commit...",
+                    Image = Resources.IconGotoCommit,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToCommit),
+                    ExecuteAction = GotoCommitExecute
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "GotoChildCommit",
+                    Text = "Go to child commit",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToChild),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.GoToChild)
+                },
+                new MenuCommand
+                {
+                    Name = "GotoParentCommit",
+                    Text = "Go to parent commit",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToParent),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.GoToParent)
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "NavigateBackward",
+                    Text = "Navigate backward",
+                    ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString(),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NavigateBackward)
+                },
+                new MenuCommand
+                {
+                    Name = "NavigateForward",
+                    Text = "Navigate forward",
+                    ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString(),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NavigateForward)
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "QuickSearch",
+                    Text = "Quick search",
+                    ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text)
+                },
+                new MenuCommand
+                {
+                    Name = "PrevQuickSearch",
+                    Text = "Quick search previous",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.PrevQuickSearch),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.PrevQuickSearch)
+                },
+                new MenuCommand
+                {
+                    Name = "NextQuickSearch",
+                    Text = "Quick search next",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.NextQuickSearch),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NextQuickSearch)
+                }
+            };
         }
 
         /// <summary>
@@ -195,256 +165,186 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private IEnumerable<MenuCommand> CreateViewMenuCommands()
         {
-            var resultList = new List<MenuCommand>();
-
-            // the next three MenuCommands just reuse (the currently rather
-            //  convoluted) logic from RevisionGrid.
-            //  After refactoring the three items should be added to RevisionGrid
-            //  as done with "ShowRemoteBranches" and not via RevisionGrid.Designer.cs
+            return new List<MenuCommand>
             {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowAllBranches";
-                menuCommand.Text = "Show all branches";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowAllBranches);
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemChecked;
+                // the next three MenuCommands just reuse (the currently rather
+                //  convoluted) logic from RevisionGrid.
+                //  After refactoring the three items should be added to RevisionGrid
+                //  as done with "ShowRemoteBranches" and not via RevisionGrid.Designer.cs
 
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowCurrentBranchOnly";
-                menuCommand.Text = "Show current branch only";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowCurrentBranchOnly);
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemChecked;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowFilteredBranches";
-                menuCommand.Text = "Show filtered branches";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFilteredBranches);
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemChecked;
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowRemoteBranches";
-                menuCommand.Text = "Show remote branches";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowRemoteBranches);
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowRemoteBranches_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowRemoteBranches;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowReflogReferences";
-                menuCommand.Text = "Show reflog references";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowReflogReferences_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowReflogReferences;
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowSuperprojectTags";
-                menuCommand.Text = "Show superproject tags";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowSuperprojectTags_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowSuperprojectTags;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowSuperprojectBranches";
-                menuCommand.Text = "Show superproject branches";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowSuperprojectBranches_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowSuperprojectBranches;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ShowSuperprojectRemoteBranches";
-                menuCommand.Text = "Show superproject remote branches";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowSuperprojectRemoteBranches_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowSuperprojectRemoteBranches;
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showRevisionGraphToolStripMenuItem";
-                menuCommand.Text = "Show revision graph";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowRevisionGraph_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.IsGraphLayout();
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "drawNonrelativesGrayToolStripMenuItem";
-                menuCommand.Text = "Draw non relatives gray";
-                menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGray_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.RevisionGraphDrawNonRelativesGray;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "orderRevisionsByDateToolStripMenuItem";
-                menuCommand.Text = "Order revisions by date";
-                menuCommand.ExecuteAction = () => _revisionGrid.OrderRevisionsByDate_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.OrderRevisionByDate;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showAuthorDateToolStripMenuItem";
-                menuCommand.Text = "Show author date";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowAuthorDate_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowAuthorDate;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showRelativeDateToolStripMenuItem";
-                menuCommand.Text = "Show relative date";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowRelativeDate_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.RelativeDate;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showMergeCommitsToolStripMenuItem";
-                menuCommand.Text = "Show merge commits";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleShowMergeCommits);
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommits_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowMergeCommits;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-              var menuCommand = new MenuCommand();
-              menuCommand.Name = "showTagsToolStripMenuItem";
-              menuCommand.Text = "Show tags";
-              menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleShowTags);
-              menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
-              menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
-
-              resultList.Add(menuCommand);
-            }
-
-            {
-              var menuCommand = new MenuCommand();
-              menuCommand.Name = "showIdsToolStripMenuItem";
-              menuCommand.Text = "Show SHA-1";
-              menuCommand.ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null);
-              menuCommand.IsCheckedFunc = () => AppSettings.ShowIds;
-
-              resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showGitNotesToolStripMenuItem";
-                menuCommand.Text = "Show git notes";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotes_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowGitNotes;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showIsMessageMultilineToolStripMenuItem";
-                menuCommand.Text = "Show indicator for multiline message";
-                menuCommand.ExecuteAction = () =>
+                new MenuCommand
                 {
-                    AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
-                    _revisionGrid.ForceRefreshRevisions();
-                };
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowIndicatorForMultilineMessage;
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ToggleHighlightSelectedBranch";
-                menuCommand.Text = "Highlight selected branch (until refresh)";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleHighlightSelectedBranch);
-                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.ToggleHighlightSelectedBranch);
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "ToggleRevisionCardLayout";
-                menuCommand.Text = "Change commit view layout";
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleRevisionCardLayout);
-                menuCommand.ExecuteAction = () => _revisionGrid.ToggleRevisionCardLayout();
-
-                resultList.Add(menuCommand);
-            }
-
-            resultList.Add(MenuCommand.CreateSeparator());
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showFirstParent";
-                menuCommand.Text = "Show first parents";
-                menuCommand.Image = Resources.IconShowFirstParent;
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFirstParent);
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowFirstParent;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "filterToolStripMenuItem";
-                menuCommand.Text = "Set advanced filter";
-                menuCommand.Image = Resources.IconFilter;
-                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.RevisionFilter);
-                menuCommand.ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null);
-
-                resultList.Add(menuCommand);
-            }
-
-            return resultList;
+                    Name = "ShowAllBranches",
+                    Text = "Show all branches",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowAllBranches),
+                    ExecuteAction = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemChecked
+                },
+                new MenuCommand
+                {
+                    Name = "ShowCurrentBranchOnly",
+                    Text = "Show current branch only",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowCurrentBranchOnly),
+                    ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemChecked
+                },
+                new MenuCommand
+                {
+                    Name = "ShowFilteredBranches",
+                    Text = "Show filtered branches",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFilteredBranches),
+                    ExecuteAction = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemChecked
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "ShowRemoteBranches",
+                    Text = "Show remote branches",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowRemoteBranches),
+                    ExecuteAction = () => _revisionGrid.ShowRemoteBranches_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowRemoteBranches
+                },
+                new MenuCommand
+                {
+                    Name = "ShowReflogReferences",
+                    Text = "Show reflog references",
+                    ExecuteAction = () => _revisionGrid.ShowReflogReferences_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowReflogReferences
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "ShowSuperprojectTags",
+                    Text = "Show superproject tags",
+                    ExecuteAction = () => _revisionGrid.ShowSuperprojectTags_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowSuperprojectTags
+                },
+                new MenuCommand
+                {
+                    Name = "ShowSuperprojectBranches",
+                    Text = "Show superproject branches",
+                    ExecuteAction = () => _revisionGrid.ShowSuperprojectBranches_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowSuperprojectBranches
+                },
+                new MenuCommand
+                {
+                    Name = "ShowSuperprojectRemoteBranches",
+                    Text = "Show superproject remote branches",
+                    ExecuteAction = () => _revisionGrid.ShowSuperprojectRemoteBranches_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowSuperprojectRemoteBranches
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "showRevisionGraphToolStripMenuItem",
+                    Text = "Show revision graph",
+                    ExecuteAction = () => _revisionGrid.ShowRevisionGraph_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => _revisionGrid.IsGraphLayout()
+                },
+                new MenuCommand
+                {
+                    Name = "drawNonrelativesGrayToolStripMenuItem",
+                    Text = "Draw non relatives gray",
+                    ExecuteAction = () => _revisionGrid.DrawNonrelativesGray_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.RevisionGraphDrawNonRelativesGray
+                },
+                new MenuCommand
+                {
+                    Name = "orderRevisionsByDateToolStripMenuItem",
+                    Text = "Order revisions by date",
+                    ExecuteAction = () => _revisionGrid.OrderRevisionsByDate_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.OrderRevisionByDate
+                },
+                new MenuCommand
+                {
+                    Name = "showAuthorDateToolStripMenuItem",
+                    Text = "Show author date",
+                    ExecuteAction = () => _revisionGrid.ShowAuthorDate_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowAuthorDate
+                },
+                new MenuCommand
+                {
+                    Name = "showRelativeDateToolStripMenuItem",
+                    Text = "Show relative date",
+                    ExecuteAction = () => _revisionGrid.ShowRelativeDate_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.RelativeDate
+                },
+                new MenuCommand
+                {
+                    Name = "showMergeCommitsToolStripMenuItem",
+                    Text = "Show merge commits",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleShowMergeCommits),
+                    ExecuteAction = () => _revisionGrid.ShowMergeCommits_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowMergeCommits
+                },
+                new MenuCommand
+                {
+                    Name = "showTagsToolStripMenuItem",
+                    Text = "Show tags",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleShowTags),
+                    ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowTags
+                },
+                new MenuCommand
+                {
+                    Name = "showIdsToolStripMenuItem",
+                    Text = "Show SHA-1",
+                    ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowIds
+                },
+                new MenuCommand
+                {
+                    Name = "showGitNotesToolStripMenuItem",
+                    Text = "Show git notes",
+                    ExecuteAction = () => _revisionGrid.ShowGitNotes_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowGitNotes
+                },
+                new MenuCommand
+                {
+                    Name = "showIsMessageMultilineToolStripMenuItem",
+                    Text = "Show indicator for multiline message",
+                    ExecuteAction = () =>
+                    {
+                        AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
+                        _revisionGrid.ForceRefreshRevisions();
+                    },
+                    IsCheckedFunc = () => AppSettings.ShowIndicatorForMultilineMessage
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "ToggleHighlightSelectedBranch",
+                    Text = "Highlight selected branch (until refresh)",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleHighlightSelectedBranch),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.ToggleHighlightSelectedBranch)
+                },
+                new MenuCommand
+                {
+                    Name = "ToggleRevisionCardLayout",
+                    Text = "Change commit view layout",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleRevisionCardLayout),
+                    ExecuteAction = () => _revisionGrid.ToggleRevisionCardLayout()
+                },
+                MenuCommand.CreateSeparator(),
+                new MenuCommand
+                {
+                    Name = "showFirstParent",
+                    Text = "Show first parents",
+                    Image = Resources.IconShowFirstParent,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFirstParent),
+                    ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null),
+                    IsCheckedFunc = () => AppSettings.ShowFirstParent
+                },
+                new MenuCommand
+                {
+                    Name = "filterToolStripMenuItem",
+                    Text = "Set advanced filter",
+                    Image = Resources.IconFilter,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.RevisionFilter),
+                    ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null)
+                }
+            };
         }
 
         public IEnumerable<MenuCommand> GetViewMenuCommands()
