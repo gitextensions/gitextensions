@@ -55,7 +55,7 @@ namespace GitUI
             private string FontSizeSettingsKey => SettingName + "_FontSize";
             private float? _latestFontSize;
 
-            private int SplitterSize => (Splitter.Orientation == Orientation.Horizontal)
+            private int SplitterSize => Splitter.Orientation == Orientation.Horizontal
                 ? Splitter.Height
                 : Splitter.Width;
 
@@ -169,10 +169,7 @@ namespace GitUI
             /// </returns>
             private bool IsValidSplitterDistance(int distance)
             {
-                bool valid;
-                int limit = SplitterSize;
-                valid = (distance > Splitter.Panel1MinSize) && (distance < limit - Splitter.Panel2MinSize);
-                return valid;
+                return distance > Splitter.Panel1MinSize && distance < SplitterSize - Splitter.Panel2MinSize;
             }
         }
     }

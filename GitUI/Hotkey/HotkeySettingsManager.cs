@@ -45,10 +45,9 @@ namespace GitUI.Hotkey
         public static HotkeyCommand[] LoadHotkeys(string name)
         {
             //var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
-            HotkeySettings[] allSettings;
             HotkeySettings settings = new HotkeySettings();
             HotkeySettings scriptkeys = new HotkeySettings();
-            allSettings = LoadSettings();
+            var allSettings = LoadSettings();
 
             GetUsedHotkeys(allSettings);
 

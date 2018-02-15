@@ -52,10 +52,8 @@ namespace GitUI.CommitInfo
 
             _commitDataManager = new CommitDataManager(() => Module);
 
-            IHeaderRenderStyleProvider headerRenderer;
-            IHeaderLabelFormatter labelFormatter;
-            labelFormatter = new TabbedHeaderLabelFormatter();
-            headerRenderer = new TabbedHeaderRenderStyleProvider();
+            IHeaderLabelFormatter labelFormatter = new TabbedHeaderLabelFormatter();
+            IHeaderRenderStyleProvider headerRenderer = new TabbedHeaderRenderStyleProvider();
 
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
