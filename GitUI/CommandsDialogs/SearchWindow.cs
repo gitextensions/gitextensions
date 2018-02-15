@@ -10,17 +10,13 @@ namespace GitUI.CommandsDialogs
     {
         private readonly Func<string, IList<T>> getCandidates;
         private readonly AsyncLoader backgroundLoader = new AsyncLoader();
-        
+
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
             InitializeComponent();
             textBox1.Select();
 
-            if (getCandidates == null)
-            {
-                throw new InvalidOperationException("getCandidates cannot be null");
-            }
-            this.getCandidates = getCandidates;
+            this.getCandidates = getCandidates ?? throw new InvalidOperationException("getCandidates cannot be null");
             AutoFit();
 
             if (Parent == null)

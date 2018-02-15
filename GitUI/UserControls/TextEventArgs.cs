@@ -7,9 +7,7 @@ namespace GitUI.UserControls
     {
         public TextEventArgs([NotNull] string text)
         {
-            if(text == null)
-                throw new ArgumentNullException(nameof(text));
-            Text = text;
+            Text = text ?? throw new ArgumentNullException(nameof(text));
         }
 
         [NotNull]
