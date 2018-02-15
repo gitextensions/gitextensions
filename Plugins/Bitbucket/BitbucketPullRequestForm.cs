@@ -14,7 +14,7 @@ namespace Bitbucket
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
         private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in Bitbucket.");
-        private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
+        private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
@@ -240,7 +240,7 @@ namespace Bitbucket
             if (commit == null)
                 label.Text = string.Empty;
             else
-                label.Text = string.Format(_commited.Text,
+                label.Text = string.Format(_committed.Text,
                     commit.AuthorName, commit.Message);
         }
 
