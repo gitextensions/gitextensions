@@ -224,7 +224,7 @@ namespace GitUI.CommandsDialogs
 
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
+            bool isAnyItemSelected = DiffFiles.SelectedItems.Any();
             var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var selectedItemStatus = DiffFiles.SelectedItem;
             bool isBareRepository = Module.IsBareRepository();
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
         private void ShowSelectedFileDiff()
         {
             var items = _revisionGrid.GetSelectedRevisions();
-            if (DiffFiles.SelectedItem == null || items.Count() == 0)
+            if (DiffFiles.SelectedItem == null || !items.Any())
             {
                 DiffText.ViewPatch("");
                 return;

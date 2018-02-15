@@ -371,7 +371,7 @@ namespace GitUI.CommitInfo
             if (_sortedRefs != null)
             {
                 if (_annotatedTagsMessages != null &&
-                    _annotatedTagsMessages.Count() > 0 &&
+                    _annotatedTagsMessages.Any() &&
                     string.IsNullOrEmpty(_annotatedTagsInfo) &&
                     Revision != null)
                 {
