@@ -2947,7 +2947,13 @@ namespace GitCommands
         {
             from = from.ToPosixPath();
             filename = filename.ToPosixPath();
-            string blameCommand = string.Format("blame --porcelain -M -w -l{0} \"{1}\" -- \"{2}\"", lines != null ? " -L " + lines : "", from, filename);
+
+            string detectCopyInFileOpt = AppSettings.DetectCopyInFileOnBlame ? " -M" : string.Empty;
+            string detectCopyInAllOpt = AppSettings.DetectCopyInAllOnBlame ? " -C" : string.Empty;
+            string ignoreWhitespaceOpt = AppSettings.IgnoreWhitespaceOnBlame ? " -w" : string.Empty;
+            string linesOpt = lines != null ? " -L " + lines : string.Empty;
+
+            string blameCommand = $"blame --porcelain{detectCopyInFileOpt}{detectCopyInAllOpt}{ignoreWhitespaceOpt} -l{linesOpt} \"{from}\" -- \"{filename}\"";
             var itemsStrings =
                 RunCacheableCmd(
                     AppSettings.GitCommand,

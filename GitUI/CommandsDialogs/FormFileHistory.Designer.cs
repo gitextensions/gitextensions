@@ -56,6 +56,10 @@ namespace GitUI.CommandsDialogs
             this.loadHistoryOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadBlameOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShowFullHistory = new System.Windows.Forms.ToolStripButton();
+            this.toolStripBlameOptions = new System.Windows.Forms.ToolStripDropDownButton();
+            this.ignoreWhitespaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detectMoveAndCopyInThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -302,7 +306,8 @@ namespace GitUI.CommandsDialogs
             this.ShowFirstParent,
             this.toolStripSeparator3,
             this.toolStripSplitLoad,
-            this.ShowFullHistory});
+            this.ShowFullHistory,
+            this.toolStripBlameOptions});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
@@ -410,6 +415,41 @@ namespace GitUI.CommandsDialogs
             this.ShowFullHistory.ToolTipText = "Show Full History";
             this.ShowFullHistory.Click += new System.EventHandler(this.ShowFullHistory_Click);
             // 
+            // toolStripBlameOptions
+            // 
+            this.toolStripBlameOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripBlameOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ignoreWhitespaceToolStripMenuItem,
+            this.detectMoveAndCopyInThisFileToolStripMenuItem,
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem});
+            this.toolStripBlameOptions.Image = global::GitUI.Properties.Resources.IconBlame;
+            this.toolStripBlameOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripBlameOptions.Name = "toolStripBlameOptions";
+            this.toolStripBlameOptions.Size = new System.Drawing.Size(29, 22);
+            this.toolStripBlameOptions.Text = "Blame options";
+            this.toolStripBlameOptions.ToolTipText = "Blame options";
+            // 
+            // ignoreWhitespaceToolStripMenuItem
+            // 
+            this.ignoreWhitespaceToolStripMenuItem.Name = "ignoreWhitespaceToolStripMenuItem";
+            this.ignoreWhitespaceToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.ignoreWhitespaceToolStripMenuItem.Text = "Ignore whitespace";
+            this.ignoreWhitespaceToolStripMenuItem.Click += new System.EventHandler(this.ignoreWhitespaceToolStripMenuItem_Click);
+            // 
+            // detectMoveAndCopyInThisFileToolStripMenuItem
+            // 
+            this.detectMoveAndCopyInThisFileToolStripMenuItem.Name = "detectMoveAndCopyInThisFileToolStripMenuItem";
+            this.detectMoveAndCopyInThisFileToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.detectMoveAndCopyInThisFileToolStripMenuItem.Text = "Detect move and copy in this file";
+            this.detectMoveAndCopyInThisFileToolStripMenuItem.Click += new System.EventHandler(this.detectMoveAndCopyInThisFileToolStripMenuItem_Click);
+            // 
+            // detectMoveAndCopyInAllFilesToolStripMenuItem
+            // 
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem.Name = "detectMoveAndCopyInAllFilesToolStripMenuItem";
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem.Text = "Detect move and copy in all files";
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem.Click += new System.EventHandler(this.detectMoveAndCopyInAllFilesToolStripMenuItem_Click);
+            // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -478,5 +518,9 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripButton ShowFirstParent;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton ShowFullHistory;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripBlameOptions;
+        private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detectMoveAndCopyInThisFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detectMoveAndCopyInAllFilesToolStripMenuItem;
     }
 }

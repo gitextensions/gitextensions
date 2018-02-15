@@ -578,6 +578,25 @@ namespace GitCommands
             set { SetBool("LoadBlameOnShow", value); }
         }
 
+        public static bool DetectCopyInFileOnBlame
+        {
+            get { return GetBool("DetectCopyInFileOnBlame", true); }
+            set { SetBool("DetectCopyInFileOnBlame", value); }
+        }
+
+        public static bool DetectCopyInAllOnBlame
+        {
+            get { return GetBool("DetectCopyInAllOnBlame", false); }
+            set { SetBool("DetectCopyInAllOnBlame", value); }
+        }
+
+        public static bool IgnoreWhitespaceOnBlame
+        {
+            get { return GetBool("IgnoreWhitespaceOnBlame", true); }
+            set { SetBool("IgnoreWhitespaceOnBlame", value); }
+        }
+
+
         public static bool OpenSubmoduleDiffInSeparateWindow
         {
             get { return GetBool("opensubmodulediffinseparatewindow", false); }
