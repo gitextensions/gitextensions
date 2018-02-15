@@ -29,41 +29,34 @@ namespace GitUI.CommitInfo
         private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
         private const int MaximumDisplayedRefs = 20;
+
         private readonly ILinkFactory _linkFactory = new LinkFactory();
-        private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
 
-
         public CommitInfo()
         {
             InitializeComponent();
             Translate();
-            GitUICommandsSourceSet += (a, uiCommandsSource) =>
-            {
-                _sortedRefs = null;
-            };
+
+            GitUICommandsSourceSet += (s, e) => _sortedRefs = null;
 
             _commitDataManager = new CommitDataManager(() => Module);
 
-            IHeaderLabelFormatter labelFormatter = new TabbedHeaderLabelFormatter();
-            IHeaderRenderStyleProvider headerRenderer = new TabbedHeaderRenderStyleProvider();
-
-            _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
+            _commitDataHeaderRenderer = new CommitDataHeaderRenderer(new TabbedHeaderLabelFormatter(),
+                new DateFormatter(),
+                new TabbedHeaderRenderStyleProvider(),
+                _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
-            IExternalLinksLoader externalLinksLoader = new ExternalLinksLoader();
-            IConfiguredLinkDefinitionsProvider effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(externalLinksLoader);
-            IGitRemoteManager gitRemoteManager = new GitRemoteManager(() => Module);
-            IExternalLinkRevisionParser externalLinkRevisionParser = new ExternalLinkRevisionParser(gitRemoteManager);
-            _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(effectiveLinkDefinitionsProvider, externalLinkRevisionParser);
+            _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(
+                new ConfiguredLinkDefinitionsProvider(new ExternalLinksLoader()),
+                new ExternalLinkRevisionParser(new GitRemoteManager(() => Module)));
 
             RevisionInfo.Font = AppSettings.Font;
-            using (Graphics g = CreateGraphics())
-            {
+            using (var g = CreateGraphics())
                 _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
-            }
             _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
@@ -88,11 +81,7 @@ namespace GitUI.CommitInfo
                 var result = new Uri(link);
                 if (result.Scheme == "gitext")
                 {
-                    if (CommandClick != null)
-                    {
-                        string path = result.AbsolutePath.TrimStart('/');
-                        CommandClick(sender, new CommandEventArgs(result.Host, path));
-                    }
+                    CommandClick?.Invoke(sender, new CommandEventArgs(result.Host, result.AbsolutePath.TrimStart('/')));
                 }
                 else
                 {
@@ -124,14 +113,8 @@ namespace GitUI.CommitInfo
         [Browsable(false)]
         public GitRevision Revision
         {
-            get
-            {
-                return _revision;
-            }
-            set
-            {
-                SetRevisionWithChildren(value, null);
-            }
+            get => _revision;
+            set => SetRevisionWithChildren(value, null);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -170,7 +153,10 @@ namespace GitUI.CommitInfo
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
             string error = "";
+
             CommitData data = _commitDataManager.CreateFromRevision(_revision);
+            data.ChildrenGuids = _children;
+
             if (_revision.Body == null)
             {
                 _commitDataManager.UpdateCommitMessage(data, _revision.Guid, ref error);
@@ -182,12 +168,11 @@ namespace GitUI.CommitInfo
             if (_sortedRefs == null)
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
-            data.ChildrenGuids = _children;
             var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
             var body = _commitDataBodyRenderer.Render(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(header);
-            _RevisionHeader.Height = GetRevisionHeaderHeight();
+            _RevisionHeader.Height = _headerResize.Height;
             _revisionInfo = body;
 
             UpdateRevisionInfo();
@@ -207,11 +192,6 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
         }
 
-        private int GetRevisionHeaderHeight()
-        {
-            return _headerResize.Height;
-        }
-
         private void loadSortedRefs()
         {
             _sortedRefs = Module.GetSortedRefs();
@@ -229,7 +209,7 @@ namespace GitUI.CommitInfo
             if (revision == null)
                 return null;
 
-            IDictionary<string, string> result = new Dictionary<string, string>();
+            var result = new Dictionary<string, string>();
 
             foreach (var gitRef in revision.Refs)
             {
@@ -511,6 +491,7 @@ namespace GitUI.CommitInfo
                 if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
                     allowRemote = false;
             }
+
             if (links.Any())
                 return Environment.NewLine + WebUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
             return Environment.NewLine + WebUtility.HtmlEncode(containedInNoBranch.Text);
@@ -532,9 +513,7 @@ namespace GitUI.CommitInfo
             var linksString = string.Empty;
 
             foreach (var link in links)
-            {
                 linksString = linksString.Combine(", ", _linkFactory.CreateLink(link.Caption, link.URI));
-            }
 
             if (linksString.IsNullOrEmpty())
                 return string.Empty;
@@ -583,21 +562,17 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
-        private void DoCommandClick(string command, string data)
-        {
-            CommandClick?.Invoke(this, new CommandEventArgs(command, data));
-        }
-
         private void _RevisionHeader_MouseDown(object sender, MouseEventArgs e)
         {
+            string command;
             if (e.Button == MouseButtons.XButton1)
-            {
-                DoCommandClick("navigatebackward", null);
-            }
+                command = "navigatebackward";
             else if (e.Button == MouseButtons.XButton2)
-            {
-                DoCommandClick("navigateforward", null);
-            }
+                command = "navigateforward";
+            else
+                return;
+
+            CommandClick?.Invoke(this, new CommandEventArgs(command, null));
         }
 
         private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
