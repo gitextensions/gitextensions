@@ -28,7 +28,7 @@ namespace GitCommandsTests.Remote
             _module = Substitute.For<IGitModule>();
             _module.LocalConfigFile.Returns(_configFile);
 
-            _controller = new GitRemoteManager(_module);
+            _controller = new GitRemoteManager(() => _module);
         }
 
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -9,8 +8,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
 using GitCommands.Remote;
+using GitCommands.Repository;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -103,7 +102,7 @@ namespace GitUI.CommandsDialogs
             //they are reset to false
             if (aCommands != null)
             {
-                _remoteManager = new GitRemoteManager(Module);
+                _remoteManager = new GitRemoteManager(() => Module);
                 Init();
             }
         }

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
 using GitCommands.Remote;
+using GitCommands.Repository;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -293,7 +293,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
-            _remoteManager = new GitRemoteManager(Module);
+            _remoteManager = new GitRemoteManager(() => Module);
             // load the data for the very first time
             Initialize(PreselectRemoteOnLoad);
         }
