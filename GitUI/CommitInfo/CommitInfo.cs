@@ -231,7 +231,7 @@ namespace GitUI.CommitInfo
 
             IDictionary<string, string> result = new Dictionary<string, string>();
 
-            foreach (GitRef gitRef in revision.Refs)
+            foreach (var gitRef in revision.Refs)
             {
                 #region Note on annotated tags
                 // Notice that for the annotated tags, gitRef's come in pairs because they're produced

@@ -371,7 +371,7 @@ namespace GitUI.Script
                                                              List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
             GitRevision selectedRevision = revisionGrid.LatestSelectedRevision;
-            foreach (GitRef head in selectedRevision.Refs)
+            foreach (IGitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
                     selectedTags.Add(head);

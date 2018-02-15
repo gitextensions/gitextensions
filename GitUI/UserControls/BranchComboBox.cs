@@ -74,7 +74,7 @@ namespace GitUI
                     formSelectMultipleBranches.SelectBranch(branch.Name);
                 formSelectMultipleBranches.ShowDialog(this);
                 string branchesText = string.Empty;
-                foreach (GitRef branch in formSelectMultipleBranches.GetSelectedBranches())
+                foreach (IGitRef branch in formSelectMultipleBranches.GetSelectedBranches())
                 {
                     if (!string.IsNullOrEmpty(branchesText))
                         branchesText += " ";

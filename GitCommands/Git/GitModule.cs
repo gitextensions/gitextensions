@@ -1342,7 +1342,7 @@ namespace GitCommands
             {
                 submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
                 var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
-                foreach (ConfigSection configSection in configFile.ConfigSections)
+                foreach (IConfigSection configSection in configFile.ConfigSections)
                 {
                     if (configSection.GetValue("path") == submodulePath.ToPosixPath())
                     {
