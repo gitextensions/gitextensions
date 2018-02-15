@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
@@ -9,7 +8,6 @@ namespace GitUI
 {
     public sealed class WebBrowserEmulationMode
     {
-
         public static void SetBrowserFeatureControl()
         {
             // Fix for issue #2654:
@@ -25,8 +23,7 @@ namespace GitUI
 
             var featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
-            uint emulationMode;
-            if (TryGetBrowserEmulationMode(out emulationMode))
+            if (TryGetBrowserEmulationMode(out var emulationMode))
             {
                 Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, emulationMode, RegistryValueKind.DWord);
             }
@@ -73,7 +70,7 @@ namespace GitUI
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

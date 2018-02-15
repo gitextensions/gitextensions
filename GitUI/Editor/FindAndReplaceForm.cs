@@ -207,8 +207,7 @@ namespace GitUI
                 int offset = 0, count = 0;
                 for (;;)
                 {
-                    bool looped;
-                    TextRange range = _search.FindNext(offset, false, out looped);
+                    TextRange range = _search.FindNext(offset, false, out var looped);
                     if (range == null || looped)
                         break;
                     offset = range.Offset + range.Length;

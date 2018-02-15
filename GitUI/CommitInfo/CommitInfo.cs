@@ -433,8 +433,7 @@ namespace GitUI.CommitInfo
 
             foreach (string tag in tagNames)
             {
-                string annotatedContents;
-                if (annotatedTagsMessages.TryGetValue(tag, out annotatedContents))
+                if (annotatedTagsMessages.TryGetValue(tag, out var annotatedContents))
                     result += "<u>" + tag + "</u>: " + annotatedContents + Environment.NewLine;
             }
 

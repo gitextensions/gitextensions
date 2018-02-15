@@ -142,8 +142,7 @@ namespace GitUI.Hotkey
                         if (command != null)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                            HotkeyCommand defaultCommand;
-                            if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                            if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
                             {
                                 defaultCommand.KeyData = command.KeyData;
                             }

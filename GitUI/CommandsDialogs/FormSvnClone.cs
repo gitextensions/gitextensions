@@ -62,8 +62,8 @@ namespace GitUI.CommandsDialogs
                 {
                     authorsFile = null;
                 }
-                int from;
-                if (!int.TryParse(tbFrom.Text, out from))
+
+                if (!int.TryParse(tbFrom.Text, out var from))
                     from = 0;
 
                 var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand,

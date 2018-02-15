@@ -27,7 +27,7 @@ namespace GitUI.Editor.Diff
                 if (!_visible)
                 {
                     _lastSize = new Size(0, 0);
-                } 
+                }
                 else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
@@ -128,17 +128,13 @@ namespace GitUI.Editor.Diff
 
         public string GetLineDesc(int lineNumInDiffFile)
         {
-            DiffLineNum line;
-            if (!DiffLines.TryGetValue(lineNumInDiffFile, out line)) return null;
+            if (!DiffLines.TryGetValue(lineNumInDiffFile, out var line))
+                return null;
 
             if (line.LeftLineNum != DiffLineNum.NotApplicableLineNum)
-            {
                 return "L" + line.LeftLineNum;
-            }
             if (line.RightLineNum != DiffLineNum.NotApplicableLineNum)
-            {
                 return "R" + line.RightLineNum;
-            }
             return null;
         }
 

@@ -2605,8 +2605,7 @@ namespace GitUI.CommandsDialogs
                 var startinfoBaseConfiguration = startinfo.BaseConfiguration;
                 if (!string.IsNullOrWhiteSpace(AppSettings.ConEmuFontSize.ValueOrDefault))
                 {
-                    int fontSize;
-                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out fontSize))
+                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out var fontSize))
                     {
                         var nodeFontSize =
                             startinfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
@@ -2634,13 +2633,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string cmdPath = exeList.
-                      Select(shell =>
-                      {
-                          string shellPath;
-                          if (PathUtil.TryFindShellPath(shell, out shellPath))
-                              return shellPath;
-                          return null;
-                      }).
+                      Select(shell => PathUtil.TryFindShellPath(shell, out var shellPath) ? shellPath : null).
                       FirstOrDefault(shellPath => shellPath != null);
 
                 if (cmdPath == null)
@@ -2680,8 +2673,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
             {
-                string posixPath;
-                if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
+                if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                 {
                     ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
                 }

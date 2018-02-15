@@ -1984,8 +1984,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FileStatusList list;
-            if (!SenderToFileStatusList(sender, out list))
+            if (!SenderToFileStatusList(sender, out var list))
                 return;
 
             if (!list.SelectedItems.Any())
@@ -1999,8 +1998,7 @@ namespace GitUI.CommandsDialogs
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FileStatusList list;
-            if (!SenderToFileStatusList(sender, out list))
+            if (!SenderToFileStatusList(sender, out var list))
                 return;
 
             if (!list.SelectedItems.Any())
@@ -2069,8 +2067,7 @@ namespace GitUI.CommandsDialogs
 
         private void editFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileStatusList list;
-            if (!SenderToFileStatusList(sender, out list))
+            if (!SenderToFileStatusList(sender, out var list))
                 return;
 
             var item = list.SelectedItem;
@@ -2139,8 +2136,7 @@ namespace GitUI.CommandsDialogs
 
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)
         {
-            FileStatusList list;
-            if (!SenderToFileStatusList(sender, out list))
+            if (!SenderToFileStatusList(sender, out var list))
                 return;
 
             if (list.SelectedItems.Count() == 1)

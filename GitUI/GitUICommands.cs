@@ -2134,13 +2134,10 @@ namespace GitUI
             string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             int? initialLine = null;
-            if( args.Length >= 4 )
+            if (args.Length >= 4)
             {
-                int temp;
-                if( int.TryParse( args[3], out temp ) )
-                {
+                if (int.TryParse(args[3], out var temp))
                     initialLine = temp;
-                }
             }
 
             StartBlameDialog(filenameFromBlame, initialLine);

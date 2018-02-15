@@ -160,9 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            RecentRepoInfo repo;
-
-            e.Cancel = !GetSelectedRepo(sender, out repo);
+            e.Cancel = !GetSelectedRepo(sender, out var repo);
 
             if (!e.Cancel)
             {
@@ -199,9 +197,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 repo.Repo.Anchor = Repository.RepositoryAnchor.MostRecent;
                 RefreshRepos();
@@ -210,9 +206,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void anchorToLessToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 repo.Repo.Anchor = Repository.RepositoryAnchor.LessRecent;
                 RefreshRepos();
@@ -221,9 +215,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeAnchorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 repo.Repo.Anchor = Repository.RepositoryAnchor.None;
                 RefreshRepos();
@@ -232,9 +224,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
                 RefreshRepos();

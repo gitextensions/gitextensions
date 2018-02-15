@@ -85,8 +85,7 @@ namespace GitUI
             SendOrPostCallback method = o =>
                 {
                     int index = text.LastIndexOf('%');
-                    int progressValue;
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue) && progressValue >= 0)
+                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                     {
                         if (ProgressBar.Style != ProgressBarStyle.Blocks)
                             ProgressBar.Style = ProgressBarStyle.Blocks;
@@ -104,7 +103,7 @@ namespace GitUI
                             }
                         }
                     }
-                    // Show last progress message in the title, unless it's showin in the control body already
+                    // Show last progress message in the title, unless it's showing in the control body already
                     if(!ConsoleOutput.IsDisplayingFullProcessOutput)
                       Text = text;
                 };

@@ -95,14 +95,13 @@ namespace GitUI
                 }
                 */
 
-                // If the authentication failed because of a missing key, ask the user to supply one. 
+                // If the authentication failed because of a missing key, ask the user to supply one.
                 if (GetOutputString().Contains("FATAL ERROR") && GetOutputString().Contains("authentication"))
                 {
-                    string loadedKey;
-                    if (FormPuttyError.AskForKey(this, out loadedKey))
+                    if (FormPuttyError.AskForKey(this, out var loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
-                        if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) && 
+                        if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
                             string.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
                             Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
 

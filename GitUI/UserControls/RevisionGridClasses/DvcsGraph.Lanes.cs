@@ -459,8 +459,7 @@ namespace GitUI.RevisionGridClasses
                     {
                         while (edges.CountNext(i) > 0)
                         {
-                            int start, end;
-                            Graph.LaneInfo info = edges.RemoveNext(i, 0, out start, out end);
+                            Graph.LaneInfo info = edges.RemoveNext(i, 0, out var start, out _);
                             info.ConnectLane--;
                             edges.Add(start, info);
                         }
@@ -474,8 +473,7 @@ namespace GitUI.RevisionGridClasses
                     {
                         while (edges.CountNext(i) > 0)
                         {
-                            int start, end;
-                            Graph.LaneInfo info = edges.RemoveNext(i, 0, out start, out end);
+                            Graph.LaneInfo info = edges.RemoveNext(i, 0, out var start, out var _);
                             info.ConnectLane++;
                             edges.Add(start, info);
                         }
@@ -486,8 +484,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     for (int j = edges.CountNext(aOld) - 1; j >= 0; --j)
                     {
-                        int start, end;
-                        Graph.LaneInfo info = edges.RemoveNext(aOld, j, out start, out end);
+                        Graph.LaneInfo info = edges.RemoveNext(aOld, j, out var start, out var _);
                         info.ConnectLane = aNew;
                         edges.Add(start, info);
                     }
