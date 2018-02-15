@@ -385,7 +385,7 @@ namespace GitUI.CommitInfo
                         .ToList();
 
                     thisRevisionTagNames.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
-                    _annotatedTagsInfo = GetAnnotatedTagsInfo(Revision, thisRevisionTagNames, _annotatedTagsMessages);
+                    _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
@@ -425,7 +425,6 @@ namespace GitUI.CommitInfo
         }
 
         private static string GetAnnotatedTagsInfo(
-            GitRevision revision,
             IEnumerable<string> tagNames,
             IDictionary<string, string> annotatedTagsMessages)
         {

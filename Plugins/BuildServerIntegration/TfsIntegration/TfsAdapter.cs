@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -123,12 +122,12 @@ namespace TfsIntegration
             if (_tfsHelper == null)
                 return Observable.Empty<BuildInfo>();
 
-            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
+            return Observable.Create<BuildInfo>(observer =>
                 Task<IDisposable>.Factory.StartNew(
-                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
+                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer))));
         }
 
-        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer)
         {
             try
             {

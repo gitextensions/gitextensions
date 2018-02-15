@@ -176,10 +176,10 @@ namespace JenkinsIntegration
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(
-                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
+                    () => scheduler.Schedule(() => ObserveBuilds(observer, cancellationToken))));
         }
 
-        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        private void ObserveBuilds(IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
             //Note that 'running' is ignored (attempt to fetch data when updated)
             //Similar for 'sinceDate', not supported in Jenkins API
