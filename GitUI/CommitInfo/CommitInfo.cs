@@ -276,7 +276,6 @@ namespace GitUI.CommitInfo
             this.InvokeAsync(UpdateRevisionInfo);
         }
 
-
         private void loadBranchInfo(string revision)
         {
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
@@ -356,15 +355,8 @@ namespace GitUI.CommitInfo
             tableLayout.ResumeLayout(true);
         }
 
-        public void DisplayAvatarOnRight()
-        {
-            DisplayAvatarSetup(true);
-        }
-
-        public void DisplayAvatarOnLeft()
-        {
-            DisplayAvatarSetup(false);
-        }
+        public void DisplayAvatarOnRight() => DisplayAvatarSetup(right: true);
+        public void DisplayAvatarOnLeft() => DisplayAvatarSetup(right: false);
 
         private void UpdateRevisionInfo()
         {
