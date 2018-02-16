@@ -349,14 +349,11 @@ namespace GitUI.CommitInfo
                 {
                     // having both lightweight & annotated tags in thisRevisionTagNames,
                     // but GetAnnotatedTagsInfo will process annotated only:
-                    List<string> thisRevisionTagNames =
-                        Revision
-                        .Refs
+                    var thisRevisionTagNames = Revision.Refs
                         .Where(r => r.IsTag)
                         .Select(r => r.LocalName)
-                        .ToList();
+                        .OrderBy(name => name, new ItemTpComparer(_sortedRefs, "refs/tags/"));
 
-                    thisRevisionTagNames.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
                     _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
