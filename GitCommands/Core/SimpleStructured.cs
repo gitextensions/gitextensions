@@ -6,7 +6,7 @@ namespace GitCommands.Core
 {
     /// <summary>
     /// class that provides Equals and ToString methods based on objects returned by InlinedStructure
-    /// Warning: it doesn't provide GetHashCode, 
+    /// Warning: it doesn't provide GetHashCode,
     /// so obj1.Equals(obj2) == true does not imply obj1.GetHashCode() == obj2.GetHashCode()
     /// to satisfy above implication you have to provide custom implementation for GetHashCode
     /// </summary>
@@ -16,8 +16,7 @@ namespace GitCommands.Core
 
         public override bool Equals(object obj)
         {
-            SimpleStructured other = obj as SimpleStructured;
-            if (other == null)
+            if (!(obj is SimpleStructured other))
                 return false;
 
             return InlinedStructure().SequenceEqual(other.InlinedStructure(), new SimpleEqualityComparer());
@@ -42,9 +41,7 @@ namespace GitCommands.Core
                 return y == null;
             if (!(x is string))
             {
-                IEnumerable ex = x as IEnumerable;
-                IEnumerable ey = y as IEnumerable;
-                if (ex != null && ey != null)
+                if (x is IEnumerable ex && y is IEnumerable ey)
                     return ex.Cast<object>().SequenceEqual(ey.Cast<object>(), this);
             }
             return x.Equals(y);
@@ -64,15 +61,14 @@ namespace GitCommands.Core
         {
             if (obj == null)
                 return indent + "[null]";
+
             if (!(obj is string))
             {
-                IEnumerable eo = obj as IEnumerable;
-                if (eo != null)
+                if (obj is IEnumerable eo)
                     return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
-
             }
-            SimpleStructured ss = obj as SimpleStructured;
-            if (ss != null)
+
+            if (obj is SimpleStructured ss)
                 return ToString(ss.InlinedStructure(), indent);
 
             return indent + obj;

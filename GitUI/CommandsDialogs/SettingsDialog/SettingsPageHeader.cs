@@ -4,7 +4,6 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-
     public interface IGlobalSettingsPage : ISettingsPage
     {
         void SetGlobalSettings();
@@ -42,9 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void ConfigureHeader()
         {
-            ILocalSettingsPage localSettings = _Page as ILocalSettingsPage;
-
-            if (localSettings == null)
+            if (!(_Page is ILocalSettingsPage localSettings))
             {
                 GlobalRB.Checked = true;
 
@@ -84,26 +81,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 EffectiveRB.Checked = true;
 
-                IRepoDistSettingsPage repoDistPage = localSettings as IRepoDistSettingsPage;
-
-                if (repoDistPage == null)
-                {
-                    DistributedRB.Visible = false;
-                    arrow3.Visible = false;
-                }
-                else
+                if (localSettings is IRepoDistSettingsPage repoDistPage)
                 {
                     DistributedRB.CheckedChanged += (a, b) =>
                     {
                         if (DistributedRB.Checked)
-                        {
                             repoDistPage.SetRepoDistSettings();
-                        }
                     };
                 }
-
+                else
+                {
+                    DistributedRB.Visible = false;
+                    arrow3.Visible = false;
+                }
             }
-
         }
 
         private void GlobalRB_CheckedChanged(object sender, EventArgs e)

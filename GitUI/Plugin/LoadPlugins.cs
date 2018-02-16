@@ -1,10 +1,10 @@
 ﻿﻿using System;
- using System.Diagnostics;
- using System.IO;
- using System.Linq;
- using System.Reflection;
- using System.Windows.Forms;
- using GitUI.Plugin;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+using GitUI.Plugin;
 
 namespace GitUI
 {
@@ -24,7 +24,7 @@ namespace GitUI
                                    ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
                                    : new FileInfo[] { };
 
-                var pluginFiles = plugins.Where(pluginFile => 
+                var pluginFiles = plugins.Where(pluginFile =>
                     !pluginFile.Name.StartsWith("System.") &&
                     !pluginFile.Name.StartsWith("ICSharpCode.") &&
                     !pluginFile.Name.StartsWith("Microsoft."));
@@ -41,8 +41,7 @@ namespace GitUI
                     {
                         string exInfo = "Exception info:\r\n";
 
-                        var rtle = ex as ReflectionTypeLoadException;
-                        if (rtle != null)
+                        if (ex is ReflectionTypeLoadException rtle)
                         {
                             foreach (var el in rtle.LoaderExceptions)
                                 exInfo += el.Message + "\r\n";

@@ -270,9 +270,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void addToItem_Click(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (!(sender is ToolStripItem toolStripItem))
                 return;
 
             if (repository == null)

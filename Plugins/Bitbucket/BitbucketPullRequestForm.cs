@@ -172,8 +172,7 @@ namespace Bitbucket
 
         private void ReviewersDataGridEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            var cellEdit = e.Control as DataGridViewTextBoxEditingControl;
-            if (cellEdit != null)
+            if (e.Control is DataGridViewTextBoxEditingControl cellEdit)
             {
                 cellEdit.AutoCompleteCustomSource = new AutoCompleteStringCollection();
                 cellEdit.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -292,8 +291,8 @@ namespace Bitbucket
 
         private void BtnMergeClick(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null) return;
+            if (!(lbxPullRequests.SelectedItem is PullRequest curItem))
+                return;
 
             var mergeInfo = new MergeRequestInfo
             {
@@ -315,10 +314,11 @@ namespace Bitbucket
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
         private void BtnApproveClick(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null) return;
+            if (!(lbxPullRequests.SelectedItem is PullRequest curItem))
+                return;
 
             var mergeInfo = new MergeRequestInfo
             {

@@ -376,9 +376,7 @@ namespace Gerrit
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                     return result;
 
                 result = FindControl(control.Controls, predicate);

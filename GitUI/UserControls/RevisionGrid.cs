@@ -202,11 +202,8 @@ namespace GitUI
             foreach (var menuCommand in menuCommands)
             {
                 var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
-                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
-                if (toolStripMenuItem != null)
-                {
+                if (toolStripItem is ToolStripMenuItem toolStripMenuItem)
                     menuCommand.RegisterMenuItem(toolStripMenuItem);
-                }
                 targetMenuItem.DropDownItems.Add(toolStripItem);
             }
         }
@@ -2481,92 +2478,56 @@ namespace GitUI
 
         private void ToolStripItemClickDeleteTag(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartDeleteTagDialog(this, toolStripItem.Tag as string);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartDeleteTagDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartDeleteBranchDialog(this, toolStripItem.Tag as string);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartDeleteBranchDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickDeleteRemoteBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartDeleteRemoteBranchDialog(this, toolStripItem.Text);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartDeleteRemoteBranchDialog(this, toolStripItem.Text);
         }
 
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            string branch = toolStripItem.Text;
-            UICommands.StartCheckoutBranch(this, branch, false);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartCheckoutBranch(this, branch: toolStripItem.Text, remote: false);
         }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartCheckoutRemoteBranch(this, toolStripItem.Text);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartCheckoutRemoteBranch(this, toolStripItem.Text);
         }
 
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartMergeBranchDialog(this, toolStripItem.Tag as string);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartMergeBranchDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartRebaseDialog(this, toolStripItem.Tag as string);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartRebaseDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-                return;
-
-            UICommands.StartRenameDialog(this, toolStripItem.Tag as string);
+            if (sender is ToolStripItem toolStripItem)
+                UICommands.StartRenameDialog(this, toolStripItem.Tag as string);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (LatestSelectedRevision == null)
-                return;
-
-            string revision = LatestSelectedRevision.Guid;
-            UICommands.StartCheckoutRevisionDialog(this, revision);
+            if (LatestSelectedRevision != null)
+                UICommands.StartCheckoutRevisionDialog(this, LatestSelectedRevision.Guid);
         }
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
@@ -2905,8 +2866,7 @@ namespace GitUI
 
         void Revisions_DragDrop(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
                 if (fileNameArray.Length > 10)
                 {
@@ -2930,8 +2890,7 @@ namespace GitUI
 
         static void Revisions_DragEnter(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
                 foreach (object fileNameObject in fileNameArray)
                 {

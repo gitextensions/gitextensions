@@ -3345,11 +3345,10 @@ namespace GitCommands
 
         public override bool Equals(object obj)
         {
-            if (obj == null) { return false; }
-            if (obj == this) { return true; }
+            if (obj == null) return false;
+            if (obj == this) return true;
 
-            GitModule other = obj as GitModule;
-            return other != null && Equals(other);
+            return obj is GitModule other && Equals(other);
         }
 
         private bool Equals(GitModule other)

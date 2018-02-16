@@ -143,9 +143,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                     return result;
 
                 result = FindControl(control.Controls, predicate);
@@ -354,8 +352,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                     return;
@@ -395,8 +392,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                     return;
