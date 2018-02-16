@@ -85,7 +85,7 @@ namespace GitUI
         public BuildServerWatcher BuildServerWatcher { get; private set; }
 
         private RevisionGridLayout _layout;
-        private int _rowHeigth;
+        private int _rowHeight;
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
@@ -211,13 +211,8 @@ namespace GitUI
         private void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading != null)
-            {
-                if (Loading.Visible != _isLoading)
-                {
-                    Loading.Visible = _isLoading;
-                }
-            }
+            if (Loading != null && Loading.Visible != _isLoading)
+                Loading.Visible = _isLoading;
         }
 
         [Browsable(false)]
@@ -283,7 +278,7 @@ namespace GitUI
         public string CurrentCheckout { get; private set; }
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string FiltredFileName { get; set; }
+        public string FilteredFileName { get; set; }
         [Browsable(false)]
         public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
@@ -294,9 +289,7 @@ namespace GitUI
             get
             {
                 if (IsValidRevisionIndex(LatestSelectedRowIndex))
-                {
                     return GetRevision(LatestSelectedRowIndex);
-                }
 
                 return null;
             }
@@ -314,7 +307,7 @@ namespace GitUI
         [Description("Show uncommited changes in revision grid if enabled in settings.")]
         [Category("Behavior")]
         [DefaultValue(false)]
-        public bool ShowUncommitedChangesIfPossible
+        public bool ShowUncommittedChangesIfPossible
         {
             get;
             set;
@@ -1673,7 +1666,7 @@ namespace GitUI
                     if (IsCardLayout())
                     {
                         int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                        int gravatarSize = _rowHeigth - textHeight - 12;
+                        int gravatarSize = _rowHeight - textHeight - 12;
                         int gravatarTop = e.CellBounds.Top + textHeight + 6;
                         int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
@@ -1691,7 +1684,7 @@ namespace GitUI
                         string authorText;
                         string timeText;
 
-                        if (_rowHeigth >= 60)
+                        if (_rowHeight >= 60)
                         {
                             authorText = revision.Author;
                             timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
@@ -2622,7 +2615,7 @@ namespace GitUI
 
         private bool ShowUncommitedChanges()
         {
-            return ShowUncommitedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
+            return ShowUncommittedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
         private string[] _currentCheckoutParents;
@@ -2915,7 +2908,7 @@ namespace GitUI
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
 
             // hide revision graph when hiding merge commits, reasons:
-            // 1, revison graph is no longer relevant, as we are not sohwing all commits
+            // 1, revision graph is no longer relevant, as we are not showing all commits
             // 2, performance hit when both revision graph and no merge commits are enabled
             if (IsGraphLayout() && !AppSettings.ShowMergeCommits)
             {
@@ -2952,7 +2945,6 @@ namespace GitUI
 
         internal void ShowRevisionGraph_ToolStripMenuItemClick(object sender, EventArgs e)
         {
-
             ToggleRevisionGraph();
             SetRevisionsLayout();
             MenuCommands.TriggerMenuChanged();
@@ -3039,43 +3031,40 @@ namespace GitUI
                 if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card
                     || AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
                 {
-                    _rowHeigth = 45;
+                    _rowHeight = 45;
                 }
                 else
                 {
-                    _rowHeigth = 70;
+                    _rowHeight = 70;
                 }
 
                 if (_filledItemBrush == null)
                 {
-                    _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                    _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeight, _rowHeight),
                         Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
                         Color.LightBlue, 90, false);
                 }
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
-
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeight);
             }
             else
             {
                 if (IsFilledBranchesLayout())
                 {
                     using (var graphics = Graphics.FromHwnd(Handle))
-                    {
-                        _rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
-                    }
+                        _rowHeight = (int)graphics.MeasureString("By", NormalFont).Height + 9;
 
                     _selectedItemBrush = SystemBrushes.Highlight;
                 }
                 else
                 {
-                    _rowHeigth = 25;
+                    _rowHeight = 25;
 
                     if (_filledItemBrush == null)
                     {
-                        _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                        _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeight, _rowHeight),
                             Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
                             Color.LightBlue, 90, false);
                     }
@@ -3083,7 +3072,7 @@ namespace GitUI
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeight);
             }
 
             //Hide graph column when there it is disabled OR when a filter is active

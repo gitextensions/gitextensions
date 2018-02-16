@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 FileChanges.FixedRevisionFilter = filter.RevisionFilter;
                 FileChanges.FixedPathFilter = filter.PathFilter;
-                FileChanges.FiltredFileName = FileName;
+                FileChanges.FilteredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             });
