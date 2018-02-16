@@ -41,7 +41,7 @@ namespace TranslationApp
             get => _item.Value;
             set
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TranslatedValue"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TranslatedValue)));
                 if (value != _item.Value)
                 {
                     _item.Value = value;
