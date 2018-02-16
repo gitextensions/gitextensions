@@ -2084,11 +2084,8 @@ namespace GitUI
         {
             if (e.Button != MouseButtons.Left)
                 return;
-            if (DoubleClickRevision != null)
-            {
-                var selectedRevisions = GetSelectedRevisions();
-                DoubleClickRevision(this, new DoubleClickRevisionEventArgs(selectedRevisions.FirstOrDefault()));
-            }
+
+            DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisions().FirstOrDefault()));
 
             if (!DoubleClickDoesNotOpenCommitInfo)
             {
