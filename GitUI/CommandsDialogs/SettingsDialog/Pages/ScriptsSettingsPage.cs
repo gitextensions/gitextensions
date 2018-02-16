@@ -303,6 +303,10 @@ Current Branch:
 
         public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
         {
+            if (b == null)
+            {
+                return null;
+            }
             Bitmap result = new Bitmap(nWidth, nHeight);
             using (Graphics g = Graphics.FromImage((Image)result))
                 g.DrawImage(b, 0, 0, nWidth, nHeight);
