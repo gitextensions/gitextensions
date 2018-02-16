@@ -10,6 +10,7 @@ namespace System
         /// <summary>'\n'</summary>
         private static readonly char[] NewLineSeparator = { '\n' };
 
+        [CanBeNull, Pure]
         public static string SkipStr(this string str, string toSkip)
         {
             if (str == null)
@@ -21,6 +22,7 @@ namespace System
             return null;
         }
 
+        [CanBeNull, Pure]
         public static string TakeUntilStr(this string str, string untilStr)
         {
             if (str == null)
@@ -32,6 +34,7 @@ namespace System
             return str;
         }
 
+        [NotNull, Pure]
         public static string CommonPrefix(this string s, string other)
         {
             if (s.IsNullOrEmpty() || other.IsNullOrEmpty())
@@ -50,12 +53,13 @@ namespace System
             return s;
         }
 
+        [Pure]
         public static bool IsNullOrEmpty(this string s)
         {
             return string.IsNullOrEmpty(s);
         }
 
-
+        [Pure]
         public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())
@@ -68,6 +72,7 @@ namespace System
         /// <summary>
         /// Quotes string if it is not null with the specified <paramref name="quotationMark"/>
         /// </summary>
+        [NotNull, Pure]
         public static string Quote(this string s, string quotationMark = "\"")
         {
             if (s == null)
@@ -81,6 +86,7 @@ namespace System
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
+        [Pure]
         public static string QuoteNE(this string s)
         {
             return s.IsNullOrEmpty() ? s : s.Quote();
@@ -91,6 +97,7 @@ namespace System
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
+        [Pure]
         public static string AddParenthesesNE(this string s)
         {
             return s.IsNullOrEmpty() ? s : "(" + s + ")";
@@ -113,6 +120,7 @@ namespace System
         }
 
         /// <summary>Indicates whether the specified string is neither null, nor empty, nor has only whitespace.</summary>
+        [Pure]
         public static bool IsNotNullOrWhitespace([CanBeNull] this string value)
         {
             return !value.IsNullOrWhiteSpace();
@@ -124,11 +132,13 @@ namespace System
         /// <param name="value"></param>
         /// <param name="starts">array of strings to compare</param>
         /// <returns>true if any starts element matches the beginning of this string; otherwise, false.</returns>
+        [Pure]
         public static bool StartsWithAny([CanBeNull] this string value, string[] starts)
         {
             return value != null && starts.Any(value.StartsWith);
         }
 
+        [Pure]
         public static string RemoveLines(this string value, Func<string, bool> shouldRemoveLine)
         {
             if (value.IsNullOrEmpty())
@@ -148,6 +158,7 @@ namespace System
         }
 
         /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
+        [Pure]
         public static IEnumerable<string> SplitThenTrim(this string value, params string[] separator)
         {
             return value
@@ -156,6 +167,7 @@ namespace System
         }
 
         /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
+        [Pure]
         public static IEnumerable<string> SplitThenTrim(this string value, params char[] separator)
         {
             return value
@@ -164,12 +176,14 @@ namespace System
         }
 
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
+        [Pure]
         public static string[] SplitLines(this string value)
         {
             return value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries; then trim whitespace.</summary>
+        [Pure]
         public static IEnumerable<string> SplitLinesThenTrim(this string value)
         {
             return value.SplitThenTrim(NewLineSeparator);
@@ -177,6 +191,7 @@ namespace System
 
         /// <summary>Gets the text after the last separator.
         /// If NO separator OR ends with separator, returns the original value.</summary>
+        [Pure]
         public static string SubstringAfterLastSafe(this string value, string separator)
         {// ex: "origin/master" -> "master"
             if (value.EndsWith(separator) || !value.Contains(separator))
@@ -185,6 +200,8 @@ namespace System
             }
             return value.Substring(1 + value.LastIndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
         }
+
+        [Pure]
         public static string SubstringAfterFirst(this string value, string separator)
         {
             return value.Substring(1 + value.IndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
@@ -195,6 +212,7 @@ namespace System
         /// If this string is longer than the specified <paramref name="maxLength"/>, it'll be truncated to the length of <paramref name="maxLength"/>-3
         /// and the "..." will be appended to the end of the resulting string.
         /// </summary>
+        [Pure]
         public static string ShortenTo(this string str, int maxLength)
         {
             if (str.IsNullOrEmpty())
@@ -204,19 +222,17 @@ namespace System
                 return str;
             return str.Substring(0, maxLength - 3) + "...";
         }
-
     }
 
     public static class BoolExtensions
     {
-
         /// <summary>
         /// Translates this bool value to the git command line force flag
         /// </summary>
+        [NotNull, Pure]
         public static string AsForce(this bool force)
         {
             return force ? " -f " : string.Empty;
         }
-
     }
 }
