@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ResourceManager.Xliff;
 
 namespace ResourceManager
 {
@@ -7,39 +8,39 @@ namespace ResourceManager
     {
         public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
         {
-            return Xliff.TranslationUtl.GetObjFields(obj, objName);
+            return TranslationUtl.GetObjFields(obj, objName);
         }
 
         public static void AddTranslationItem(string category, object obj, string property, ITranslation translation)
         {
-            Xliff.TranslationUtl.AddTranslationItem(category, obj, property, translation);
+            TranslationUtl.AddTranslationItem(category, obj, property, translation);
         }
 
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (!string.IsNullOrEmpty(category))
-                Xliff.TranslationUtl.AddTranslationItemsFromFields(category, obj, translation);
+                TranslationUtl.AddTranslationItemsFromFields(category, obj, translation);
         }
 
         public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
         {
-            Xliff.TranslationUtl.AddTranslationItemsFromList(category, translation, items);
+            TranslationUtl.AddTranslationItemsFromList(category, translation, items);
         }
 
         public static void TranslateProperty(string category, object obj, string property, ITranslation translation)
         {
-            Xliff.TranslationUtl.TranslateProperty(category, obj, property, translation);
+            TranslationUtl.TranslateProperty(category, obj, property, translation);
         }
 
         public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
         {
-            Xliff.TranslationUtl.TranslateItemsFromList(category, translation, items);
+            TranslationUtl.TranslateItemsFromList(category, translation, items);
         }
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (!string.IsNullOrEmpty(category))
-                Xliff.TranslationUtl.TranslateItemsFromFields(category, obj, translation);
+                TranslationUtl.TranslateItemsFromFields(category, obj, translation);
         }
     }
 }

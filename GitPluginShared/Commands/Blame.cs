@@ -9,11 +9,9 @@ namespace GitPluginShared.Commands
             string[] arguments = null;
 
             if (item.DTE.ActiveDocument.Selection is TextSelection textSelection)
-            {
-                arguments = new string[] {textSelection.CurrentLine.ToString()};
-            }
+                arguments = new[] {textSelection.CurrentLine.ToString()};
 
-            RunGitEx ("blame", fileName, arguments);
+            RunGitEx("blame", fileName, arguments);
         }
 
         protected override CommandTarget SupportedTargets => CommandTarget.File;

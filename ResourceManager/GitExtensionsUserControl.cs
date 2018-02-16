@@ -24,7 +24,7 @@ namespace ResourceManager
             int deviceDpi = DeviceDpi;
 #else
             int deviceDpi;
-            using (Graphics g = this.CreateGraphics())
+            using (Graphics g = CreateGraphics())
             {
                 deviceDpi = (int)g.DpiX;
             }
@@ -78,7 +78,7 @@ namespace ResourceManager
         /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
             translated = true;
         }
 
@@ -115,8 +115,8 @@ namespace ResourceManager
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (HotkeysEnabled && this.Hotkeys != null)
-                foreach (var hotkey in this.Hotkeys)
+            if (HotkeysEnabled && Hotkeys != null)
+                foreach (var hotkey in Hotkeys)
                 {
                     if (hotkey != null && hotkey.KeyData == keyData)
                     {

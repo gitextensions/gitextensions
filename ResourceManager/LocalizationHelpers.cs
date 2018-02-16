@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using GitCommands;
 using JetBrains.Annotations;
+using PatchApply;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager
@@ -9,7 +10,6 @@ namespace ResourceManager
     public static class LocalizationHelpers
     {
         private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
-
 
         private static DateTime RoundDateTime(DateTime dateTime)
         {
@@ -98,7 +98,7 @@ namespace ResourceManager
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
+        public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch patch)
         {
             string text = patch?.Text;
             var status = GitCommandHelpers.GetSubmoduleStatus(text, module, fileName);
@@ -134,8 +134,8 @@ namespace ResourceManager
                 if (oldCommitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var delim = new[] { '\n', '\r' };
+                    var lines = oldCommitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                         sb.AppendLine("\t\t" + curline);
                 }
@@ -160,8 +160,8 @@ namespace ResourceManager
                 if (commitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var delim = new[] { '\n', '\r' };
+                    var lines = commitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                         sb.AppendLine("\t\t" + curline);
                 }

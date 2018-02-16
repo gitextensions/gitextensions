@@ -246,7 +246,7 @@ namespace ResourceManager.Xliff
             "access",
             "SMDiag",
             "System",
-            "vshost",
+            "vshost"
         };
 
         /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
