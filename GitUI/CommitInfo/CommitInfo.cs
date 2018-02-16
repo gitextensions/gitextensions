@@ -72,24 +72,20 @@ namespace GitUI.CommitInfo
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
             string link = _linkFactory.ParseLink(e.LinkText);
-            HandleLink(link, sender);
-        }
 
-        private void HandleLink(string link, object sender)
-        {
             try
             {
-                var result = new Uri(link);
-                if (result.Scheme == "gitext")
+                var uri = new Uri(link);
+                if (uri.Scheme == "gitext")
                 {
-                    CommandClick?.Invoke(sender, new CommandEventArgs(result.Host, result.AbsolutePath.TrimStart('/')));
+                    CommandClick?.Invoke(sender, new CommandEventArgs(uri.Host, uri.AbsolutePath.TrimStart('/')));
                 }
                 else
                 {
                     using (var process = new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = result.AbsoluteUri }
+                        StartInfo = { FileName = uri.AbsoluteUri }
                     })
                     {
                         process.Start();
