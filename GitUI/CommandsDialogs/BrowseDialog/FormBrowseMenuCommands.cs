@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.CommandsDialogs
@@ -31,11 +32,8 @@ namespace GitUI.CommandsDialogs
 
         private static IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
-            var resultList = new List<MenuCommand>();
-
             // no additional MenuCommands that are not defined in the RevisionGrid
-
-            return resultList;
+            return Enumerable.Empty<MenuCommand>();
         }
 
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
