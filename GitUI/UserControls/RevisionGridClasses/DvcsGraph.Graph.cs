@@ -36,7 +36,7 @@ namespace GitUI.RevisionGridClasses
 
             public bool IsFilter
             {
-                get { return isFilter; }
+                get => isFilter;
                 set
                 {
                     isFilter = value;

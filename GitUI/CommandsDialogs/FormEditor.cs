@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
 
         private bool HasChanges
         {
-            get { return _hasChanges; }
+            get => _hasChanges;
             set
             {
                 _hasChanges = value;

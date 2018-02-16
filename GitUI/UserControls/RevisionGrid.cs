@@ -105,7 +105,7 @@ namespace GitUI
         /// </summary>
         private IEnumerable<IGitRef> LatestRefs
         {
-            get { return _LatestRefs; }
+            get => _LatestRefs;
             set
             {
                 _LatestRefs = value;
@@ -235,7 +235,7 @@ namespace GitUI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font NormalFont
         {
-            get { return _normalFont; }
+            get => _normalFont;
             set
             {
                 _normalFont = value;
@@ -307,8 +307,8 @@ namespace GitUI
         [DefaultValue(true)]
         public bool MultiSelect
         {
-            get { return Revisions.MultiSelect; }
-            set { Revisions.MultiSelect = value; }
+            get => Revisions.MultiSelect;
+            set => Revisions.MultiSelect = value;
         }
 
         [Description("Show uncommited changes in revision grid if enabled in settings.")]
@@ -846,14 +846,8 @@ namespace GitUI
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
-            get
-            {
-                return Revisions.RevisionGraphDrawStyle;
-            }
-            set
-            {
-                Revisions.RevisionGraphDrawStyle = value;
-            }
+            get => Revisions.RevisionGraphDrawStyle;
+            set => Revisions.RevisionGraphDrawStyle = value;
         }
 
         public List<GitRevision> GetSelectedRevisions()
@@ -2460,10 +2454,7 @@ namespace GitUI
                 return _AmbiguousRefs;
             }
 
-            set
-            {
-                _AmbiguousRefs = value;
-            }
+            set => _AmbiguousRefs = value;
         }
 
         private string GetRefUnambiguousName(IGitRef gitRef)

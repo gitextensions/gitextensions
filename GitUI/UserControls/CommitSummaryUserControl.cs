@@ -39,10 +39,7 @@ namespace GitUI.UserControls
 
         public GitRevision Revision
         {
-            get
-            {
-                return _revision;
-            }
+            get => _revision;
 
             set
             {

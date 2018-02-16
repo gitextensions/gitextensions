@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _selectedRevision;
         public GitRevision SelectedRevision
         {
-            get { return _selectedRevision; }
+            get => _selectedRevision;
             set
             {
                 _selectedRevision = value;
@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _diffSelectedRevision;
         private GitRevision DiffSelectedRevision
         {
-            get { return _diffSelectedRevision; }
+            get => _diffSelectedRevision;
             set
             {
                 _diffSelectedRevision = value;

@@ -64,20 +64,14 @@ namespace GitUI.Script
         [Browsable(false)]
         public override ContextMenuStrip ContextMenuStrip
         {
-            get
-            {
-                return SplitMenuStrip;
-            }
-            set
-            {
-                SplitMenuStrip = value;
-            }
+            get => SplitMenuStrip;
+            set => SplitMenuStrip = value;
         }
 
         [DefaultValue(null)]
         public ContextMenu SplitMenu
         {
-            get { return m_SplitMenu; }
+            get => m_SplitMenu;
             set
             {
                 //remove the event handlers for the old SplitMenu
@@ -102,10 +96,7 @@ namespace GitUI.Script
         [DefaultValue(null)]
         public ContextMenuStrip SplitMenuStrip
         {
-            get
-            {
-                return m_SplitMenuStrip;
-            }
+            get => m_SplitMenuStrip;
             set
             {
                 //remove the event handlers for the old SplitMenuStrip
@@ -150,10 +141,7 @@ namespace GitUI.Script
 
         private PushButtonState State
         {
-            get
-            {
-                return _state;
-            }
+            get => _state;
             set
             {
                 if (!_state.Equals(value))

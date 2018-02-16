@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private GitStatusMonitorState CurrentStatus
         {
-            get { return _currentStatus; }
+            get => _currentStatus;
             set
             {
                 _currentStatus = value;

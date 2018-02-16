@@ -26,14 +26,14 @@ namespace GitUI.UserControls
         private string _manualSectionAnchorName;
         public string ManualSectionAnchorName
         {
-            get { return _manualSectionAnchorName; }
+            get => _manualSectionAnchorName;
             set { _manualSectionAnchorName = value; if (isLoaded) { UpdateTooltip(); } }
         }
 
         private string _manualSectionSubfolder;
         public string ManualSectionSubfolder
         {
-            get { return _manualSectionSubfolder; }
+            get => _manualSectionSubfolder;
             set { _manualSectionSubfolder = value; if (isLoaded) { UpdateTooltip(); } }
         }
 

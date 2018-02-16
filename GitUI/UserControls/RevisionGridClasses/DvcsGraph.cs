@@ -192,7 +192,7 @@ namespace GitUI.RevisionGridClasses
         [Category("Behavior")]
         public FilterType FilterMode
         {
-            get { return _filterMode; }
+            get => _filterMode;
             set
             {
                 // TODO: We only need to rebuild the graph if switching to or from hide
@@ -752,10 +752,7 @@ namespace GitUI.RevisionGridClasses
                     return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
                 return RevisionGraphDrawStyleEnum.Normal;
             }
-            set
-            {
-                _revisionGraphDrawStyle = value;
-            }
+            set => _revisionGraphDrawStyle = value;
         }
 
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
@@ -1313,7 +1310,7 @@ namespace GitUI.RevisionGridClasses
 
             public bool IsFiltered
             {
-                get { return (DataType & DataType.Filtered) == DataType.Filtered; }
+                get => (DataType & DataType.Filtered) == DataType.Filtered;
                 set
                 {
                     if (value)

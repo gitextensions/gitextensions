@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private HotkeySettings[] _Settings;
         private HotkeySettings[] Settings
         {
-            get { return _Settings; }
+            get => _Settings;
             set
             {
                 _Settings = value;
@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private HotkeySettings _SelectedHotkeySettings;
         private HotkeySettings SelectedHotkeySettings
         {
-            get { return _SelectedHotkeySettings; }
+            get => _SelectedHotkeySettings;
             set
             {
                 _SelectedHotkeySettings = value;
@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private HotkeyCommand _SelectedHotkeyCommand;
         private HotkeyCommand SelectedHotkeyCommand
         {
-            get { return _SelectedHotkeyCommand; }
+            get => _SelectedHotkeyCommand;
             set
             {
                 _SelectedHotkeyCommand = value;

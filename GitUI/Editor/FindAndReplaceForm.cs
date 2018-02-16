@@ -51,7 +51,7 @@ namespace GitUI
 
         private TextEditorControl Editor
         {
-            get { return _editor; }
+            get => _editor;
             set
             {
                 _editor = value;
@@ -62,7 +62,7 @@ namespace GitUI
 
         public bool ReplaceMode
         {
-            get { return txtReplaceWith.Visible; }
+            get => txtReplaceWith.Visible;
             set
             {
                 btnReplace.Visible = btnReplaceAll.Visible = value;
@@ -362,7 +362,7 @@ namespace GitUI
 
         public IDocument Document
         {
-            get { return _document; }
+            get => _document;
             set
             {
                 if (_document != value)

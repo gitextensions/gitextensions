@@ -139,10 +139,7 @@ namespace GitUI
 
         public bool FilterVisible
         {
-            get
-            {
-                return _filterVisible;
-            }
+            get => _filterVisible;
 
             set
             {
@@ -269,10 +266,7 @@ namespace GitUI
 
         public override ContextMenuStrip ContextMenuStrip
         {
-            get
-            {
-                return FileStatusListView.ContextMenuStrip;
-            }
+            get => FileStatusListView.ContextMenuStrip;
             set
             {
                 FileStatusListView.ContextMenuStrip = value;
@@ -285,14 +279,8 @@ namespace GitUI
 
         public override ContextMenu ContextMenu
         {
-            get
-            {
-                return FileStatusListView.ContextMenu;
-            }
-            set
-            {
-                FileStatusListView.ContextMenu = value;
-            }
+            get => FileStatusListView.ContextMenu;
+            set => FileStatusListView.ContextMenu = value;
         }
 
         private Rectangle dragBoxFromMouseDown;
@@ -700,10 +688,7 @@ namespace GitUI
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
         {
-            get
-            {
-                return _itemsDictionary;
-            }
+            get => _itemsDictionary;
             set
             {
                 _itemsDictionary = value;

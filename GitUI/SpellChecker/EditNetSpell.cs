@@ -152,7 +152,7 @@ namespace GitUI.SpellChecker
         [DefaultValue("")]
         public string WatermarkText
         {
-            get { return _WatermarkText; }
+            get => _WatermarkText;
 
             set
             {
@@ -167,14 +167,8 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectionStart
         {
-            get
-            {
-                return TextBox.SelectionStart;
-            }
-            set
-            {
-                TextBox.SelectionStart = value;
-            }
+            get => TextBox.SelectionStart;
+            set => TextBox.SelectionStart = value;
         }
 
         [Category("Appearance")]
@@ -182,15 +176,9 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual int SelectionLength
         {
-            get
-            {
-                return TextBox.SelectionLength;
-            }
+            get => TextBox.SelectionLength;
 
-            set
-            {
-                TextBox.SelectionLength = value;
-            }
+            set => TextBox.SelectionLength = value;
         }
 
         [Category("Appearance")]
@@ -198,14 +186,8 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual string SelectedText
         {
-            get
-            {
-                return TextBox.SelectedText;
-            }
-            set
-            {
-                TextBox.SelectedText = value;
-            }
+            get => TextBox.SelectedText;
+            set => TextBox.SelectedText = value;
         }
 
         protected RepoDistSettings Settings => IsUICommandsInitialized ?

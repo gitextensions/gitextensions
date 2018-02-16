@@ -130,8 +130,8 @@ namespace GitUI.Editor
         [Browsable(false)]
         public new Font Font
         {
-            get { return _internalFileViewer.Font; }
-            set { _internalFileViewer.Font = value; }
+            get => _internalFileViewer.Font;
+            set => _internalFileViewer.Font = value;
         }
 
         [Description("Ignore changes in amount of whitespace. This ignores whitespace at line end, and considers all other sequences of one or more whitespace characters to be equivalent.")]
@@ -150,16 +150,16 @@ namespace GitUI.Editor
         [Category("Behavior")]
         public bool IsReadOnly
         {
-            get { return _internalFileViewer.IsReadOnly; }
-            set { _internalFileViewer.IsReadOnly = value; }
+            get => _internalFileViewer.IsReadOnly;
+            set => _internalFileViewer.IsReadOnly = value;
         }
         [DefaultValue(true)]
         [Description("If true line numbers are shown in the textarea")]
         [Category("Appearance")]
         public bool ShowLineNumbers
         {
-            get { return _internalFileViewer.ShowLineNumbers; }
-            set { _internalFileViewer.ShowLineNumbers = value; }
+            get => _internalFileViewer.ShowLineNumbers;
+            set => _internalFileViewer.ShowLineNumbers = value;
         }
 
         private Encoding _Encoding;
@@ -175,18 +175,15 @@ namespace GitUI.Editor
                 return _Encoding;
             }
 
-            set
-            {
-                _Encoding = value;
-            }
+            set => _Encoding = value;
         }
 
         [DefaultValue(0)]
         [Browsable(false)]
         public int ScrollPos
         {
-            get { return _internalFileViewer.ScrollPos; }
-            set { _internalFileViewer.ScrollPos = value; }
+            get => _internalFileViewer.ScrollPos;
+            set => _internalFileViewer.ScrollPos = value;
         }
 
         [Browsable(false)]

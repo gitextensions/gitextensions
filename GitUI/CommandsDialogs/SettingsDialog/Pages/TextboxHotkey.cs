@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// <summary>Gets or sets the KeyData</summary>
         public Keys KeyData
         {
-            get { return _KeyData; }
+            get => _KeyData;
             set
             {
                 _KeyData = value;

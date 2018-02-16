@@ -24,10 +24,7 @@ namespace GitUI
         private IList<IGitRef> _branchesToSelect;
         public IList<IGitRef> BranchesToSelect
         {
-            get
-            {
-                return _branchesToSelect;
-            }
+            get => _branchesToSelect;
             set
             {
                 _branchesToSelect = value;

@@ -50,10 +50,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public bool IsRefreshWorkingCopyOnSave
         {
-            get
-            {
-                return _isRefreshWorkingCopyOnSave;
-            }
+            get => _isRefreshWorkingCopyOnSave;
             set
             {
                 _isRefreshWorkingCopyOnSave = value;
@@ -71,10 +68,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public bool IsSparseCheckoutEnabled
         {
-            get
-            {
-                return _isSparseCheckoutEnabled;
-            }
+            get => _isSparseCheckoutEnabled;
             set
             {
                 if(value == _isSparseCheckoutEnabled)
@@ -90,10 +84,7 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         public string RulesText
         {
-            get
-            {
-                return _sRulesText;
-            }
+            get => _sRulesText;
             set
             {
                 if(_sRulesText == value)

@@ -39,7 +39,7 @@ namespace GitUI.Help
 
         public bool IsExpanded
         {
-            get { return _isExpanded; }
+            get => _isExpanded;
             set
             {
                 _isExpanded = value;
@@ -92,7 +92,7 @@ namespace GitUI.Help
 
         public Image Image1
         {
-            get { return _image1; }
+            get => _image1;
             set
             {
                 _image1 = value;
@@ -104,7 +104,7 @@ namespace GitUI.Help
 
         public Image Image2
         {
-            get { return _image2; }
+            get => _image2;
             set
             {
                 _image2 = value;
@@ -119,7 +119,7 @@ namespace GitUI.Help
         /// </summary>
         public bool IsOnHoverShowImage2
         {
-            get { return _showImage2OnHover; }
+            get => _showImage2OnHover;
             set
             {
                 _showImage2OnHover = value;
@@ -134,7 +134,9 @@ namespace GitUI.Help
         /// <summary>
         /// only shown when IsOnHoverShowImage2 is true
         /// </summary>
-        public string IsOnHoverShowImage2NoticeText { get { return labelHoverText.Text; } set { labelHoverText.Text = value; } }
+        public string IsOnHoverShowImage2NoticeText { get => labelHoverText.Text;
+            set => labelHoverText.Text = value;
+        }
 
         private bool _isHover;
         private bool _showImage2OnHover;

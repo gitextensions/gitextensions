@@ -83,7 +83,7 @@ namespace GitUI.CommandsDialogs
 
         private CheckState CheckedState
         {
-            get { return checkedState; }
+            get => checkedState;
             set
             {
                 if (value == checkedState)

@@ -18,7 +18,7 @@ namespace GitUI
         private bool _active;
         public static bool Active
         {
-            get { return instance._active; }
+            get => instance._active;
             set
             {
                 if (instance._active != value)
