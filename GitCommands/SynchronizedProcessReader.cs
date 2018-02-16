@@ -1,30 +1,34 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace GitCommands
 {
     public class SynchronizedProcessReader
     {
-        public Process Process { get; }
+        public Process Process { get; private set; }
         public byte[] Output { get; private set; }
         public byte[] Error { get; private set; }
 
-        private readonly Task stdOutReadTask;
-        private readonly Task stdErrReadTask;
+        private readonly Thread stdOutputLoaderThread;
+        private readonly Thread stdErrLoaderThread;
 
-        public SynchronizedProcessReader(Process process)
+        public SynchronizedProcessReader(Process aProcess)
         {
-            Process = process;
-            stdOutReadTask = Task.Run(async () => Output = await process.StandardOutput.BaseStream.ReadToEndAsync());
-            stdErrReadTask = Task.Run(async () => Error = await process.StandardError.BaseStream.ReadToEndAsync());
+            Process = aProcess;
+            stdOutputLoaderThread = new Thread(_ => Output = ReadByte(Process.StandardOutput.BaseStream));
+            stdOutputLoaderThread.Start();
+            stdErrLoaderThread = new Thread(_ => Error = ReadByte(Process.StandardError.BaseStream));
+            stdErrLoaderThread.Start();
         }
 
         public void WaitForExit()
         {
-            stdOutReadTask.Wait();
-            stdErrReadTask.Wait();
+            stdOutputLoaderThread.Join();
+            stdErrLoaderThread.Join();
             Process.WaitForExit();
         }
 
@@ -39,47 +43,44 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Reads string data written by <paramref name="process"/> to both <see cref="System.Diagnostics.Process.StandardOutput"/>
-        /// and <see cref="System.Diagnostics.Process.StandardError"/>.
+        /// This function reads the output to a string. This function can be dangerous, because it returns a string
+        /// and needs to know the correct encoding. This function should be avoided!
         /// </summary>
-        /// <remarks>
-        /// This method uses the <see cref="Encoding"/> specified in the <see cref="ProcessStartInfo"/> used
-        /// to create <paramref name="process"/>.
-        /// <para />
-        /// If raw byte streams are required, use <see cref="ReadBytes"/> instead.
-        /// </remarks>
         public static void Read(Process process, out string stdOutput, out string stdError)
         {
-            var stdOutTask = Task.Run(async () => await process.StandardOutput.ReadToEndAsync());
-            var stdErrTask = Task.Run(async () => await process.StandardError.ReadToEndAsync());
+            string stdOutputLoader = null;
 
-            stdOutput = stdOutTask.GetAwaiter().GetResult();
-            stdError = stdErrTask.GetAwaiter().GetResult();
+            Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = process.StandardOutput.ReadToEnd());
+            stdOutputLoaderThread.Start();
+
+            stdError = process.StandardError.ReadToEnd();
+
+            stdOutputLoaderThread.Join();
+
+            stdOutput = stdOutputLoader;
         }
 
         /// <summary>
-        /// Reads bytes written by <paramref name="process"/> to both <see cref="System.Diagnostics.Process.StandardOutput"/>
-        /// and <see cref="System.Diagnostics.Process.StandardError"/>.
+        /// This function reads the output to a byte[]. This function is used because it doesn't need to know the
+        /// correct encoding.
         /// </summary>
-        /// <remarks>
-        /// As this method returns byte data, it may later be interpreted using whatever <see cref="Encoding"/>
-        /// is required.
-        /// <para />
-        /// To use the process's default encoding, use <see cref="Read"/> instead.
-        /// </remarks>
         public static void ReadBytes(Process process, out byte[] stdOutput, out byte[] stdError)
         {
-            var stdOutTask = Task.Run(async () => await process.StandardOutput.BaseStream.ReadToEndAsync());
-            var stdErrTask = Task.Run(async () => await process.StandardError.BaseStream.ReadToEndAsync());
+            byte[] stdOutputLoader = null;
 
-            stdOutput = stdOutTask.GetAwaiter().GetResult();
-            stdError = stdErrTask.GetAwaiter().GetResult();
+            //We cannot use the async functions because these functions will read the output to a string, this
+            //can cause problems because the correct encoding is not used.
+            Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
+            stdOutputLoaderThread.Start();
+
+            stdError = ReadByte(process.StandardError.BaseStream);
+
+            stdOutputLoaderThread.Join();
+
+            stdOutput = stdOutputLoader;
         }
-    }
 
-    internal static class StreamExtensions
-    {
-        public static async Task<byte[]> ReadToEndAsync(this Stream stream)
+        private static byte[] ReadByte(Stream stream)
         {
             if (!stream.CanRead)
             {
@@ -88,7 +89,7 @@ namespace GitCommands
 
             using (MemoryStream memStream = new MemoryStream())
             {
-                await stream.CopyToAsync(memStream);
+                stream.CopyTo(memStream);
                 return memStream.ToArray();
             }
         }
