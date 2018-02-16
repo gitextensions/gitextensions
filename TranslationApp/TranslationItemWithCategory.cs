@@ -22,20 +22,30 @@ namespace TranslationApp
         public string Category { get; set; }
 
         private readonly TranslationItem _item;
+
         public TranslationItem GetTranslationItem()
         {
             return _item;
         }
 
-        public string Name { get => _item.Name;
+        public string Name
+        {
+            get => _item.Name;
             set => _item.Name = value;
         }
-        public string Property { get => _item.Property;
+
+        public string Property
+        {
+            get => _item.Property;
             set => _item.Property = value;
         }
-        public string NeutralValue { get => _item.Source;
+
+        public string NeutralValue
+        {
+            get => _item.Source;
             set => _item.Source = value;
         }
+
         public string TranslatedValue
         {
             get => _item.Value;
@@ -43,9 +53,7 @@ namespace TranslationApp
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TranslatedValue)));
                 if (value != _item.Value)
-                {
                     _item.Value = value;
-                }
             }
         }
 
@@ -63,10 +71,7 @@ namespace TranslationApp
 
         private string DebuggerDisplay => string.Format("\"{0}\" - \"{1}\"", Category, NeutralValue);
 
-        object ICloneable.Clone()
-        {
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
         public TranslationItemWithCategory Clone()
         {
