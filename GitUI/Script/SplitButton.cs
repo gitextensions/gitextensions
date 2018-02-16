@@ -346,7 +346,7 @@ namespace GitUI.Script
                 backgroundBounds.Inflate(-1, -1);
                 ButtonRenderer.DrawButton(g, backgroundBounds, State);
 
-                // button renderer doesnt draw the black frame when themes are off
+                // button renderer doesn't draw the black frame when themes are off
                 g.DrawRectangle(SystemPens.WindowFrame, 0, 0, bounds.Width - 1, bounds.Height - 1);
             }
             else
@@ -393,7 +393,7 @@ namespace GitUI.Script
             PaintArrow(g, dropDownRectangle);
 
             //paint the image and text in the "button" part of the splitButton
-            PaintTextandImage(g, new Rectangle(0, 0, ClientRectangle.Width - SplitSectionWidth, ClientRectangle.Height));
+            PaintTextAndImage(g, new Rectangle(0, 0, ClientRectangle.Width - SplitSectionWidth, ClientRectangle.Height));
 
             // draw the focus rectangle.
             if (State != PushButtonState.Pressed && Focused && ShowFocusCues)
@@ -402,7 +402,7 @@ namespace GitUI.Script
             }
         }
 
-        private void PaintTextandImage(Graphics g, Rectangle bounds)
+        private void PaintTextAndImage(Graphics g, Rectangle bounds)
         {
             // Figure out where our text and image should go
 
@@ -417,7 +417,7 @@ namespace GitUI.Script
                     ControlPaint.DrawImageDisabled(g, Image, image_rectangle.X, image_rectangle.Y, BackColor);
             }
 
-            // If we dont' use mnemonic, set formatFlag to NoPrefix as this will show ampersand.
+            // If we don't use mnemonic, set formatFlag to NoPrefix as this will show ampersand.
             if (!UseMnemonic)
                 textFormatFlags = textFormatFlags | TextFormatFlags.NoPrefix;
             else if (!ShowKeyboardCues)
