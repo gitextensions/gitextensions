@@ -15,7 +15,7 @@ namespace GitUI.Script
     /// <summary>Runs scripts.</summary>
     public static class ScriptRunner
     {
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
         /// and returns true if any executed.</summary>
         public static bool ExecuteScriptCommand(IWin32Window owner, GitModule aModule, int command, RevisionGrid revisionGrid = null)
         {
@@ -428,45 +428,37 @@ namespace GitUI.Script
             return currentRevision;
         }
 
-        private static string[] Options
-        {
-            get
-            {
-                string[] options =
-                    {
-                        "{sHashes}",
-                        "{sTag}",
-                        "{sBranch}",
-                        "{sLocalBranch}",
-                        "{sRemoteBranch}",
-                        "{sRemote}",
-                        "{sRemoteUrl}",
-                        "{sRemotePathFromUrl}",
-                        "{sHash}",
-                        "{sMessage}",
-                        "{sAuthor}",
-                        "{sCommitter}",
-                        "{sAuthorDate}",
-                        "{sCommitDate}",
-                        "{cTag}",
-                        "{cBranch}",
-                        "{cLocalBranch}",
-                        "{cRemoteBranch}",
-                        "{cHash}",
-                        "{cMessage}",
-                        "{cAuthor}",
-                        "{cCommitter}",
-                        "{cAuthorDate}",
-                        "{cCommitDate}",
-                        "{cDefaultRemote}",
-                        "{cDefaultRemoteUrl}",
-                        "{cDefaultRemotePathFromUrl}",
-                        "{UserInput}",
-                        "{WorkingDir}"
-                    };
-                return options;
-            }
-        }
+        private static readonly string[] Options = {
+            "{sHashes}",
+            "{sTag}",
+            "{sBranch}",
+            "{sLocalBranch}",
+            "{sRemoteBranch}",
+            "{sRemote}",
+            "{sRemoteUrl}",
+            "{sRemotePathFromUrl}",
+            "{sHash}",
+            "{sMessage}",
+            "{sAuthor}",
+            "{sCommitter}",
+            "{sAuthorDate}",
+            "{sCommitDate}",
+            "{cTag}",
+            "{cBranch}",
+            "{cLocalBranch}",
+            "{cRemoteBranch}",
+            "{cHash}",
+            "{cMessage}",
+            "{cAuthor}",
+            "{cCommitter}",
+            "{cAuthorDate}",
+            "{cCommitDate}",
+            "{cDefaultRemote}",
+            "{cDefaultRemoteUrl}",
+            "{cDefaultRemotePathFromUrl}",
+            "{UserInput}",
+            "{WorkingDir}"
+        };
 
         private static readonly string PluginPrefix = "plugin:";
 
