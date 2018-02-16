@@ -50,9 +50,13 @@ namespace GitUI
                         {
                             void GetEx(Exception arg)
                             {
-                                exInfo += arg.Message + "\r\n";
-                                if (arg.InnerException != null)
-                                    GetEx(arg.InnerException);
+                                while (true)
+                                {
+                                    exInfo += arg.Message + "\r\n";
+                                    if (arg.InnerException == null)
+                                        break;
+                                    arg = arg.InnerException;
+                                }
                             }
 
                             GetEx(ex);
