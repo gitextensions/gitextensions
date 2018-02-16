@@ -125,10 +125,6 @@ namespace GitUI.CommitInfo
             set => SetRevisionWithChildren(value, null);
         }
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Browsable(false)]
-        public string RevisionGuid => _revision.Guid;
-
         private void ReloadCommitInfo()
         {
             _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(BackColor);
