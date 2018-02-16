@@ -1940,14 +1940,14 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        enum ArrowType
+        private enum ArrowType
         {
             None,
             Filled,
             NotFilled
         }
 
-        static readonly float[] dashPattern = { 4, 4 };
+        private static readonly float[] dashPattern = { 4, 4 };
 
         private static float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
@@ -2855,7 +2855,7 @@ namespace GitUI
 
         #region Drag/drop patch files on revision grid
 
-        void Revisions_DragDrop(object sender, DragEventArgs e)
+        private void Revisions_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
@@ -2879,7 +2879,7 @@ namespace GitUI
             }
         }
 
-        static void Revisions_DragEnter(object sender, DragEventArgs e)
+        private static void Revisions_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
