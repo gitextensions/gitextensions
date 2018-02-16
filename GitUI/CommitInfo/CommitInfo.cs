@@ -23,19 +23,37 @@ namespace GitUI.CommitInfo
 {
     public partial class CommitInfo : GitModuleControl
     {
+        private const int MaximumDisplayedRefs = 20;
+
+        public event EventHandler<CommandEventArgs> CommandClick;
+
         private readonly TranslationString containedInBranches = new TranslationString("Contained in branches:");
         private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
         private readonly TranslationString containedInTags = new TranslationString("Contained in tags:");
         private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
         private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
-        private const int MaximumDisplayedRefs = 20;
-
         private readonly ILinkFactory _linkFactory = new LinkFactory();
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
+
+        private GitRevision _revision;
+        private List<string> _children;
+        private string _revisionInfo;
+        private string _linksInfo;
+        private IDictionary<string, string> _annotatedTagsMessages;
+        private string _annotatedTagsInfo;
+        private List<string> _tags;
+        private string _tagInfo;
+        private List<string> _branches;
+        private string _branchInfo;
+        private IList<string> _sortedRefs;
+        private Rectangle _headerResize; // Cache desired size for commit header
+
+        [DefaultValue(false)]
+        public bool ShowBranchesAsLinks { get; set; }
 
         public CommitInfo()
         {
@@ -63,11 +81,6 @@ namespace GitUI.CommitInfo
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Commands.AddNotes).ToShortcutKeyDisplayString();
         }
-
-        [DefaultValue(false)]
-        public bool ShowBranchesAsLinks { get; set; }
-
-        public event EventHandler<CommandEventArgs> CommandClick;
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
@@ -97,8 +110,6 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private GitRevision _revision;
-        private List<string> _children;
         public void SetRevisionWithChildren(GitRevision revision, List<string> children)
         {
             _revision = revision;
@@ -117,17 +128,6 @@ namespace GitUI.CommitInfo
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public string RevisionGuid => _revision.Guid;
-
-        private string _revisionInfo;
-        private string _linksInfo;
-        private IDictionary<string, string> _annotatedTagsMessages;
-        private string _annotatedTagsInfo;
-        private List<string> _tags;
-        private string _tagInfo;
-        private List<string> _branches;
-        private string _branchInfo;
-        private IList<string> _sortedRefs;
-        private Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
