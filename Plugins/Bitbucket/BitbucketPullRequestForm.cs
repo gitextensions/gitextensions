@@ -273,7 +273,7 @@ namespace Bitbucket
         }
         private void PullRequestChanged(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var curItem = (PullRequest)lbxPullRequests.SelectedItem;
 
             txtPRTitle.Text = curItem.Title;
             txtPRDescription.Text = curItem.Description;
@@ -345,7 +345,7 @@ namespace Bitbucket
         {
             try
             {
-                var link = (sender as LinkLabel).Text;
+                var link = ((LinkLabel)sender).Text;
                 if (e.Button == MouseButtons.Right)
                 {
                     //Just copy the text
