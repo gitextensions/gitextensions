@@ -66,17 +66,9 @@ namespace System
         }
 
         /// <summary>
-        /// Quotes string if it is not null
+        /// Quotes string if it is not null with the specified <paramref name="quotationMark"/>
         /// </summary>
-        public static string Quote(this string s)
-        {
-            return s.Quote("\"");
-        }
-
-        /// <summary>
-        /// Quotes this string with the specified <paramref name="quotationMark"/>
-        /// </summary>
-        public static string Quote(this string s, string quotationMark)
+        public static string Quote(this string s, string quotationMark = "\"")
         {
             if (s == null)
                 return string.Empty;
@@ -91,7 +83,7 @@ namespace System
         /// <returns></returns>
         public static string QuoteNE(this string s)
         {
-            return s.IsNullOrEmpty() ? s : s.Quote("\"");
+            return s.IsNullOrEmpty() ? s : s.Quote();
         }
 
         /// <summary>
