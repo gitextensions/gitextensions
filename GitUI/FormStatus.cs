@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using GitCommands;
@@ -82,32 +81,34 @@ namespace GitUI
         public void SetProgress(string text)
         {
             // This has to happen on the UI thread
-            SendOrPostCallback method = o =>
+            void Method()
+            {
+                int index = text.LastIndexOf('%');
+                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                 {
-                    int index = text.LastIndexOf('%');
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
-                    {
-                        if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                            ProgressBar.Style = ProgressBarStyle.Blocks;
-                        ProgressBar.Value = Math.Min(100, progressValue);
+                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
+                        ProgressBar.Style = ProgressBarStyle.Blocks;
+                    ProgressBar.Value = Math.Min(100, progressValue);
 
-                        if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                    if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                    {
+                        try
                         {
-                            try
-                            {
-                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                            }
-                            catch (InvalidOperationException)
-                            {
-                            }
+                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        }
+                        catch (InvalidOperationException)
+                        {
                         }
                     }
-                    // Show last progress message in the title, unless it's showing in the control body already
-                    if(!ConsoleOutput.IsDisplayingFullProcessOutput)
-                      Text = text;
-                };
-            BeginInvoke(method, this);
+                }
+
+                // Show last progress message in the title, unless it's showing in the control body already
+                if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    Text = text;
+            }
+
+            BeginInvoke((Action)Method);
         }
 
         /// <summary>
