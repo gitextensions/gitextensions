@@ -506,21 +506,24 @@ namespace GitUI.CommandsDialogs
 
         private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool DoAsync)
         {
-            Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
-                    !showIgnoredFilesToolStripMenuItem.Checked,
+            IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus() =>
+                Module.GetAllChangedFilesWithSubmodulesStatus(!showIgnoredFilesToolStripMenuItem.Checked,
                     !showAssumeUnchangedFilesToolStripMenuItem.Checked,
                     !showSkipWorktreeFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
+                    showUntrackedFilesToolStripMenuItem.Checked
+                        ? UntrackedFilesMode.Default
+                        : UntrackedFilesMode.No);
 
             if (DoAsync)
-                _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
+            {
+                _unstagedLoader.Load(GetAllChangedFilesWithSubmodulesStatus, onComputed);
+            }
             else
             {
                 _unstagedLoader.Cancel();
-                onComputed(getAllChangedFilesWithSubmodulesStatus());
+                onComputed(GetAllChangedFilesWithSubmodulesStatus());
             }
         }
-
 
         public void ShowDialogWhenChanges(IWin32Window owner)
         {
@@ -591,25 +594,26 @@ namespace GitUI.CommandsDialogs
             int selectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
             int scrollPosition = SelectedDiff.ScrollPos;
             string selectedFileName = _currentItem.Name;
-            Action stageAreaLoaded = null;
-            stageAreaLoaded = () =>
-            {
-                EventHandler textLoaded = null;
-                textLoaded = (a, b) =>
-                    {
-                        if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
-                        {
-                            SelectedDiff.GoToLine(selectedDifflineToSelect);
-                            SelectedDiff.ScrollPos = scrollPosition;
-                        }
-                        SelectedDiff.TextLoaded -= textLoaded;
-                        _selectedDiffReloaded = true;
-                    };
-                SelectedDiff.TextLoaded += textLoaded;
-                OnStageAreaLoaded -= stageAreaLoaded;
-            };
 
-            OnStageAreaLoaded += stageAreaLoaded;
+            void StageAreaLoaded()
+            {
+                void TextLoaded(object a, EventArgs b)
+                {
+                    if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
+                    {
+                        SelectedDiff.GoToLine(selectedDifflineToSelect);
+                        SelectedDiff.ScrollPos = scrollPosition;
+                    }
+
+                    SelectedDiff.TextLoaded -= TextLoaded;
+                    _selectedDiffReloaded = true;
+                }
+
+                SelectedDiff.TextLoaded += TextLoaded;
+                OnStageAreaLoaded -= StageAreaLoaded;
+            }
+
+            OnStageAreaLoaded += StageAreaLoaded;
         }
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1147,17 +1151,16 @@ namespace GitUI.CommandsDialogs
             if (_currentFilesList != null)
                 lastSelection = _currentSelection;
 
-            Action stageAreaLoaded = null;
-            stageAreaLoaded = () =>
+            void StageAreaLoaded()
             {
                 _currentFilesList = Unstaged;
                 RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                 Unstaged.Focus();
 
-                OnStageAreaLoaded -= stageAreaLoaded;
-            };
+                OnStageAreaLoaded -= StageAreaLoaded;
+            }
 
-            OnStageAreaLoaded += stageAreaLoaded;
+            OnStageAreaLoaded += StageAreaLoaded;
 
             if (IsMergeCommit)
             {
@@ -1168,6 +1171,7 @@ namespace GitUI.CommandsDialogs
             {
                 Module.ResetMixed("HEAD");
             }
+
             Initialize();
         }
 
@@ -1454,16 +1458,15 @@ namespace GitUI.CommandsDialogs
                 bool wereErrors = false;
                 if (AppSettings.ShowErrorsWhenStagingFiles)
                 {
-                    FormStatus.ProcessStart processStart =
-                        form =>
-                        {
-                            form.AppendMessageCrossThread(string.Format(_stageFiles.Text + "\n",
-                                                         files.Count));
-                            var output = Module.StageFiles(files, out wereErrors);
-                            form.AppendMessageCrossThread(output);
-                            form.Done(string.IsNullOrEmpty(output));
-                        };
-                    using (var process = new FormStatus(processStart, null) { Text = _stageDetails.Text })
+                    void ProcessStart(FormStatus form)
+                    {
+                        form.AppendMessageCrossThread(string.Format(_stageFiles.Text + "\n", files.Count));
+                        var output = Module.StageFiles(files, out wereErrors);
+                        form.AppendMessageCrossThread(output);
+                        form.Done(string.IsNullOrEmpty(output));
+                    }
+
+                    using (var process = new FormStatus(ProcessStart, null) { Text = _stageDetails.Text })
                         process.ShowDialogOnError(this);
                 }
                 else

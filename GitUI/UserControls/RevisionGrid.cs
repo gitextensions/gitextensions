@@ -2098,12 +2098,8 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Any(rev => !GitRevision.IsArtificial(rev.Guid)))
             {
-                Func<Form> provideForm = () =>
-                {
-                    return new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
-                };
-
-                UICommands.ShowModelessForm(this, false, null, null, provideForm);
+                Form ProvideForm() => new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                UICommands.ShowModelessForm(this, false, null, null, ProvideForm);
             }
             else if (!selectedRevisions.Any())
             {

@@ -450,21 +450,19 @@ namespace GitUI.CommandsDialogs
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = name =>
+            IList<GitItemStatus> FindDiffFilesMatches(string name)
             {
-
                 string nameAsLower = name.ToLower();
 
-                return candidates.Where(item =>
-                {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                }
-                    ).ToList();
-            };
+                return candidates
+                    .Where(item => item.Name != null &&
+                                   item.Name.ToLower().Contains(nameAsLower) ||
+                                   item.OldName != null &&
+                                   item.OldName.ToLower().Contains(nameAsLower))
+                    .ToList();
+            }
 
             GitItemStatus selectedItem;
             using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
@@ -837,7 +835,7 @@ namespace GitUI.CommandsDialogs
             }
             RefreshArtificial();
         }
-        
+
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var unStagedFiles = DiffFiles.SelectedItems.ToList();

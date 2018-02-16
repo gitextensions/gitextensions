@@ -49,9 +49,14 @@ namespace GitUI
                         }
                         else
                         {
-                            Action<Exception> getEx = null;
-                            getEx = arg => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
-                            getEx(ex);
+                            void GetEx(Exception arg)
+                            {
+                                exInfo += arg.Message + "\r\n";
+                                if (arg.InnerException != null)
+                                    GetEx(arg.InnerException);
+                            }
+
+                            GetEx(ex);
                         }
 
                         MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));

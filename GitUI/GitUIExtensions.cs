@@ -166,14 +166,14 @@ namespace GitUI
 
         public static void InvokeAsync(this Control control, SendOrPostCallback action, object state)
         {
-            SendOrPostCallback checkDisposedAndInvoke = s =>
+            void CheckDisposedAndInvoke(object s)
             {
                 if (!control.IsDisposed)
                     action(s);
-            };
+            }
 
             if (!control.IsDisposed)
-                UISynchronizationContext.Post(checkDisposedAndInvoke, state);
+                UISynchronizationContext.Post(CheckDisposedAndInvoke, state);
         }
 
         public static void InvokeSync(this Control control, Action action)
@@ -183,7 +183,7 @@ namespace GitUI
 
         public static void InvokeSync(this Control control, SendOrPostCallback action, object state)
         {
-            SendOrPostCallback checkDisposedAndInvoke = s =>
+            void CheckDisposedAndInvoke(object s)
             {
                 if (!control.IsDisposed)
                 {
@@ -197,10 +197,10 @@ namespace GitUI
                         throw;
                     }
                 }
-            };
+            }
 
             if (!control.IsDisposed)
-                UISynchronizationContext.Send(checkDisposedAndInvoke, state);
+                UISynchronizationContext.Send(CheckDisposedAndInvoke, state);
         }
 
         public static Control FindFocusedControl(this ContainerControl container)
@@ -212,6 +212,5 @@ namespace GitUI
                 return control;
             return container.FindFocusedControl();
         }
-
     }
 }
