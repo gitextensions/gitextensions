@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
         public static readonly string SettingCoreSparseCheckout = "core.sparseCheckout";
 
         [NotNull]
-        private readonly GitUICommands _gitcommands;
+        private readonly GitUICommands _gitCommands;
 
         private bool _isRefreshWorkingCopyOnSave = true /* on by default, otherwise index bitmap won't be updated */;
 
@@ -37,9 +37,9 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         private string _sRulesTextAsOnDisk;
 
-        public FormSparseWorkingCopyViewModel([NotNull] GitUICommands gitcommands)
+        public FormSparseWorkingCopyViewModel([NotNull] GitUICommands gitCommands)
         {
-            _gitcommands = gitcommands ?? throw new ArgumentNullException(nameof(gitcommands));
+            _gitCommands = gitCommands ?? throw new ArgumentNullException(nameof(gitCommands));
             _isSparseCheckoutEnabled = _isSparseCheckoutEnabledAsSaved = GetCurrentSparseEnabledState();
         }
 
@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public bool GetCurrentSparseEnabledState()
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(_gitcommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), bool.TrueString);
+            return StringComparer.OrdinalIgnoreCase.Equals(_gitCommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), bool.TrueString);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs
         [NotNull]
         public FileInfo GetPathToSparseCheckoutFile()
         {
-            return new FileInfo(Path.Combine(_gitcommands.GitModule.ResolveGitInternalPath("info"), "sparse-checkout"));
+            return new FileInfo(Path.Combine(_gitCommands.GitModule.ResolveGitInternalPath("info"), "sparse-checkout"));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
         {
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
-            using(var fromProcess = new FormRemoteProcess(_gitcommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
+            using(var fromProcess = new FormRemoteProcess(_gitCommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
                 fromProcess.ShowDialog(Form.ActiveForm);
         }
 
@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
             // Enabled state for the repo
             if(IsSparseCheckoutEnabled != _isSparseCheckoutEnabledAsSaved)
             {
-                _gitcommands.Module.SetSetting(SettingCoreSparseCheckout, IsSparseCheckoutEnabled.ToString().ToLowerInvariant());
+                _gitCommands.Module.SetSetting(SettingCoreSparseCheckout, IsSparseCheckoutEnabled.ToString().ToLowerInvariant());
                 _isSparseCheckoutEnabledAsSaved = IsSparseCheckoutEnabled;
             }
 
@@ -180,7 +180,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Fires for the view to show a confirmation msgbox on the matter.
         /// </summary>
-        public event EventHandler<ComfirmAdjustingRulesOnDeactEventArgs> ComfirmAdjustingRulesOnDeactRequested = delegate { };
+        public event EventHandler<ConfirmAdjustingRulesOnDeactEventArgs> ComfirmAdjustingRulesOnDeactRequested = delegate { };
 
         /// <summary>
         /// Fires on any prop change. Lightweight reactive.
@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs
                 return; // Rules OK for turning off
 
             // Confirm
-            var args = new ComfirmAdjustingRulesOnDeactEventArgs(!rulelines.Any());
+            var args = new ConfirmAdjustingRulesOnDeactEventArgs(!rulelines.Any());
             ComfirmAdjustingRulesOnDeactRequested(this, args);
             if(args.Cancel)
                 return;
@@ -214,9 +214,9 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// For <see cref="ComfirmAdjustingRulesOnDeactRequested" />.
         /// </summary>
-        public class ComfirmAdjustingRulesOnDeactEventArgs : CancelEventArgs
+        public class ConfirmAdjustingRulesOnDeactEventArgs : CancelEventArgs
         {
-            public ComfirmAdjustingRulesOnDeactEventArgs(bool isCurrentRuleSetEmpty)
+            public ConfirmAdjustingRulesOnDeactEventArgs(bool isCurrentRuleSetEmpty)
             {
                 IsCurrentRuleSetEmpty = isCurrentRuleSetEmpty;
             }
