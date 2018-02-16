@@ -424,7 +424,12 @@ namespace GitImpact
 
         private static int GenerateIntFromString(string text)
         {
-            return text.Sum(c => (int) c);
+            var j = 0;
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < text.Length; i++)
+                j = unchecked(j + text[i]);
+            return j;
         }
 
         /// <summary>
