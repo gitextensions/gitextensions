@@ -473,12 +473,9 @@ namespace GitUI.CommitInfo
 
                 if ((branchIsLocal && allowLocal) || (!branchIsLocal && allowRemote))
                 {
-                    string branchText;
-                    if (showBranchesAsLinks)
-                        branchText = _linkFactory.CreateBranchLink(noPrefixBranch);
-                    else
-                        branchText = WebUtility.HtmlEncode(noPrefixBranch);
-                    links.Add(branchText);
+                    links.Add(showBranchesAsLinks
+                        ? _linkFactory.CreateBranchLink(noPrefixBranch)
+                        : WebUtility.HtmlEncode(noPrefixBranch));
                 }
 
                 if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
