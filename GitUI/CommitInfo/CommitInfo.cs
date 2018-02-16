@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
@@ -380,14 +381,12 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            string body = _revisionInfo;
+            var body = new StringBuilder(_revisionInfo);
             if (Revision != null && !Revision.IsArtificial())
-            {
-                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo;
-            }
+                body.AppendLine().Append(_annotatedTagsInfo).Append(_linksInfo).Append(_branchInfo).Append(_tagInfo);
 
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(body);
+            RevisionInfo.SetXHTMLText(body.ToString());
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);
@@ -397,18 +396,15 @@ namespace GitUI.CommitInfo
             IEnumerable<string> tagNames,
             IDictionary<string, string> annotatedTagsMessages)
         {
-            string result = string.Empty;
+            var result = new StringBuilder(Environment.NewLine);
 
             foreach (string tag in tagNames)
             {
                 if (annotatedTagsMessages.TryGetValue(tag, out var annotatedContents))
-                    result += "<u>" + tag + "</u>: " + annotatedContents + Environment.NewLine;
+                    result.Append("<u>").Append(tag).Append("</u>: ").AppendLine(annotatedContents);
             }
 
-            if (result.IsNullOrEmpty())
-                return string.Empty;
-
-            return Environment.NewLine + result;
+            return result.Length > 2 ? result.ToString() : string.Empty;
         }
 
         private void ResetTextAndImage()
