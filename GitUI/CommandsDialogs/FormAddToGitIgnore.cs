@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -43,10 +42,8 @@ namespace GitUI.CommandsDialogs
                 {
                     return _fullPathResolver.Resolve(".gitignore");
                 }
-                else
-                {
-                    return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
-                }
+
+                return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
             }
         }
 

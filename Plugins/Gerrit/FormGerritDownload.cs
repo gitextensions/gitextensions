@@ -66,7 +66,7 @@ namespace Gerrit
 
             var reviewInfo = LoadReviewInfo();
 
-            if (reviewInfo == null || reviewInfo["id"] == null)
+            if (reviewInfo?["id"] == null)
             {
                 MessageBox.Show(owner, _cannotGetChangeDetails.Text);
                 return false;
@@ -142,7 +142,7 @@ namespace Gerrit
             return !command.ErrorOccurred;
         }
 
-        private string FetchCommand(string remote, string remoteBranch)
+        private static string FetchCommand(string remote, string remoteBranch)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -150,9 +150,8 @@ namespace Gerrit
 
             remote = FixPath(remote);
 
-            //Remove spaces... 
-            if (remoteBranch != null)
-                remoteBranch = remoteBranch.Replace(" ", "");
+            //Remove spaces...
+            remoteBranch = remoteBranch?.Replace(" ", "");
 
             return "fetch " + progressOption + "\"" + remote.Trim() + "\" " + remoteBranch;
         }
@@ -175,7 +174,7 @@ namespace Gerrit
             string change = GerritUtil.RunGerritCommand(
                 this,
                 Module,
-                String.Format(
+                string.Format(
                     "gerrit query --format=JSON project:{0} --current-patch-set change:{1}",
                     projectName,
                     _NO_TRANSLATE_Change.Text

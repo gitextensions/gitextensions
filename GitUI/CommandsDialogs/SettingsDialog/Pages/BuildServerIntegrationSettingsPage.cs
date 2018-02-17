@@ -51,18 +51,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        public override bool IsInstantSavePage
-        {
-            get { return false; }
-        }
+        public override bool IsInstantSavePage => false;
 
         protected override void SettingsToPage()
         {
             _populateBuildServerTypeTask.ContinueWith(
                 task =>
                 {
-                    checkBoxEnableBuildServerIntegration.SetNullableChecked((bool?)CurrentSettings.BuildServer.EnableIntegration.Value);
-                    checkBoxShowBuildSummary.SetNullableChecked((bool?)CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
+                    checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
+                    checkBoxShowBuildSummary.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
 
                     BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? _noneItem.Text;
                 },
@@ -81,15 +78,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             var control =
                 buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
                                         .SingleOrDefault();
-            if (control != null)
-                control.SaveSettings(CurrentSettings.BuildServer.TypeSettings);
+            control?.SaveSettings(CurrentSettings.BuildServer.TypeSettings);
         }
 
         private void ActivateBuildServerSettingsControl()
         {
             var controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
             var previousControl = controls.SingleOrDefault();
-            if (previousControl != null) previousControl.Dispose();
+            previousControl?.Dispose();
 
             var control = CreateBuildServerSettingsUserControl();
 
@@ -129,7 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return (string)BuildServerType.SelectedItem;
         }
 
-        private void BuildServerType_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void BuildServerType_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActivateBuildServerSettingsControl();
         }

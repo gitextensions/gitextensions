@@ -1,8 +1,7 @@
-﻿using GitUIPluginInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -10,7 +9,7 @@ namespace GitUI
     {
         private readonly ISettingsSource _settings;
         private readonly List<SplitterData> splitters = new List<SplitterData>();
-        private float _designTimeFontSize;
+        private readonly float _designTimeFontSize;
 
         public SplitterManager(ISettingsSource settings, float designTimeFontSize = 8.25F)
         {
@@ -20,7 +19,7 @@ namespace GitUI
 
         public void AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
         {
-            var data = new SplitterData()
+            var data = new SplitterData
             {
                 Splitter = splitter,
                 SettingName = settingName,
@@ -56,23 +55,13 @@ namespace GitUI
             private string FontSizeSettingsKey => SettingName + "_FontSize";
             private float? _latestFontSize;
 
-            private int SplitterSize
-            {
-                get
-                {
-                    return (Splitter.Orientation == Orientation.Horizontal)
-                       ? Splitter.Height
-                       : Splitter.Width;
-                }
-            }
+            private int SplitterSize => Splitter.Orientation == Orientation.Horizontal
+                ? Splitter.Height
+                : Splitter.Width;
 
             public void RestoreFromSettings(ISettingsSource settings)
             {
-                _latestFontSize = settings.GetFloat(FontSizeSettingsKey);
-                if (!_latestFontSize.HasValue)
-                {
-                    _latestFontSize = DesignTimeFontSize;
-                }
+                _latestFontSize = settings.GetFloat(FontSizeSettingsKey) ?? DesignTimeFontSize;
 
                 int? prevSize = settings.GetInt(SizeSettingsKey);
                 int? prevDistance = settings.GetInt(DistanceSettingsKey);
@@ -180,10 +169,7 @@ namespace GitUI
             /// </returns>
             private bool IsValidSplitterDistance(int distance)
             {
-                bool valid;
-                int limit = SplitterSize;
-                valid = (distance > Splitter.Panel1MinSize) && (distance < limit - Splitter.Panel2MinSize);
-                return valid;
+                return distance > Splitter.Panel1MinSize && distance < SplitterSize - Splitter.Panel2MinSize;
             }
         }
     }

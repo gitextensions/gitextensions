@@ -1,7 +1,6 @@
 ﻿using System;
 using GitUI;
 using GitUIPluginInterfaces;
-using ResourceManager;
 
 namespace Gerrit
 {
@@ -9,7 +8,7 @@ namespace Gerrit
     {
         protected GerritSettings Settings { get; private set; }
         protected readonly IGitUICommands UICommands;
-        protected IGitModule Module { get { return UICommands.GitModule; } }
+        protected IGitModule Module => UICommands.GitModule;
 
         private FormGerritBase()
             : this(null)

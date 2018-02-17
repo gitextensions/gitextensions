@@ -50,7 +50,7 @@ namespace GitCommands
             ".jpeg",
             ".png",
             ".tif",
-            ".tiff",
+            ".tiff"
         };
 
         public static bool IsBinaryFile(GitModule aModule, string fileName)
@@ -67,34 +67,33 @@ namespace GitCommands
             string[] diffvals = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
             string cmd = "check-attr -z diff text crlf eol -- " + fileName.Quote();
             string result = aModule.RunGitCmd(cmd);
-            var lines = result.Split(new[] { '\n', '\0' });
+            var lines = result.Split('\n', '\0');
             var attributes = new Dictionary<string, string>();
             for (int i = 0; i < lines.Length - 2; i += 3)
             {
                 attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();
             }
 
-            string val;
-            if (attributes.TryGetValue("diff", out val))
+            if (attributes.TryGetValue("diff", out var diff))
             {
-                if (val == "unset")
+                if (diff == "unset")
                     return true;
-                if (diffvals.Contains(val))
+                if (diffvals.Contains(diff))
                     return false;
             }
-            if (attributes.TryGetValue("text", out val))
+            if (attributes.TryGetValue("text", out var text))
             {
-                if (val != "unset" && val != "unspecified")
+                if (text != "unset" && text != "unspecified")
                     return false;
             }
-            if (attributes.TryGetValue("crlf", out val))
+            if (attributes.TryGetValue("crlf", out var crlf))
             {
-                if (val != "unset" && val != "unspecified")
+                if (crlf != "unset" && crlf != "unspecified")
                     return false;
             }
-            if (attributes.TryGetValue("eol", out val))
+            if (attributes.TryGetValue("eol", out var eol))
             {
-                if (val != "unset" && val != "unspecified")
+                if (eol != "unset" && eol != "unspecified")
                     return false;
             }
             return null;
@@ -117,9 +116,9 @@ namespace GitCommands
             if (content != null && content.Length > 0)
             {
                 int nullCount = 0;
-                foreach (char c in content)
+                foreach (byte b in content)
                 {
-                    if (c == '\0')
+                    if (b == '\0')
                         nullCount++;
                     if (nullCount > 5) break;
                 }

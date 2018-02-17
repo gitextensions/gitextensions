@@ -27,21 +27,19 @@ namespace Gerrit
             new TranslationString("Save changes?");
 
         private string _originalGitReviewFileContent = string.Empty;
-        private IGitModule Module { get { return UICommands.GitModule; } }
+        private IGitModule Module => UICommands.GitModule;
 
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
         private void OnGitUICommandsChanged(GitUICommands oldcommands)
         {
-            EventHandler<GitUICommandsChangedEventArgs> handler = GitUICommandsChanged;
-            if (handler != null)
-                handler(this, new GitUICommandsChangedEventArgs(oldcommands));
+            GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldcommands));
         }
 
         private GitUICommands _uiCommands;
         public GitUICommands UICommands
         {
-            get { return _uiCommands; }
+            get => _uiCommands;
             set
             {
                 var oldcommands = _uiCommands;

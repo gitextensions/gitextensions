@@ -36,8 +36,8 @@ namespace Gource
             Translate();
         }
 
-        private StringSetting GourcePath = new StringSetting("Path to Gource", "");
-        private StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        private readonly StringSetting GourcePath = new StringSetting("Path to Gource", "");
+        private readonly StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 
@@ -136,7 +136,7 @@ namespace Gource
                     {
                         Directory.CreateDirectory(directoryName);
                     }
-                    if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
+                    if (fileName == string.Empty || theEntry.Name.IndexOf(".ini") >= 0)
                         continue;
 
                     var fullPath = Path.Combine(directoryName, theEntry.Name);
@@ -170,7 +170,7 @@ namespace Gource
             }
         }
 
-        public int DownloadFile(String remoteFilename, String localFilename)
+        public int DownloadFile(string remoteFilename, string localFilename)
         {
             // Function will return the number of bytes processed
             // to the caller. Initialize to 0 here.
@@ -221,7 +221,7 @@ namespace Gource
                 // Close the response and streams objects here
                 // to make sure they're closed even if an exception
                 // is thrown at some point
-                if (localStream != null) localStream.Close();
+                localStream?.Close();
             }
 
             // Return total bytes processed to caller.

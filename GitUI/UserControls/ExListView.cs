@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -48,7 +49,7 @@ namespace GitUI.UserControls
         SubSetLinkFocused = 128
     }
 
-    class ExListView : ListView
+    internal class ExListView : ListView
     {
         public ExListView()
         {
@@ -96,12 +97,12 @@ namespace GitUI.UserControls
                     Y = y;
                 }
 
-                public static implicit operator System.Drawing.Point(POINT p)
+                public static implicit operator Point(POINT p)
                 {
-                    return new System.Drawing.Point(p.X, p.Y);
+                    return new Point(p.X, p.Y);
                 }
 
-                public static implicit operator POINT(System.Drawing.Point p)
+                public static implicit operator POINT(Point p)
                 {
                     return new POINT(p.X, p.Y);
                 }
@@ -158,7 +159,7 @@ namespace GitUI.UserControls
                 LVHT_EX_GROUP_COLLAPSE = 0x40000000,
                 LVHT_EX_GROUP_BACKGROUND = 0x80000000,
                 LVHT_EX_GROUP_STATEICON = 0x01000000,
-                LVHT_EX_GROUP_SUBSETLINK = 0x02000000,
+                LVHT_EX_GROUP_SUBSETLINK = 0x02000000
             }
 
             public enum ListViewGroupMask : uint

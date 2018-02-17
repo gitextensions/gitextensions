@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormMergeSubmodule : GitModuleForm
     {
-        readonly string _filename;
+        private readonly string _filename;
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
         private readonly TranslationString _deleted = new TranslationString("deleted");
 
@@ -17,21 +17,21 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             lbSubmodule.Text = filename;
-            this._filename = filename;
+            _filename = filename;
         }
 
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
             var item = Module.GetConflict(_filename);
-            this.tbBase.Text = item.Base.Hash ?? _deleted.Text;
-            this.tbLocal.Text = item.Local.Hash ?? _deleted.Text;
-            this.tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
-            this.tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
+            tbBase.Text = item.Base.Hash ?? _deleted.Text;
+            tbLocal.Text = item.Local.Hash ?? _deleted.Text;
+            tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
         {
-            this.tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
         }
 
         private void StageSubmodule()
@@ -52,15 +52,20 @@ namespace GitUI.CommandsDialogs
         {
             StageSubmodule();
             DialogResult = DialogResult.OK;
-            this.Close();
+            Close();
         }
 
         private void btOpenSubmodule_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = Application.ExecutablePath;
-            process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.GetSubmoduleFullPath(_filename);
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = Application.ExecutablePath,
+                    Arguments = "browse",
+                    WorkingDirectory = Module.GetSubmoduleFullPath(_filename)
+                }
+            };
             process.Start();
         }
 

@@ -43,7 +43,7 @@ namespace NetSpell.SpellChecker
 	public class AssemblyInfo
 	{
 
-		private Type myType;
+		private readonly Type myType;
 
 		/// <summary>
 		///     Initialized the AssemblyInfo class with the given type
@@ -56,19 +56,16 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		/// CodeBase of Assembly
 		/// </summary>
-		public string CodeBase
-		{
-			get {return myType.Assembly.CodeBase.ToString(CultureInfo.CurrentUICulture);}
-		}
+		public string CodeBase => myType.Assembly.CodeBase.ToString(CultureInfo.CurrentUICulture);
 
-		/// <summary>
+	    /// <summary>
 		/// Company of Assembly
 		/// </summary>
 		public string Company
 		{
 			get
 			{
-				Object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+				object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 				AssemblyCompanyAttribute ct = (AssemblyCompanyAttribute)r[0];
 				return ct.Company;
 			}
@@ -81,7 +78,7 @@ namespace NetSpell.SpellChecker
 		{
 			get
 			{
-				Object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+				object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 				AssemblyCopyrightAttribute ct = (AssemblyCopyrightAttribute)r[0];
 				return ct.Copyright;
 			}
@@ -94,7 +91,7 @@ namespace NetSpell.SpellChecker
 		{
 			get
 			{
-				Object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+				object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
 				AssemblyDescriptionAttribute ct = (AssemblyDescriptionAttribute)r[0];
 				return ct.Description;
 			}
@@ -103,27 +100,21 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///		FullName of Assembly
 		/// </summary>
-		public string FullName
-		{
-			get {return myType.Assembly.GetName().FullName.ToString(CultureInfo.CurrentUICulture);}
-		}
+		public string FullName => myType.Assembly.GetName().FullName.ToString(CultureInfo.CurrentUICulture);
 
-		/// <summary>
+	    /// <summary>
 		/// Name of Assembly
 		/// </summary>
-		public string Name
-		{
-			get	{return myType.Assembly.GetName().Name.ToString(CultureInfo.CurrentUICulture);}
-		}
+		public string Name => myType.Assembly.GetName().Name.ToString(CultureInfo.CurrentUICulture);
 
-		/// <summary>
+	    /// <summary>
 		/// Product of Assembly
 		/// </summary>
 		public string Product
 		{
 			get
 			{
-				Object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+				object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
 				AssemblyProductAttribute ct = (AssemblyProductAttribute)r[0];
 				return ct.Product;
 			}
@@ -136,7 +127,7 @@ namespace NetSpell.SpellChecker
 		{
 			get
 			{
-				Object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+				object[] r = myType.Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
 				AssemblyTitleAttribute ct = (AssemblyTitleAttribute)r[0];
 				return ct.Title;
 			}
@@ -145,10 +136,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		/// Version of Assembly
 		/// </summary>
-		public string Version
-		{
-			get { return myType.Assembly.GetName().Version.ToString(); }
-		}
+		public string Version => myType.Assembly.GetName().Version.ToString();
 	}
 }
 

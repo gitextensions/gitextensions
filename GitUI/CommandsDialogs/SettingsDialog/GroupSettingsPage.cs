@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         protected GroupSettingsPage(string aTitle)
         {
             Title = aTitle;
-            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
         public string GetTitle()
@@ -22,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return Title;
         }
 
-        public Control GuiControl { get { return null; } }
+        public Control GuiControl => null;
 
         public void OnPageShown()
         {
@@ -41,15 +42,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return new string[] { };
         }
 
-        public bool IsInstantSavePage
-        {
-            get { return false; }
-        }
+        public bool IsInstantSavePage => false;
 
-        public SettingsPageReference PageReference
-        {
-            get { return new SettingsPageReferenceByType(GetType()); }
-        }
-
+        public SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
     }
 }

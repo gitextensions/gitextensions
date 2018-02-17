@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -23,7 +24,7 @@ namespace GitUI.RevisionGridClasses
                 IsLoading = isLoading;
             }
 
-            public bool IsLoading { get; private set; }
+            public bool IsLoading { get; }
         }
 
         #endregion
@@ -36,7 +37,7 @@ namespace GitUI.RevisionGridClasses
             Normal = 0,
             Active = 1,
             Special = 2,
-            Filtered = 4,
+            Filtered = 4
         }
 
         #endregion
@@ -47,7 +48,7 @@ namespace GitUI.RevisionGridClasses
         {
             None,
             Highlight,
-            Hide,
+            Hide
         }
 
         #endregion
@@ -161,37 +162,37 @@ namespace GitUI.RevisionGridClasses
         /// <summary>
         /// 0
         /// </summary>
-        internal DataGridViewColumn GraphColumn { get { return Columns[0]; } }
+        internal DataGridViewColumn GraphColumn => Columns[0];
 
         /// <summary>
         /// 1
         /// </summary>
-        internal DataGridViewColumn MessageColumn { get { return Columns[1]; } }
+        internal DataGridViewColumn MessageColumn => Columns[1];
 
         /// <summary>
         /// 2
         /// </summary>
-        internal DataGridViewColumn AuthorColumn { get { return Columns[2]; } }
+        internal DataGridViewColumn AuthorColumn => Columns[2];
 
         /// <summary>
         /// 3
         /// </summary>
-        internal DataGridViewColumn DateColumn { get { return Columns[3]; } }
+        internal DataGridViewColumn DateColumn => Columns[3];
 
-        internal DataGridViewColumn IdColumn { get { return Columns[4]; } }
+        internal DataGridViewColumn IdColumn => Columns[4];
 
         public void ShowAuthor(bool show)
         {
-            this.AuthorColumn.Visible = show;
-            this.DateColumn.Visible = show;
+            AuthorColumn.Visible = show;
+            DateColumn.Visible = show;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         [DefaultValue(FilterType.None)]
         [Category("Behavior")]
         public FilterType FilterMode
         {
-            get { return _filterMode; }
+            get => _filterMode;
             set
             {
                 // TODO: We only need to rebuild the graph if switching to or from hide
@@ -239,7 +240,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public string[] SelectedIds
@@ -291,7 +292,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         protected override void Dispose(bool disposing)
         {
             lock (_backgroundEvent)
@@ -314,10 +315,8 @@ namespace GitUI.RevisionGridClasses
                     _graphBitmap.Dispose();
                     _graphBitmap = null;
                 }
-                if (_backgroundEvent != null)
-                {
-                    _backgroundEvent.Dispose();
-                }
+
+                _backgroundEvent?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -342,13 +341,7 @@ namespace GitUI.RevisionGridClasses
 
         [DefaultValue(true)]
         [Browsable(false)]
-        public bool RevisionGraphVisible
-        {
-            get
-            {
-                return GraphColumn.Visible;
-            }
-        }
+        public bool RevisionGraphVisible => GraphColumn.Visible;
 
         public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
         {
@@ -360,7 +353,7 @@ namespace GitUI.RevisionGridClasses
             UpdateData();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
             lock (_backgroundThread)
@@ -418,23 +411,13 @@ namespace GitUI.RevisionGridClasses
         public GitRevision GetRowData(int aRow)
         {
             lock (_graphData)
-            {
-                Graph.ILaneRow row = _graphData[aRow];
-                return row == null ? null : row.Node.Data;
-            }
+                return _graphData[aRow]?.Node.Data;
         }
 
         public string GetRowId(int aRow)
         {
             lock (_graphData)
-            {
-                Graph.ILaneRow row = _graphData[aRow];
-                if (row == null)
-                {
-                    return null;
-                }
-                return row.Node.Id;
-            }
+                return _graphData[aRow]?.Node.Id;
         }
 
         public int FindRow(string aId)
@@ -475,7 +458,7 @@ namespace GitUI.RevisionGridClasses
             Invalidate(true);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void SetRowCount(int count)
         {
             if (InvokeRequired)
@@ -566,7 +549,7 @@ namespace GitUI.RevisionGridClasses
             UpdateColumnWidth();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void BackgroundThreadEntry()
         {
             while (_shouldRun)
@@ -603,7 +586,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
             while (curCount < scrollTo)
@@ -641,7 +624,7 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateData()
         {
-            _visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
+            _visibleTop = FirstDisplayedCell?.RowIndex ?? 0;
             _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
 
             //Add 5 for safe merge (1 for rounding and 1 for whitespace)....
@@ -658,10 +641,7 @@ namespace GitUI.RevisionGridClasses
             {
                 //All rows that the user is viewing are loaded. We now can hide the loading
                 //animation that is shown. (the event Loading(bool) triggers this!)
-                if (Loading != null)
-                {
-                    Loading(this, new LoadingEventArgs(false));
-                }
+                Loading?.Invoke(this, new LoadingEventArgs(false));
             }
 
             if (_visibleBottom >= _graphData.Count)
@@ -726,12 +706,12 @@ namespace GitUI.RevisionGridClasses
                         }
                     }
 
-                    // When 'git log --first-parent' filtration is enabled and when only current 
+                    // When 'git log --first-parent' filtration is enabled and when only current
                     // branch needed to be rendered (and this filter actually works),
                     // it is much more readable to limit max lanes to 1.
-                    int maxLanes = 
-                        (AppSettings.ShowFirstParent && 
-                        AppSettings.ShowCurrentBranchOnly && 
+                    int maxLanes =
+                        (AppSettings.ShowFirstParent &&
+                        AppSettings.ShowCurrentBranchOnly &&
                         AppSettings.BranchFilterEnabled) ? 1: MaxLanes;
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
@@ -772,10 +752,7 @@ namespace GitUI.RevisionGridClasses
                     return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
                 return RevisionGraphDrawStyleEnum.Normal;
             }
-            set
-            {
-                _revisionGraphDrawStyle = value;
-            }
+            set => _revisionGraphDrawStyle = value;
         }
 
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
@@ -1154,10 +1131,8 @@ namespace GitUI.RevisionGridClasses
                     }
                     finally
                     {
-                        if (brushLineColorPen != null)
-                            ((IDisposable)brushLineColorPen).Dispose();
-                        if (brushLineColor != null)
-                            ((IDisposable)brushLineColor).Dispose();
+                        brushLineColorPen?.Dispose();
+                        ((IDisposable)brushLineColor)?.Dispose();
                     }
                 }
             }
@@ -1253,39 +1228,22 @@ namespace GitUI.RevisionGridClasses
 
         public GitRevision GetRevision(string guid)
         {
-            Node node;
-
-            if (_graphData.Nodes.TryGetValue(guid, out node))
-                return node.Data;
-
-            return null;
+            return _graphData.Nodes.TryGetValue(guid, out var node) ? node.Data : null;
         }
 
         public int? TryGetRevisionIndex(string guid)
         {
-            Node node;
-
-            if (guid != null)
-            {
-                if (_graphData.Nodes.TryGetValue(guid, out node))
-                {
-                    return node.Index;
-                }
-            }
-
-            return null;
+            return guid != null && _graphData.Nodes.TryGetValue(guid, out var node) ? (int?)node.Index : null;
         }
 
         public List<string> GetRevisionChildren(string guid)
         {
-            Node node;
-
-            List<string> childrenIds = new List<string>();
+            var childrenIds = new List<string>();
 
             //We do not need a lock here since we load the data from the first commit and walkt through all
             //parents. Children are always loaded, since we start at the newest commit.
             //With lock, loading the commit info slows down terrible.
-            if (_graphData.Nodes.TryGetValue(guid, out node))
+            if (_graphData.Nodes.TryGetValue(guid, out var node))
             {
                 foreach (var descendant in node.Descendants)
                 {
@@ -1317,7 +1275,8 @@ namespace GitUI.RevisionGridClasses
                 }
                 return;
             }
-            else if (e.KeyData == Keys.End)
+
+            if (e.KeyData == Keys.End)
             {
                 if (RowCount != 0)
                 {
@@ -1347,14 +1306,11 @@ namespace GitUI.RevisionGridClasses
                 Id = aId;
             }
 
-            public bool IsActive
-            {
-                get { return (DataType & DataType.Active) == DataType.Active; }
-            }
+            public bool IsActive => (DataType & DataType.Active) == DataType.Active;
 
             public bool IsFiltered
             {
-                get { return (DataType & DataType.Filtered) == DataType.Filtered; }
+                get => (DataType & DataType.Filtered) == DataType.Filtered;
                 set
                 {
                     if (value)
@@ -1368,16 +1324,13 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public bool IsSpecial
-            {
-                get { return (DataType & DataType.Special) == DataType.Special; }
-            }
+            public bool IsSpecial => (DataType & DataType.Special) == DataType.Special;
 
             public override string ToString()
             {
                 if (Data == null)
                 {
-                    string name = Id.ToString();
+                    string name = Id;
                     if (name.Length > 8)
                     {
                         name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);

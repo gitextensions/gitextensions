@@ -2,27 +2,25 @@
 using System.Drawing;
 using System.Linq;
 using GitCommands;
+using GitUI.Properties;
 
 namespace GitUI.UserControls.ToolStripClasses
 {
     internal class CommitIconProvider : ICommitIconProvider
     {
-        internal static readonly Bitmap IconClean = Properties.Resources.IconClean;
+        internal static readonly Bitmap IconClean = Resources.IconClean;
 
-        internal static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
+        internal static readonly Bitmap IconDirty = Resources.IconDirty;
 
-        internal static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
+        internal static readonly Bitmap IconDirtySubmodules = Resources.IconDirtySubmodules;
 
-        internal static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
+        internal static readonly Bitmap IconStaged = Resources.IconStaged;
 
-        internal static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
+        internal static readonly Bitmap IconMixed = Resources.IconMixed;
 
-        internal static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
+        internal static readonly Bitmap IconUntrackedOnly = Resources.IconUntrackedOnly;
 
-        public Image DefaultIcon
-        {
-            get { return IconClean; }
-        }
+        public Image DefaultIcon => IconClean;
 
         public Image GetCommitIcon(IList<GitItemStatus> allChangedFiles)
         {

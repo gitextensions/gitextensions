@@ -17,13 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             BindSettingsWithControls();
         }
 
-        private DetailedGroup DetailedSettings
-        {
-            get
-            {
-                return CurrentSettings.Detailed;
-            }
-        }
+        private DetailedGroup DetailedSettings => CurrentSettings.Detailed;
 
         private void BindSettingsWithControls()
         {

@@ -3,16 +3,16 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
-    class GithubBranch : IHostedBranch
+    internal class GithubBranch : IHostedBranch
     {
-        private Branch branch;
+        private readonly Branch branch;
 
         public GithubBranch(Branch branch)
         {
             this.branch = branch;
         }
 
-        public string Name { get { return branch.Name; } }
-        public string Sha { get { return branch.Commit.Sha; } }
+        public string Name => branch.Name;
+        public string Sha => branch.Commit.Sha;
     }
 }

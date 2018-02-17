@@ -12,15 +12,15 @@ namespace GitCommands
         private string _name;
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get => _name;
+            set => _name = value;
         }
 
         private string _text;
         public string Text
         {
-            get { return _text; }
-            set { _text = value; }
+            get => _text;
+            set => _text = value;
         }
 
         public CommitTemplateItem(string name, string text)
@@ -31,8 +31,8 @@ namespace GitCommands
 
         public CommitTemplateItem()
         {
-            Name = String.Empty;
-            Text = String.Empty;
+            Name = string.Empty;
+            Text = string.Empty;
         }
 
         private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
@@ -56,8 +56,7 @@ namespace GitCommands
         public static CommitTemplateItem[] LoadFromSettings()
         {
             string serializedString = AppSettings.CommitTemplates;
-            bool shouldBeUpdated;
-            var templates = DeserializeCommitTemplates(serializedString, out shouldBeUpdated);
+            var templates = DeserializeCommitTemplates(serializedString, out var shouldBeUpdated);
             if (shouldBeUpdated)
                 SaveToSettings(templates);
 
@@ -96,7 +95,7 @@ namespace GitCommands
                     byte[] memorydata = Convert.FromBase64String(serializedString.Substring(p + 1));
                     using (MemoryStream rs = new MemoryStream(memorydata, 0, length))
                     {
-                        BinaryFormatter sf = new BinaryFormatter() { Binder = new MoveNamespaceDeserializationBinder() };
+                        BinaryFormatter sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
                         commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
                     shouldBeUpdated = true;
@@ -109,7 +108,7 @@ namespace GitCommands
 
             return commitTemplateItem;
         }
-    
+
     }
 
     public sealed class MoveNamespaceDeserializationBinder : SerializationBinder

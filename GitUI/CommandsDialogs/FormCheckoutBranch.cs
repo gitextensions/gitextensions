@@ -1,16 +1,15 @@
 ﻿﻿﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GitCommands;
-using GitCommands.Git;
-using GitCommands.Utils;
-using GitUI.Script;
-using GitUIPluginInterfaces;
-using PSTaskDialog;
-using ResourceManager;
+  using System.Collections.Generic;
+  using System.Drawing;
+  using System.Linq;
+  using System.Threading.Tasks;
+  using System.Windows.Forms;
+  using GitCommands;
+  using GitCommands.Git;
+  using GitUI.Script;
+  using GitUIPluginInterfaces;
+  using PSTaskDialog;
+  using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -35,7 +34,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetNonFastForwardBranch =
             new TranslationString("You are going to reset the “{0}” branch to a new location\n" +
                 "discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
-        readonly TranslationString resetCaption = new TranslationString("Reset branch");
+
+        private readonly TranslationString resetCaption = new TranslationString("Reset branch");
         #endregion
 
         private readonly string[] _containRevisons;

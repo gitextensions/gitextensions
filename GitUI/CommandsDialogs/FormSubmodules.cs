@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
-        private BindingList<IGitSubmoduleInfo> modules = new BindingList<IGitSubmoduleInfo>();
+        private readonly BindingList<IGitSubmoduleInfo> modules = new BindingList<IGitSubmoduleInfo>();
         private GitSubmoduleInfo _oldSubmoduleInfo;
 
         public FormSubmodules(GitUICommands aCommands)
@@ -80,8 +80,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            if (bw != null)
-                bw.CancelAsync();
+            bw?.CancelAsync();
             UseWaitCursor = true;
             _oldSubmoduleInfo = null;
             if (Submodules.SelectedRows.Count == 1)

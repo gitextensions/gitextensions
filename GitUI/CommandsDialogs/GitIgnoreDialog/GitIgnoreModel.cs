@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using GitCommands;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -23,45 +22,24 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
         private readonly TranslationString _saveFileQuestion =
             new TranslationString("Save changes to .gitignore?");
 
-        private readonly IGitModule _module;
         private readonly IFullPathResolver _fullPathResolver;
 
         public GitIgnoreModel(IGitModule module)
         {
-            _module = module;
-
             Translator.Translate(this, AppSettings.CurrentTranslation);
-            _fullPathResolver = new FullPathResolver(() => _module.WorkingDir);
+            _fullPathResolver = new FullPathResolver(() => module.WorkingDir);
         }
 
-        public string FormCaption
-        {
-            get { return _editGitignoreTitle.Text; }
-        }
+        public string FormCaption => _editGitignoreTitle.Text;
 
-        public string ExcludeFile
-        {
-            get { return _fullPathResolver.Resolve(".gitignore"); }
-        }
+        public string ExcludeFile => _fullPathResolver.Resolve(".gitignore");
 
-        public string FileOnlyInWorkingDirSupported
-        {
-            get { return _gitignoreOnlyInWorkingDirSupported.Text; }
-        }
+        public string FileOnlyInWorkingDirSupported => _gitignoreOnlyInWorkingDirSupported.Text;
 
-        public string CannotAccessFile
-        {
-            get { return _cannotAccessGitignore.Text; }
-        }
+        public string CannotAccessFile => _cannotAccessGitignore.Text;
 
-        public string CannotAccessFileCaption
-        {
-            get { return _cannotAccessGitignoreCaption.Text; }
-        }
+        public string CannotAccessFileCaption => _cannotAccessGitignoreCaption.Text;
 
-        public string SaveFileQuestion
-        {
-            get { return _saveFileQuestion.Text; }
-        }
+        public string SaveFileQuestion => _saveFileQuestion.Text;
     }
 }

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    [DebuggerDisplay("{_name}")]
+    [DebuggerDisplay("{" + nameof(Name) + "}")]
     public class TranslationCategory : IComparable<TranslationCategory>
     {
         public TranslationCategory()
@@ -13,68 +13,25 @@ namespace ResourceManager.Xliff
 
         public TranslationCategory(string name, string sourceLanguage, string targetLanguage = null)
         {
-            _name = name;
-            _sourceLanguage = sourceLanguage;
-            _targetLanguage = targetLanguage;
+            Name = name;
+            SourceLanguage = sourceLanguage;
+            TargetLanguage = targetLanguage;
         }
 
-        private string _datatype = "plaintext";
         [XmlAttribute("datatype")]
-        public string Datatype
-        {
-            get
-            {
-                return _datatype;
-            }
-            set
-            {
-                _datatype = value;
-            }
-        }
+        public string Datatype { get; set; } = "plaintext";
 
-        private string _name;
         [XmlAttribute("original")]
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
-        }
+        public string Name { get; set; }
 
-        private string _sourceLanguage;
         [XmlAttribute("source-language")]
-        public string SourceLanguage
-        {
-            get { return _sourceLanguage; }
-            set { _sourceLanguage = value; }
-        }
+        public string SourceLanguage { get; set; }
 
-        private string _targetLanguage;
         [XmlAttribute("target-language")]
-        public string TargetLanguage
-        {
-            get { return _targetLanguage; }
-            set { _targetLanguage = value; }
-        }
+        public string TargetLanguage { get; set; }
 
-        private TranslationBody _body = new TranslationBody();
         [XmlElement(ElementName = "body")]
-        public TranslationBody Body
-        {
-            get
-            {
-                return _body;
-            }
-            set
-            {
-                _body = value;
-            }
-        }
+        public TranslationBody Body { get; set; } = new TranslationBody();
 
         public int CompareTo(TranslationCategory other)
         {

@@ -13,6 +13,7 @@ using GitCommands.Repository;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using PSTaskDialog;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -497,8 +498,8 @@ namespace GitUI.CommandsDialogs
                             buttons = string.Format(buttons, _pullActionNone.Text);
                             break;
                     }
-                    int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
-                                    String.Format(_pullRepositoryCaption.Text, destination),
+                    int idx = cTaskDialog.ShowCommandBox(owner,
+                                    string.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
                                     _pullRepository.Text,
                                     "",
@@ -508,7 +509,7 @@ namespace GitUI.CommandsDialogs
                                     true,
                                     0,
                                     0);
-                    bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
+                    bool rememberDecision = cTaskDialog.VerificationChecked;
                     switch (idx)
                     {
                         case 0:
@@ -589,8 +590,7 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                bool pullCompleted;
-                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedRemote.Name, out pullCompleted, false);
+                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedRemote.Name, out var pullCompleted, false);
                 if (pullCompleted)
                 {
                     form.Retry();
@@ -630,7 +630,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Branch.Text = curBranch;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Branch.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private IEnumerable<IGitRef> GetLocalBranches()
@@ -638,7 +638,7 @@ namespace GitUI.CommandsDialogs
             return _gitRefs.Where(r => r.IsHead);
         }
 
-        private IEnumerable<IGitRef> GetRemoteBranches(String remoteName)
+        private IEnumerable<IGitRef> GetRemoteBranches(string remoteName)
         {
             return _gitRefs.Where(r => r.IsRemote && r.Remote == remoteName);
         }
@@ -670,7 +670,7 @@ namespace GitUI.CommandsDialogs
                         RemoteBranch.Items.Add(head.LocalName);
             }
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            RemoteBranch.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -685,9 +685,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PushToRemote.Checked)
                 {
-                    var branch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
-
-                    if (branch != null)
+                    if (_NO_TRANSLATE_Branch.SelectedItem is GitRef branch)
                     {
                         if (_selectedRemote != null)
                         {
@@ -823,7 +821,7 @@ namespace GitUI.CommandsDialogs
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(TagComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            TagComboBox.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)
@@ -959,7 +957,7 @@ namespace GitUI.CommandsDialogs
             BranchGrid.Enabled = true;
         }
 
-        static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        private static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
             if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
             {
@@ -1029,8 +1027,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

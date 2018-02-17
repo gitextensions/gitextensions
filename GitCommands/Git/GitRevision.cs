@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -22,7 +23,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
 
         public string[] ParentGuids;
-        private readonly List<IGitRef> _refs = new List<IGitRef>();
         public readonly GitModule Module;
         private BuildInfo _buildStatus;
 
@@ -34,7 +34,7 @@ namespace GitCommands
             Module = aModule;
         }
 
-        public List<IGitRef> Refs { get { return _refs; } }
+        public List<IGitRef> Refs { get; } = new List<IGitRef>();
 
         public string TreeGuid { get; set; }
 
@@ -47,12 +47,13 @@ namespace GitCommands
 
         public BuildInfo BuildStatus
         {
-            get { return _buildStatus; }
+            get => _buildStatus;
             set
             {
-                if (Equals(value, _buildStatus)) return;
+                if (Equals(value, _buildStatus))
+                    return;
                 _buildStatus = value;
-                OnPropertyChanged("BuildStatus");
+                OnPropertyChanged();
             }
         }
 
@@ -77,13 +78,13 @@ namespace GitCommands
             {
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
-            return String.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
+            return string.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
         }
 
-        public static string ToShortSha(String sha)
+        public static string ToShortSha(string sha)
         {
             if (sha == null)
-                throw new ArgumentNullException("sha");
+                throw new ArgumentNullException(nameof(sha));
             const int maxShaLength = 10;
             if (sha.Length > maxShaLength)
             {
@@ -98,10 +99,10 @@ namespace GitCommands
             if (Refs.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
                 return true;
 
-            if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
+            if (searchString.Length > 2 && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                 return true;
 
-            return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
+            return Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) ||
                     Subject.ToLower().Contains(searchString);
         }
 
@@ -116,40 +117,24 @@ namespace GitCommands
                     guid == IndexGuid;
         }
 
-        public bool HasParent
-        {
-            get
-            {
-                return ParentGuids != null && ParentGuids.Length > 0;
-            }
-        }
+        public bool HasParent => ParentGuids != null && ParentGuids.Length > 0;
 
-        public string FirstParentGuid
-        {
-            get
-            {
-                return HasParent ? ParentGuids[0] : null;
-            }
-        }
+        public string FirstParentGuid => HasParent ? ParentGuids[0] : null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public static GitRevision CreateForShortSha1(GitModule aModule, string sha1)
         {
             if (!sha1.IsNullOrWhiteSpace() && sha1.Length < 40)
             {
-                string fullSha1;
-                if (aModule.IsExistingCommitHash(sha1, out fullSha1))
-                {
+                if (aModule.IsExistingCommitHash(sha1, out var fullSha1))
                     sha1 = fullSha1;
-                }
             }
 
             return new GitRevision(aModule, sha1);
@@ -157,7 +142,7 @@ namespace GitCommands
 
         public static bool IsFullSha1Hash(string id)
         {
-            return Regex.IsMatch(id, GitRevision.Sha1HashPattern);
+            return Regex.IsMatch(id, Sha1HashPattern);
         }
     }
 }

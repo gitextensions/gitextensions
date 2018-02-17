@@ -25,7 +25,7 @@ namespace GitUITests
         [Test]
         public void ForNoFixedPanel_WhenWidthChanges_DistanceChangesEvenly()
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 100;
             const int splitterDistance = 30;
@@ -53,7 +53,7 @@ namespace GitUITests
         [TestCase(-100)]
         public void ForFixedPanel1_WhenWidthChanges_DistanceDoesNotChange(int deltaWidth)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 70;
@@ -82,7 +82,7 @@ namespace GitUITests
         [TestCase(-100)]
         public void ForFixedPanel2_WhenWidthChanges_DistanceChangesAlong(int deltaWidth)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 130;
@@ -112,7 +112,7 @@ namespace GitUITests
         [TestCase(false)]
         public void DistanceDoesNotChangeWhenGoesBelowPanel1MinSize(bool applyMinSize)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 120;
@@ -155,7 +155,7 @@ namespace GitUITests
         [TestCase(false)]
         public void DistanceDoesNotChangeWhenGoesBelowPanel2MinSize(bool applyMinSize)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 120;
@@ -197,7 +197,7 @@ namespace GitUITests
         [TestCase(-2)]
         public void ForFixedPanel1_WhenFontChanges_Panel1WidthChangesAlong(int deltaFontSize)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 70;
@@ -229,7 +229,7 @@ namespace GitUITests
         [TestCase(-2)]
         public void ForFixedPanel2_WhenFontChanges_Panel2WidthChangesAlong(int deltaFontSize)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 70;
@@ -263,7 +263,7 @@ namespace GitUITests
         [TestCase(-2)]
         public void ForNoFixedPanel_WhenFontChanges_DistanceDoesNotChange(int deltaFontSize)
         {
-            //arrange 
+            //arrange
             const string splitterName = "splitterName";
             const int splitterWidth = 200;
             const int splitterDistance = 70;
@@ -289,14 +289,14 @@ namespace GitUITests
             }
         }
 
-        private SplitContainer CreateVerticalSplitContainer()
+        private static SplitContainer CreateVerticalSplitContainer()
         {
             SplitContainer splitter = new SplitContainer();
             splitter.FixedPanel = FixedPanel.None;
             splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize);
             splitter.Orientation = Orientation.Vertical;
             splitter.Width = _designTimeSplitterWidth;
-            splitter.SplitterDistance = _designTimeSplitterDistance;            
+            splitter.SplitterDistance = _designTimeSplitterDistance;
 
             return splitter;
         }

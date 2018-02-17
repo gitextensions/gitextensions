@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using ResourceManager;
 using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            this.HotkeysEnabled = true;
+            HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
 
         public void RefreshArtificial()
         {
-            if (this.Visible)
+            if (Visible)
             {
                 var revisions = _revisionGrid.GetSelectedRevisions();
 
@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            DeleteSelectedFiles,
+            DeleteSelectedFiles
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -137,8 +137,8 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            this.diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             DiffText.ReloadHotkeys();
         }
 
@@ -224,7 +224,7 @@ namespace GitUI.CommandsDialogs
 
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
+            bool isAnyItemSelected = DiffFiles.SelectedItems.Any();
             var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var selectedItemStatus = DiffFiles.SelectedItem;
             bool isBareRepository = Module.IsBareRepository();
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
         private void ShowSelectedFileDiff()
         {
             var items = _revisionGrid.GetSelectedRevisions();
-            if (DiffFiles.SelectedItem == null || items.Count() == 0)
+            if (DiffFiles.SelectedItem == null || !items.Any())
             {
                 DiffText.ViewPatch("");
                 return;
@@ -284,7 +284,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
             }
-            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, string.Empty);
         }
 
 
@@ -302,12 +302,17 @@ namespace GitUI.CommandsDialogs
             {
                 var submoduleName = DiffFiles.SelectedItem.Name;
                 DiffFiles.SelectedItem.SubmoduleStatus.ContinueWith(
-                    (t) =>
+                    t =>
                     {
-                        Process process = new Process();
-                        process.StartInfo.FileName = Application.ExecutablePath;
-                        process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                        process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
+                        var process = new Process
+                        {
+                            StartInfo =
+                            {
+                                FileName = Application.ExecutablePath,
+                                Arguments = "browse -commit=" + t.Result.Commit,
+                                WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
+                            }
+                        };
                         process.Start();
                     });
             }
@@ -321,7 +326,7 @@ namespace GitUI.CommandsDialogs
         private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
         {
             if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
-                DiffText.ViewPatch(String.Empty);
+                DiffText.ViewPatch(string.Empty);
         }
 
         private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -445,21 +450,19 @@ namespace GitUI.CommandsDialogs
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            IList<GitItemStatus> FindDiffFilesMatches(string name)
             {
-
                 string nameAsLower = name.ToLower();
 
-                return candidates.Where(item =>
-                {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                }
-                    ).ToList();
-            };
+                return candidates
+                    .Where(item => item.Name != null &&
+                                   item.Name.ToLower().Contains(nameAsLower) ||
+                                   item.OldName != null &&
+                                   item.OldName.ToLower().Contains(nameAsLower))
+                    .ToList();
+            }
 
             GitItemStatus selectedItem;
             using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
@@ -497,19 +500,19 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            GitUI.RevisionDiffKind diffKind;
+            RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffALocal;
+                diffKind = RevisionDiffKind.DiffALocal;
             else if (sender == bLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+                diffKind = RevisionDiffKind.DiffBLocal;
             else if (sender == parentOfALocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+                diffKind = RevisionDiffKind.DiffAParentLocal;
             else if (sender == parentOfBLocalToolStripMenuItem)
-                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+                diffKind = RevisionDiffKind.DiffBParentLocal;
             else
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAB;
+                diffKind = RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
@@ -832,7 +835,7 @@ namespace GitUI.CommandsDialogs
             }
             RefreshArtificial();
         }
-        
+
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var unStagedFiles = DiffFiles.SelectedItems.ToList();

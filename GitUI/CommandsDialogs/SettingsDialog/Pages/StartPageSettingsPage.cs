@@ -1,7 +1,4 @@
-﻿using GitCommands;
-using GitUIPluginInterfaces;
-
-namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class StartPageSettingsPage : SettingsPageWithHeader
     {
@@ -12,13 +9,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsInstantSavePage => true;
 
         protected override void SettingsToPage()
         {

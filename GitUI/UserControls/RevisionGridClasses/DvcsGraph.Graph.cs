@@ -36,7 +36,7 @@ namespace GitUI.RevisionGridClasses
 
             public bool IsFilter
             {
-                get { return isFilter; }
+                get => isFilter;
                 set
                 {
                     isFilter = value;
@@ -50,7 +50,7 @@ namespace GitUI.RevisionGridClasses
                         j.CurrentState = Junction.State.Unprocessed;
                     }
 
-                    // We need to signal the DvcsGraph object that it needs to 
+                    // We need to signal the DvcsGraph object that it needs to
                     // redraw everything.
                     Updated(this);
                 }
@@ -69,15 +69,9 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public ILaneRow this[int col]
-            {
-                get { return lanes[col]; }
-            }
+            public ILaneRow this[int col] => lanes[col];
 
-            public int CachedCount
-            {
-                get { return lanes.CachedCount; }
-            }
+            public int CachedCount => lanes.CachedCount;
 
             public void Filter(string aId)
             {
@@ -89,7 +83,7 @@ namespace GitUI.RevisionGridClasses
                     node.IsFiltered = true;
                 }
 
-                // Clear the filtered lane data. 
+                // Clear the filtered lane data.
                 // TODO: We could be smart and only clear items after Node[aId]. The check
                 // below isn't valid, since it could be either the filtered or unfiltered
                 // lane...
@@ -118,21 +112,17 @@ namespace GitUI.RevisionGridClasses
 
             public bool IsRevisionRelative(string aGuid)
             {
-                Node startNode;
-
-                if (Nodes.TryGetValue(aGuid, out startNode))
+                if (Nodes.TryGetValue(aGuid, out var startNode))
                 {
                     return startNode.Ancestors.Any(a => a.IsRelative);
                 }
 
-                return false;              
+                return false;
             }
 
             public void HighlightBranchRecursive(string aId)
             {
-                Node startNode;
-
-                if (Nodes.TryGetValue(aId, out startNode))
+                if (Nodes.TryGetValue(aId, out var startNode))
                 {
                     foreach (Junction junction in startNode.Ancestors)
                     {
@@ -151,8 +141,7 @@ namespace GitUI.RevisionGridClasses
             public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
             {
                 // If we haven't seen this node yet, create a new junction.
-                Node node;
-                if (!GetNode(aId, out node) && (aParentIds == null || aParentIds.Length == 0))
+                if (!GetNode(aId, out var node) && (aParentIds == null || aParentIds.Length == 0))
                 {
                     var newJunction = new Junction(node, node);
                     junctions.Add(newJunction);
@@ -165,8 +154,8 @@ namespace GitUI.RevisionGridClasses
 
                 foreach (string parentId in aParentIds)
                 {
-                    Node parent;
-                    GetNode(parentId, out parent);
+                    GetNode(parentId, out var parent);
+
                     if (parent.Index < node.Index)
                     {
                         // TODO: We might be able to recover from this with some work, but
@@ -178,7 +167,7 @@ namespace GitUI.RevisionGridClasses
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Oldest == node
                         && parent.Ancestors.Count == 0
-                        //If this is true, the current revision is in the middle of a branch 
+                        //If this is true, the current revision is in the middle of a branch
                         //and is about to start a new branch. This will also mean that the last
                         //revisions are non-relative. Make sure a new junction is added and this
                         //is the start of a new branch (and color!)
@@ -191,7 +180,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     else if (node.Ancestors.Count == 1 && node.Ancestors[0].Youngest != node)
                     {
-                        // The node is in the middle of a junction. We need to split it.                   
+                        // The node is in the middle of a junction. We need to split it.
                         Junction splitNode = node.Ancestors[0].Split(node);
                         junctions.Add(splitNode);
 
@@ -201,7 +190,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     else if (parent.Descendants.Count == 1 && parent.Descendants[0].Oldest != parent)
                     {
-                        // The parent is in the middle of a junction. We need to split it.     
+                        // The parent is in the middle of a junction. We need to split it.
                         Junction splitNode = parent.Descendants[0].Split(parent);
                         junctions.Add(splitNode);
 
@@ -248,10 +237,7 @@ namespace GitUI.RevisionGridClasses
                     lanes.CacheTo(lastLane);
 
                     // We need to signal the DvcsGraph object that it needs to redraw everything.
-                    if (Updated != null)
-                    {
-                        Updated(this);
-                    }
+                    Updated?.Invoke(this);
                 }
                 else
                 {
@@ -293,10 +279,8 @@ namespace GitUI.RevisionGridClasses
                         }
 
                         // Signal that these rows have changed
-                        if (isChanged && Updated != null)
-                        {
-                            Updated(this);
-                        }
+                        if (isChanged)
+                            Updated?.Invoke(this);
 
                         processedNodes++;
                         break;
@@ -369,7 +353,7 @@ namespace GitUI.RevisionGridClasses
 
                 Visit visit = null;
                 Visit localVisit = visit;
-                visit = (Node n) =>
+                visit = n =>
                 {
                     if (!P.Contains(n))
                     {
@@ -439,29 +423,21 @@ namespace GitUI.RevisionGridClasses
 
             public struct LaneInfo
             {
-                private int connectLane;
                 private List<Junction> junctions;
 
                 public LaneInfo(int aConnectLane, Junction aJunction)
                 {
-                    connectLane = aConnectLane;
+                    ConnectLane = aConnectLane;
                     junctions = new List<Junction>(1) { aJunction };
                 }
 
-                public int ConnectLane
-                {
-                    get { return connectLane; }
-                    set { connectLane = value; }
-                }
+                public int ConnectLane { get; set; }
 
-                public IEnumerable<Junction> Junctions
-                {
-                    get { return junctions; }
-                }
+                public IEnumerable<Junction> Junctions => junctions;
 
                 public LaneInfo Clone()
                 {
-                    var other = new LaneInfo { connectLane = connectLane, junctions = new List<Junction>(junctions) };
+                    var other = new LaneInfo { ConnectLane = ConnectLane, junctions = new List<Junction>(junctions) };
                     return other;
                 }
 

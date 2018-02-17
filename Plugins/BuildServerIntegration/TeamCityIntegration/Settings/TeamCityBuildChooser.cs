@@ -110,17 +110,14 @@ namespace TeamCityIntegration.Settings
 
         private void SelectBuild()
         {
-            if (treeViewTeamCityProjects.SelectedNode == null)
-                return;
+            if (treeViewTeamCityProjects.SelectedNode?.Tag is Build build)
+            {
+                TeamCityProjectName = build.ParentProject;
+                TeamCityBuildIdFilter = build.Id;
 
-            var build = treeViewTeamCityProjects.SelectedNode.Tag as Build;
-            if (build == null)
-                return;
-            TeamCityProjectName = build.ParentProject;
-            TeamCityBuildIdFilter = build.Id;
-
-            DialogResult = DialogResult.OK;
-            Close();
+                DialogResult = DialogResult.OK;
+                Close();
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -129,9 +126,9 @@ namespace TeamCityIntegration.Settings
             Close();
         }
 
-        private bool IsBuildSelected(TreeNode selectedNode)
+        private static bool IsBuildSelected(TreeNode selectedNode)
         {
-            return selectedNode != null && selectedNode.Tag is Build;
+            return selectedNode?.Tag is Build;
         }
 
         private void treeViewTeamCityProjects_AfterSelect(object sender, TreeViewEventArgs e)

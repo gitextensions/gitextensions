@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class GetRepoRequest : BitbucketRequestBase<Repository>
+    internal class GetRepoRequest : BitbucketRequestBase<Repository>
     {
         private readonly string _projectKey;
         private readonly string _repoName;
@@ -14,24 +14,12 @@ namespace Bitbucket
             _repoName = repoName;
         }
 
-        protected override object RequestBody
-        {
-            get { return null; }
-        }
+        protected override object RequestBody => null;
 
-        protected override Method RequestMethod
-        {
-            get { return Method.GET; }
-        }
+        protected override Method RequestMethod => Method.GET;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/rest/api/latest/projects/{0}/repos/{1}",
-                                     _projectKey, _repoName);
-            }
-        }
+        protected override string ApiUrl => string.Format("/rest/api/latest/projects/{0}/repos/{1}",
+            _projectKey, _repoName);
 
         protected override Repository ParseResponse(JObject json)
         {

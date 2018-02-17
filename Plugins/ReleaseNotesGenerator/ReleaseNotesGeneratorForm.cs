@@ -20,7 +20,7 @@ namespace ReleaseNotesGenerator
         private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' commit must be specified");
         private readonly TranslationString _caption = new TranslationString("Invalid input");
 
-        const string MostRecentHint = "most recent changes are listed on top";
+        private const string MostRecentHint = "most recent changes are listed on top";
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
         private readonly IGitLogLineParser _gitLogLineParser;
@@ -131,13 +131,13 @@ namespace ReleaseNotesGenerator
             return result;
         }
 
-        private string CreateHtmlTable(IEnumerable<LogLine> logLines)
+        private static string CreateHtmlTable(IEnumerable<LogLine> logLines)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("<table>\r\n");
             foreach (var logLine in logLines)
             {
-                string message = string.Join("<br/>", logLine.MessageLines.Select(a => WebUtility.HtmlEncode(a)));
+                string message = string.Join("<br/>", logLine.MessageLines.Select(WebUtility.HtmlEncode));
                 stringBuilder.AppendFormat("<tr>\r\n  <td>{0}</td>\r\n  <td>{1}</td>\r\n</tr>\r\n", logLine.Commit, message);
             }
             stringBuilder.Append("</table>");

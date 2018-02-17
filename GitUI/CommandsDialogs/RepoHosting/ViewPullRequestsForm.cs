@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
-        private AsyncLoader loader = new AsyncLoader();
+        private readonly AsyncLoader loader = new AsyncLoader();
 
         // only for translation
         private ViewPullRequestsForm()
@@ -52,9 +52,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        List<IHostedRemote> _hostedRemotes;
-        List<IPullRequestInformation> _pullRequestsInfo;
-        IPullRequestInformation _currentPullRequestInfo;
+        private List<IHostedRemote> _hostedRemotes;
+        private List<IPullRequestInformation> _pullRequestsInfo;
+        private IPullRequestInformation _currentPullRequestInfo;
 
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
         {
@@ -92,10 +92,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
             var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
-            if (hostedRemote == null)
-                return;
 
-            var hostedRepo = hostedRemote.GetHostedRepository();
+            var hostedRepo = hostedRemote?.GetHostedRepository();
             if (hostedRepo == null)
                 return;
 
@@ -135,8 +133,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var currentRemote = Module.GetCurrentRemote();
             var hostedRemote = _selectHostedRepoCB.Items.
                 Cast<IHostedRemote>().
-                Where(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase)).
-                FirstOrDefault();
+                FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
 
             if (hostedRemote == null)
             {
@@ -231,11 +228,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
         {
-            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion != null ? discussion.Entries : null);
+            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
         }
 
-        void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (_discussionWB.Document != null)
             {
@@ -253,7 +250,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                     _strError.Text));
         }
 
-        Dictionary<string, string> _diffCache;
+        private Dictionary<string, string> _diffCache;
         private void SplitAndLoadDiff(string diffData)
         {
             _diffCache = new Dictionary<string, string>();
@@ -357,7 +354,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             Close();
         }
 
-        void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
+        private void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var gis = _fileStatusList.SelectedItem;
             if (gis == null)
@@ -437,9 +434,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 loader.Cancel();
                 loader.Dispose();
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);

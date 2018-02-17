@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
     public class SettingsContainer<L, C> : ISettingsSource where L : SettingsContainer<L, C> where C : SettingsCache
     {
-        public L LowerPriority { get; private set; }
-        public C SettingsCache { get; private set; }
+        public L LowerPriority { get; }
+        public C SettingsCache { get; }
 
         public SettingsContainer(L aLowerPriority, C aSettingsCache)
         {
@@ -35,19 +32,12 @@ namespace GitCommands.Settings
         public void Save()
         {
             SettingsCache.Save();
-
-            if (LowerPriority != null)
-            {
-                LowerPriority.Save();
-            }
+            LowerPriority?.Save();
         }
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
-            T value;
-
-            TryGetValue(name, defaultValue, decode, out value);
-
+            TryGetValue(name, defaultValue, decode, out var value);
             return value;
         }
 
@@ -68,7 +58,7 @@ namespace GitCommands.Settings
 
         public virtual bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
-            if (SettingsCache.TryGetValue<T>(name, defaultValue, decode, out value))
+            if (SettingsCache.TryGetValue(name, defaultValue, decode, out value))
                 return true;
 
             if (LowerPriority != null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))

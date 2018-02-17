@@ -17,8 +17,8 @@ namespace GitUIPluginInterfaces
             DefaultValue = aDefaultValue;
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public string DefaultValue { get; set; }
         public TextBox CustomControl { get; set; }
 
@@ -77,15 +77,9 @@ namespace GitUIPluginInterfaces
 
         public string this[ISettingsSource settings]
         {
-            get 
-            {
-                return settings.GetString(Name, null);
-            }
+            get => settings.GetString(Name, null);
 
-            set 
-            {
-                settings.SetString(Name, value);
-            }
+            set => settings.SetString(Name, value);
         }
 
         public string ValueOrDefault(ISettingsSource settings)

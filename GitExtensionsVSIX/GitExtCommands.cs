@@ -34,7 +34,7 @@ namespace GitExtensionsVSIX
 
         private readonly DTE2 _application;
         private OutputWindowPane _outputPane;
-        private OleMenuCommandService _commandService;
+        private readonly OleMenuCommandService _commandService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitExtCommands"/> class.
@@ -43,12 +43,7 @@ namespace GitExtensionsVSIX
         /// <param name="package">Owner package, not null.</param>
         private GitExtCommands(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
-            _package = package;
+            _package = package ?? throw new ArgumentNullException(nameof(package));
             _application = (DTE2)ServiceProvider.GetService(typeof(DTE));
             _commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
@@ -59,8 +54,7 @@ namespace GitExtensionsVSIX
             }
             catch (Exception ex)
             {
-                if (OutputPane != null)
-                    OutputPane.OutputString("Error adding commands: " + ex);
+                OutputPane?.OutputString("Error adding commands: " + ex);
             }
         }
 
@@ -115,10 +109,8 @@ namespace GitExtensionsVSIX
         private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand guiCommand = (OleMenuCommand)sender;
-            VsixCommandBase command;
-            if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
-                return;
-            command.BeforeQueryStatus(_application, guiCommand);
+            if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+                command.BeforeQueryStatus(_application, guiCommand);
         }
 
         /// <summary>
@@ -129,15 +121,9 @@ namespace GitExtensionsVSIX
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider
-        {
-            get { return _package; }
-        }
+        private IServiceProvider ServiceProvider => _package;
 
-        public OutputWindowPane OutputPane
-        {
-            get { return _outputPane ?? (_outputPane = PluginHelpers.AquireOutputPane(_application, Vsix.Name)); }
-        }
+        public OutputWindowPane OutputPane => _outputPane ?? (_outputPane = PluginHelpers.AquireOutputPane(_application, Vsix.Name));
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -158,10 +144,8 @@ namespace GitExtensionsVSIX
         private void MenuItemCallback(object sender, EventArgs e)
         {
             var guiCommand = (MenuCommand)sender;
-            VsixCommandBase command;
-            if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
-                return;
-            command.BaseCommand.OnCommand(_application, OutputPane);
+            if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+                command.BaseCommand.OnCommand(_application, OutputPane);
         }
     }
 }

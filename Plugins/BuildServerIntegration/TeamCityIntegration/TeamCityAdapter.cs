@@ -75,12 +75,12 @@ namespace TeamCityIntegration
 
             string url = serverUrl + "ntlmLogin.html";
             var cookieContainer = new CookieContainer();
-            var request = (HttpWebRequest)HttpWebRequest.Create (url);
+            var request = (HttpWebRequest)WebRequest.Create (url);
             request.CookieContainer = cookieContainer;
 
             if (buildServerCredentials != null
-                && !String.IsNullOrEmpty(buildServerCredentials.Username)
-                && !String.IsNullOrEmpty(buildServerCredentials.Password))
+                && !string.IsNullOrEmpty(buildServerCredentials.Username)
+                && !string.IsNullOrEmpty(buildServerCredentials.Password))
             {
                 request.Credentials = new NetworkCredential(buildServerCredentials.Username, buildServerCredentials.Password);
             }
@@ -157,10 +157,7 @@ namespace TeamCityIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return httpClient.BaseAddress.Host; }
-        }
+        public string UniqueKey => httpClient.BaseAddress.Host;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -534,10 +531,7 @@ namespace TeamCityIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (httpClient != null)
-            {
-                httpClient.Dispose();
-            }
+            httpClient?.Dispose();
         }
 
         public Project GetProjectsTree()
@@ -607,6 +601,6 @@ namespace TeamCityIntegration
         public string ParentProject { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
-        public string DisplayName { get { return Name + " (" + Id + ")"; } }
+        public string DisplayName => Name + " (" + Id + ")";
     }
 }

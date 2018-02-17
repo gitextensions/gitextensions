@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.Mask();
             _remoteLoader.Load(
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
-                (IHostedRemote[] foreignHostedRemotes) =>
+                foreignHostedRemotes =>
                 {
                     if (foreignHostedRemotes.Length == 0)
                     {
@@ -79,8 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
                 {
-                    var ihr = _pullReqTargetsCB.Items[i] as IHostedRemote;
-                    if (ihr != null && ihr.Name == _chooseRemote)
+                    if (_pullReqTargetsCB.Items[i] is IHostedRemote ihr && ihr.Name == _chooseRemote)
                     {
                         _pullReqTargetsCB.SelectedIndex = i;
                         break;
@@ -104,7 +103,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 () => _currentHostedRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, true));
                     int selectItem = 0;
                     _remoteBranchesCB.Items.Clear();
                     for (int i = 0; i < branches.Count; i++)
@@ -139,7 +138,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 () => MyRemote.GetHostedRepository().Branches,
                 branches =>
                 {
-                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, true));
                     int selectItem = 0;
                     for (int i = 0; i < branches.Count; i++)
                     {
@@ -202,9 +201,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 _remoteLoader.Cancel();
                 _remoteLoader.Dispose();
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);

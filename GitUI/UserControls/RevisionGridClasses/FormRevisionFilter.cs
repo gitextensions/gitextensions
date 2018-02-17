@@ -1,6 +1,5 @@
 ﻿using System;
 using GitCommands;
-using ResourceManager;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -136,7 +135,7 @@ namespace GitUI.RevisionGridClasses
         public string GetBranchFilter()
         {
             if (!AppSettings.BranchFilterEnabled || AppSettings.ShowCurrentBranchOnly)
-                return String.Empty;
+                return string.Empty;
 
             return BranchFilter.Text;
         }

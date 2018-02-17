@@ -29,8 +29,8 @@ namespace ResourceManager
         }
         public HotkeyCommand(int commandCode, string name)
         {
-            this.CommandCode = commandCode;
-            this.Name = name;
+            CommandCode = commandCode;
+            Name = name;
         }
 
         public static HotkeyCommand[] FromEnum(Type enumType)
@@ -40,13 +40,10 @@ namespace ResourceManager
 
         public override bool Equals(object obj)
         {
-            HotkeyCommand other = obj as HotkeyCommand;
-            if (other == null)
-            {
-                return false;
-            }
+            if (obj is HotkeyCommand other)
+                return GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
+            return false;
 
-            return GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
         }
 
         private IEnumerable<object> GetFieldsToCompare()

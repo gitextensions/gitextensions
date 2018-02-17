@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using GitUIPluginInterfaces;
 using GitCommands.Settings;
-using System.Linq;
+using GitUIPluginInterfaces;
+using ResourceManager;
+using BoolSetting = GitUIPluginInterfaces.BoolSetting;
+using StringSetting = GitCommands.Settings.StringSetting;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -14,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        private List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
+        private readonly List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
         private ISettingsPageHost _PageHost;
         protected ISettingsPageHost PageHost
         {
@@ -27,11 +29,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
-        protected CheckSettingsLogic CheckSettingsLogic { get { return PageHost.CheckSettingsLogic; } }
-        protected CommonLogic CommonLogic { get { return CheckSettingsLogic.CommonLogic; } }
+        protected CheckSettingsLogic CheckSettingsLogic => PageHost.CheckSettingsLogic;
+        protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
 
-        protected GitModule Module { get { return this.CommonLogic.Module; } }
+        protected GitModule Module => CommonLogic.Module;
 
         protected virtual void Init(ISettingsPageHost aPageHost)
         {
@@ -52,7 +54,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return Text;
         }
 
-        public virtual Control GuiControl { get { return this; } }
+        public virtual Control GuiControl => this;
 
         /// <summary>
         /// Called when SettingsPage is shown (again);
@@ -63,23 +65,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             // to be overridden
         }
 
-        private bool _loadingSettings;
-
         /// <summary>
         /// True during execution of LoadSettings(). Usually derived classes
         /// apply settings to GUI controls. Some of controls trigger events -
         /// IsLoadingSettings can be used for example to not execute the event action.
         /// </summary>
-        protected bool IsLoadingSettings
-        {
-            get { return _loadingSettings; }
-        }
+        protected bool IsLoadingSettings { get; private set; }
 
         public void LoadSettings()
         {
-            _loadingSettings = true;
+            IsLoadingSettings = true;
             SettingsToPage();
-            _loadingSettings = false;
+            IsLoadingSettings = false;
         }
 
         public void SaveSettings()
@@ -123,13 +120,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        protected void AddSettingBinding(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+        protected void AddSettingBinding(StringSetting aSetting, ComboBox aComboBox)
         {
             var adapter = new StringComboBoxAdapter(aSetting, aComboBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        IList<string> childrenText;
+        private IList<string> childrenText;
 
         /// <summary>
         /// override to provide search keywords
@@ -140,7 +137,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
-        static IList<string> GetChildrenText(Control control)
+        private static IList<string> GetChildrenText(Control control)
         {
             if (control.HasChildren == false) { return new string[0]; }
 
@@ -169,18 +166,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return "";
         }
 
-        public virtual bool IsInstantSavePage
-        {
-            get { return false; }
-        }
+        public virtual bool IsInstantSavePage => false;
 
-        public virtual SettingsPageReference PageReference
-        {
-            get { return new SettingsPageReferenceByType(GetType()); }
-        }
+        public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
     }
 
-    public class BoolCheckBoxAdapter : GitUIPluginInterfaces.BoolSetting
+    public class BoolCheckBoxAdapter : BoolSetting
     {
         public BoolCheckBoxAdapter(BoolNullableSetting aSetting, CheckBox aCheckBox)
             : base(aSetting.FullPath, aSetting.DefaultValue.Value)
@@ -189,16 +180,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class StringComboBoxAdapter : GitUIPluginInterfaces.ChoiceSetting
+    public class StringComboBoxAdapter : ChoiceSetting
     {
-        public StringComboBoxAdapter(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+        public StringComboBoxAdapter(StringSetting aSetting, ComboBox aComboBox)
             : base(aSetting.FullPath, aComboBox.Items.Cast<string>().ToList(), aSetting.DefaultValue)
         {
             CustomControl = aComboBox;
         }
     }
 
-    public class IntTextBoxAdapter : GitUIPluginInterfaces.NumberSetting<int>
+    public class IntTextBoxAdapter : NumberSetting<int>
     {
         public IntTextBoxAdapter(IntNullableSetting aSetting, TextBox aControl)
             : base(aSetting.FullPath, aSetting.DefaultValue.Value)

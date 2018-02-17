@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
@@ -135,10 +134,10 @@ namespace AppVeyorIntegration
             }
             var builds = Projects.Where(p => useAllProjets || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
             _allBuilds =
-                FilterBuilds(builds.SelectMany(project => QueryBuildsResults(project)));
+                FilterBuilds(builds.SelectMany(QueryBuildsResults));
         }
 
-        private void FillProjectsFromSettings(string accountName, string[] projectNames)
+        private static void FillProjectsFromSettings(string accountName, string[] projectNames)
         {
             foreach (var projectName in projectNames)
             {
@@ -152,7 +151,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        HttpClient GetHttpClient(string baseUrl, string accountToken)
+        private static HttpClient GetHttpClient(string baseUrl, string accountToken)
         {
             var httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
             {
@@ -166,7 +165,7 @@ namespace AppVeyorIntegration
             return httpClient;
         }
 
-        private string BuildQueryUrl(string projectId)
+        private static string BuildQueryUrl(string projectId)
         {
             return ApiBaseUrl + projectId + "/history?recordsNumber=" + ProjectsToRetrieveCount;
         }
@@ -250,7 +249,7 @@ namespace AppVeyorIntegration
                                     CommitId = commitSha1,
                                     CommitHashList = new[] { commitSha1 },
                                     Status = status,
-                                    StartDate = b["started"] == null ? DateTime.MinValue : b["started"].ToObject<DateTime>(),
+                                    StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                                     BaseWebUrl = baseWebUrl,
                                     Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                     BaseApiUrl = baseApiUrl,
@@ -275,10 +274,7 @@ namespace AppVeyorIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return _httpClientAppVeyor.BaseAddress.Host; }
-        }
+        public string UniqueKey => _httpClientAppVeyor.BaseAddress.Host;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -494,14 +490,8 @@ namespace AppVeyorIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (_httpClientAppVeyor != null)
-            {
-                _httpClientAppVeyor.Dispose();
-            }
-            if (_httpClientGitHub != null)
-            {
-                _httpClientGitHub.Dispose();
-            }
+            _httpClientAppVeyor?.Dispose();
+            _httpClientGitHub?.Dispose();
         }
     }
 
@@ -513,7 +503,7 @@ namespace AppVeyorIntegration
         public string BuildId { get; set; }
         public string CommitId { get; set; }
         public string AppVeyorBuildReportUrl { get; set; }
-        public bool IsRunning { get { return Status == BuildStatus.InProgress; } }
+        public bool IsRunning => Status == BuildStatus.InProgress;
         public string Branch { get; set; }
         public string BaseApiUrl { get; set; }
         public string BaseWebUrl { get; set; }

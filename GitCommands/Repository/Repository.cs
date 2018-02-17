@@ -30,23 +30,14 @@ namespace GitCommands.Repository
         private string _path;
         public string Path
         {
-            get
-            {
-                return _path ?? string.Empty;
-            }
-            set
-            {
-                _path = value;
-            }
+            get => _path ?? string.Empty;
+            set => _path = value;
         }
         public string Description { get; set; }
         public RepositoryAnchor Anchor { get; set; }
 
         [XmlIgnore]
-        public bool IsRemote
-        {
-            get { return PathIsUrl(Path); }
-        }
+        public bool IsRemote => PathIsUrl(Path);
 
         [XmlIgnore]
         public RepositoryType RepositoryType { get; set; }
@@ -63,12 +54,12 @@ namespace GitCommands.Repository
 
         public override string ToString()
         {
-            return Path + " ("+ Anchor.ToString() +")";
+            return Path + " ("+ Anchor +")";
         }
 
         public static bool PathIsUrl(string path)
         {
-            return !String.IsNullOrEmpty(path) &&
+            return !string.IsNullOrEmpty(path) &&
                 (path.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) ||
                  path.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) ||
                  path.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase));

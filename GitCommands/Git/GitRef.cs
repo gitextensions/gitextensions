@@ -10,7 +10,7 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-       
+
         /// <summary>"refs/tags/"</summary>
         public static readonly string RefsTagsPrefix = "refs/tags/";
         /// <summary>"refs/heads/"</summary>
@@ -21,8 +21,8 @@ namespace GitCommands
         public static readonly string RefsBisectPrefix = "refs/bisect/";
         /// <summary>"^{}"</summary>
         public static readonly string TagDereferenceSuffix = "^{}";
-       
-        public IGitModule Module { get; private set; }
+
+        public IGitModule Module { get; }
 
         public GitRef(IGitModule module, string guid, string completeName)
             : this(module, guid, completeName, string.Empty) { }
@@ -43,7 +43,7 @@ namespace GitCommands
             ParseName();
 
             _remoteSettingName = RemoteSettingName(Name);
-            _mergeSettingName = String.Format("branch.{0}.merge", Name);
+            _mergeSettingName = string.Format("branch.{0}.merge", Name);
         }
 
         public static GitRef CreateBranchRef(GitModule module, string guid, string name)
@@ -51,42 +51,33 @@ namespace GitCommands
             return new GitRef(module, guid, RefsHeadsPrefix + name);
         }
 
-        public string CompleteName { get; private set; }
+        public string CompleteName { get; }
         public bool Selected { get; set; }
         public bool SelectedHeadMergeSource { get; set; }
-        public bool IsTag { get; private set; }
-        public bool IsHead { get; private set; }
-        public bool IsRemote { get; private set; }
-        public bool IsBisect { get; private set; }
+        public bool IsTag { get; }
+        public bool IsHead { get; }
+        public bool IsRemote { get; }
+        public bool IsBisect { get; }
 
         /// <summary>
-        /// True when Guid is a checksum of an object (e.g. commit) to which another object 
-        /// with Name (e.g. annotated tag) is applied. 
+        /// True when Guid is a checksum of an object (e.g. commit) to which another object
+        /// with Name (e.g. annotated tag) is applied.
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
-        public bool IsDereference { get; private set; }
+        public bool IsDereference { get; }
 
-        public bool IsOther
-        {
-            get { return !IsHead && !IsRemote && !IsTag; }
-        }
+        public bool IsOther => !IsHead && !IsRemote && !IsTag;
 
-        public string LocalName
-        {
-            get { return IsRemote ? Name.Substring(Remote.Length + 1) : Name; }
-        }
+        public string LocalName => IsRemote ? Name.Substring(Remote.Length + 1) : Name;
 
-        public string Remote { get; private set; }
+        public string Remote { get; }
 
         public string TrackingRemote
         {
-            get
-            {
-                return GetTrackingRemote(Module.LocalConfigFile);
-            }
+            get => GetTrackingRemote(Module.LocalConfigFile);
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     Module.UnsetSetting(_remoteSettingName);
                 else
                 {
@@ -101,7 +92,7 @@ namespace GitCommands
         /// <summary>Gets the setting name for a branch's remote.</summary>
         public static string RemoteSettingName(string branch)
         {
-            return String.Format(SettingKeyString.BranchRemote, branch);
+            return string.Format(SettingKeyString.BranchRemote, branch);
         }
 
         /// <summary>
@@ -116,13 +107,10 @@ namespace GitCommands
 
         public string MergeWith
         {
-            get
-            {
-                return GetMergeWith(Module.LocalConfigFile);
-            }
+            get => GetMergeWith(Module.LocalConfigFile);
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     Module.UnsetSetting(_mergeSettingName);
                 else
                     Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
@@ -137,7 +125,7 @@ namespace GitCommands
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
-            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
+            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(RefsHeadsPrefix.Length) : merge;
         }
 
 
@@ -148,7 +136,7 @@ namespace GitCommands
 
         #region IGitItem Members
 
-        public string Guid { get; private set; }
+        public string Guid { get; }
         public string Name { get; private set; }
 
         #endregion
@@ -162,7 +150,7 @@ namespace GitCommands
         {
             if (IsRemote)
             {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + "remotes/".Length);
             }
             else if (IsTag)
             {
@@ -172,11 +160,11 @@ namespace GitCommands
                         ? CompleteName.Substring(0, CompleteName.Length - TagDereferenceSuffix.Length)
                         : CompleteName;
 
-                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
+                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + "tags/".Length);
             }
             else if (IsHead)
             {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
+                Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + "heads/".Length);
             }
             else
             {

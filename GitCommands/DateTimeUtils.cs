@@ -11,8 +11,7 @@ namespace GitCommands
 
         public static bool TryParseUnixTime(string unixTime, out DateTime result)
         {
-            long seconds;
-            if (long.TryParse(unixTime, out seconds))
+            if (long.TryParse(unixTime, out var seconds))
             {
                 result = UnixEpoch.AddSeconds(seconds).ToLocalTime();
                 return true;

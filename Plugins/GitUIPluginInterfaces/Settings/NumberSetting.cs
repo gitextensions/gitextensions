@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
@@ -20,8 +16,8 @@ namespace GitUIPluginInterfaces
             DefaultValue = aDefaultValue;
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public T DefaultValue { get; set; }
         public TextBox CustomControl { get; set; }
 
@@ -102,18 +98,9 @@ namespace GitUIPluginInterfaces
 
         public object this[ISettingsSource settings]
         {
-            get 
-            {
-                return settings.GetValue(Name, null, s =>
-                    {
-                        return ConvertFromString(s);
-                    });
-            }
+            get => settings.GetValue(Name, null, ConvertFromString);
 
-            set 
-            {
-                settings.SetValue(Name, value, i => { return ConvertToString(i); });
-            }
+            set => settings.SetValue(Name, value, ConvertToString);
         }
 
         public T ValueOrDefault(ISettingsSource settings)
@@ -123,10 +110,8 @@ namespace GitUIPluginInterfaces
             {
                 return DefaultValue;
             }
-            else
-            {
-                return (T)settingVal;
-            }            
+
+            return (T)settingVal;
         }
 
     }

@@ -6,12 +6,12 @@ using GitCommands.Git;
 
 namespace GitUI.UserControls
 {
-    class AuthorEmailBasedRevisionHighlighting
+    internal class AuthorEmailBasedRevisionHighlighting
     {
         public enum SelectionChangeAction
         {
             NoAction,
-            RefreshUserInterface,
+            RefreshUserInterface
         }
 
         private GitRevision _currentSelectedRevision;

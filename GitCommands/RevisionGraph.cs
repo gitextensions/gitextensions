@@ -11,7 +11,7 @@ using GitUIPluginInterfaces;
 namespace GitCommands
 {
     [Flags]
-    public enum RefsFiltringOptions
+    public enum RefsFilteringOptions
     {
         Branches = 1,               // --branches
         Remotes = 2,                // --remotes
@@ -35,15 +35,8 @@ namespace GitCommands
         public event EventHandler Exited;
         public event EventHandler<AsyncErrorEventArgs> Error
         {
-            add
-            {
-                _backgroundLoader.LoadingError += value;
-            }
-
-            remove
-            {
-                _backgroundLoader.LoadingError -= value;
-            }
+            add => _backgroundLoader.LoadingError += value;
+            remove => _backgroundLoader.LoadingError -= value;
         }
         public event EventHandler Updated;
         public event EventHandler BeginUpdate;
@@ -72,7 +65,7 @@ namespace GitCommands
             Commit,
             CommitSubject,
             CommitBody,
-            FileName,
+            FileName
         }
 
         private ReadStep _nextStep = ReadStep.Commit;
@@ -103,24 +96,23 @@ namespace GitCommands
             }
         }
 
-        public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
-        public string RevisionFilter = String.Empty;
-        public string PathFilter = String.Empty;
-        public string BranchFilter = String.Empty;
+        public RefsFilteringOptions RefsOptions = RefsFilteringOptions.All | RefsFilteringOptions.Boundary;
+        public string RevisionFilter = string.Empty;
+        public string PathFilter = string.Empty;
+        public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        static char[] ShellGlobCharacters = new[] { '?', '*', '[' };
+        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
 
         public void Execute()
         {
-            _backgroundLoader.Load(ProccessGitLog, ProccessGitLogExecuted);
+            _backgroundLoader.Load(ProcessGitLog, ProcessGitLogExecuted);
         }
 
-        private void ProccessGitLog(CancellationToken taskState)
+        private void ProcessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
-            if (Updated != null)
-                Updated(this, new RevisionGraphUpdatedEventArgs(null));
+            Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             string formatString =
@@ -146,67 +138,60 @@ namespace GitCommands
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            string logParam;
-            if (AppSettings.OrderRevisionByDate)
-            {
-                logParam = " --date-order";
-            }
+            var arguments = new StringBuilder("log -z ");
+
+            if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0)
+                arguments.Append("--branches=" + BranchFilter);
             else
-            {
-                logParam = " --topo-order";
-            }
+                arguments.Append(BranchFilter);
+
+            arguments.AppendFormat(" --pretty=format:\"{0}\"", formatString);
+
+            arguments.Append(AppSettings.OrderRevisionByDate
+                ? " --date-order"
+                : " --topo-order");
 
             if (AppSettings.ShowReflogReferences)
-            {
-                logParam += " --reflog";
-            }
+                arguments.Append(" --reflog");
 
-            if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
-                logParam += " --all";
+            if (RefsOptions.HasFlag(RefsFilteringOptions.All))
+            {
+                arguments.Append(" --all");
+            }
             else
             {
-                if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
-                    logParam = " --branches";
-                if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
-                    logParam += " --remotes";
-                if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
-                    logParam += " --tags";
+                if (RefsOptions.HasFlag(RefsFilteringOptions.Branches))
+                    arguments.Append(" --branches");
+                if (RefsOptions.HasFlag(RefsFilteringOptions.Remotes))
+                    arguments.Append(" --remotes");
+                if (RefsOptions.HasFlag(RefsFilteringOptions.Tags))
+                    arguments.Append(" --tags");
             }
-            if ((RefsOptions & RefsFiltringOptions.Boundary) == RefsFiltringOptions.Boundary)
-                logParam += " --boundary";
-            if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
-                logParam += " --not --glob=notes --not";
 
-            if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
-                logParam += " --no-merges";
+            if (RefsOptions.HasFlag(RefsFilteringOptions.Boundary))
+                arguments.Append(" --boundary");
 
-            if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
-                logParam += " --first-parent";
+            if (RefsOptions.HasFlag(RefsFilteringOptions.ShowGitNotes))
+                arguments.Append(" --not --glob=notes --not");
 
-            if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
-                logParam += " --simplify-by-decoration";
+            if (RefsOptions.HasFlag(RefsFilteringOptions.NoMerges))
+                arguments.Append(" --no-merges");
 
-            string branchFilter = BranchFilter;
-            if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
-                (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
-                branchFilter = "--branches=" + BranchFilter;
+            if (RefsOptions.HasFlag(RefsFilteringOptions.FirstParent))
+                arguments.Append(" --first-parent");
 
-            string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
-                logParam,
-                formatString,
-                branchFilter,
-                RevisionFilter,
-                PathFilter);
+            if (RefsOptions.HasFlag(RefsFilteringOptions.SimplifyByDecoration))
+                arguments.Append(" --simplify-by-decoration");
 
-            Process p = _module.RunGitCmdDetached(arguments, GitModule.LosslessEncoding);
+            arguments.Append(" ").Append(RevisionFilter).Append(" -- ").Append(PathFilter);
+
+            Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
 
             if (taskState.IsCancellationRequested)
                 return;
 
             _previousFileName = null;
-            if (BeginUpdate != null)
-                BeginUpdate(this, EventArgs.Empty);
+            BeginUpdate?.Invoke(this, EventArgs.Empty);
 
             _nextStep = ReadStep.Commit;
             foreach (string data in ReadDataBlocks(p.StandardOutput))
@@ -231,7 +216,7 @@ namespace GitCommands
                     break;
 
                 string bufferString = new string(buffer, 0, bytesRead);
-                string[] dataBlocks = bufferString.Split(new char[] { '\0' });
+                string[] dataBlocks = bufferString.Split('\0');
 
                 if (dataBlocks.Length > 1)
                 {
@@ -243,7 +228,7 @@ namespace GitCommands
 
                 int lastDataBlockIndex = dataBlocks.Length - 1;
 
-                // Return all the blocks until the last one 
+                // Return all the blocks until the last one
                 for (int i = 1; i < lastDataBlockIndex; i++)
                 {
                     yield return dataBlocks[i];
@@ -259,13 +244,12 @@ namespace GitCommands
             }
         }
 
-        private void ProccessGitLogExecuted()
+        private void ProcessGitLogExecuted()
         {
             FinishRevision();
             _previousFileName = null;
 
-            if (Exited != null)
-                Exited(this, EventArgs.Empty);
+            Exited?.Invoke(this, EventArgs.Empty);
         }
 
         private IList<IGitRef> GetRefs()
@@ -294,7 +278,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>Refs loaded while the latest processing of git log</returns>
         public IEnumerable<IGitRef> LatestRefs()
@@ -303,15 +287,13 @@ namespace GitCommands
             {
                 return Enumerable.Empty<IGitRef>();
             }
-            else
-            {
-                return _refs.SelectMany(entry => entry.Value);
-            }
+
+            return _refs.SelectMany(entry => entry.Value);
         }
 
         private string _previousFileName;
 
-        void FinishRevision()
+        private void FinishRevision()
         {
             if (_revision != null && _revision.Guid == null)
                 _revision = null;
@@ -330,13 +312,12 @@ namespace GitCommands
                     _revision.Body = null;
 
                     RevisionCount++;
-                    if (Updated != null)
-                        Updated(this, new RevisionGraphUpdatedEventArgs(_revision));
+                    Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(_revision));
                 }
             }
         }
 
-        void DataReceived(string data)
+        private void DataReceived(string data)
         {
             if (data.StartsWith(CommitBegin))
             {
@@ -350,7 +331,7 @@ namespace GitCommands
                 case ReadStep.Commit:
                     data = GitModule.ReEncodeString(data, GitModule.LosslessEncoding, _module.LogOutputEncoding);
 
-                    string[] lines = data.Split(new char[] { '\n' });
+                    string[] lines = data.Split('\n');
                     Debug.Assert(lines.Length == 11);
                     Debug.Assert(lines[0] == CommitBegin);
 
@@ -358,28 +339,25 @@ namespace GitCommands
 
                     _revision.Guid = lines[1];
                     {
-                        List<IGitRef> gitRefs;
-                        if (_refs.TryGetValue(_revision.Guid, out gitRefs))
+                        if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
                             _revision.Refs.AddRange(gitRefs);
                     }
 
                     // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
-                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    _revision.ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     _revision.TreeGuid = lines[3];
 
                     _revision.Author = lines[4];
                     _revision.AuthorEmail = lines[5];
                     {
-                        DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(lines[6], out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[6], out var dateTime))
                             _revision.AuthorDate = dateTime;
                     }
 
                     _revision.Committer = lines[7];
                     _revision.CommitterEmail = lines[8];
                     {
-                        DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(lines[9], out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[9], out var dateTime))
                             _revision.CommitDate = dateTime;
                     }
 
@@ -397,10 +375,10 @@ namespace GitCommands
                 case ReadStep.FileName:
                     if (!string.IsNullOrEmpty(data))
                     {
-                        // Git adds \n between the format string (ends with \0 in our case) 
+                        // Git adds \n between the format string (ends with \0 in our case)
                         // and the first file name. So, we need to remove it from the file name.
                         data = GitModule.ReEncodeFileNameFromLossless(data);
-                        _revision.Name = data.TrimStart(new char[] { '\n' });
+                        _revision.Name = data.TrimStart('\n');
                     }
                     break;
             }

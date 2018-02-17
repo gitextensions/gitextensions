@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,7 +11,6 @@ using GitCommands.Config;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -176,13 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(ChecklistSettingsPage));
         }
 
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsInstantSavePage => true;
 
         protected override void SettingsToPage()
         {
@@ -250,7 +245,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
             ////GitBinPath.Text = Settings.GitBinDir;
             PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(null, null);
@@ -296,7 +291,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         }
                     }
                 }
-                catch(System.ComponentModel.Win32Exception)
+                catch(Win32Exception)
                 {
                     // User cancel operation, continue;
                 }               
@@ -342,7 +337,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private readonly string[] AutoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
+        private readonly string[] AutoConfigMergeTools = { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
@@ -411,7 +406,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
@@ -658,7 +653,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
-        private bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
+        private static bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
             string textSettingUnset, string textSettingGood)
         {
             settingButton.Visible = true;
@@ -671,7 +666,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
-        private void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
+        private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
         {
             settingButton.BackColor = Color.PaleGreen;
             settingButton.ForeColor = Color.DarkGreen;
@@ -679,7 +674,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             settingFixButton.Visible = false;
         }
 
-        private void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
+        private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
         {
             settingButton.BackColor = Color.LavenderBlush;
             settingButton.ForeColor = Color.Crimson;

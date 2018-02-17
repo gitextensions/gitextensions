@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using GitCommands;
 using JetBrains.Annotations;
+using PatchApply;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager
@@ -9,7 +10,6 @@ namespace ResourceManager
     public static class LocalizationHelpers
     {
         private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
-
 
         private static DateTime RoundDateTime(DateTime dateTime)
         {
@@ -98,9 +98,9 @@ namespace ResourceManager
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
+        public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch patch)
         {
-            string text = patch != null ? patch.Text : null;
+            string text = patch?.Text;
             var status = GitCommandHelpers.GetSubmoduleStatus(text, module, fileName);
             if (status == null)
                 return "";
@@ -110,20 +110,20 @@ namespace ResourceManager
         public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
             if (module == null)
-                throw new ArgumentNullException("module");
+                throw new ArgumentNullException(nameof(module));
             if (status == null)
-                throw new ArgumentNullException("status");
-            GitModule gitmodule = module.GetSubmodule(status.Name);
+                throw new ArgumentNullException(nameof(status));
+            GitModule gitModule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
             // TEMP, will be moved in the follow up refactor
-            ICommitDataManager commitDataManager = new CommitDataManager(() => gitmodule);
+            ICommitDataManager commitDataManager = new CommitDataManager(() => gitModule);
 
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
             CommitData oldCommitData = null;
-            if (gitmodule.IsValidGitWorkingDir())
+            if (gitModule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.OldCommit != null)
@@ -134,8 +134,8 @@ namespace ResourceManager
                 if (oldCommitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var delim = new[] { '\n', '\r' };
+                    var lines = oldCommitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                         sb.AppendLine("\t\t" + curline);
                 }
@@ -149,7 +149,7 @@ namespace ResourceManager
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
             CommitData commitData = null;
-            if (gitmodule.IsValidGitWorkingDir())
+            if (gitModule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.Commit != null)
@@ -160,8 +160,8 @@ namespace ResourceManager
                 if (commitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var delim = new[] { '\n', '\r' };
+                    var lines = commitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                         sb.AppendLine("\t\t" + curline);
                 }
@@ -172,7 +172,7 @@ namespace ResourceManager
             }
 
             sb.AppendLine();
-            var submoduleStatus = gitmodule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
+            var submoduleStatus = gitModule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
             sb.Append("Type: ");
             switch (submoduleStatus)
             {
@@ -222,16 +222,16 @@ namespace ResourceManager
             {
                 if (status.IsDirty)
                 {
-                    string statusText = gitmodule.GetStatusText(false);
-                    if (!String.IsNullOrEmpty(statusText))
+                    string statusText = gitModule.GetStatusText(false);
+                    if (!string.IsNullOrEmpty(statusText))
                     {
                         sb.AppendLine("\nStatus:");
                         sb.Append(statusText);
                     }
                 }
 
-                string diffs = gitmodule.GetDiffFilesText(status.OldCommit, status.Commit);
-                if (!String.IsNullOrEmpty(diffs))
+                string diffs = gitModule.GetDiffFilesText(status.OldCommit, status.Commit);
+                if (!string.IsNullOrEmpty(diffs))
                 {
                     sb.AppendLine("\nDifferences:");
                     sb.Append(diffs);

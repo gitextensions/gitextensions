@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using BoolSetting = GitUIPluginInterfaces.BoolSetting;
+using StringSetting = GitCommands.Settings.StringSetting;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -30,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 settingsLayout = CreateSettingsLayout();
                 if (settingsLayout.GetControl().Parent == null)
                 {
-                    this.Controls.Add(settingsLayout.GetControl());
+                    Controls.Add(settingsLayout.GetControl());
                 }
             }
 
@@ -44,20 +45,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static TableLayoutPanel CreateDefaultTableLayoutPanel()
         {
-            TableLayoutPanel layout = new TableLayoutPanel();
-
-            layout.AutoSize = true;
-            layout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            layout.ColumnCount = 3;
-            layout.ColumnStyles.Add(new ColumnStyle());
-            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            layout.ColumnStyles.Add(new ColumnStyle());
-            layout.Dock = DockStyle.Top;
-            layout.Location = new Point(0, 0);
-            layout.RowCount = 0;
-            layout.Size = new Size(951, 518);
-
-            return layout;
+            return new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 3,
+                ColumnStyles =
+                {
+                    new ColumnStyle(),
+                    new ColumnStyle(SizeType.Percent, 100F),
+                    new ColumnStyle()
+                },
+                Dock = DockStyle.Top,
+                Location = new Point(0, 0),
+                RowCount = 0,
+                Size = new Size(951, 518)
+            };
         }
 
         public void AddSettingControl(ISettingControlBinding controlBinding)
@@ -145,10 +148,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     new Label
                     {
                         Text = controlBinding.Caption(),
-                        AutoSize = true
+                        AutoSize = true,
+                        Anchor = AnchorStyles.Left
                     };
 
-                label.Anchor = AnchorStyles.Left;
                 tableLayout.Controls.Add(label, 0, currentRow);
             }
             var control = controlBinding.GetControl();
@@ -174,13 +177,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         protected GroupBox groupBox;
 
-        public GroupBoxSettingsLayout(SettingsLayout aParentLayout, String aGroupBoxCaption)
+        public GroupBoxSettingsLayout(SettingsLayout aParentLayout, string aGroupBoxCaption)
             : base(aParentLayout, AutoLayoutSettingsPage.CreateDefaultTableLayoutPanel())
         {
             CreateGroupBox(aGroupBoxCaption);
         }
 
-        private void CreateGroupBox(String aGroupBoxCaption)
+        private void CreateGroupBox(string aGroupBoxCaption)
         {
             var gbox = new GroupBox();
             groupBox = gbox;
@@ -208,13 +211,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             aLayout.AddSetting(new BoolNullableISettingAdapter(aCaption, aSetting));
         }
 
-        public static void AddStringSetting(this SettingsLayout aLayout, string aCaption, GitCommands.Settings.StringSetting aSetting)
+        public static void AddStringSetting(this SettingsLayout aLayout, string aCaption, StringSetting aSetting)
         {
             aLayout.AddSetting(new StringISettingAdapter(aCaption, aSetting));
         }
     }
 
-    public class BoolNullableISettingAdapter : GitUIPluginInterfaces.BoolSetting
+    public class BoolNullableISettingAdapter : BoolSetting
     {
         public BoolNullableISettingAdapter(string aCaption, BoolNullableSetting setting)
             : base(setting.FullPath, aCaption, setting.DefaultValue.Value)
@@ -223,7 +226,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class StringISettingAdapter : GitUIPluginInterfaces.StringSetting
     {
-        public StringISettingAdapter(string aCaption, GitCommands.Settings.StringSetting setting)
+        public StringISettingAdapter(string aCaption, StringSetting setting)
             : base(setting.FullPath, aCaption, setting.DefaultValue)
         { }
     }

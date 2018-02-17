@@ -13,7 +13,7 @@ namespace GitUI.RevisionGridClasses
             {
                 Unprocessed,
                 Processing,
-                Processed,
+                Processed
             }
 
             #endregion
@@ -51,39 +51,25 @@ namespace GitUI.RevisionGridClasses
                 AddNode(aNode);
             }
 
-            public Node Youngest
-            {
-                get { return this[0]; }
-            }
+            public Node Youngest => this[0];
 
-            public Node Oldest
-            {
-                get { return this[NodesCount - 1]; }
-            }
+            public Node Oldest => this[NodesCount - 1];
 
             public Node ChildOf(Node aParent)
             {
-                int childIndex;
-                if (nodeIndices.TryGetValue(aParent, out childIndex))
+                if (nodeIndices.TryGetValue(aParent, out var childIndex))
                 {
                     if (childIndex > 0)
                         return nodes[childIndex - 1];
-                    else
-                        throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
+                    throw new ArgumentException("Parent has no children:\n" + aParent);
                 }
 
-                throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent.ToString());
+                throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent);
             }
 
-            public int NodesCount
-            {
-                get { return nodes.Count; }
-            }
+            public int NodesCount => nodes.Count;
 
-            public Node this[int index]
-            {
-                get { return nodes[index]; }
-            }
+            public Node this[int index] => nodes[index];
 
             public void Add(Node aParent)
             {
@@ -102,8 +88,7 @@ namespace GitUI.RevisionGridClasses
             {
                 // The 'top' (Child->node) of the junction is retained by this.
                 // The 'bottom' (node->Parent) of the junction is returned.
-                int index;
-                if (!nodeIndices.TryGetValue(aNode, out index))
+                if (!nodeIndices.TryGetValue(aNode, out var index))
                     return null;
 
                 var bottom = new Junction(this, aNode);
@@ -123,8 +108,7 @@ namespace GitUI.RevisionGridClasses
 
             public Node TryGetParent(Node child)
             {
-                int childIndex;
-                return nodeIndices.TryGetValue(child, out childIndex) ? nodes[childIndex + 1] : null;
+                return nodeIndices.TryGetValue(child, out var childIndex) ? nodes[childIndex + 1] : null;
             }
 
             private void AddNode(Node node)

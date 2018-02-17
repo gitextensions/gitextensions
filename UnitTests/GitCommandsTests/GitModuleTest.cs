@@ -6,7 +6,7 @@ namespace GitCommandsTests
     [TestFixture]
     public class GitModuleTest
     {
-        GitModule _gitModule;
+        private GitModule _gitModule;
         [SetUp]
         public void SetUp()
         {

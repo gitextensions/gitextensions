@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.CommandsDialogs.BrowseDialog;
-using ResourceManager;
 using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI.HelperDialogs
@@ -26,12 +24,12 @@ namespace GitUI.HelperDialogs
             : this(aCommands)
         {
             revisionGrid.MultiSelect = false;
-            revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
+            revisionGrid.ShowUncommittedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
 
-            if (!String.IsNullOrEmpty(preselectCommit))
+            if (!string.IsNullOrEmpty(preselectCommit))
             {
                 string guid = Module.RevParse(preselectCommit);
-                if (!String.IsNullOrEmpty(guid))
+                if (!string.IsNullOrEmpty(guid))
                 {
                     revisionGrid.SetInitialRevision(new GitRevision(Module, guid));
                 }
@@ -39,7 +37,7 @@ namespace GitUI.HelperDialogs
 
         }
 
-        public GitCommands.GitRevision SelectedRevision { get; private set; }
+        public GitRevision SelectedRevision { get; private set; }
         private Dictionary<string, string> _parents;
 
         protected override void OnLoad(EventArgs e)
@@ -72,7 +70,7 @@ namespace GitUI.HelperDialogs
 
         private void buttonGotoCommit_Click(object sender, EventArgs e)
         {
-            revisionGrid.MenuCommands.GotoCommitExcecute();
+            revisionGrid.MenuCommands.GotoCommitExecute();
         }
 
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -93,7 +91,7 @@ namespace GitUI.HelperDialogs
 
             if(!flowLayoutPanelParents.Visible)
                 return;
-            _parents = SelectedRevision.ParentGuids.ToDictionary(p=> GitRevision.ToShortSha(p), p=> p);
+            _parents = SelectedRevision.ParentGuids.ToDictionary(GitRevision.ToShortSha, p => p);
             linkLabelParent.Text = _parents.Keys.ElementAt(0);
 
             linkLabelParent2.Visible = _parents.Count > 1;

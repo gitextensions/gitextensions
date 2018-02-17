@@ -1,4 +1,6 @@
-﻿namespace GitUI.Properties
+﻿using System.Drawing;
+
+namespace GitUI.Properties
 {
     /// <summary>
     /// DESIGNER USAGE INFO!
@@ -12,12 +14,6 @@
     /// </summary>
     internal partial class Resources
     {
-        public static System.Drawing.Bitmap loadingpanel
-        {
-            get
-            {
-                return loadingpanel_animated;
-            }
-        }
+        public static Bitmap loadingpanel => loadingpanel_animated;
     }
 }

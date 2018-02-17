@@ -16,20 +16,14 @@ namespace FindLargeFiles
             gitObjects.AddRange(objects);
         }
 
-        protected override bool SupportsSortingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSortingCore => true;
 
         protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
         {
             gitObjects.Sort(GitObjectsComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
         }
 
-        private List<GitObject> gitObjects
-        {
-            get { return (List<GitObject>)Items; }
-        }
+        private List<GitObject> gitObjects => (List<GitObject>)Items;
 
         private static class GitObjectsComparer
         {
@@ -52,8 +46,7 @@ namespace FindLargeFiles
             /// <param name="isReversedComparing">Use reversed sorting order.</param>
             public static Comparison<GitObject> Create(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
             {
-                Comparison<GitObject> comparer;
-                if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out comparer))
+                if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out var comparer))
                     return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
                 throw new NotSupportedException(string.Format("Custom sort by {0} property is not supported.", propertyDescriptor.Name));
             }

@@ -61,10 +61,8 @@ namespace GitUI.CommandsDialogs
                     MessageBox.Show(this, _noneParentSelectedText.Text, _noneParentSelectedTextCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                else
-                {
-                    parentIndex = ParentsList.SelectedItems[0].Index + 1;
-                }
+
+                parentIndex = ParentsList.SelectedItems[0].Index + 1;
             }
 
             FormProcess.ShowDialog(this, GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked, parentIndex));

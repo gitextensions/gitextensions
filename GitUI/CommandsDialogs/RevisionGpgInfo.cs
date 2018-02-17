@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using GitCommands.Gpg;
 using GitCommands.Utils;
+using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -77,15 +78,15 @@ namespace GitUI.CommandsDialogs
             switch (commitStatus)
             {
                 case CommitStatus.GoodSignature:
-                    commitSignPicture.Image = Properties.Resources.commit_ok;
+                    commitSignPicture.Image = Resources.commit_ok;
                     commitSignPicture.Visible = true;
                     break;
                 case CommitStatus.MissingPublicKey:
-                    commitSignPicture.Image = Properties.Resources.commit_warning;
+                    commitSignPicture.Image = Resources.commit_warning;
                     commitSignPicture.Visible = true;
                     break;
                 case CommitStatus.SignatureError:
-                    commitSignPicture.Image = Properties.Resources.commit_error;
+                    commitSignPicture.Image = Resources.commit_error;
                     commitSignPicture.Visible = true;
                     break;
                 case CommitStatus.NoSignature:
@@ -102,25 +103,25 @@ namespace GitUI.CommandsDialogs
             switch (tagStatus)
             {
                 case TagStatus.OneGood:
-                    tagSignPicture.Image = Properties.Resources.tag_ok;
+                    tagSignPicture.Image = Resources.tag_ok;
                     tagSignPicture.Visible = true;
                     /* This shows the Tag row in ApplyLayout */
                     txtTagGpgInfo.Visible = true;
                     break;
                 case TagStatus.OneBad:
-                    tagSignPicture.Image = Properties.Resources.tag_error;
+                    tagSignPicture.Image = Resources.tag_error;
                     tagSignPicture.Visible = true;
                     /* This shows the Tag row in ApplyLayout */
                     txtTagGpgInfo.Visible = true;
                     break;
                 case TagStatus.Many:
-                    tagSignPicture.Image = Properties.Resources.tag_many;
+                    tagSignPicture.Image = Resources.tag_many;
                     tagSignPicture.Visible = true;
                     /* This shows the Tag row in ApplyLayout */
                     txtTagGpgInfo.Visible = true;
                     break;
                 case TagStatus.NoPubKey:
-                    tagSignPicture.Image = Properties.Resources.tag_warning;
+                    tagSignPicture.Image = Resources.tag_warning;
                     tagSignPicture.Visible = true;
                     /* This shows the Tag row in ApplyLayout */
                     txtTagGpgInfo.Visible = true;

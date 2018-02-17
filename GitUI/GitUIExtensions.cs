@@ -7,25 +7,23 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using ICSharpCode.TextEditor.Util;
+using GitUI.Properties;
+using PatchApply;
 using ResourceManager;
 
 namespace GitUI
 {
     public static class GitUIExtensions
     {
-
         public static SynchronizationContext UISynchronizationContext;
 
-
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked=true)
+        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked=true)
         {
             //Note: Order in revisions is that first clicked is last in array
-            string extraDiffArgs;
-            string firstRevision;
-            string secondRevision;
 
-            string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind, out extraDiffArgs, out firstRevision, out secondRevision);
+            string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind,
+                out var extraDiffArgs, out var firstRevision, out var secondRevision);
+
             if (!string.IsNullOrEmpty(error))
             {
                 MessageBox.Show(grid, error);
@@ -38,7 +36,7 @@ namespace GitUI
             }
         }
 
-        private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
+        private static Patch GetItemPatch(GitModule module, GitItemStatus file,
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
@@ -60,7 +58,7 @@ namespace GitUI
             if (file.IsSubmodule && file.SubmoduleStatus != null)
                 return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Result);
 
-            PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
+            Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
                 diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
 
             if (patch == null)
@@ -139,7 +137,7 @@ namespace GitUI
         {
             public MaskPanel()
             {
-                Image = Properties.Resources.loadingpanel;
+                Image = Resources.loadingpanel;
                 SizeMode = PictureBoxSizeMode.CenterImage;
                 BackColor = SystemColors.AppWorkspace;
             }
@@ -168,14 +166,14 @@ namespace GitUI
 
         public static void InvokeAsync(this Control control, SendOrPostCallback action, object state)
         {
-            SendOrPostCallback checkDisposedAndInvoke = (s) =>
+            void CheckDisposedAndInvoke(object s)
             {
                 if (!control.IsDisposed)
                     action(s);
-            };
+            }
 
             if (!control.IsDisposed)
-                UISynchronizationContext.Post(checkDisposedAndInvoke, state);
+                UISynchronizationContext.Post(CheckDisposedAndInvoke, state);
         }
 
         public static void InvokeSync(this Control control, Action action)
@@ -185,7 +183,7 @@ namespace GitUI
 
         public static void InvokeSync(this Control control, SendOrPostCallback action, object state)
         {
-            SendOrPostCallback checkDisposedAndInvoke = (s) =>
+            void CheckDisposedAndInvoke(object s)
             {
                 if (!control.IsDisposed)
                 {
@@ -199,22 +197,22 @@ namespace GitUI
                         throw;
                     }
                 }
-            };
+            }
 
             if (!control.IsDisposed)
-                UISynchronizationContext.Send(checkDisposedAndInvoke, state);
+                UISynchronizationContext.Send(CheckDisposedAndInvoke, state);
         }
 
         public static Control FindFocusedControl(this ContainerControl container)
         {
-            var control = container.ActiveControl;
-            container = control as ContainerControl;
+            while (true)
+            {
+                var control = container.ActiveControl;
+                container = control as ContainerControl;
 
-            if (container == null)
-                return control;
-            else
-                return container.FindFocusedControl();
+                if (container == null)
+                    return control;
+            }
         }
-
     }
 }

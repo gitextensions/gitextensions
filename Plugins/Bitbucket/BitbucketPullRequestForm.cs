@@ -14,15 +14,12 @@ namespace Bitbucket
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
         private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in Bitbucket.");
-        private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
+        private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
-        private Settings _settings;
-        private readonly BitbucketPlugin _plugin;
-        private readonly GitUIBaseEventArgs _gitUiCommands;
-        private readonly ISettingsSource _settingsContainer;
+        private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
         private readonly List<string> _bitbucketUsers = new List<string>();
 
@@ -32,11 +29,7 @@ namespace Bitbucket
             InitializeComponent();
             Translate();
 
-            _plugin = plugin;
-            _settingsContainer = settings;
-            _gitUiCommands = gitUiCommands;
-
-            _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer, _plugin);
+            _settings = Settings.Parse(gitUiCommands.GitModule, settings, plugin);
             if (_settings == null)
             {
                 MessageBox.Show(_yourRepositoryIsNotInBitbucket.Text);
@@ -156,7 +149,7 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
+        private readonly Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (Branches.ContainsKey(selectedRepo))
@@ -179,8 +172,7 @@ namespace Bitbucket
 
         private void ReviewersDataGridEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            var cellEdit = e.Control as DataGridViewTextBoxEditingControl;
-            if (cellEdit != null)
+            if (e.Control is DataGridViewTextBoxEditingControl cellEdit)
             {
                 cellEdit.AutoCompleteCustomSource = new AutoCompleteStringCollection();
                 cellEdit.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -247,7 +239,7 @@ namespace Bitbucket
             if (commit == null)
                 label.Text = string.Empty;
             else
-                label.Text = string.Format(_commited.Text,
+                label.Text = string.Format(_committed.Text,
                     commit.AuthorName, commit.Message);
         }
 
@@ -281,7 +273,7 @@ namespace Bitbucket
         }
         private void PullRequestChanged(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var curItem = (PullRequest)lbxPullRequests.SelectedItem;
 
             txtPRTitle.Text = curItem.Title;
             txtPRDescription.Text = curItem.Description;
@@ -299,8 +291,8 @@ namespace Bitbucket
 
         private void BtnMergeClick(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null) return;
+            if (!(lbxPullRequests.SelectedItem is PullRequest curItem))
+                return;
 
             var mergeInfo = new MergeRequestInfo
             {
@@ -322,10 +314,11 @@ namespace Bitbucket
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
         private void BtnApproveClick(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null) return;
+            if (!(lbxPullRequests.SelectedItem is PullRequest curItem))
+                return;
 
             var mergeInfo = new MergeRequestInfo
             {
@@ -352,7 +345,7 @@ namespace Bitbucket
         {
             try
             {
-                var link = (sender as LinkLabel).Text;
+                var link = ((LinkLabel)sender).Text;
                 if (e.Button == MouseButtons.Right)
                 {
                     //Just copy the text

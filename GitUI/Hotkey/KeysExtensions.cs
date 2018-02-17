@@ -25,19 +25,19 @@ namespace GitUI.Hotkey
                    key == Keys.Alt;
         }
 
-        public static Keys[] GetModifiers(this Keys key)
+        public static IEnumerable<Keys> GetModifiers(this Keys key)
         {
             // Retrieve the modifiers, mask away the rest
-            Keys modifier = key & Keys.Modifiers;
+            var modifiers = key & Keys.Modifiers;
 
-            List<Keys> modifierList = new List<Keys>();
-            Action<Keys> addIfContains = m => { if (m == (m & modifier))  modifierList.Add(m); };
+            if (modifiers.HasFlag(Keys.Control))
+                yield return Keys.Control;
 
-            addIfContains(Keys.Control);
-            addIfContains(Keys.Shift);
-            addIfContains(Keys.Alt);
+            if (modifiers.HasFlag(Keys.Shift))
+                yield return Keys.Shift;
 
-            return modifierList.ToArray();
+            if (modifiers.HasFlag(Keys.Alt))
+                yield return Keys.Alt;
         }
 
         public static string ToText(this Keys key)

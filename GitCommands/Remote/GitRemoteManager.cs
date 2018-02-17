@@ -16,7 +16,7 @@ namespace GitCommands.Remote
         /// </summary>
         /// <param name="remote"></param>
         /// <param name="branch"></param>
-        /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
+        /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
         string GetDefaultPushRemote(GitRemote remote, string branch);
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace GitCommands.Remote
         {
             if (remote == null)
             {
-                throw new ArgumentNullException("remote");
+                throw new ArgumentNullException(nameof(remote));
             }
 
             var _module = GetModule();
@@ -126,7 +126,7 @@ namespace GitCommands.Remote
                                    .Select(t => new GitRef(_module, string.Empty, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
-            return remoteHead == null ? null : remoteHead.Name;
+            return remoteHead?.Name;
         }
 
         /// <summary>
@@ -227,8 +227,8 @@ namespace GitCommands.Remote
             {
                 if (remote.Disabled)
                 {
-                    // disabled branches can't updated as it poses to many problems, i.e. 
-                    // - verify that the branch name is valid, and 
+                    // disabled branches can't updated as it poses to many problems, i.e.
+                    // - verify that the branch name is valid, and
                     // - it does not duplicate an active branch name etc.
                     return new GitRemoteSaveResult(null, false);
                 }
@@ -309,7 +309,6 @@ namespace GitCommands.Remote
                 func = GetDisabledRemotes;
             }
 
-
             var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())
             {
@@ -335,16 +334,16 @@ namespace GitCommands.Remote
             return module;
         }
 
-        private string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
+        private static string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
         {
             var key = string.Format(settingKey, remoteName);
             return remoteEnabled ? key : DisabledSectionPrefix + key;
         }
 
-        private void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
+        private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
         {
-            var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
-            var fullSettingName = preffix + string.Format(settingName, remoteName);
+            var prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
+            var fullSettingName = prefix + string.Format(settingName, remoteName);
 
             if (!string.IsNullOrWhiteSpace(value))
             {

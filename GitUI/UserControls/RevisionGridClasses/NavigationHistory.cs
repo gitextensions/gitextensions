@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class NavigationHistory
+    internal class NavigationHistory
     {
         // history of selected items (browse history)
         // head == currently selected item
@@ -30,13 +28,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// Returns whether CanNavigateBackward is possible
         /// </summary>
-        public bool CanNavigateBackward
-        {
-            get 
-            {
-                return (prevItems.Count > 1);
-            }
-        }
+        public bool CanNavigateBackward => (prevItems.Count > 1);
 
         /// <summary>
         /// Navigatees backward in history, returns item which should be selected, null if no previous item is available
@@ -51,22 +43,14 @@ namespace GitUI.UserControls.RevisionGridClasses
                 nextItems.Push(curr);
                 return prev;
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            throw new InvalidOperationException();
         }
 
         /// <summary>
         /// Returns whether CanNavigateForward is possible
         /// </summary>
-        public bool CanNavigateForward
-        {
-            get
-            {
-                return (nextItems.Count != 0);
-            }
-        }
+        public bool CanNavigateForward => (nextItems.Count != 0);
 
         /// <summary>
         /// Navigatees forward in history, returns item which should be selected, null if no next item is available
@@ -80,10 +64,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 prevItems.Push(next);
                 return next;
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            throw new InvalidOperationException();
         }
 
         /// <summary>

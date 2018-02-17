@@ -7,7 +7,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs
@@ -20,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private TabPage buildReportTabPage;
         private WebBrowserCtrl buildReportWebBrowser;
         private GitRevision selectedGitRevision;
-        private String url;
+        private string url;
 
         public BuildReportTabPageExtension(TabControl tabControl, string caption)
         {
@@ -34,8 +33,7 @@ namespace GitUI.CommandsDialogs
             selectedGitRevision = revision;
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
 
-            var buildInfoIsAvailable =
-                !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
+            var buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
 
             tabControl.SuspendLayout();
 
@@ -102,24 +100,24 @@ namespace GitUI.CommandsDialogs
             if (e.PropertyName == "BuildStatus")
             {
                 // Refresh the selected Git revision
-                this.FillBuildReport(this.selectedGitRevision);
+                FillBuildReport(selectedGitRevision);
             }
         }
 
         private void CreateBuildReportTabPage(TabControl tabControl)
         {
-            this.buildReportTabPage = new TabPage
+            buildReportTabPage = new TabPage
                 {
                     Padding = new Padding(3),
                     TabIndex = tabControl.Controls.Count,
                     Text = _caption,
                     UseVisualStyleBackColor = true
                 };
-            this.buildReportWebBrowser = new WebBrowserCtrl
+            buildReportWebBrowser = new WebBrowserCtrl
             {
                 Dock = DockStyle.Fill
             };
-            this.buildReportTabPage.Controls.Add(this.buildReportWebBrowser);
+            buildReportTabPage.Controls.Add(buildReportWebBrowser);
         }
 
         private void BuildReportWebBrowserOnNavigated(object sender,
@@ -165,7 +163,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private string DetermineFavIconUrl(HtmlDocument htmlDocument)
+        private static string DetermineFavIconUrl(HtmlDocument htmlDocument)
         {
             var links = htmlDocument.GetElementsByTagName("link");
             var favIconLink =
@@ -183,11 +181,9 @@ namespace GitUI.CommandsDialogs
                 //Szenario: http://test.test/teamcity/....
                 return htmlDocument.Url.AbsoluteUri.Replace(htmlDocument.Url.PathAndQuery, href);
             }
-            else
-            {
-                //Szenario: http://teamcity.domain.test/
-                return new Uri(new Uri(htmlDocument.Url.AbsoluteUri), href).ToString();
-            }
+
+            //Szenario: http://teamcity.domain.test/
+            return new Uri(new Uri(htmlDocument.Url.AbsoluteUri), href).ToString();
         }
 
         private static Task<Stream> DownloadRemoteImageFileAsync(string uri)

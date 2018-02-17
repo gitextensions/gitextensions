@@ -5,7 +5,7 @@ using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class TranslationItemWithCategory : INotifyPropertyChanged, ICloneable
     {
         public TranslationItemWithCategory()
@@ -21,29 +21,39 @@ namespace TranslationApp
 
         public string Category { get; set; }
 
-        private TranslationItem _item;
+        private readonly TranslationItem _item;
+
         public TranslationItem GetTranslationItem()
         {
             return _item;
         }
 
-        public string Name { get { return _item.Name; } set { _item.Name = value; } }
-        public string Property { get { return _item.Property; } set { _item.Property = value; } }
-        public string NeutralValue { get { return _item.Source; } set { _item.Source = value; } }
+        public string Name
+        {
+            get => _item.Name;
+            set => _item.Name = value;
+        }
+
+        public string Property
+        {
+            get => _item.Property;
+            set => _item.Property = value;
+        }
+
+        public string NeutralValue
+        {
+            get => _item.Source;
+            set => _item.Source = value;
+        }
+
         public string TranslatedValue
         {
-            get { return _item.Value; }
+            get => _item.Value;
             set
             {
-                var pc = PropertyChanged;
-                if (pc != null)
-                {
-                    pc(this, new PropertyChangedEventArgs("TranslatedValue"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TranslatedValue)));
                 if (value != _item.Value)
-                {
                     _item.Value = value;
-                }
             }
         }
 
@@ -59,18 +69,9 @@ namespace TranslationApp
             return equal;
         }
 
-        private string DebuggerDisplay
-        {
-            get
-            {
-                return string.Format("\"{0}\" - \"{1}\"", Category, NeutralValue);
-            }
-        }
+        private string DebuggerDisplay => string.Format("\"{0}\" - \"{1}\"", Category, NeutralValue);
 
-        object ICloneable.Clone()
-        {
-            return Clone();
-        }
+        object ICloneable.Clone() => Clone();
 
         public TranslationItemWithCategory Clone()
         {

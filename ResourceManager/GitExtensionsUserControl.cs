@@ -24,7 +24,7 @@ namespace ResourceManager
             int deviceDpi = DeviceDpi;
 #else
             int deviceDpi;
-            using (Graphics g = this.CreateGraphics())
+            using (Graphics g = CreateGraphics())
             {
                 deviceDpi = (int)g.DpiX;
             }
@@ -36,20 +36,17 @@ namespace ResourceManager
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Font Font
         {
-            get { return base.Font; }
-            set { base.Font = value; }
+            get => base.Font;
+            set => base.Font = value;
         }
 
         private static bool CheckComponent(object value)
         {
             bool isComponentInDesignMode = false;
             var component = value as IComponent;
-            if (component != null)
-            {
-                ISite site = component.Site;
-                if ((site != null) && site.DesignMode)
-                    isComponentInDesignMode = true;
-            }
+            ISite site = component?.Site;
+            if (site != null && site.DesignMode)
+                isComponentInDesignMode = true;
 
             return isComponentInDesignMode;
         }
@@ -69,7 +66,7 @@ namespace ResourceManager
 
         private bool translated;
 
-        void GitExtensionsControl_Load(object sender, EventArgs e)
+        private void GitExtensionsControl_Load(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
             bool isComponentInDesignMode = CheckComponent(this);
@@ -81,7 +78,7 @@ namespace ResourceManager
         /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
             translated = true;
         }
 
@@ -118,8 +115,8 @@ namespace ResourceManager
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (HotkeysEnabled && this.Hotkeys != null)
-                foreach (var hotkey in this.Hotkeys)
+            if (HotkeysEnabled && Hotkeys != null)
+                foreach (var hotkey in Hotkeys)
                 {
                     if (hotkey != null && hotkey.KeyData == keyData)
                     {
@@ -132,16 +129,12 @@ namespace ResourceManager
 
         protected Keys GetShortcutKeys(int commandCode)
         {
-            var hotkey = GetHotkeyCommand(commandCode);
-            return hotkey == null ? Keys.None : hotkey.KeyData;
+            return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
         protected HotkeyCommand GetHotkeyCommand(int commandCode)
         {
-            if (Hotkeys == null)
-                return null;
-
-            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+            return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         /// <summary>

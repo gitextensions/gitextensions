@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly IList<ISettingsPage> _SettingsPages = new List<ISettingsPage>();
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
-        public IEnumerable<ISettingsPage> SettingsPages { get { return _SettingsPages; } }
+        public IEnumerable<ISettingsPage> SettingsPages => _SettingsPages;
 
         public SettingsTreeViewUserControl()
         {
@@ -51,8 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
                 else
                 {
-                    TreeNode parentNode;
-                    if (!_Pages2NodeMap.TryGetValue(parentPageReference, out parentNode))
+                    if (!_Pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
 
                     node = parentNode.Nodes.Add(page.GetTitle());
@@ -141,7 +140,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         /// <summary>Highlights a <see cref="TreeNode"/> or returns it to the default colors.</summary>
-        static void HighlightNode(TreeNode treeNode, bool highlight)
+        private static void HighlightNode(TreeNode treeNode, bool highlight)
         {
             treeNode.ForeColor = highlight ? Color.White : Color.Black;
             treeNode.BackColor = highlight ? Color.SeaGreen : new Color();

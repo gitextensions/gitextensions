@@ -50,10 +50,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string NestedSearchPattern
         {
-            get
-            {
-                return _nestedSearchPattern;
-            }
+            get => _nestedSearchPattern;
             set
             {
                 _nestedSearchPattern = value;
@@ -68,10 +65,7 @@ namespace GitCommands.ExternalLinks
                         System.Diagnostics.Debug.Print(e.ToStringWithData());
                         return null;
                     }
-                }
-                );
-
-
+                });
             }
         }
 
@@ -83,10 +77,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string RemoteSearchPattern
         {
-            get
-            {
-                return _remoteSearchPattern;
-            }
+            get => _remoteSearchPattern;
             set
             {
                 _remoteSearchPattern = value;
@@ -101,8 +92,7 @@ namespace GitCommands.ExternalLinks
                         System.Diagnostics.Debug.Print(e.ToStringWithData());
                         return null;
                     }
-                }
-                );
+                });
             }
         }
 
@@ -114,26 +104,22 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string SearchPattern
         {
-            get
-            {
-                return _searchPattern;
-            }
+            get => _searchPattern;
             set
             {
                 _searchPattern = value;
                 SearchPatternRegex = new Lazy<Regex>(() =>
+                {
+                    try
                     {
-                        try
-                        {
-                            return new Regex(SearchPattern, RegexOptions.Compiled);
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.Print(e.ToStringWithData());
-                            return null;
-                        }
+                        return new Regex(SearchPattern, RegexOptions.Compiled);
                     }
-                        );
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.Print(e.ToStringWithData());
+                        return null;
+                    }
+                });
             }
         }
 
@@ -143,26 +129,22 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string UseRemotesPattern
         {
-            get
-            {
-                return _useRemotesPattern;
-            }
+            get => _useRemotesPattern;
             set
             {
                 _useRemotesPattern = value;
                 UseRemotesRegex = new Lazy<Regex>(() =>
+                {
+                    try
                     {
-                        try
-                        {
-                            return new Regex(UseRemotesPattern, RegexOptions.Compiled);
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.Print(e.ToStringWithData());
-                            return null;
-                        }
+                        return new Regex(UseRemotesPattern, RegexOptions.Compiled);
                     }
-                );
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.Print(e.ToStringWithData());
+                        return null;
+                    }
+                });
             }
         }
 

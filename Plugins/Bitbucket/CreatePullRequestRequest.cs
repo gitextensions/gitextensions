@@ -4,7 +4,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class PullRequestInfo
+    internal class PullRequestInfo
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -15,7 +15,7 @@ namespace Bitbucket
         public IEnumerable<BitbucketUser> Reviewers { get; set; }
     }
 
-    class CreatePullRequestRequest : BitbucketRequestBase<JObject>
+    internal class CreatePullRequestRequest : BitbucketRequestBase<JObject>
     {
         private readonly PullRequestInfo _info;
 
@@ -25,24 +25,12 @@ namespace Bitbucket
             _info = info;
         }
 
-        protected override object RequestBody
-        {
-            get { return GetPullRequestBody(); }
-        }
+        protected override object RequestBody => GetPullRequestBody();
 
-        protected override Method RequestMethod
-        {
-            get { return Method.POST; }
-        }
+        protected override Method RequestMethod => Method.POST;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/projects/{0}/repos/{1}/pull-requests",
-                                     _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
-            }
-        }
+        protected override string ApiUrl => string.Format("/projects/{0}/repos/{1}/pull-requests",
+            _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
 
         protected override JObject ParseResponse(JObject json)
         {
@@ -51,41 +39,50 @@ namespace Bitbucket
 
         private string GetPullRequestBody()
         {
-            var resource = new JObject();
-            resource["title"] = _info.Title;
-            resource["description"] = _info.Description;
-
-            resource["fromRef"] = CreatePullRequestRef(
-                _info.SourceRepo.ProjectKey
-                , _info.SourceRepo.RepoName, _info.SourceBranch);
-
-            resource["toRef"] = CreatePullRequestRef(
-                _info.TargetRepo.ProjectKey
-                , _info.TargetRepo.RepoName, _info.TargetBranch);
+            var resource = new JObject
+            {
+                ["title"] = _info.Title,
+                ["description"] = _info.Description,
+                ["fromRef"] = CreatePullRequestRef(
+                    _info.SourceRepo.ProjectKey,
+                    _info.SourceRepo.RepoName,
+                    _info.SourceBranch),
+                ["toRef"] = CreatePullRequestRef(
+                    _info.TargetRepo.ProjectKey,
+                    _info.TargetRepo.RepoName,
+                    _info.TargetBranch)
+            };
 
             var reviewers = new JArray();
             foreach (var reviewer in _info.Reviewers)
             {
-                var r = new JObject();
-                r["user"] = new JObject();
-                r["user"]["name"] = reviewer.Slug;
-
-                reviewers.Add(r);
+                reviewers.Add(new JObject
+                {
+                    ["user"] = new JObject
+                    {
+                        ["name"] = reviewer.Slug
+                    }
+                });
             }
             resource["reviewers"] = reviewers;
 
             return resource.ToString();
-        }
 
-        private JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
-        {
-            var reference = new JObject();
-            reference["id"] = branchName;
-            reference["repository"] = new JObject();
-            reference["repository"]["slug"] = repoName;
-            reference["repository"]["project"] = new JObject();
-            reference["repository"]["project"]["key"] = projectKey;
-            return reference;
+            JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
+            {
+                return new JObject
+                {
+                    ["id"] = branchName,
+                    ["repository"] = new JObject
+                    {
+                        ["slug"] = repoName,
+                        ["project"] = new JObject
+                        {
+                            ["key"] = projectKey
+                        }
+                    }
+                };
+            }
         }
     }
 }

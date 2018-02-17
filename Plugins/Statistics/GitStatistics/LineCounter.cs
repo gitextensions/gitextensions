@@ -21,7 +21,7 @@ namespace GitStatistics
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
 
-        public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
+        public Dictionary<string, int> LinesOfCodePerExtension { get; }
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
         {
@@ -33,7 +33,7 @@ namespace GitStatistics
             return false;
         }
 
-        private IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
+        private static IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
         {
             foreach (var file in filesToCheck)
             {

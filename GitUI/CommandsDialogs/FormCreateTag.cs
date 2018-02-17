@@ -2,10 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Tag;
 using GitUI.Script;
 using ResourceManager;
-using GitCommands.Git;
-using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {
@@ -50,7 +49,7 @@ namespace GitUI.CommandsDialogs
         {
             textBoxTagName.Select();
             _currentRemote = Module.GetCurrentRemote();
-            if (String.IsNullOrEmpty(_currentRemote))
+            if (string.IsNullOrEmpty(_currentRemote))
                 _currentRemote = "origin";
             pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
         }
@@ -103,7 +102,7 @@ namespace GitUI.CommandsDialogs
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
                 Remote = _currentRemote,
-                Text = string.Format(_pushToCaption.Text, _currentRemote),
+                Text = string.Format(_pushToCaption.Text, _currentRemote)
             })
             {
 
@@ -124,27 +123,21 @@ namespace GitUI.CommandsDialogs
             tagMessage.Enabled = tagOperation.CanProvideMessage();
         }
 
-        private TagOperation GetSelectedOperation(int dropdownSelection)
+        private static TagOperation GetSelectedOperation(int dropDownSelection)
         {
-            TagOperation returnValue = TagOperation.Lightweight;
-            switch (dropdownSelection)
+            switch (dropDownSelection)
             {
                 case 0:
-                    returnValue = TagOperation.Lightweight;
-                    break;
+                    return TagOperation.Lightweight;
                 case 1:
-                    returnValue = TagOperation.Annotate;
-                    break;
+                    return TagOperation.Annotate;
                 case 2:
-                    returnValue = TagOperation.SignWithDefaultKey;
-                    break;
+                    return TagOperation.SignWithDefaultKey;
                 case 3:
-                    returnValue = TagOperation.SignWithSpecificKey;
-                    break;
+                    return TagOperation.SignWithSpecificKey;
                 default:
-                    throw new NotSupportedException("Invalid dropdownSelection");
+                    throw new NotSupportedException("Invalid dropDownSelection");
             }
-            return returnValue;
         }
     }
 }

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
-
-using GitCommands;
-
-using GitUI.UserControls;
-
-using JetBrains.Annotations;
-
-using ResourceManager;
 using System.Windows.Threading;
+using GitCommands;
+using GitCommands.Utils;
+using GitUI.Properties;
+using GitUI.UserControls;
+using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
@@ -35,21 +31,14 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-            if (aConsoleOutput == null)
-            {
-                ConsoleOutput = ConsoleOutputControl.CreateInstance();
-            }
-            else
-            {
-                ConsoleOutput = aConsoleOutput;
-            }
+            ConsoleOutput = aConsoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
             InitializeComponent();
             Translate();
             if (UseDialogSettings)
-                KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
             else
                 KeepDialogOpen.Hide();
         }
@@ -92,33 +81,34 @@ namespace GitUI
         public void SetProgress(string text)
         {
             // This has to happen on the UI thread
-            SendOrPostCallback method = o =>
+            void Method()
+            {
+                int index = text.LastIndexOf('%');
+                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                 {
-                    int index = text.LastIndexOf('%');
-                    int progressValue;
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue) && progressValue >= 0)
-                    {
-                        if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                            ProgressBar.Style = ProgressBarStyle.Blocks;
-                        ProgressBar.Value = Math.Min(100, progressValue);
+                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
+                        ProgressBar.Style = ProgressBarStyle.Blocks;
+                    ProgressBar.Value = Math.Min(100, progressValue);
 
-                        if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                    if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                    {
+                        try
                         {
-                            try
-                            {
-                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                            }
-                            catch (InvalidOperationException)
-                            {
-                            }
+                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        }
+                        catch (InvalidOperationException)
+                        {
                         }
                     }
-                    // Show last progress message in the title, unless it's showin in the control body already
-                    if(!ConsoleOutput.IsDisplayingFullProcessOutput)
-                      Text = text;
-                };
-            BeginInvoke(method, this);
+                }
+
+                // Show last progress message in the title, unless it's showing in the control body already
+                if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    Text = text;
+            }
+
+            BeginInvoke((Action)Method);
         }
 
         /// <summary>
@@ -147,7 +137,7 @@ namespace GitUI
                 Ok.Focus();
                 AcceptButton = Ok;
                 Abort.Enabled = false;
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                 {
                     try
                     {
@@ -161,9 +151,9 @@ namespace GitUI
                 }
 
                 if (isSuccess)
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
+                    picBoxSuccessFail.Image = Resources.success;
                 else
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+                    picBoxSuccessFail.Image = Resources.error;
 
                 errorOccurred = !isSuccess;
 
@@ -174,10 +164,7 @@ namespace GitUI
             }
             finally
             {
-                if (ModalControler != null)
-                {
-                    ModalControler.EndModal(isSuccess);
-                }
+                ModalControler?.EndModal(isSuccess);
             }
         }
 
@@ -229,7 +216,7 @@ namespace GitUI
             if (ModalControler != null)
             {
                 return;
-            }            
+            }
 
             Start();
         }
@@ -253,7 +240,7 @@ namespace GitUI
 
             StartPosition = FormStartPosition.CenterParent;
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -270,7 +257,7 @@ namespace GitUI
             try
             {
                 AbortCallback(this);
-                OutputLog.Append(Environment.NewLine + "Aborted");	// TODO: write to display control also, if we pull the function up to this base class
+                OutputLog.Append(Environment.NewLine + "Aborted");    // TODO: write to display control also, if we pull the function up to this base class
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }
@@ -293,7 +280,7 @@ namespace GitUI
 
         internal void AfterClosed()
         {
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -304,11 +291,11 @@ namespace GitUI
         }
     }
 
-    class DispatcherFrameModalControler
+    internal class DispatcherFrameModalControler
     {
-        private DispatcherFrame DispatcherFrame = new DispatcherFrame();
-        private FormStatus FormStatus;
-        private IWin32Window Owner;
+        private readonly DispatcherFrame DispatcherFrame = new DispatcherFrame();
+        private readonly FormStatus FormStatus;
+        private readonly IWin32Window Owner;
 
         public DispatcherFrameModalControler(FormStatus aFormStatus, IWin32Window aOwner)
         {

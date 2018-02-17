@@ -11,13 +11,13 @@ using ResourceManager;
 
 namespace Github3
 {
-    class GithubAPIInfo
+    internal class GithubAPIInfo
     {
         internal static string client_id = "ebc0e8947c206610d737";
         internal static string client_secret = "c993907df3f45145bf638842692b69c56d1ace4d";
     }
 
-    class GithubLoginInfo
+    internal class GithubLoginInfo
     {
         private static string _username;
         public static string username
@@ -52,10 +52,7 @@ namespace Github3
 
         public static string OAuthToken
         {
-            get
-            {
-                return Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
-            }
+            get => Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
             set
             {
                 _username = null;
@@ -131,7 +128,8 @@ namespace Github3
             return github.getRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
-        public bool ConfigurationOk { get { return true; } }
+        public bool ConfigurationOk => true;
+
         public bool GitModuleIsRelevantToMe(IGitModule aModule)
         {
             return GetHostedRemotesForModule(aModule).Count > 0;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GitUI;
 
 namespace GitUIPluginInterfaces
@@ -18,8 +17,8 @@ namespace GitUIPluginInterfaces
             DefaultValue = aDefaultValue;
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public bool DefaultValue { get; set; }
         public CheckBox CustomControl { get; set; }
 
@@ -30,15 +29,8 @@ namespace GitUIPluginInterfaces
 
         public bool? this[ISettingsSource settings]
         {
-            get
-            {
-                return settings.GetBool(Name);
-            }
-
-            set
-            {
-                settings.SetBool(Name, value);
-            }
+            get => settings.GetBool(Name);
+            set => settings.SetBool(Name, value);
         }
 
         public bool ValueOrDefault(ISettingsSource settings)
@@ -54,36 +46,19 @@ namespace GitUIPluginInterfaces
 
             public override CheckBox CreateControl()
             {
-                CheckBox result = new CheckBox();
-                result.ThreeState = true;
-                return result;
+                return new CheckBox {ThreeState = true};
             }
 
             public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
-                bool? settingVal;
-                if (areSettingsEffective)
-                {
-                    settingVal = Setting.ValueOrDefault(settings);
-                }
-                else
-                {
-                    settingVal = Setting[settings];
-                }
-
-                control.SetNullableChecked(settingVal);
+                control.SetNullableChecked(areSettingsEffective ? Setting.ValueOrDefault(settings) : Setting[settings]);
             }
 
             public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
                 var controlValue = control.GetNullableChecked();
-                if (areSettingsEffective)
-                {
-                    if (Setting.ValueOrDefault(settings) == controlValue)
-                    {
-                        return;
-                    }
-                }
+                if (areSettingsEffective && Setting.ValueOrDefault(settings) == controlValue)
+                    return;
 
                 Setting[settings] = controlValue;
             }

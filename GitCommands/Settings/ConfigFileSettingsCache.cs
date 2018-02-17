@@ -1,6 +1,6 @@
-﻿using GitCommands.Config;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
@@ -25,15 +25,14 @@ namespace GitCommands.Settings
                 return new ConfigFileSettingsCache(aSettingsFilePath, true, aLocal);
             });
 
-            return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
+            return FromCache(aSettingsFilePath, createSettingsCache);
         }
 
         public static ConfigFileSettingsCache Create(string aSettingsFilePath, bool aLocal, bool allowCache = true)
         {
             if (allowCache)
                 return FromCache(aSettingsFilePath, aLocal);
-            else
-                return new ConfigFileSettingsCache(aSettingsFilePath, false, aLocal);
+            return new ConfigFileSettingsCache(aSettingsFilePath, false, aLocal);
         }
 
         protected override void WriteSettings(string fileName)

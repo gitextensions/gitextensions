@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GitCommands.Settings
 {
     public class MemorySettingsCache : SettingsCache
     {
-        private IDictionary<string, string> stringSettings = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> stringSettings = new Dictionary<string, string>();
 
         protected override void LoadImpl()
         {
@@ -32,11 +28,8 @@ namespace GitCommands.Settings
 
         protected override string GetValueImpl(string key)
         {
-            string value = null;
-            if (stringSettings.TryGetValue(key, out value))
-            {
+            if (stringSettings.TryGetValue(key, out var value))
                 return value;
-            }
 
             return null;
         }

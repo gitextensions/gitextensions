@@ -196,10 +196,9 @@ namespace GitUITests.CommandsDialogs
         }
 
 
-        private IGitItem CreateGitItem(string name, bool isTree, bool isCommit, bool isBlol)
+        private static IGitItem CreateGitItem(string name, bool isTree, bool isCommit, bool isBlol)
         {
-            var item = new GitItem("", isTree ? "tree" : isBlol ? "blob" : isCommit ? "commit" : "", "", name);
-            return item;
+            return new GitItem("", isTree ? "tree" : isBlol ? "blob" : isCommit ? "commit" : "", "", name);
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]

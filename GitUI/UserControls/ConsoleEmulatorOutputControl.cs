@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
 using ConEmu.WinForms;
-
 using GitCommands;
 using GitCommands.Utils;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace GitUI.UserControls
 {
@@ -28,38 +26,18 @@ namespace GitUI.UserControls
 
         private void InitializeComponent()
         {
-            Controls.Add(_panel = new Panel() { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
+            Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
         }
 
-        public override int ExitCode
-        {
-            get
-            {
-                return _nLastExitCode;
-            }
-        }
+        public override int ExitCode => _nLastExitCode;
 
-        public override bool IsDisplayingFullProcessOutput
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsDisplayingFullProcessOutput => true;
 
-        public static bool IsSupportedInThisEnvironment
-        {
-            get
-            {
-                return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
-            }
-        }
+        public static bool IsSupportedInThisEnvironment => EnvUtils.RunningOnWindows();
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            ConEmuSession session = _terminal.RunningSession;
-            if(session != null)
-                session.WriteOutputText(text);
+            _terminal.RunningSession?.WriteOutputText(text);
         }
 
         public override void KillProcess()
@@ -69,16 +47,14 @@ namespace GitUI.UserControls
 
         private static void KillProcess(ConEmuControl terminal)
         {
-            ConEmuSession session = terminal.RunningSession;
-            if (session != null)
-                session.SendControlCAsync();
+            terminal.RunningSession?.SendControlCAsync();
         }
 
         public override void Reset()
         {
             ConEmuControl oldTerminal = _terminal;
 
-            _terminal = new ConEmuControl()
+            _terminal = new ConEmuControl
             {
                 Dock = DockStyle.Fill,
                 AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
@@ -98,10 +74,8 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (disposing && _terminal != null)
-            {
-                _terminal.Dispose();
-            }
+            if (disposing)
+                _terminal?.Dispose();
         }
 
         public override void StartProcess(string command, string arguments, string workdir, Dictionary<string, string> envVariables)
@@ -114,8 +88,7 @@ namespace GitUI.UserControls
             }
             cmdl.Append(arguments /* expecting to be already escaped */);
 
-            var startinfo = new ConEmuStartInfo();
-            startinfo.ConsoleProcessCommandLine = cmdl.ToString();
+            var startinfo = new ConEmuStartInfo {ConsoleProcessCommandLine = cmdl.ToString()};
             if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
             {
                 startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
@@ -152,9 +125,9 @@ namespace GitUI.UserControls
     [CLSCompliant(false)]
     public class ConsoleCommandLineOutputProcessor
     {
-        private Action<TextEventArgs> _FireDataReceived;
+        private readonly Action<TextEventArgs> _FireDataReceived;
         private int _commandLineCharsInOutput;
-        private string _lineChunk = null;
+        private string _lineChunk;
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> FireDataReceived)
         {

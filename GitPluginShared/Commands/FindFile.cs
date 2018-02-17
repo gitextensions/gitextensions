@@ -13,17 +13,13 @@ namespace GitPluginShared.Commands
                         o =>
                         {
                             string file = GitCommands.RunGitExWait("searchfile", application.Solution.FullName);
-                            if (file == null || string.IsNullOrEmpty(file.Trim()))
-                                return;
-                            application.ExecuteCommand("File.OpenFile", file);
+                            if (!string.IsNullOrEmpty(file?.Trim()))
+                                application.ExecuteCommand("File.OpenFile", file);
                         });
         }
 
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.SolutionExplorerFileItem; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.SolutionExplorerFileItem;
 
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {

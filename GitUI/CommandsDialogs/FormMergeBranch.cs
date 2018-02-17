@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitUI.Script;
 using ResourceManager;
 
@@ -59,7 +58,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 string merge = Module.GetRemoteBranch(selectedHead);
-                if (!String.IsNullOrEmpty(merge))
+                if (!string.IsNullOrEmpty(merge))
                     Branches.SetSelectedText(merge);
             }
 

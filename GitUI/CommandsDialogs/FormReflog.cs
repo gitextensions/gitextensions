@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
@@ -70,7 +71,7 @@ namespace GitUI.CommandsDialogs
                     {
                         Sha = match.Groups[1].Value,
                         Ref = match.Groups[2].Value,
-                        Action = match.Groups[3].Value,
+                        Action = match.Groups[3].Value
                     });
                 }
             }
@@ -84,7 +85,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var form = new FormCreateBranch(UICommands, new GitCommands.GitRevision((GitCommands.GitModule)UICommands.GitModule, GetShaOfRefLine())))
+            using (var form = new FormCreateBranch(UICommands, new GitRevision((GitModule)UICommands.GitModule, GetShaOfRefLine())))
             {
                 form.CheckoutAfterCreation = false;
                 form.UserAbleToChangeRevision = false;

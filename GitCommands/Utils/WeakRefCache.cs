@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Timers;
 
 namespace GitCommands.Utils
 {
     public class WeakRefCache : IDisposable
     {
-        private Dictionary<string, WeakReference> weakMap = new Dictionary<string, WeakReference>();
+        private readonly Dictionary<string, WeakReference> weakMap = new Dictionary<string, WeakReference>();
         private readonly Timer _clearTimer = new Timer(60 * 1000);
 
         public static readonly WeakRefCache Default = new WeakRefCache();
@@ -32,11 +31,8 @@ namespace GitCommands.Utils
 
             lock (weakMap)
             {
-                WeakReference wref;
-                if (weakMap.TryGetValue(objectUniqueKey, out wref))
-                {
+                if (weakMap.TryGetValue(objectUniqueKey, out var wref))
                     cached = wref.Target;
-                }
 
                 if (cached == null)
                 {
@@ -55,7 +51,7 @@ namespace GitCommands.Utils
             return (T)cached;
         }
 
-        private void OnClearTimer(object source, System.Timers.ElapsedEventArgs e)
+        private void OnClearTimer(object source, ElapsedEventArgs e)
         {
             lock (weakMap)
             {

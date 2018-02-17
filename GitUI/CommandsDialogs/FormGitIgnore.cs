@@ -22,8 +22,7 @@ namespace GitUI.CommandsDialogs
 
         #region default patterns
         private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
-        private static readonly string[] DefaultIgnorePatterns = new[]
-        {
+        private static readonly string[] DefaultIgnorePatterns = {
             "#Ignore thumbnails created by Windows",
             "Thumbs.db",
             "#Ignore files built by Visual Studio",
@@ -57,7 +56,7 @@ namespace GitUI.CommandsDialogs
             "packages/"
         };
 
-        private IGitIgnoreDialogModel _dialogModel;
+        private readonly IGitIgnoreDialogModel _dialogModel;
 
         #endregion
 
@@ -81,10 +80,7 @@ namespace GitUI.CommandsDialogs
             return new GitIgnoreModel(Module);
         }
 
-        private string ExcludeFile
-        {
-            get { return _dialogModel.ExcludeFile; }
-        }
+        private string ExcludeFile => _dialogModel.ExcludeFile;
 
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -163,7 +159,6 @@ namespace GitUI.CommandsDialogs
                         if (!SaveGitIgnore())
                         {
                             e.Cancel = true;
-                            return;
                         }
                         break;
                     case DialogResult.Cancel:

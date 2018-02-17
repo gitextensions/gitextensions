@@ -195,7 +195,7 @@ namespace GitUI.SpellChecker
         {
             Wave,
             Mark
-        };
+        }
 
         #endregion
 
@@ -210,12 +210,9 @@ namespace GitUI.SpellChecker
             if (!disposing)
                 return;
             ReleaseHandle();
-            if (_bitmap != null)
-                _bitmap.Dispose();
-            if (_bufferGraphics != null)
-                _bufferGraphics.Dispose();
-            if (_textBoxGraphics != null)
-                _textBoxGraphics.Dispose();
+            _bitmap?.Dispose();
+            _bufferGraphics?.Dispose();
+            _textBoxGraphics?.Dispose();
         }
     }
 }

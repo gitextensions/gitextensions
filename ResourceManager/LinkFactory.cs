@@ -1,8 +1,7 @@
 using System;
-using System.Linq;
+using System.Collections.Concurrent;
 using System.Net;
 using GitCommands;
-using System.Collections.Concurrent;
 
 namespace ResourceManager
 {
@@ -37,8 +36,7 @@ namespace ResourceManager
             string rtfLinkText = caption + "#" + htmlUri;
             _linksMap[rtfLinkText] = htmlUri;
 
-            string htmlLink = "<a href=" + htmlUri.Quote("'") + ">" + WebUtility.HtmlEncode(caption) + "</a>";
-            return htmlLink;
+            return "<a href=" + htmlUri.Quote("'") + ">" + WebUtility.HtmlEncode(caption) + "</a>";
         }
 
         public string CreateTagLink(string tag)
@@ -64,33 +62,20 @@ namespace ResourceManager
                 else if (GitRevision.IndexGuid == guid)
                     linkText = Strings.GetCurrentIndex();
                 else
-                {
-                    if (preserveGuidInLinkText)
-                    {
-                        linkText = guid;
-                    }
-                    else
-                    {
-                        linkText = GitRevision.ToShortSha(guid);
-                    }
-                }
+                    linkText = preserveGuidInLinkText ? guid : GitRevision.ToShortSha(guid);
             }
             return AddLink(linkText, "gitext://gotocommit/" + guid);
         }
 
         public string ParseLink(string aLinkText)
         {
-            string linkUri;
-            if (_linksMap.TryGetValue(aLinkText, out linkUri))
-            {
+            if (_linksMap.TryGetValue(aLinkText, out var linkUri))
                 return linkUri;
-            }
 
             string uriCandidate = aLinkText;
             while (uriCandidate != null)
             {
-                Uri uri;
-                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
                     return uri.AbsoluteUri;
                 uriCandidate = uriCandidate.SkipStr("#");
             }

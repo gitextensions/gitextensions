@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-
 using GitUI.UserControls;
-
 using ResourceManager;
 
 namespace GitUI
@@ -28,27 +25,26 @@ namespace GitUI
 
         // only for translation
         protected FormRemoteProcess()
-            : base()
         { }
 
         public FormRemoteProcess(GitModule module, string process, string arguments)
             : base(process, arguments, module.WorkingDir, null, true)
         {
-            this.Module = module;
+            Module = module;
         }
 
         public FormRemoteProcess(GitModule module, string arguments)
             : base(null, arguments, module.WorkingDir, null, true)
         {
-            this.Module = module;
+            Module = module;
         }
 
-        public static new bool ShowDialog(GitModuleForm owner, string arguments)
+        public new static bool ShowDialog(GitModuleForm owner, string arguments)
         {
             return ShowDialog(owner, owner.Module, arguments);
         }
 
-        public static new bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
+        public new static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
         {
             using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
             {
@@ -99,16 +95,15 @@ namespace GitUI
                 }
                 */
 
-                // If the authentication failed because of a missing key, ask the user to supply one. 
+                // If the authentication failed because of a missing key, ask the user to supply one.
                 if (GetOutputString().Contains("FATAL ERROR") && GetOutputString().Contains("authentication"))
                 {
-                    string loadedKey;
-                    if (FormPuttyError.AskForKey(this, out loadedKey))
+                    if (FormPuttyError.AskForKey(this, out var loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
-                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
-                            String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
-                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+                        if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
+                            string.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
+                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
 
                         // Retry the command.
                         Retry();

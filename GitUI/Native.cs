@@ -43,7 +43,7 @@ namespace GitUI
 
 
         [DllImport("user32", CharSet = CharSet.Auto, EntryPoint = "SendMessage")]
-        internal extern static IntPtr SendMessageInt(
+        internal static extern IntPtr SendMessageInt(
             IntPtr handle,
             uint msg,
             IntPtr wParam,
@@ -57,7 +57,7 @@ namespace GitUI
 
         [DllImport("user32", EntryPoint = "ShowCaret")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal extern static bool ShowCaretAPI(
+        internal static extern bool ShowCaretAPI(
             IntPtr hwnd);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]

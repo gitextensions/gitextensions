@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitImpact

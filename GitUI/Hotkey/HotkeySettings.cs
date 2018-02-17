@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Serialization;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.Hotkey
 {
@@ -18,23 +18,19 @@ namespace GitUI.Hotkey
         public string Name { get; set; }
 
         public HotkeySettings()
-        {
-        }
+        {}
+
         public HotkeySettings(string name, params HotkeyCommand[] commands)
         {
-            this.Name = name;
-            this.Commands = commands;
+            Name = name;
+            Commands = commands;
         }
 
         public override bool Equals(object obj)
         {
-            HotkeySettings other = obj as HotkeySettings;
-            if (other == null)
-            {
-                return false;
-            }
-
-            return Commands.SequenceEqual(other.Commands);
+            if (obj is HotkeySettings other)
+                return Commands.SequenceEqual(other.Commands);
+            return false;
         }
 
         public override int GetHashCode()

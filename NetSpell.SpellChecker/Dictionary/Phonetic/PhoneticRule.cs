@@ -5,86 +5,45 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 	/// </summary>
 	public class PhoneticRule
 	{
-		private bool _BeginningOnly;
-		private int[] _Condition = new int[256];
-		private int _ConditionCount;
-		private int _ConsumeCount;
-		private bool _EndOnly;
-		private int _Priority;
-		private bool _ReplaceMode;
-		private string _ReplaceString;
-
 	    /// <summary>
 		///     True if this rule should be applied to the beginning only
 		/// </summary>
-		public bool BeginningOnly
-		{
-			get {return _BeginningOnly;}
-			set {_BeginningOnly = value;}
-		}
+		public bool BeginningOnly { get; set; }
 
 
-		/// <summary>
+	    /// <summary>
 		///     The ascii condition array
 		/// </summary>
-		public int[] Condition
-		{
-			get {return _Condition;}
-		}
+		public int[] Condition { get; } = new int[256];
 
-		/// <summary>
+	    /// <summary>
 		///     The number of conditions
 		/// </summary>
-		public int ConditionCount
-		{
-			get {return _ConditionCount;}
-			set {_ConditionCount = value;}
-		}
+		public int ConditionCount { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		///     The number of chars to consume with this rule
 		/// </summary>
-		public int ConsumeCount
-		{
-			get {return _ConsumeCount;}
-			set {_ConsumeCount = value;}
-		}
+		public int ConsumeCount { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		///     True if this rule should be applied to the end only
 		/// </summary>
-		public bool EndOnly
-		{
-			get {return _EndOnly;}
-			set {_EndOnly = value;}
-		}
+		public bool EndOnly { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		///     The priority of this rule
 		/// </summary>
-		public int Priority
-		{
-			get {return _Priority;}
-			set {_Priority = value;}
-		}
+		public int Priority { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		///     True if this rule should run in replace mode
 		/// </summary>
-		public bool ReplaceMode
-		{
-			get {return _ReplaceMode;}
-			set {_ReplaceMode = value;}
-		}
+		public bool ReplaceMode { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		///     The string to use when replacing
 		/// </summary>
-		public string ReplaceString
-		{
-			get {return _ReplaceString;}
-			set {_ReplaceString = value;}
-		}
-
+		public string ReplaceString { get; set; }
 	}
 }

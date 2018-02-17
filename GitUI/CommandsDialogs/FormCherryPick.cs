@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, Revision != null ? Revision.Guid : null))
+            using (var chooseForm = new FormChooseCommit(UICommands, Revision?.Guid))
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
@@ -127,12 +127,12 @@ namespace GitUI.CommandsDialogs
             OnRevisionChanged();
         }
 
-        void Form_Closing(object sender, FormClosingEventArgs e)
+        private void Form_Closing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
         }
 
-        void SaveSettings()
+        private void SaveSettings()
         {
             AppSettings.CommitAutomaticallyAfterCherryPick = AutoCommit.Checked;
             AppSettings.AddCommitReferenceToCherryPick = checkAddReference.Checked;

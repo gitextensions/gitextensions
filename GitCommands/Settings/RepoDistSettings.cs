@@ -9,8 +9,7 @@ namespace GitCommands.Settings
     /// </summary>
     public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
-
-        public GitModule Module { get; private set; }
+        public GitModule Module { get; }
 
         public RepoDistSettings(RepoDistSettings aLowerPriority, GitExtSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
@@ -58,7 +57,7 @@ namespace GitCommands.Settings
 
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            bool isEffectiveLevel = LowerPriority != null && LowerPriority.LowerPriority != null;
+            bool isEffectiveLevel = LowerPriority?.LowerPriority != null;
             bool isDetachedOrGlobal = LowerPriority == null;
 
             if (isDetachedOrGlobal || //there is no lower level
@@ -99,14 +98,14 @@ namespace GitCommands.Settings
 
         public bool NoFastForwardMerge
         {
-            get { return this.GetBool("NoFastForwardMerge", false); }
-            set { this.SetBool("NoFastForwardMerge", value); }
+            get => GetBool("NoFastForwardMerge", false);
+            set => SetBool("NoFastForwardMerge", value);
         }
 
         public string Dictionary
         {
-            get { return this.GetString("dictionary", "en-US"); }
-            set { this.SetString("dictionary", value); }
+            get => GetString("dictionary", "en-US");
+            set => SetString("dictionary", value);
         }
 
     }
@@ -126,13 +125,7 @@ namespace GitCommands.Settings
             ShowBuildSummaryInGrid = new BoolNullableSetting("ShowBuildSummaryInGrid", this, true);
         }
 
-        public SettingsPath TypeSettings
-        {
-            get
-            {
-                return new SettingsPath(this, Type.ValueOrDefault);
-            }
-        }
+        public SettingsPath TypeSettings => new SettingsPath(this, Type.ValueOrDefault);
     }
 
     public class DetailedGroup : SettingsPath

@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -57,7 +56,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
-        public bool IsUndoInProgress = false;
+        public bool IsUndoInProgress;
 
         public EditNetSpell()
         {
@@ -91,10 +90,7 @@ namespace GitUI.SpellChecker
 
         private void OnTextAssigned()
         {
-            if (TextAssigned != null)
-            {
-                TextAssigned(this, EventArgs.Empty);
-            }
+            TextAssigned?.Invoke(this, EventArgs.Empty);
         }
 
         public string Line(int line)
@@ -129,15 +125,11 @@ namespace GitUI.SpellChecker
         public Font MistakeFont { get; set; }
 
         [Browsable(false)]
-        public int CurrentColumn
-        {
-            get { return TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1; }
-        }
+        public int CurrentColumn => TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1;
+
         [Browsable(false)]
-        public int CurrentLine
-        {
-            get { return TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1; }
-        }
+        public int CurrentLine => TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1;
+
         public event EventHandler SelectionChanged;
 
         private void EditNetSpellEnabledChanged(object sender, EventArgs e)
@@ -160,7 +152,7 @@ namespace GitUI.SpellChecker
         [DefaultValue("")]
         public string WatermarkText
         {
-            get { return _WatermarkText; }
+            get => _WatermarkText;
 
             set
             {
@@ -175,14 +167,8 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectionStart
         {
-            get
-            {
-                return TextBox.SelectionStart;
-            }
-            set
-            {
-                TextBox.SelectionStart = value;
-            }
+            get => TextBox.SelectionStart;
+            set => TextBox.SelectionStart = value;
         }
 
         [Category("Appearance")]
@@ -190,15 +176,9 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual int SelectionLength
         {
-            get
-            {
-                return TextBox.SelectionLength;
-            }
+            get => TextBox.SelectionLength;
 
-            set
-            {
-                TextBox.SelectionLength = value;
-            }
+            set => TextBox.SelectionLength = value;
         }
 
         [Category("Appearance")]
@@ -206,25 +186,13 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual string SelectedText
         {
-            get
-            {
-                return TextBox.SelectedText;
-            }
-            set
-            {
-                TextBox.SelectedText = value;
-            }
+            get => TextBox.SelectedText;
+            set => TextBox.SelectedText = value;
         }
 
-        protected RepoDistSettings Settings
-        {
-            get
-            {
-                return IsUICommandsInitialized ?
-                    Module.EffectiveSettings :
-                    AppSettings.SettingsContainer;
-            }
-        }
+        protected RepoDistSettings Settings => IsUICommandsInitialized ?
+            Module.EffectiveSettings :
+            AppSettings.SettingsContainer;
 
 
         public void SelectAll()
@@ -389,7 +357,7 @@ namespace GitUI.SpellChecker
             TextBox.Select(start, length);
         }
 
-        private ToolStripMenuItem AddContextMenuItem(String text, EventHandler eventHandler)
+        private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
         {
             ToolStripMenuItem menuItem = new ToolStripMenuItem(text, null, eventHandler);
             SpellCheckContextMenu.Items.Add(menuItem);
@@ -431,7 +399,7 @@ namespace GitUI.SpellChecker
                     foreach (var suggestion in _spelling.Suggestions)
                     {
                         var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
-                        si.Font = new System.Drawing.Font(si.Font, FontStyle.Bold);
+                        si.Font = new Font(si.Font, FontStyle.Bold);
                     }
 
                     AddContextMenuItem(addToDictionaryText.Text, AddToDictionaryClick)
@@ -622,7 +590,7 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
-        private bool skipSelectionUndo = false;
+        private bool skipSelectionUndo;
 
         private void UndoHighlighting()
         {
@@ -790,7 +758,7 @@ namespace GitUI.SpellChecker
             var lineLength = LineLength(afterLine);
             if (lineLength > 0)
             {
-                var bullet = addBullet ? " - " : String.Empty;
+                var bullet = addBullet ? " - " : string.Empty;
                 var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
                 var newLine = Environment.NewLine;
                 var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
@@ -1040,12 +1008,8 @@ namespace GitUI.SpellChecker
                 CancelAutoComplete();
                 SpellCheckTimer.Stop();
                 _autoCompleteCancellationTokenSource.Dispose();
-                if (_customUnderlines != null)
-                {
-                    _customUnderlines.Dispose();
-                }
-                if (components != null)
-                    components.Dispose();
+                _customUnderlines?.Dispose();
+                components?.Dispose();
                 if (_autoCompleteListTask != null && _autoCompleteListTask.Status == TaskStatus.Canceled)
                 {
                     _autoCompleteListTask.Dispose();

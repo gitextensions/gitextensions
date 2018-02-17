@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace GitUI.BuildServerIntegration
     {
         private readonly RevisionGrid revisionGrid;
         private readonly DvcsGraph revisions;
-        private GitModule Module { get { return revisionGrid.Module; } }
+        private GitModule Module => revisionGrid.Module;
 
         public int BuildStatusImageColumnIndex { get; private set; }
         public int BuildStatusMessageColumnIndex { get; private set; }
@@ -49,7 +50,7 @@ namespace GitUI.BuildServerIntegration
             DisposeBuildServerAdapter();
 
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
-            GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
+            GetBuildServerAdapter().ContinueWith(task =>
             {
                 if (revisions.IsDisposed)
                 {
@@ -97,13 +98,10 @@ namespace GitUI.BuildServerIntegration
         {
             var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
 
-            if (cancellationToken != null)
-            {
-                cancellationToken.Dispose();
-            }
+            cancellationToken?.Dispose();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
         public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
             lock (buildServerCredentialsLock)
@@ -297,7 +295,7 @@ namespace GitUI.BuildServerIntegration
                         var canBeLoaded = export.Metadata.CanBeLoaded;
                         if (!canBeLoaded.IsNullOrEmpty())
                         {
-                            System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
+                            Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
                             return null;
                         }
                         var buildServerAdapter = export.Value;

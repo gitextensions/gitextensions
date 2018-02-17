@@ -82,11 +82,8 @@ namespace Gravatar
         /// <param name="imageType">The serialised image type.</param>
         public DefaultImageType GetDefaultImageType(string imageType)
         {
-            DefaultImageType defaultImageType;
-            if (!Enum.TryParse(imageType, true, out defaultImageType))
-            {
+            if (!Enum.TryParse(imageType, true, out DefaultImageType defaultImageType))
                 defaultImageType = DefaultImageType.None;
-            }
 
             return defaultImageType;
         }
@@ -98,7 +95,7 @@ namespace Gravatar
         /// <param name="email">The email address for which to build the <see cref="Uri"/>.</param>
         /// <param name="size">The size of the image to request.  The default is 32.</param>
         /// <param name="useHttps">Indicates whether or not the request should be performed over Secure HTTP.</param>
-        /// <param name="rating">The mazimum rating of the returned image.</param>
+        /// <param name="rating">The maximum rating of the returned image.</param>
         /// <param name="defaultImageType">The Gravatar service that will be used for fall-back.</param>
         /// <returns>The constructed <see cref="Uri"/>.</returns>
         private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, DefaultImageType defaultImageType)

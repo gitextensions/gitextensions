@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
-using GitCommands.Config;
 using GitCommands;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -59,22 +59,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Client github = new Client();
                 Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
-                if (gitExtRepo == null)
-                    return;
 
-                var configData = gitExtRepo.GetRef("heads/configdata");
-                if (configData == null)
-                    return;
+                var configData = gitExtRepo?.GetRef("heads/configdata");
 
-                var tree = configData.GetTree();
+                var tree = configData?.GetTree();
                 if (tree == null)
                     return;
 
-                var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                if (releases != null && releases.Blob.Value != null)
-                {
+                var releases = tree.Tree.FirstOrDefault(
+                    entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
+
+                if (releases?.Blob.Value != null)
                     CheckForNewerVersion(releases.Blob.Value.GetContent());
-                }
             }
             catch (InvalidAsynchronousStateException)
             {
@@ -96,7 +92,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         }
 
-        void CheckForNewerVersion(string releases)
+        private void CheckForNewerVersion(string releases)
         {
             var versions = ReleaseVersion.Parse(releases);
             var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
@@ -148,7 +144,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Process.Start(UpdateUrl);
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
             }
         }
@@ -176,18 +172,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e);
+                Debug.WriteLine(e);
                 return null;
             }
 
-            var version = new ReleaseVersion()
+            var version = new ReleaseVersion
             {
                 Version = ver,
                 ReleaseType = ReleaseType.Major,
                 DownloadPage = section.GetValue("DownloadPage")
             };
 
-            Enum.TryParse<ReleaseType>(section.GetValue("ReleaseType"), true, out version.ReleaseType);
+            Enum.TryParse(section.GetValue("ReleaseType"), true, out version.ReleaseType);
 
             return version;
 

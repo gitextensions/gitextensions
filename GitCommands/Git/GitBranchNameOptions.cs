@@ -13,11 +13,11 @@ namespace GitCommands.Git
             {
                 if (replacementToken.Length > 1)
                 {
-                    throw new ArgumentOutOfRangeException("replacementToken", "Replacement token must be a single character");
+                    throw new ArgumentOutOfRangeException(nameof(replacementToken), "Replacement token must be a single character");
                 }
                 if (!GitBranchNameNormaliser.IsValidChar(replacementToken[0]))
                 {
-                    throw new ArgumentOutOfRangeException("replacementToken", string.Format("Replacement token invalid: '{0}'", replacementToken));
+                    throw new ArgumentOutOfRangeException(nameof(replacementToken), string.Format("Replacement token invalid: '{0}'", replacementToken));
                 }
             }
             ReplacementToken = replacementToken ?? string.Empty;
@@ -27,6 +27,6 @@ namespace GitCommands.Git
         /// Gets the character which will replace all invalid characters in git branch name.
         /// </summary>
         /// <seealso cref="GitBranchNameNormaliser"/>.
-        public string ReplacementToken { get; private set; }
+        public string ReplacementToken { get; }
     }
 }

@@ -16,20 +16,14 @@ namespace DeleteUnusedBranches
             Branches.AddRange(branches);
         }
 
-        protected override bool SupportsSortingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSortingCore => true;
 
         protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
         {
             Branches.Sort(BranchesComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
         }
 
-        private List<Branch> Branches
-        {
-            get { return (List<Branch>)Items; }
-        }
+        private List<Branch> Branches => (List<Branch>)Items;
 
         private static class BranchesComparer
         {
@@ -49,8 +43,7 @@ namespace DeleteUnusedBranches
             /// <param name="isReversedComparing">Use reversed sorting order.</param>
             public static Comparison<Branch> Create(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
             {
-                Comparison<Branch> comparer;
-                if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out comparer))
+                if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out var comparer))
                     return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
                 throw new NotSupportedException(string.Format("Custom sort by {0} property is not supported.", propertyDescriptor.Name));
             }

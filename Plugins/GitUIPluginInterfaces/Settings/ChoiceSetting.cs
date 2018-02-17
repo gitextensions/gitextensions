@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -22,8 +21,8 @@ namespace GitUIPluginInterfaces
                 DefaultValue = values.First();
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public string DefaultValue { get; set; }
         public IList<string> Values { get; set; }
         public ComboBox CustomControl { get; set; }
@@ -88,15 +87,9 @@ namespace GitUIPluginInterfaces
 
         public string this[ISettingsSource settings]
         {
-            get
-            {
-                return settings.GetString(Name, null);
-            }
+            get => settings.GetString(Name, null);
 
-            set
-            {
-                settings.SetString(Name, value);
-            }
+            set => settings.SetString(Name, value);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
@@ -8,7 +7,7 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.BuildServerIntegration
 {
-    static internal class BuildInfoDrawingLogic
+    internal static class BuildInfoDrawingLogic
     {
         public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
         {
@@ -90,7 +89,7 @@ namespace GitUI.BuildServerIntegration
 
         private static string GetBuildStatusMessageText(GitRevision revision)
         {
-            if (revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Description))
+            if (string.IsNullOrEmpty(revision.BuildStatus?.Description))
                 return string.Empty;
             return revision.BuildStatus.Description;
         }

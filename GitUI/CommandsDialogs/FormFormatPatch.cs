@@ -194,20 +194,21 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (string file in Directory.GetFiles(dir, "*.patch"))
                     {
-                        var attacheMent = new Attachment(file);
-                        mail.Attachments.Add(attacheMent);
+                        mail.Attachments.Add(new Attachment(file));
                     }
 
-                    var smtpClient = new SmtpClient(AppSettings.SmtpServer);
-                    smtpClient.Port = AppSettings.SmtpPort;
-                    smtpClient.EnableSsl = AppSettings.SmtpUseSsl;
+                    var smtpClient = new SmtpClient(AppSettings.SmtpServer)
+                    {
+                        Port = AppSettings.SmtpPort,
+                        EnableSsl = AppSettings.SmtpUseSsl
+                    };
+
                     using (var credentials = new SmtpCredentials())
                     {
                         credentials.login.Text = from;
-                        if (credentials.ShowDialog(this) == DialogResult.OK)
-                            smtpClient.Credentials = new NetworkCredential(credentials.login.Text, credentials.password.Text);
-                        else
-                            smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+                        smtpClient.Credentials = credentials.ShowDialog(this) == DialogResult.OK
+                            ? new NetworkCredential(credentials.login.Text, credentials.password.Text)
+                            : CredentialCache.DefaultNetworkCredentials;
                     }
                     ServicePointManager.ServerCertificateValidationCallback =
                         (sender, certificate, chain, errors) => true;

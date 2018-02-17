@@ -9,7 +9,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Object representing 3D pie.
     /// </summary>
-    public class PieSlice : Object, IDisposable
+    public class PieSlice : object, IDisposable
     {
         /// <summary>
         ///   Angle offset used to define reference angle for gradual shadow.
@@ -333,10 +333,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Gets ending angle (in degrees) of the pie slice.
         /// </summary>
-        public float EndAngle
-        {
-            get { return (StartAngle + SweepAngle)%360; }
-        }
+        public float EndAngle => (StartAngle + SweepAngle)%360;
 
         /// <summary>
         ///   Gets or sets the bounding rectangle.
@@ -457,10 +454,7 @@ namespace GitStatistics.PieChart
         /// </param>
         internal void DrawVisibleStartSide(Graphics graphics)
         {
-            if (StartSide != null)
-            {
-                StartSide.Draw(graphics, Pen, BrushStartSide);
-            }
+            StartSide?.Draw(graphics, Pen, BrushStartSide);
         }
 
         /// <summary>
@@ -471,10 +465,7 @@ namespace GitStatistics.PieChart
         /// </param>
         internal void DrawVisibleEndSide(Graphics graphics)
         {
-            if (EndSide != null)
-            {
-                EndSide.Draw(graphics, Pen, BrushEndSide);
-            }
+            EndSide?.Draw(graphics, Pen, BrushEndSide);
         }
 
         /// <summary>
@@ -1107,13 +1098,13 @@ namespace GitStatistics.PieChart
                 EndPoint = endPoint;
             }
 
-            public float StartAngle { get; private set; }
+            public float StartAngle { get; }
 
-            public float EndAngle { get; private set; }
+            public float EndAngle { get; }
 
-            public PointF StartPoint { get; private set; }
+            public PointF StartPoint { get; }
 
-            public PointF EndPoint { get; private set; }
+            public PointF EndPoint { get; }
         }
 
         #endregion

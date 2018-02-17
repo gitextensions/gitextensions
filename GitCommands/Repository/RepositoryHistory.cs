@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Xml.Serialization;
 
 namespace GitCommands.Repository
@@ -23,10 +22,7 @@ namespace GitCommands.Repository
         [XmlIgnore]
         public int MaxCount
         {
-            get
-            {
-                return _maxCount;
-            }
+            get => _maxCount;
             set
             {
                 _maxCount = value;

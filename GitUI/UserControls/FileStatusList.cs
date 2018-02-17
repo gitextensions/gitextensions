@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
@@ -15,6 +14,7 @@ using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;
+using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI
 {
@@ -76,7 +76,7 @@ namespace GitUI
             FileStatusListView.LargeImageList = _images;
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
-            this.Controls.SetChildIndex(NoFiles, 0);
+            Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _filter = new Regex(".*");
@@ -97,10 +97,7 @@ namespace GitUI
 
         protected override void DisposeCustomResources()
         {
-            if (selectedIndexChangeSubscription != null)
-            {
-                selectedIndexChangeSubscription.Dispose();
-            }
+            selectedIndexChangeSubscription?.Dispose();
         }
 
         private bool _enableSelectedIndexChangeEvent = true;
@@ -142,10 +139,7 @@ namespace GitUI
 
         public bool FilterVisible
         {
-            get
-            {
-                return _filterVisible;
-            }
+            get => _filterVisible;
 
             set
             {
@@ -155,13 +149,7 @@ namespace GitUI
             }
         }
 
-        public override bool Focused
-        {
-            get
-            {
-                return FileStatusListView.Focused;
-            }
-        }
+        public override bool Focused => FileStatusListView.Focused;
 
         public new void Focus()
         {
@@ -227,7 +215,7 @@ namespace GitUI
                                   new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
 
-        private string AppendItemSubmoduleStatus(string text, GitItemStatus item)
+        private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
         {
             if (item.IsSubmodule &&
                 item.SubmoduleStatus != null &&
@@ -239,7 +227,7 @@ namespace GitUI
             return text;
         }
 
-        void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
+        private void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
         {
             //SELECT
             if (e.Button == MouseButtons.Right)
@@ -278,35 +266,26 @@ namespace GitUI
 
         public override ContextMenuStrip ContextMenuStrip
         {
-            get
-            {
-                return FileStatusListView.ContextMenuStrip;
-            }
+            get => FileStatusListView.ContextMenuStrip;
             set
             {
                 FileStatusListView.ContextMenuStrip = value;
                 if (FileStatusListView.ContextMenuStrip != null)
                 {
-                    FileStatusListView.ContextMenuStrip.Opening += new CancelEventHandler(FileStatusListView_ContextMenu_Opening);
+                    FileStatusListView.ContextMenuStrip.Opening += FileStatusListView_ContextMenu_Opening;
                 }
             }
         }
 
         public override ContextMenu ContextMenu
         {
-            get
-            {
-                return FileStatusListView.ContextMenu;
-            }
-            set
-            {
-                FileStatusListView.ContextMenu = value;
-            }
+            get => FileStatusListView.ContextMenu;
+            set => FileStatusListView.ContextMenu = value;
         }
 
         private Rectangle dragBoxFromMouseDown;
 
-        void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
+        private void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
         {
             ListView listView = sender as ListView;
 
@@ -378,10 +357,8 @@ namespace GitUI
             {
                 return 0;
             }
-            else
-            {
-                return _itemsDictionary.SelectMany(pair => pair.Value).Count();
-            }
+
+            return _itemsDictionary.SelectMany(pair => pair.Value).Count();
         }
 
         [Browsable(false)]
@@ -414,8 +391,7 @@ namespace GitUI
                     item.Selected = true;
                 }
                 var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
-                if (first != null)
-                    first.EnsureVisible();
+                first?.EnsureVisible();
                 StoreNextIndexToSelect();
             }
         }
@@ -470,7 +446,7 @@ namespace GitUI
             get
             {
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                    return item.Group != null ? (string)item.Group.Tag : null;
+                    return (string)item.Group?.Tag;
                 return null;
             }
         }
@@ -553,7 +529,7 @@ namespace GitUI
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
 
-        void FileStatusListView_DoubleClick(object sender, EventArgs e)
+        private void FileStatusListView_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
             {
@@ -574,17 +550,22 @@ namespace GitUI
         {
             var submoduleName = SelectedItem.Name;
             SelectedItem.SubmoduleStatus.ContinueWith(
-                (t) =>
+                t =>
                 {
-                    Process process = new Process();
-                    process.StartInfo.FileName = Application.ExecutablePath;
-                    process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                    process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
+                    var process = new Process
+                    {
+                        StartInfo =
+                        {
+                            FileName = Application.ExecutablePath,
+                            Arguments = "browse -commit=" + t.Result.Commit,
+                            WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
+                        }
+                    };
                     process.Start();
                 });
         }
 
-        void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
+        private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             var cm = sender as ContextMenuStrip;
             if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
@@ -604,10 +585,9 @@ namespace GitUI
             }
         }
 
-        void FileStatusListView_SelectedIndexChanged()
+        private void FileStatusListView_SelectedIndexChanged()
         {
-            if (SelectedIndexChanged != null)
-                SelectedIndexChanged(this, EventArgs.Empty);
+            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private static int GetItemImageIndex(GitItemStatus gitItemStatus)
@@ -644,10 +624,7 @@ namespace GitUI
 
         [Browsable(false)]
         [DefaultValue(true)]
-        public bool IsEmpty
-        {
-            get { return GitItemStatuses == null || !GitItemStatuses.Any(); }
-        }
+        public bool IsEmpty => GitItemStatuses == null || !GitItemStatuses.Any();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -711,10 +688,7 @@ namespace GitUI
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
         {
-            get
-            {
-                return _itemsDictionary;
-            }
+            get => _itemsDictionary;
             set
             {
                 _itemsDictionary = value;
@@ -743,8 +717,7 @@ namespace GitUI
                     previouslySelectedItems.Add((GitItemStatus)Item.Tag);
                 }
 
-                if (DataSourceChanged != null)
-                    DataSourceChanged(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, new EventArgs());
             }
 
             FileStatusListView.BeginUpdate();
@@ -760,7 +733,7 @@ namespace GitUI
                 foreach (var pair in _itemsDictionary)
                 {
                     ListViewGroup group = null;
-                    if (!String.IsNullOrEmpty(pair.Key))
+                    if (!string.IsNullOrEmpty(pair.Key))
                     {
                         var groupName = "";
                         if (pair.Key == CombinedDiff.Text)
@@ -772,8 +745,7 @@ namespace GitUI
                             groupName = _DiffWithParent.Text + " " + GetDescriptionForRevision(pair.Key);
                         }
 
-                        group = new ListViewGroup(groupName);
-                        group.Tag = pair.Key;
+                        group = new ListViewGroup(groupName) {Tag = pair.Key};
                         FileStatusListView.Groups.Add(group);
                     }
                     foreach (var item in pair.Value)
@@ -794,21 +766,21 @@ namespace GitUI
                                 text = AppendItemSubmoduleStatus(text, item);
                             }
 
-                            var listItem = new ListViewItem(text, group);
-                            listItem.ImageIndex = GetItemImageIndex(item);
+                            var listItem = new ListViewItem(text, group)
+                            {
+                                ImageIndex = GetItemImageIndex(item),
+                                Tag = item,
+                                Selected = previouslySelectedItems.Contains(item)
+                            };
+
                             if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                             {
                                 var capturedItem = item;
-                                item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(capturedItem),
+                                item.SubmoduleStatus.ContinueWith(task => listItem.ImageIndex = GetItemImageIndex(capturedItem),
                                                                   CancellationToken.None,
                                                                   TaskContinuationOptions.OnlyOnRanToCompletion,
                                                                   TaskScheduler.FromCurrentSynchronizationContext());
                             }
-                            if (previouslySelectedItems.Contains(item))
-                            {
-                                listItem.Selected = true;
-                            }
-                            listItem.Tag = item;
                             list.Add(listItem);
                         }
                     }
@@ -818,8 +790,7 @@ namespace GitUI
             if (updateCausedByFilter == false)
             {
                 FileStatusListView_SelectedIndexChanged();
-                if (DataSourceChanged != null)
-                    DataSourceChanged(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, new EventArgs());
                 if (SelectFirstItemOnSetItems)
                     SelectFirstVisibleItem();
             }
@@ -900,8 +871,7 @@ namespace GitUI
                         break;
                     }
                 default:
-                    if (KeyDown != null)
-                        KeyDown(sender, e);
+                    KeyDown?.Invoke(sender, e);
                     break;
             }
         }
@@ -999,10 +969,9 @@ namespace GitUI
                 else if (keys.Count == 1 && (GitItemStatusesWithParents[keys[0]] == null || GitItemStatusesWithParents[keys[0]].Count == 0))
                     HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
-            else if (GitItemStatuses != null)
+            else if (GitItemStatuses?.Count == 0)
             {
-                if (GitItemStatuses.Count == 0)
-                    HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
+                HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
         }
 
@@ -1089,7 +1058,7 @@ namespace GitUI
             if (_lastUserInputTime == 0)
             {
                 long timerLastChanged = currentTime;
-                var timer = new System.Windows.Forms.Timer { Interval = 250 };
+                var timer = new Timer { Interval = 250 };
                 timer.Tick += (s, a) =>
                 {
                     if (NoUserInput(timerLastChanged))

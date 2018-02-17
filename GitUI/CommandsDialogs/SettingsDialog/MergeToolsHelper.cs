@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    static class MergeToolsHelper
+    internal static class MergeToolsHelper
     {
         private static string GetGlobalSetting(ConfigFileSettingsSet settings, string setting)
         {
@@ -15,8 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static string GetFullPath(string fileName)
         {
-            string fullPath;
-            PathUtil.TryFindFullPath(fileName, out fullPath);
+            PathUtil.TryFindFullPath(fileName, out var fullPath);
 
             return fullPath;
         }
@@ -49,7 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
 
                 if (8 == IntPtr.Size
-                    || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+                    || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
                 {
                     programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 
@@ -71,7 +70,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private static string UnquoteString(string str)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
                 return str;
 
             int length = str.Length;
@@ -172,7 +171,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "tmerge":
                     exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
-                    if (String.IsNullOrEmpty(difftoolPath))
+                    if (string.IsNullOrEmpty(difftoolPath))
                     {
                         exeName = "TortoiseMerge.exe";
                         difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
@@ -334,7 +333,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     if (exeFile.ToLower().Contains("tortoisegit"))
                         command = command.Replace("/", "-");
 
-                    return String.Format(command, exeFile);
+                    return string.Format(command, exeFile);
                 case "vscode":
                     return "\"" + exeFile + "\" --wait \"$MERGED\" ";
                 case "vsdiffmerge":
@@ -372,21 +371,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 return exeName;
             }
 
-            var vsVersions = new string[] { "14.0", "12.0", "11.0" };
+            var vsVersions = new[] { "14.0", "12.0", "11.0" };
 
             foreach (var version in vsVersions)
             {
                 string registryKeyString = string.Format(@"SOFTWARE{0}Microsoft\VisualStudio\{1}", Environment.Is64BitProcess ? @"\Wow6432Node\" : "\\", version);
                 using (RegistryKey localMachineKey = Registry.LocalMachine.OpenSubKey(registryKeyString))
                 {
-                    if (localMachineKey != null)
-                    {
-                        var path = localMachineKey.GetValue("InstallDir") as string;
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            return Path.Combine(path, exeName);
-                        }
-                    }
+                    var path = localMachineKey?.GetValue("InstallDir") as string;
+                    if (!string.IsNullOrEmpty(path))
+                        return Path.Combine(path, exeName);
                 }
             }
             return exeName;

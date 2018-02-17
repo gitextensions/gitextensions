@@ -70,7 +70,7 @@ namespace GitCommands.Settings
 
         public string GetValue(string setting)
         {
-            return this.GetString(setting, string.Empty);
+            return GetString(setting, string.Empty);
         }
 
         public IList<string> GetValues(string setting)
@@ -86,7 +86,7 @@ namespace GitCommands.Settings
                 value = null;
             }
 
-            this.SetString(setting, value);
+            SetString(setting, value);
         }
 
         public void SetPathValue(string setting, string value)
@@ -120,32 +120,14 @@ namespace GitCommands.Settings
 
         public Encoding FilesEncoding
         {
-            get
-            {
-                return GetEncoding("i18n.filesEncoding");
-            }
+            get => GetEncoding("i18n.filesEncoding");
 
-            set
-            {
-                SetEncoding("i18n.filesEncoding", value);
-            }
+            set => SetEncoding("i18n.filesEncoding", value);
         }
 
-        public Encoding CommitEncoding
-        {
-            get
-            {
-                return GetEncoding("i18n.commitEncoding");
-            }
-        }
+        public Encoding CommitEncoding => GetEncoding("i18n.commitEncoding");
 
-        public Encoding LogOutputEncoding
-        {
-            get
-            {
-                return GetEncoding("i18n.logoutputencoding");
-            }
-        }
+        public Encoding LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
 
         private Encoding GetEncoding(string settingName)
         {
@@ -174,7 +156,7 @@ namespace GitCommands.Settings
 
         private void SetEncoding(string settingName, Encoding encoding)
         {
-            SetValue(settingName, encoding == null ? null : encoding.HeaderName);
+            SetValue(settingName, encoding?.HeaderName);
         }
     }
 

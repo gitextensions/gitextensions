@@ -57,14 +57,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 Controls.Add(translationImage);
 
-                Label label = new Label();
-                label.Text = translation;
-                label.Tag = translation;
-                label.Left = translationImage.Left;
-                label.Width = translationImage.Width;
-                label.Top = translationImage.Bottom;
-                label.Height = labelHeight;
-                label.TextAlign = ContentAlignment.TopCenter;
+                Label label = new Label
+                {
+                    Text = translation,
+                    Tag = translation,
+                    Left = translationImage.Left,
+                    Width = translationImage.Width,
+                    Top = translationImage.Bottom,
+                    Height = labelHeight,
+                    TextAlign = ContentAlignment.TopCenter
+                };
                 label.Click += translationImage_Click;
                 Controls.Add(label);
             }
@@ -74,7 +76,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             label2.Top = Height - SystemInformation.CaptionHeight - 25;
         }
 
-        void translationImage_Click(object sender, EventArgs e)
+        private void translationImage_Click(object sender, EventArgs e)
         {
             AppSettings.Translation = ((Control)sender).Tag.ToString();
             Close();

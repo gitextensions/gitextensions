@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class MenuUtil
+    internal class MenuUtil
     {
-        private static CaptionCustomMenuRenderer customMenuRenderer = new CaptionCustomMenuRenderer();
+        private static readonly CaptionCustomMenuRenderer customMenuRenderer = new CaptionCustomMenuRenderer();
         private static Font disabledFont;
 
         /// <summary>

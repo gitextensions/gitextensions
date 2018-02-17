@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -32,15 +33,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strSearching = new TranslationString(" : SEARCHING : ");
         private readonly TranslationString _strSelectOneItem = new TranslationString("You must select exactly one item");
         private readonly TranslationString _strCloneFolderCanNotBeEmpty = new TranslationString("Clone folder can not be empty");
+
         #endregion
 
-        readonly IRepositoryHostPlugin _gitHoster;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private readonly IRepositoryHostPlugin _gitHost;
+        private readonly EventHandler<GitModuleEventArgs> GitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHost, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             this.GitModuleChanged = GitModuleChanged;
-            _gitHoster = gitHoster;
+            _gitHost = gitHost;
             InitializeComponent();
             Translate();
         }
@@ -60,7 +62,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 var hist = Repositories.RepositoryHistory;
                 var lastRepo = hist.Repositories.FirstOrDefault();
-                if (lastRepo != null && !string.IsNullOrEmpty(lastRepo.Path))
+                if (!string.IsNullOrEmpty(lastRepo?.Path))
                 {
                     string p = lastRepo.Path.Trim('/', '\\');
 
@@ -68,7 +70,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
             }
 
-            Text = _gitHoster.Description + ": " + Text;
+            Text = _gitHost.Description + ": " + Text;
 
             UpdateCloneInfo();
             UpdateMyRepos();
@@ -80,7 +82,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
             AsyncLoader.DoAsync(
-                () => _gitHoster.GetMyRepos(),
+                () => _gitHost.GetMyRepos(),
 
                 repos =>
                 {
@@ -98,7 +100,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex =>
                 {
                     _myReposLV.Items.Clear();
-                    _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) + 
+                    _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHost.Description) +
                         "\r\n\r\nException: " + ex.Exception.Message + "\r\n\r\n" + _helpTextLbl.Text;
                 });
         }
@@ -113,7 +115,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             PrepareSearch(sender, e);
 
             AsyncLoader.DoAsync(
-                () => _gitHoster.SearchForRepository(search),
+                () => _gitHost.SearchForRepository(search),
                 HandleSearchResult,
                 ex =>
                 {
@@ -130,7 +132,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             PrepareSearch(sender, e);
 
             AsyncLoader.DoAsync(
-                () => _gitHoster.GetRepositoriesOfUser(search.Trim()),
+                () => _gitHost.GetRepositoriesOfUser(search.Trim()),
                 HandleSearchResult,
                 ex =>
                 {
@@ -178,7 +180,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var hostedRepo = _searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
             try
             {
-                if (hostedRepo != null) hostedRepo.Fork();
+                hostedRepo?.Fork();
             }
             catch (Exception ex)
             {
@@ -228,18 +230,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _cloneBtn_Click(object sender, EventArgs e)
         {
-            Clone(CurrentySelectedGitRepo);
+            Clone(CurrentlySelectedGitRepo);
         }
 
         private void _openGitupPageBtn_Click(object sender, EventArgs e)
         {
-            if (CurrentySelectedGitRepo == null)
+            if (CurrentlySelectedGitRepo == null)
                 return;
-            string hp = CurrentySelectedGitRepo.Homepage;
+            string hp = CurrentlySelectedGitRepo.Homepage;
             if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
                 MessageBox.Show(this, _strNoHomepageDefined.Text, _strError.Text);
             else
-                Process.Start(CurrentySelectedGitRepo.Homepage);
+                Process.Start(CurrentlySelectedGitRepo.Homepage);
         }
 
         private void _closeBtn_Click(object sender, EventArgs e)
@@ -285,8 +287,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
-            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd);
-            formRemoteProcess.Remote = repoSrc;
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd)
+            {
+                Remote = repoSrc
+            };
             formRemoteProcess.ShowDialog();
 
             if (formRemoteProcess.ErrorOccurred())
@@ -301,13 +305,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }
 
-            if (GitModuleChanged != null)
-                GitModuleChanged(this, new GitModuleEventArgs(module));
+            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Close();
         }
 
-        private IHostedRepository CurrentySelectedGitRepo
+        private IHostedRepository CurrentlySelectedGitRepo
         {
             get
             {
@@ -325,14 +328,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
-        private void UpdateCloneInfo()
+        private void UpdateCloneInfo(bool updateCreateDirTB = true)
         {
-            UpdateCloneInfo(true);
-        }
-
-        private void UpdateCloneInfo(bool updateCreateDirTB)
-        {
-            var repo = CurrentySelectedGitRepo;
+            var repo = CurrentlySelectedGitRepo;
 
             if (repo != null)
             {
@@ -372,13 +370,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             return targetDir;
         }
 
-        private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void _destinationTB_Validating(object sender, CancelEventArgs e)
         {
             if (_destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 e.Cancel = true;
         }
 
-        private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void _createDirTB_Validating(object sender, CancelEventArgs e)
         {
             if (_createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
                 e.Cancel = true;

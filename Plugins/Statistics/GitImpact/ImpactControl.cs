@@ -18,7 +18,6 @@ namespace GitImpact
         private const int LinesFontSize = 10;
         private const int WeekFontSize = 8;
 
-
         private readonly object _dataLock = new object();
 
         private ImpactLoader _impactLoader;
@@ -48,7 +47,7 @@ namespace GitImpact
             InitializeComponent();
 
             // Set DoubleBuffer flag for flicker-free drawing
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             MouseWheel += ImpactControl_MouseWheel;
@@ -56,8 +55,11 @@ namespace GitImpact
 
         public void Init(IGitModule Module)
         {
-            _impactLoader = new ImpactLoader(Module);
-            _impactLoader.RespectMailmap = true; // respect the .mailmap file
+            _impactLoader = new ImpactLoader(Module)
+            {
+                // respect the .mailmap file
+                RespectMailmap = true
+            };
             _impactLoader.Updated += OnImpactUpdate;
         }
 
@@ -78,18 +80,17 @@ namespace GitImpact
 
         public void Stop()
         {
-            if (_impactLoader != null)
-                _impactLoader.Stop();
+            _impactLoader?.Stop();
         }
 
-        void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
+        private void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
-            this._scrollBar.Value = Math.Min(this._scrollBar.Maximum, Math.Max(this._scrollBar.Minimum, this._scrollBar.Value + e.Delta));
+            _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
             // Redraw when we've scrolled
             Invalidate();
         }
 
-        void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
+        private void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
         {
             var commit = e.Commit;
 
@@ -148,7 +149,7 @@ namespace GitImpact
         [DefaultValue(false)]
         public bool ShowSubmodules
         {
-            get { return _showSubmodules; }
+            get => _showSubmodules;
             set
             {
                 _showSubmodules = value;
@@ -160,28 +161,28 @@ namespace GitImpact
 
         private void InitializeComponent()
         {
-            this._scrollBar = new System.Windows.Forms.HScrollBar();
-            this.SuspendLayout();
+            _scrollBar = new HScrollBar();
+            SuspendLayout();
             //
             // scrollBar
             //
-            this._scrollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._scrollBar.LargeChange = 0;
-            this._scrollBar.Location = new System.Drawing.Point(0, 133);
-            this._scrollBar.Maximum = 0;
-            this._scrollBar.Name = "_scrollBar";
-            this._scrollBar.Size = new System.Drawing.Size(150, 17);
-            this._scrollBar.SmallChange = 0;
-            this._scrollBar.TabIndex = 0;
-            this._scrollBar.Scroll += this.OnScroll;
+            _scrollBar.Dock = DockStyle.Bottom;
+            _scrollBar.LargeChange = 0;
+            _scrollBar.Location = new Point(0, 133);
+            _scrollBar.Maximum = 0;
+            _scrollBar.Name = "_scrollBar";
+            _scrollBar.Size = new Size(150, 17);
+            _scrollBar.SmallChange = 0;
+            _scrollBar.TabIndex = 0;
+            _scrollBar.Scroll += OnScroll;
             //
             // ImpactControl
             //
-            this.Controls.Add(this._scrollBar);
-            this.Name = "ImpactControl";
-            this.Paint += this.OnPaint;
-            this.Resize += this.OnResize;
-            this.ResumeLayout(false);
+            Controls.Add(_scrollBar);
+            Name = "ImpactControl";
+            Paint += OnPaint;
+            Resize += OnResize;
+            ResumeLayout(false);
 
         }
 
@@ -193,7 +194,7 @@ namespace GitImpact
             }
         }
 
-        private void UpdateScrollbar()
+        private void UpdateScrollBar()
         {
             lock (_dataLock)
             {
@@ -212,7 +213,7 @@ namespace GitImpact
         {
             // White background
             e.Graphics.Clear(Color.White);
-            UpdateScrollbar();
+            UpdateScrollBar();
             lock (_dataLock)
             {
                 // Nothing to draw
@@ -287,7 +288,7 @@ namespace GitImpact
         private void OnResize(object sender, EventArgs e)
         {
             UpdatePathsAndLabels();
-            UpdateScrollbar();
+            UpdateScrollBar();
             Invalidate();
         }
 
@@ -421,9 +422,14 @@ namespace GitImpact
             }
         }
 
-        private int GenerateIntFromString(string text)
+        private static int GenerateIntFromString(string text)
         {
-            return text.Sum(c => (int) c);
+            var j = 0;
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < text.Length; i++)
+                j = unchecked(j + text[i]);
+            return j;
         }
 
         /// <summary>

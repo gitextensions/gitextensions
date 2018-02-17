@@ -8,18 +8,12 @@ namespace GitPluginShared.Commands
         {
             string[] arguments = null;
 
-            var textSelection = item.DTE.ActiveDocument.Selection as TextSelection;
-            if( textSelection != null )
-            {
-                arguments = new string[] { textSelection.CurrentLine.ToString() };
-            }
+            if (item.DTE.ActiveDocument.Selection is TextSelection textSelection)
+                arguments = new[] {textSelection.CurrentLine.ToString()};
 
-            RunGitEx ("blame", fileName, arguments);
+            RunGitEx("blame", fileName, arguments);
         }
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.File; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.File;
     }
 }

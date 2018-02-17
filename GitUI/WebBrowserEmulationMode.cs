@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Win32;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.ComponentModel;
+using System.IO;
+using System.Security.AccessControl;
+using Microsoft.Win32;
 
 namespace GitUI
 {
     public sealed class WebBrowserEmulationMode
     {
-
         public static void SetBrowserFeatureControl()
         {
             // Fix for issue #2654:
@@ -22,18 +19,17 @@ namespace GitUI
                 return;
 
             // FeatureControl settings are per-process
-            var appName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            var appName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
 
             var featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
-            UInt32 emulationMode;
-            if (TryGetBrowserEmulationMode(out emulationMode))
+            if (TryGetBrowserEmulationMode(out var emulationMode))
             {
                 Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, emulationMode, RegistryValueKind.DWord);
             }
         }
 
-        static bool TryGetBrowserEmulationMode(out UInt32 emulationMode)
+        private static bool TryGetBrowserEmulationMode(out uint emulationMode)
         {
             // https://msdn.microsoft.com/en-us/library/ee330730(v=vs.85).aspx#browser_emulation
             // http://stackoverflow.com/questions/28526826/web-browser-control-emulation-issue-feature-browser-emulation/28626667#28626667
@@ -44,7 +40,7 @@ namespace GitUI
                 int browserVersion = 0;
                 using (var ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
                     RegistryKeyPermissionCheck.ReadSubTree,
-                    System.Security.AccessControl.RegistryRights.QueryValues))
+                    RegistryRights.QueryValues))
                 {
                     var version = ieKey.GetValue("svcVersion");
                     if (null == version)
@@ -74,7 +70,7 @@ namespace GitUI
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

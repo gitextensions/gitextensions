@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             IsIndexChanged = isIndexChanged;
         }
 
-        public bool IsIndexChanged { get; private set; }
+        public bool IsIndexChanged { get; }
     }
 
     public sealed class IndexWatcher : IDisposable
@@ -20,15 +20,9 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private readonly IGitUICommandsSource UICommandsSource;
 
-        private GitUICommands UICommands
-        {
-            get
-            {
-                return UICommandsSource.UICommands;
-            }
-        }
+        private GitUICommands UICommands => UICommandsSource.UICommands;
 
-        private GitModule Module { get { return UICommands.Module; } }
+        private GitModule Module => UICommands.Module;
 
         public IndexWatcher(IGitUICommandsSource aUICommandsSource)
         {
@@ -43,7 +37,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
-        void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             Clear();
         }
@@ -97,15 +91,14 @@ namespace GitUI.UserControls.RevisionGridClasses
                 indexChanged = value;
                 GitIndexWatcher.EnableRaisingEvents = !IndexChanged;
 
-                if (Changed != null)
-                    Changed(this, new IndexChangedEventArgs(IndexChanged));
+                Changed?.Invoke(this, new IndexChangedEventArgs(IndexChanged));
             }
         }
 
         private bool enabled;
         private string _gitDirPath;
-        private FileSystemWatcher GitIndexWatcher { get; set; }
-        private FileSystemWatcher RefsWatcher { get; set; }
+        private FileSystemWatcher GitIndexWatcher { get; }
+        private FileSystemWatcher RefsWatcher { get; }
 
         private void fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {

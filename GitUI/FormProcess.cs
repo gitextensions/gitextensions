@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-
 using GitUI.UserControls;
-
-using ResourceManager;
-using System.Collections.Generic;
 
 namespace GitUI
 {
-    delegate void DataCallback(string text);
+    internal delegate void DataCallback(string text);
     /// <summary>
     ///
     /// </summary>
@@ -68,7 +63,7 @@ namespace GitUI
 
         public static bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            return ShowDialog(owner, (string)null, arguments);
+            return ShowDialog(owner, null, arguments);
         }
 
         public static bool ShowDialog(GitModuleForm owner, string process, string arguments)
@@ -106,12 +101,10 @@ namespace GitUI
             }
         }
 
-
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
-            FormProcess formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings);
+            var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings) {ControlBox = true};
 
-            formProcess.ControlBox = true;
             formProcess.Show(owner);
 
             return formProcess;
@@ -155,7 +148,7 @@ namespace GitUI
 
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
-                    throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");	// Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
+                    throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");    // Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
 /*
                     Thread.Sleep(500);
                     Process.StandardInput.Write(ProcessInput);
@@ -264,16 +257,16 @@ namespace GitUI
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             //
             // FormProcess
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(565, 326);
-            this.Name = "FormProcess";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(565, 326);
+            Name = "FormProcess";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
     }

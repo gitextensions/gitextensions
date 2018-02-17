@@ -30,16 +30,16 @@ namespace GitCommands
             get
             {
                 if (!IsIgnored) return "Ignored";
-                else if (!IsTracked) return "Untracked";
-                else if (IsDeleted) return "Deleted";
-                else if (IsChanged) return "Modified";
-                else if (IsNew) return "New";
-                else if (IsRenamed) return "Renamed";
-                else if (IsConflict) return "Conflict";
-                else if (IsCopied) return "Copied";
-                else if (IsAssumeUnchanged) return "Unchanged";
-                else if (IsSkipWorktree) return "SkipWorktree";
-                else return "";
+                if (!IsTracked) return "Untracked";
+                if (IsDeleted) return "Deleted";
+                if (IsChanged) return "Modified";
+                if (IsNew) return "New";
+                if (IsRenamed) return "Renamed";
+                if (IsConflict) return "Conflict";
+                if (IsCopied) return "Copied";
+                if (IsAssumeUnchanged) return "Unchanged";
+                if (IsSkipWorktree) return "SkipWorktree";
+                return "";
             }
         }
 

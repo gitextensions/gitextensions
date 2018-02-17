@@ -6,26 +6,24 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI
 {
-    static public class PluginExtraction
+    public static class PluginExtraction
     {
-        static public void ExtractPluginTypes(IEnumerable<Type> pluginTypes)
+        public static void ExtractPluginTypes(IEnumerable<Type> pluginTypes)
         {
             foreach (var type in pluginTypes)
             {
                 if (!typeof(IGitPlugin).IsAssignableFrom(type) || type.IsInterface || type.IsAbstract)
                     continue;
 
-                var gitPlugin = Activator.CreateInstance(type) as IGitPlugin;
-                if (gitPlugin == null)
-                    continue;
+                if (Activator.CreateInstance(type) is IGitPlugin gitPlugin)
+                {
+                    gitPlugin.SettingsContainer = new GitPluginSettingsContainer(gitPlugin.Name);
 
-                gitPlugin.SettingsContainer = new GitPluginSettingsContainer(gitPlugin.Name);
+                    if (gitPlugin is IRepositoryHostPlugin gitRepositoryHostPlugin)
+                        RepoHosts.GitHosters.Add(gitRepositoryHostPlugin);
 
-                var gitRepositoryHostPlugin = gitPlugin as IRepositoryHostPlugin;
-                if (gitRepositoryHostPlugin != null)
-                    RepoHosts.GitHosters.Add(gitRepositoryHostPlugin);
-
-                LoadedPlugins.Plugins.Add(gitPlugin);
+                    LoadedPlugins.Plugins.Add(gitPlugin);
+                }
             }
         }
     }

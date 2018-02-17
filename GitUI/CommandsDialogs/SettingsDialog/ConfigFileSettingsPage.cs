@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
-        protected ConfigFileSettingsSet ConfigFileSettingsSet { get { return CommonLogic.ConfigFileSettingsSet; } }
+        protected ConfigFileSettingsSet ConfigFileSettingsSet => CommonLogic.ConfigFileSettingsSet;
         protected ConfigFileSettings CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost aPageHost)
@@ -19,10 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
         }
 
-        protected override bool AreEffectiveSettings
-        {
-            get { return CurrentSettings == ConfigFileSettingsSet.EffectiveSettings; }
-        }
+        protected override bool AreEffectiveSettings => CurrentSettings == ConfigFileSettingsSet.EffectiveSettings;
 
         protected override ISettingsSource GetCurrentSettings()
         {

@@ -11,15 +11,15 @@ namespace DeleteUnusedBranches
             Translate();
         }
 
-        private StringSetting MergedInBranch = new StringSetting("Branch where all branches should be merged in", "HEAD");
-        private NumberSetting<int> DaysOlderThan = new NumberSetting<int>("Delete obsolete branches older than (days)", 30);
-        private BoolSetting DeleteRemoteBranchesFromFlag = new BoolSetting("Delete obsolete branches from remote", false);
-        private StringSetting RemoteName = new StringSetting("Remote name obsoleted branches should be deleted from", "origin");
-        private BoolSetting UseRegexToFilterBranchesFlag = new BoolSetting("Use regex to filter branches to delete", false);
-        private StringSetting RegexFilter = new StringSetting("Regex to filter branches to delete", "/(feature|develop)/");
-        private BoolSetting RegexCaseInsensitiveFlag = new BoolSetting("Is regex filter case insensitive?", false);
-        private BoolSetting RegexInvertedFlag = new BoolSetting("Search branches that does not match regex", false);
-        private BoolSetting IncludeUnmergedBranchesFlag = new BoolSetting("Delete unmerged branches", false);
+        private readonly StringSetting MergedInBranch = new StringSetting("Branch where all branches should be merged in", "HEAD");
+        private readonly NumberSetting<int> DaysOlderThan = new NumberSetting<int>("Delete obsolete branches older than (days)", 30);
+        private readonly BoolSetting DeleteRemoteBranchesFromFlag = new BoolSetting("Delete obsolete branches from remote", false);
+        private readonly StringSetting RemoteName = new StringSetting("Remote name obsoleted branches should be deleted from", "origin");
+        private readonly BoolSetting UseRegexToFilterBranchesFlag = new BoolSetting("Use regex to filter branches to delete", false);
+        private readonly StringSetting RegexFilter = new StringSetting("Regex to filter branches to delete", "/(feature|develop)/");
+        private readonly BoolSetting RegexCaseInsensitiveFlag = new BoolSetting("Is regex filter case insensitive?", false);
+        private readonly BoolSetting RegexInvertedFlag = new BoolSetting("Search branches that does not match regex", false);
+        private readonly BoolSetting IncludeUnmergedBranchesFlag = new BoolSetting("Delete unmerged branches", false);
 
         public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {

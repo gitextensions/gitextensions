@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
@@ -62,46 +67,40 @@ Current Branch:
             Translate();
         }
 
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsInstantSavePage => true;
 
         public override void OnPageShown()
         {
-			if (EnvUtils.RunningOnWindows())
-			{
-				System.Resources.ResourceManager rm =
-					new System.Resources.ResourceManager("GitUI.Properties.Resources",
-								System.Reflection.Assembly.GetExecutingAssembly());
+            if (EnvUtils.RunningOnWindows())
+            {
+                System.Resources.ResourceManager rm =
+                    new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                                Assembly.GetExecutingAssembly());
 
-				// dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
-				rm.GetObject("dummy");
+                // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
+                rm.GetObject("dummy");
 
-				System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
+                ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
 
-				contextMenuStrip_SplitButton.Items.Clear();
+                contextMenuStrip_SplitButton.Items.Clear();
 
-				foreach (System.Collections.DictionaryEntry icon in resourceSet)
-				{
-					//add entry to toolstrip
-					if (icon.Value.GetType() == typeof(Icon))
-					{
-						//contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
-					}
-					else if (icon.Value.GetType() == typeof(Bitmap))
-					{
-						contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
-					}
-					//var aa = icon.Value.GetType();
-				}
+                foreach (DictionaryEntry icon in resourceSet)
+                {
+                    //add entry to toolstrip
+                    if (icon.Value.GetType() == typeof(Icon))
+                    {
+                        //contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+                    }
+                    else if (icon.Value.GetType() == typeof(Bitmap))
+                    {
+                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
+                    }
+                    //var aa = icon.Value.GetType();
+                }
 
-				resourceSet.Close();
-				rm.ReleaseAllResources();
-			}
+                resourceSet.Close();
+                rm.ReleaseAllResources();
+            }
         }
 
         protected override void SettingsToPage()
@@ -115,7 +114,7 @@ Current Branch:
             SaveScripts();
         }
 
-        private void SaveScripts()
+        private static void SaveScripts()
         {
             AppSettings.ownScripts = ScriptManager.SerializeIntoXml();
         }
@@ -266,7 +265,7 @@ Current Branch:
             UpdateIconVisibility();
         }
 
-        private void ScriptInfoEdit_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ScriptInfoEdit_Validating(object sender, CancelEventArgs e)
         {
             ScriptInfoFromEdits();
             ScriptList.Refresh();
@@ -293,7 +292,7 @@ Current Branch:
             IconName = ((ToolStripMenuItem)sender).Text;
 
             //store variables
-            ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
+            ScriptInfoEdit_Validating(sender, new CancelEventArgs());
         }
 
         private Bitmap ResizeForSplitButton(Bitmap b)
@@ -308,7 +307,7 @@ Current Branch:
                 return null;
             }
             Bitmap result = new Bitmap(nWidth, nHeight);
-            using (Graphics g = Graphics.FromImage((Image)result))
+            using (Graphics g = Graphics.FromImage(result))
                 g.DrawImage(b, 0, 0, nWidth, nHeight);
             return result;
         }
@@ -328,9 +327,11 @@ Current Branch:
 
         private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
         {
-            var helpDisplayDialog = new SimpleHelpDisplayDialog();
-            helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
-            helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
+            var helpDisplayDialog = new SimpleHelpDisplayDialog
+            {
+                DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text,
+                ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine)
+            };
 
             helpDisplayDialog.ShowDialog();
         }

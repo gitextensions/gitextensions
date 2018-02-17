@@ -1,5 +1,3 @@
-using System;
-
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerTypeMetadata

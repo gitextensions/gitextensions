@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using GitUI.Plugin;
 
 namespace GitUI
 {
@@ -11,9 +12,9 @@ namespace GitUI
     {
         public static void Load()
         {
-            lock (Plugin.LoadedPlugins.Plugins)
+            lock (LoadedPlugins.Plugins)
             {
-                if (Plugin.LoadedPlugins.Plugins.Count > 0)
+                if (LoadedPlugins.Plugins.Count > 0)
                     return;
 
                 var file = new FileInfo(Application.ExecutablePath);
@@ -23,7 +24,7 @@ namespace GitUI
                                    ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
                                    : new FileInfo[] { };
 
-                var pluginFiles = plugins.Where(pluginFile => 
+                var pluginFiles = plugins.Where(pluginFile =>
                     !pluginFile.Name.StartsWith("System.") &&
                     !pluginFile.Name.StartsWith("ICSharpCode.") &&
                     !pluginFile.Name.StartsWith("Microsoft."));
@@ -40,17 +41,25 @@ namespace GitUI
                     {
                         string exInfo = "Exception info:\r\n";
 
-                        var rtle = ex as ReflectionTypeLoadException;
-                        if (rtle != null)
+                        if (ex is ReflectionTypeLoadException rtle)
                         {
                             foreach (var el in rtle.LoaderExceptions)
                                 exInfo += el.Message + "\r\n";
                         }
                         else
                         {
-                            Action<Exception> getEx = null;
-                            getEx = arg => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
-                            getEx(ex);
+                            void GetEx(Exception arg)
+                            {
+                                while (true)
+                                {
+                                    exInfo += arg.Message + "\r\n";
+                                    if (arg.InnerException == null)
+                                        break;
+                                    arg = arg.InnerException;
+                                }
+                            }
+
+                            GetEx(ex);
                         }
 
                         MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));

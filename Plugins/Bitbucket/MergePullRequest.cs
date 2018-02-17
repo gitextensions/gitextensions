@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace Bitbucket
 {
-    class MergeRequestInfo
+    internal class MergeRequestInfo
     {
         public string Id { get; set; }
         public string Version { get; set; }
@@ -12,7 +11,7 @@ namespace Bitbucket
         public string TargetRepo { get; set; }
     }
 
-    class MergePullRequest : BitbucketRequestBase<JObject>
+    internal class MergePullRequest : BitbucketRequestBase<JObject>
     {
         private readonly MergeRequestInfo _info;
 
@@ -22,24 +21,12 @@ namespace Bitbucket
             _info = info;
         }
 
-        protected override object RequestBody
-        {
-            get { return ""; }
-        }
+        protected override object RequestBody => "";
 
-        protected override Method RequestMethod
-        {
-            get { return Method.POST; }
-        }
+        protected override Method RequestMethod => Method.POST;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("rest/api/1.0/projects/{0}/repos/{1}/pull-requests/{2}/merge?version={3}",
-                                     _info.ProjectKey, _info.TargetRepo, _info.Id, _info.Version);
-            }
-        }
+        protected override string ApiUrl => string.Format("rest/api/1.0/projects/{0}/repos/{1}/pull-requests/{2}/merge?version={3}",
+            _info.ProjectKey, _info.TargetRepo, _info.Id, _info.Version);
 
         protected override JObject ParseResponse(JObject json)
         {

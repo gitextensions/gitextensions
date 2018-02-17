@@ -45,21 +45,21 @@ namespace GitUI.Blame
 
         private void commitInfo_CommandClick(object sender, CommandEventArgs e)
         {
-            if (CommandClick != null)
-                CommandClick(sender, e);
+            CommandClick?.Invoke(sender, e);
         }
 
         public event EventHandler<CommandEventArgs> CommandClick;
 
-        void BlameCommitter_MouseLeave(object sender, EventArgs e)
+        private void BlameCommitter_MouseLeave(object sender, EventArgs e)
         {
             blameTooltip.Hide(this);
         }
 
-        int lastTooltipX = -100;
-        int lastTooltipY = -100;
-        string lastTooltip = "";
-        void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
+        private int lastTooltipX = -100;
+        private int lastTooltipY = -100;
+        private string lastTooltip = "";
+
+        private void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
         {
             if (!BlameFile.Focused)
                 BlameFile.Focus();
@@ -88,9 +88,9 @@ namespace GitUI.Blame
             }
         }
 
-        GitBlameHeader _lastBlameHeader;
+        private GitBlameHeader _lastBlameHeader;
 
-        void BlameFile_MouseMove(object sender, MouseEventArgs e)
+        private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
             if (_blame == null)
                 return;
@@ -135,7 +135,7 @@ namespace GitUI.Blame
             }
         }
 
-        void SelectedLineChanged(object sender, SelectedLineEventArgs e)
+        private void SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             int selectedLine = e.SelectedLine;
             if (_blame == null || selectedLine >= _blame.Lines.Count)
@@ -150,9 +150,9 @@ namespace GitUI.Blame
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.CommitGuid);
         }
 
-        bool _bChangeScrollPosition;
+        private bool _bChangeScrollPosition;
 
-        void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
             if (!_bChangeScrollPosition)
             {
@@ -175,7 +175,7 @@ namespace GitUI.Blame
             BlameFile.ScrollPos = BlameCommitter.ScrollPos;
         }
 
-        void BlameFile_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameFile_ScrollPosChanged(object sender, EventArgs e)
         {
             if (_bChangeScrollPosition)
                 return;
@@ -189,7 +189,7 @@ namespace GitUI.Blame
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
         
-        private AsyncLoader blameLoader = new AsyncLoader();
+        private readonly AsyncLoader blameLoader = new AsyncLoader();
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
@@ -198,8 +198,7 @@ namespace GitUI.Blame
             if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
-            if (controlToMask != null)
-                controlToMask.Mask();
+            controlToMask?.Mask();
 
             var scrollpos = BlameFile.ScrollPos;
 
@@ -230,12 +229,12 @@ namespace GitUI.Blame
                 {
                     blameCommitter.AppendLine(
                         (blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName +
-                         new string(' ', 100)).Trim(new[] {'\r', '\n'}));
+                         new string(' ', 100)).Trim('\r', '\n'));
                 }
                 if (blameLine.LineText == null)
                     blameFile.AppendLine("");
                 else
-                    blameFile.AppendLine(blameLine.LineText.Trim(new[] {'\r', '\n'}));
+                    blameFile.AppendLine(blameLine.LineText.Trim('\r', '\n'));
             }
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
@@ -250,8 +249,7 @@ namespace GitUI.Blame
             _blameHash = revision.Guid;
             CommitInfo.SetRevisionWithChildren(revision, children);
 
-            if (controlToMask != null)
-                controlToMask.UnMask();
+            controlToMask?.UnMask();
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
@@ -350,9 +348,7 @@ namespace GitUI.Blame
         {
             if (disposing)
             {
-                if (components != null)
-                    components.Dispose();
-
+                components?.Dispose();
                 blameLoader.Dispose();
             }
             base.Dispose(disposing);

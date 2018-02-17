@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -31,7 +30,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
         private bool initialized;
-        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
 
         public Dashboard()
         {
@@ -52,12 +51,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             // Do this at runtime, because it is difficult to keep consistent at design time.
             pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - pictureBox1.Image.Width - 10, this.Height - pictureBox1.Image.Height - 10);
+            pictureBox1.Location = new Point(Width - pictureBox1.Image.Width - 10, Height - pictureBox1.Image.Height - 10);
 
             Load += Dashboard_Load;
         }
 
-        void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
+        private static void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
             var repository = e.Repository;
             if (repository != null)
@@ -112,7 +111,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             //
             var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
             showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = GitCommands.AppSettings.DashboardShowCurrentBranch;
+            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
 
             var menuStrip = FindControl<MenuStrip>(Parent.Parent.Parent, p => true); // TODO: improve: Parent.Parent.Parent == FormBrowse
             var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
@@ -126,7 +125,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <param name="form"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
+        private static T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
             return FindControl(form.Controls, predicate);
@@ -139,14 +138,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <param name="controls"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                     return result;
 
                 result = FindControl(control.Controls, predicate);
@@ -167,15 +164,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            var handler = GitModuleChanged;
-            if (handler != null)
-                handler(this, e);
+            GitModuleChanged?.Invoke(this, e);
         }
 
         private void AddDashboardEntry(RepositoryCategory entry)
         {
             var dashboardCategory = new DashboardCategory(entry.Description, entry);
-            this.groupLayoutPanel.Controls.Add(dashboardCategory);
+            groupLayoutPanel.Controls.Add(dashboardCategory);
 
             dashboardCategory.DashboardItemClick += dashboardItem_Click;
             dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
@@ -203,9 +198,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!initialized)
             {
                 // Remove favorites
-                var categories = (from DashboardCategory i in this.groupLayoutPanel.Controls
+                var categories = (from DashboardCategory i in groupLayoutPanel.Controls
                                   select i).ToList();
-                this.groupLayoutPanel.Controls.Clear();
+                groupLayoutPanel.Controls.Clear();
                 foreach (var category in categories)
                 {
                     category.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
@@ -229,8 +224,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             RecentRepositories.Clear();
 
-            RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
-            filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
+            var filteredRecentRepositoryHistory = new RepositoryCategory
+            {
+                Description = Repositories.RepositoryHistory.Description
+            };
 
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
@@ -246,10 +243,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             pictureBox1.BringToFront();
         }
 
-        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
+        private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
         {
-            bool newValue = !GitCommands.AppSettings.DashboardShowCurrentBranch;
-            GitCommands.AppSettings.DashboardShowCurrentBranch = newValue;
+            bool newValue = !AppSettings.DashboardShowCurrentBranch;
+            AppSettings.DashboardShowCurrentBranch = newValue;
             ((ToolStripMenuItem)sender).Checked = newValue;
             Refresh();
         }
@@ -262,7 +259,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _splitterManager.RestoreSplitters();
         }
 
-        private void TranslateItem_Click(object sender, EventArgs e)
+        private static void TranslateItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
@@ -280,7 +277,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void dashboardItem_Click(object sender, EventArgs e)
         {
             var label = sender as DashboardItem;
-            if (label == null || string.IsNullOrEmpty(label.Path))
+            if (string.IsNullOrEmpty(label?.Path))
                 return;
 
             //Open urls in browser, but open directories in GitExtensions
@@ -355,8 +352,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                     return;
@@ -396,8 +392,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                     return;

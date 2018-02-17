@@ -33,8 +33,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComponent();
 
             // Do this here, so that at design time, the form will keep its size.
-            this.flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             SetUpFonts();
             Translate();
@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public RepositoryCategory RepositoryCategory
         {
-            get { return m_repositoryCategory; }
+            get => m_repositoryCategory;
             set
             {
                 m_repositoryCategory = value;
@@ -60,8 +60,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         [Category("Appearance")]
         public string Title
         {
-            get { return _NO_TRANSLATE_Caption.Text; }
-            set { _NO_TRANSLATE_Caption.Text = value; }
+            get => _NO_TRANSLATE_Caption.Text;
+            set => _NO_TRANSLATE_Caption.Text = value;
         }
 
         public void DisableContextMenu()
@@ -119,7 +119,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private Repository repository;
 
-        void contextMenu_Opening(object sender, EventArgs e)
+        private void contextMenu_Opening(object sender, EventArgs e)
         {
             repository = (Repository)(((ContextMenuStrip)sender).SourceControl.Tag);
         }
@@ -221,16 +221,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void dashboardItem_Click(object sender, EventArgs e)
         {
-            if (DashboardItemClick != null)
-                DashboardItemClick(sender, e);
+            DashboardItemClick?.Invoke(sender, e);
         }
 
         public event EventHandler DashboardCategoryChanged;
 
         private void dashboardCategoryChanged(object sender, EventArgs e)
         {
-            if (DashboardCategoryChanged != null)
-                DashboardCategoryChanged(sender, e);
+            DashboardCategoryChanged?.Invoke(sender, e);
         }
 
         public class RepositoryEventArgs : EventArgs
@@ -240,30 +238,28 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 Repository = repository;
             }
 
-            public Repository Repository { get; private set; }
+            public Repository Repository { get; }
         }
 
         public event EventHandler<RepositoryEventArgs> RepositoryRemoved;
 
         private void repositoryRemoved(Repository repository)
         {
-            var handler = RepositoryRemoved;
-            if (handler != null)
-                handler(this, new RepositoryEventArgs(repository));
+            RepositoryRemoved?.Invoke(this, new RepositoryEventArgs(repository));
         }
 
         public void AddItem(DashboardItem dashboardItem)
         {
             dashboardItem.Margin = new Padding(10, 0, 0, 0);
-            this.flowLayoutPanel.Controls.Add(dashboardItem);
+            flowLayoutPanel.Controls.Add(dashboardItem);
         }
 
         public void Clear()
         {
-            var items = (from DashboardItem i in this.flowLayoutPanel.Controls
+            var items = (from DashboardItem i in flowLayoutPanel.Controls
                          select i).ToList();
 
-            this.flowLayoutPanel.Controls.Clear();
+            flowLayoutPanel.Controls.Clear();
 
             foreach (var item in items)
             {
@@ -274,9 +270,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void addToItem_Click(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (!(sender is ToolStripItem toolStripItem))
                 return;
 
             if (repository == null)

@@ -1,15 +1,16 @@
-﻿using GitUI.CommandsDialogs.BrowseDialog;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.CommandsDialogs
 {
-    class FormBrowseMenuCommands : MenuCommandsBase
+    internal class FormBrowseMenuCommands : MenuCommandsBase
     {
-        FormBrowse _formBrowse;
-        GitUICommands UICommands { get { return _formBrowse.UICommands; } }
+        private readonly FormBrowse _formBrowse;
+        private GitUICommands UICommands => _formBrowse.UICommands;
 
         // must be created only once because of translation
-        IEnumerable<MenuCommand> _navigateMenuCommands;
+        private IEnumerable<MenuCommand> _navigateMenuCommands;
 
         public FormBrowseMenuCommands(FormBrowse formBrowse)
         {
@@ -29,13 +30,10 @@ namespace GitUI.CommandsDialogs
             return _navigateMenuCommands;
         }
 
-        private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
+        private static IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
-            var resultList = new List<MenuCommand>();
-
             // no additional MenuCommands that are not defined in the RevisionGrid
-
-            return resultList;
+            return Enumerable.Empty<MenuCommand>();
         }
 
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()

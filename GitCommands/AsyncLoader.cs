@@ -45,7 +45,7 @@ namespace GitCommands
         public event EventHandler<AsyncErrorEventArgs> LoadingError = delegate { };
 
         /// <summary>
-        /// Does something on threadpool, executes continuation on current sync context thread, executes onError if the async request fails.
+        /// Does something on thread pool, executes continuation on current sync context thread, executes onError if the async request fails.
         /// There does probably exist something like this in the .NET library, but I could not find it. //cocytus
         /// </summary>
         /// <typeparam name="T">Result to be passed from doMe to continueWith</typeparam>
@@ -72,15 +72,14 @@ namespace GitCommands
         }
 
         public Task Load(Action loadContent, Action onLoaded)
-        { 
-            return Load((token) => loadContent(), onLoaded);
+        {
+            return Load(token => loadContent(), onLoaded);
         }
 
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Dispose();
+            _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
             return Task.Factory.StartNew(() =>
@@ -94,7 +93,7 @@ namespace GitCommands
                         loadContent(token);
                     }
                 }, token)
-                .ContinueWith((task) =>
+                .ContinueWith(task =>
                     {
                         if (task.IsFaulted)
                         {
@@ -120,17 +119,16 @@ namespace GitCommands
 
         public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            return Load((token) => loadContent(), onLoaded);
+            return Load(token => loadContent(), onLoaded);
         }
 
         public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             Cancel();
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Dispose();
+            _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() => 
+            return Task.Factory.StartNew(() =>
                 {
                     if (Delay > 0)
                     {
@@ -143,7 +141,7 @@ namespace GitCommands
                     return loadContent(token);
 
                 }, token)
-                .ContinueWith((task) =>
+                .ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
@@ -171,8 +169,7 @@ namespace GitCommands
 
         public void Cancel()
         {
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Cancel();
+            _cancelledTokenSource?.Cancel();
         }
 
         private bool OnLoadingError(Exception exception)
@@ -185,8 +182,7 @@ namespace GitCommands
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-                if (_cancelledTokenSource != null)
-                    _cancelledTokenSource.Dispose();
+                _cancelledTokenSource?.Dispose();
         }
 
         public void Dispose()
@@ -204,7 +200,7 @@ namespace GitCommands
             Handled = true;
         }
 
-        public Exception Exception { get; private set; }
+        public Exception Exception { get; }
 
         public bool Handled { get; set; }
     }

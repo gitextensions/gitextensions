@@ -5,14 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.Properties;
+using GitUI.Script;
 using ResourceManager;
-using GitCommands;
 
 namespace GitUI.Hotkey
 {
-    class HotkeySettingsManager
+    internal class HotkeySettingsManager
     {
         #region Serializer
         private static XmlSerializer _Serializer;
@@ -28,7 +30,7 @@ namespace GitUI.Hotkey
         }
         #endregion
 
-        private static List<Keys> UsedKeys = new List<Keys>();
+        private static readonly List<Keys> UsedKeys = new List<Keys>();
 
         /// <summary>
         /// Returns whether the hotkey is already assigned.
@@ -43,10 +45,9 @@ namespace GitUI.Hotkey
         public static HotkeyCommand[] LoadHotkeys(string name)
         {
             //var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
-            HotkeySettings[] allSettings;
             HotkeySettings settings = new HotkeySettings();
             HotkeySettings scriptkeys = new HotkeySettings();
-            allSettings = LoadSettings();
+            var allSettings = LoadSettings();
 
             GetUsedHotkeys(allSettings);
 
@@ -141,8 +142,7 @@ namespace GitUI.Hotkey
                         if (command != null)
                         {
                             string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                            HotkeyCommand defaultCommand;
-                            if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                            if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
                             {
                                 defaultCommand.KeyData = command.KeyData;
                             }
@@ -167,7 +167,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        private static string CalcDictionaryKey(String settingName, int commandCode)
+        private static string CalcDictionaryKey(string settingName, int commandCode)
         {
             return settingName + ":" + commandCode;
         }
@@ -204,10 +204,10 @@ namespace GitUI.Hotkey
         {
             if (AppSettings.SerializedHotkeys == null)
             {
-                Properties.Settings.Default.Upgrade();
-                if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
+                Settings.Default.Upgrade();
+                if (!string.IsNullOrWhiteSpace(Settings.Default.Hotkeys))
                 {
-                    HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
+                    HotkeySettings[] settings = LoadSerializedSettings(Settings.Default.Hotkeys);
                     if (settings == null)
                     {
                         AppSettings.SerializedHotkeys = " ";//mark settings as migrated
@@ -318,7 +318,7 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadScriptHotkeys()
         {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+            var curScripts = ScriptManager.GetScripts();
 
             HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
             /* define unusable int for identifying a shortcut for a custom script is pressed
@@ -329,7 +329,7 @@ namespace GitUI.Hotkey
 
             return curScripts.
                 Where(s => !s.Name.IsNullOrEmpty()).
-                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) }
+                Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) }
             ).ToArray();
         }
 

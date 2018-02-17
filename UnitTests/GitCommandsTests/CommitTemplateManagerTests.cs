@@ -13,7 +13,7 @@ namespace GitCommandsTests
     [TestFixture]
     public class CommitTemplateManagerTests
     {
-        private string _workingDir = @"c:\dev\repo";
+        private readonly string _workingDir = @"c:\dev\repo";
         private IGitModule _module;
         private FileBase _file;
         private IFileSystem _fileSystem;

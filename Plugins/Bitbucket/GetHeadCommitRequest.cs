@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class Commit
+    internal class Commit
     {
         public static Commit Parse(JObject json)
         {
@@ -20,7 +20,8 @@ namespace Bitbucket
         public string AuthorName { get; set; }
         public bool IsMerge { get; set; }
     }
-    class GetHeadCommitRequest : BitbucketRequestBase<Commit>
+
+    internal class GetHeadCommitRequest : BitbucketRequestBase<Commit>
     {
         private readonly Repository _repo;
         private readonly string _branch;
@@ -32,24 +33,12 @@ namespace Bitbucket
             _branch = branchName;
         }
 
-        protected override object RequestBody
-        {
-            get { return null; }
-        }
+        protected override object RequestBody => null;
 
-        protected override Method RequestMethod
-        {
-            get { return Method.GET; }
-        }
+        protected override Method RequestMethod => Method.GET;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/projects/{0}/repos/{1}/commits/refs/heads/{2}",
-                                     _repo.ProjectKey, _repo.RepoName, _branch);
-            }
-        }
+        protected override string ApiUrl => string.Format("/projects/{0}/repos/{1}/commits/refs/heads/{2}",
+            _repo.ProjectKey, _repo.RepoName, _branch);
 
         protected override Commit ParseResponse(JObject json)
         {

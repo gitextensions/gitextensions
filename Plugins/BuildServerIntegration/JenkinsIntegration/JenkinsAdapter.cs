@@ -62,20 +62,22 @@ namespace JenkinsIntegration
 
             if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
             {
-                var baseAdress = hostName.Contains("://")
-                                     ? new Uri(hostName, UriKind.Absolute)
-                                     : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
+                var baseAddress = hostName.Contains("://")
+                    ? new Uri(hostName, UriKind.Absolute)
+                    : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
-                _httpClient = new HttpClient(new HttpClientHandler(){ UseDefaultCredentials = true});
-                _httpClient.Timeout = TimeSpan.FromMinutes(2);
-                _httpClient.BaseAddress = baseAdress;
+                _httpClient = new HttpClient(new HttpClientHandler {UseDefaultCredentials = true})
+                {
+                    Timeout = TimeSpan.FromMinutes(2),
+                    BaseAddress = baseAddress
+                };
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
                 string[] projectUrls = projectName.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var projectUrl in projectUrls.Select(s => baseAdress + "job/" + s.Trim() + "/"))
+                foreach (var projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
                 {
                     AddGetBuildUrl(projectUrl);
                 }
@@ -85,10 +87,7 @@ namespace JenkinsIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return _httpClient.BaseAddress.Host; }
-        }
+        public string UniqueKey => _httpClient.BaseAddress.Host;
 
         private void AddGetBuildUrl(string projectUrl)
         {
@@ -177,12 +176,12 @@ namespace JenkinsIntegration
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(
-                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
+                    () => scheduler.Schedule(() => ObserveBuilds(observer, cancellationToken))));
         }
 
-        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        private void ObserveBuilds(IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            //Note that 'running' is ignored (attempt to fetch data when updated) 
+            //Note that 'running' is ignored (attempt to fetch data when updated)
             //Similar for 'sinceDate', not supported in Jenkins API
             try
             {
@@ -270,7 +269,7 @@ namespace JenkinsIntegration
             catch (Exception ex)
             {
                 //Cancelling a subtask is similar to cancelling this task
-                if (ex.InnerException == null || !(ex.InnerException is OperationCanceledException))
+                if (!(ex.InnerException is OperationCanceledException))
                 {
                     observer.OnError(ex);
                 }
@@ -503,10 +502,7 @@ namespace JenkinsIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (_httpClient != null)
-            {
-                _httpClient.Dispose();
-            }
+            _httpClient?.Dispose();
         }
     }
 }

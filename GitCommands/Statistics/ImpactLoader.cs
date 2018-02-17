@@ -16,7 +16,7 @@ namespace GitCommands.Statistics
                 Commit = commit;
             }
 
-            public Commit Commit { get; private set; }
+            public Commit Commit { get; }
         }
 
         /// <summary>
@@ -31,25 +31,23 @@ namespace GitCommands.Statistics
         {
             public int Commits, AddedLines, DeletedLines;
 
-            public int ChangedLines
-            {
-                get { return AddedLines + DeletedLines; }
-            }
+            public int ChangedLines => AddedLines + DeletedLines;
 
             public DataPoint(int commits, int added, int deleted)
             {
-                this.Commits = commits;
-                this.AddedLines = added;
-                this.DeletedLines = deleted;
+                Commits = commits;
+                AddedLines = added;
+                DeletedLines = deleted;
             }
 
             public static DataPoint operator +(DataPoint d1, DataPoint d2)
             {
-                DataPoint temp = new DataPoint();
-                temp.Commits = d1.Commits + d2.Commits;
-                temp.AddedLines = d1.AddedLines + d2.AddedLines;
-                temp.DeletedLines = d1.DeletedLines + d2.DeletedLines;
-                return temp;
+                return new DataPoint
+                {
+                    Commits = d1.Commits + d2.Commits,
+                    AddedLines = d1.AddedLines + d2.AddedLines,
+                    DeletedLines = d1.DeletedLines + d2.DeletedLines
+                };
             }
         }
 
@@ -94,10 +92,10 @@ namespace GitCommands.Statistics
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
             Task[] tasks = GetTasks(token);
-            Task.Factory.ContinueWhenAll(tasks, (task) =>
+            Task.Factory.ContinueWhenAll(tasks, task =>
                 {
-                    if (!token.IsCancellationRequested && Exited != null)
-                        Exited(this, EventArgs.Empty);
+                    if (!token.IsCancellationRequested)
+                        Exited?.Invoke(this, EventArgs.Empty);
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.None,
@@ -107,7 +105,7 @@ namespace GitCommands.Statistics
         private bool showSubmodules;
         public bool ShowSubmodules
         {
-            get { return showSubmodules; }
+            get => showSubmodules;
             set { Stop(); showSubmodules = value; }
         }
 

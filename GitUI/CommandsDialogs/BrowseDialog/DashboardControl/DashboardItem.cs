@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
-using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -17,9 +17,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             InitializeComponent();
             Translate();
-            this.flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.Icon.Width = this.Icon.Height;
+            flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Icon.Width = Icon.Height;
         }
 
         public DashboardItem(Repository repository)
@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _branchNameLoader = new AsyncLoader();
                 _branchNameLoader.Load(() =>
                 {
-                    if (!GitCommands.GitModule.IsBareRepository(repository.Path))
+                    if (!GitModule.IsBareRepository(repository.Path))
                     {
                         return GitModule.GetSelectedBranchFast(repository.Path);
                     }
@@ -56,8 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void Close()
         {
-            if (toolTip != null)
-                toolTip.RemoveAll();
+            toolTip?.RemoveAll();
         }
 
         private void Initialize(Bitmap icon, string path, string title, string text)
@@ -106,24 +105,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void CancelBranchNameLoad()
         {
-            if (_branchNameLoader != null)
-            {
-                _branchNameLoader.Cancel();
-            }
+            _branchNameLoader?.Cancel();
         }
 
-        void Title_Click(object sender, EventArgs e)
+        private void Title_Click(object sender, EventArgs e)
         {
             OnClick(e);
         }
 
-        void Title_MouseDown(object sender, MouseEventArgs e)
+        private void Title_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
-                if (ContextMenuStrip != null)
-                    ContextMenuStrip.Show((Control)sender, e.Location);
-            }
+                ContextMenuStrip?.Show((Control)sender, e.Location);
         }
 
         public string Path { get; private set; }
@@ -136,19 +129,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
         {
-            this.BackColor = SystemColors.ControlLight;
+            BackColor = SystemColors.ControlLight;
         }
 
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             if ((sender == Icon || sender == _NO_TRANSLATE_Title) &&
-                this.ClientRectangle.Contains(this.PointToClient(Control.MousePosition)))
+                ClientRectangle.Contains(PointToClient(MousePosition)))
                 return;
 
-            this.BackColor = SystemColors.Control;
+            BackColor = SystemColors.Control;
         }
 
-        void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        private void DashboardItem_VisibleChanged(object sender, EventArgs e)
         {
             if (!Visible)
             {
@@ -167,7 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 case RepositoryType.History:
                     return Resources.history;
                 default:
-                    throw new ArgumentException("Repository type is not supported.", "repository");
+                    throw new ArgumentException("Repository type is not supported.", nameof(repository));
             }
         }
 
@@ -186,10 +179,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (disposing)
             {
                 CancelBranchNameLoad();
-                if (_branchNameLoader != null)
-                    _branchNameLoader.Dispose();
-                if (components != null)
-                    components.Dispose();
+                _branchNameLoader?.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

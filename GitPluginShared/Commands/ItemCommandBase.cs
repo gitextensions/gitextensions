@@ -17,7 +17,7 @@ namespace GitPluginShared.Commands
             {
                 var activeDocument = application.ActiveDocument;
 
-                if (activeDocument == null || activeDocument.ProjectItem == null)
+                if (activeDocument?.ProjectItem == null)
                 {
                     // no active document - try solution target
                     if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))

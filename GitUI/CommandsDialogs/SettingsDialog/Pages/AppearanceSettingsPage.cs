@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return "graph,visual studio,author,image,font,lang,language,spell,spelling";
         }
 
-        private int GetTruncatePathMethodIndex(string text)
+        private static int GetTruncatePathMethodIndex(string text)
         {
             switch (text.ToLowerInvariant())
             {
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private string GetTruncatePathMethodString(int index)
+        private static string GetTruncatePathMethodString(int index)
         {
             switch (index)
             {
@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                MessageBox.Show(this, String.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()));
+                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()));
             }
         }
 
@@ -176,23 +176,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SetCurrentDiffFont(Font newFont)
         {
-            this._diffFont = newFont;
+            _diffFont = newFont;
             SetFontButtonText(newFont, diffFontChangeButton);
         }
 
         private void SetCurrentApplicationFont(Font newFont)
         {
-            this._applicationFont = newFont;
+            _applicationFont = newFont;
             SetFontButtonText(newFont, applicationFontChangeButton);
         }
 
         private void SetCurrentCommitFont(Font newFont)
         {
-            this.commitFont = newFont;
+            commitFont = newFont;
             SetFontButtonText(newFont, commitFontChangeButton);
         }
 
-        private void SetFontButtonText(Font font, Button button)
+        private static void SetFontButtonText(Font font, Button button)
         {
             button.Text = string.Format("{0}, {1}", font.FontFamily.Name, (int)(font.Size + 0.5f));
         }

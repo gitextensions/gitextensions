@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Script;
 
 namespace GitUI
 {
@@ -26,23 +27,16 @@ namespace GitUI
             {
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
-                if (GitUICommandsChanged != null)
-                    GitUICommandsChanged(this, new GitUICommandsChangedEventArgs(oldCommands));
+                GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
 
         /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
-        public bool IsUICommandsInitialized
-        {
-            get
-            {
-                return _uiCommands != null;
-            }
-        }
+        public bool IsUICommandsInitialized => _uiCommands != null;
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module { get { return _uiCommands != null ? _uiCommands.Module : null; } }
+        public GitModule Module => _uiCommands?.Module;
 
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
@@ -70,7 +64,7 @@ namespace GitUI
 
         protected bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
+            return ScriptRunner.ExecuteScriptCommand(this, Module, command);
         }
     }
 }

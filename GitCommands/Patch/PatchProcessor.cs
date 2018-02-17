@@ -8,7 +8,7 @@ namespace PatchApply
 {
     public class PatchProcessor
     {
-        public Encoding FilesContentEncoding { get; private set; }
+        public Encoding FilesContentEncoding { get; }
 
         public PatchProcessor(Encoding filesContentEncoding)
         {
@@ -37,8 +37,7 @@ namespace PatchApply
                 return null;
 
             string input = lines[lineIndex];
-            bool combinedDiff;
-            if (!IsStartOfANewPatch(input, out combinedDiff))
+            if (!IsStartOfANewPatch(input, out var combinedDiff))
                 return null;
 
             PatchProcessorState state = PatchProcessorState.InHeader;
@@ -186,7 +185,7 @@ namespace PatchApply
                                  (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
-        private void ValidateHeader(ref string input, Patch patch)
+        private static void ValidateHeader(ref string input, Patch patch)
         {
             //--- /dev/null
             //means there is no old file, so this should be a new file

@@ -38,10 +38,7 @@ namespace GitPlugin
 
         public static string Prefix { get; set; }
 
-        public static int HandlerCount
-        {
-            get { return Handlers.Count; }
-        }
+        public static int HandlerCount => Handlers.Count;
 
         public static void AddHandler(IHandler handler)
         {

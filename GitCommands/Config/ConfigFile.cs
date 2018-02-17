@@ -10,29 +10,28 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        private readonly string _fileName;
-        public string FileName { get { return _fileName; } }
+        public string FileName { get; }
 
-        public bool Local { get; private set; }
+        public bool Local { get; }
 
         public ConfigFile(string fileName, bool aLocal)
         {
             ConfigSections = new List<IConfigSection>();
             Local = aLocal;
 
-            _fileName = fileName;
+            FileName = fileName;
             try
             {
                 Load();
             }
             catch (Exception ex)
             {
-                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + _fileName);
+                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + FileName);
                 throw;
             }
         }
 
-        public IList<IConfigSection> ConfigSections { get; private set; }
+        public IList<IConfigSection> ConfigSections { get; }
 
         public IEnumerable<IConfigSection> GetConfigSections(string sectionName)
         {
@@ -46,14 +45,14 @@ namespace GitCommands.Config
 
         private void Load()
         {
-            if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
+            if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
                 return;
 
             ConfigFileParser parser = new ConfigFileParser(this);
             parser.Parse();
         }
 
-        public static readonly char[] CommentChars = new char[] { ';', '#' };
+        public static readonly char[] CommentChars = { ';', '#' };
 
         public void LoadFromString(string str)
         {
@@ -77,7 +76,7 @@ namespace GitCommands.Config
 
         public void Save()
         {
-            Save(_fileName);
+            Save(FileName);
         }
 
         public string GetAsString()
@@ -150,7 +149,7 @@ namespace GitCommands.Config
             return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
-        private int FindAndCheckKeyIndex(string setting)
+        private static int FindAndCheckKeyIndex(string setting)
         {
             var keyIndex = FindKeyIndex(setting);
 
@@ -160,30 +159,19 @@ namespace GitCommands.Config
             return keyIndex;
         }
 
-        private int FindKeyIndex(string setting)
+        private static int FindKeyIndex(string setting)
         {
             return setting.LastIndexOf('.');
         }
 
         public bool HasConfigSection(string configSectionName)
         {
-            var configSection = FindConfigSection(configSectionName);
-            return configSection != null;
+            return FindConfigSection(configSectionName) != null;
         }
 
-        private string GetStringValue(string setting)
+        public string GetValue(string setting, string defaultValue = "")
         {
-            return GetValue(setting, string.Empty);
-        }
-
-        public string GetValue(string setting)
-        {
-            return GetValue(setting, string.Empty);
-        }
-
-        public string GetValue(string setting, string defaultValue)
-        {
-            if (String.IsNullOrEmpty(setting))
+            if (string.IsNullOrEmpty(setting))
                 throw new ArgumentNullException();
 
             var keyIndex = FindAndCheckKeyIndex(setting);
@@ -201,7 +189,7 @@ namespace GitCommands.Config
 
         public string GetPathValue(string setting)
         {
-            return GetStringValue(setting);
+            return GetValue(setting);
         }
 
         public IList<string> GetValues(string setting)
@@ -228,10 +216,7 @@ namespace GitCommands.Config
 
             var configSection = FindConfigSection(configSectionName);
 
-            if (configSection == null)
-                return;
-
-            configSection.SetValue(keyName, null);
+            configSection?.SetValue(keyName, null);
         }
 
         public IConfigSection FindOrCreateConfigSection(string name)
@@ -293,15 +278,16 @@ namespace GitCommands.Config
         {
             private delegate ParsePart ParsePart(char c);
 
-            private ConfigFile _configFile;
+            private readonly ConfigFile _configFile;
             private string _fileContent;
-            private IConfigSection _section = null;
-            private string FileName { get { return _configFile._fileName; } }
-            private string _key = null;
+            private IConfigSection _section;
+            private string FileName => _configFile.FileName;
+
+            private string _key;
             //parsed char
             private int pos;
-            private StringBuilder token = new StringBuilder();
-            private StringBuilder valueToken = new StringBuilder();
+            private readonly StringBuilder token = new StringBuilder();
+            private readonly StringBuilder valueToken = new StringBuilder();
 
             public ConfigFileParser(ConfigFile configFile)
             {
@@ -310,7 +296,7 @@ namespace GitCommands.Config
 
             public void Parse(string aFileContent = null)
             {
-                _fileContent = aFileContent ?? File.ReadAllText(FileName, ConfigFile.GetEncoding());
+                _fileContent = aFileContent ?? File.ReadAllText(FileName, GetEncoding());
 
                 ParsePart parseFunc = ReadUnknown;
 
@@ -363,8 +349,8 @@ namespace GitCommands.Config
                 _key = null;
             }
 
-            private bool _escapedSection = false;
-            private bool _quotedStringInSection = false;
+            private bool _escapedSection;
+            private bool _quotedStringInSection;
 
             private ParsePart ReadSection(char c)
             {
@@ -385,27 +371,25 @@ namespace GitCommands.Config
                     _escapedSection = false;
                     return ReadSection;
                 }
-                else
+
+                // closing square bracket not in quoted section lead to start new section
+                if(c == ']' && !_quotedStringInSection)
                 {
-                    // closing square bracket not in quoted section lead to start new section
-                    if(c == ']' && !_quotedStringInSection)
-                    {
-                        NewSection();
-                        return ReadUnknown;
-                    }
+                    NewSection();
+                    return ReadUnknown;
+                }
 
-                    if (c == '"')
-                        _quotedStringInSection = !_quotedStringInSection;
+                if (c == '"')
+                    _quotedStringInSection = !_quotedStringInSection;
 
-                    switch (c)
-                    {
-                        case '\\':
-                            _escapedSection = true;
-                            return ReadSection;
-                        default:
-                            token.Append(c);
-                            return ReadSection;
-                    }
+                switch (c)
+                {
+                    case '\\':
+                        _escapedSection = true;
+                        return ReadSection;
+                    default:
+                        token.Append(c);
+                        return ReadSection;
                 }
             }
 
@@ -446,8 +430,8 @@ namespace GitCommands.Config
                 }
             }
 
-            private bool _quotedValue = false;
-            private bool _escapedValue = false;
+            private bool _quotedValue;
+            private bool _escapedValue;
 
             private ParsePart ReadValue(char c)
             {
@@ -477,43 +461,41 @@ namespace GitCommands.Config
                     _escapedValue = false;
                     return ReadValue;
                 }
-                else
+
+                switch (c)
                 {
-                    switch (c)
-                    {
-                        case '\\':
-                            _escapedValue = true;
-                            return ReadValue;
-                        case '"':
-                            if (_quotedValue)
-                            {
-                                token.Append(valueToken.ToString());
-                            }
-                            else
-                            {
-                                token.Append(valueToken.ToString().Trim());
-                            }
-                            valueToken.Clear();
-                            _quotedValue = !_quotedValue;
-                            return ReadValue;
-                        case ';':
-                        case '#':
-                            if (_quotedValue)
-                            {
-                                valueToken.Append(c);
-                                return ReadValue;
-                            }
-                            NewValue();
-                            return ReadComment;
-                        case '\r':
-                            return ReadValue;
-                        case '\n':
-                            NewValue();
-                            return ReadUnknown;
-                        default:
+                    case '\\':
+                        _escapedValue = true;
+                        return ReadValue;
+                    case '"':
+                        if (_quotedValue)
+                        {
+                            token.Append(valueToken);
+                        }
+                        else
+                        {
+                            token.Append(valueToken.ToString().Trim());
+                        }
+                        valueToken.Clear();
+                        _quotedValue = !_quotedValue;
+                        return ReadValue;
+                    case ';':
+                    case '#':
+                        if (_quotedValue)
+                        {
                             valueToken.Append(c);
                             return ReadValue;
-                    }
+                        }
+                        NewValue();
+                        return ReadComment;
+                    case '\r':
+                        return ReadValue;
+                    case '\n':
+                        NewValue();
+                        return ReadUnknown;
+                    default:
+                        valueToken.Append(c);
+                        return ReadValue;
                 }
             }
 

@@ -19,11 +19,9 @@
 
     public class SettingsPageHostMock : ISettingsPageHost
     {
-        private readonly CheckSettingsLogic _CheckSettingsLogic;
-
         public SettingsPageHostMock(CheckSettingsLogic aCheckSettingsLogic)
         {
-            _CheckSettingsLogic = aCheckSettingsLogic;
+            CheckSettingsLogic = aCheckSettingsLogic;
         }
 
         public void GotoPage(SettingsPageReference settingsPageReference)
@@ -38,6 +36,6 @@
         {
         }
 
-        public CheckSettingsLogic CheckSettingsLogic { get { return _CheckSettingsLogic; } }
+        public CheckSettingsLogic CheckSettingsLogic { get; }
     }
 }

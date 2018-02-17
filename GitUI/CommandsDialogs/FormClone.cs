@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -25,9 +26,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
         private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
 
-        private bool openedFromProtocolHandler;
+        private readonly bool openedFromProtocolHandler;
         private readonly string url;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> GitModuleChanged;
         private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 
@@ -130,7 +131,7 @@ namespace GitUI.CommandsDialogs
                 cbLfs.Checked = false;
         }
 
-        private bool CanBeGitURL(string anURL)
+        private static bool CanBeGitURL(string anURL)
         {
             if (anURL == null)
             {
@@ -209,7 +210,7 @@ namespace GitUI.CommandsDialogs
 
                 Repositories.AddMostRecentRepository(dirTo);
 
-                if (!String.IsNullOrEmpty(_puttySshKey))
+                if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);
                     clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
@@ -266,7 +267,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillFromDropDown()
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
+            BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
             if (_NO_TRANSLATE_From.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();
@@ -277,7 +278,7 @@ namespace GitUI.CommandsDialogs
 
         private void ToDropDown(object sender, EventArgs e)
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
             if (_NO_TRANSLATE_To.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();
@@ -326,7 +327,7 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
                 destinationPath += "[" + label2.Text + "]";
             else
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd('\\', '/');
 
             destinationPath += "\\";
 
@@ -431,8 +432,7 @@ namespace GitUI.CommandsDialogs
 
                 _branchListLoader.Dispose();
 
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

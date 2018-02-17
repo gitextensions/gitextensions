@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -42,10 +41,10 @@ namespace TfsIntegration
     {
         private IBuildServerWatcher _buildServerWatcher;
         private ITfsHelper _tfsHelper;
-        string _tfsServer;
-        string _tfsTeamCollectionName;
-        string _projectName;
-        Regex _tfsBuildDefinitionNameFilter;
+        private string _tfsServer;
+        private string _tfsTeamCollectionName;
+        private string _projectName;
+        private Regex _tfsBuildDefinitionNameFilter;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
@@ -106,10 +105,7 @@ namespace TfsIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return _tfsServer + "/" + _tfsTeamCollectionName + "/" + _projectName; }
-        }
+        public string UniqueKey => _tfsServer + "/" + _tfsTeamCollectionName + "/" + _projectName;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -126,12 +122,12 @@ namespace TfsIntegration
             if (_tfsHelper == null)
                 return Observable.Empty<BuildInfo>();
 
-            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
+            return Observable.Create<BuildInfo>(observer =>
                 Task<IDisposable>.Factory.StartNew(
-                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
+                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer))));
         }
 
-        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer)
         {
             try
             {
@@ -169,8 +165,7 @@ namespace TfsIntegration
 
         public void Dispose()
         {
-            if (_tfsHelper != null)
-                _tfsHelper.Dispose();
+            _tfsHelper?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

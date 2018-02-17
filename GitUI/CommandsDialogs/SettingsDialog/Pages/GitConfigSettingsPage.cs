@@ -155,21 +155,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
             string exeFile;
-            if (!String.IsNullOrEmpty(MergetoolPath.Text))
+            if (!string.IsNullOrEmpty(MergetoolPath.Text))
             {
                 exeFile = MergetoolPath.Text;
                 exeName = Path.GetFileName(exeFile);
             }
             else
                 exeFile = MergeToolsHelper.FindMergeToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalMergeTool.Text, out exeName);
-            if (String.IsNullOrEmpty(exeFile))
+            if (string.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
                 MergetoolPath.SelectedText = "";
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
+                    MessageBox.Show(this, string.Format(_toolSuggestPathText.Text, exeName),
                         _mergeToolSuggestCaption.Text);
                 return;
             }
@@ -200,21 +200,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), DifftoolPath.Text.Trim());
             string exeName;
             string exeFile;
-            if (!String.IsNullOrEmpty(DifftoolPath.Text))
+            if (!string.IsNullOrEmpty(DifftoolPath.Text))
             {
                 exeFile = DifftoolPath.Text;
                 exeName = Path.GetFileName(exeFile);
             }
             else
                 exeFile = MergeToolsHelper.FindDiffToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalDiffTool.Text, out exeName);
-            if (String.IsNullOrEmpty(exeFile))
+            if (string.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
                 DifftoolPath.SelectedText = "";
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
+                    MessageBox.Show(this, string.Format(_toolSuggestPathText.Text, exeName),
                         _diffToolSuggestCaption.Text);
                 return;
             }

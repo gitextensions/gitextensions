@@ -45,10 +45,7 @@ namespace PatchApply
 
         public PatchType Type { get; set; }
 
-        public string Text
-        {
-            get { return _textBuilder == null ? null : _textBuilder.ToString(); }
-        }
+        public string Text => _textBuilder?.ToString();
 
         public void AppendText(string text)
         {
@@ -83,7 +80,6 @@ namespace PatchApply
             if (Type == PatchType.ChangeFile)
             {
                 HandleChangeFilePatchType(filesContentEncoding);
-                return;
             }
         }
 
@@ -136,7 +132,7 @@ namespace PatchApply
                     string[] addrem = pos.Split('+', '-');
                     string[] oldLines = addrem[1].Split(',');
 
-                    lineNumber = Int32.Parse(oldLines[0]) - 1;
+                    lineNumber = int.Parse(oldLines[0]) - 1;
                     continue;
                 }
 

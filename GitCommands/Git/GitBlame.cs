@@ -13,8 +13,8 @@ namespace GitCommands
             Headers = new List<GitBlameHeader>();
             Lines = new List<GitBlameLine>();
         }
-        public IList<GitBlameHeader> Headers { get; private set; }
-        public IList<GitBlameLine> Lines { get; private set; }
+        public IList<GitBlameHeader> Headers { get; }
+        public IList<GitBlameLine> Lines { get; }
 
         public GitBlameHeader FindHeaderForCommitGuid(string commitGuid)
         {
@@ -55,12 +55,12 @@ namespace GitCommands
             //return Color.White;
         }
 
-        private int GenerateIntFromString(string text)
+        private static int GenerateIntFromString(string text)
         {
             int number = 0;
             foreach (char c in text)
             {
-                number += (int)c;
+                number += c;
             }
             return number;
         }
@@ -69,9 +69,9 @@ namespace GitCommands
         {
             StringBuilder toStringValue = new StringBuilder();
             toStringValue.AppendLine("Author: " + Author);
-            toStringValue.AppendLine("AuthorTime: " + AuthorTime.ToString());
+            toStringValue.AppendLine("AuthorTime: " + AuthorTime);
             toStringValue.AppendLine("Committer: " + Committer);
-            toStringValue.AppendLine("CommitterTime: " + CommitterTime.ToString());
+            toStringValue.AppendLine("CommitterTime: " + CommitterTime);
             toStringValue.AppendLine("Summary: " + Summary);
             toStringValue.AppendLine();
             toStringValue.AppendLine("FileName: " + FileName);
@@ -91,9 +91,9 @@ namespace GitCommands
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
-            if (Object.ReferenceEquals(x, y))
+            if (ReferenceEquals(x, y))
                 return true;
-            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 return false;
             return x.Author == y.Author && x.AuthorTime == y.AuthorTime &&
                 x.Committer == y.Committer && x.CommitterTime == y.CommitterTime &&

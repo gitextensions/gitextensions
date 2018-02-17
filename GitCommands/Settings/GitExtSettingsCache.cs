@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
-
 
 namespace GitCommands.Settings
 {
@@ -14,7 +10,7 @@ namespace GitCommands.Settings
 
         public GitExtSettingsCache(string aSettingsFilePath, bool autoSave = true)
             : base(aSettingsFilePath, autoSave)
-        {         
+        {
         }
 
         public static GitExtSettingsCache FromCache(string aSettingsFilePath)
@@ -24,15 +20,14 @@ namespace GitCommands.Settings
                     return new GitExtSettingsCache(aSettingsFilePath, true);
                 });
 
-            return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
+            return FromCache(aSettingsFilePath, createSettingsCache);
         }
 
         public static GitExtSettingsCache Create(string aSettingsFilePath, bool allowCache = true)
         {
             if (allowCache)
                 return FromCache(aSettingsFilePath);
-            else
-                return new GitExtSettingsCache(aSettingsFilePath, false);
+            return new GitExtSettingsCache(aSettingsFilePath, false);
         }
 
         protected override void ClearImpl()
@@ -42,7 +37,7 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(fileName, Encoding.UTF8))
+            using (XmlTextWriter xtw = new XmlTextWriter(fileName, Encoding.UTF8))
             {
                 xtw.Formatting = Formatting.Indented;
                 xtw.WriteStartDocument();
@@ -61,7 +56,7 @@ namespace GitCommands.Settings
                 CheckCharacters = false
             };
 
-            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))
+            using (XmlReader xr = XmlReader.Create(fileName, rSettings))
             {
                 EncodedNameMap.ReadXml(xr);
             }
@@ -81,10 +76,8 @@ namespace GitCommands.Settings
 
         protected override string GetValueImpl(string key)
         {
-            string value = null;
-            EncodedNameMap.TryGetValue(key, out value);
+            EncodedNameMap.TryGetValue(key, out var value);
             return value;
         }
-
     }
 }

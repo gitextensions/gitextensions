@@ -37,7 +37,7 @@ namespace System.Linq
         public static Dictionary<TKey, List<TSource>> ToDictionaryOfList<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
 
             Dictionary<TKey, List<TSource>> result = new Dictionary<TKey, List<TSource>>();
 
@@ -46,17 +46,17 @@ namespace System.Linq
                 TKey key = keySelector(sourceElement);
                 if (key == null)
                 {
-                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    var ex = new InvalidOperationException("KeySelector produced a key that is null. See exception data for source.");
                     ex.Data.Add("source", sourceElement);
                     throw ex;
                 }
 
-                List<TSource> list;
-                if (!result.TryGetValue(key, out list))
+                if (!result.TryGetValue(key, out var list))
                 {
                     list = new List<TSource>();
                     result[key] = list;
                 }
+
                 list.Add(sourceElement);
             }
 
@@ -66,7 +66,7 @@ namespace System.Linq
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
 
             HashSet<TKey> result = new HashSet<TKey>();
 
@@ -75,7 +75,7 @@ namespace System.Linq
                 TKey key = keySelector(sourceElement);
                 if (key == null)
                 {
-                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    var ex = new InvalidOperationException("KeySelector produced a key that is null. See exception data for source.");
                     ex.Data.Add("source", sourceElement);
                     throw ex;
                 }
@@ -130,7 +130,7 @@ namespace System.Linq
 
         private class FuncComparer<T> : IComparer<T>
         {
-            private Func<T, T, int> comparer;
+            private readonly Func<T, T, int> comparer;
 
             public FuncComparer(Func<T, T, int> comparer)
             {
@@ -167,10 +167,10 @@ namespace System.Linq
         public static void Select<TSource>(this TSource[] source, Func<TSource, int, TSource> transformer)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             if (transformer == null)
-                throw new ArgumentNullException("transformer");
+                throw new ArgumentNullException(nameof(transformer));
 
             for (int i = 0; i < source.Length; i++)
                 source[i] = transformer(source[i], i);
@@ -197,10 +197,10 @@ namespace System.Linq
         public static void Transform<TSource>(this TSource[] source, Func<TSource, TSource> transformer)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             if (transformer == null)
-                throw new ArgumentNullException("transformer");
+                throw new ArgumentNullException(nameof(transformer));
 
             for (int i = 0; i < source.Length; i++)
                 source[i] = transformer(source[i]);

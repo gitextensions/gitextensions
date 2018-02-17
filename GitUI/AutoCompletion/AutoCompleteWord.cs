@@ -5,7 +5,7 @@ namespace GitUI.AutoCompletion
 {
     public class AutoCompleteWord : IEquatable<AutoCompleteWord>
     {
-        public string Word { get; private set; }
+        public string Word { get; }
         private readonly string _camelHumps;
 
         public AutoCompleteWord (string word)
@@ -34,7 +34,7 @@ namespace GitUI.AutoCompletion
                 return false;
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
                 return false;
             return Equals((AutoCompleteWord) obj);
         }

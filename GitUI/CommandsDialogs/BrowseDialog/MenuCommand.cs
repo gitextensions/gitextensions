@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -13,7 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     /// From a MenuCommand a (theoretically) unlimited number of actual ToolStripItems can
     /// be created that all behave the same.
     /// A MenuCommand can also be a separator
-    /// 
+    ///
     /// Purpose: have methods from specific context menus also available in main menu
     /// </summary>
     internal class MenuCommand
@@ -29,31 +28,32 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 return new ToolStripSeparator();
             }
-            else
-            {
-                var toolStripMenuItem = new ToolStripMenuItem();
-                toolStripMenuItem.Name = menuCommand.Name;
-                toolStripMenuItem.Text = menuCommand.Text;
-                toolStripMenuItem.Image = menuCommand.Image;
-                toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
-                toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
-                toolStripMenuItem.Click += (obj, sender) =>
-                    {
-                        if (menuCommand.ExecuteAction != null)
-                        {
-                            menuCommand.ExecuteAction();
-                        }
-                        else
-                        {
-                            MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.");
-                        }
-                    };
 
-                return toolStripMenuItem;
-            }
+            var toolStripMenuItem = new ToolStripMenuItem
+            {
+                Name = menuCommand.Name,
+                Text = menuCommand.Text,
+                Image = menuCommand.Image,
+                ShortcutKeys = menuCommand.ShortcutKeys,
+                ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString
+            };
+
+            toolStripMenuItem.Click += (obj, sender) =>
+            {
+                if (menuCommand.ExecuteAction != null)
+                {
+                    menuCommand.ExecuteAction();
+                }
+                else
+                {
+                    MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.");
+                }
+            };
+
+            return toolStripMenuItem;
         }
 
-        IList<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
+        private readonly IList<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
 
         /// <summary>
         /// if true all other properties have no meaning

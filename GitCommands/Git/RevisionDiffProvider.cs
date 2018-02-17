@@ -59,7 +59,7 @@ namespace GitCommands.Git
             return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
         }
 
-        private string GetInternal(string firstRevision, string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
+        private static string GetInternal(string firstRevision, string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
         {
             string extra = string.Empty;
             firstRevision = ArtificialToDiffOptions(firstRevision);
@@ -91,7 +91,7 @@ namespace GitCommands.Git
             if (secondRevision == StagedOpt)
             {
                 extra += " " + StagedOpt;
-                secondRevision = String.Empty;
+                secondRevision = string.Empty;
             }
 
             if (fileName.IsNullOrWhiteSpace())
@@ -126,7 +126,7 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="rev"></param>
         /// <returns></returns>
-        private string ArtificialToDiffOptions(string rev)
+        private static string ArtificialToDiffOptions(string rev)
         {
             if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)
             {

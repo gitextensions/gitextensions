@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.HelperDialogs;
+using GitUI.Plugin;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -13,7 +15,7 @@ namespace GitUI.Script
     /// <summary>Runs scripts.</summary>
     public static class ScriptRunner
     {
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
         /// and returns true if any executed.</summary>
         public static bool ExecuteScriptCommand(IWin32Window owner, GitModule aModule, int command, RevisionGrid revisionGrid = null)
         {
@@ -81,7 +83,7 @@ namespace GitUI.Script
 
         private static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
         {
-            if (scriptInfo.AskConfirmation && DialogResult.No == MessageBox.Show(owner, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            if (scriptInfo.AskConfirmation && DialogResult.No == MessageBox.Show(owner, string.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 return false;
             }
@@ -336,7 +338,7 @@ namespace GitUI.Script
             if (command.StartsWith(PluginPrefix))
             {
                 command = command.Replace(PluginPrefix, "");
-                foreach (var plugin in Plugin.LoadedPlugins.Plugins)
+                foreach (var plugin in LoadedPlugins.Plugins)
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands, argument);
@@ -369,7 +371,7 @@ namespace GitUI.Script
                                                              List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
             GitRevision selectedRevision = revisionGrid.LatestSelectedRevision;
-            foreach (GitRef head in selectedRevision.Refs)
+            foreach (IGitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
                     selectedTags.Add(head);
@@ -426,47 +428,39 @@ namespace GitUI.Script
             return currentRevision;
         }
 
-        private static string[] Options
-        {
-            get
-            {
-                string[] options =
-                    {
-                        "{sHashes}",
-                        "{sTag}",
-                        "{sBranch}",
-                        "{sLocalBranch}",
-                        "{sRemoteBranch}",
-                        "{sRemote}",
-                        "{sRemoteUrl}",
-                        "{sRemotePathFromUrl}",
-                        "{sHash}",
-                        "{sMessage}",
-                        "{sAuthor}",
-                        "{sCommitter}",
-                        "{sAuthorDate}",
-                        "{sCommitDate}",
-                        "{cTag}",
-                        "{cBranch}",
-                        "{cLocalBranch}",
-                        "{cRemoteBranch}",
-                        "{cHash}",
-                        "{cMessage}",
-                        "{cAuthor}",
-                        "{cCommitter}",
-                        "{cAuthorDate}",
-                        "{cCommitDate}",
-                        "{cDefaultRemote}",
-                        "{cDefaultRemoteUrl}",
-                        "{cDefaultRemotePathFromUrl}",
-                        "{UserInput}",
-                        "{WorkingDir}"
-                    };
-                return options;
-            }
-        }
+        private static readonly string[] Options = {
+            "{sHashes}",
+            "{sTag}",
+            "{sBranch}",
+            "{sLocalBranch}",
+            "{sRemoteBranch}",
+            "{sRemote}",
+            "{sRemoteUrl}",
+            "{sRemotePathFromUrl}",
+            "{sHash}",
+            "{sMessage}",
+            "{sAuthor}",
+            "{sCommitter}",
+            "{sAuthorDate}",
+            "{sCommitDate}",
+            "{cTag}",
+            "{cBranch}",
+            "{cLocalBranch}",
+            "{cRemoteBranch}",
+            "{cHash}",
+            "{cMessage}",
+            "{cAuthor}",
+            "{cCommitter}",
+            "{cAuthorDate}",
+            "{cCommitDate}",
+            "{cDefaultRemote}",
+            "{cDefaultRemoteUrl}",
+            "{cDefaultRemotePathFromUrl}",
+            "{UserInput}",
+            "{WorkingDir}"
+        };
 
-        private static string PluginPrefix = "plugin:";
+        private static readonly string PluginPrefix = "plugin:";
 
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
@@ -485,7 +479,7 @@ namespace GitUI.Script
                 return "explorer";
 
             //Prefix should be {plugin:pluginname},{plugin=pluginname}
-            var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var match = Regex.Match(originalCommand, @"\{plugin.(.+)\}", RegexOptions.IgnoreCase);
             if (match.Success && match.Groups.Count > 1)
                 originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());
 

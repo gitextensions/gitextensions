@@ -14,7 +14,7 @@ namespace ResourceManager.Xliff
         {
             if (text == null)
                 return false;
-            return text.Any(Char.IsLetter);
+            return text.Any(char.IsLetter);
         }
 
         public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
@@ -42,15 +42,9 @@ namespace ResourceManager.Xliff
             var propertyInfo = obj.GetType().GetProperty(propName,
                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
                 BindingFlags.NonPublic | BindingFlags.SetProperty);
-            if (propertyInfo == null)
-            {
-                return;
-            }
-            var value = propertyInfo.GetValue(obj, null) as string;
-            if (value != null && AllowTranslateProperty(value))
-            {
+
+            if (propertyInfo?.GetValue(obj, null) is string value && AllowTranslateProperty(value))
                 translation.AddTranslationItem(category, propName, "Text", value);
-            }
         }
 
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
@@ -106,30 +100,22 @@ namespace ResourceManager.Xliff
                 var itemObj = item.Item2;
                 foreach (var property in GetItemPropertiesEnumerator(item))
                 {
-                    var value = property.GetValue(itemObj, null);
-                    if (value == null)
-                        continue;
-                    var valueStr = value as string;
-                    if (valueStr != null)
+                    switch (property.GetValue(itemObj, null))
                     {
-                        if (AllowTranslateProperty(valueStr))
-                        {
-                            translation.AddTranslationItem(category, itemName, property.Name, valueStr);
-                        }
-                        continue;
-                    }
-
-                    var listItems = value as IList;
-                    if (listItems != null)
-                    {
-                        for (int index = 0; index < listItems.Count; index++)
-                        {
-                            var listItem = listItems[index] as string;
-                            if (AllowTranslateProperty(listItem))
+                        case null:
+                            continue;
+                        case string valueStr:
+                            if (AllowTranslateProperty(valueStr))
+                                translation.AddTranslationItem(category, itemName, property.Name, valueStr);
+                            continue;
+                        case IList listItems:
+                            for (int index = 0; index < listItems.Count; index++)
                             {
-                                translation.AddTranslationItem(category, itemName, "Item" + index, listItem);
+                                var listItem = listItems[index] as string;
+                                if (AllowTranslateProperty(listItem))
+                                    translation.AddTranslationItem(category, itemName, "Item" + index, listItem);
                             }
-                        }
+                            break;
                     }
                 }
             }
@@ -152,17 +138,14 @@ namespace ResourceManager.Xliff
                         for (int index = 0; index < list.Count; index++)
                         {
                             propertyName = "Item" + index;
-                            var listValue = list[index] as string;
-                            if (listValue != null)
+                            if (list[index] is string listValue)
                             {
                                 string ProvideDefaultValue() => listValue;
                                 string value = translation.TranslateItem(category, itemName, propertyName,
                                     ProvideDefaultValue);
 
                                 if (!string.IsNullOrEmpty(value))
-                                {
                                     list[index] = value;
-                                }
                             }
                         }
                     }
@@ -206,7 +189,7 @@ namespace ResourceManager.Xliff
 
             string ProvideDefaultValue() => "";
             string value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
             {
                 if (propertyInfo.CanWrite)
                     propertyInfo.SetValue(obj, value, null);
@@ -232,11 +215,8 @@ namespace ResourceManager.Xliff
                 return true;
             if (propertyInfo.Name.Equals("Items", StringComparison.CurrentCulture))
             {
-                var items = propertyInfo.GetValue(itemObj, null) as IList;
-                if (items != null && items.Count != 0)
-                {
+                if (propertyInfo.GetValue(itemObj, null) is IList items && items.Count != 0)
                     return true;
-                }
             }
             return false;
         }
@@ -256,7 +236,7 @@ namespace ResourceManager.Xliff
             return false;
         }
 
-        static readonly string[] UnTranslatableDLLs =
+        private static readonly string[] UnTranslatableDLLs =
         {
             "mscorlib",
             "Microsoft",
@@ -266,7 +246,7 @@ namespace ResourceManager.Xliff
             "access",
             "SMDiag",
             "System",
-            "vshost",
+            "vshost"
         };
 
         /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
@@ -296,8 +276,7 @@ namespace ResourceManager.Xliff
                     if (type.IsClass && typeof (ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
                         var val = !assembly.IsPlugin() ? "" : ".Plugins";
-                        List<Type> list;
-                        if (!dictionary.TryGetValue(val, out list))
+                        if (!dictionary.TryGetValue(val, out var list))
                         {
                             list = new List<Type>();
                             dictionary.Add(val, list);

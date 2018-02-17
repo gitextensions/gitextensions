@@ -83,7 +83,7 @@ namespace GitCommands.Git
 
             if (options == null)
             {
-                throw new ArgumentNullException("options");
+                throw new ArgumentNullException(nameof(options));
             }
 
             // run rules in reverse order
@@ -109,7 +109,7 @@ namespace GitCommands.Git
         /// <returns></returns>
         public static bool IsValidChar(char c)
         {
-            return (c >= 32 && c < 127) &&
+            return c >= 32 && c < 127 &&
                     c != ' ' && c != '~' && c != '^' && c != ':' &&
                     Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
         }

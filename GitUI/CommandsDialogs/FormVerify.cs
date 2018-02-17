@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Tag;
 using GitUI.HelperDialogs;
 using ResourceManager;
-using GitCommands.Git;
-using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {
@@ -51,10 +50,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private LostObject CurrentItem
-        {
-            get { return Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index]; }
-        }
+        private LostObject CurrentItem => Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index];
 
         #region Event Handlers
 
@@ -195,7 +191,7 @@ namespace GitUI.CommandsDialogs
             _lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select<string, LostObject>((s) => LostObject.TryParse(Module, s))
+                .Select(s => LostObject.TryParse(Module, s))
                 .Where(parsedLostObject => parsedLostObject != null));
 
             UpdateFilteredLostObjects();
@@ -297,8 +293,7 @@ namespace GitUI.CommandsDialogs
                 _selectedItemsHeader.Detach();
                 _selectedItemsHeader.Dispose();
 
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

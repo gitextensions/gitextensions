@@ -13,12 +13,11 @@ namespace GitPluginShared.Git
         {
             try
             {
-                RegistryKey rk;
-                rk = root.OpenSubKey(subkey, false);
+                var rk = root.OpenSubKey(subkey, false);
 
                 string value = "";
 
-                if (rk != null && rk.GetValue(key) is string)
+                if (rk?.GetValue(key) is string)
                 {
                     value = rk.GetValue(key).ToString();
                     rk.Flush();
@@ -139,8 +138,7 @@ namespace GitPluginShared.Git
                     }
                     else
                     {
-                        int exitCode;
-                        head = RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out exitCode);
+                        head = RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out var exitCode);
                         if (exitCode == 1)
                             head = "no branch";
                     }

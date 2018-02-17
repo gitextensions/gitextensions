@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -21,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return "color,graph,diff,icon";
         }
 
-        private int GetIconStyleIndex(string text)
+        private static int GetIconStyleIndex(string text)
         {
             switch (text.ToLowerInvariant())
             {
@@ -36,7 +35,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private string GetIconStyleString(int index)
+        private static string GetIconStyleString(int index)
         {
             switch (index)
             {

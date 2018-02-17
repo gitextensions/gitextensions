@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using ResourceManager;
-using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -15,7 +14,7 @@ namespace TranslationApp
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

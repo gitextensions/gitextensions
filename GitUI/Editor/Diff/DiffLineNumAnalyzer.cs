@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands;
 using PatchApply;
@@ -9,17 +8,17 @@ namespace GitUI.Editor.Diff
 {
     public class DiffLineNumAnalyzer
     {
-        private static Regex regex = new Regex(
+        private static readonly Regex regex = new Regex(
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public class Result
         {
             public Dictionary<int, DiffLineNum> LineNumbers = new Dictionary<int, DiffLineNum>();
-            public int MaxLineNumber = 0;
+            public int MaxLineNumber;
         }
 
-        private void AddToResult(Result result, DiffLineNum diffLine)
+        private static void AddToResult(Result result, DiffLineNum diffLine)
         {
             result.LineNumbers.Add(diffLine.LineNumInDiff, diffLine);
             result.MaxLineNumber = Math.Max(result.MaxLineNumber,
@@ -66,7 +65,7 @@ namespace GitUI.Editor.Diff
                     {
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNum = DiffLineNum.NotApplicableLineNum,
-                        RightLineNum = DiffLineNum.NotApplicableLineNum,
+                        RightLineNum = DiffLineNum.NotApplicableLineNum
                     };
 
                     if (IsMinusLineInCombinedDiff(line))
@@ -109,7 +108,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNum = DiffLineNum.NotApplicableLineNum,
                         RightLineNum = rightLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Plus,
+                        Style = DiffLineNum.DiffLineStyle.Plus
                     };
                     AddToResult(ret, meta);
                     rightLineNum++;
@@ -132,7 +131,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNum = leftLineNum,
                         RightLineNum = rightLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Context,
+                        Style = DiffLineNum.DiffLineStyle.Context
                     };
                     AddToResult(ret, meta);
 

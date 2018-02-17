@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private GitStatusMonitorState CurrentStatus
         {
-            get { return _currentStatus; }
+            get => _currentStatus;
             set
             {
                 _currentStatus = value;
@@ -146,11 +146,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public void Init(IGitUICommandsSource commandsSource)
         {
-            if (commandsSource == null)
-            {
-                throw new ArgumentNullException(nameof(commandsSource));
-            }
-            UICommandsSource = commandsSource;
+            UICommandsSource = commandsSource ?? throw new ArgumentNullException(nameof(commandsSource));
             UICommandsSource.GitUICommandsChanged += commandsSource_GitUICommandsChanged;
             commandsSource_activate(commandsSource);
         }

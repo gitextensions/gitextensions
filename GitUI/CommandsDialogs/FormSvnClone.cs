@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -12,7 +13,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionOpenRepo =
            new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
                                  "Do you want to open the new repository \"{0}\" now?");
-        
+
         private readonly TranslationString _questionOpenRepoCaption =
             new TranslationString("Open");
 
@@ -31,7 +32,7 @@ namespace GitUI.CommandsDialogs
         {
             this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
-            this.Translate();
+            Translate();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -51,34 +52,32 @@ namespace GitUI.CommandsDialogs
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
-                bool resetauthorsfile = false;
-                if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
+                var authorsFile = _NO_TRANSLATE_authorsFileTextBox.Text.Trim();
+                bool resetAuthorsFile = false;
+                if (!string.IsNullOrEmpty(authorsFile) && !File.Exists(authorsFile) && !(resetAuthorsFile = AskContinueWithoutAuthorsFile(authorsFile)))
                 {
                     return;
                 }
-                if (resetauthorsfile)
+                if (resetAuthorsFile)
                 {
-                    authorsfile = null;
+                    authorsFile = null;
                 }
-                int from;
-                if (!int.TryParse(tbFrom.Text, out from))
+
+                if (!int.TryParse(tbFrom.Text, out var from))
                     from = 0;
-                
-                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, 
+
+                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand,
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_SvnFrom.Text, dirTo,
-                    tbUsername.Text, authorsfile, from,
+                    tbUsername.Text, authorsFile, from,
                     cbTrunk.Checked ? _NO_TRANSLATE_tbTrunk.Text : null,
                     cbTags.Checked ? _NO_TRANSLATE_tbTags.Text : null,
                     cbBranches.Checked ? _NO_TRANSLATE_tbBranches.Text : null));
-                
+
                 if (errorOccurred || Module.InTheMiddleOfPatch())
                     return;
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                {
-                    if (GitModuleChanged != null)
-                        GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
-                }
+                    GitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
+
                 Close();
             }
             catch (Exception ex)
@@ -87,10 +86,10 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool AskContinutWithoutAuthorsFile(string authorsfile)
+        private bool AskContinueWithoutAuthorsFile(string authorsFile)
         {
             return MessageBox.Show(
-                this, string.Format(_questionContinueWithoutAuthors.Text, authorsfile), this._questionContinueWithoutAuthorsCaption.Text,
+                this, string.Format(_questionContinueWithoutAuthors.Text, authorsFile), _questionContinueWithoutAuthorsCaption.Text,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes;
         }
@@ -103,31 +102,31 @@ namespace GitUI.CommandsDialogs
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, this._NO_TRANSLATE_destinationComboBox.Text);
+            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_destinationComboBox.Text);
 
             if (userSelectedPath != null)
             {
-                this._NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
+                _NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
             }
         }
 
         private void authorsFileBrowseButton_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
+            using (var dialog = new OpenFileDialog { InitialDirectory = _NO_TRANSLATE_destinationComboBox.Text })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
-                    this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+                    _NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
             }
         }
 
         private void destinationComboBox_DropDown(object sender, EventArgs e)
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
-            if (this._NO_TRANSLATE_destinationComboBox.Items.Count != repos.Count)
+            BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            if (_NO_TRANSLATE_destinationComboBox.Items.Count != repos.Count)
             {
-                this._NO_TRANSLATE_destinationComboBox.Items.Clear();
+                _NO_TRANSLATE_destinationComboBox.Items.Clear();
                 foreach (Repository repo in repos)
-                    this._NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
+                    _NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
             }
         }
 
@@ -158,7 +157,7 @@ namespace GitUI.CommandsDialogs
         private void _NO_TRANSLATE_svnRepositoryComboBox_TextUpdate(object sender, EventArgs e)
         {
             var path = _NO_TRANSLATE_SvnFrom.Text;
-            path = path.TrimEnd(new[] { '\\', '/' });
+            path = path.TrimEnd('\\', '/');
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_subdirectoryTextBox.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);

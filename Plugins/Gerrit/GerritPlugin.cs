@@ -54,12 +54,12 @@ namespace Gerrit
             _gitUiCommands = null;
         }
 
-        void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
+        private void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
         {
             UpdateGerritMenuItems(e);
         }
 
-        void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
+        private void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
         {
             UpdateGerritMenuItems(e);
         }
@@ -87,15 +87,10 @@ namespace Gerrit
                 !HaveValidCommitMsgHook(e.GitModule);
         }
 
-        private bool HaveValidCommitMsgHook(IGitModule gitModule)
-        {
-            return HaveValidCommitMsgHook(gitModule, false);
-        }
-
-        private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force)
+        private static bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force = false)
         {
             if (gitModule == null)
-                throw new ArgumentNullException("gitDirectory");
+                throw new ArgumentNullException(nameof(gitModule));
 
             string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
 
@@ -108,9 +103,7 @@ namespace Gerrit
 
             lock (_syncRoot)
             {
-                bool isValid;
-
-                if (!force && _validatedHooks.TryGetValue(path, out isValid))
+                if (!force && _validatedHooks.TryGetValue(path, out var isValid))
                     return isValid;
 
                 try
@@ -236,7 +229,7 @@ namespace Gerrit
             };
         }
 
-        void publishMenuItem_Click(object sender, EventArgs e)
+        private void publishMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new FormGerritPublish(_gitUiCommands))
             {
@@ -246,7 +239,7 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        void downloadMenuItem_Click(object sender, EventArgs e)
+        private void downloadMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new FormGerritDownload(_gitUiCommands))
             {
@@ -256,7 +249,7 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        void installCommitMsgMenuItem_Click(object sender, EventArgs e)
+        private void installCommitMsgMenuItem_Click(object sender, EventArgs e)
         {
             var result = MessageBox.Show(
                 _mainForm,
@@ -332,7 +325,7 @@ namespace Gerrit
             // The first line of the output contains the file we're receiving
             // in a format like "C0755 4248 commit-msg".
 
-            if (String.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content))
                 return null;
 
             int index = content.IndexOf('\n');
@@ -362,7 +355,7 @@ namespace Gerrit
             return content;
         }
 
-        void gitReviewMenuItem_Click(object sender, EventArgs e)
+        private void gitReviewMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new FormGitReview(_gitUiCommands))
             {
@@ -372,20 +365,18 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
+        private static T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
             return FindControl(form.Controls, predicate);
         }
 
-        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                     return result;
 
                 result = FindControl(control.Controls, predicate);

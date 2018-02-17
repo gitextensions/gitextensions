@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces;
+﻿using System.Collections.Generic;
 
 namespace GitCommands.Settings
 {
@@ -30,10 +26,8 @@ namespace GitCommands.Settings
                 {
                     return DefaultValue;
                 }
-                else
-                {
-                    return v;
-                }
+
+                return v;
             }
         }
 
@@ -42,12 +36,6 @@ namespace GitCommands.Settings
             return EqualityComparer<T>.Default.Equals(aValue, default(T));
         }
 
-        public string FullPath
-        {
-            get
-            {
-                return SettingsSource.PathFor(Name);
-            }
-        }
+        public string FullPath => SettingsSource.PathFor(Name);
     }
 }

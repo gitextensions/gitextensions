@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
-using GitUI.Properties;
+using GitCommands;
 using GitUI.CommandsDialogs.AboutBoxDialog;
-using ResourceManager;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -11,47 +12,26 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", new []{Coders, Translators,
-                Designers, Other})
+            _contributorsList = string.Join(", ", Coders, Translators, Designers, Other)
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
             Translate();
         }
 
-        private string Coders
-        {
-            get { return Resources.Coders.Replace(Environment.NewLine, " "); }
-        }
-
-        private string Translators
-        {
-            get { return Resources.Translators.Replace(Environment.NewLine, " "); }
-        }
-
-        private string Designers
-        {
-            get { return Resources.Designers.Replace(Environment.NewLine, " "); }
-        }
-
-        private string Other
-        {
-            get { return Resources.Other.Replace(Environment.NewLine, " "); }
-        }
+        private static string Coders => Resources.Coders.Replace(Environment.NewLine, " ");
+        private static string Translators => Resources.Translators.Replace(Environment.NewLine, " ");
+        private static string Designers => Resources.Designers.Replace(Environment.NewLine, " ");
+        private static string Other => Resources.Other.Replace(Environment.NewLine, " ");
 
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void labelVersion_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(FormDonate.DonationUrl);
+            Process.Start(FormDonate.DonationUrl);
         }
 
         private void AboutBox_Load(object sender, EventArgs e)
@@ -71,15 +51,15 @@ namespace GitUI.CommandsDialogs
             base.OnLoad(e);
 
             _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text,
-                GitCommands.AppSettings.ProductVersion);
+                AppSettings.ProductVersion);
         }
 
-        private readonly string[] _contributersList;
+        private readonly string[] _contributorsList;
         private readonly Random _random = new Random();
 
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_thanksToTicker.Text = _contributersList[_random.Next(_contributersList.Length - 1)].Trim();
+            _NO_TRANSLATE_thanksToTicker.Text = _contributorsList[_random.Next(_contributorsList.Length - 1)].Trim();
         }
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)

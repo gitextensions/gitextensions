@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class BuildServerAdapterMetadataAttribute : ExportAttribute
     {
         public BuildServerAdapterMetadataAttribute(string buildServerType)
@@ -16,14 +16,8 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
             BuildServerType = buildServerType;
         }
 
-        public string BuildServerType { get; private set; }
+        public string BuildServerType { get; }
 
-        public virtual string CanBeLoaded
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual string CanBeLoaded => null;
     }
 }

@@ -41,7 +41,7 @@ namespace Github3
             checkAuth(e.Url.ToString());
         }
 
-        static private Dictionary<string, string> GetParams(string uri)
+        private static Dictionary<string, string> GetParams(string uri)
         {
             var matches = Regex.Matches(uri, @"[\?&](([^&=]+)=([^&=#]*))", RegexOptions.Compiled);
             return matches.Cast<Match>().ToDictionary(
@@ -59,8 +59,7 @@ namespace Github3
             {
                 Uri uri = new Uri(url);
                 var queryParams = GetParams(uri.Query);
-                string code;
-                if (queryParams.TryGetValue("code", out code))
+                if (queryParams.TryGetValue("code", out var code))
                 {
                     this.Hide();
                     this.Close();

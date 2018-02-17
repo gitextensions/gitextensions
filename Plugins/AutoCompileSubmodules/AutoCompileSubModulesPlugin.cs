@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -21,9 +20,9 @@ namespace AutoCompileSubmodules
             Translate();
         }
 
-        private BoolSetting MsBuildEnabled = new BoolSetting("Enabled", false);
-        private StringSetting MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
-        private StringSetting MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        private readonly BoolSetting MsBuildEnabled = new BoolSetting("Enabled", false);
+        private readonly StringSetting MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
+        private readonly StringSetting MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
 
         private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
         private static string FindMsBuild()

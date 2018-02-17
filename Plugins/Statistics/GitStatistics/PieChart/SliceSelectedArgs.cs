@@ -14,7 +14,7 @@ namespace GitStatistics.PieChart
             Tooltip = hint;
         }
 
-        public SliceSelectedArgs(decimal val, string hint, Object t)
+        public SliceSelectedArgs(decimal val, string hint, object t)
         {
             Value = val;
             Tooltip = hint;

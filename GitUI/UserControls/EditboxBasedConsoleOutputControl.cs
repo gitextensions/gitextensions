@@ -1,12 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-
 using GitCommands;
-
 using JetBrains.Annotations;
-using System.Collections.Generic;
 
 namespace GitUI.UserControls
 {
@@ -31,26 +29,13 @@ namespace GitUI.UserControls
             _timer.Start();
         }
 
-        public override int ExitCode
-        {
-            get
-            {
-                return _exitcode;
-            }
-        }
+        public override int ExitCode => _exitcode;
 
-        public override bool IsDisplayingFullProcessOutput
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool IsDisplayingFullProcessOutput => false;
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            if (_timer != null)
-                _timer.Append(text);
+            _timer?.Append(text);
         }
 
         public override void KillProcess()
@@ -109,7 +94,7 @@ namespace GitUI.UserControls
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
-                    this.InvokeAsync(new Action(() =>
+                    this.InvokeAsync(() =>
                     {
                         if (_process == null)
                             return;
@@ -130,7 +115,7 @@ namespace GitUI.UserControls
                         _process = null;
                         _timer.Stop(true);
                         FireProcessExited();
-                    }));
+                    });
 
                 };
 
@@ -156,7 +141,7 @@ namespace GitUI.UserControls
         private void AppendMessage([NotNull] string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             if (InvokeRequired)
                 throw new InvalidOperationException("This operation must be called on the GUI thread.");
             //if not disposed

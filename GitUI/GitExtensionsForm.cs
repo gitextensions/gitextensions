@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Utils;
 using GitUI.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
-using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
@@ -21,7 +21,7 @@ namespace GitUI
         internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
-        readonly bool _enablePositionRestore;
+        private readonly bool _enablePositionRestore;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
@@ -33,7 +33,6 @@ namespace GitUI
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
         public GitExtensionsForm(bool enablePositionRestore)
-            : base()
         {
             _enablePositionRestore = enablePositionRestore;
 
@@ -51,12 +50,12 @@ namespace GitUI
             Close();
         }
 
-        void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_enablePositionRestore)
                 SavePosition(GetType().Name);
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -212,7 +211,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when looking up the position in
         ///   the settings</param>
-        private void RestorePosition(String name)
+        private void RestorePosition(string name)
         {
             if (!Visible ||
                 WindowState == FormWindowState.Minimized)
@@ -257,7 +256,7 @@ namespace GitUI
                 WindowState = position.State;
         }
 
-        static Rectangle? FindWindowScreen(Point location)
+        private static Rectangle? FindWindowScreen(Point location)
         {
             SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
             foreach (var rect in (from screen in Screen.AllScreens
@@ -276,10 +275,8 @@ namespace GitUI
             {
                 return distance.First().Value;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public int GetCurrentDeviceDpi()
@@ -288,7 +285,7 @@ namespace GitUI
             int deviceDpi = DeviceDpi;
 #else
             int deviceDpi;
-            using (Graphics g = this.CreateGraphics())
+            using (Graphics g = CreateGraphics())
             {
                 deviceDpi = (int)g.DpiX;
             }
@@ -303,7 +300,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when writing the position to the
         ///   settings</param>
-        private void SavePosition(String name)
+        private void SavePosition(string name)
         {
             try
             {
@@ -348,18 +345,14 @@ namespace GitUI
         ///   doesn't exist, or would not be visible on any screen in the user's
         ///   current display setup.
         /// </returns>
-        private static WindowPosition LookupWindowPosition(String name)
+        private static WindowPosition LookupWindowPosition(string name)
         {
             try
             {
                 if (_windowPositionList == null)
                     _windowPositionList = WindowPositionList.Load();
-                if (_windowPositionList == null)
-                {
-                    return null;
-                }
 
-                var position = _windowPositionList.Get(name);
+                var position = _windowPositionList?.Get(name);
                 if (position == null || position.Rect.IsEmpty)
                     return null;
 

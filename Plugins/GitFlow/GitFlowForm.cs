@@ -17,18 +17,18 @@ namespace GitFlow
         private readonly TranslationString _loading = new TranslationString("Loading...");
         private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
 
-        readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIBaseEventArgs _gitUiCommands;
 
-        Dictionary<string,List<string>> Branches { get; set; }
+        private Dictionary<string,List<string>> Branches { get; }
 
-        readonly AsyncLoader _task = new AsyncLoader();
+        private readonly AsyncLoader _task = new AsyncLoader();
 
         public bool IsRefreshNeeded { get; set; }
         private const string RefHeads = "refs/heads/";
 
         private string CurrentBranch { get; set; }
 
-        enum Branch
+        private enum Branch
         {
             feature,
             bugfix,
@@ -37,15 +37,12 @@ namespace GitFlow
             support
         }
 
-        private List<string> BranchTypes
+        private static List<string> BranchTypes
         {
             get { return Enum.GetValues(typeof (Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
 
-        private bool IsGitFlowInited
-        {
-            get { return !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master")); }
-        }
+        private bool IsGitFlowInitialised => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
 
         public GitFlowForm(GitUIBaseEventArgs gitUiCommands)
         {
@@ -65,15 +62,15 @@ namespace GitFlow
 
         private void Init()
         {
-            var isGitFlowInited = IsGitFlowInited;
+            var isGitFlowInitialised = IsGitFlowInitialised;
 
-            btnInit.Visible = !isGitFlowInited;
-            gbStart.Enabled = isGitFlowInited;
-            gbManage.Enabled = isGitFlowInited;
-            lblCaptionHead.Visible = isGitFlowInited;
-            lblHead.Visible = isGitFlowInited;
+            btnInit.Visible = !isGitFlowInitialised;
+            gbStart.Enabled = isGitFlowInitialised;
+            gbManage.Enabled = isGitFlowInitialised;
+            lblCaptionHead.Visible = isGitFlowInitialised;
+            lblHead.Visible = isGitFlowInitialised;
 
-            if (isGitFlowInited)
+            if (isGitFlowInitialised)
             {
                 var remotes = _gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
@@ -92,7 +89,7 @@ namespace GitFlow
             }
         }
 
-        private bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
+        private static bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
         {
             foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {
@@ -115,9 +112,9 @@ namespace GitFlow
             cbManageType.Enabled = false;
             cbBranches.DataSource = new List<string> {_loading.Text};
             if (!Branches.ContainsKey(branchType))
-                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
+                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchData(); });
             else
-                DisplayBranchDatas();
+                DisplayBranchData();
         }
 
         private List<string> GetBranches(string typeBranch)
@@ -137,7 +134,7 @@ namespace GitFlow
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
-        private void DisplayBranchDatas()
+        private void DisplayBranchData()
         {
             var branchType = cbManageType.SelectedValue.ToString();
             var branches = Branches[branchType];
@@ -257,7 +254,8 @@ namespace GitFlow
         #endregion
 
         #region GUI interactions
-        private void ForceRefresh(Control c)
+
+        private static void ForceRefresh(Control c)
         {
             c.Invalidate();
             c.Update();
@@ -313,9 +311,7 @@ namespace GitFlow
             lblHead.Text = head;
             var currentRef = head.StartsWith(RefHeads) ? head.Substring(RefHeads.Length) : head;
 
-            string branchTypes;
-            string branchName;
-            if (TryExtractBranchFromHead(currentRef, out branchTypes, out branchName))
+            if (TryExtractBranchFromHead(currentRef, out var branchTypes, out var branchName))
             {
                 cbManageType.SelectedItem = branchTypes;
                 CurrentBranch = branchName;

@@ -73,10 +73,7 @@ namespace GitUI.CommandsDialogs
             cboTo.DataSource = refs;
             cboTo.DisplayMember = "Name";
 
-            if (_defaultToBranch != null)
-                cboTo.Text = _defaultToBranch;
-            else
-                cboTo.Text = selectedHead;
+            cboTo.Text = _defaultToBranch ?? selectedHead;
 
             rebasePanel.Visible = !Module.InTheMiddleOfRebase();
             EnableButtons();
@@ -207,7 +204,7 @@ namespace GitUI.CommandsDialogs
             AppSettings.RebaseAutoStash = chkStash.Checked;
 
             string rebaseCmd;
-            if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
+            if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,

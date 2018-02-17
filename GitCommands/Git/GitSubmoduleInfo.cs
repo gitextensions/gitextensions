@@ -13,15 +13,9 @@ namespace GitCommands
             _module = module;
         }
 
-        public string Name
-        {
-            get { return _module.GetSubmoduleNameByPath(LocalPath); }
-        }
+        public string Name => _module.GetSubmoduleNameByPath(LocalPath);
 
-        public string RemotePath
-        {
-            get { return _module.GetSubmoduleRemotePath(Name); }
-        }
+        public string RemotePath => _module.GetSubmoduleRemotePath(Name);
 
         public string CurrentCommitGuid { get; set; }
         public string Branch { get; set; }
@@ -51,7 +45,7 @@ namespace GitCommands
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if ((object)a == null || (object)b == null)
             {
                 return false;
             }
@@ -65,7 +59,7 @@ namespace GitCommands
             return !(a == b);
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             return obj is GitSubmoduleInfo && this == (GitSubmoduleInfo)obj;
         }
@@ -77,7 +71,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            if (String.IsNullOrEmpty(Branch))
+            if (string.IsNullOrEmpty(Branch))
                 return LocalPath;
             return LocalPath + " [" + Branch + "]";
         }

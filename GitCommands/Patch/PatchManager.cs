@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -11,24 +12,15 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        private List<Patch> _patches = new List<Patch>();
-
         public string PatchFileName { get; set; }
 
         public string DirToPatch { get; set; }
 
-        public List<Patch> Patches
-        {
-            get { return _patches; }
-            set { _patches = value; }
-        }
+        public List<Patch> Patches { get; set; } = new List<Patch>();
 
         public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
-
-            string header;
-
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
                 return null;
@@ -42,16 +34,12 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
         {
-
-            string header;
-
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
                 return null;
@@ -64,13 +52,12 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
                 if (line.StartsWith("+++"))
@@ -125,8 +112,7 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         public static byte[] GetPatchBytes(string header, string body, Encoding fileContentEncoding)
@@ -142,7 +128,7 @@ namespace PatchApply
         public string GetMD5Hash(string input)
         {
             IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
-            var s = new System.Text.StringBuilder();
+            var s = new StringBuilder();
             foreach (byte b in bs)
             {
                 s.Append(b.ToString("x2").ToLower());
@@ -152,8 +138,8 @@ namespace PatchApply
 
         private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
         {
-            var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+            var x = new MD5CryptoServiceProvider();
+            byte[] bs = Encoding.UTF8.GetBytes(input);
             bs = x.ComputeHash(bs);
             return bs;
         }
@@ -163,12 +149,12 @@ namespace PatchApply
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            _patches = patchProcessor.CreatePatchesFromString(text).ToList();
+            Patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
                 return;
 
-            foreach (Patch patchApply in _patches)
+            foreach (Patch patchApply in Patches)
             {
                 if (patchApply.Apply)
                     patchApply.ApplyPatch(filesContentEncoding);
@@ -196,10 +182,11 @@ namespace PatchApply
 
         public PatchLine Clone()
         {
-            var c = new PatchLine();
-            c.Text = Text;
-            c.Selected = Selected;
-            return c;
+            return new PatchLine
+            {
+                Text = Text,
+                Selected = Selected
+            };
         }
 
         public void SetOperation(string operationMark)
@@ -214,8 +201,8 @@ namespace PatchApply
         public List<PatchLine> RemovedLines = new List<PatchLine>();
         public List<PatchLine> AddedLines = new List<PatchLine>();
         public List<PatchLine> PostContext = new List<PatchLine>();
-        public string WasNoNewLineAtTheEnd = null;
-        public string IsNoNewLineAtTheEnd = null;
+        public string WasNoNewLineAtTheEnd;
+        public string IsNoNewLineAtTheEnd;
 
 
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
@@ -366,8 +353,8 @@ namespace PatchApply
     internal class Chunk
     {
         private int StartLine;
-        private List<SubChunk> SubChunks = new List<SubChunk>();
-        private SubChunk _CurrentSubChunk = null;
+        private readonly List<SubChunk> SubChunks = new List<SubChunk>();
+        private SubChunk _CurrentSubChunk;
 
         public SubChunk CurrentSubChunk
         {
@@ -429,7 +416,7 @@ namespace PatchApply
                 string line = lines[i];
                 if (inPatch)
                 {
-                    PatchLine patchLine = new PatchLine()
+                    PatchLine patchLine = new PatchLine
                     {
                         Text = line
                     };
@@ -470,8 +457,8 @@ namespace PatchApply
 
         public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
-            Chunk result = new Chunk();
-            result.StartLine = 0;
+            var result = new Chunk {StartLine = 0};
+
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
@@ -484,14 +471,14 @@ namespace PatchApply
 
             int eolLength = eol.Length;
 
-            string[] lines = fileText.Split(new string[] { eol }, StringSplitOptions.None);
+            string[] lines = fileText.Split(new[] { eol }, StringSplitOptions.None);
             int i = 0;
 
             while (i < lines.Length)
             {
                 string line = lines[i];
-                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
-                PatchLine patchLine = new PatchLine()
+                string preamble = i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty;
+                PatchLine patchLine = new PatchLine
                 {
                     Text = (reset ? "-" : "+") + preamble + line
                 };
@@ -572,7 +559,7 @@ namespace PatchApply
             header = text.Substring(0, patchPos);
             string diff = text.Substring(patchPos - 1);
 
-            string[] chunks = diff.Split(new string[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
             ChunkList selectedChunks = new ChunkList();
             int i = 0;
             int currentPos = patchPos - 1;
@@ -597,10 +584,10 @@ namespace PatchApply
 
         public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
-            ChunkList result = new ChunkList();
-            result.Add(chunk);
-            return result;
+            return new ChunkList
+            {
+                Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding)
+            };
         }
 
         public string ToResetUnstagedLinesPatch()

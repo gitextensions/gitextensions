@@ -24,10 +24,7 @@ namespace GitUI
         private IList<IGitRef> _branchesToSelect;
         public IList<IGitRef> BranchesToSelect
         {
-            get
-            {
-                return _branchesToSelect;
-            }
+            get => _branchesToSelect;
             set
             {
                 _branchesToSelect = value;
@@ -43,7 +40,7 @@ namespace GitUI
 
         public IEnumerable<IGitRef> GetSelectedBranches()
         {
-            foreach (string branch in branches.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead == null)
@@ -61,7 +58,7 @@ namespace GitUI
         public void SetSelectedText(string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
 
             branches.Text = text;
         }
@@ -74,7 +71,7 @@ namespace GitUI
                     formSelectMultipleBranches.SelectBranch(branch.Name);
                 formSelectMultipleBranches.ShowDialog(this);
                 string branchesText = string.Empty;
-                foreach (GitRef branch in formSelectMultipleBranches.GetSelectedBranches())
+                foreach (IGitRef branch in formSelectMultipleBranches.GetSelectedBranches())
                 {
                     if (!string.IsNullOrEmpty(branchesText))
                         branchesText += " ";

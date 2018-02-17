@@ -34,16 +34,12 @@ namespace GitCommands.Repository
                 ShortName = DirInfo.Name;
 
 
-            if (DirInfo != null)
-                DirInfo = DirInfo.Parent;
+            DirInfo = DirInfo?.Parent;
 
-            DirName = DirInfo == null ? "" : DirInfo.FullName;
+            DirName = DirInfo?.FullName ?? "";
         }
 
-        public bool FullPath
-        {
-            get { return DirInfo == null; }
-        }
+        public bool FullPath => DirInfo == null;
 
         public override string ToString()
         {
@@ -143,11 +139,9 @@ namespace GitCommands.Repository
                 AddNotSortedRepos(lessRecentRepos, lessRecentRepoList);
         }
 
-        private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
+        private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
-            List<RecentRepoInfo> list = null;
-            bool existsShortName;
-            //if there is no short name for a repo, then try to find unique caption extendig short directory path
+            //if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
@@ -162,7 +156,7 @@ namespace GitCommands.Repository
             else
                 repoInfo.Caption = repoInfo.Repo.Path;
 
-            existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out list);
+            var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out var list);
             if (!existsShortName)
             {
                 list = new List<RecentRepoInfo>();
@@ -191,7 +185,7 @@ namespace GitCommands.Repository
                 AddToOrderedSignDir(orderedRepos, r, shortenPath);
         }
 
-        private string MakePath(string l, string r)
+        private static string MakePath(string l, string r)
         {
             if (l == null)
                 return r;
@@ -239,7 +233,7 @@ namespace GitCommands.Repository
 
                 if (dirInfo != null)
                 {
-                    while (dirInfo.Parent != null && dirInfo.Parent.Parent != null)
+                    while (dirInfo.Parent?.Parent != null)
                     {
                         dirInfo = dirInfo.Parent;
                         addDots = true;
@@ -254,22 +248,16 @@ namespace GitCommands.Repository
                     bool result = false;
                     string c = null;
                     string r = null;
-                    if (company != null)
+                    if (company?.Length > skipCount)
                     {
-                        if (company.Length > skipCount)
-                        {
-                            c = company.Substring(0, company.Length - skipCount);
-                            result = true;
-                        }
+                        c = company.Substring(0, company.Length - skipCount);
+                        result = true;
                     }
 
-                    if (repository != null)
+                    if (repository?.Length > skipCount)
                     {
-                        if (repository.Length > skipCount)
-                        {
-                            r = repository.Substring(skipCount, repository.Length - skipCount);
-                            result = true;
-                        }
+                        r = repository.Substring(skipCount, repository.Length - skipCount);
+                        result = true;
                     }
 
                     repoInfo.Caption = MakePath(root, c);
@@ -307,7 +295,7 @@ namespace GitCommands.Repository
                 //if fixed width is not set then short as in pull request vccp's example
                 //full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
                 //short "E:\CompanyName\...\RepositoryName\WorkingDirName"
-                if (this.RecentReposComboMinWidth == 0)
+                if (RecentReposComboMinWidth == 0)
                 {
                     ShortenPathWithCompany(0);
                 }
@@ -328,15 +316,13 @@ namespace GitCommands.Repository
                 }
             }
 
-            List<RecentRepoInfo> list = null;
-
-            if (!orderedRepos.TryGetValue(repoInfo.Caption, out list))
+            if (!orderedRepos.TryGetValue(repoInfo.Caption, out var list))
             {
                 list = new List<RecentRepoInfo>();
                 orderedRepos.Add(repoInfo.Caption, list);
             }
+
             list.Add(repoInfo);
         }
-
     }
 }

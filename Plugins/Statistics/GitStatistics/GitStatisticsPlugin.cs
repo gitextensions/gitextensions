@@ -1,5 +1,4 @@
-﻿using System.IO;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitStatistics
@@ -12,11 +11,12 @@ namespace GitStatistics
             Translate();
         }
 
-        StringSetting CodeFiles = new StringSetting("Code files",
+        private readonly StringSetting CodeFiles = new StringSetting("Code files",
                                 "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
                                 "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.mk;*.java");
-        StringSetting IgnoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
-        BoolSetting IgnoreSubmodules = new BoolSetting("Ignore submodules", true);
+
+        private readonly StringSetting IgnoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+        private readonly BoolSetting IgnoreSubmodules = new BoolSetting("Ignore submodules", true);
 
         #region IGitPlugin Members
 

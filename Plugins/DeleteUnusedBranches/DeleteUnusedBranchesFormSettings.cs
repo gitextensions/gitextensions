@@ -7,7 +7,7 @@
             string mergedInBranch,
             bool removeDeleteRemoteBranchesFromFlag,
             string remoteName,
-            bool userRegexToFIlterBranchesFlag,
+            bool userRegexToFilterBranchesFlag,
             string regexFilter,
             bool regexCaseInsensitiveFlag,
             bool regexInvertedFlag,
@@ -17,21 +17,21 @@
             DaysOlderThan = daysOlderThan;
             DeleteRemoteBranchesFromFlag = removeDeleteRemoteBranchesFromFlag;
             RemoteName = remoteName;
-            UseRegexToFilterBranchesFlag = userRegexToFIlterBranchesFlag;
+            UseRegexToFilterBranchesFlag = userRegexToFilterBranchesFlag;
             RegexFilter = regexFilter;
             RegexCaseInsensitiveFlag = regexCaseInsensitiveFlag;
             RegexInvertedFlag = regexInvertedFlag;
             IncludeUnmergedBranchesFlag = includeUnmergedBranchesFlag;
         }
 
-        public string MergedInBranch { get; private set; }
-        public int DaysOlderThan { get; private set; }
-        public bool DeleteRemoteBranchesFromFlag { get; private set; }
-        public string RemoteName { get; private set; }
-        public bool UseRegexToFilterBranchesFlag { get; private set; }
-        public string RegexFilter { get; private set; }
-        public bool RegexCaseInsensitiveFlag { get; private set; }
-        public bool RegexInvertedFlag { get; private set; }
-        public bool IncludeUnmergedBranchesFlag { get; private set; }
+        public string MergedInBranch { get; }
+        public int DaysOlderThan { get; }
+        public bool DeleteRemoteBranchesFromFlag { get; }
+        public string RemoteName { get; }
+        public bool UseRegexToFilterBranchesFlag { get; }
+        public string RegexFilter { get; }
+        public bool RegexCaseInsensitiveFlag { get; }
+        public bool RegexInvertedFlag { get; }
+        public bool IncludeUnmergedBranchesFlag { get; }
     }
 }

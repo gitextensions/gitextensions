@@ -13,10 +13,10 @@ namespace GitCommands
         public GitDeleteRemoteBranchesCmd(string remote, IEnumerable<IGitRef> branches)
         {
             if (string.IsNullOrEmpty(remote))
-                throw new ArgumentNullException("remote");
+                throw new ArgumentNullException(nameof(remote));
 
             if (branches == null)
-                throw new ArgumentNullException("branches");
+                throw new ArgumentNullException(nameof(branches));
 
             this.remote = remote;
             this.branches = branches.ToList();

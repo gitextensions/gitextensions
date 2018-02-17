@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitCommands.Statistics;
+using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -12,7 +13,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(aCommands)
         {
             InitializeComponent();
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Resources.loadingpanel;
             Translate();
         }
 
@@ -72,7 +73,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             submodulesList = " [" + item + "]";
                     }
                     else
-                        submodulesList = " [" + sub.Count.ToString() + " submodules]";
+                        submodulesList = " [" + sub.Count + " submodules]";
                 }
                 CommitCount.Text += string.Format("{0,6} - {1}{2}\r\n", keyValuePair.Value, keyValuePair.Key, submodulesList);
             }

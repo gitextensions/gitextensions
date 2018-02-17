@@ -74,11 +74,11 @@ namespace GitUI.CommandsDialogs
                         _fullPathResolver.Resolve(".mailmap"),
                         x =>
                         {
-                            this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
-                            if (!this.MailMapFile.EndsWith(Environment.NewLine))
-                                this.MailMapFile += Environment.NewLine;
+                            MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
+                            if (!MailMapFile.EndsWith(Environment.NewLine))
+                                MailMapFile += Environment.NewLine;
 
-                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(this.MailMapFile));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(MailMapFile));
                         });
 
                 UICommands.RepoChangedNotifier.Notify();

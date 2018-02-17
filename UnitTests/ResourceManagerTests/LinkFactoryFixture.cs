@@ -4,7 +4,7 @@ using ResourceManager;
 namespace ResourceManagerTests
 {
     [TestFixture]
-    class LinkFactoryFixture
+    internal class LinkFactoryFixture
     {
         [Test]
         public void ParseGoToBranchLink()
@@ -26,7 +26,7 @@ namespace ResourceManagerTests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
-        private void TestCreateLink(string caption, string uri)
+        private static void TestCreateLink(string caption, string uri)
         {
             LinkFactory linkFactory = new LinkFactory();
             linkFactory.CreateLink(caption, uri);
@@ -58,7 +58,7 @@ namespace ResourceManagerTests
         }
 
         [Test]
-        public void ParseCustomeSchemeLinkWithHash()
+        public void ParseCustomSchemeLinkWithHash()
         {
             TestCreateLink("PR#3471 and Issue#64", "ftp://github.com/gitextensions/gitextensions/pull/3471#end");
         }

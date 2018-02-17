@@ -51,12 +51,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (dontShortenRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_None;
-            else if (mostSigDirRB.Checked)
+            if (mostSigDirRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_MostSignDir;
-            else if (middleDotRB.Checked)
+            if (middleDotRB.Checked)
                 return RecentRepoSplitter.ShorteningStrategy_MiddleDots;
-            else
-                throw new Exception("Can not figure shortening strategy");
+            throw new Exception("Can not figure shortening strategy");
         }
 
         private void SetShorteningStrategy(string strategy)
@@ -79,14 +78,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
-            RecentRepoSplitter splitter = new RecentRepoSplitter();
-            splitter.MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
-            splitter.ShorteningStrategy = GetShorteningStrategy();
-            splitter.SortLessRecentRepos = sortLessRecentRepos.Checked;
-            splitter.SortMostRecentRepos = sortMostRecentRepos.Checked;
-            splitter.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
-            splitter.MeasureFont = MostRecentLB.Font;
-            splitter.Graphics = MostRecentLB.CreateGraphics();
+            var splitter = new RecentRepoSplitter
+            {
+                MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
+                ShorteningStrategy = GetShorteningStrategy(),
+                SortLessRecentRepos = sortLessRecentRepos.Checked,
+                SortMostRecentRepos = sortMostRecentRepos.Checked,
+                RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
+                MeasureFont = MostRecentLB.Font,
+                Graphics = MostRecentLB.CreateGraphics()
+            };
+
             try
             {
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
@@ -158,9 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            RecentRepoInfo repo;
-
-            e.Cancel = !GetSelectedRepo(sender, out repo);
+            e.Cancel = !GetSelectedRepo(sender, out var repo);
 
             if (!e.Cancel)
             {
@@ -197,9 +197,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 repo.Repo.Anchor = Repository.RepositoryAnchor.MostRecent;
                 RefreshRepos();
@@ -208,9 +206,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void anchorToLessToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 repo.Repo.Anchor = Repository.RepositoryAnchor.LessRecent;
                 RefreshRepos();
@@ -219,9 +215,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeAnchorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 repo.Repo.Anchor = Repository.RepositoryAnchor.None;
                 RefreshRepos();
@@ -230,9 +224,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
-
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepo(sender, out var repo))
             {
                 Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
                 RefreshRepos();

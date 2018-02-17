@@ -1,11 +1,12 @@
-﻿using GitCommands.Settings;
+﻿using System.Drawing;
+using GitCommands.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class RepoDistSettingsPage : SettingsPageWithHeader, IRepoDistSettingsPage
     {
-        protected RepoDistSettingsSet RepoDistSettingsSet { get { return CommonLogic.RepoDistSettingsSet; } }
+        protected RepoDistSettingsSet RepoDistSettingsSet => CommonLogic.RepoDistSettingsSet;
         protected RepoDistSettings CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost aPageHost)
@@ -15,10 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CurrentSettings = RepoDistSettingsSet.EffectiveSettings;
         }
 
-        protected override bool AreEffectiveSettings
-        {
-            get { return CurrentSettings == RepoDistSettingsSet.EffectiveSettings; }
-        }
+        protected override bool AreEffectiveSettings => CurrentSettings == RepoDistSettingsSet.EffectiveSettings;
 
         protected override ISettingsSource GetCurrentSettings()
         {
@@ -61,13 +59,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // RepoDistSettingsPage
             // 
-            this.Name = "RepoDistSettingsPage";
-            this.Size = new System.Drawing.Size(951, 518);
-            this.ResumeLayout(false);
+            Name = "RepoDistSettingsPage";
+            Size = new Size(951, 518);
+            ResumeLayout(false);
 
         }
     }

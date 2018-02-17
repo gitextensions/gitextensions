@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ResourceManager.Xliff;
@@ -63,7 +62,7 @@ namespace ResourceManager
                     var name = Path.GetFileNameWithoutExtension(fileName);
                     if (name.IndexOf(".") > 0)
                         continue;
-                    if (String.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                    if (string.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
                         continue;
                     translations.Add(name);
                 }

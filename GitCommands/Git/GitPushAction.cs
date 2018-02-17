@@ -10,9 +10,9 @@ namespace GitCommands
     public class GitPush
     {
         /// <summary>Gets the name or URL of the remote repo to push to.</summary>
-        public string Remote { get; private set; }
+        public string Remote { get; }
         /// <summary>Gets the set of LocalBranch:RemoteBranch actions.</summary>
-        public IEnumerable<GitPushAction> PushActions { get; private set; }
+        public IEnumerable<GitPushAction> PushActions { get; }
         /// <summary>Indicates whether to report progress during the push operation.</summary>
         public bool ReportProgress { get; set; }
 
@@ -71,9 +71,9 @@ namespace GitCommands
     /// <summary>Part of a 'git push', which specifies the local and/or remote branch.</summary>
     public class GitPushAction
     {
-        string _localBranch;
-        string _remoteBranch;
-        bool _force;
+        private readonly string _localBranch;
+        private readonly string _remoteBranch;
+        private readonly bool _force;
 
         /// <summary>
         /// Push a local branch to a remote one, optionally forcing a non-fast-forward commit.
@@ -105,7 +105,7 @@ namespace GitCommands
             }
 
             return string.Format("{0}{1}:{2}",
-                (_force ? "+" : ""),
+                _force ? "+" : "",
                 _localBranch,
                 _remoteBranch);
         }

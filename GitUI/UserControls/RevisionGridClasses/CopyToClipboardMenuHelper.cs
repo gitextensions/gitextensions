@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class CopyToClipboardMenuHelper
+    internal class CopyToClipboardMenuHelper
     {
         /// <summary>
         /// ...
@@ -33,8 +31,8 @@ namespace GitUI.UserControls.RevisionGridClasses
             var branchNameItemInsertAfter = captionItem;
             gitNameList.ForEach(branchName =>
             {
-                var branchNameItem = new ToolStripMenuItem(branchName);
-                branchNameItem.Tag = itemFlag; // to delete items from previous opening
+                var branchNameItem = new ToolStripMenuItem(branchName) {Tag = itemFlag};
+                // to delete items from previous opening
                 branchNameItem.Click += CopyToClipBoard;
                 int insertAfterIndex = targetMenu.DropDownItems.IndexOf(branchNameItemInsertAfter);
                 targetMenu.DropDownItems.Insert(insertAfterIndex + 1, branchNameItem);
@@ -76,8 +74,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 return StrLimit(str, characterCount); // Can’t do much with such a short limit
             if (str.Length <= characterCount - 3)
                 return str;
-            else
-                return str.Substring(0, characterCount - 3) + "...";
+            return str.Substring(0, characterCount - 3) + "...";
         }
 
         /// <summary>
@@ -90,8 +87,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             if (str.Length <= characterCount)
                 return str;
-            else
-                return str.Substring(0, characterCount).TrimEnd(' ');
+            return str.Substring(0, characterCount).TrimEnd(' ');
         }
     }
 }
