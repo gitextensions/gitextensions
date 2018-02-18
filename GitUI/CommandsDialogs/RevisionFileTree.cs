@@ -223,7 +223,9 @@ See the changes in the commit form.");
         private IList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
-            var predicate = GitUICommands.GetFindFilePredicate(name, Module.WorkingDir);
+
+            IFindFilePredicateProvider pathProvider = new FindFilePredicateProvider();
+            var predicate = pathProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate).ToList();
         }

@@ -2174,25 +2174,12 @@ namespace GitUI
             return arguments;
         }
 
-        internal static Func<string, bool> GetFindFilePredicate(string name, string workingDir)
-        {
-            var pattern = name.ToPosixPath();
-            var dir = workingDir.ToPosixPath();
-
-            if (pattern.StartsWith(dir, StringComparison.OrdinalIgnoreCase))
-            {
-                pattern = pattern.Substring(dir.Length);
-                return fileName => fileName.StartsWith(pattern, StringComparison.OrdinalIgnoreCase);
-            }
-
-            // Method Contains have no override with StringComparison parameter
-            return fileName => fileName.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
         private IList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree("HEAD");
-            var predicate = GetFindFilePredicate(name, Module.WorkingDir);
+
+            IFindFilePredicateProvider pathProvider = new FindFilePredicateProvider();
+            var predicate = pathProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate).ToList();
         }

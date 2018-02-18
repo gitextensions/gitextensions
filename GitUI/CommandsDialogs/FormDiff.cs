@@ -176,9 +176,11 @@ namespace GitUI.CommandsDialogs
 
             var candidates = DiffFiles.GitItemStatuses;
 
+            IFindFilePredicateProvider pathProvider = new FindFilePredicateProvider();
+
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
             {
-                var predicate = GitUICommands.GetFindFilePredicate(name, Module.WorkingDir);
+                var predicate = pathProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item =>
                 {
                     return item.Name != null && predicate(item.Name)
