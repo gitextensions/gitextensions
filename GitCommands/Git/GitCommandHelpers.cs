@@ -105,9 +105,8 @@ namespace GitCommands
                 return UserHomeDir;
 
             if (EnvUtils.RunningOnWindows())
-            {
                 return WindowsDefaultHomeDir;
-            }
+
             return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
@@ -115,13 +114,10 @@ namespace GitCommands
         {
             get
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
-                {
-                    string homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
-                    homePath += Environment.GetEnvironmentVariable("HOMEPATH");
-                    return homePath;
-                }
-                return Environment.GetEnvironmentVariable("USERPROFILE");
+                var homeDrive = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                return !string.IsNullOrEmpty(homeDrive)
+                    ? homeDrive + Environment.GetEnvironmentVariable("HOMEPATH")
+                    : Environment.GetEnvironmentVariable("USERPROFILE");
             }
         }
 
