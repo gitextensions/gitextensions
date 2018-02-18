@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ namespace GitCommands
         /// <para />
         /// To use the process's default encoding, use <see cref="Read"/> instead.
         /// </remarks>
+        [Obsolete("Use non-blocking, async version instead")]
         public static void ReadBytes(Process process, out byte[] stdOutput, out byte[] stdError)
         {
             var stdOutTask = Task.Run(async () => await process.StandardOutput.BaseStream.ReadToEndAsync());
@@ -74,6 +76,30 @@ namespace GitCommands
 
             stdOutput = stdOutTask.GetAwaiter().GetResult();
             stdError = stdErrTask.GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Asynchronously reads <see cref="System.Diagnostics.Process.StandardOutput"/> and
+        /// <see cref="System.Diagnostics.Process.StandardError"/> of <paramref name="process"/>, returning them
+        /// as byte arrays.
+        /// </summary>
+        /// <remarks>
+        /// As this method returns byte data, it may later be interpreted using whatever <see cref="Encoding"/>
+        /// is required.
+        /// <para />
+        /// To use the process's default encoding, use <see cref="Read"/> instead.
+        /// </remarks>
+        public static async Task<(byte[] stdOut, byte[] stdError)> ReadBytesAsync(Process process)
+        {
+            // Read both streams concurrently
+            var stdOutTask = process.StandardOutput.BaseStream.ReadToEndAsync();
+            var stdErrTask = process.StandardError.BaseStream.ReadToEndAsync();
+
+            // Await the stream output as a byte array
+            var stdOut = await stdOutTask;
+            var stdErr = await stdErrTask;
+
+            return (stdOut, stdErr);
         }
     }
 

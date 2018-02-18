@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -301,6 +303,7 @@ namespace GitCommands
             }
         }
 
+        [Obsolete]
         private static Process StartProcessAndReadAllBytes(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
@@ -322,9 +325,51 @@ namespace GitCommands
             return process;
         }
 
+        private static async Task<(Process, byte[] stdOut, byte[] stdErr)> StartProcessAndReadAllBytesAsync(string arguments, string cmd, string workDir, byte[] stdInput)
+        {
+            if (string.IsNullOrEmpty(cmd))
+                return (null, null, null);
+
+            var process = StartProcess(cmd, arguments, workDir, Encoding.Default);
+
+            if (stdInput?.Length > 0)
+            {
+                process.StandardInput.BaseStream.Write(stdInput, 0, stdInput.Length);
+                process.StandardInput.Close();
+            }
+
+            var (stdOutput, stdError) = await SynchronizedProcessReader.ReadBytesAsync(process);
+
+            return (process, stdOutput, stdError);
+        }
+
         /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        public static async Task<(int exitCode, byte[] stdOut, byte[] stdErr)> RunCmdByteAsync(string cmd, string arguments, string workingdir, byte[] stdInput)
+        {
+            try
+            {
+                arguments = arguments.Replace("$QUOTE$", "\\\"");
+
+                var (process, output, error) = await StartProcessAndReadAllBytesAsync(arguments, cmd, workingdir, stdInput);
+
+                using (process)
+                {
+                    process.WaitForExit();
+                    return (process.ExitCode, output, error);
+                }
+            }
+            catch (Win32Exception e)
+            {
+                return (1, Encoding.UTF8.GetBytes(""), Encoding.UTF8.GetBytes(e.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        [Obsolete]
         public static int RunCmdByte(string cmd, string arguments, string workingdir, byte[] stdInput, out byte[] output, out byte[] error)
         {
             try

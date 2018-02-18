@@ -283,6 +283,7 @@ namespace GitCommands
 
         //encoding for files paths
         private static Encoding _systemEncoding;
+        [Obsolete]
         public static Encoding SystemEncoding
         {
             get
@@ -310,6 +311,31 @@ namespace GitCommands
 
                 return _systemEncoding;
             }
+        }
+
+        public static async Task<Encoding> GetSystemEncodingAsync()
+        {
+            if (_systemEncoding != null)
+                return _systemEncoding;
+
+            // check whether GitExtensions works with standard msysgit or msysgit-unicode
+
+            // invoke a git command that returns an invalid argument in its response, and
+            // check if a unicode-only character is reported back. If so assume msysgit-unicode
+
+            // git config --get with a malformed key (no section) returns:
+            // "error: key does not contain a section: <key>"
+            const string controlStr = "ą"; // "a caudata"
+
+            var s = await new GitModule("").RunGitCmdAsync($"config --get {controlStr}", Encoding.UTF8);
+
+            _systemEncoding = s != null && s.IndexOf(controlStr, StringComparison.Ordinal) != -1
+                ? new UTF8Encoding(false)
+                : Encoding.Default;
+
+            Debug.WriteLine("System encoding: " + _systemEncoding.EncodingName);
+
+            return _systemEncoding;
         }
 
         //Encoding that let us read all bytes without replacing any char
@@ -408,10 +434,29 @@ namespace GitCommands
         /// </summary>
         /// <param name="relativePath">A path relative to the .git directory</param>
         /// <returns></returns>
+        [Obsolete]
         public string ResolveGitInternalPath(string relativePath)
         {
             string gitPath = RunGitCmd("rev-parse --git-path " + relativePath.Quote());
             string systemPath = PathUtil.ToNativePath(gitPath.Trim());
+            if (systemPath.StartsWith(".git\\"))
+            {
+                systemPath = Path.Combine(GetGitDirectory(), systemPath.Substring(".git\\".Length));
+            }
+            return systemPath;
+        }
+
+        /// <summary>
+        /// Asks git to resolve the given relativePath
+        /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main
+        /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
+        /// </summary>
+        /// <param name="relativePath">A path relative to the .git directory</param>
+        /// <returns></returns>
+        public async Task<string> ResolveGitInternalPathAsync(string relativePath)
+        {
+            string gitPath = await RunGitCmdAsync("rev-parse --git-path " + relativePath.Quote());
+            string systemPath = gitPath.Trim().ToNativePath();
             if (systemPath.StartsWith(".git\\"))
             {
                 systemPath = Path.Combine(GetGitDirectory(), systemPath.Substring(".git\\".Length));
@@ -424,6 +469,7 @@ namespace GitCommands
         /// Returns git common directory
         /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
         /// </summary>
+        [Obsolete]
         public string GitCommonDirectory
         {
             get
@@ -440,6 +486,24 @@ namespace GitCommands
 
                 return _GitCommonDirectory;
             }
+        }
+        /// <summary>
+        /// Returns git common directory
+        /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
+        /// </summary>
+        public async Task<string> GetGitCommonDirectoryAsync()
+        {
+            if (_GitCommonDirectory == null)
+            {
+                var commDir = await RunGitCmdResultAsync("rev-parse --git-common-dir");
+                _GitCommonDirectory = commDir.StdOutput.Trim().ToNativePath();
+                if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !Directory.Exists(_GitCommonDirectory))
+                {
+                    _GitCommonDirectory = GetGitDirectory();
+                }
+            }
+
+            return _GitCommonDirectory;
         }
 
         /// <summary>Gets the ".git" directory path.</summary>
@@ -463,9 +527,22 @@ namespace GitCommands
             return repositoryPath == GetGitDirectory(repositoryPath);
         }
 
+        [Obsolete]
         public bool IsSubmodule(string submodulePath)
         {
             var result = RunGitCmdResult("submodule status " + submodulePath);
+
+            if (result.ExitCode == 0
+                // submodule removed
+                || result.StdError.StartsWith("No submodule mapping found in .gitmodules for path"))
+                return true;
+
+            return false;
+        }
+
+        public async Task<bool> IsSubmoduleAsync(string submodulePath)
+        {
+            var result = await RunGitCmdResultAsync("submodule status " + submodulePath);
 
             if (result.ExitCode == 0
                 // submodule removed
@@ -633,6 +710,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, cache results, console window is hidden, wait for exit, redirect output
         /// </summary>
+        [Obsolete]
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCacheableCmd(string cmd, string arguments = "", Encoding encoding = null)
         {
@@ -651,8 +729,29 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Run command, cache results, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        public async Task<string> RunCacheableCmdAsync(string cmd, string arguments = "", Encoding encoding = null)
+        {
+            if (encoding == null)
+                encoding = await GetSystemEncodingAsync();
+
+            byte[] cmdout, cmderr;
+            if (GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
+                return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
+
+            await GitCommandHelpers.RunCmdByteAsync(cmd, arguments, WorkingDir, null);
+
+            GitCommandCache.Add(arguments, cmdout, cmderr);
+
+            return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
+        }
+
+        /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        [Obsolete]
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public CmdResult RunCmdResult(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
@@ -672,14 +771,45 @@ namespace GitCommands
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        public async Task<CmdResult> RunCmdResultAsync(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
+        {
+            if (encoding == null)
+                encoding = await GetSystemEncodingAsync();
+
+            var (exitCode, output, error) = await GitCommandHelpers.RunCmdByteAsync(cmd, arguments, WorkingDir, stdInput);
+
+            return new CmdResult
+            {
+                StdOutput = output == null ? string.Empty : StripAnsiCodes(encoding.GetString(output)),
+                StdError = error == null ? string.Empty : StripAnsiCodes(encoding.GetString(error)),
+                ExitCode = exitCode
+            };
+        }
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        [Obsolete]
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
             return RunCmdResult(cmd, arguments, encoding, stdInput).GetString();
         }
 
         /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        public async Task<string> RunCmdAsync(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
+        {
+            var cmdResult = await RunCmdResultAsync(cmd, arguments, encoding, stdInput);
+            return cmdResult.GetString();
+        }
+
+        /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        [Obsolete]
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
             return RunCmd(AppSettings.GitCommand, arguments, encoding, stdInput);
@@ -688,9 +818,26 @@ namespace GitCommands
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        public Task<string> RunGitCmdAsync(string arguments, Encoding encoding = null, byte[] stdInput = null)
+        {
+            return RunCmdAsync(AppSettings.GitCommand, arguments, encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        [Obsolete]
         public CmdResult RunGitCmdResult(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
             return RunCmdResult(AppSettings.GitCommand, arguments, encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        public Task<CmdResult> RunGitCmdResultAsync(string arguments, Encoding encoding = null, byte[] stdInput = null)
+        {
+            return RunCmdResultAsync(AppSettings.GitCommand, arguments, encoding, stdInput);
         }
 
         /// <summary>
@@ -710,21 +857,21 @@ namespace GitCommands
             return ReadCmdOutputLines(AppSettings.GitCommand, arguments, null);
         }
 
-        /// <summary>
-        /// Run batch file, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        public string RunBatchFile(string batchFile)
-        {
-            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
-            using (var writer = new StreamWriter(tempFileName))
-            {
-                writer.WriteLine("@prompt $G");
-                writer.Write(batchFile);
-            }
-            string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
-            File.Delete(tempFileName);
-            return result;
-        }
+//        /// <summary>
+//        /// Run batch file, console window is hidden, wait for exit, redirect output
+//        /// </summary>
+//        public string RunBatchFile(string batchFile)
+//        {
+//            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
+//            using (var writer = new StreamWriter(tempFileName))
+//            {
+//                writer.WriteLine("@prompt $G");
+//                writer.Write(batchFile);
+//            }
+//            string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
+//            File.Delete(tempFileName);
+//            return result;
+//        }
 
         public void EditNotes(string revision)
         {

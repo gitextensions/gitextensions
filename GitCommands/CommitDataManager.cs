@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -43,7 +44,7 @@ namespace GitCommands
         /// Gets the commit info for submodule.
         /// </summary>
         void UpdateCommitMessage(CommitData data, string sha1, ref string error);
-
+        Task<string> UpdateCommitMessageAsync(CommitData data, string sha1);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -93,6 +94,36 @@ namespace GitCommands
             }
 
             UpdateBodyInCommitData(data, info);
+        }
+
+        /// <summary>
+        /// Gets the commit info for submodule.
+        /// </summary>
+        public async Task<string> UpdateCommitMessageAsync(CommitData data, string sha1)
+        {
+            if (sha1 == null)
+                throw new ArgumentNullException(nameof(sha1));
+
+            var module = GetModule();
+
+            // Do not cache this command, since notes can be added
+            var arguments = "log -1 --pretty=\"format:" + ShortLogFormat + $"\" {sha1}";
+
+            var info = await module.RunGitCmdAsync(arguments, GitModule.LosslessEncoding);
+
+            if (info.Trim().StartsWith("fatal"))
+                return "Cannot find commit " + sha1;
+
+            var index = info.IndexOf(sha1, StringComparison.Ordinal) + sha1.Length;
+
+            if (index < 0)
+                return "Cannot find commit " + sha1;
+
+            if (index >= info.Length)
+                return info;
+
+            UpdateBodyInCommitData(data, info);
+            return null;
         }
 
         /// <summary>

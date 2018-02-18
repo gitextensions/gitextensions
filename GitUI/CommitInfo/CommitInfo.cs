@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.ExternalLinks;
@@ -119,11 +120,19 @@ namespace GitUI.CommitInfo
 
         private GitRevision _revision;
         private List<string> _children;
+        [Obsolete]
         public void SetRevisionWithChildren(GitRevision revision, List<string> children)
         {
             _revision = revision;
             _children = children;
             ReloadCommitInfo();
+        }
+
+        public Task SetRevisionWithChildrenAsync(GitRevision revision, List<string> children)
+        {
+            _revision = revision;
+            _children = children;
+            return ReloadCommitInfoAsync();
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -161,6 +170,7 @@ namespace GitUI.CommitInfo
         private IList<string> _sortedRefs;
         private System.Drawing.Rectangle _headerResize; // Cache desired size for commit header
 
+        [Obsolete]
         private void ReloadCommitInfo()
         {
             _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(BackColor);
@@ -222,6 +232,66 @@ namespace GitUI.CommitInfo
         private int GetRevisionHeaderHeight()
         {
             return _headerResize.Height;
+        }
+
+        private async Task ReloadCommitInfoAsync()
+        {
+            _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(BackColor);
+
+            showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
+            showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
+
+            ResetTextAndImage();
+
+            if (string.IsNullOrEmpty(_revision.Guid))
+            {
+                Debug.Fail("Unexpectedly called ReloadCommitInfoAsync() with empty revision");
+                return;
+            }
+
+            _RevisionHeader.Text = string.Empty;
+            _RevisionHeader.Refresh();
+
+            CommitData data = _commitDataManager.CreateFromRevision(_revision);
+            data.ChildrenGuids = _children;
+
+            if (_revision.Body == null)
+            {
+                // TODO error response here is ignored
+                await _commitDataManager.UpdateCommitMessageAsync(data, _revision.Guid);
+                _revision.Body = data.Body;
+            }
+
+            ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
+
+            if (_sortedRefs == null)
+                ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
+
+            var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
+            var body = _commitDataBodyRenderer.Render(data, CommandClick != null);
+
+            _RevisionHeader.SetXHTMLText(header);
+            _RevisionHeader.Height = _headerResize.Height;
+            _revisionInfo = body;
+
+            UpdateRevisionInfo();
+            LoadAuthorImage(data.Author ?? data.Committer);
+
+            //No branch/tag data for artificial commands
+            if (GitRevision.IsArtificial(_revision.Guid))
+                return;
+
+            if (AppSettings.CommitInfoShowContainedInBranches)
+                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
+
+            if (AppSettings.ShowAnnotatedTagsMessages)
+                ThreadPool.QueueUserWorkItem(_ => loadAnnotatedTagInfo(_revision));
+
+            if (AppSettings.CommitInfoShowContainedInTags)
+                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
         }
 
         private void loadSortedRefs()

@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs
                 PuTTYToolStripMenuItem.Visible = false;
             }
 
-            RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
+            RevisionGrid.SelectionChanged += async (o, args) => await RevisionGridSelectionChangedAsync(o, args);
             _filterRevisionsHelper.SetFilter(filter);
 
 
@@ -1003,6 +1003,7 @@ namespace GitUI.CommandsDialogs
             DiffTabPage.Text = revisionDiff.GetTabText();
         }
 
+        [Obsolete]
         private void FillCommitInfo()
         {
             if (!_showRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
@@ -1020,6 +1021,26 @@ namespace GitUI.CommandsDialogs
 
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
+        }
+
+        private async Task FillCommitInfoAsync()
+        {
+            if (!_showRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+                return;
+
+            if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
+                return;
+
+            _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
+
+            if (RevisionGrid.GetSelectedRevisions().Count == 0)
+                return;
+
+            var revision = RevisionGrid.GetSelectedRevisions()[0];
+
+            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
+
+            await RevisionInfo.SetRevisionWithChildrenAsync(revision, children);
         }
 
         private async void FillGpgInfo()
@@ -1070,6 +1091,24 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                FillGpgInfo();
+                FillBuildReport();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+        }
+
+        private async Task RevisionGridSelectionChangedAsync(object sender, EventArgs e)
+        {
+            try
+            {
+                _selectedRevisionUpdatedTargets = UpdateTargets.None;
+
+                FillFileTree();
+                FillDiff();
+                await FillCommitInfoAsync();
                 FillGpgInfo();
                 FillBuildReport();
             }

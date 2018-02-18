@@ -1886,19 +1886,11 @@ namespace GitUI
             else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
             {
                 if (revision.Body == null && !revision.IsArtificial())
-                {
-                    var moduleRef = Module;
-                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef));
-                }
+                    Task.Run(async () => await LoadIsMultilineMessageInfoAsync(revision, columnIndex, e.RowIndex, Revisions.RowCount));
 
-                if (revision.Body != null)
-                {
-                    e.Value = revision.Body.TrimEnd().Contains("\n") ? MultilineMessageIndicator : "";
-                }
-                else
-                {
-                    e.Value = "";
-                }
+                e.Value = revision.Body?.TrimEnd().Contains("\n") == true
+                    ? MultilineMessageIndicator
+                    : "";
             }
             else
             {
@@ -1913,25 +1905,23 @@ namespace GitUI
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
         /// <param name="colIndex"></param>
         /// <param name="rowIndex"></param>
-        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule aModule)
+        private async Task LoadIsMultilineMessageInfoAsync(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
         {
-            // code taken from CommitInfo.cs
-            CommitData commitData = _commitDataManager.CreateFromRevision(revision);
-            string error = "";
+            var commitData = _commitDataManager.CreateFromRevision(revision);
+
             if (revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(commitData, revision.Guid, ref error);
+                // TODO any error message response is ignored here
+                await _commitDataManager.UpdateCommitMessageAsync(commitData, revision.Guid);
+
                 revision.Body = commitData.Body;
             }
 
             // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
             this.InvokeAsync(() =>
             {
-                if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
-                {
-                    return;
-                }
-                Revisions.InvalidateCell(colIndex, rowIndex);
+                if (Revisions != null && Revisions.RowCount != 0 && Revisions.RowCount > rowIndex && Revisions.RowCount == totalRowCount)
+                    Revisions.InvalidateCell(colIndex, rowIndex);
             });
         }
 
@@ -1954,6 +1944,7 @@ namespace GitUI
 
         private float RoundToEven(float value)
         {
+//            return Math.Round(value, MidpointRounding.ToEven);
             int result = ((int)value / 2) * 2;
             return result < value ? result + 2 : result;
         }
