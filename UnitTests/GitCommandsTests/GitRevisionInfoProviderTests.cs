@@ -27,7 +27,7 @@ namespace GitCommandsTests
         [Test]
         public void LoadChildren_should_throw_if_null()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _provider.LoadChildren(null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => _provider.LoadChildrenAsync(null));
         }
 
         [TestCase(null)]
@@ -38,7 +38,7 @@ namespace GitCommandsTests
             var item = Substitute.For<IGitItem>();
             item.Guid.Returns(guid);
 
-            Assert.ThrowsAsync<ArgumentException>(() => _provider.LoadChildren(item));
+            Assert.ThrowsAsync<ArgumentException>(() => _provider.LoadChildrenAsync(item));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace GitCommandsTests
 
             _provider = new GitRevisionInfoProvider(() => null);
 
-            Assert.ThrowsAsync<ArgumentException>(() => _provider.LoadChildren(item));
+            Assert.ThrowsAsync<ArgumentException>(() => _provider.LoadChildrenAsync(item));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace GitCommandsTests
 
             _module.GetTreeAsync(guid, false).Returns(items);
 
-            var children = await _provider.LoadChildren(item);
+            var children = await _provider.LoadChildrenAsync(item);
 
             children.Should().BeEquivalentTo(items);
             _module.Received(1).GetTreeAsync(guid, false);
@@ -78,7 +78,7 @@ namespace GitCommandsTests
 
             _module.GetTreeAsync(item.Guid, full: false).Returns(expectedChildren);
 
-            var children = await _provider.LoadChildren(item);
+            var children = await _provider.LoadChildrenAsync(item);
 
             children.Count().Should().Be(3);
             children.Should().BeEquivalentTo(expectedChildren);

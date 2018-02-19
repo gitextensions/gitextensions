@@ -46,7 +46,7 @@ namespace GitUITests.CommandsDialogs
         public async Task LoadItemsInTreeView_should_not_add_nods_if_no_children()
         {
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(x => (IEnumerable<IGitItem>)null);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(x => (IEnumerable<IGitItem>)null);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -59,7 +59,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new IGitItem[] { new MockGitItem("file1"), new MockGitItem("file2") };
             var item = new MockGitItem("folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -79,7 +79,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new[] { CreateGitItem("file1", true, false, false), CreateGitItem("file2", true, false, false) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -99,7 +99,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new[] { CreateGitItem("file1", false, true, false), CreateGitItem("file2", false, true, false) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -119,7 +119,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new[] { CreateGitItem("file1", false, false, true), CreateGitItem("file2", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -136,7 +136,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new[] { CreateGitItem("file1.", false, false, true), CreateGitItem("file2", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -157,7 +157,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new[] { CreateGitItem("file1.foo", false, false, true), CreateGitItem("file2.txt", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
 
             await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
@@ -178,7 +178,7 @@ namespace GitUITests.CommandsDialogs
         {
             var items = new[] { CreateGitItem("file1.txt", false, false, true), CreateGitItem("file2.txt", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(items);
+            _revisionInfoProvider.LoadChildrenAsync(item).Returns(items);
             var image = Resources.cow_head;
             _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(image);
 

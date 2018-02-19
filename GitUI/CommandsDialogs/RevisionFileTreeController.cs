@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
         /// <remarks>The method DOES NOT check any input parameters for performance reasons.</remarks>
         public async Task LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
-            var childrenItems = _cachedItems.GetOrAdd(item.Guid, await _revisionInfoProvider.LoadChildren(item));
+            var childrenItems = _cachedItems.GetOrAdd(item.Guid, await _revisionInfoProvider.LoadChildrenAsync(item));
             if (childrenItems == null)
             {
                 return;

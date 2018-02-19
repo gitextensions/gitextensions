@@ -15,7 +15,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="item"></param>
         /// <returns>The item's children.</returns>
-        Task<IEnumerable<IGitItem>> LoadChildren(IGitItem item);
+        Task<IEnumerable<IGitItem>> LoadChildrenAsync(IGitItem item);
     }
 
     public sealed class GitRevisionInfoProvider : IGitRevisionInfoProvider
@@ -34,7 +34,7 @@ namespace GitCommands
         /// <returns>The item's children.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="item"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><see cref="IGitItem.Guid"/> is not supplied.</exception>
-        public async Task<IEnumerable<IGitItem>> LoadChildren(IGitItem item)
+        public async Task<IEnumerable<IGitItem>> LoadChildrenAsync(IGitItem item)
         {
             if (item == null)
             {
