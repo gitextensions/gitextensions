@@ -48,9 +48,9 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            _baseRevision = new GitRevision(Module, baseCommitSha);
-            _headRevision = new GitRevision(Module, headCommitSha);
-            _mergeBase = new GitRevision(Module, Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
+            _baseRevision = new GitRevision(baseCommitSha);
+            _headRevision = new GitRevision(headCommitSha);
+            _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
 
             lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
             lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs
 
             IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
             if (items.Count() == 1)
-                items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
+                items.Add(new GitRevision(DiffFiles.SelectedItemParent));
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     displayStr = form.BranchName;
-                    revision = new GitRevision(Module, Module.RevParse(form.BranchName));
+                    revision = new GitRevision(Module.RevParse(form.BranchName));
                     PopulateDiffFiles();
                 }
             }

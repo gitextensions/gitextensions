@@ -26,8 +26,8 @@ using GitUI.UserControls.RevisionGridClasses;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
 using Microsoft.Win32;
-using ResourceManager;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitDataManager _commitDataManager;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private readonly IAppTitleGenerator _appTitleGenerator;
+        private readonly IGitRevisionProvider _gitRevisionProvider;
         private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
@@ -206,13 +207,14 @@ namespace GitUI.CommandsDialogs
                         _toolStripGitStatus.Visible = false;
                         _toolStripGitStatus.Text = String.Empty;
                     }
-                    else if(status == GitStatusMonitorState.Running)
+                    else if (status == GitStatusMonitorState.Running)
                     {
                         _toolStripGitStatus.Visible = true;
                     }
                 };
 
-                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) => {
+                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
+                {
                     var status = e.ItemStatuses.ToList();
                     _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
 
@@ -259,6 +261,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.BrowseRepo = this;
                 _controller = new FormBrowseController(new GitGpgController(() => Module));
                 _commitDataManager = new CommitDataManager(() => Module);
+                _gitRevisionProvider = new GitRevisionProvider(() => Module);
             }
 
             _repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
@@ -314,11 +317,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormBrowse(GitUICommands aCommands, string filter, string selectCommit) : this(aCommands, filter)
+        public FormBrowse(GitUICommands aCommands, string filter, string selectCommit)
+            : this(aCommands, filter)
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
-                RevisionGrid.SetInitialRevision(GitRevision.CreateForShortSha1(Module, selectCommit));
+                RevisionGrid.SetInitialRevision(_gitRevisionProvider.Get(selectCommit));
             }
         }
 
@@ -2015,7 +2019,7 @@ namespace GitUI.CommandsDialogs
             this.runMergetoolToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
-            this.toolStripMenuItemReflog.Enabled = 
+            this.toolStripMenuItemReflog.Enabled =
             this.bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
@@ -2191,7 +2195,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                var revision = GitRevision.CreateForShortSha1(Module, e.Data);
+                var revision = _gitRevisionProvider.Get(e.Data);
                 var found = RevisionGrid.SetSelectedRevision(revision);
 
                 // When 'git log --first-parent' filtration is used, user can click on child commit
@@ -2208,7 +2212,7 @@ namespace GitUI.CommandsDialogs
                 string error = "";
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
                 if (commit != null)
-                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
+                    RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid));
             }
             else if (e.Command == "navigatebackward")
             {

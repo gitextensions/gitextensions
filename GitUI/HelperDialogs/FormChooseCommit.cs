@@ -33,7 +33,7 @@ namespace GitUI.HelperDialogs
                 string guid = Module.RevParse(preselectCommit);
                 if (!String.IsNullOrEmpty(guid))
                 {
-                    revisionGrid.SetInitialRevision(new GitRevision(Module, guid));
+                    revisionGrid.SetInitialRevision(new GitRevision(guid));
                 }
             }
 
@@ -77,7 +77,7 @@ namespace GitUI.HelperDialogs
 
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            revisionGrid.SetSelectedRevision(new GitRevision(revisionGrid.Module, _parents[((LinkLabel)sender).Text]));
+            revisionGrid.SetSelectedRevision(new GitRevision(_parents[((LinkLabel)sender).Text]));
         }
 
         private void revisionGrid_SelectionChanged(object sender, EventArgs e)

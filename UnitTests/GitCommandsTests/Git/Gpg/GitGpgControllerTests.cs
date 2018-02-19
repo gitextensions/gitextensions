@@ -1,14 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
 using GitCommands;
 using GitCommands.Gpg;
-using NUnit.Framework;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using FluentAssertions;
-
+using NUnit.Framework;
 
 namespace GitCommandsTests.Git.Gpg
 {
@@ -21,7 +18,7 @@ namespace GitCommandsTests.Git.Gpg
         [SetUp]
         public void Setup()
         {
-            _module = Substitute.For<Func<IGitModule> >();
+            _module = Substitute.For<Func<IGitModule>>();
             _gpgController = new GitGpgController(_module);
         }
 
@@ -38,10 +35,10 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             _module().RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}").Returns(gitCmdReturn);
-            
+
             var actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
 
             Assert.AreEqual(expected, actual);
@@ -53,7 +50,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             ((Func<Task>)(async () => await _gpgController.GetRevisionCommitSignatureStatusAsync(null))).ShouldThrow<ArgumentNullException>();
         }
-        
+
 
         [TestCase]
         public void Validate_GetRevisionTagSignatureStatusAsync_null_revision()
@@ -68,15 +65,15 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, "");
-            
+            GitRevision revision = new GitRevision("");
+
             string gitRefCompleteName = "refs/tags/FirstTag^{}";
-            
+
             for (int i = 0; i < numberOfTags; i++)
             {
                 revision.Refs.Add(new GitRef(_module(), guid, gitRefCompleteName));
             }
-            
+
             var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
             Assert.AreEqual(tagStatus, actual);
@@ -90,7 +87,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             GitRef gitRef = new GitRef(_module(), guid, "refs/tags/FirstTag^{}");
             revision.Refs.Add(gitRef);
@@ -108,7 +105,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             _module().RunGitCmd($"log --pretty=\"format:%GG\" -1 {guid}").Returns(returnString);
 
@@ -139,7 +136,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             GitRef gitRef;
             string gitRefCompleteName = "";
@@ -181,7 +178,7 @@ namespace GitCommandsTests.Git.Gpg
             }
 
             var actual = _gpgController.GetTagVerifyMessage(revision);
-            
+
             Assert.AreEqual(expected, actual);
         }
 

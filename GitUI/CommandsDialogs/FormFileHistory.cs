@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Utils;
 using ResourceManager;
-using System.ComponentModel;
 
 namespace GitUI.CommandsDialogs
 {
@@ -19,6 +20,7 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _asyncLoader;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly IGitRevisionProvider _gitRevisionProvider;
 
         private readonly TranslationString _buildReportTabCaption =
             new TranslationString("Build Report");
@@ -37,9 +39,9 @@ namespace GitUI.CommandsDialogs
                 var imageList = new ImageList();
                 tabControl1.ImageList = imageList;
                 imageList.ColorDepth = ColorDepth.Depth8Bit;
-                imageList.Images.Add(global::GitUI.Properties.Resources.IconViewFile);
-                imageList.Images.Add(global::GitUI.Properties.Resources.IconDiff);
-                imageList.Images.Add(global::GitUI.Properties.Resources.IconBlame);
+                imageList.Images.Add(Properties.Resources.IconViewFile);
+                imageList.Images.Add(Properties.Resources.IconDiff);
+                imageList.Images.Add(Properties.Resources.IconBlame);
                 tabControl1.TabPages[0].ImageIndex = 0;
                 tabControl1.TabPages[1].ImageIndex = 1;
                 tabControl1.TabPages[2].ImageIndex = 2;
@@ -56,6 +58,7 @@ namespace GitUI.CommandsDialogs
 
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _gitRevisionProvider = new GitRevisionProvider(() => Module);
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
@@ -197,7 +200,7 @@ namespace GitUI.CommandsDialogs
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 //
 
-                string arg = "log --format=\"%n\" --name-only --follow "+
+                string arg = "log --format=\"%n\" --name-only --follow " +
                     GitCommandHelpers.FindRenamesAndCopiesOpts()
                     + " -- \"" + fileName + "\"";
                 Process p = Module.RunGitCmdDetached(arg, GitModule.LosslessEncoding);
@@ -330,7 +333,7 @@ namespace GitUI.CommandsDialogs
             {
                 orgFileName = selectedRows[0].Name;
             }
-            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUI.RevisionDiffKind.DiffAB);
+            FileChanges.OpenWithDifftool(FileName, orgFileName, RevisionDiffKind.DiffAB);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -456,7 +459,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUI.RevisionDiffKind.DiffBLocal);
+            FileChanges.OpenWithDifftool(FileName, string.Empty, RevisionDiffKind.DiffBLocal);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)
@@ -480,14 +483,14 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                FileChanges.SetSelectedRevision(GitRevision.CreateForShortSha1(Module, e.Data));
+                FileChanges.SetSelectedRevision(_gitRevisionProvider.Get(e.Data));
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 string error = "";
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
                 if (commit != null)
-                    FileChanges.SetSelectedRevision(new GitRevision(Module, commit.Guid));
+                    FileChanges.SetSelectedRevision(new GitRevision(commit.Guid));
             }
             else if (e.Command == "navigatebackward")
             {

@@ -2774,7 +2774,7 @@ namespace GitUI
             var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
             // Add working directory as virtual commit
-            var unstagedRev = new GitRevision(Module, GitRevision.UnstagedGuid)
+            var unstagedRev = new GitRevision(GitRevision.UnstagedGuid)
             {
                 Author = userName,
                 AuthorDate = DateTime.MaxValue,
@@ -2788,7 +2788,7 @@ namespace GitUI
             Revisions.Add(unstagedRev.Guid, unstagedRev.ParentGuids, DvcsGraph.DataType.Normal, unstagedRev);
 
             // Add index as virtual commit
-            var stagedRev = new GitRevision(Module, GitRevision.IndexGuid)
+            var stagedRev = new GitRevision(GitRevision.IndexGuid)
             {
                 Author = userName,
                 AuthorDate = DateTime.MaxValue,
@@ -3266,7 +3266,7 @@ namespace GitUI
                 case Commands.ShowFilteredBranches: ShowFilteredBranches_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowRemoteBranches: ShowRemoteBranches_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowFirstParent: ShowFirstParent_ToolStripMenuItemClick(null, null); break;
-                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(Module, CurrentCheckout)); break;
+                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(CurrentCheckout)); break;
                 case Commands.GoToCommit: _revisionGridMenuCommands.GotoCommitExcecute(); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
                 case Commands.GoToChild: goToChildToolStripMenuItem_Click(null, null); break;
@@ -3387,7 +3387,7 @@ namespace GitUI
             string revisionGuid = Module.RevParse(refName);
             if (!string.IsNullOrEmpty(revisionGuid))
             {
-                SetSelectedRevision(new GitRevision(Module, revisionGuid));
+                SetSelectedRevision(new GitRevision(revisionGuid));
             }
             else if (showNoRevisionMsg)
             {

@@ -354,7 +354,7 @@ namespace GitCommands
                     Debug.Assert(lines.Length == 11);
                     Debug.Assert(lines[0] == CommitBegin);
 
-                    _revision = new GitRevision(_module, null);
+                    _revision = new GitRevision(null);
 
                     _revision.Guid = lines[1];
                     {

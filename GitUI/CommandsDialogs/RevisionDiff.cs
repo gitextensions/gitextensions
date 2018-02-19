@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs
 
             if (items.Count() == 1)
             {
-                items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
+                items.Add(new GitRevision(DiffFiles.SelectedItemParent));
 
                 if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent)
                     && DiffFiles.SelectedItemParent == DiffFiles.CombinedDiff.Text)

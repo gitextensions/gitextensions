@@ -27,7 +27,7 @@ namespace GitCommandsTests.ExternalLinks
         {
             _linkDef = Parse(GetGithubIssuesXmlDef()).First();
 
-            _revision = new GitRevision(null, "");
+            _revision = new GitRevision("");
 
             _remoteManager = Substitute.For<IGitRemoteManager>();
             _remoteManager.LoadRemotes(false).Returns(GetDefaultRemotes());
