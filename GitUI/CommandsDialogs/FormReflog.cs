@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var form = new FormCreateBranch(UICommands, new GitCommands.GitRevision((GitCommands.GitModule)UICommands.GitModule, GetShaOfRefLine())))
+            using (var form = new FormCreateBranch(UICommands, new GitCommands.GitRevision(GetShaOfRefLine())))
             {
                 form.CheckoutAfterCreation = false;
                 form.UserAbleToChangeRevision = false;

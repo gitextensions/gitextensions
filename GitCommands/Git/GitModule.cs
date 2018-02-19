@@ -1154,7 +1154,7 @@ namespace GitCommands
             string cmd = "log -n1 --format=format:" + formatString + (shortFormat ? "%e%n%s" : messageFormat) + " " + commit;
             var revInfo = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
             string[] lines = revInfo.Split('\n');
-            var revision = new GitRevision(this, lines[0])
+            var revision = new GitRevision(lines[0])
             {
                 TreeGuid = lines[1],
                 ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
@@ -2697,7 +2697,7 @@ namespace GitCommands
             {
                 sortedList = list.OrderBy(head =>
                 {
-                    var r = new GitRevision(this, head.Guid);
+                    var r = new GitRevision(head.Guid);
                     return r.CommitDate;
                 }).ToList();
             }
@@ -2705,7 +2705,7 @@ namespace GitCommands
             {
                 sortedList = list.OrderByDescending(head =>
                 {
-                    var r = new GitRevision(this, head.Guid);
+                    var r = new GitRevision(head.Guid);
                     return r.CommitDate;
                 }).ToList();
             }

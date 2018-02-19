@@ -283,7 +283,7 @@ namespace GitUI.CommandsDialogs
             if (currentItem == null)
                 throw new InvalidOperationException("There are no current selected item.");
 
-            return new GitRevision(Module, currentItem.Hash);
+            return new GitRevision(currentItem.Hash);
         }
 
         /// <summary>

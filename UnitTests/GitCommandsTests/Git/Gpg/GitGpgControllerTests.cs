@@ -38,7 +38,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             _module().RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}").Returns(gitCmdReturn);
             
@@ -68,8 +68,8 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, "");
             
+            GitRevision revision = new GitRevision("");
             string gitRefCompleteName = "refs/tags/FirstTag^{}";
             
             for (int i = 0; i < numberOfTags; i++)
@@ -90,7 +90,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             GitRef gitRef = new GitRef(_module(), guid, "refs/tags/FirstTag^{}");
             revision.Refs.Add(gitRef);
@@ -108,7 +108,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             _module().RunGitCmd($"log --pretty=\"format:%GG\" -1 {guid}").Returns(returnString);
 
@@ -139,7 +139,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(null, guid);
+            GitRevision revision = new GitRevision(guid);
 
             GitRef gitRef;
             string gitRefCompleteName = "";
