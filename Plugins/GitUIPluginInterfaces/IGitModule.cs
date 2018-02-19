@@ -15,6 +15,7 @@ namespace GitUIPluginInterfaces
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
         IEnumerable<IGitItem> GetTree(string id, bool full);
+        Task<IEnumerable<IGitItem>> GetTreeAsync(string id, bool full);
 
         /// <summary>
         /// Removes the registered remote by running <c>git remote rm</c> command.

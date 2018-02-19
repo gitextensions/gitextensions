@@ -126,7 +126,7 @@ See the changes in the commit form.");
             findToolStripMenuItem_Click(null, null);
         }
 
-        public void LoadRevision(GitRevision revision)
+        public async void LoadRevision(GitRevision revision)
         {
             _revision = revision;
             _revisionFileTreeController.ResetCache();
@@ -152,7 +152,7 @@ See the changes in the commit form.");
                 //restore selected file and scroll position when new selection is done
                 if (_revision != null)
                 {
-                    _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
+                    await _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
                     //GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state

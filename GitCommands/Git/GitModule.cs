@@ -741,7 +741,8 @@ namespace GitCommands
             if (GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
                 return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
 
-            await GitCommandHelpers.RunCmdByteAsync(cmd, arguments, WorkingDir, null);
+            int exitCode;
+            (exitCode, cmdout, cmderr) = await GitCommandHelpers.RunCmdByteAsync(cmd, arguments, WorkingDir, null);
 
             GitCommandCache.Add(arguments, cmdout, cmderr);
 
@@ -3080,6 +3081,26 @@ namespace GitCommands
             else
             {
                 tree = this.RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+            }
+
+            return _gitTreeParser.Parse(tree);
+        }
+
+        public async Task<IEnumerable<IGitItem>> GetTreeAsync(string id, bool full)
+        {
+            string args = "-z";
+            if (full)
+                args += " -r";
+
+            string tree;
+
+            if (GitRevision.IsFullSha1Hash(id))
+            {
+                tree = await this.RunCacheableCmdAsync(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+            }
+            else
+            {
+                tree = await this.RunCmdAsync(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
             }
 
             return _gitTreeParser.Parse(tree);

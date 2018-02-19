@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
+using System.Threading.Tasks;
 
 namespace GitCommands
 {
@@ -14,7 +15,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="item"></param>
         /// <returns>The item's children.</returns>
-        IEnumerable<IGitItem> LoadChildren(IGitItem item);
+        Task<IEnumerable<IGitItem>> LoadChildren(IGitItem item);
     }
 
     public sealed class GitRevisionInfoProvider : IGitRevisionInfoProvider
@@ -33,7 +34,7 @@ namespace GitCommands
         /// <returns>The item's children.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="item"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><see cref="IGitItem.Guid"/> is not supplied.</exception>
-        public IEnumerable<IGitItem> LoadChildren(IGitItem item)
+        public async Task<IEnumerable<IGitItem>> LoadChildren(IGitItem item)
         {
             if (item == null)
             {
@@ -49,7 +50,7 @@ namespace GitCommands
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
 
-            var subItems = module.GetTree(item.Guid, false).ToList();
+            var subItems = (await module.GetTreeAsync(item.Guid, false)).ToList();
             foreach (var subItem in subItems.OfType<GitItem>())
             {
                 subItem.FileName = Path.Combine((item as GitItem)?.FileName ?? string.Empty, subItem.FileName ?? string.Empty);

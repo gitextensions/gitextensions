@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUIPluginInterfaces;
+using System.Threading.Tasks;
 
 namespace GitUI.CommandsDialogs
 {
@@ -28,7 +29,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="item"></param>
         /// <param name="nodes"></param>
         /// <param name="imageCollection"></param>
-        void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection);
+        Task LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection);
 
         /// <summary>
         /// Clears the cache of the current revision's loaded children items.
@@ -85,9 +86,9 @@ namespace GitUI.CommandsDialogs
         /// <param name="nodes"></param>
         /// <param name="imageCollection"></param>
         /// <remarks>The method DOES NOT check any input parameters for performance reasons.</remarks>
-        public void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
+        public async Task LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
-            var childrenItems = _cachedItems.GetOrAdd(item.Guid, _revisionInfoProvider.LoadChildren(item));
+            var childrenItems = _cachedItems.GetOrAdd(item.Guid, await _revisionInfoProvider.LoadChildren(item));
             if (childrenItems == null)
             {
                 return;
