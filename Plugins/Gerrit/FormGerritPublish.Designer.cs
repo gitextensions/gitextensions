@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGerritPublish));
             this.Publish = new System.Windows.Forms.Button();
             this.AddRemote = new System.Windows.Forms.Button();
@@ -39,6 +38,8 @@
             this.labelTopic = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Branch = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_Topic = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_Reviewers = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Publish
@@ -46,7 +47,7 @@
             this.Publish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Publish.Image = ((System.Drawing.Image)(resources.GetObject("Publish.Image")));
             this.Publish.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Publish.Location = new System.Drawing.Point(522, 127);
+            this.Publish.Location = new System.Drawing.Point(522, 142);
             this.Publish.Name = "Publish";
             this.Publish.Size = new System.Drawing.Size(101, 25);
             this.Publish.TabIndex = 9;
@@ -74,7 +75,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(101, 20);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(415, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(415, 21);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             // 
             // labelRemote
@@ -82,16 +83,16 @@
             this.labelRemote.AutoSize = true;
             this.labelRemote.Location = new System.Drawing.Point(13, 23);
             this.labelRemote.Name = "labelRemote";
-            this.labelRemote.Size = new System.Drawing.Size(51, 15);
+            this.labelRemote.Size = new System.Drawing.Size(48, 13);
             this.labelRemote.TabIndex = 0;
             this.labelRemote.Text = "Remote:";
             // 
             // PublishDraft
             // 
             this.PublishDraft.AutoSize = true;
-            this.PublishDraft.Location = new System.Drawing.Point(101, 107);
+            this.PublishDraft.Location = new System.Drawing.Point(101, 144);
             this.PublishDraft.Name = "PublishDraft";
-            this.PublishDraft.Size = new System.Drawing.Size(143, 19);
+            this.PublishDraft.Size = new System.Drawing.Size(134, 17);
             this.PublishDraft.TabIndex = 7;
             this.PublishDraft.Text = "Submit review as draft";
             this.PublishDraft.UseVisualStyleBackColor = true;
@@ -101,7 +102,7 @@
             this.labelBranch.AutoSize = true;
             this.labelBranch.Location = new System.Drawing.Point(13, 52);
             this.labelBranch.Name = "labelBranch";
-            this.labelBranch.Size = new System.Drawing.Size(47, 15);
+            this.labelBranch.Size = new System.Drawing.Size(44, 13);
             this.labelBranch.TabIndex = 3;
             this.labelBranch.Text = "Branch:";
             // 
@@ -110,7 +111,7 @@
             this.labelTopic.AutoSize = true;
             this.labelTopic.Location = new System.Drawing.Point(13, 81);
             this.labelTopic.Name = "labelTopic";
-            this.labelTopic.Size = new System.Drawing.Size(40, 15);
+            this.labelTopic.Size = new System.Drawing.Size(36, 13);
             this.labelTopic.TabIndex = 5;
             this.labelTopic.Text = "Topic:";
             // 
@@ -120,7 +121,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Branch.Location = new System.Drawing.Point(101, 49);
             this._NO_TRANSLATE_Branch.Name = "_NO_TRANSLATE_Branch";
-            this._NO_TRANSLATE_Branch.Size = new System.Drawing.Size(522, 23);
+            this._NO_TRANSLATE_Branch.Size = new System.Drawing.Size(522, 21);
             this._NO_TRANSLATE_Branch.TabIndex = 4;
             // 
             // _NO_TRANSLATE_Topic
@@ -129,15 +130,35 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Topic.Location = new System.Drawing.Point(101, 78);
             this._NO_TRANSLATE_Topic.Name = "_NO_TRANSLATE_Topic";
-            this._NO_TRANSLATE_Topic.Size = new System.Drawing.Size(522, 23);
+            this._NO_TRANSLATE_Topic.Size = new System.Drawing.Size(522, 21);
             this._NO_TRANSLATE_Topic.TabIndex = 6;
+            // 
+            // _NO_TRANSLATE_Reviewers
+            // 
+            this._NO_TRANSLATE_Reviewers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_Reviewers.Location = new System.Drawing.Point(101, 108);
+            this._NO_TRANSLATE_Reviewers.Name = "_NO_TRANSLATE_Reviewers";
+            this._NO_TRANSLATE_Reviewers.Size = new System.Drawing.Size(522, 21);
+            this._NO_TRANSLATE_Reviewers.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 111);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Reviewer(s):";
             // 
             // FormGerritPublish
             // 
             this.AcceptButton = this.Publish;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(644, 164);
+            this.ClientSize = new System.Drawing.Size(644, 173);
+            this.Controls.Add(this._NO_TRANSLATE_Reviewers);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this._NO_TRANSLATE_Topic);
             this.Controls.Add(this._NO_TRANSLATE_Branch);
             this.Controls.Add(this.labelTopic);
@@ -170,5 +191,7 @@
         private System.Windows.Forms.Label labelTopic;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Branch;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Topic;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_Reviewers;
+        private System.Windows.Forms.Label label1;
     }
 }
