@@ -3181,6 +3181,7 @@ namespace GitCommands
             return tree.Split(new char[] { '\0', '\n' });
         }
 
+        [Obsolete]
         public IEnumerable<IGitItem> GetTree(string id, bool full)
         {
             string args = "-z";

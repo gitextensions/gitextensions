@@ -14,6 +14,7 @@ namespace GitUIPluginInterfaces
         string AddRemote(string remoteName, string path);
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
+        [Obsolete]
         IEnumerable<IGitItem> GetTree(string id, bool full);
         Task<IEnumerable<IGitItem>> GetTreeAsync(string id, bool full);
 
@@ -40,6 +41,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        [Obsolete]
         string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
         Task<string> RunGitCmdAsync(string arguments, Encoding encoding = null, byte[] stdInput = null);
 
