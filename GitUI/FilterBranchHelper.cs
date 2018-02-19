@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -22,9 +23,9 @@ namespace GitUI
             this.localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            // 
+            //
             // localToolStripMenuItem
-            // 
+            //
             this.localToolStripMenuItem.Checked = true;
             this.localToolStripMenuItem.CheckOnClick = true;
             this.localToolStripMenuItem.Name = "localToolStripMenuItem";
@@ -37,11 +38,11 @@ namespace GitUI
             this.tagsToolStripMenuItem.Text = "Tag";
             //
             // remoteToolStripMenuItem
-            // 
+            //
             this.remoteToolStripMenuItem.CheckOnClick = true;
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.remoteToolStripMenuItem.Text = "Remote";        
+            this.remoteToolStripMenuItem.Text = "Remote";
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid revisionGrid)
@@ -59,7 +60,7 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
             this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
             this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;           
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
         }
 
         public void InitToolStripBranchFilter()
@@ -72,40 +73,41 @@ namespace GitUI
 
             if (Module.IsValidGitWorkingDir())
             {
-                AsyncLoader.DoAsync(() => GetBranchAndTagRefs(local, tag, remote),
-                    branches =>
-                    {
-                        foreach (var branch in branches)
-                            _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+                Task.Run(async () =>
+                {
+                    var branches = await GetBranchAndTagRefs(local, tag, remote);
 
-                        var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
-                        if (!autoCompleteList.SequenceEqual(branches))
-                        {
-                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
-                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
-                        }
-                    });
+                    foreach (var branch in branches)
+                        _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+
+                    var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+                    if (!autoCompleteList.SequenceEqual(branches))
+                    {
+                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+                    }
+                });
             }
 
             _NO_TRANSLATE_toolStripBranches.Enabled = Module.IsValidGitWorkingDir();
         }
 
-        private List<string> GetBranchHeads(bool local, bool remote)
+        private async Task<List<string>> GetBranchHeadsAsync(bool local, bool remote)
         {
             var list = new List<string>();
             if (local && remote)
             {
-                var branches = Module.GetRefs(true, true);
+                var branches = await Module.GetRefsAsync(true, true);
                 list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
             }
             else if (local)
             {
-                var branches = Module.GetRefs(false);
+                var branches = await Module.GetRefsAsync(false);
                 list.AddRange(branches.Select(branch => branch.Name));
             }
             else if (remote)
             {
-                var branches = Module.GetRefs(true, true);
+                var branches = await Module.GetRefsAsync(true, true);
                 list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
             return list;
@@ -116,17 +118,17 @@ namespace GitUI
             return Module.GetRefs(true, false).Select(tag => tag.Name);
         }
 
-        private List<string> GetBranchAndTagRefs(bool local, bool tag, bool remote)
+        private async Task<List<string>> GetBranchAndTagRefs(bool local, bool tag, bool remote)
         {
-            var list = GetBranchHeads(local, remote);
+            var list = await GetBranchHeadsAsync(local, remote);
             if (tag)
                 list.AddRange(GetTagsRefs());
             return list;
         }
 
-        private void toolStripBranches_TextUpdate(object sender, EventArgs e)
+        private async void toolStripBranches_TextUpdate(object sender, EventArgs e)
         {
-            UpdateBranchFilterItems();
+            await UpdateBranchFilterItemsAsync();
         }
 
         private void toolStripBranches_KeyUp(object sender, KeyEventArgs e)
@@ -137,9 +139,9 @@ namespace GitUI
             }
         }
 
-        private void toolStripBranches_DropDown(object sender, EventArgs e)
+        private async void toolStripBranches_DropDown(object sender, EventArgs e)
         {
-            UpdateBranchFilterItems();
+            await UpdateBranchFilterItemsAsync();
         }
 
         private void ApplyBranchFilter(bool refresh)
@@ -164,10 +166,10 @@ namespace GitUI
             }
         }
 
-        private void UpdateBranchFilterItems()
+        private async Task UpdateBranchFilterItemsAsync()
         {
             string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
-            var branches = GetBranchAndTagRefs(localToolStripMenuItem.Checked, tagsToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            var branches = await GetBranchAndTagRefs(localToolStripMenuItem.Checked, tagsToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             var matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
 
             var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;

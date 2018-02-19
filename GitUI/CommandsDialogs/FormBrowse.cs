@@ -878,7 +878,6 @@ namespace GitUI.CommandsDialogs
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
             {
-
                 if (_bisect == null)
                 {
                     _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
@@ -896,8 +895,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (validWorkingDir &&
-                (Module.InTheMiddleOfRebase() || Module.InTheMiddleOfPatch()))
+            if (validWorkingDir && (Module.InTheMiddleOfRebase() || Module.InTheMiddleOfPatch()))
             {
                 if (_rebase == null)
                 {
@@ -921,37 +919,44 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            AsyncLoader.DoAsync(
-                () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                      !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
-                (result) =>
-                {
-                    if (result)
-                    {
-                        if (_warning == null)
-                        {
-                            _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                            _warning.Click += WarningClick;
-                            statusStrip.Items.Add(_warning);
-                        }
-                    }
-                    else
-                    {
-                        if (_warning != null)
-                        {
-                            _warning.Click -= WarningClick;
-                            statusStrip.Items.Remove(_warning);
-                            _warning = null;
-                        }
-                    }
+            Task.Run(async () =>
+            {
+                var hasUnresolvedMergeConflict
+                    = validWorkingDir &&
+                      await Module.InTheMiddleOfConflictedMergeAsync() &&
+                      !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\");
 
-                    //Only show status strip when there are status items on it.
-                    //There is always a close (x) button, do not count first item.
-                    if (statusStrip.Items.Count > 1)
-                        statusStrip.Show();
-                    else
-                        statusStrip.Hide();
-                });
+                if (hasUnresolvedMergeConflict)
+                {
+                    if (_warning == null)
+                    {
+                        _warning = new WarningToolStripItem {Text = _hintUnresolvedMergeConflicts.Text};
+                        _warning.Click += WarningClick;
+                        statusStrip.Items.Add(_warning);
+                    }
+                }
+                else
+                {
+                    if (_warning != null)
+                    {
+                        _warning.Click -= WarningClick;
+                        statusStrip.Items.Remove(_warning);
+                        _warning = null;
+                    }
+                }
+
+                //Only show status strip when there are status items on it.
+                //There is always a close (x) button, do not count first item.
+                if (statusStrip.Items.Count > 1)
+                    statusStrip.Show();
+                else
+                    statusStrip.Hide();
+
+                void WarningClick(object sender, EventArgs e)
+                {
+                    UICommands.StartResolveConflictsDialog(this);
+                }
+            });
         }
 
         private void RebaseClick(object sender, EventArgs e)
@@ -979,10 +984,10 @@ namespace GitUI.CommandsDialogs
         private void FillFileTree()
         {
             if (CommitInfoTabControl.SelectedTab != TreeTabPage || _selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
-            {
                 return;
-            }
+
             _selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
+
             fileTree.LoadRevision(RevisionGrid.GetSelectedRevisions().FirstOrDefault());
         }
 
@@ -991,9 +996,7 @@ namespace GitUI.CommandsDialogs
             DiffTabPage.Text = _diffTabPageTitleBase;
 
             if (CommitInfoTabControl.SelectedTab != DiffTabPage)
-            {
                 return;
-            }
 
             if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.DiffList))
                 return;
@@ -1046,18 +1049,11 @@ namespace GitUI.CommandsDialogs
         private async void FillGpgInfo()
         {
             if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
-            {
                 return;
-            }
 
-            var revisions = RevisionGrid.GetSelectedRevisions();
-            var revision = revisions.FirstOrDefault();
-            if (revision == null)
-            {
-                return;
-            }
-            var info = await _controller.LoadGpgInfoAsync(revision);
-            revisionGpgInfo1.DisplayGpgInfo(info);
+            var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
+            if (revision != null)
+                revisionGpgInfo1.DisplayGpgInfo(await _controller.LoadGpgInfoAsync(revision));
         }
 
         private void FillBuildReport()
@@ -1100,21 +1096,25 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private async Task RevisionGridSelectionChangedAsync(object sender, EventArgs e)
+        private Task RevisionGridSelectionChangedAsync(object sender, EventArgs e)
         {
             try
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
+                // TODO when these are all async, run them all concurrently
+                var commitInfoTask = FillCommitInfoAsync();
                 FillFileTree();
                 FillDiff();
-                await FillCommitInfoAsync();
                 FillGpgInfo();
                 FillBuildReport();
+
+                return commitInfoTask;
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
+                return Task.FromResult((byte)0);
             }
         }
 
@@ -1243,11 +1243,6 @@ namespace GitUI.CommandsDialogs
         }
 
         private void RunMergetoolToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartResolveConflictsDialog(this);
-        }
-
-        private void WarningClick(object sender, EventArgs e)
         {
             UICommands.StartResolveConflictsDialog(this);
         }
@@ -2054,7 +2049,7 @@ namespace GitUI.CommandsDialogs
             this.runMergetoolToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
-            this.toolStripMenuItemReflog.Enabled = 
+            this.toolStripMenuItemReflog.Enabled =
             this.bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
@@ -2387,7 +2382,7 @@ namespace GitUI.CommandsDialogs
 
         private static void GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 var submodule = new GitModule(info.Path);
                 var supermodule = submodule.SuperprojectModule;
@@ -2398,7 +2393,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(submoduleName) || supermodule == null)
                     return;
 
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
+                var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(supermodule, submoduleName);
                 if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
                     submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));

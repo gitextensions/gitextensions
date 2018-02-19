@@ -631,18 +631,20 @@ See the changes in the commit form.");
 
         private void assumeUnchangedToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var itemStatus = new GitItemStatus
+            {
+                Name = GetSelectedFile()
+            };
 
-            bool wereErrors;
-            var itemStatus = new GitItemStatus();
-            itemStatus.Name = GetSelectedFile();
             if (itemStatus.Name == null)
                 return;
+
             var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (answer == DialogResult.No)
                 return;
 
-            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out wereErrors);
+            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out var wereErrors);
 
             if (wereErrors)
             {

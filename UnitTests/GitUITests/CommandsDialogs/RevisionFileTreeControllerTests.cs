@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
@@ -42,25 +43,25 @@ namespace GitUITests.CommandsDialogs
 
 
         [Test]
-        public void LoadItemsInTreeView_should_not_add_nods_if_no_children()
+        public async Task LoadItemsInTreeView_should_not_add_nods_if_no_children()
         {
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(x =>null);
+            _revisionInfoProvider.LoadChildren(item).Returns(x => (IEnumerable<IGitItem>)null);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(0);
             _imageList.Images.Count.Should().Be(0);
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_all_none_GitItem_items_with_1st_level_nodes()
+        public async Task LoadItemsInTreeView_should_add_all_none_GitItem_items_with_1st_level_nodes()
         {
             var items = new IGitItem[] { new MockGitItem("file1"), new MockGitItem("file2") };
             var item = new MockGitItem("folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -74,13 +75,13 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_IsTree_as_folders()
+        public async Task LoadItemsInTreeView_should_add_IsTree_as_folders()
         {
             var items = new[] { CreateGitItem("file1", true, false, false), CreateGitItem("file2", true, false, false) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -94,13 +95,13 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_IsCommit_as_submodue()
+        public async Task LoadItemsInTreeView_should_add_IsCommit_as_submodule()
         {
             var items = new[] { CreateGitItem("file1", false, true, false), CreateGitItem("file2", false, true, false) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -114,13 +115,13 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_IsBlob_as_file()
+        public async Task LoadItemsInTreeView_should_add_IsBlob_as_file()
         {
             var items = new[] { CreateGitItem("file1", false, false, true), CreateGitItem("file2", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -131,13 +132,13 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_not_load_icons_for_file_without_extension()
+        public async Task LoadItemsInTreeView_should_not_load_icons_for_file_without_extension()
         {
             var items = new[] { CreateGitItem("file1.", false, false, true), CreateGitItem("file2", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -152,13 +153,13 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_not_add_icons_for_file_if_none_provided()
+        public async Task LoadItemsInTreeView_should_not_add_icons_for_file_if_none_provided()
         {
             var items = new[] { CreateGitItem("file1.foo", false, false, true), CreateGitItem("file2.txt", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -173,7 +174,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_icon_for_file_extension_only_once()
+        public async Task LoadItemsInTreeView_should_add_icon_for_file_extension_only_once()
         {
             var items = new[] { CreateGitItem("file1.txt", false, false, true), CreateGitItem("file2.txt", false, false, true) };
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
@@ -181,7 +182,7 @@ namespace GitUITests.CommandsDialogs
             var image = Resources.cow_head;
             _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(image);
 
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+            await _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 
             _rootNode.Nodes.Count.Should().Be(items.Length);
             for (int i = 0; i < items.Length - 1; i++)
@@ -196,10 +197,9 @@ namespace GitUITests.CommandsDialogs
         }
 
 
-        private IGitItem CreateGitItem(string name, bool isTree, bool isCommit, bool isBlol)
+        private IGitItem CreateGitItem(string name, bool isTree, bool isCommit, bool isBlob)
         {
-            var item = new GitItem("", isTree ? "tree" : isBlol ? "blob" : isCommit ? "commit" : "", "", name);
-            return item;
+            return new GitItem("", isTree ? "tree" : isBlob ? "blob" : isCommit ? "commit" : "", "", name);
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]

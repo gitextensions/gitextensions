@@ -202,7 +202,7 @@ namespace GitUI.CommitInfo
             ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
 
             if (_sortedRefs == null)
-                ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
+                Task.Run(LoadSortedRefsAsync);
 
             data.ChildrenGuids = _children;
             var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
@@ -220,13 +220,13 @@ namespace GitUI.CommitInfo
                 return;
 
             if (AppSettings.CommitInfoShowContainedInBranches)
-                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
+                Task.Run(() => LoadBranchInfoAsync(_revision.Guid));
 
             if (AppSettings.ShowAnnotatedTagsMessages)
-                ThreadPool.QueueUserWorkItem(_ => loadAnnotatedTagInfo(_revision));
+                Task.Run(() => LoadAnnotatedTagInfoAsync(_revision));
 
             if (AppSettings.CommitInfoShowContainedInTags)
-                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
+                Task.Run(() => LoadTagInfoAsync(_revision.Guid));
         }
 
         private int GetRevisionHeaderHeight()
@@ -268,7 +268,9 @@ namespace GitUI.CommitInfo
             ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
 
             if (_sortedRefs == null)
-                ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
+                #pragma warning disable 4014
+                Task.Run(() => LoadSortedRefsAsync());
+                #pragma warning restore 4014
 
             var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
             var body = _commitDataBodyRenderer.Render(data, CommandClick != null);
@@ -284,82 +286,96 @@ namespace GitUI.CommitInfo
             if (GitRevision.IsArtificial(_revision.Guid))
                 return;
 
+            #pragma warning disable 4014
+
             if (AppSettings.CommitInfoShowContainedInBranches)
-                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
+                Task.Run(() => LoadBranchInfoAsync(_revision.Guid));
 
             if (AppSettings.ShowAnnotatedTagsMessages)
-                ThreadPool.QueueUserWorkItem(_ => loadAnnotatedTagInfo(_revision));
+                Task.Run(() => LoadAnnotatedTagInfoAsync(_revision));
 
             if (AppSettings.CommitInfoShowContainedInTags)
-                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
+                Task.Run(() => LoadTagInfoAsync(_revision.Guid));
+
+            #pragma warning restore 4014
         }
 
-        private void loadSortedRefs()
+        private async Task LoadSortedRefsAsync()
         {
-            _sortedRefs = Module.GetSortedRefs();
+            _sortedRefs = await Module.GetSortedRefsAsync();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 
-        private void loadAnnotatedTagInfo(GitRevision revision)
+        private async Task LoadAnnotatedTagInfoAsync(GitRevision revision)
         {
-            _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
+            _annotatedTagsMessages = await GetAnnotatedTagsMessages();
             this.InvokeAsync(UpdateRevisionInfo);
-        }
 
-        private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
-        {
-            if (revision == null)
-                return null;
-
-            IDictionary<string, string> result = new Dictionary<string, string>();
-
-            foreach (GitRef gitRef in revision.Refs)
+            async Task<IDictionary<string, string>> GetAnnotatedTagsMessages()
             {
-                #region Note on annotated tags
-                // Notice that for the annotated tags, gitRef's come in pairs because they're produced
-                // by the "show-ref --dereference" command. GitRef's in such pair have the same Name,
-                // a bit different CompleteName's, and completely different checksums:
-                //      GitRef_1:
-                //      {
-                //          Name: "some_tag"
-                //          CompleteName: "refs/tags/some_tag"
-                //          Guid: <some_tag_checksum>
-                //      },
-                //
-                //      GitRef_2:
-                //      {
-                //          Name: "some_tag"
-                //          CompleteName: "refs/tags/some_tag^{}"   <- by "^{}", IsDereference is true.
-                //          Guid: <target_object_checksum>
-                //      }
-                //
-                // The 2nd one is a dereference: a link between the tag and the object which it references.
-                // GitRevions.Refs by design contains GitRef's where Guid's are equal to the GitRevision.Guid,
-                // so this collection contains only derefencing GitRef's - just because GitRef_2 has the same
-                // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
-                // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
-                #endregion
+                if (revision == null)
+                    return null;
 
-                if (gitRef.IsTag && gitRef.IsDereference)
+                var items = revision.Refs
+                    .Select(r => new
+                    {
+                        r.IsTag,
+                        r.IsDereference,
+                        r.LocalName,
+                        TagMessageTask = Module.GetTagMessageAsync(r.LocalName)
+                    })
+                    .ToList();
+
+                var result = new Dictionary<string, string>();
+
+                foreach (var item in items)
                 {
-                    string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
+                    #region Note on annotated tags
+                    // Notice that for the annotated tags, gitRef's come in pairs because they're produced
+                    // by the "show-ref --dereference" command. GitRef's in such pair have the same Name,
+                    // a bit different CompleteName's, and completely different checksums:
+                    //      GitRef_1:
+                    //      {
+                    //          Name: "some_tag"
+                    //          CompleteName: "refs/tags/some_tag"
+                    //          Guid: <some_tag_checksum>
+                    //      },
+                    //
+                    //      GitRef_2:
+                    //      {
+                    //          Name: "some_tag"
+                    //          CompleteName: "refs/tags/some_tag^{}"   <- by "^{}", IsDereference is true.
+                    //          Guid: <target_object_checksum>
+                    //      }
+                    //
+                    // The 2nd one is a dereference: a link between the tag and the object which it references.
+                    // GitRevions.Refs by design contains GitRef's where Guid's are equal to the GitRevision.Guid,
+                    // so this collection contains only derefencing GitRef's - just because GitRef_2 has the same
+                    // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
+                    // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
+                    #endregion
 
-                    if (content != null)
-                        result.Add(gitRef.LocalName, content);
+                    if (item.IsTag && item.IsDereference)
+                    {
+                        // TODO do these in parallel
+                        string content = WebUtility.HtmlEncode(await item.TagMessageTask);
+
+                        if (content != null)
+                            result.Add(item.LocalName, content);
+                    }
                 }
-            }
 
-            return result;
+                return result;
+            }
         }
 
-        private void loadTagInfo(string revision)
+        private async Task LoadTagInfoAsync(string revision)
         {
-            _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
+            _tags = (await Module.GetAllTagsWhichContainGivenCommitAsync(revision)).ToList();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 
-
-        private void loadBranchInfo(string revision)
+        private async Task LoadBranchInfoAsync(string revision)
         {
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
             bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
@@ -367,7 +383,7 @@ namespace GitUI.CommitInfo
             // Include remote branches if requested
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
+            _branches = (await Module.GetAllBranchesWhichContainGivenCommitAsync(revision, getLocal, getRemote)).ToList();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 

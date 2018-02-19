@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -20,14 +21,12 @@ using SmartFormat;
 
 namespace GitCommands
 {
+    // TODO replace all uses of EffectiveConfigFile.Result with awaits
+
     public class GitModuleEventArgs : EventArgs
     {
-        public GitModuleEventArgs(GitModule gitModule)
-        {
-            GitModule = gitModule;
-        }
-
-        public GitModule GitModule { get; private set; }
+        public GitModuleEventArgs(GitModule gitModule) => GitModule = gitModule;
+        public GitModule GitModule { get; }
     }
 
     public enum SubmoduleStatus
@@ -105,6 +104,25 @@ namespace GitCommands
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
+
+            _gitCommonDirectoryTcs = new TaskCompletionSource<string>();
+
+            Task.Run(async () =>
+            {
+                // Returns git common directory
+                // https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
+                var commDir = await RunGitCmdResultAsync("rev-parse --git-common-dir");
+                var dir = commDir.StdOutput.Trim().ToNativePath();
+                if (!commDir.ExitedSuccessfully || dir == ".git" || !Directory.Exists(dir))
+                    dir = GetGitDirectory();
+                _gitCommonDirectoryTcs.SetResult(dir);
+            });
+
+            EffectiveConfigFileTask = Task.Run(() => ConfigFileSettings.CreateEffectiveAsync(this));
+
+            FilesEncodingTask = new Lazy<Task<Encoding>>(
+                async () => (await EffectiveConfigFileTask).FilesEncoding ?? new UTF8Encoding(false),
+                LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         #region IGitCommands
@@ -226,20 +244,20 @@ namespace GitCommands
             return EffectiveSettings;
         }
 
-        private RepoDistSettings _distributedSettings;
-        public RepoDistSettings DistributedSettings
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    if (_distributedSettings == null)
-                        _distributedSettings = new RepoDistSettings(null, EffectiveSettings.LowerPriority.SettingsCache);
-                }
-
-                return _distributedSettings;
-            }
-        }
+//        private RepoDistSettings _distributedSettings;
+//        public RepoDistSettings DistributedSettings
+//        {
+//            get
+//            {
+//                lock (_lock)
+//                {
+//                    if (_distributedSettings == null)
+//                        _distributedSettings = new RepoDistSettings(null, EffectiveSettings.LowerPriority.SettingsCache);
+//                }
+//
+//                return _distributedSettings;
+//            }
+//        }
 
         private RepoDistSettings _localSettings;
         public RepoDistSettings LocalSettings
@@ -256,7 +274,9 @@ namespace GitCommands
             }
         }
 
+        public readonly Task<ConfigFileSettings> EffectiveConfigFileTask;
         private ConfigFileSettings _effectiveConfigFile;
+        [Obsolete]
         public ConfigFileSettings EffectiveConfigFile
         {
             get
@@ -349,16 +369,8 @@ namespace GitCommands
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
 
-        public Encoding FilesEncoding
-        {
-            get
-            {
-                Encoding result = EffectiveConfigFile.FilesEncoding;
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
+        public Encoding FilesEncoding => EffectiveConfigFile.FilesEncoding ?? new UTF8Encoding(false);
+        public readonly Lazy<Task<Encoding>> FilesEncodingTask;
 
         public Encoding CommitEncoding
         {
@@ -465,6 +477,8 @@ namespace GitCommands
         }
 
         private string _GitCommonDirectory;
+        private readonly TaskCompletionSource<string> _gitCommonDirectoryTcs;
+
         /// <summary>
         /// Returns git common directory
         /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
@@ -487,24 +501,8 @@ namespace GitCommands
                 return _GitCommonDirectory;
             }
         }
-        /// <summary>
-        /// Returns git common directory
-        /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
-        /// </summary>
-        public async Task<string> GetGitCommonDirectoryAsync()
-        {
-            if (_GitCommonDirectory == null)
-            {
-                var commDir = await RunGitCmdResultAsync("rev-parse --git-common-dir");
-                _GitCommonDirectory = commDir.StdOutput.Trim().ToNativePath();
-                if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !Directory.Exists(_GitCommonDirectory))
-                {
-                    _GitCommonDirectory = GetGitDirectory();
-                }
-            }
 
-            return _GitCommonDirectory;
-        }
+        public Task<string> GitCommonDirectoryTask => _gitCommonDirectoryTcs.Task;
 
         /// <summary>Gets the ".git" directory path.</summary>
         private string GetGitDirectory()
@@ -892,6 +890,11 @@ namespace GitCommands
             return !string.IsNullOrEmpty(RunGitCmd("ls-files -z --unmerged"));
         }
 
+        public async Task<bool> InTheMiddleOfConflictedMergeAsync()
+        {
+            return !string.IsNullOrEmpty(await RunGitCmdAsync("ls-files -z --unmerged"));
+        }
+
         public bool HandleConflictSelectSide(string fileName, string side)
         {
             Directory.SetCurrentDirectory(_workingDir);
@@ -1091,11 +1094,11 @@ namespace GitCommands
             return list;
         }
 
-        public IList<string> GetSortedRefs()
+        public async Task<IList<string>> GetSortedRefsAsync()
         {
             string command = "for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/";
 
-            var tree = RunGitCmd(command, SystemEncoding);
+            var tree = await RunGitCmdAsync(command, SystemEncoding);
 
             return tree.Split();
         }
@@ -1689,7 +1692,7 @@ namespace GitCommands
             {
                 revision = "";
             }
-            else 
+            else
             {
                 revision = revision.QuoteNE();
             }
@@ -2249,7 +2252,7 @@ namespace GitCommands
             {
                 author = author.Trim().Trim('"');
                 command += " --author=\"" + author + "\"";
-            }                
+            }
 
             if (gpgSign)
             {
@@ -2319,9 +2322,21 @@ namespace GitCommands
         /// </summary>
         /// <param name="allowEmpty"></param>
         /// <returns>Registered remotes.</returns>
+        [Obsolete]
         public string[] GetRemotes(bool allowEmpty)
         {
             string remotes = RunGitCmd("remote show");
+            return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
+        /// Retrieves registered remotes by running <c>git remote show</c> command.
+        /// </summary>
+        /// <param name="allowEmpty"></param>
+        /// <returns>Registered remotes.</returns>
+        public async Task<string[]> GetRemotesAsync(bool allowEmpty)
+        {
+            string remotes = await RunGitCmdAsync("remote show");
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -2831,6 +2846,12 @@ namespace GitCommands
             return GetTreeRefs(tree);
         }
 
+        public async Task<IList<IGitRef>> GetRefsAsync(bool tags = true, bool branches = true)
+        {
+            var tree = await GetTreeAsync(tags, branches);
+            return await GetTreeRefsAsync(tree);
+        }
+
         /// <summary>
         ///
         /// </summary>
@@ -2902,6 +2923,7 @@ namespace GitCommands
                 .Where(b => !string.IsNullOrEmpty(GitCommandHelpers.GetRemoteName(b, remotes))).ToList();
         }
 
+        [Obsolete]
         private string GetTree(bool tags, bool branches)
         {
             if (tags && branches)
@@ -2915,6 +2937,21 @@ namespace GitCommands
             return "";
         }
 
+        private Task<string> GetTreeAsync(bool tags, bool branches)
+        {
+            if (tags && branches)
+                return RunGitCmdAsync("show-ref --dereference", SystemEncoding);
+
+            if (tags)
+                return RunGitCmdAsync("show-ref --tags", SystemEncoding);
+
+            if (branches)
+                return RunGitCmdAsync(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
+
+            return Task.FromResult("");
+        }
+
+        [Obsolete]
         public IList<IGitRef> GetTreeRefs(string tree)
         {
             var itemsStrings = tree.Split('\n');
@@ -2922,6 +2959,44 @@ namespace GitCommands
             var gitRefs = new List<IGitRef>();
             var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
             var remotes = GetRemotes(false);
+
+            foreach (var itemsString in itemsStrings)
+            {
+                if (itemsString == null || itemsString.Length <= 42 || itemsString.StartsWith("error: "))
+                    continue;
+
+                var completeName = itemsString.Substring(41).Trim();
+                var guid = itemsString.Substring(0, 40);
+                if (GitRevision.IsFullSha1Hash(guid) && completeName.StartsWith("refs/"))
+                {
+                    var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
+                    var head = new GitRef(this, guid, completeName, remoteName);
+                    if (DefaultHeadPattern.IsMatch(completeName))
+                        defaultHeads[remoteName] = head;
+                    else
+                        gitRefs.Add(head);
+                }
+            }
+
+            // do not show default head if remote has a branch on the same commit
+            GitRef defaultHead;
+            foreach (var gitRef in gitRefs.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
+            {
+                defaultHeads.Remove(gitRef.Remote);
+            }
+
+            gitRefs.AddRange(defaultHeads.Values);
+
+            return gitRefs;
+        }
+
+        public async Task<IList<IGitRef>> GetTreeRefsAsync(string tree)
+        {
+            var itemsStrings = tree.Split('\n');
+
+            var gitRefs = new List<IGitRef>();
+            var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
+            var remotes = await GetRemotesAsync(false);
 
             foreach (var itemsString in itemsStrings)
             {
@@ -2962,6 +3037,7 @@ namespace GitCommands
         /// <param name="getLocal">Pass true to include local branches</param>
         /// <param name="getRemote">Pass true to include remote branches</param>
         /// <returns></returns>
+        [Obsolete]
         public IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote)
         {
             string args = "--contains " + sha1;
@@ -2993,15 +3069,54 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Gets branches which contain the given commit.
+        /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
+        /// (as returned by git branch -a)
+        /// </summary>
+        /// <param name="sha1">The sha1.</param>
+        /// <param name="getLocal">Pass true to include local branches</param>
+        /// <param name="getRemote">Pass true to include remote branches</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<string>> GetAllBranchesWhichContainGivenCommitAsync(string sha1, bool getLocal, bool getRemote)
+        {
+            string args = "--contains " + sha1;
+            if (getRemote && getLocal)
+                args = "-a " + args;
+            else if (getRemote)
+                args = "-r " + args;
+            else if (!getLocal)
+                return new string[] { };
+            string info = await RunGitCmdAsync("branch " + args);
+            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+                return new List<string>();
+
+            string[] result = info.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Remove symlink targets as in "origin/HEAD -> origin/master"
+            for (int i = 0; i < result.Length; i++)
+            {
+                string item = result[i].Trim();
+                int idx;
+                if (getRemote && ((idx = item.IndexOf(" ->")) >= 0))
+                {
+                    item = item.Substring(0, idx);
+                }
+                result[i] = item;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets all tags which contain the given commit.
         /// </summary>
         /// <param name="sha1">The sha1.</param>
         /// <returns></returns>
-        public IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
+        public async Task<IEnumerable<string>> GetAllTagsWhichContainGivenCommitAsync(string sha1)
         {
-            string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
+            string info = (await RunGitCmdAsync("tag --contains " + sha1, SystemEncoding)).Trim();
 
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+            if (info.StartsWith("fatal") || info.StartsWith("error:"))
                 return new List<string>();
             return info.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
@@ -3010,14 +3125,14 @@ namespace GitCommands
         /// Returns tag's message. If the lightweight tag is passed, corresponding commit message
         /// is returned.
         /// </summary>
-        public string GetTagMessage(string tag)
+        public async Task<string> GetTagMessageAsync(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
                 return null;
 
             tag = tag.Trim();
 
-            string info = RunGitCmd("tag -l -n10 " + tag, SystemEncoding);
+            string info = await RunGitCmdAsync("tag -l -n10 " + tag, SystemEncoding);
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return null;

@@ -22,10 +22,17 @@ namespace GitCommands
             stdErrReadTask = Task.Run(async () => Error = await process.StandardError.BaseStream.ReadToEndAsync());
         }
 
+        [Obsolete]
         public void WaitForExit()
         {
             stdOutReadTask.Wait();
             stdErrReadTask.Wait();
+            Process.WaitForExit();
+        }
+
+        public async Task WaitForExitAsync()
+        {
+            await Task.WhenAll(stdOutReadTask, stdErrReadTask);
             Process.WaitForExit();
         }
 
@@ -49,6 +56,7 @@ namespace GitCommands
         /// <para />
         /// If raw byte streams are required, use <see cref="ReadBytes"/> instead.
         /// </remarks>
+        [Obsolete]
         public static void Read(Process process, out string stdOutput, out string stdError)
         {
             var stdOutTask = Task.Run(async () => await process.StandardOutput.ReadToEndAsync());
@@ -108,11 +116,9 @@ namespace GitCommands
         public static async Task<byte[]> ReadToEndAsync(this Stream stream)
         {
             if (!stream.CanRead)
-            {
                 return null;
-            }
 
-            using (MemoryStream memStream = new MemoryStream())
+            using (var memStream = new MemoryStream())
             {
                 await stream.CopyToAsync(memStream);
                 return memStream.ToArray();

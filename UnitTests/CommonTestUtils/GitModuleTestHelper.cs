@@ -41,7 +41,7 @@ namespace CommonTestUtils
 
 
         /// <summary>
-        /// Creates a new file, writes the specified string to the file, and then closes the file. 
+        /// Creates a new file, writes the specified string to the file, and then closes the file.
         /// If the target file already exists, it is overwritten.
         /// </summary>
         /// <returns>The path to the newly created file.</returns>
@@ -60,8 +60,8 @@ namespace CommonTestUtils
         }
 
         /// <summary>
-        /// Creates a new file under the working folder to the specified directory, 
-        /// writes the specified string to the file and then closes the file. 
+        /// Creates a new file under the working folder to the specified directory,
+        /// writes the specified string to the file and then closes the file.
         /// If the target file already exists, it is overwritten.
         /// </summary>
         /// <returns>The path to the newly created file.</returns>
@@ -79,8 +79,8 @@ namespace CommonTestUtils
         }
 
         /// <summary>
-        /// Creates a new file to the root of the working folder, 
-        /// writes the specified string to the file and then closes the file. 
+        /// Creates a new file to the root of the working folder,
+        /// writes the specified string to the file and then closes the file.
         /// If the target file already exists, it is overwritten.
         /// </summary>
         /// <returns>The path to the newly created file.</returns>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using GitCommands;
 using GitUIPluginInterfaces;
 
@@ -264,50 +265,48 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _commandIsRunning = true;
                 _statusIsUpToDate = true;
                 _previousUpdateTime = Environment.TickCount;
-                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        _ignoredFilesPending = _ignoredFilesAreStale;
+                        //git-status with ignored files when needed only
+                        string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default);
+                        var status = await Module.RunGitCmdAsync(command);
+
+                        //Adjust the interval between updates. (This does not affect an update already scheculed).
+                        _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
+                        _commandIsRunning = false;
+
+                        if (CurrentStatus != GitStatusMonitorState.Running)
+                            return;
+
+                        var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, status);
+                        OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
+
+                        if (_ignoredFilesPending)
+                        {
+                            _ignoredFilesPending = false;
+                            _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name).ToArray());
+                            if (_statusIsUpToDate)
+                                _ignoredFilesAreStale = false;
+                        }
+
+                        if (!_statusIsUpToDate)
+                        {
+                            //Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
+                            CalculateNextUpdateTime(UpdateDelay);
+                        }
+                    }
+                    catch
+                    {
+                        _commandIsRunning = false;
+                        CurrentStatus = GitStatusMonitorState.Stopped;
+                    }
+                });
+//                AsyncLoader.DoAsync(RunStatusCommandAsync, UpdatedStatusReceived, OnUpdateStatusError);
                 // Schedule update every 5 min, even if we don't know that anything changed
                 CalculateNextUpdateTime(MaxUpdatePeriod);
-            }
-        }
-
-        private string RunStatusCommand()
-        {
-            _ignoredFilesPending = _ignoredFilesAreStale;
-            //git-status with ignored files when needed only
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default);
-            return Module.RunGitCmd(command);
-        }
-
-        private void OnUpdateStatusError(AsyncErrorEventArgs e)
-        {
-            _commandIsRunning = false;
-            CurrentStatus = GitStatusMonitorState.Stopped;
-        }
-
-        private void UpdatedStatusReceived(string updatedStatus)
-        {
-            //Adjust the interval between updates. (This does not affect an update already scheculed).
-            _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
-            _commandIsRunning = false;
-
-            if (CurrentStatus != GitStatusMonitorState.Running)
-                return;
-
-            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
-            OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
-            if (_ignoredFilesPending)
-            {
-                _ignoredFilesPending = false;
-                _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name).ToArray());
-                if (_statusIsUpToDate)
-                {
-                    _ignoredFilesAreStale = false;
-                }
-            }
-            if (!_statusIsUpToDate)
-            {
-                //Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
-                CalculateNextUpdateTime(UpdateDelay);
             }
         }
 

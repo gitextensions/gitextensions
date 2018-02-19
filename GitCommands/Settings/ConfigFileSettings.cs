@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
@@ -10,6 +11,9 @@ namespace GitCommands.Settings
 {
     public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
     {
+        public readonly CorePath core;
+        public readonly MergeToolPath mergetool;
+
         public ConfigFileSettings(ConfigFileSettings aLowerPriority, ConfigFileSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
@@ -22,11 +26,24 @@ namespace GitCommands.Settings
             return CreateLocal(aModule, CreateGlobal(CreateSystemWide()));
         }
 
-        public static ConfigFileSettings CreateLocal(GitModule aModule, bool allowCache = true)
+        public static Task<ConfigFileSettings> CreateEffectiveAsync(GitModule aModule)
         {
-            return CreateLocal(aModule, null, allowCache);
+            return CreateLocalAsync(aModule, CreateGlobal(CreateSystemWide()));
         }
 
+        public static ConfigFileSettings CreateLocal(GitModule aModule, bool allowCache = true)
+        {
+            return CreateLocalAsync(aModule, null, allowCache).Result;
+        }
+
+        private static async Task<ConfigFileSettings> CreateLocalAsync(GitModule aModule, ConfigFileSettings aLowerPriority, bool allowCache = true)
+        {
+            return new ConfigFileSettings(
+                aLowerPriority,
+                ConfigFileSettingsCache.Create(Path.Combine(await aModule.GitCommonDirectoryTask, "config"), true, allowCache));
+        }
+
+        [Obsolete]
         private static ConfigFileSettings CreateLocal(GitModule aModule, ConfigFileSettings aLowerPriority, bool allowCache = true)
         {
             return new ConfigFileSettings(aLowerPriority,
@@ -63,10 +80,6 @@ namespace GitCommands.Settings
             return new ConfigFileSettings(null,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
         }
-
-
-        public readonly CorePath core;
-        public readonly MergeToolPath mergetool;
 
         public string GetValue(string setting)
         {

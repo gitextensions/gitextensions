@@ -41,15 +41,16 @@ namespace GitUIPluginInterfaces
         /// Saves value from Control to settings
         /// </summary>
         /// <param name="settings"></param>
+        /// <param name="areSettingsEffective"></param>
         void SaveSetting(ISettingsSource settings, bool areSettingsEffective);
 
         /// <summary>
-        /// returns caption assotiated with this control or null if the control layouts
+        /// returns caption associated with this control or null if the control layouts
         /// the caption by itself
         /// </summary>
         string Caption();
 
-        ISetting GetSetting();        
+        ISetting GetSetting();
     }
 
     public abstract class SettingControlBinding<S, T> : ISettingControlBinding where T : Control where S : ISetting
@@ -88,6 +89,7 @@ namespace GitUIPluginInterfaces
         /// Saves value from Control to settings
         /// </summary>
         /// <param name="settings"></param>
+        /// <param name="areSettingsEffective"></param>
         public void SaveSetting(ISettingsSource settings, bool areSettingsEffective)
         {
             SaveSetting(settings, areSettingsEffective, Control);

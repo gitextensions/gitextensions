@@ -944,6 +944,7 @@ namespace GitCommands
         }
 
         [CanBeNull]
+        [Obsolete]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
             PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
@@ -952,9 +953,24 @@ namespace GitCommands
         }
 
         [CanBeNull]
+        public static async Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string fileName, string oldFileName, bool staged)
+        {
+            PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", await module.FilesEncodingTask.Value);
+            string text = patch != null ? patch.Text : "";
+            return GetSubmoduleStatus(text, module, fileName);
+        }
+
+        [CanBeNull]
+        [Obsolete]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule)
         {
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
+        }
+
+        [CanBeNull]
+        public static Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule)
+        {
+            return GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false);
         }
 
         public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
