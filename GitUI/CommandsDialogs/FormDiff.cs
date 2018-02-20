@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _baseRevision;
         private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
+        private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
         ToolTip _toolTipControl = new ToolTip();
 
@@ -51,6 +52,7 @@ namespace GitUI.CommandsDialogs
             _baseRevision = new GitRevision(baseCommitSha);
             _headRevision = new GitRevision(headCommitSha);
             _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
+            _findFilePredicateProvider = new FindFilePredicateProvider(() => Module.WorkingDir);
 
             lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
             lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
@@ -176,17 +178,10 @@ namespace GitUI.CommandsDialogs
 
             var candidates = DiffFiles.GitItemStatuses;
 
-            IFindFilePredicateProvider pathProvider = new FindFilePredicateProvider();
-
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
             {
-                var predicate = pathProvider.Get(name, Module.WorkingDir);
-                return candidates.Where(item =>
-                {
-                    return item.Name != null && predicate(item.Name)
-                        || item.OldName != null && predicate(item.OldName);
-                }
-                    ).ToList();
+                var predicate = _findFilePredicateProvider.Get(name);
+                return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
             };
 
             GitItemStatus selectedItem;

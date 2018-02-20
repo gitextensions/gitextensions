@@ -23,6 +23,7 @@ namespace GitUI
         private readonly IAvatarService _gravatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly IFindFilePredicateProvider _fildFilePredicateProvider;
 
         public GitUICommands(GitModule module)
         {
@@ -34,6 +35,7 @@ namespace GitUI
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _gravatarService = new GravatarService(avatarCache);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _fildFilePredicateProvider = new FindFilePredicateProvider(() => Module.WorkingDir);
         }
 
         public GitUICommands(string workingDir)
@@ -2178,8 +2180,7 @@ namespace GitUI
         {
             var candidates = Module.GetFullTree("HEAD");
 
-            IFindFilePredicateProvider pathProvider = new FindFilePredicateProvider();
-            var predicate = pathProvider.Get(name, Module.WorkingDir);
+            var predicate = _fildFilePredicateProvider.Get(name);
 
             return candidates.Where(predicate).ToList();
         }
