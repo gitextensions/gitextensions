@@ -113,16 +113,16 @@ namespace GitUI
             return list;
         }
 
-        private IEnumerable<string> GetTagsRefs()
+        private async Task<IEnumerable<string>> GetTagsRefsAsync()
         {
-            return Module.GetRefs(true, false).Select(tag => tag.Name);
+            return (await Module.GetRefsAsync(true, false)).Select(tag => tag.Name);
         }
 
         private async Task<List<string>> GetBranchAndTagRefsAsync(bool local, bool tag, bool remote)
         {
             var list = await GetBranchHeadsAsync(local, remote);
             if (tag)
-                list.AddRange(GetTagsRefs());
+                list.AddRange(await GetTagsRefsAsync());
             return list;
         }
 
