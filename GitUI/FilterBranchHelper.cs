@@ -75,7 +75,7 @@ namespace GitUI
             {
                 Task.Run(async () =>
                 {
-                    var branches = await GetBranchAndTagRefs(local, tag, remote);
+                    var branches = await GetBranchAndTagRefsAsync(local, tag, remote);
 
                     foreach (var branch in branches)
                         _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
@@ -118,7 +118,7 @@ namespace GitUI
             return Module.GetRefs(true, false).Select(tag => tag.Name);
         }
 
-        private async Task<List<string>> GetBranchAndTagRefs(bool local, bool tag, bool remote)
+        private async Task<List<string>> GetBranchAndTagRefsAsync(bool local, bool tag, bool remote)
         {
             var list = await GetBranchHeadsAsync(local, remote);
             if (tag)
@@ -169,7 +169,7 @@ namespace GitUI
         private async Task UpdateBranchFilterItemsAsync()
         {
             string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
-            var branches = await GetBranchAndTagRefs(localToolStripMenuItem.Checked, tagsToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            var branches = await GetBranchAndTagRefsAsync(localToolStripMenuItem.Checked, tagsToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             var matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
 
             var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;
