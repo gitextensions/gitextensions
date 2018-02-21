@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using ResourceManager;
 using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
             {
                 var revisions = _revisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count > 0 && revisions[0].IsArtificial())
+                if (revisions.Count > 0 && revisions[0].IsArtificial)
                 {
                     DiffFiles.SetDiffs(revisions);
                 }
@@ -728,7 +728,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (DiffFiles.SelectedItem == null || !DiffFiles.Revision.IsArtificial() ||
+                if (DiffFiles.SelectedItem == null || !DiffFiles.Revision.IsArtificial ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                 {
@@ -832,7 +832,7 @@ namespace GitUI.CommandsDialogs
             }
             RefreshArtificial();
         }
-        
+
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var unStagedFiles = DiffFiles.SelectedItems.ToList();

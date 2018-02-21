@@ -75,11 +75,11 @@ namespace GitUI.CommandsDialogs
 
             if (ckCompareToMergeBase.Checked)
             {
-                DiffFiles.SetDiffs(new List<GitRevision> {_headRevision, _mergeBase});
+                DiffFiles.SetDiffs(new List<GitRevision> { _headRevision, _mergeBase });
             }
             else
             {
-                DiffFiles.SetDiffs(new List<GitRevision> {_headRevision, _baseRevision});
+                DiffFiles.SetDiffs(new List<GitRevision> { _headRevision, _baseRevision });
             }
         }
 
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             parentOfALocalToolStripMenuItem.Enabled = parentOfBLocalToolStripMenuItem.Enabled = !Module.IsBareRepository();
 
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            blameToolStripMenuItem.Visible = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsSubmodule || _baseRevision.IsArtificial());
+            blameToolStripMenuItem.Visible = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsSubmodule || _baseRevision.IsArtificial);
         }
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)

@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Extensions;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -2224,7 +2225,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked=true)
+        public Patch GetSingleDiff(string firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked = true)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -2245,8 +2246,8 @@ namespace GitCommands
             var patchManager = new PatchManager();
             var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
             cacheResult = cacheResult &&
-                !GitRevision.IsArtificial(secondRevision) &&
-                !GitRevision.IsArtificial(firstRevision) &&
+                !secondRevision.IsArtificial() &&
+                !firstRevision.IsArtificial() &&
                 !secondRevision.IsNullOrEmpty() &&
                 !firstRevision.IsNullOrEmpty();
             string patch;
@@ -2297,7 +2298,7 @@ namespace GitCommands
 
         public List<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, bool noCache = false)
         {
-            noCache = noCache || GitRevision.IsArtificial(firstRevision) || GitRevision.IsArtificial(secondRevision);
+            noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
@@ -2375,7 +2376,7 @@ namespace GitCommands
             if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
             {
                 string lsOutput = RunGitCmd("ls-files -v");
-                if(!excludeAssumeUnchangedFiles)
+                if (!excludeAssumeUnchangedFiles)
                     result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(lsOutput));
                 if (!excludeSkipWorktreeFiles)
                     result.AddRange(GitCommandHelpers.GetSkipWorktreeFilesFromString(lsOutput));
@@ -3118,7 +3119,7 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.UnstagedGuid, string extraDiffArguments = "", bool isTracked=true)
+        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.UnstagedGuid, string extraDiffArguments = "", bool isTracked = true)
         {
             var output = "";
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitCommands.Git.Extensions;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
@@ -104,16 +105,11 @@ namespace GitCommands
                     Subject.ToLower().Contains(searchString);
         }
 
-        public bool IsArtificial()
-        {
-            return IsArtificial(Guid);
-        }
 
-        public static bool IsArtificial(string guid)
-        {
-            return guid == UnstagedGuid ||
-                    guid == IndexGuid;
-        }
+        /// <summary>
+        /// Indicates whether the commit is an artificial commit.
+        /// </summary>
+        public bool IsArtificial => Guid.IsArtificial();
 
         public bool HasParent
         {

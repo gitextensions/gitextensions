@@ -206,7 +206,7 @@ namespace GitUI.CommitInfo
             LoadAuthorImage(data.Author ?? data.Committer);
 
             //No branch/tag data for artificial commands
-            if (GitRevision.IsArtificial(_revision.Guid))
+            if (_revision.IsArtificial)
                 return;
 
             if (AppSettings.CommitInfoShowContainedInBranches)
@@ -424,7 +424,7 @@ namespace GitUI.CommitInfo
             }
 
             string body = _revisionInfo;
-            if (Revision != null && !Revision.IsArtificial())
+            if (Revision != null && !Revision.IsArtificial)
             {
                 body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo;
             }
