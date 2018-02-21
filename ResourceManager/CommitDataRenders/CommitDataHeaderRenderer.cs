@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GitCommands;
+using GitCommands.Git.Extensions;
 
 namespace ResourceManager.CommitDataRenders
 {
@@ -72,7 +73,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            bool isArtificial = GitRevision.IsArtificial(commitData.Guid);
+            bool isArtificial = commitData.Guid.IsArtificial();
             bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();

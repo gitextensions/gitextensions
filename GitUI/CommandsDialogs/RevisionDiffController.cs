@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GitCommands;
-using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -34,7 +33,7 @@ namespace GitUI.CommandsDialogs
         {
             SelectedRevisions = selectedRevisions;
             SelectedDiff = selectedDiff;
-            IsAnyCombinedDiff  = isAnyCombinedDiff;
+            IsAnyCombinedDiff = isAnyCombinedDiff;
             IsSingleGitItemSelected = isSingleGitItemSelected;
             IsCombinedDiff = isCombinedDiff;
             IsAnyItemSelected = isAnyItemSelected;
@@ -77,7 +76,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !(selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedRevisions[0].IsArtificial());
+            return selectionInfo.IsSingleGitItemSelected && !(selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedRevisions[0].IsArtificial);
         }
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
@@ -100,7 +99,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !(selectionInfo.SelectedDiff.IsNew && selectionInfo.SelectedRevisions[0].IsArtificial());
+            return selectionInfo.IsSingleGitItemSelected && !(selectionInfo.SelectedDiff.IsNew && selectionInfo.SelectedRevisions[0].IsArtificial);
         }
 
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
@@ -115,7 +114,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedRevisions[0].IsArtificial();
+            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedRevisions[0].IsArtificial;
         }
 
         public bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo)

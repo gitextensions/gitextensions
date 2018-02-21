@@ -437,7 +437,7 @@ namespace GitUI.CommandsDialogs
                 selectedRevisions.Count >= 1 && selectedRevisions.Count <= 2;
             manipuleerCommitToolStripMenuItem.Enabled =
                 viewCommitToolStripMenuItem.Enabled =
-                selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
+                selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
             saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
         }
 

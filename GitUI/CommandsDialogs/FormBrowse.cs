@@ -2005,7 +2005,7 @@ namespace GitUI.CommandsDialogs
         {
             //Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
+            bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
 
             this.branchToolStripMenuItem.Enabled =
             this.deleteBranchToolStripMenuItem.Enabled =

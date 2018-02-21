@@ -889,7 +889,7 @@ namespace GitUI
                 description = revision.Subject;
             }
 
-            if (!revision.IsArtificial())
+            if (!revision.IsArtificial)
             {
                 description += " @" + revision.Guid.Substring(0, 4);
             }
@@ -1741,7 +1741,7 @@ namespace GitUI
                 }
                 else if (columnIndex == idColIndex)
                 {
-                    if (!revision.IsArtificial()) //do not show artificial GUID
+                    if (!revision.IsArtificial) //do not show artificial GUID
                     {
                         var text = revision.Guid;
                         var rect = RevisionGridUtils.GetCellRectangle(e);
@@ -1855,7 +1855,7 @@ namespace GitUI
             int dateColIndex = DateDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            if (columnIndex == graphColIndex && !revision.IsArtificial()) //Do not show artificial guid
+            if (columnIndex == graphColIndex && !revision.IsArtificial) //Do not show artificial guid
             {
                 e.Value = revision.Guid;
             }
@@ -1885,7 +1885,7 @@ namespace GitUI
             }
             else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
             {
-                if (revision.Body == null && !revision.IsArtificial())
+                if (revision.Body == null && !revision.IsArtificial)
                 {
                     var moduleRef = Module;
                     ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef));
@@ -2108,7 +2108,7 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Any(rev => !GitRevision.IsArtificial(rev.Guid)))
+            if (selectedRevisions.Any(rev => !rev.IsArtificial))
             {
                 Func<Form> provideForm = () =>
                 {
@@ -2335,7 +2335,7 @@ namespace GitUI
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
                 if (head.CompleteName.Equals(currentBranchRef))
-                    currentBranchPointsToRevision = !revision.IsArtificial();
+                    currentBranchPointsToRevision = !revision.IsArtificial;
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
@@ -2437,7 +2437,7 @@ namespace GitUI
                 }
             }
 
-            bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial();
+            bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial;
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
             deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
@@ -2461,11 +2461,11 @@ namespace GitUI
             cherryPickCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
             manipulateCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
 
-            copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial();
+            copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial;
             createNewBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
             resetCurrentBranchToHereToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
-            archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial();
-            createTagToolStripMenuItem.Enabled = !revision.IsArtificial();
+            archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial;
+            createTagToolStripMenuItem.Enabled = !revision.IsArtificial;
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
