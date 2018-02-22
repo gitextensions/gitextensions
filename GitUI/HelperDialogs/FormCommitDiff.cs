@@ -20,7 +20,7 @@ namespace GitUI.HelperDialogs
             : this(commands)
         {
             CommitDiff.TextChanged += CommitDiff_TextChanged;
-            CommitDiff.SetRevision(revisionGuid);
+            CommitDiff.SetRevision(revisionGuid, null);
         }
 
         private void CommitDiff_TextChanged(object sender, EventArgs e)

@@ -24,9 +24,8 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffToolremotelocalStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.manipuleerCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manipulateCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revertCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -35,6 +34,8 @@ namespace GitUI.CommandsDialogs
             this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
+            this.CommitDiff = new GitUI.UserControls.CommitDiff();
             this.ViewTab = new System.Windows.Forms.TabPage();
             this.View = new GitUI.Editor.FileViewer();
             this.DiffTab = new System.Windows.Forms.TabPage();
@@ -66,6 +67,7 @@ namespace GitUI.CommandsDialogs
             this.splitContainer1.SuspendLayout();
             this.FileHistoryContextMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.CommitInfoTabPage.SuspendLayout();
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
             this.BlameTab.SuspendLayout();
@@ -109,9 +111,8 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem,
             this.diffToolremotelocalStripMenuItem,
             this.saveAsToolStripMenuItem,
-            this.viewCommitToolStripMenuItem,
             this.toolStripSeparator2,
-            this.manipuleerCommitToolStripMenuItem,
+            this.manipulateCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.followFileHistoryToolStripMenuItem,
             this.followFileHistoryRenamesToolStripMenuItem,
@@ -145,26 +146,19 @@ namespace GitUI.CommandsDialogs
             this.saveAsToolStripMenuItem.Text = "Save as";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
-            // viewCommitToolStripMenuItem
-            // 
-            this.viewCommitToolStripMenuItem.Name = "viewCommitToolStripMenuItem";
-            this.viewCommitToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
-            this.viewCommitToolStripMenuItem.Text = "View commit";
-            this.viewCommitToolStripMenuItem.Click += new System.EventHandler(this.viewCommitToolStripMenuItem_Click);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(336, 6);
             // 
-            // manipuleerCommitToolStripMenuItem
+            // manipulateCommitToolStripMenuItem
             // 
-            this.manipuleerCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.revertCommitToolStripMenuItem,
             this.cherryPickThisCommitToolStripMenuItem});
-            this.manipuleerCommitToolStripMenuItem.Name = "manipuleerCommitToolStripMenuItem";
-            this.manipuleerCommitToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
-            this.manipuleerCommitToolStripMenuItem.Text = "Manipulate commit";
+            this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
+            this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
+            this.manipulateCommitToolStripMenuItem.Text = "Manipulate commit";
             // 
             // revertCommitToolStripMenuItem
             // 
@@ -215,6 +209,7 @@ namespace GitUI.CommandsDialogs
             // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.CommitInfoTabPage);
             this.tabControl1.Controls.Add(this.ViewTab);
             this.tabControl1.Controls.Add(this.DiffTab);
             this.tabControl1.Controls.Add(this.BlameTab);
@@ -225,6 +220,26 @@ namespace GitUI.CommandsDialogs
             this.tabControl1.Size = new System.Drawing.Size(748, 314);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
+            // 
+            // CommitInfoTabPage
+            // 
+            this.CommitInfoTabPage.Controls.Add(this.CommitDiff);
+            this.CommitInfoTabPage.Location = new System.Drawing.Point(4, 22);
+            this.CommitInfoTabPage.Name = "CommitInfoTabPage";
+            this.CommitInfoTabPage.Size = new System.Drawing.Size(740, 288);
+            this.CommitInfoTabPage.TabIndex = 3;
+            this.CommitInfoTabPage.Text = "Commit";
+            // 
+            // CommitDiff
+            // 
+            this.CommitDiff.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CommitDiff.Location = new System.Drawing.Point(0, 0);
+            this.CommitDiff.MinimumSize = new System.Drawing.Size(150, 148);
+            this.CommitDiff.Name = "CommitDiff";
+            this.CommitDiff.Size = new System.Drawing.Size(740, 288);
+            this.CommitDiff.TabIndex = 0;
             // 
             // ViewTab
             // 
@@ -467,6 +482,7 @@ namespace GitUI.CommandsDialogs
             this.splitContainer1.ResumeLayout(false);
             this.FileHistoryContextMenu.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.CommitInfoTabPage.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
             this.BlameTab.ResumeLayout(false);
@@ -482,6 +498,8 @@ namespace GitUI.CommandsDialogs
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage CommitInfoTabPage;
+        private UserControls.CommitDiff CommitDiff;
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
         private System.Windows.Forms.TabPage BlameTab;
@@ -496,11 +514,10 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem followFileHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fullHistoryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem manipuleerCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherryPickThisCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem viewCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStrip ToolStrip;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox toolStripBranchFilterComboBox;

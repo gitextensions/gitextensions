@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
 
@@ -15,7 +16,7 @@ namespace GitUI.UserControls
             DiffFiles.SetDiffs();
         }
 
-        public void SetRevision(string revisionGuid)
+        public void SetRevision(string revisionGuid, string fileToSelect)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,
@@ -24,9 +25,17 @@ namespace GitUI.UserControls
 
             if (revision != null)
             {
-                commitInfo.Revision = revision;
-
                 DiffFiles.SetDiffs(new[] { revision });
+                if (fileToSelect != null)
+                {
+                    var itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Name == fileToSelect);
+                    if (itemToSelect != null)
+                    {
+                        DiffFiles.SelectedItem = itemToSelect;
+                    }
+                }
+
+                commitInfo.Revision = revision;
 
                 Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir;
             }
