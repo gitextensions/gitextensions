@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.tvGitTree = new System.Windows.Forms.TreeView();
+            this.tvGitTree = new UserControls.NativeTreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -337,7 +337,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer FileTreeSplitContainer;
-        private System.Windows.Forms.TreeView tvGitTree;
+        private UserControls.NativeTreeView tvGitTree;
         private Editor.FileViewer FileText;
         private System.Windows.Forms.ContextMenuStrip FileTreeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;

@@ -34,8 +34,6 @@ namespace GitUI
         private IDisposable selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
-        private const int ImageSize = 16;
-
         private bool _filterVisible;
         private ToolStripItem _openSubmoduleMenuItem;
 
@@ -135,11 +133,6 @@ namespace GitUI
             NoFiles.Text = text;
         }
 
-        public string GetNoFilesText()
-        {
-            return NoFiles.Text;
-        }
-
         public bool FilterVisible
         {
             get
@@ -173,58 +166,33 @@ namespace GitUI
             }
         }
 
-        public void BeginUpdate()
-        {
-            FileStatusListView.BeginUpdate();
-        }
-
-        public void EndUpdate()
-        {
-            FileStatusListView.EndUpdate();
-        }
-
-        private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)
+        private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus, int imageWidth)
         {
             var pathFormatter = new PathFormatter(graphics, FileStatusListView.Font);
 
-            return pathFormatter.FormatTextForDrawing(FileStatusListView.ClientSize.Width - ImageSize,
+            return pathFormatter.FormatTextForDrawing(FileStatusListView.ClientSize.Width - imageWidth,
                                                       gitItemStatus.Name, gitItemStatus.OldName);
         }
 
         private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (e.Bounds.Height <= 0 || e.Bounds.Width <= 0 || e.ItemIndex < 0)
-                return;
+            var gitItemStatus = e?.Item?.Tag as GitItemStatus;
 
-            e.DrawBackground();
-            Color color;
-            if (e.Item.Selected)
+            if (gitItemStatus != null)
             {
-                e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
-                color = SystemColors.HighlightText;
+                var imageWidth = 0;
+                if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
+                {
+                    imageWidth = e.Item.ImageList.Images[e.Item.ImageIndex].Width;
+                }
+
+                string text = GetItemText(e.Graphics, gitItemStatus, imageWidth);
+                text = AppendItemSubmoduleStatus(text, gitItemStatus);
+
+                e.Item.Text = text;
             }
-            else
-                color = SystemColors.WindowText;
-            e.DrawFocusRectangle();
 
-            e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
-
-            int centeredImageTop = e.Bounds.Top;
-            if ((e.Bounds.Height - ImageSize) > 1)
-                centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
-
-            var image = e.Item.ImageList.Images[e.Item.ImageIndex];
-
-            if (image != null)
-                e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-
-            GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
-
-            string text = GetItemText(e.Graphics, gitItemStatus);
-            text = AppendItemSubmoduleStatus(text, gitItemStatus);
-
-            e.Graphics.DrawString(text, e.Item.ListView.Font,
-                                  new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
+            e.DrawDefault = true;
         }
 
         private string AppendItemSubmoduleStatus(string text, GitItemStatus item)

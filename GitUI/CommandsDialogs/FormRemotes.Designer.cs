@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.Remotes = new System.Windows.Forms.ListView();
+            this.Remotes = new UserControls.NativeListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -839,7 +839,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private System.Windows.Forms.ListView Remotes;
+        private UserControls.NativeListView Remotes;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;

@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._myReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this._helpTextLbl = new System.Windows.Forms.Label();
-            this._myReposLV = new System.Windows.Forms.ListView();
+            this._myReposLV = new UserControls.NativeListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this._searchReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._getFromUserBtn = new System.Windows.Forms.Button();
             this._forkBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this._searchResultsLV = new System.Windows.Forms.ListView();
+            this._searchResultsLV = new UserControls.NativeListView();
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this._openGitupPageBtn = new System.Windows.Forms.Button();
@@ -544,7 +544,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.TabControl _tabControl;
         private System.Windows.Forms.TabPage _myReposPage;
         private System.Windows.Forms.Label _helpTextLbl;
-        private System.Windows.Forms.ListView _myReposLV;
+        private UserControls.NativeListView _myReposLV;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.TabPage _searchReposPage;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -555,7 +555,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.Button _getFromUserBtn;
         private System.Windows.Forms.Button _forkBtn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.ListView _searchResultsLV;
+        private UserControls.NativeListView _searchResultsLV;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Button _openGitupPageBtn;

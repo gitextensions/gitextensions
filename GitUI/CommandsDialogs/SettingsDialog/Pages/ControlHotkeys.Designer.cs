@@ -32,7 +32,7 @@
             this.bApply = new System.Windows.Forms.Button();
             this.bClear = new System.Windows.Forms.Button();
             this.lHotkeyableItems = new System.Windows.Forms.Label();
-            this.listMappings = new System.Windows.Forms.ListView();
+            this.listMappings = new UserControls.NativeListView();
             this.columnCommand = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bResetToDefaults = new System.Windows.Forms.Button();
@@ -174,7 +174,7 @@
     private System.Windows.Forms.Button bApply;
     private System.Windows.Forms.Button bClear;
     private System.Windows.Forms.Label lHotkeyableItems;
-    private System.Windows.Forms.ListView listMappings;
+    private UserControls.NativeListView listMappings;
     private System.Windows.Forms.ColumnHeader columnCommand;
     private System.Windows.Forms.ColumnHeader columnKey;
     private System.Windows.Forms.Button bResetToDefaults;
