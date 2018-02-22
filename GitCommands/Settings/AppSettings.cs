@@ -1421,7 +1421,7 @@ namespace GitCommands
 
         public static DateTime LastUpdateCheck
         {
-            get { return GetDate("LastUpdateCheck", default(DateTime)); }
+            get { return GetDate("LastUpdateCheck", default); }
             set { SetDate("LastUpdateCheck", value); }
         }
 

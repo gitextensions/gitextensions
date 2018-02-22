@@ -136,7 +136,7 @@ namespace GitCommands
                     }
                     if (token.IsCancellationRequested)
                     {
-                        return default(T);
+                        return default;
                     }
                     return loadContent(token);
 
@@ -148,7 +148,7 @@ namespace GitCommands
                     foreach (var e in task.Exception.InnerExceptions)
                         if (!OnLoadingError(e))
                             throw e;
-                    return default(T);
+                    return default;
                 }
                 try
                 {
@@ -162,7 +162,7 @@ namespace GitCommands
                 {
                     if (!OnLoadingError(exception))
                         throw;
-                    return default(T);
+                    return default;
                 }
             }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
         }

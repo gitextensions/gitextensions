@@ -35,7 +35,7 @@ namespace GitCommands.Settings
 
         public virtual bool ValueIsEmpty(T aValue)
         {
-            return EqualityComparer<T>.Default.Equals(aValue, default(T));
+            return EqualityComparer<T>.Default.Equals(aValue, default);
         }
 
         public string FullPath

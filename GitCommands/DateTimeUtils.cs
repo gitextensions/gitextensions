@@ -17,7 +17,7 @@ namespace GitCommands
                 return true;
             }
 
-            result = default(DateTime);
+            result = default;
             return false;
         }
 
