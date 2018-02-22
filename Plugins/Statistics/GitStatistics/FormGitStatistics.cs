@@ -64,7 +64,7 @@ namespace GitStatistics
             InitializeComponent();
             Translate();
 
-            TotalLinesOfCode.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            TotalLinesOfCode.Font = new Font(TotalLinesOfCode.Font, FontStyle.Bold);
             TotalLinesOfCode2.Font = TotalLinesOfCode.Font;
             TotalLinesOfTestCode.Font = TotalLinesOfCode.Font;
             TotalCommits.Font = TotalLinesOfCode.Font;

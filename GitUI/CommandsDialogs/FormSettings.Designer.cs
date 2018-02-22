@@ -128,7 +128,6 @@ namespace GitUI.CommandsDialogs
             // settingsTreeView
             //
             this.settingsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsTreeView.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.settingsTreeView.Location = new System.Drawing.Point(3, 3);
             this.settingsTreeView.MinimumSize = new System.Drawing.Size(100, 220);
             this.settingsTreeView.Name = "settingsTreeView";

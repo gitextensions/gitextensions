@@ -164,7 +164,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.FilterVisible = true;
             DiffFiles.DescribeRevision = sha1 => DescribeRevision(sha1);
             DiffText.SetFileLoader(GetNextPatchFile);
-            DiffText.Font = AppSettings.DiffFont;
+            DiffText.Font = AppSettings.FixedWidthFont;
             ReloadHotkeys();
 
             GotFocus += (s, e1) => DiffFiles.Focus();

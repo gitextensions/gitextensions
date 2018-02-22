@@ -25,7 +25,6 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             {
                 BackColor = Color.White,
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
                 Margin = new Padding(0),
                 Multiline = true,
                 ReadOnly = true,
@@ -50,7 +49,6 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return new TabControl
             {
                 Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0),
                 SelectedIndex = 0,
             };
         }

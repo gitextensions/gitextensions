@@ -159,7 +159,6 @@ namespace GitUI
             // 
             this.Revisions.AllowUserToAddRows = false;
             this.Revisions.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Revisions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.Revisions.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
@@ -181,14 +180,12 @@ namespace GitUI
             this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.Revisions.DefaultCellStyle = dataGridViewCellStyle4;
             this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Revisions.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Revisions.GridColor = System.Drawing.SystemColors.Window;
             this.Revisions.Location = new System.Drawing.Point(0, 0);
             this.Revisions.Name = "Revisions";
@@ -201,9 +198,7 @@ namespace GitUI
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.Revisions.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.Revisions.RowHeadersVisible = false;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Revisions.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this.Revisions.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -218,7 +213,6 @@ namespace GitUI
             // 
             // Graph
             // 
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.GraphDataGridViewColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.GraphDataGridViewColumn.Frozen = true;
             this.GraphDataGridViewColumn.HeaderText = "";
