@@ -2124,7 +2124,8 @@ namespace GitUI.CommandsDialogs
             RotateApplicationIcon = 14,
             CloseRepository = 15,
             Stash = 16,
-            StashPop = 17
+            StashPop = 17,
+            OpenWithDifftool = 19
         }
 
         private void AddNotes()
@@ -2153,6 +2154,18 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
+        private void OpenWithDifftool()
+        {
+            if (revisionDiff.Visible)
+            {
+                revisionDiff.ExecuteCommand(RevisionDiff.Command.OpenWithDifftool);
+            }
+            else if (fileTree.Visible)
+            {
+                fileTree.ExecuteCommand(RevisionFileTree.Command.OpenWithDifftool);
+            }
+        }
+
         protected override bool ExecuteCommand(int cmd)
         {
             switch ((Commands)cmd)
@@ -2176,6 +2189,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
                 case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Commands.StashPop: UICommands.StashPop(this); break;
+                case Commands.OpenWithDifftool: OpenWithDifftool(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

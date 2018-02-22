@@ -84,25 +84,46 @@ namespace GitUI.CommandsDialogs
 
         public static readonly string HotkeySettingsName = "BrowseDiff";
 
-        internal enum Commands
+        public enum Command
         {
-            DeleteSelectedFiles = 0
+            DeleteSelectedFiles = 0,
+            ShowHistory = 1,
+            Blame = 2,
+            OpenWithDifftool = 3
+        }
+
+        public bool ExecuteCommand(Command cmd)
+        {
+            return ExecuteCommand((int)cmd);
         }
 
         protected override bool ExecuteCommand(int cmd)
         {
-            Commands command = (Commands)cmd;
-
-            switch (command)
+            switch ((Command)cmd)
             {
-                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
+                case Command.DeleteSelectedFiles: return DeleteSelectedFiles();
+                case Command.ShowHistory: fileHistoryDiffToolstripMenuItem.PerformClick(); break;
+                case Command.Blame: blameToolStripMenuItem.PerformClick(); break;
+                case Command.OpenWithDifftool: firstToSelectedToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
+
+            return true;
         }
 
-        internal Keys GetShortcutKeys(Commands cmd)
+        public void ReloadHotkeys()
         {
-            return GetShortcutKeys((int)cmd);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
+            fileHistoryDiffToolstripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
+            blameToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
+            firstToSelectedToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
+            DiffText.ReloadHotkeys();
+        }
+
+        private string GetShortcutKeyDisplayString(Command cmd)
+        {
+            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
         }
 
         #endregion
@@ -129,13 +150,6 @@ namespace GitUI.CommandsDialogs
         public void InitSplitterManager(SplitterManager splitterManager)
         {
             splitterManager.AddSplitter(DiffSplitContainer, "DiffSplitContainer");
-        }
-
-        public void ReloadHotkeys()
-        {
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
-            DiffText.ReloadHotkeys();
         }
 
         protected override void OnRuntimeLoad()
@@ -294,7 +308,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
-                DiffText.ViewPatch("");
+                DiffText.ViewPatch(null);
                 return;
             }
 
@@ -308,11 +322,12 @@ namespace GitUI.CommandsDialogs
                     diffOfConflict = Strings.GetUninterestingDiffOmitted();
                 }
 
-                DiffText.ViewPatch(diffOfConflict);
+                DiffText.ViewPatch(text: diffOfConflict, openWithDifftool: null /* not implemented */);
                 return;
             }
 
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty,
+                openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -365,7 +380,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
             {
-                DiffText.ViewPatch(string.Empty);
+                DiffText.ViewPatch(null);
             }
         }
 

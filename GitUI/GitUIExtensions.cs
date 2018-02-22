@@ -85,7 +85,7 @@ namespace GitUI
                 firstRevision = selectedRevision.FirstParentGuid;
             }
 
-            return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText);
+            return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText, openWithDifftool: null /* use default */);
         }
 
         public static Task ViewChangesAsync(
@@ -93,7 +93,8 @@ namespace GitUI
             [CanBeNull] string firstRevision,
             string secondRevision,
             [NotNull] GitItemStatus file,
-            [NotNull] string defaultText)
+            [NotNull] string defaultText,
+            [CanBeNull] Action openWithDifftool)
         {
             if (firstRevision == null)
             {
@@ -117,7 +118,13 @@ namespace GitUI
                 return diffViewer.ViewPatchAsync(() =>
                 {
                     string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
-                    return selectedPatch ?? defaultText;
+                    if (selectedPatch == null)
+                    {
+                        return (text: defaultText, openWithDifftool: null /* not applicable */);
+                    }
+
+                    return (text: selectedPatch,
+                            openWithDifftool: openWithDifftool ?? (() => { diffViewer.Module.OpenWithDifftool(file.Name, null, firstRevision, secondRevision, "", file.IsTracked); }));
                 });
             }
         }

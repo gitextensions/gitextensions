@@ -170,7 +170,6 @@ namespace GitUI.CommandsDialogs
             // firstToSelectedToolStripMenuItem
             // 
             this.firstToSelectedToolStripMenuItem.Name = "firstToSelectedToolStripMenuItem";
-            this.firstToSelectedToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.firstToSelectedToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.firstToSelectedToolStripMenuItem.Text = "First -> Selected";
             this.firstToSelectedToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
