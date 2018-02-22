@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._chooseRepo = new System.Windows.Forms.Label();
             this._selectHostedRepoCB = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this._pullRequestsList = new System.Windows.Forms.ListView();
+            this._pullRequestsList = new UserControls.NativeListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -437,7 +437,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.Button _refreshCommentsBtn;
         private System.Windows.Forms.Button _postComment;
         private System.Windows.Forms.Label _chooseRepo;
-        private System.Windows.Forms.ListView _pullRequestsList;
+        private UserControls.NativeListView _pullRequestsList;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;

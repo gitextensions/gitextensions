@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.textBoxFind = new System.Windows.Forms.TextBox();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.treeView1 = new UserControls.NativeTreeView();
             this.labelNumFound = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -53,9 +53,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView1.FullRowSelect = true;
             this.treeView1.HideSelection = false;
+            this.treeView1.HotTracking = true;
             this.treeView1.ItemHeight = 25;
             this.treeView1.Location = new System.Drawing.Point(3, 32);
             this.treeView1.Name = "treeView1";
+            this.treeView1.ShowLines = false;
             this.treeView1.Size = new System.Drawing.Size(194, 185);
             this.treeView1.TabIndex = 2;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -85,7 +87,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBoxFind;
-        private System.Windows.Forms.TreeView treeView1;
+        private UserControls.NativeTreeView treeView1;
         private System.Windows.Forms.Label labelNumFound;
     }
 }

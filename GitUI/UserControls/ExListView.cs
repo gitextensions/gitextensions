@@ -48,7 +48,7 @@ namespace GitUI.UserControls
         SubSetLinkFocused = 128
     }
 
-    class ExListView : ListView
+    class ExListView : NativeListView
     {
         public ExListView()
         {
