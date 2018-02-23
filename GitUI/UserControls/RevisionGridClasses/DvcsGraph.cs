@@ -606,9 +606,9 @@ namespace GitUI.RevisionGridClasses
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
-            while (curCount < scrollTo)
+            lock (_graphData)
             {
-                lock (_graphData)
+                while (curCount < scrollTo)
                 {
                     // Cache the next item
                     if (!_graphData.CacheTo(curCount))
