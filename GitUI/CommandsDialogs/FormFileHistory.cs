@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _asyncLoader;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly IGitRevisionProvider _gitRevisionProvider;
+        private readonly ILongShaProvider _longShaProvider;
 
         private readonly TranslationString _buildReportTabCaption =
             new TranslationString("Build Report");
@@ -58,13 +58,13 @@ namespace GitUI.CommandsDialogs
 
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _gitRevisionProvider = new GitRevisionProvider(() => Module);
+            _longShaProvider = new LongShaProvider(() => Module);
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
             : this(aCommands)
         {
-            FileChanges.SetInitialRevision(revision);
+            FileChanges.SetInitialRevision(revision.Guid);
             Translate();
 
             FileChanges.ShowBuildServerInfo = true;
@@ -483,7 +483,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                FileChanges.SetSelectedRevision(_gitRevisionProvider.Get(e.Data));
+                FileChanges.SetSelectedRevision(_longShaProvider.Get(e.Data));
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {

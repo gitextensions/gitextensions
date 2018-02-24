@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitDataManager _commitDataManager;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private readonly IAppTitleGenerator _appTitleGenerator;
-        private readonly IGitRevisionProvider _gitRevisionProvider;
+        private readonly ILongShaProvider _longShaProvider;
         private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.BrowseRepo = this;
                 _controller = new FormBrowseController(new GitGpgController(() => Module));
                 _commitDataManager = new CommitDataManager(() => Module);
-                _gitRevisionProvider = new GitRevisionProvider(() => Module);
+                _longShaProvider = new LongShaProvider(() => Module);
             }
 
             _repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
@@ -328,7 +328,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
-                RevisionGrid.SetInitialRevision(_gitRevisionProvider.Get(selectCommit));
+                RevisionGrid.SetInitialRevision(_longShaProvider.Get(selectCommit));
             }
         }
 
@@ -2202,7 +2202,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                var revision = _gitRevisionProvider.Get(e.Data);
+                var revision = _longShaProvider.Get(e.Data);
                 var found = RevisionGrid.SetSelectedRevision(revision);
 
                 // When 'git log --first-parent' filtration is used, user can click on child commit
@@ -2210,7 +2210,7 @@ namespace GitUI.CommandsDialogs
                 // and to make it possible we add explicit branch filter and refresh.
                 if (AppSettings.ShowFirstParent && !found)
                 {
-                    _filterBranchHelper.SetBranchFilter(revision.Guid, refresh: true);
+                    _filterBranchHelper.SetBranchFilter(revision, refresh: true);
                     RevisionGrid.SetSelectedRevision(revision);
                 }
             }

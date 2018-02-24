@@ -33,7 +33,7 @@ namespace GitUI.HelperDialogs
                 string guid = Module.RevParse(preselectCommit);
                 if (!String.IsNullOrEmpty(guid))
                 {
-                    revisionGrid.SetInitialRevision(new GitRevision(guid));
+                    revisionGrid.SetInitialRevision(guid);
                 }
             }
 
