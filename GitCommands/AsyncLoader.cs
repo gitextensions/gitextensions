@@ -260,8 +260,11 @@ namespace GitCommands
                 return;
             }
 
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
         }
     }
 
