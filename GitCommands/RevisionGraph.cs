@@ -141,58 +141,53 @@ namespace GitCommands
                 /* Commit Subject          */ "%s%x00" +
                 /* Commit Body             */ "%B%x00";
 
-            var formatString = ShaOnly ? shaOnlyFormat : fullFormat;
-
             // NOTE:
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            var logParam = new StringBuilder();
+            string branchFilter = BranchFilter;
+            if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1)
+                branchFilter = "--branches=" + BranchFilter;
 
-            logParam.Append(AppSettings.OrderRevisionByDate ? " --date-order" : " --topo-order");
+            var arguments = new StringBuilder("log -z ");
+
+            arguments.Append(branchFilter);
+
+            arguments.AppendFormat(" --pretty=format:\"{0}\"", ShaOnly ? shaOnlyFormat : fullFormat);
+
+            arguments.Append(AppSettings.OrderRevisionByDate ? " --date-order" : " --topo-order");
 
             if (AppSettings.ShowReflogReferences)
-                logParam.Append(" --reflog");
+                arguments.Append(" --reflog");
 
             if (RefsOptions.HasFlag(RefsFiltringOptions.All))
             {
-                logParam.Append(" --all");
+                arguments.Append(" --all");
             }
             else
             {
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Branches))
-                    logParam.Append(" --branches");
+                    arguments.Append(" --branches");
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
-                    logParam.Append(" --remotes");
+                    arguments.Append(" --remotes");
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Tags))
-                    logParam.Append(" --tags");
+                    arguments.Append(" --tags");
             }
 
             if (RefsOptions.HasFlag(RefsFiltringOptions.Boundary))
-                logParam.Append(" --boundary");
+                arguments.Append(" --boundary");
             if (RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes))
-                logParam.Append(" --not --glob=notes --not");
+                arguments.Append(" --not --glob=notes --not");
             if (RefsOptions.HasFlag(RefsFiltringOptions.NoMerges))
-                logParam.Append(" --no-merges");
+                arguments.Append(" --no-merges");
             if (RefsOptions.HasFlag(RefsFiltringOptions.FirstParent))
-                logParam.Append(" --first-parent");
+                arguments.Append(" --first-parent");
             if (RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration))
-                logParam.Append(" --simplify-by-decoration");
+                arguments.Append(" --simplify-by-decoration");
 
-            string branchFilter = BranchFilter;
-            if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
-                (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
-                branchFilter = "--branches=" + BranchFilter;
+            arguments.AppendFormat(" {0} -- {1}", RevisionFilter, PathFilter);
 
-            string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {0} --pretty=format:\"{1}\" {2} {3} -- {4}",
-                branchFilter,
-                formatString,
-                logParam,
-                RevisionFilter,
-                PathFilter);
-
-            Process p = _module.RunGitCmdDetached(arguments, GitModule.LosslessEncoding);
+            Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
 
             if (taskState.IsCancellationRequested)
                 return;
