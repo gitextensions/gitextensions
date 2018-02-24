@@ -149,6 +149,9 @@ namespace GitUI
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rebaseInteractivelyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rebaseWithAdvOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -430,11 +433,14 @@ namespace GitUI
             // 
             // rebaseOnToolStripMenuItem
             // 
+            this.rebaseOnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rebaseToolStripMenuItem,
+            this.rebaseInteractivelyToolStripMenuItem,
+            this.rebaseWithAdvOptionsToolStripMenuItem});
             this.rebaseOnToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRebase;
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
-            this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
-            this.rebaseOnToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchTagToolStripMenuItem_Click);
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
@@ -806,6 +812,26 @@ namespace GitUI
             this.rewordCommitToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.rewordCommitToolStripMenuItem.Text = "Reword commit";
             this.rewordCommitToolStripMenuItem.Click += new System.EventHandler(this.rewordCommitToolStripMenuItem_Click);
+            // rebaseToolStripMenuItem
+            // 
+            this.rebaseToolStripMenuItem.Name = "rebaseToolStripMenuItem";
+            this.rebaseToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.rebaseToolStripMenuItem.Text = "Selected commit";
+            this.rebaseToolStripMenuItem.Click += new System.EventHandler(this.ToolStripItemClickRebaseBranch);
+            // 
+            // rebaseInteractivelyToolStripMenuItem
+            // 
+            this.rebaseInteractivelyToolStripMenuItem.Name = "rebaseInteractivelyToolStripMenuItem";
+            this.rebaseInteractivelyToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.rebaseInteractivelyToolStripMenuItem.Text = "Selected commit interactively";
+            this.rebaseInteractivelyToolStripMenuItem.Click += new System.EventHandler(this.OnRebaseInteractivelyClicked);
+            //
+            // rebaseWithAdvOptionsToolStripMenuItem
+            //
+            this.rebaseWithAdvOptionsToolStripMenuItem.Name = "rebaseWithAdvOptionsToolStripMenuItem";
+            this.rebaseWithAdvOptionsToolStripMenuItem.Size = new System.Drawing.Size(307, 22);
+            this.rebaseWithAdvOptionsToolStripMenuItem.Text = "Selected commit with advanced options...";
+            this.rebaseWithAdvOptionsToolStripMenuItem.Click += OnRebaseWithAdvOptionsClicked;
             // 
             // RevisionGrid
             // 
@@ -857,6 +883,8 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;
         private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rebaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rebaseInteractivelyToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -902,5 +930,6 @@ namespace GitUI
         private ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
         private ToolStripMenuItem openBuildReportToolStripMenuItem;
         private ToolStripMenuItem editCommitToolStripMenuItem;
+        private ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
     }
 }

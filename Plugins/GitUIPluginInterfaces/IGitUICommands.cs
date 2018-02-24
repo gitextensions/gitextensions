@@ -142,7 +142,7 @@ namespace GitUIPluginInterfaces
         bool StartPluginSettingsDialog();
         bool StartPullDialog();
         bool StartPushDialog();
-        bool StartRebaseDialog(string branch);
+        bool StartRebaseDialog(IWin32Window owner, string onto);
         bool StartRemotesDialog();
         bool StartResolveConflictsDialog();
         bool StartSettingsDialog();

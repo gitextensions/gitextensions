@@ -26,6 +26,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
+        private readonly bool _startRebaseImmediately;
 
         private FormRebase()
             : this(null)
@@ -48,11 +49,14 @@ namespace GitUI.CommandsDialogs
             _defaultBranch = defaultBranch;
         }
 
-        public FormRebase(GitUICommands aCommands, string from, string to, string defaultBranch)
+        public FormRebase(GitUICommands aCommands, string from, string to, string defaultBranch, bool interactive = false,
+            bool startRebaseImmediately = true)
             : this(aCommands, defaultBranch)
         {
             txtFrom.Text = from;
             _defaultToBranch = to;
+            chkInteractive.Checked = interactive;
+            _startRebaseImmediately = startRebaseImmediately;
         }
 
         private void FormRebaseLoad(object sender, EventArgs e)
@@ -86,6 +90,14 @@ namespace GitUI.CommandsDialogs
             chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
 
             chkStash.Checked = AppSettings.RebaseAutoStash;
+            if (_startRebaseImmediately)
+            {
+                OkClick(null, null);
+            }
+            else
+            {
+                ShowOptions_LinkClicked(null, null);
+            }
         }
 
         private void EnableButtons()

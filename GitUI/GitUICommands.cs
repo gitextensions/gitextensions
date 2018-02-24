@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs;
-using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
@@ -1385,17 +1384,45 @@ namespace GitUI
             return StartRemotesDialog(null);
         }
 
-        public bool StartRebaseDialog(IWin32Window owner, string branch)
+        private bool StartRebaseDialog(IWin32Window owner, string onto, bool interactive = false,
+            bool startRebaseImmediately = true)
         {
-            return StartRebaseDialog(owner, string.Empty, null, branch);
+            return StartRebaseDialog(owner, string.Empty, null, onto, interactive, startRebaseImmediately);
         }
 
-        public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto)
+        public bool StartRebase(IWin32Window owner, string onto)
+        {
+            return StartRebaseDialog(owner, onto,
+                interactive: false, startRebaseImmediately: true);
+        }
+
+        public bool ContinueRebase(IWin32Window owner)
+        {
+            return StartRebaseDialog(owner, onto: null,
+                interactive: false, startRebaseImmediately: true);
+        }
+
+        public bool StartInteractiveRebase(IWin32Window owner, string onto)
+        {
+            return StartRebaseDialog(owner, onto,
+                interactive: true, startRebaseImmediately: true);
+        }
+
+        public bool StartRebaseDialogWithAdvOptions(IWin32Window owner, string onto)
+        {
+            return StartRebaseDialog(owner, onto,
+                interactive: false, startRebaseImmediately: false);
+        }
+
+        public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto,
+            bool interactive = false, bool startRebaseImmediately = true)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormRebase(this, from, to, onto))
+                using (var form = new FormRebase(this, from, to, onto, interactive, startRebaseImmediately))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1403,11 +1430,10 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, PreRebase, PostRebase, action);
         }
 
-        public bool StartRebaseDialog(string branch)
+        public bool StartRebaseDialog(IWin32Window owner, string onto)
         {
-            return StartRebaseDialog(null, branch);
+            return StartRebaseDialog(owner, onto, interactive: false, startRebaseImmediately: false);
         }
-
 
         public bool StartRenameDialog(string branch)
         {
@@ -2100,7 +2126,7 @@ namespace GitUI
             string branch = null;
             if (arguments.ContainsKey("branch"))
                 branch = arguments["branch"];
-            StartRebaseDialog(branch);
+            StartRebaseDialog(owner: null, onto: branch);
         }
 
         public bool StartFileEditorDialog(string filename, bool showWarning = false)
