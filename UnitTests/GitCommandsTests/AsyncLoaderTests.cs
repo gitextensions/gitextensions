@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using GitCommandsTests.Helpers;
 using NUnit.Framework;
 
-namespace GitCommandsTests.Helpers
+namespace GitCommandsTests
 {
     public sealed class AsyncLoaderTests
     {
