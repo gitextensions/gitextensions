@@ -284,6 +284,7 @@
             // 
             this.SubModuleStatus.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.SubModuleStatus.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "Status", true));
+            this.SubModuleStatus.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleStatus.Location = new System.Drawing.Point(120, 183);
             this.SubModuleStatus.Name = "SubModuleStatus";
             this.SubModuleStatus.ReadOnly = true;
@@ -338,6 +339,7 @@
             // 
             this.SubModuleName.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.SubModuleName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "Name", true));
+            this.SubModuleName.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleName.Location = new System.Drawing.Point(120, 3);
             this.SubModuleName.Name = "SubModuleName";
             this.SubModuleName.ReadOnly = true;
@@ -389,6 +391,7 @@
             // SubModuleCommit
             // 
             this.SubModuleCommit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "CurrentCommitGuid", true));
+            this.SubModuleCommit.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleCommit.Location = new System.Drawing.Point(120, 111);
             this.SubModuleCommit.Name = "SubModuleCommit";
             this.SubModuleCommit.ReadOnly = true;
