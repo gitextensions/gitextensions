@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitTagController = new GitTagController(() => aCommands.Module.WorkingDir);
+                _gitTagController = new GitTagController(aCommands);
             }
         }
 
@@ -261,8 +261,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{currentTag}", lostObject.Hash);
-                var cmd = _gitTagController.GetCreateTagCommand(createTagArgs);
-                UICommands.StartCommandLineProcessDialog(cmd, this);
+                var success = _gitTagController.CreateTag(createTagArgs, this);
             }
 
             return currentTag;
