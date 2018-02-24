@@ -3,27 +3,27 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
-    public interface IGitRevisionProvider
+    public interface ILongShaProvider
     {
-        GitRevision Get(string sha1);
+        string Get(string sha1);
     }
 
-    public sealed class GitRevisionProvider : IGitRevisionProvider
+    public sealed class LongShaProvider : ILongShaProvider
     {
         private readonly Func<IGitModule> _getModule;
 
 
-        public GitRevisionProvider(Func<IGitModule> getModule)
+        public LongShaProvider(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
 
 
-        public GitRevision Get(string sha1)
+        public string Get(string sha1)
         {
             if (sha1.IsNullOrWhiteSpace() || sha1.Length >= 40)
             {
-                return new GitRevision(sha1);
+                return sha1;
             }
 
             var module = GetModule();
@@ -32,7 +32,7 @@ namespace GitCommands.Git
                 sha1 = fullSha1;
             }
 
-            return new GitRevision(sha1);
+            return sha1;
         }
 
         private IGitModule GetModule()

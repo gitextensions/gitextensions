@@ -360,9 +360,9 @@ namespace GitUI
         }
 
 
-        public void SetInitialRevision(GitRevision initialSelectedRevision)
+        public void SetInitialRevision(string initialSelectedRevision)
         {
-            _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
+            _initialSelectedRevision = initialSelectedRevision;
         }
 
         private bool _isRefreshingRevisions = false;

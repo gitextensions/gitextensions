@@ -8,9 +8,9 @@ using NUnit.Framework;
 namespace GitCommandsTests.Git
 {
     [TestFixture]
-    public class GitRevisionProviderTests
+    public class LongShaProviderTests
     {
-        private GitRevisionProvider _provider;
+        private LongShaProvider _provider;
         private IGitModule _module;
 
 
@@ -19,7 +19,7 @@ namespace GitCommandsTests.Git
         {
             _module = Substitute.For<IGitModule>();
 
-            _provider = new GitRevisionProvider(() => _module);
+            _provider = new LongShaProvider(() => _module);
         }
 
 
@@ -31,8 +31,7 @@ namespace GitCommandsTests.Git
         {
             var rev = _provider.Get(sha1);
 
-            rev.Should().NotBeNull();
-            rev.Guid.Should().Be(sha1);
+            rev.Should().Be(sha1);
         }
 
         [Test]
@@ -58,7 +57,7 @@ namespace GitCommandsTests.Git
             var rev = _provider.Get(sha1Fragment);
 
             rev.Should().NotBeNull();
-            rev.Guid.Should().Be(existing ? fullSha : sha1Fragment);
+            rev.Should().Be(existing ? fullSha : sha1Fragment);
         }
     }
 }
