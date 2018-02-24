@@ -145,13 +145,7 @@ namespace GitCommands
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            string branchFilter = BranchFilter;
-            if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1)
-                branchFilter = "--branches=" + BranchFilter;
-
             var arguments = new StringBuilder("log -z ");
-
-            arguments.Append(branchFilter);
 
             arguments.AppendFormat(" --pretty=format:\"{0}\"", ShaOnly ? shaOnlyFormat : fullFormat);
 
@@ -167,7 +161,10 @@ namespace GitCommands
             else
             {
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Branches))
-                    arguments.Append(" --branches");
+                {
+                    if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1)
+                        arguments.Append(" --branches=" + BranchFilter);
+                }
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
                     arguments.Append(" --remotes");
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Tags))
