@@ -71,7 +71,10 @@ namespace GitCommands
             _continuationTaskScheduler = continuationTaskScheduler ?? DefaultContinuationTaskScheduler;
         }
 
-        public Task Load(Action loadContent, Action onLoaded) => Load(token => loadContent(), onLoaded);
+        public Task Load(Action loadContent, Action onLoaded)
+        {
+            return Load(token => loadContent(), onLoaded);
+        }
 
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
@@ -148,7 +151,10 @@ namespace GitCommands
             }
         }
 
-        public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded) => Load(token => loadContent(), onLoaded);
+        public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
+        {
+            return Load(token => loadContent(), onLoaded);
+        }
 
         public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
