@@ -123,24 +123,25 @@ namespace GitCommands
                 Updated(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
-            string formatString =
+            const string shaOnlyFormat =
                 /* <COMMIT>       */ CommitBegin + "%n" +
                 /* Hash           */ "%H%n" +
                 /* Parents        */ "%P%n";
-            if (!ShaOnly)
-            {
-                formatString +=
-                    /* Tree                    */ "%T%n" +
-                    /* Author Name             */ "%aN%n" +
-                    /* Author Email            */ "%aE%n" +
-                    /* Author Date             */ "%at%n" +
-                    /* Committer Name          */ "%cN%n" +
-                    /* Committer Email         */ "%cE%n" +
-                    /* Committer Date          */ "%ct%n" +
-                    /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
-                    /* Commit Subject          */ "%s%x00" +
-                    /* Commit Body             */ "%B%x00";
-            }
+
+            const string fullFormat =
+                shaOnlyFormat +
+                /* Tree                    */ "%T%n" +
+                /* Author Name             */ "%aN%n" +
+                /* Author Email            */ "%aE%n" +
+                /* Author Date             */ "%at%n" +
+                /* Committer Name          */ "%cN%n" +
+                /* Committer Email         */ "%cE%n" +
+                /* Committer Date          */ "%ct%n" +
+                /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
+                /* Commit Subject          */ "%s%x00" +
+                /* Commit Body             */ "%B%x00";
+
+            var formatString = ShaOnly ? shaOnlyFormat : fullFormat;
 
             // NOTE:
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
