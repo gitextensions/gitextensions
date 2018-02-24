@@ -154,32 +154,29 @@ namespace GitCommands
             if (AppSettings.ShowReflogReferences)
                 logParam.Append(" --reflog");
 
-            if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
+            if (RefsOptions.HasFlag(RefsFiltringOptions.All))
             {
                 logParam.Append(" --all");
             }
             else
             {
-                if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
+                if (RefsOptions.HasFlag(RefsFiltringOptions.Branches))
                     logParam.Append(" --branches");
-                if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
+                if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
                     logParam.Append(" --remotes");
-                if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
+                if (RefsOptions.HasFlag(RefsFiltringOptions.Tags))
                     logParam.Append(" --tags");
             }
 
-            if ((RefsOptions & RefsFiltringOptions.Boundary) == RefsFiltringOptions.Boundary)
+            if (RefsOptions.HasFlag(RefsFiltringOptions.Boundary))
                 logParam.Append(" --boundary");
-            if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
+            if (RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes))
                 logParam.Append(" --not --glob=notes --not");
-
-            if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
+            if (RefsOptions.HasFlag(RefsFiltringOptions.NoMerges))
                 logParam.Append(" --no-merges");
-
-            if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
+            if (RefsOptions.HasFlag(RefsFiltringOptions.FirstParent))
                 logParam.Append(" --first-parent");
-
-            if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
+            if (RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration))
                 logParam.Append(" --simplify-by-decoration");
 
             string branchFilter = BranchFilter;
