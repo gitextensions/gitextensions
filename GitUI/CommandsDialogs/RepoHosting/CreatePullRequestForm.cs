@@ -217,7 +217,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (disposing)
             {
-                _remoteLoader.Cancel();
                 _remoteLoader.Dispose();
                 components?.Dispose();
             }

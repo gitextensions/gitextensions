@@ -3098,7 +3098,6 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _unstagedLoader.Cancel();
                 _unstagedLoader.Dispose();
                 if (_interactiveAddBashCloseWaitCts != null)
                 {

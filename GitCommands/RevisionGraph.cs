@@ -92,7 +92,6 @@ namespace GitCommands
         {
             if (disposing)
             {
-                _backgroundLoader.Cancel();
                 _backgroundLoader.Dispose();
             }
         }

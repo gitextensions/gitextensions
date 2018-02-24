@@ -240,9 +240,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (disposing)
             {
-                _tagsLoader.Cancel();
                 _tagsLoader.Dispose();
-                _branchesLoader.Cancel();
                 _branchesLoader.Dispose();
 
                 components?.Dispose();
