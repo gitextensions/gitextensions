@@ -185,10 +185,10 @@ namespace GitCommands
                 branchFilter = "--branches=" + BranchFilter;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
-                logParam,
-                formatString,
+                "log -z {0} --pretty=format:\"{1}\" {2} {3} -- {4}",
                 branchFilter,
+                formatString,
+                logParam,
                 RevisionFilter,
                 PathFilter);
 
