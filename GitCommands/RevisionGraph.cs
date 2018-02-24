@@ -166,7 +166,7 @@ namespace GitCommands
             else
             {
                 if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
-                    logParam = " --branches";
+                    logParam += " --branches";
                 if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
                     logParam += " --remotes";
                 if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
