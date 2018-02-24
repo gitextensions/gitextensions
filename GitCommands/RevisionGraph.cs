@@ -147,45 +147,40 @@ namespace GitCommands
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            string logParam;
-            if (AppSettings.OrderRevisionByDate)
-            {
-                logParam = " --date-order";
-            }
-            else
-            {
-                logParam = " --topo-order";
-            }
+            var logParam = new StringBuilder();
+
+            logParam.Append(AppSettings.OrderRevisionByDate ? " --date-order" : " --topo-order");
 
             if (AppSettings.ShowReflogReferences)
-            {
-                logParam += " --reflog";
-            }
+                logParam.Append(" --reflog");
 
             if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
-                logParam += " --all";
+            {
+                logParam.Append(" --all");
+            }
             else
             {
                 if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
-                    logParam += " --branches";
+                    logParam.Append(" --branches");
                 if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
-                    logParam += " --remotes";
+                    logParam.Append(" --remotes");
                 if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
-                    logParam += " --tags";
+                    logParam.Append(" --tags");
             }
+
             if ((RefsOptions & RefsFiltringOptions.Boundary) == RefsFiltringOptions.Boundary)
-                logParam += " --boundary";
+                logParam.Append(" --boundary");
             if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
-                logParam += " --not --glob=notes --not";
+                logParam.Append(" --not --glob=notes --not");
 
             if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
-                logParam += " --no-merges";
+                logParam.Append(" --no-merges");
 
             if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
-                logParam += " --first-parent";
+                logParam.Append(" --first-parent");
 
             if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
-                logParam += " --simplify-by-decoration";
+                logParam.Append(" --simplify-by-decoration");
 
             string branchFilter = BranchFilter;
             if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
