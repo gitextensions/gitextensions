@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
             : this(aCommands)
         {
-            FileChanges.SetInitialRevision(revision.Guid);
+            FileChanges.SetInitialRevision(revision?.Guid);
             Translate();
 
             FileChanges.ShowBuildServerInfo = true;
