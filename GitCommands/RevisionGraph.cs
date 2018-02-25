@@ -123,83 +123,68 @@ namespace GitCommands
                 Updated(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
-            string formatString =
+            const string shaOnlyFormat =
                 /* <COMMIT>       */ CommitBegin + "%n" +
                 /* Hash           */ "%H%n" +
                 /* Parents        */ "%P%n";
-            if (!ShaOnly)
-            {
-                formatString +=
-                    /* Tree                    */ "%T%n" +
-                    /* Author Name             */ "%aN%n" +
-                    /* Author Email            */ "%aE%n" +
-                    /* Author Date             */ "%at%n" +
-                    /* Committer Name          */ "%cN%n" +
-                    /* Committer Email         */ "%cE%n" +
-                    /* Committer Date          */ "%ct%n" +
-                    /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
-                    /* Commit Subject          */ "%s%x00" +
-                    /* Commit Body             */ "%B%x00";
-            }
+
+            const string fullFormat =
+                shaOnlyFormat +
+                /* Tree                    */ "%T%n" +
+                /* Author Name             */ "%aN%n" +
+                /* Author Email            */ "%aE%n" +
+                /* Author Date             */ "%at%n" +
+                /* Committer Name          */ "%cN%n" +
+                /* Committer Email         */ "%cE%n" +
+                /* Committer Date          */ "%ct%n" +
+                /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
+                /* Commit Subject          */ "%s%x00" +
+                /* Commit Body             */ "%B%x00";
 
             // NOTE:
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            string logParam;
-            if (AppSettings.OrderRevisionByDate)
-            {
-                logParam = " --date-order";
-            }
-            else
-            {
-                logParam = " --topo-order";
-            }
+            var arguments = new StringBuilder("log -z ");
+
+            arguments.AppendFormat(" --pretty=format:\"{0}\"", ShaOnly ? shaOnlyFormat : fullFormat);
+
+            arguments.Append(AppSettings.OrderRevisionByDate ? " --date-order" : " --topo-order");
 
             if (AppSettings.ShowReflogReferences)
-            {
-                logParam += " --reflog";
-            }
+                arguments.Append(" --reflog");
 
-            if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
-                logParam += " --all";
+            if (RefsOptions.HasFlag(RefsFiltringOptions.All))
+            {
+                arguments.Append(" --all");
+            }
             else
             {
-                if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
-                    logParam = " --branches";
-                if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
-                    logParam += " --remotes";
-                if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
-                    logParam += " --tags";
+                if (RefsOptions.HasFlag(RefsFiltringOptions.Branches))
+                {
+                    if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1)
+                        arguments.Append(" --branches=" + BranchFilter);
+                }
+                if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
+                    arguments.Append(" --remotes");
+                if (RefsOptions.HasFlag(RefsFiltringOptions.Tags))
+                    arguments.Append(" --tags");
             }
-            if ((RefsOptions & RefsFiltringOptions.Boundary) == RefsFiltringOptions.Boundary)
-                logParam += " --boundary";
-            if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
-                logParam += " --not --glob=notes --not";
 
-            if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
-                logParam += " --no-merges";
+            if (RefsOptions.HasFlag(RefsFiltringOptions.Boundary))
+                arguments.Append(" --boundary");
+            if (RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes))
+                arguments.Append(" --not --glob=notes --not");
+            if (RefsOptions.HasFlag(RefsFiltringOptions.NoMerges))
+                arguments.Append(" --no-merges");
+            if (RefsOptions.HasFlag(RefsFiltringOptions.FirstParent))
+                arguments.Append(" --first-parent");
+            if (RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration))
+                arguments.Append(" --simplify-by-decoration");
 
-            if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
-                logParam += " --first-parent";
+            arguments.AppendFormat(" {0} -- {1}", RevisionFilter, PathFilter);
 
-            if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
-                logParam += " --simplify-by-decoration";
-
-            string branchFilter = BranchFilter;
-            if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
-                (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
-                branchFilter = "--branches=" + BranchFilter;
-
-            string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
-                logParam,
-                formatString,
-                branchFilter,
-                RevisionFilter,
-                PathFilter);
-
-            Process p = _module.RunGitCmdDetached(arguments, GitModule.LosslessEncoding);
+            Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
 
             if (taskState.IsCancellationRequested)
                 return;
