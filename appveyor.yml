@@ -36,3 +36,14 @@ build_script:
     & Setup\MakePortableArchive.cmd Release %APPVEYOR_BUILD_VERSION%
     #Upload a portable archive, not a installer
     Get-ChildItem Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+test_script:
+- ps: |
+    $testAssemblies = @(
+        "UnitTests\GitCommandsTests\bin\Release\GitCommandsTests.dll"
+        "UnitTests\GitUITests\bin\Release\GitUITests.dll"
+        "UnitTests\GravatarTests\bin\Release\GravatarTests.dll"
+        "UnitTests\Plugins\ReleaseNotesGeneratorTests\bin\Release\ReleaseNotesGeneratorTests.dll"
+        "UnitTests\ResourceManagerTests\bin\Release\ResourceManagerTests.dll"
+    )
+    nunit3-console $testAssemblies
