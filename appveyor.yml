@@ -46,4 +46,16 @@ test_script:
         "UnitTests\Plugins\ReleaseNotesGeneratorTests\bin\Release\ReleaseNotesGeneratorTests.dll"
         "UnitTests\ResourceManagerTests\bin\Release\ResourceManagerTests.dll"
     )
-    nunit3-console $testAssemblies
+    $packageConfig = [xml](Get-Content .nuget\packages.config)
+    $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
+    $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Console.exe"
+    &$opencover_console `
+        -register:user `
+        -returntargetcode `
+        -hideskipped:All `
+        -filter:"+[*]*" `
+        -excludebyattribute:*.ExcludeFromCodeCoverage* `
+        -excludebyfile:*\*Designer.cs `
+        -output:"OpenCover.GitExtensions.xml" `
+        -target:"nunit3-console.exe" `
+        -targetargs:"$testAssemblies"
