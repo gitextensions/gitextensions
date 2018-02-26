@@ -239,7 +239,7 @@ See the changes in the commit form.");
             {
                 case GitObjectType.Blob:
                     {
-                        UICommands.StartFileHistoryDialog(this, gitItem.FileName, null);
+                        UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision);
                         break;
                     }
                 case GitObjectType.Commit:

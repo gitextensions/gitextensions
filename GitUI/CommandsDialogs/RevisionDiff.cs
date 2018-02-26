@@ -313,8 +313,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-
-                UICommands.StartFileHistoryDialog(this, (DiffFiles.SelectedItem).Name);
+                UICommands.StartFileHistoryDialog(this, DiffFiles.SelectedItem.Name, DiffFiles.Revision, false);
             }
         }
 
@@ -482,8 +481,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
-                UICommands.StartFileHistoryDialog(this, item.Name, revision, false);
+                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision, false);
             }
         }
 
