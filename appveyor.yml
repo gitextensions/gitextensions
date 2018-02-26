@@ -36,3 +36,29 @@ build_script:
     & Setup\MakePortableArchive.cmd Release %APPVEYOR_BUILD_VERSION%
     #Upload a portable archive, not a installer
     Get-ChildItem Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+test_script:
+- ps: |
+    $testAssemblies = @(
+        "UnitTests\GitCommandsTests\bin\Release\GitCommandsTests.dll"
+        "UnitTests\GitUITests\bin\Release\GitUITests.dll"
+        "UnitTests\GravatarTests\bin\Release\GravatarTests.dll"
+        "UnitTests\Plugins\ReleaseNotesGeneratorTests\bin\Release\ReleaseNotesGeneratorTests.dll"
+        "UnitTests\ResourceManagerTests\bin\Release\ResourceManagerTests.dll"
+    )
+    $packageConfig = [xml](Get-Content .nuget\packages.config)
+    $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
+    $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Console.exe"
+    &$opencover_console `
+        -register:user `
+        -returntargetcode `
+        -hideskipped:All `
+        -filter:"+[*]*" `
+        -excludebyattribute:*.ExcludeFromCodeCoverage* `
+        -excludebyfile:*\*Designer.cs `
+        -output:"OpenCover.GitExtensions.xml" `
+        -target:"nunit3-console.exe" `
+        -targetargs:"$testAssemblies"
+    $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
+    $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
+    &$codecov -f ".\OpenCover.GitExtensions.xml"
