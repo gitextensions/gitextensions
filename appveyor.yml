@@ -59,3 +59,6 @@ test_script:
         -output:"OpenCover.GitExtensions.xml" `
         -target:"nunit3-console.exe" `
         -targetargs:"$testAssemblies"
+    $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
+    $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
+    &$codecov -f ".\OpenCover.GitExtensions.xml"
