@@ -10,28 +10,21 @@ namespace GitUI
         /// Returns the names of files that match the specified search pattern
         /// </summary>
         /// <param name="searchPattern">The search string to match against the pathes of files</param>
-        Func<string, bool> Get([NotNull] string searchPattern);
+        /// <param name="workingDir"></param>
+        Func<string, bool> Get([NotNull] string searchPattern, [NotNull] string workingDir);
     }
 
     public sealed class FindFilePredicateProvider : IFindFilePredicateProvider
     {
-        private readonly Func<string> _workingDirGetter;
-
-        public FindFilePredicateProvider([NotNull] Func<string> workingDirGetter)
-        {
-            if (workingDirGetter == null)
-                throw new ArgumentNullException(nameof(workingDirGetter));
-
-            _workingDirGetter = workingDirGetter;
-        }
-
-        public Func<string, bool> Get(string searchPattern)
+        public Func<string, bool> Get(string searchPattern, string workingDir)
         {
             if (searchPattern == null)
                 throw new ArgumentNullException(nameof(searchPattern));
+            if (workingDir == null)
+                throw new ArgumentNullException(nameof(workingDir));
 
             var pattern = searchPattern.ToPosixPath();
-            var dir = (_workingDirGetter() ?? string.Empty).ToPosixPath();
+            var dir = workingDir.ToPosixPath();
 
             if (pattern.StartsWith(dir, StringComparison.OrdinalIgnoreCase))
             {

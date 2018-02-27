@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
             Translate();
             this.HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _findFilePredicateProvider = new FindFilePredicateProvider(() => Module.WorkingDir);
+            _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
         public void ForceRefreshRevisions()
@@ -452,7 +452,7 @@ namespace GitUI.CommandsDialogs
 
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
             {
-                var predicate = _findFilePredicateProvider.Get(name);
+                var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
             };
 

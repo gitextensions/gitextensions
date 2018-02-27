@@ -54,7 +54,7 @@ See the changes in the commit form.");
             InitializeComponent();
             Translate();
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _findFilePredicateProvider = new FindFilePredicateProvider(() => Module.WorkingDir);
+            _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
 
@@ -225,7 +225,7 @@ See the changes in the commit form.");
         private IList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
-            var predicate = _findFilePredicateProvider.Get(name);
+            var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate).ToList();
         }

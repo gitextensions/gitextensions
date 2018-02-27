@@ -35,7 +35,7 @@ namespace GitUI
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _gravatarService = new GravatarService(avatarCache);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _fildFilePredicateProvider = new FindFilePredicateProvider(() => Module.WorkingDir);
+            _fildFilePredicateProvider = new FindFilePredicateProvider();
         }
 
         public GitUICommands(string workingDir)
@@ -2180,7 +2180,7 @@ namespace GitUI
         {
             var candidates = Module.GetFullTree("HEAD");
 
-            var predicate = _fildFilePredicateProvider.Get(name);
+            var predicate = _fildFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate).ToList();
         }
