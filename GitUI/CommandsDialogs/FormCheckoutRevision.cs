@@ -31,7 +31,6 @@ namespace GitUI.CommandsDialogs
 
         private void FormCheckoutLoad(object sender, EventArgs e)
         {
-
         }
 
         public void SetRevision(string commitHash)

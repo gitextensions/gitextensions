@@ -38,7 +38,8 @@ namespace GitUI
         }
 
         public GitUICommands(string workingDir)
-            : this(new GitModule(workingDir)) { }
+            : this(new GitModule(workingDir))
+        { }
 
         #region IGitUICommands Members
 
@@ -402,7 +403,6 @@ namespace GitUI
             {
                 InvokeEvent(form == null ? null : form.Owner, ev);
             };
-
         }
 
         public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir,
@@ -1164,7 +1164,6 @@ namespace GitUI
         /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
-
             Func<bool> action = () =>
             {
                 using (var form = new FormMergeBranch(this, branch))
@@ -1209,7 +1208,6 @@ namespace GitUI
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-
             };
 
             return DoActionOnRepo(owner, true, true, PreDeleteTag, PostDeleteTag, action);
@@ -1439,10 +1437,8 @@ namespace GitUI
             {
                 using (var form = new FormRenameBranch(this, branch))
                 {
-
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-
             };
 
             return DoActionOnRepo(owner, true, true, PreRename, PostRename, action);
@@ -1709,7 +1705,6 @@ namespace GitUI
 
         private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, GitUIPostActionEventHandler gitUIEventHandler)
         {
-
             if (gitUIEventHandler != null)
             {
                 var e = new GitUIPostActionEventArgs(ownerForm, this, actionDone);

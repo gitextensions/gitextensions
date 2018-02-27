@@ -14,7 +14,6 @@ using System.Text.RegularExpressions;
 
 namespace TfsIntegration
 {
-
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class TfsIntegrationMetadata : BuildServerAdapterMetadataAttribute

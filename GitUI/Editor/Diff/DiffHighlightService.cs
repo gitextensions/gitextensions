@@ -14,7 +14,6 @@ namespace GitUI.Editor.Diff
 
         protected DiffHighlightService()
         {
-
         }
 
         public static bool IsCombinedDiff(string diff)
@@ -80,7 +79,6 @@ namespace GitUI.Editor.Diff
                                                         TextMarkerType.SolidBlock, color,
                                                         ColorHelper.GetForeColorForBackColor(color)));
             }
-
         }
 
         private void AddExtraPatchHighlighting(IDocument document)

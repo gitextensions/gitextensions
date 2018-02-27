@@ -37,7 +37,6 @@ namespace GitExtensions
 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;
-
             }
             catch (TypeInitializationException tie)
             {
@@ -228,6 +227,5 @@ namespace GitExtensions
                 System.Environment.Exit(1);
             }
         }
-
     }
 }

@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(aCommands)
         {
             InitializeComponent();
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
             Translate();
         }
 
@@ -57,8 +57,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             var sortedItems = from pair in items
-                        orderby pair.Value descending
-                        select pair;
+                              orderby pair.Value descending
+                              select pair;
 
             foreach (var keyValuePair in sortedItems)
             {

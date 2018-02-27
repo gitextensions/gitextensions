@@ -53,7 +53,6 @@ namespace ResourceManager
 
         protected virtual void OnRuntimeLoad(EventArgs e)
         {
-
         }
 
         protected override void OnLoad(EventArgs e)

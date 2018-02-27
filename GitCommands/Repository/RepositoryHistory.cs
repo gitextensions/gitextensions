@@ -77,7 +77,8 @@ namespace GitCommands.Repository
                 break;
             }
 
-            var repository = new Repository(repo, null, null) {
+            var repository = new Repository(repo, null, null)
+            {
                 RepositoryType = RepositoryType.History,
                 Anchor = anchor
             };

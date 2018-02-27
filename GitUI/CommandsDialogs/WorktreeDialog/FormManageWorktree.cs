@@ -78,7 +78,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
                     if (IsCurrentlyOpenedWorktree(_worktrees[0]))
                         Worktrees.Rows[i].Cells["Open"].Value = Resources.IconBlank;
-
                 }
                 else if (!CanDeleteWorkspace(_worktrees[i]))
                 {

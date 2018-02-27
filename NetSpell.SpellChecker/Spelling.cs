@@ -19,7 +19,6 @@ namespace NetSpell.SpellChecker
     [ToolboxBitmap(typeof(NetSpell.SpellChecker.Spelling), "Spelling.bmp")]
     public class Spelling : System.ComponentModel.Component
     {
-
         #region Global Regex
         // Regex are class scope and compiled to improve performance on reuse
         private Regex _digitRegex = new Regex(@"^\d", RegexOptions.Compiled);
@@ -876,7 +875,6 @@ namespace NetSpell.SpellChecker
             }
 
             return misspelledWord;
-
         } // SpellCheck
 
         /// <summary>
@@ -1055,7 +1053,6 @@ namespace NetSpell.SpellChecker
                     break;
                 }
             }
-
         } // suggest
 
         /// <summary>

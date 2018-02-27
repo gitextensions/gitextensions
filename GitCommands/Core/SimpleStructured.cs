@@ -74,7 +74,6 @@ namespace GitCommands.Core
                     IEnumerable eo = obj as IEnumerable;
                     if (eo != null)
                         return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
-
                 }
                 SimpleStructured ss = obj as SimpleStructured;
                 if (ss != null)

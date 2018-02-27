@@ -188,12 +188,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // Could be a security issue. Just ignore and let the user choose
                 // manually.
             }
-
         }
 
         private void ok_Click(object sender, EventArgs e)
         {
-
             if (otherHome.Checked)
             {
                 if (string.IsNullOrEmpty(otherHomeDir.Text))

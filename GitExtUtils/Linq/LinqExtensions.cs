@@ -2,10 +2,8 @@
 
 namespace System.Linq
 {
-
     public static class LinqExtensions
     {
-
         //
         // Summary:
         //     Creates a System.Collections.Generic.Dictionary<TKey,List<TValue>> from an System.Collections.Generic.IEnumerable<T>
@@ -217,6 +215,5 @@ namespace System.Linq
             foreach (T t in enumerable)
                 action(t);
         }
-
     }
 }

@@ -488,9 +488,9 @@ namespace GitUI.CommandsDialogs
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
             return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
-                       {
-                           HandleOnExitCallback = HandlePullOnExit
-                       };
+            {
+                HandleOnExitCallback = HandlePullOnExit
+            };
         }
 
         private bool HandlePullOnExit(ref bool isError, FormProcess form)
@@ -522,11 +522,9 @@ namespace GitUI.CommandsDialogs
                         Text = string.Format(_pruneFromCaption.Text, remote)
                     })
                     {
-
                         formPrune.ShowDialog(form);
                     }
                 }
-
             }
 
             return false;
@@ -669,7 +667,6 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<string> GetSelectedRemotes()
         {
-
             if (PullFromUrl.Checked)
             {
                 yield break;

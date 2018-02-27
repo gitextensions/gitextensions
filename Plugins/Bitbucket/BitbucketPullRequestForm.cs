@@ -95,7 +95,8 @@ namespace Bitbucket
                         lbxPullRequests.DisplayMember = "DisplayName";
                     });
                 }
-                catch (System.InvalidOperationException) {
+                catch (System.InvalidOperationException)
+                {
                     return;
                 }
             });
@@ -341,7 +342,7 @@ namespace Bitbucket
             if (response.Success)
             {
                 MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                BitbucketViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),

@@ -60,7 +60,8 @@ namespace GitUI.Hotkey
 
             ////HotkeyCommand[] scriptkeys = LoadSettings().FirstOrDefault(s => s.Name == name);
 
-            if (settings != null) {
+            if (settings != null)
+            {
                 // append general hotkeys to every form
                 ////HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
                 HotkeyCommand[] allkeys = new HotkeyCommand[settings.Commands.Length + scriptkeys.Commands.Length];
@@ -233,7 +234,6 @@ namespace GitUI.Hotkey
 
             return new[]
               {
-
                 // FormCommit
                 new HotkeySettings(FormCommit.HotkeySettingsName,
                     hk(FormCommit.Commands.AddToGitIgnore, Keys.None),
@@ -331,6 +331,5 @@ namespace GitUI.Hotkey
                 Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) })
             .ToArray();
         }
-
     }
 }

@@ -114,7 +114,5 @@ namespace GitUI.CommandsDialogs
 
             _ignoredFilesLoader.Load(() => Module.GetIgnoredFiles(GetCurrentPatterns()), UpdatePreviewPanel);
         }
-
-
     }
 }

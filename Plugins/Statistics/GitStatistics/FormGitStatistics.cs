@@ -123,7 +123,6 @@ namespace GitStatistics
                     CommitCountPie.ToolTips = commitCountLabels;
 
                     CommitStatistics.Text = builder.ToString();
-
                 }, null);
             };
             a.BeginInvoke(null, null, this);

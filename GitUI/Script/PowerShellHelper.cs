@@ -29,7 +29,6 @@ namespace GitUI.Script
                 var executionEndTimestamp = DateTime.Now;
                 AppSettings.GitLog.Log(filename + " " + psarguments, executionStartTimestamp, executionEndTimestamp);
             };
-
         }
     }
 }

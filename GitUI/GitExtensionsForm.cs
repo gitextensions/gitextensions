@@ -199,7 +199,6 @@ namespace GitUI
         /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
         protected virtual void OnRuntimeLoad(EventArgs e)
         {
-
         }
 
         private bool _windowCentred;

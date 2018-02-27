@@ -535,7 +535,6 @@ namespace GitCommands.Config
                         return ReadKey;
                 }
             }
-
         }
         #endregion
     }

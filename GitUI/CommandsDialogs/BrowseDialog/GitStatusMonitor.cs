@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
 
             CalculateNextUpdateTime(UpdateDelay);
-         }
+        }
 
         private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
         {

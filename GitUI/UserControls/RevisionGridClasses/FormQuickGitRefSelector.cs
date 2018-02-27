@@ -97,7 +97,6 @@ namespace GitUI.UserControls.RevisionGridClasses
                 // resize the form to look nice
                 Size = new Size(lbxRefs.Width + Padding.Left + Padding.Right,
                                 lbxRefs.Height + Padding.Top + flowLayoutPanel1.Height);
-
             }
         }
 

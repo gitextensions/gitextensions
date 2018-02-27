@@ -4,7 +4,6 @@ namespace GitUIPluginInterfaces
 {
     public class GitUIPostActionEventArgs : GitUIBaseEventArgs
     {
-
         public bool ActionDone { get; private set; }
 
         public GitUIPostActionEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands, bool actionDone)
@@ -12,6 +11,5 @@ namespace GitUIPluginInterfaces
         {
             ActionDone = actionDone;
         }
-
     }
 }

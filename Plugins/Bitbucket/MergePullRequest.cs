@@ -32,6 +32,5 @@ namespace Bitbucket
         {
             return json;
         }
-
     }
 }

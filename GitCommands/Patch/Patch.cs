@@ -210,9 +210,8 @@ namespace PatchApply
                 {
                     if (line.Length > 4 && line.StartsWith("+ï»¿"))
                         AppendText(line.Substring(4));
-                    else
-                        if (line.Length > 1)
-                            FileTextB += line.Substring(1);
+                    else if (line.Length > 1)
+                        FileTextB += line.Substring(1);
 
                     FileTextB += "\n";
                 }

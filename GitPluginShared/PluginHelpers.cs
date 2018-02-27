@@ -87,7 +87,6 @@ namespace GitPluginShared
 
                     return pane;
                 }
-
             }
             catch (Exception)
             {

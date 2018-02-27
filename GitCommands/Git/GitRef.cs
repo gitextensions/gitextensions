@@ -25,7 +25,8 @@ namespace GitCommands
         public IGitModule Module { get; private set; }
 
         public GitRef(IGitModule module, string guid, string completeName)
-            : this(module, guid, completeName, string.Empty) { }
+            : this(module, guid, completeName, string.Empty)
+        { }
 
         public GitRef(IGitModule module, string guid, string completeName, string remote)
         {

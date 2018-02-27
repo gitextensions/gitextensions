@@ -33,9 +33,9 @@ namespace GitStatistics
             bool countSubmodule = !IgnoreSubmodules.ValueOrDefault(Settings);
             using (var formGitStatistics =
                 new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles.ValueOrDefault(Settings), countSubmodule)
-                    {
-                        DirectoriesToIgnore = IgnoreDirectories.ValueOrDefault(Settings)
-                    })
+                {
+                    DirectoriesToIgnore = IgnoreDirectories.ValueOrDefault(Settings)
+                })
             {
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
 

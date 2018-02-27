@@ -5,7 +5,6 @@ namespace GitCommands.Git
 {
     public class GitCheckoutBranchCmd : GitCommand
     {
-
         public enum NewBranch
         {
             DontCreate,

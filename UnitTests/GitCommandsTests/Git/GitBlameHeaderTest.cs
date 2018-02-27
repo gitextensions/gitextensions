@@ -8,7 +8,6 @@ using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-
     [TestClass]
     public class GitBlameHeaderTest
     {
@@ -31,7 +30,6 @@ namespace GitCommandsTests.Git
             Color expectedColor = Color.FromArgb(255, 246, 226, 238);
 
             Assert.AreEqual(expectedColor, header.GetColor());
-
         }
 
         [TestMethod]

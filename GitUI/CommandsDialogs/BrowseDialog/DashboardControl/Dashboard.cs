@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void AddDashboardEntry(RepositoryCategory entry)
         {
             var dashboardCategory = new DashboardCategory(entry.Description, entry);
-            this.groupLayoutPanel.Controls.Add(dashboardCategory);
+            groupLayoutPanel.Controls.Add(dashboardCategory);
 
             dashboardCategory.DashboardItemClick += dashboardItem_Click;
             dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
@@ -200,9 +200,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!initialized)
             {
                 // Remove favorites
-                var categories = (from DashboardCategory i in this.groupLayoutPanel.Controls
+                var categories = (from DashboardCategory i in groupLayoutPanel.Controls
                                   select i).ToList();
-                this.groupLayoutPanel.Controls.Clear();
+                groupLayoutPanel.Controls.Clear();
                 foreach (var category in categories)
                 {
                     category.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;

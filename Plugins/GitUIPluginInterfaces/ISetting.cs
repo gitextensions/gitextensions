@@ -117,5 +117,4 @@ namespace GitUIPluginInterfaces
         /// </summary>
         public abstract void SaveSetting(ISettingsSource settings, bool areSettingsEffective, T control);
     }
-
 }

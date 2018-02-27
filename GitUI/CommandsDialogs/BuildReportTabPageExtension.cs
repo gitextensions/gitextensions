@@ -101,24 +101,24 @@ namespace GitUI.CommandsDialogs
             if (e.PropertyName == "BuildStatus")
             {
                 // Refresh the selected Git revision
-                this.FillBuildReport(this.selectedGitRevision);
+                this.FillBuildReport(selectedGitRevision);
             }
         }
 
         private void CreateBuildReportTabPage(TabControl tabControl)
         {
-            this.buildReportTabPage = new TabPage
-                {
-                    Padding = new Padding(3),
-                    TabIndex = tabControl.Controls.Count,
-                    Text = _caption,
-                    UseVisualStyleBackColor = true
-                };
-            this.buildReportWebBrowser = new WebBrowserCtrl
+            buildReportTabPage = new TabPage
+            {
+                Padding = new Padding(3),
+                TabIndex = tabControl.Controls.Count,
+                Text = _caption,
+                UseVisualStyleBackColor = true
+            };
+            buildReportWebBrowser = new WebBrowserCtrl
             {
                 Dock = DockStyle.Fill
             };
-            this.buildReportTabPage.Controls.Add(this.buildReportWebBrowser);
+            buildReportTabPage.Controls.Add(buildReportWebBrowser);
         }
 
         private void BuildReportWebBrowserOnNavigated(object sender,

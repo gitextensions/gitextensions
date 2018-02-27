@@ -20,7 +20,6 @@ namespace GitCommandsTests.Config
     [TestClass]
     public class ConfigFileTest
     {
-
         private GitModule _Module;
         private GitModule Module
         {
@@ -102,7 +101,6 @@ namespace GitCommandsTests.Config
             {
                 Assert.AreEqual("invalid setting name: inexistentsetting", e.Message.ToLower());
             }
-
         }
 
         [TestMethod]
@@ -222,7 +220,6 @@ namespace GitCommandsTests.Config
         [TestMethod]
         public void TestSetPathValueFileNonExisting()
         {
-
             { // PERFORM TEST
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
@@ -705,7 +702,6 @@ namespace GitCommandsTests.Config
         [TestMethod]
         public void CaseSensitive()
         {
-
             // create test data
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -717,7 +713,6 @@ namespace GitCommandsTests.Config
             }
             // verify
             {
-
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
 
                 string remote = "branch.BranchName1.remote";

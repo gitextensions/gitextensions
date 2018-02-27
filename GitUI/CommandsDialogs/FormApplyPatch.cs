@@ -125,11 +125,11 @@ namespace GitUI.CommandsDialogs
         private string SelectPatchFile(string initialDirectory)
         {
             using (var dialog = new OpenFileDialog
-                             {
-                                 Filter = _selectPatchFileFilter.Text + "|*.patch",
-                                 InitialDirectory = initialDirectory,
-                                 Title = _selectPatchFileCaption.Text
-                             })
+            {
+                Filter = _selectPatchFileFilter.Text + "|*.patch",
+                InitialDirectory = initialDirectory,
+                Title = _selectPatchFileCaption.Text
+            })
             {
                 return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFile.Text;
             }
@@ -240,7 +240,6 @@ namespace GitUI.CommandsDialogs
 
         private void PatchDirMode_CheckedChanged(object sender, EventArgs e)
         {
-
         }
 
         private void SolveMergeconflicts_Click(object sender, EventArgs e)

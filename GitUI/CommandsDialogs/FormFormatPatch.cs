@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs
         private void OutputPath_TextChanged(object sender, EventArgs e)
         {
             if (Directory.Exists(OutputPath.Text))
-               AppSettings.LastFormatPatchDir = OutputPath.Text;
+                AppSettings.LastFormatPatchDir = OutputPath.Text;
         }
 
         private void FormatPatch_Click(object sender, EventArgs e)
@@ -151,12 +151,11 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
-            else
-                if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
-                {
-                    MessageBox.Show(this, _twoRevisionsNeededText.Text, _twoRevisionsNeededCaption.Text);
-                    return;
-                }
+            else if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
+            {
+                MessageBox.Show(this, _twoRevisionsNeededText.Text, _twoRevisionsNeededCaption.Text);
+                return;
+            }
 
             if (!SaveToDir.Checked)
             {

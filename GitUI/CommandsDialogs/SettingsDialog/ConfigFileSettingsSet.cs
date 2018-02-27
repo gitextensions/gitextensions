@@ -17,6 +17,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             LocalSettings = aLocalSettings;
             GlobalSettings = aGlobalSettings;
         }
-
     }
 }

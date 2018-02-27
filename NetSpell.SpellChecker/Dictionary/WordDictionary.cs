@@ -96,7 +96,6 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </remarks>
         private void SaveUserFile()
         {
-
             // quit if user file is disabled
             if (!EnableUserFile) return;
 
@@ -435,7 +434,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                         SuffixRules.Add(currentRule.Name, currentRule);
                                     }
                                 }
-                                    // if 4 parts, then entry for current rule
+                                // if 4 parts, then entry for current rule
                                 else if (partMatches.Count == 4)
                                 {
                                     // part 1 = affix key
@@ -565,7 +564,6 @@ namespace NetSpell.SpellChecker.Dictionary
                 // if no match consume one char
                 if (prevWord.Length == tempWord.Length)
                 {
-
                     tempWord = tempWord.Substring(1);
                 }
             }// while
@@ -646,8 +644,8 @@ namespace NetSpell.SpellChecker.Dictionary
 #if FULL_PROFILE
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
 #endif
-        [NotifyParentProperty(true)]
-        public string DictionaryFolder { get; set; } = "";
+            [NotifyParentProperty(true)]
+            public string DictionaryFolder { get; set; } = "";
 
         /// <summary>
         ///     Set this to true to automatically create a user dictionary when
@@ -747,5 +745,4 @@ namespace NetSpell.SpellChecker.Dictionary
         #endregion
 
     }
-
 }

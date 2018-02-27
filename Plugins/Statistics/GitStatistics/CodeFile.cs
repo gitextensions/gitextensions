@@ -206,7 +206,7 @@ namespace GitStatistics
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
                 _inCommentBlock = false;
 
-             if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
+            if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
                 _inCommentBlock = false;
 
             if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||

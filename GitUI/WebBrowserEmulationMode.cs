@@ -6,7 +6,6 @@ namespace GitUI
 {
     public sealed class WebBrowserEmulationMode
     {
-
         public static void SetBrowserFeatureControl()
         {
             // Fix for issue #2654:

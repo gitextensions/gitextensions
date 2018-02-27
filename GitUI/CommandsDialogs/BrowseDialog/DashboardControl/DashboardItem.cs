@@ -17,9 +17,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             InitializeComponent();
             Translate();
-            this.flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.Icon.Width = this.Icon.Height;
+            Icon.Width = Icon.Height;
         }
 
         public DashboardItem(Repository repository)
@@ -81,14 +81,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 Icon.Image = icon;
 
             toolTip = new ToolTip
-                              {
-                                  InitialDelay = 1,
-                                  AutomaticDelay = 100,
-                                  AutoPopDelay = 5000,
-                                  UseFading = false,
-                                  UseAnimation = false,
-                                  ReshowDelay = 1
-                              };
+            {
+                InitialDelay = 1,
+                AutomaticDelay = 100,
+                AutoPopDelay = 5000,
+                UseFading = false,
+                UseAnimation = false,
+                ReshowDelay = 1
+            };
             toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
 
             _NO_TRANSLATE_Title.MouseDown += Title_MouseDown;

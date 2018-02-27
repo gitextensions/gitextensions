@@ -43,7 +43,6 @@ namespace GitCommands
         /// Gets the commit info for submodule.
         /// </summary>
         void UpdateCommitMessage(CommitData data, string sha1, ref string error);
-
     }
 
     public sealed class CommitDataManager : ICommitDataManager

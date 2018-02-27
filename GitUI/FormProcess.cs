@@ -133,7 +133,6 @@ namespace GitUI
 
         protected virtual void BeforeProcessStart()
         {
-
         }
 
         private void processStart(FormStatus form)
@@ -197,7 +196,6 @@ namespace GitUI
 
         private void OnExit(int exitcode)
         {
-
             this.InvokeAsync(() =>
             {
                 bool isError;
@@ -219,7 +217,6 @@ namespace GitUI
 
         protected virtual void DataReceived(object sender, TextEventArgs e)
         {
-
         }
 
         private void DataReceivedCore(object sender, TextEventArgs e)
@@ -269,7 +266,6 @@ namespace GitUI
             this.Name = "FormProcess";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
     }
 }

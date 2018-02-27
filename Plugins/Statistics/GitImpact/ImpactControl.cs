@@ -83,7 +83,7 @@ namespace GitImpact
 
         void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
-            this._scrollBar.Value = Math.Min(this._scrollBar.Maximum, Math.Max(this._scrollBar.Minimum, this._scrollBar.Value + e.Delta));
+            _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
             // Redraw when we've scrolled
             Invalidate();
         }
@@ -159,29 +159,28 @@ namespace GitImpact
 
         private void InitializeComponent()
         {
-            this._scrollBar = new System.Windows.Forms.HScrollBar();
+            _scrollBar = new System.Windows.Forms.HScrollBar();
             this.SuspendLayout();
             //
             // scrollBar
             //
-            this._scrollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._scrollBar.LargeChange = 0;
-            this._scrollBar.Location = new System.Drawing.Point(0, 133);
-            this._scrollBar.Maximum = 0;
-            this._scrollBar.Name = "_scrollBar";
-            this._scrollBar.Size = new System.Drawing.Size(150, 17);
-            this._scrollBar.SmallChange = 0;
-            this._scrollBar.TabIndex = 0;
+            _scrollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            _scrollBar.LargeChange = 0;
+            _scrollBar.Location = new System.Drawing.Point(0, 133);
+            _scrollBar.Maximum = 0;
+            _scrollBar.Name = "_scrollBar";
+            _scrollBar.Size = new System.Drawing.Size(150, 17);
+            _scrollBar.SmallChange = 0;
+            _scrollBar.TabIndex = 0;
             this._scrollBar.Scroll += this.OnScroll;
             //
             // ImpactControl
             //
-            this.Controls.Add(this._scrollBar);
+            this.Controls.Add(_scrollBar);
             this.Name = "ImpactControl";
             this.Paint += this.OnPaint;
             this.Resize += this.OnResize;
             this.ResumeLayout(false);
-
         }
 
         private int GetGraphWidth()

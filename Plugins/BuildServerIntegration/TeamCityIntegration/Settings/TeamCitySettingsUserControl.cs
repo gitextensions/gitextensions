@@ -120,7 +120,6 @@ namespace TeamCityIntegration.Settings
 
             MessageBox.Show(this, _failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text,
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
         }
     }
 }

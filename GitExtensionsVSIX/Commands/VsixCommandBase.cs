@@ -17,6 +17,5 @@ namespace GitExtensionsVSIX.Commands
         {
             menuCommand.Enabled = BaseCommand.IsEnabled(application);
         }
-
     }
 }

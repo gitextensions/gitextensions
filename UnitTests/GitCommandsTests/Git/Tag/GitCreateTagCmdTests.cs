@@ -82,6 +82,5 @@ namespace GitCommandsTests.Git.Tag
 
             Assert.AreEqual(expected, actualCmdLine);
         }
-
     }
 }

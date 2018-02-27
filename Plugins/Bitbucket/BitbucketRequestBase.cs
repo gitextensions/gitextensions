@@ -53,10 +53,10 @@ namespace Bitbucket
             var response = client.Execute(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
                 return new BitbucketResponse<T>
-                    {
-                        Success = false,
-                        Messages = new[] { response.ErrorMessage }
-                    };
+                {
+                    Success = false,
+                    Messages = new[] { response.ErrorMessage }
+                };
 
             if ((int)response.StatusCode >= 300)
             {
@@ -64,10 +64,10 @@ namespace Bitbucket
             }
 
             return new BitbucketResponse<T>
-                {
-                    Success = true,
-                    Result = ParseResponse(JObject.Parse(response.Content))
-                };
+            {
+                Success = true,
+                Result = ParseResponse(JObject.Parse(response.Content))
+            };
         }
 
         protected abstract object RequestBody { get; }
@@ -117,6 +117,5 @@ namespace Bitbucket
             }
             return new BitbucketResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
         }
-
     }
 }

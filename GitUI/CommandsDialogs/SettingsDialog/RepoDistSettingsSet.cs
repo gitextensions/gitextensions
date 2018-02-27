@@ -20,7 +20,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             RepoDistSettings = aPulledSettings;
             GlobalSettings = aGlobalSettings;
         }
-
-
     }
 }

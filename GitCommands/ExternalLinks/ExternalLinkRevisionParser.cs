@@ -160,6 +160,5 @@ namespace GitCommands.ExternalLinks
                 }
             }
         }
-
     }
 }

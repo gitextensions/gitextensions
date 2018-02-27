@@ -94,6 +94,5 @@ namespace TranslationApp
             }
             Cursor.Current = Cursors.Default;
         }
-
     }
 }

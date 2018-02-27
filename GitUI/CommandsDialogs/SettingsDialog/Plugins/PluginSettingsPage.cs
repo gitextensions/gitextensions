@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
             foreach (var setting in settings)
             {
-               this.AddSetting(setting);
+                this.AddSetting(setting);
             }
         }
 
@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
             var layout = base.CreateSettingsLayout();
 
-            this.tableLayoutPanel1.Controls.Add(layout.GetControl(), 0, 1);
+            tableLayoutPanel1.Controls.Add(layout.GetControl(), 0, 1);
 
             return layout;
         }

@@ -105,7 +105,6 @@ namespace GitUI.CommandsDialogs
                 Text = string.Format(_pushToCaption.Text, _currentRemote),
             })
             {
-
                 form.ShowDialog();
 
                 if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())

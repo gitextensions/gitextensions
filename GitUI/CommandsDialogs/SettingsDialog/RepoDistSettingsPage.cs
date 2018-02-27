@@ -65,7 +65,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             this.Name = "RepoDistSettingsPage";
             this.Size = new System.Drawing.Size(951, 518);
             this.ResumeLayout(false);
-
         }
     }
 }

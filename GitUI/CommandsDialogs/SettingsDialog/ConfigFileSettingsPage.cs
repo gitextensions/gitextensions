@@ -49,6 +49,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             LoadSettings();
         }
-
     }
 }

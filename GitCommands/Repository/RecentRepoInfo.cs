@@ -215,7 +215,6 @@ namespace GitCommands.Repository
             }
             else
             {
-
                 string root = null;
                 string company = null;
                 string repository = null;

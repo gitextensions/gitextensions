@@ -21,7 +21,6 @@ namespace GitUI.HelperDialogs
         private FormCommitDiff()
             : this(null)
         {
-
         }
 
         public FormCommitDiff(GitUICommands aCommands, string revision)

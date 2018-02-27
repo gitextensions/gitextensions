@@ -139,7 +139,6 @@ namespace GitCommands
                         return default;
                     }
                     return loadContent(token);
-
                 }, token)
                 .ContinueWith((task) =>
             {

@@ -39,7 +39,7 @@ namespace GitUI
         private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
-            //Files with tree guid should be presented with normal diff
+            // Files with tree guid should be presented with normal diff
             var isTracked = file.IsTracked || file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace();
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
                     diffArgs, encoding, true, isTracked);
@@ -215,6 +215,5 @@ namespace GitUI
             else
                 return container.FindFocusedControl();
         }
-
     }
 }

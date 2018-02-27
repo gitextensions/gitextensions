@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
+                var authorsfile = _NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetauthorsfile = false;
                 if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
                 {
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
         private bool AskContinutWithoutAuthorsFile(string authorsfile)
         {
             return MessageBox.Show(
-                this, string.Format(_questionContinueWithoutAuthors.Text, authorsfile), this._questionContinueWithoutAuthorsCaption.Text,
+                this, string.Format(_questionContinueWithoutAuthors.Text, authorsfile), _questionContinueWithoutAuthorsCaption.Text,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes;
         }
@@ -101,31 +101,31 @@ namespace GitUI.CommandsDialogs
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            var userSelectedPath = OsShellUtil.PickFolder(this, this._NO_TRANSLATE_destinationComboBox.Text);
+            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_destinationComboBox.Text);
 
             if (userSelectedPath != null)
             {
-                this._NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
+                _NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
             }
         }
 
         private void authorsFileBrowseButton_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
+            using (var dialog = new OpenFileDialog { InitialDirectory = _NO_TRANSLATE_destinationComboBox.Text })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
-                    this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+                    _NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
             }
         }
 
         private void destinationComboBox_DropDown(object sender, EventArgs e)
         {
             System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
-            if (this._NO_TRANSLATE_destinationComboBox.Items.Count != repos.Count)
+            if (_NO_TRANSLATE_destinationComboBox.Items.Count != repos.Count)
             {
-                this._NO_TRANSLATE_destinationComboBox.Items.Clear();
+                _NO_TRANSLATE_destinationComboBox.Items.Clear();
                 foreach (Repository repo in repos)
-                    this._NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
+                    _NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
             }
         }
 

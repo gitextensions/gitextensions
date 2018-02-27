@@ -118,7 +118,6 @@ namespace GitUI.UserControls
                         _timer.Stop(true);
                         FireProcessExited();
                     }));
-
                 };
 
                 process.Exited += (sender, args) =>

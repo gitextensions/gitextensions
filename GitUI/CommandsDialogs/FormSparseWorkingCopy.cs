@@ -51,16 +51,16 @@ namespace GitUI.CommandsDialogs
                     {
                         switch (MessageBox.Show(this, Globalized.Strings.YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.Cancel.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                         {
-                        case DialogResult.Yes:
-                            sparse.SaveChanges();
-                            break;
-                        case DialogResult.No:
-                            // Just exit
-                            break;
-                        default:
-                            // Cancel, or error
-                            args.Cancel = true;
-                            break;
+                            case DialogResult.Yes:
+                                sparse.SaveChanges();
+                                break;
+                            case DialogResult.No:
+                                // Just exit
+                                break;
+                            default:
+                                // Cancel, or error
+                                args.Cancel = true;
+                                break;
                         }
                     }
                 }

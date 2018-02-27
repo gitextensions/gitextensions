@@ -9,7 +9,6 @@ namespace GitCommands.Settings
     /// </summary>
     public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
-
         public GitModule Module { get; private set; }
 
         public RepoDistSettings(RepoDistSettings aLowerPriority, GitExtSettingsCache aSettingsCache)
@@ -108,7 +107,6 @@ namespace GitCommands.Settings
             get => this.GetString("dictionary", "en-US");
             set => this.SetString("dictionary", value);
         }
-
     }
 
 
@@ -142,7 +140,5 @@ namespace GitCommands.Settings
             AddMergeLogMessages = new BoolNullableSetting("AddMergeLogMessages", this, false);
             MergeLogMessagesCount = new IntNullableSetting("MergeLogMessagesCount", this, 20);
         }
-
     }
-
 }

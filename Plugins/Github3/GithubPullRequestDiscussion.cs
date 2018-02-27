@@ -39,7 +39,6 @@ namespace Github3
             }
 
             Entries = Entries.OrderBy(entry => entry.Created).ToList();
-
         }
     }
 

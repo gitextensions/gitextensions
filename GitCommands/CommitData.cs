@@ -33,7 +33,6 @@ namespace GitCommands
         public DateTimeOffset CommitDate { get; }
 
         // TODO: this needs review, it shouldn't be mutable
-        public string Body { get;  set; }
-
+        public string Body { get; set; }
     }
 }

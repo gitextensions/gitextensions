@@ -8,11 +8,10 @@ using GitCommands.Utils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
 using ResourceManager;
+using System.Linq;
 
 namespace GitUI.CommandsDialogs
 {
-    using System.Linq;
-
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
@@ -298,7 +297,6 @@ namespace GitUI.CommandsDialogs
                 FixPath(_fullPathResolver.Resolve(fileName))), askMergeConflictSolvedCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-
                 DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
                 if (File.Exists(_fullPathResolver.Resolve(fileName)))
                     lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
@@ -620,7 +618,8 @@ namespace GitUI.CommandsDialogs
             return ConflictedFiles.SelectedRows.Count > 1;
         }
 
-        private void HandleMultipleSelect() {
+        private void HandleMultipleSelect()
+        {
             SetAvailableCommands(false);
         }
 
@@ -916,11 +915,11 @@ namespace GitUI.CommandsDialogs
             fileName = PathUtil.GetFileName(fileName);
 
             using (var fileDialog = new SaveFileDialog
-                                 {
-                                     FileName = fileName,
-                                     InitialDirectory = _fullPathResolver.Resolve(PathUtil.GetDirectoryName(conflictData.Filename)),
-                                     AddExtension = true
-                                 })
+            {
+                FileName = fileName,
+                InitialDirectory = _fullPathResolver.Resolve(PathUtil.GetDirectoryName(conflictData.Filename)),
+                AddExtension = true
+            })
             {
                 fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
                 fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
@@ -1032,7 +1031,6 @@ namespace GitUI.CommandsDialogs
 
         private void conflictDescription_Click(object sender, EventArgs e)
         {
-
         }
 
         private void merge_Click(object sender, EventArgs e)

@@ -24,7 +24,8 @@ namespace JenkinsIntegration
     public class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
         public JenkinsIntegrationMetadata(string buildServerType)
-            : base(buildServerType) { }
+            : base(buildServerType)
+        { }
 
         public override string CanBeLoaded
         {

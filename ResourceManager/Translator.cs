@@ -66,9 +66,9 @@ namespace ResourceManager
                         continue;
                     translations.Add(name);
                 }
-            } catch
+            }
+            catch
             {
-
             }
             return translations.ToArray();
         }

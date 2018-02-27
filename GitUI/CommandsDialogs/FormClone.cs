@@ -109,7 +109,6 @@ namespace GitUI.CommandsDialogs
                         // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
                         if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
-
                     }
                     catch (Exception)
                     {
@@ -142,7 +141,6 @@ namespace GitUI.CommandsDialogs
             return (anURLLowered.StartsWith("http") ||
                 anURLLowered.StartsWith("git") ||
                 anURLLowered.StartsWith("ssh"));
-
         }
 
         private void OkClick(object sender, EventArgs e)

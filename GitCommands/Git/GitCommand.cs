@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace GitCommands
 {
-
     /// <summary>
     /// Base class for structured git command
     /// here we can introduce methods which can operate on command structure
@@ -55,8 +54,6 @@ namespace GitCommands
         /// </summary>
         public virtual void Validate()
         {
-
         }
-
     }
 }

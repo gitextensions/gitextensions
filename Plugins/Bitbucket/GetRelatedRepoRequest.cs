@@ -9,12 +9,12 @@ namespace Bitbucket
         public static Repository Parse(JObject json)
         {
             return new Repository
-                       {
-                           Id = json["id"].ToString(),
-                           RepoName = json["name"].ToString(),
-                           ProjectName = json["project"]["name"].ToString(),
-                           ProjectKey = json["project"]["key"].ToString()
-                       };
+            {
+                Id = json["id"].ToString(),
+                RepoName = json["name"].ToString(),
+                ProjectName = json["project"]["name"].ToString(),
+                ProjectKey = json["project"]["key"].ToString()
+            };
         }
         public string Id { get; set; }
         public string ProjectKey { get; set; }

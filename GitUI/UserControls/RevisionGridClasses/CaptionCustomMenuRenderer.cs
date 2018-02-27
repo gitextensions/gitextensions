@@ -17,7 +17,6 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             if (!e.Item.Enabled)
             {
-
             }
             else
             {

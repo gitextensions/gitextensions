@@ -265,7 +265,6 @@ namespace PatchApply
                     addedCount++;
                     removedCount++;
                 }
-
             }
 
             diff = diff.Combine("\n", prePart);
@@ -445,7 +444,6 @@ namespace PatchApply
                     }
                     else
                         inPatch = false;
-
                 }
 
                 currentPos += line.Length + 1;
@@ -542,7 +540,6 @@ namespace PatchApply
 
     internal class ChunkList : List<Chunk>
     {
-
         public static ChunkList GetSelectedChunks(string text, int selectionPosition, int selectionLength, bool staged, out string header)
         {
             header = null;
@@ -624,10 +621,6 @@ namespace PatchApply
                 result = result.Combine("\n", Application.ProductName + " " + AppSettings.ProductVersion);
             }
             return result;
-
         }
-
     }
-
-
 }

@@ -39,13 +39,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
 
                 var translationImage = new PictureBox
-                                           {
-                                               Top = y + 34,
-                                               Left = x + 15,
-                                               Height = imageHeight,
-                                               Width = imageWidth,
-                                               BackgroundImageLayout = ImageLayout.Stretch
-                                           };
+                {
+                    Top = y + 34,
+                    Left = x + 15,
+                    Height = imageHeight,
+                    Width = imageWidth,
+                    BackgroundImageLayout = ImageLayout.Stretch
+                };
                 if (File.Exists(Path.Combine(Translator.GetTranslationDir(), translation + ".gif")))
                     translationImage.BackgroundImage = Image.FromFile(Path.Combine(Translator.GetTranslationDir(), translation + ".gif"));
                 else

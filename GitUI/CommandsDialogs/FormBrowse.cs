@@ -114,7 +114,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _undoLastCommitCaption =
             new TranslationString("Undo last commit");
-       #endregion
+        #endregion
 
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
@@ -886,7 +886,6 @@ namespace GitUI.CommandsDialogs
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
             {
-
                 if (_bisect == null)
                 {
                     _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
@@ -1805,7 +1804,6 @@ namespace GitUI.CommandsDialogs
             {
                 ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branchName);
                 toolStripItem.Click += BranchSelectToolStripItem_Click;
-
             }
         }
 
@@ -2008,26 +2006,26 @@ namespace GitUI.CommandsDialogs
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
 
-            this.branchToolStripMenuItem.Enabled =
-            this.deleteBranchToolStripMenuItem.Enabled =
-            this.mergeBranchToolStripMenuItem.Enabled =
-            this.rebaseToolStripMenuItem.Enabled =
-            this.stashToolStripMenuItem.Enabled =
+            branchToolStripMenuItem.Enabled =
+            deleteBranchToolStripMenuItem.Enabled =
+            mergeBranchToolStripMenuItem.Enabled =
+            rebaseToolStripMenuItem.Enabled =
+            stashToolStripMenuItem.Enabled =
               selectedRevisions.Count > 0 && !Module.IsBareRepository();
 
-            this.undoLastCommitToolStripMenuItem.Enabled =
-            this.resetToolStripMenuItem.Enabled =
-            this.checkoutBranchToolStripMenuItem.Enabled =
-            this.runMergetoolToolStripMenuItem.Enabled =
-            this.cherryPickToolStripMenuItem.Enabled =
-            this.checkoutToolStripMenuItem.Enabled =
-            this.toolStripMenuItemReflog.Enabled =
-            this.bisectToolStripMenuItem.Enabled =
+            undoLastCommitToolStripMenuItem.Enabled =
+            resetToolStripMenuItem.Enabled =
+            checkoutBranchToolStripMenuItem.Enabled =
+            runMergetoolToolStripMenuItem.Enabled =
+            cherryPickToolStripMenuItem.Enabled =
+            checkoutToolStripMenuItem.Enabled =
+            toolStripMenuItemReflog.Enabled =
+            bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
-            this.tagToolStripMenuItem.Enabled =
-            this.deleteTagToolStripMenuItem.Enabled =
-            this.archiveToolStripMenuItem.Enabled =
+            tagToolStripMenuItem.Enabled =
+            deleteTagToolStripMenuItem.Enabled =
+            archiveToolStripMenuItem.Enabled =
               enabled;
         }
 
@@ -2762,7 +2760,6 @@ namespace GitUI.CommandsDialogs
 
         private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var formManageWorktree = new FormManageWorktree(UICommands);
             formManageWorktree.ShowDialog(this);
         }

@@ -85,14 +85,12 @@ namespace GitPluginShared.Commands
                         return sel.ProjectItem.get_FileNames(1);
                     }
                 }
-                else
-                    if (sel.Project != null)
-                        return sel.Project.FullName;
+                else if (sel.Project != null)
+                    return sel.Project.FullName;
             }
             if (application.Solution.IsOpen)
                 return application.Solution.FullName;
             return string.Empty;
         }
     }
-
 }

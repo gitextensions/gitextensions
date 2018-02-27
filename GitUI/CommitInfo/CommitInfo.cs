@@ -338,8 +338,8 @@ namespace GitUI.CommitInfo
             int gravatarIndex, revInfoIndex, gravatarSpan, revInfoSpan;
             if (right)
             {
-                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
                 gravatarIndex = 1;
                 revInfoIndex = 0;
                 gravatarSpan = 1;
@@ -347,8 +347,8 @@ namespace GitUI.CommitInfo
             }
             else
             {
-                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
                 gravatarIndex = 0;
                 revInfoIndex = 1;
                 gravatarSpan = 2;

@@ -111,11 +111,11 @@ namespace GitUI.RevisionGridClasses
             _graphData = new Graph();
 
             _backgroundThread = new Thread(BackgroundThreadEntry)
-                                   {
-                                       IsBackground = true,
-                                       Priority = ThreadPriority.Normal,
-                                       Name = "DvcsGraph.backgroundThread"
-                                   };
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.Normal,
+                Name = "DvcsGraph.backgroundThread"
+            };
             _backgroundThread.Start();
 
             InitializeComponent();
@@ -266,28 +266,28 @@ namespace GitUI.RevisionGridClasses
 
                 lock (_backgroundEvent)
                 lock (_graphData)
-                {
-                    ClearSelection();
-                    CurrentCell = null;
-                    if (value == null)
-                        return;
-
-                    foreach (string rowItem in value)
                     {
-                        int? row = TryGetRevisionIndex(rowItem);
-                        if (row.HasValue && row.Value >= 0 && Rows.Count > row.Value)
+                        ClearSelection();
+                        CurrentCell = null;
+                        if (value == null)
+                            return;
+
+                        foreach (string rowItem in value)
                         {
-                            Rows[row.Value].Selected = true;
-                            if (CurrentCell == null)
+                            int? row = TryGetRevisionIndex(rowItem);
+                            if (row.HasValue && row.Value >= 0 && Rows.Count > row.Value)
                             {
-                                // Set the current cell to the first item. We use cell
-                                // 1 because cell 0 could be hidden if they've chosen to
-                                // not see the graph
-                                CurrentCell = Rows[row.Value].Cells[1];
+                                Rows[row.Value].Selected = true;
+                                if (CurrentCell == null)
+                                {
+                                    // Set the current cell to the first item. We use cell
+                                    // 1 because cell 0 could be hidden if they've chosen to
+                                    // not see the graph
+                                    CurrentCell = Rows[row.Value].Cells[1];
+                                }
                             }
                         }
                     }
-                }
             }
         }
 
@@ -490,7 +490,6 @@ namespace GitUI.RevisionGridClasses
                     {
                         RowCount = count;
                     }
-
                 }
                 finally
                 {
@@ -1107,17 +1106,17 @@ namespace GitUI.RevisionGridClasses
                             Pen penLine;
                             switch (i)
                             {
-                              case 0:
-                                penLine = _whiteBorderPen;
-                                break;
-                              case 1:
-                                penLine = _blackBorderPen;
-                                break;
-                              default:
-                                if (brushLineColorPen == null)
-                                  brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
-                                penLine = brushLineColorPen;
-                                break;
+                                case 0:
+                                    penLine = _whiteBorderPen;
+                                    break;
+                                case 1:
+                                    penLine = _blackBorderPen;
+                                    break;
+                                default:
+                                    if (brushLineColorPen == null)
+                                        brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                    penLine = brushLineColorPen;
+                                    break;
                             }
 
                             if (singleLane)

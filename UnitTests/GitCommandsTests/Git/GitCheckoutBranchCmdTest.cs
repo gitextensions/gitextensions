@@ -96,7 +96,6 @@ namespace GitCommandsTests.Git
 
                 Assert.AreEqual(cmd.ToLine(), whenResetChangesWithRemoteNewBranchReset.Join(" "));
             }
-
         }
     }
 }

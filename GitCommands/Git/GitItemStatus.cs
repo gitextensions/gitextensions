@@ -74,17 +74,14 @@ namespace GitCommands
             {
                 toString = string.Concat("Renamed\n   ", OldName, "\nto\n   ", Name, "");
             }
+            else if (IsCopied)
+            {
+                toString = string.Concat("Copied\n   ", OldName, "\nto\n   ", Name, "");
+            }
             else
-                if (IsCopied)
-                {
-                    toString = string.Concat("Copied\n   ", OldName, "\nto\n   ", Name, "");
-                }
-                else
-                {
-                    toString = Name;
-                }
-
-
+            {
+                toString = Name;
+            }
 
             if (IsConflict)
             {

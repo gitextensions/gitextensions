@@ -93,7 +93,6 @@ namespace GitUI.CommandsDialogs
                     commitSignPicture.Visible = false;
                     break;
             }
-
         }
 
         private void DisplayTagSignatureStatus(TagStatus tagStatus)

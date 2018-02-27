@@ -126,6 +126,5 @@ namespace GitUITests.UserControls
 
             CollectionAssert.AreEqual(expectedData, received);
         }
-
     }
 }
