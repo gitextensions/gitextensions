@@ -26,8 +26,7 @@ namespace GitUI
             {
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
-                if (GitUICommandsChanged != null)
-                    GitUICommandsChanged(this, new GitUICommandsChangedEventArgs(oldCommands));
+                GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
 
@@ -42,7 +41,7 @@ namespace GitUI
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module { get { return _uiCommands != null ? _uiCommands.Module : null; } }
+        public GitModule Module => _uiCommands?.Module;
 
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 

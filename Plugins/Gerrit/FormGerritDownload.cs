@@ -150,9 +150,8 @@ namespace Gerrit
 
             remote = FixPath(remote);
 
-            //Remove spaces... 
-            if (remoteBranch != null)
-                remoteBranch = remoteBranch.Replace(" ", "");
+            //Remove spaces...
+            remoteBranch = remoteBranch?.Replace(" ", "");
 
             return "fetch " + progressOption + "\"" + remote.Trim() + "\" " + remoteBranch;
         }

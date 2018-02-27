@@ -1,7 +1,6 @@
 ﻿using GitUIPluginInterfaces;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -68,11 +67,7 @@ namespace GitUI
 
             public void RestoreFromSettings(ISettingsSource settings)
             {
-                _latestFontSize = settings.GetFloat(FontSizeSettingsKey);
-                if (!_latestFontSize.HasValue)
-                {
-                    _latestFontSize = DesignTimeFontSize;
-                }
+                _latestFontSize = settings.GetFloat(FontSizeSettingsKey) ?? DesignTimeFontSize;
 
                 int? prevSize = settings.GetInt(SizeSettingsKey);
                 int? prevDistance = settings.GetInt(DistanceSettingsKey);

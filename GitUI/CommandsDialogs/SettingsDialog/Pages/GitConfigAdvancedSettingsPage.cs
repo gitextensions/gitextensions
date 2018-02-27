@@ -1,12 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-using GitCommands.Config;
-using GitCommands.Settings;
-using GitCommands.Utils;
-using ResourceManager;
-
-namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitConfigAdvancedSettingsPage : ConfigFileSettingsPage
     {

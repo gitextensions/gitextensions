@@ -69,8 +69,7 @@ namespace GitUI.CommandsDialogs
 
             MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 
-            if (GitModuleChanged != null)
-                GitModuleChanged(this, new GitModuleEventArgs(module));
+            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Repositories.AddMostRecentRepository(Directory.Text);
 

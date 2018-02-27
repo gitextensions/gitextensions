@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 
 namespace GitCommands
@@ -196,7 +194,7 @@ namespace GitCommands
                 else
                 {
                     if (decode == null)
-                        throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
+                        throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
 
                     string s = GetValue(name);
 

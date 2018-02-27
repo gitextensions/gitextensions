@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -354,12 +353,8 @@ namespace GitUI
             {
                 if (_windowPositionList == null)
                     _windowPositionList = WindowPositionList.Load();
-                if (_windowPositionList == null)
-                {
-                    return null;
-                }
 
-                var position = _windowPositionList.Get(name);
+                var position = _windowPositionList?.Get(name);
                 if (position == null || position.Rect.IsEmpty)
                     return null;
 

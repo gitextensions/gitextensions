@@ -7,8 +7,6 @@ using GitCommands;
 using GitUI.UserControls;
 
 using JetBrains.Annotations;
-
-using ResourceManager;
 using System.Windows.Threading;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
@@ -35,14 +33,7 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-            if (aConsoleOutput == null)
-            {
-                ConsoleOutput = ConsoleOutputControl.CreateInstance();
-            }
-            else
-            {
-                ConsoleOutput = aConsoleOutput;
-            }
+            ConsoleOutput = aConsoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
@@ -95,8 +86,7 @@ namespace GitUI
             SendOrPostCallback method = o =>
                 {
                     int index = text.LastIndexOf('%');
-                    int progressValue;
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue) && progressValue >= 0)
+                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                     {
                         if (ProgressBar.Style != ProgressBarStyle.Blocks)
                             ProgressBar.Style = ProgressBarStyle.Blocks;
@@ -174,10 +164,7 @@ namespace GitUI
             }
             finally
             {
-                if (ModalControler != null)
-                {
-                    ModalControler.EndModal(isSuccess);
-                }
+                ModalControler?.EndModal(isSuccess);
             }
         }
 
@@ -229,7 +216,7 @@ namespace GitUI
             if (ModalControler != null)
             {
                 return;
-            }            
+            }
 
             Start();
         }

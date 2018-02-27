@@ -51,8 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
                 else
                 {
-                    TreeNode parentNode;
-                    if (!_Pages2NodeMap.TryGetValue(parentPageReference, out parentNode))
+                    if (!_Pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
 
                     node = parentNode.Nodes.Add(page.GetTitle());

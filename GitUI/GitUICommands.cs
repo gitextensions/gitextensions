@@ -1119,7 +1119,7 @@ namespace GitUI
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
             if (revisions == null)
-                throw new ArgumentNullException("revisions");
+                throw new ArgumentNullException(nameof(revisions));
             Func<bool> action = () =>
             {
                 FormCherryPick prevForm = null;
@@ -1147,10 +1147,7 @@ namespace GitUI
                 }
                 finally
                 {
-                    if (prevForm != null)
-                    {
-                        prevForm.Dispose();
-                    }
+                    prevForm?.Dispose();
                 }
             };
 
@@ -1738,8 +1735,7 @@ namespace GitUI
             try
             {
                 var e = new GitUIEventArgs(ownerForm, this);
-                if (gitUIEventHandler != null)
-                    gitUIEventHandler(sender, e);
+                gitUIEventHandler?.Invoke(sender, e);
 
                 return !e.Cancel;
             }
@@ -2170,13 +2166,10 @@ namespace GitUI
             string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             int? initialLine = null;
-            if( args.Length >= 4 )
+            if (args.Length >= 4)
             {
-                int temp;
-                if( int.TryParse( args[3], out temp ) )
-                {
+                if (int.TryParse(args[3], out var temp))
                     initialLine = temp;
-                }
             }
 
             StartBlameDialog(filenameFromBlame, initialLine);
@@ -2261,8 +2254,7 @@ namespace GitUI
 
         public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
         {
-            if (BrowseRepo != null)
-                BrowseRepo.GoToRef(refName, showNoRevisionMsg);
+            BrowseRepo?.GoToRef(refName, showNoRevisionMsg);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()
@@ -2320,8 +2312,7 @@ namespace GitUI
 
                 var e = new GitRemoteCommandCompletedEventArgs(this, isError, false);
 
-                if (Completed != null)
-                    Completed(form, e);
+                Completed?.Invoke(form, e);
 
                 isError = e.IsError;
 

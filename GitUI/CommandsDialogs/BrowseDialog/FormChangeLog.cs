@@ -1,6 +1,5 @@
 ﻿using System;
 using GitUI.Properties;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

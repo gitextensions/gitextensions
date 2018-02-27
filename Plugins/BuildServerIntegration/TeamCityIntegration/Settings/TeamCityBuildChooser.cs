@@ -110,10 +110,7 @@ namespace TeamCityIntegration.Settings
 
         private void SelectBuild()
         {
-            if (treeViewTeamCityProjects.SelectedNode == null)
-                return;
-
-            var build = treeViewTeamCityProjects.SelectedNode.Tag as Build;
+            var build = treeViewTeamCityProjects.SelectedNode?.Tag as Build;
             if (build == null)
                 return;
             TeamCityProjectName = build.ParentProject;

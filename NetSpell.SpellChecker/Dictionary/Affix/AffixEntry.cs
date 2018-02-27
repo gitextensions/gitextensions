@@ -5,48 +5,26 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 	/// </summary>
 	public class AffixEntry
 	{
-		private int _ConditionCount;
-		private string _AddCharacters = "";
-		private int[] _Condition = new int[1200];
-		private string _StripCharacters = "";
-
-		/// <summary>
+	    /// <summary>
 		///     The characters to add to the string
 		/// </summary>
-		public string AddCharacters
-		{
-			get {return _AddCharacters;}
-			set {_AddCharacters = value;}
-		}
+		public string AddCharacters { get; set; } = "";
 
-		/// <summary>
+	    /// <summary>
 		///     The condition to be met in order to add characters
 		/// </summary>
-		public int[] Condition
-		{
-			get {return _Condition;}
-			set {_Condition = value;}
-		}
+		public int[] Condition { get; set; } = new int[1200];
 
 
-		/// <summary>
+	    /// <summary>
 		///     The characters to remove before adding characters
 		/// </summary>
-		public string StripCharacters
-		{
-			get {return _StripCharacters;}
-			set {_StripCharacters = value;}
-		}
+		public string StripCharacters { get; set; } = "";
 
 
-		/// <summary>
+	    /// <summary>
 		///     The number of conditions that must be met
 		/// </summary>
-		public int ConditionCount
-		{
-			get {return _ConditionCount;}
-			set {_ConditionCount = value;}
-		}
-
+		public int ConditionCount { get; set; }
 	}
 }

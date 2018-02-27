@@ -97,7 +97,7 @@ namespace GitCommands.Gpg
         {
             if (revision == null)
             {
-                throw new ArgumentNullException("revision");
+                throw new ArgumentNullException(nameof(revision));
             }
 
             var module = GetModule();
@@ -141,7 +141,7 @@ namespace GitCommands.Gpg
         {
             if (revision == null)
             {
-                throw new ArgumentNullException("revision");
+                throw new ArgumentNullException(nameof(revision));
             }
 
             TagStatus tagStatus = TagStatus.NoTag;
@@ -211,7 +211,7 @@ namespace GitCommands.Gpg
         {
             if (revision == null)
             {
-                throw new ArgumentNullException("revision");
+                throw new ArgumentNullException(nameof(revision));
             }
 
             var module = GetModule();
@@ -226,7 +226,7 @@ namespace GitCommands.Gpg
         {
             if (revision == null)
             {
-                throw new ArgumentNullException("revision");
+                throw new ArgumentNullException(nameof(revision));
             }
 
             var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();

@@ -30,24 +30,17 @@ namespace GitUI.CommandsDialogs
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
             private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 
-            private readonly LostObjectType objectType;
-            private readonly string rawType;
-            private readonly string hash;
-
-            public LostObjectType ObjectType
-            {
-                get { return objectType; }
-            }
+            public LostObjectType ObjectType { get; }
 
             /// <summary>
             /// Sha1 hash of lost object.
             /// </summary>
-            public string Hash { get { return hash; } }
+            public string Hash { get; }
 
             /// <summary>
             /// Diagnostics and object type.
             /// </summary>
-            public string RawType { get { return rawType; } }
+            public string RawType { get; }
 
             public string Author { get; private set; }
             public string Subject { get; private set; }
@@ -55,9 +48,9 @@ namespace GitUI.CommandsDialogs
 
             private LostObject(LostObjectType objectType, string rawType, string hash)
             {
-                this.objectType = objectType;
-                this.rawType = rawType;
-                this.hash = hash;
+                this.ObjectType = objectType;
+                this.RawType = rawType;
+                this.Hash = hash;
             }
 
             public static LostObject TryParse(GitModule aModule, string raw)
@@ -102,7 +95,7 @@ namespace GitUI.CommandsDialogs
             private static string GetLostCommitLog(GitModule aModule, string hash)
             {
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
-                    throw new ArgumentOutOfRangeException("hash", hash, "Hash must be a valid SHA-1 hash.");
+                    throw new ArgumentOutOfRangeException(nameof(hash), hash, "Hash must be a valid SHA-1 hash.");
 
                 return aModule.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
             }

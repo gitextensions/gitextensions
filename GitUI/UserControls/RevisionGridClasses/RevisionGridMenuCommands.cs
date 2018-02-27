@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
@@ -189,12 +189,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <returns></returns>
         private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands revGridCommands)
         {
-            if (_revisionGrid == null)
-            {
-                return null;
-            }
-
-            return _revisionGrid.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
+            return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
         }
 
         private IEnumerable<MenuCommand> CreateViewMenuCommands()
@@ -464,11 +459,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             Debug.WriteLine("RevisionGridMenuCommands.OnPropertyChanged()");
 
-            EventHandler handler = MenuChanged;
-            if (handler != null)
-            {
-                handler(this, null);
-            }
+            MenuChanged?.Invoke(this, null);
 
             foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
             {

@@ -57,9 +57,7 @@ namespace GitUI.UserControls
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            ConEmuSession session = _terminal.RunningSession;
-            if(session != null)
-                session.WriteOutputText(text);
+            _terminal.RunningSession?.WriteOutputText(text);
         }
 
         public override void KillProcess()
@@ -69,9 +67,7 @@ namespace GitUI.UserControls
 
         private static void KillProcess(ConEmuControl terminal)
         {
-            ConEmuSession session = terminal.RunningSession;
-            if (session != null)
-                session.SendControlCAsync();
+            terminal.RunningSession?.SendControlCAsync();
         }
 
         public override void Reset()
@@ -98,10 +94,8 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (disposing && _terminal != null)
-            {
-                _terminal.Dispose();
-            }
+            if (disposing)
+                _terminal?.Dispose();
         }
 
         public override void StartProcess(string command, string arguments, string workdir, Dictionary<string, string> envVariables)

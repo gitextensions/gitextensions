@@ -52,8 +52,7 @@ namespace FindLargeFiles
             /// <param name="isReversedComparing">Use reversed sorting order.</param>
             public static Comparison<GitObject> Create(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
             {
-                Comparison<GitObject> comparer;
-                if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out comparer))
+                if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out var comparer))
                     return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
                 throw new NotSupportedException(string.Format("Custom sort by {0} property is not supported.", propertyDescriptor.Name));
             }

@@ -44,25 +44,19 @@ namespace GitUI.UserControls
 
         protected void FireDataReceived([NotNull] TextEventArgs args)
         {
-            if(args == null)
-                throw new ArgumentNullException("args");
-            EventHandler<TextEventArgs> evt = DataReceived;
-            if(evt != null)
-                evt.Invoke(this, args);
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+            DataReceived?.Invoke(this, args);
         }
 
         protected void FireProcessExited()
         {
-            EventHandler evt = ProcessExited;
-            if(evt != null)
-                evt(this, EventArgs.Empty);
+            ProcessExited?.Invoke(this, EventArgs.Empty);
         }
 
         protected void FireTerminated()
         {
-            EventHandler handler = Terminated;
-            if(handler != null)
-                handler(this, EventArgs.Empty);
+            Terminated?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

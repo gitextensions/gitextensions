@@ -15,8 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static string GetFullPath(string fileName)
         {
-            string fullPath;
-            PathUtil.TryFindFullPath(fileName, out fullPath);
+            PathUtil.TryFindFullPath(fileName, out var fullPath);
 
             return fullPath;
         }
@@ -379,14 +378,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 string registryKeyString = string.Format(@"SOFTWARE{0}Microsoft\VisualStudio\{1}", Environment.Is64BitProcess ? @"\Wow6432Node\" : "\\", version);
                 using (RegistryKey localMachineKey = Registry.LocalMachine.OpenSubKey(registryKeyString))
                 {
-                    if (localMachineKey != null)
-                    {
-                        var path = localMachineKey.GetValue("InstallDir") as string;
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            return Path.Combine(path, exeName);
-                        }
-                    }
+                    var path = localMachineKey?.GetValue("InstallDir") as string;
+                    if (!string.IsNullOrEmpty(path))
+                        return Path.Combine(path, exeName);
                 }
             }
             return exeName;

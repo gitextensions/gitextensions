@@ -7,25 +7,22 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
-using ICSharpCode.TextEditor.Util;
 using ResourceManager;
 
 namespace GitUI
 {
     public static class GitUIExtensions
     {
-
         public static SynchronizationContext UISynchronizationContext;
 
 
         public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked=true)
         {
             //Note: Order in revisions is that first clicked is last in array
-            string extraDiffArgs;
-            string firstRevision;
-            string secondRevision;
 
-            string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind, out extraDiffArgs, out firstRevision, out secondRevision);
+            string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind,
+                out var extraDiffArgs, out var firstRevision, out var secondRevision);
+
             if (!string.IsNullOrEmpty(error))
             {
                 MessageBox.Show(grid, error);

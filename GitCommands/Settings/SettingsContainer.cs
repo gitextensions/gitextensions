@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
@@ -35,19 +32,12 @@ namespace GitCommands.Settings
         public void Save()
         {
             SettingsCache.Save();
-
-            if (LowerPriority != null)
-            {
-                LowerPriority.Save();
-            }
+            LowerPriority?.Save();
         }
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
-            T value;
-
-            TryGetValue(name, defaultValue, decode, out value);
-
+            TryGetValue(name, defaultValue, decode, out var value);
             return value;
         }
 

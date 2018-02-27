@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
             if(sparse == null)
-                throw new ArgumentNullException("sparse");
+                throw new ArgumentNullException(nameof(sparse));
             Closing += (sender, args) =>
             {
                 try
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
         private void BindToViewModelGlobal([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
             if(sparse == null)
-                throw new ArgumentNullException("sparse");
+                throw new ArgumentNullException(nameof(sparse));
             sparse.ComfirmAdjustingRulesOnDeactRequested += (sender, args) =>
             {
                 if(!args.Cancel)
@@ -97,9 +97,7 @@ namespace GitUI.CommandsDialogs
 
             Panel panelHeader = CreateViewHeader();
 
-            Button btnSave;
-            Button btnCancel;
-            Panel panelFooter = CreateViewFooter(sparse, tooltip, out btnSave, out btnCancel);
+            Panel panelFooter = CreateViewFooter(sparse, tooltip, out var btnSave, out var btnCancel);
 
             Control panelOnOff = CreateViewOnOff(sparse, tooltip);
 
@@ -227,11 +225,8 @@ namespace GitUI.CommandsDialogs
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if(disposing)
-            {
-                if(_disposable1 != null)
-                    _disposable1.Dispose();
-            }
+            if (disposing)
+                _disposable1?.Dispose();
         }
 
         private class Globalized : Translate

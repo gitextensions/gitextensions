@@ -34,10 +34,9 @@ namespace GitCommands.Repository
                 ShortName = DirInfo.Name;
 
 
-            if (DirInfo != null)
-                DirInfo = DirInfo.Parent;
+            DirInfo = DirInfo?.Parent;
 
-            DirName = DirInfo == null ? "" : DirInfo.FullName;
+            DirName = DirInfo?.FullName ?? "";
         }
 
         public bool FullPath
@@ -145,9 +144,7 @@ namespace GitCommands.Repository
 
         private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
-            List<RecentRepoInfo> list = null;
-            bool existsShortName;
-            //if there is no short name for a repo, then try to find unique caption extendig short directory path
+            //if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
@@ -162,7 +159,7 @@ namespace GitCommands.Repository
             else
                 repoInfo.Caption = repoInfo.Repo.Path;
 
-            existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out list);
+            var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out var list);
             if (!existsShortName)
             {
                 list = new List<RecentRepoInfo>();
@@ -254,22 +251,16 @@ namespace GitCommands.Repository
                     bool result = false;
                     string c = null;
                     string r = null;
-                    if (company != null)
+                    if (company?.Length > skipCount)
                     {
-                        if (company.Length > skipCount)
-                        {
-                            c = company.Substring(0, company.Length - skipCount);
-                            result = true;
-                        }
+                        c = company.Substring(0, company.Length - skipCount);
+                        result = true;
                     }
 
-                    if (repository != null)
+                    if (repository?.Length > skipCount)
                     {
-                        if (repository.Length > skipCount)
-                        {
-                            r = repository.Substring(skipCount, repository.Length - skipCount);
-                            result = true;
-                        }
+                        r = repository.Substring(skipCount, repository.Length - skipCount);
+                        result = true;
                     }
 
                     repoInfo.Caption = MakePath(root, c);
@@ -328,15 +319,13 @@ namespace GitCommands.Repository
                 }
             }
 
-            List<RecentRepoInfo> list = null;
-
-            if (!orderedRepos.TryGetValue(repoInfo.Caption, out list))
+            if (!orderedRepos.TryGetValue(repoInfo.Caption, out var list))
             {
                 list = new List<RecentRepoInfo>();
                 orderedRepos.Add(repoInfo.Caption, list);
             }
+
             list.Add(repoInfo);
         }
-
     }
 }

@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionOpenRepo =
            new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
                                  "Do you want to open the new repository \"{0}\" now?");
-        
+
         private readonly TranslationString _questionOpenRepoCaption =
             new TranslationString("Open");
 
@@ -61,24 +61,22 @@ namespace GitUI.CommandsDialogs
                 {
                     authorsfile = null;
                 }
-                int from;
-                if (!int.TryParse(tbFrom.Text, out from))
+
+                if (!int.TryParse(tbFrom.Text, out var from))
                     from = 0;
-                
-                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, 
+
+                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand,
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_SvnFrom.Text, dirTo,
                     tbUsername.Text, authorsfile, from,
                     cbTrunk.Checked ? _NO_TRANSLATE_tbTrunk.Text : null,
                     cbTags.Checked ? _NO_TRANSLATE_tbTags.Text : null,
                     cbBranches.Checked ? _NO_TRANSLATE_tbBranches.Text : null));
-                
+
                 if (errorOccurred || Module.InTheMiddleOfPatch())
                     return;
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                {
-                    if (GitModuleChanged != null)
-                        GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
-                }
+                    GitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
+
                 Close();
             }
             catch (Exception ex)

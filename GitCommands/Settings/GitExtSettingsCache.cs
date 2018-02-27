@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization;
 
 
 namespace GitCommands.Settings
@@ -14,7 +11,7 @@ namespace GitCommands.Settings
 
         public GitExtSettingsCache(string aSettingsFilePath, bool autoSave = true)
             : base(aSettingsFilePath, autoSave)
-        {         
+        {
         }
 
         public static GitExtSettingsCache FromCache(string aSettingsFilePath)
@@ -81,10 +78,8 @@ namespace GitCommands.Settings
 
         protected override string GetValueImpl(string key)
         {
-            string value = null;
-            EncodedNameMap.TryGetValue(key, out value);
+            EncodedNameMap.TryGetValue(key, out var value);
             return value;
         }
-
     }
 }

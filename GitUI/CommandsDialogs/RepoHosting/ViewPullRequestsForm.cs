@@ -92,10 +92,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
             var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
-            if (hostedRemote == null)
-                return;
 
-            var hostedRepo = hostedRemote.GetHostedRepository();
+            var hostedRepo = hostedRemote?.GetHostedRepository();
             if (hostedRepo == null)
                 return;
 
@@ -231,7 +229,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion(IPullRequestDiscussion discussion)
         {
-            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion != null ? discussion.Entries : null);
+            var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
         }
 
@@ -437,9 +435,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 loader.Cancel();
                 loader.Dispose();
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);

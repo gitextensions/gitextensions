@@ -369,10 +369,7 @@ namespace GitUI.CommandsDialogs
 
             var source = CalculateSource();
 
-            string curLocalBranch;
-            string curRemoteBranch;
-
-            if (!CalculateLocalBranch(source, out curLocalBranch, out curRemoteBranch))
+            if (!CalculateLocalBranch(source, out var curLocalBranch, out var curRemoteBranch))
                 return DialogResult.No;
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);

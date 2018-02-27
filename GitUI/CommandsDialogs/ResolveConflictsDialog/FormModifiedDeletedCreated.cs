@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.ResolveConflictsDialog
 {

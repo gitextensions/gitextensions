@@ -5,7 +5,7 @@ using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class TranslationItemWithCategory : INotifyPropertyChanged, ICloneable
     {
         public TranslationItemWithCategory()
@@ -35,11 +35,7 @@ namespace TranslationApp
             get { return _item.Value; }
             set
             {
-                var pc = PropertyChanged;
-                if (pc != null)
-                {
-                    pc(this, new PropertyChangedEventArgs("TranslatedValue"));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TranslatedValue)));
                 if (value != _item.Value)
                 {
                     _item.Value = value;

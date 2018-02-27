@@ -29,7 +29,7 @@ namespace FindLargeFiles
 
             this._threshold = threshold;
             this._gitUiCommands = gitUiEventArgs;
-            this._gitCommands = gitUiEventArgs != null ? gitUiEventArgs.GitModule : null;
+            this._gitCommands = gitUiEventArgs?.GitModule;
         }
 
         private void FindLargeFilesFunction()
@@ -50,8 +50,8 @@ namespace FindLargeFiles
                     }
                     else
                         date = revData[commit];
-                    GitObject curGitObject;
-                    if (!_list.TryGetValue(d.SHA, out curGitObject))
+
+                    if (!_list.TryGetValue(d.SHA, out var curGitObject))
                     {
                         d.LastCommitDate = date;
                         _list.Add(d.SHA, d);
@@ -76,11 +76,9 @@ namespace FindLargeFiles
                         foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
                         {
                             string[] dataFields = gitobj.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            GitObject curGitObject;
-                            if (_list.TryGetValue(dataFields[0], out curGitObject))
+                            if (_list.TryGetValue(dataFields[0], out var curGitObject))
                             {
-                                int compressedSize = 0;
-                                if (Int32.TryParse(dataFields[3], out compressedSize))
+                                if (Int32.TryParse(dataFields[3], out var compressedSize))
                                 {
                                     curGitObject.compressedSizeInBytes = compressedSize;
                                     BranchesGrid.Invoke((Action)(() => { _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject)); }));
@@ -122,8 +120,7 @@ namespace FindLargeFiles
                     var data = dataPack[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (data[1] == "blob")
                     {
-                        int size = 0;
-                        Int32.TryParse(data[3], out size);
+                        Int32.TryParse(data[3], out var size);
                         if (size >= thresholdSize)
                             yield return new GitObject(data[2], dataPack[1], size, rev);
                     }

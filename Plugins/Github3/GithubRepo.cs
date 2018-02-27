@@ -15,7 +15,7 @@ namespace Github3
             this.repo = repo;
         }
 
-        public string Owner { get { return repo.Owner != null ? repo.Owner.Login : null; } }
+        public string Owner { get { return repo.Owner?.Login; } }
         public string Name { get { return repo.Name; } }
         public string Description { get { return repo.Description; } }
         public bool IsAFork { get { return repo.Fork; } }
@@ -23,6 +23,7 @@ namespace Github3
         public bool IsPrivate { get { return repo.Private; } }
         public int Forks { get { return repo.Forks; } }
         public string Homepage { get { return repo.Homepage; } }
+
         public string ParentReadOnlyUrl
         {
             get
@@ -37,7 +38,7 @@ namespace Github3
 
                     repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
-                return repo.Parent == null ? null : repo.Parent.GitUrl;
+                return repo.Parent?.GitUrl;
             }
         }
 
@@ -56,9 +57,10 @@ namespace Github3
                     repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
 
-                return repo.Parent == null ? null : repo.Parent.Owner.Login;
+                return repo.Parent?.Owner.Login;
             }
         }
+
         public string CloneReadWriteUrl { get { return repo.SshUrl; } }
         public string CloneReadOnlyUrl { get { return repo.GitUrl; } }
 
@@ -74,15 +76,12 @@ namespace Github3
 
         public List<IPullRequestInformation> GetPullRequests()
         {
-            if (repo != null)
+            var pullRequests = repo?.GetPullRequests();
+            if (pullRequests != null)
             {
-                var pullRequests = repo.GetPullRequests();
-                if (pullRequests != null)
-                {
-                    return pullRequests
-                        .Select(pr => (IPullRequestInformation)new GithubPullRequest(pr))
-                        .ToList();
-                }
+                return pullRequests
+                    .Select(pr => (IPullRequestInformation)new GithubPullRequest(pr))
+                    .ToList();
             }
 
             return new List<IPullRequestInformation>();

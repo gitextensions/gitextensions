@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -59,8 +58,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             string command = (string)CommandCacheItems.SelectedItem;
 
-            byte[] cmdout, cmderr;
-            if (GitCommandCache.TryGet(command, out cmdout, out cmderr))
+            if (GitCommandCache.TryGet(command, out var cmdout, out var cmderr))
             {
                 commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
                 Encoding encoding = GitModule.SystemEncoding;

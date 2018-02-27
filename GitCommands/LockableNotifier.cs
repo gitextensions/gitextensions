@@ -18,7 +18,7 @@ namespace GitCommands
             {
                 notifyRequested = false;
                 InternalNotify();
-            }        
+            }
         }
         /// <summary>
         /// notifies if is unlocked
@@ -69,7 +69,7 @@ namespace GitCommands
         public ActionNotifier(Action aNotifyAction)
         {
             if (aNotifyAction == null)
-                throw new ArgumentNullException("aNotifyAction");
+                throw new ArgumentNullException(nameof(aNotifyAction));
             NotifyAction = aNotifyAction;
         }
 

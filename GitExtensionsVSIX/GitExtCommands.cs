@@ -45,7 +45,7 @@ namespace GitExtensionsVSIX
         {
             if (package == null)
             {
-                throw new ArgumentNullException("package");
+                throw new ArgumentNullException(nameof(package));
             }
 
             _package = package;
@@ -59,8 +59,7 @@ namespace GitExtensionsVSIX
             }
             catch (Exception ex)
             {
-                if (OutputPane != null)
-                    OutputPane.OutputString("Error adding commands: " + ex);
+                OutputPane?.OutputString("Error adding commands: " + ex);
             }
         }
 
@@ -115,10 +114,8 @@ namespace GitExtensionsVSIX
         private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand guiCommand = (OleMenuCommand)sender;
-            VsixCommandBase command;
-            if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
-                return;
-            command.BeforeQueryStatus(_application, guiCommand);
+            if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+                command.BeforeQueryStatus(_application, guiCommand);
         }
 
         /// <summary>
@@ -158,10 +155,8 @@ namespace GitExtensionsVSIX
         private void MenuItemCallback(object sender, EventArgs e)
         {
             var guiCommand = (MenuCommand)sender;
-            VsixCommandBase command;
-            if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
-                return;
-            command.BaseCommand.OnCommand(_application, OutputPane);
+            if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+                command.BaseCommand.OnCommand(_application, OutputPane);
         }
     }
 }

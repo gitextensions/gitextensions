@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using ResourceManager;
-using ResourceManager.Xliff;
 
 namespace TranslationApp
 {

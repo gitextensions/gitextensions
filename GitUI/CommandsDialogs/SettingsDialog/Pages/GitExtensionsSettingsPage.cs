@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 
@@ -59,8 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
             AppSettings.SmtpServer = SmtpServer.Text;
-            int port;
-            if (int.TryParse(SmtpServerPort.Text, out port))
+            if (int.TryParse(SmtpServerPort.Text, out var port))
                 AppSettings.SmtpPort = port;
             AppSettings.SmtpUseSsl = chkUseSSL.Checked;
             AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;

@@ -26,12 +26,12 @@ namespace TranslationApp
                     {
                         foreach (Type type in types.Value)
                         {
-                            ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
-                            if (obj != null)
+                            if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
+                            {
                                 obj.AddTranslationItems(translation);
-                            IDisposable disposable = obj as IDisposable;
-                            if (disposable != null)
-                                disposable.Dispose();
+                                if (obj is IDisposable disposable)
+                                    disposable.Dispose();
+                            }
                         }
                     }
                     finally
@@ -65,8 +65,7 @@ namespace TranslationApp
 
         private static List<T> Find<T>(this IDictionary<string, List<T>> dictionary, string key)
         {
-            List<T> list;
-            if (!dictionary.TryGetValue(key, out list))
+            if (!dictionary.TryGetValue(key, out var list))
             {
                 list = new List<T>();
                 dictionary.Add(key, list);

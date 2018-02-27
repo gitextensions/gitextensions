@@ -23,10 +23,10 @@ namespace GitUI
         public PathFormatter(Graphics graphics, Font font)
         {
             if (graphics == null)
-                throw new ArgumentNullException("graphics");
+                throw new ArgumentNullException(nameof(graphics));
 
             if (font == null)
-                throw new ArgumentNullException("font");
+                throw new ArgumentNullException(nameof(font));
 
             _graphics = graphics;
             _font = font;

@@ -47,7 +47,7 @@ namespace GitCommandsTests.Git
         public void Get_should_get_full_sha_for_existing_commits(string sha1Fragment, bool existing)
         {
             const string fullSha = "01234567890";
-            _module.IsExistingCommitHash(sha1Fragment, out var _)
+            _module.IsExistingCommitHash(sha1Fragment, out _)
                 .Returns(x =>
                 {
                     x[1] = fullSha;

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
 using GitUI;
-using ResourceManager;
 
 namespace Gerrit
 {

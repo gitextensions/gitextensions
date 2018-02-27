@@ -56,8 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void Close()
         {
-            if (toolTip != null)
-                toolTip.RemoveAll();
+            toolTip?.RemoveAll();
         }
 
         private void Initialize(Bitmap icon, string path, string title, string text)
@@ -106,10 +105,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void CancelBranchNameLoad()
         {
-            if (_branchNameLoader != null)
-            {
-                _branchNameLoader.Cancel();
-            }
+            _branchNameLoader?.Cancel();
         }
 
         void Title_Click(object sender, EventArgs e)
@@ -120,10 +116,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         void Title_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
-                if (ContextMenuStrip != null)
-                    ContextMenuStrip.Show((Control)sender, e.Location);
-            }
+                ContextMenuStrip?.Show((Control)sender, e.Location);
         }
 
         public string Path { get; private set; }
@@ -167,7 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 case RepositoryType.History:
                     return Resources.history;
                 default:
-                    throw new ArgumentException("Repository type is not supported.", "repository");
+                    throw new ArgumentException("Repository type is not supported.", nameof(repository));
             }
         }
 
@@ -186,10 +179,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (disposing)
             {
                 CancelBranchNameLoad();
-                if (_branchNameLoader != null)
-                    _branchNameLoader.Dispose();
-                if (components != null)
-                    components.Dispose();
+                _branchNameLoader?.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

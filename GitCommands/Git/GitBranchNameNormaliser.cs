@@ -83,7 +83,7 @@ namespace GitCommands.Git
 
             if (options == null)
             {
-                throw new ArgumentNullException("options");
+                throw new ArgumentNullException(nameof(options));
             }
 
             // run rules in reverse order

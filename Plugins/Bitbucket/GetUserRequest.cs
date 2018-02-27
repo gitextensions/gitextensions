@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using RestSharp;
-
-namespace Bitbucket
+﻿namespace Bitbucket
 {
     public class BitbucketUser
     {

@@ -10,8 +10,7 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        private readonly string _fileName;
-        public string FileName { get { return _fileName; } }
+        public string FileName { get; }
 
         public bool Local { get; private set; }
 
@@ -20,14 +19,14 @@ namespace GitCommands.Config
             ConfigSections = new List<IConfigSection>();
             Local = aLocal;
 
-            _fileName = fileName;
+            FileName = fileName;
             try
             {
                 Load();
             }
             catch (Exception ex)
             {
-                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + _fileName);
+                ex.Data.Add(GetType().Name + ".Load", "Could not load config file: " + FileName);
                 throw;
             }
         }
@@ -46,7 +45,7 @@ namespace GitCommands.Config
 
         private void Load()
         {
-            if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
+            if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
                 return;
 
             ConfigFileParser parser = new ConfigFileParser(this);
@@ -77,7 +76,7 @@ namespace GitCommands.Config
 
         public void Save()
         {
-            Save(_fileName);
+            Save(FileName);
         }
 
         public string GetAsString()
@@ -228,10 +227,7 @@ namespace GitCommands.Config
 
             var configSection = FindConfigSection(configSectionName);
 
-            if (configSection == null)
-                return;
-
-            configSection.SetValue(keyName, null);
+            configSection?.SetValue(keyName, null);
         }
 
         public IConfigSection FindOrCreateConfigSection(string name)
@@ -296,8 +292,9 @@ namespace GitCommands.Config
             private ConfigFile _configFile;
             private string _fileContent;
             private IConfigSection _section = null;
-            private string FileName { get { return _configFile._fileName; } }
             private string _key = null;
+            private string FileName => _configFile.FileName;
+
             //parsed char
             private int pos;
             private StringBuilder token = new StringBuilder();

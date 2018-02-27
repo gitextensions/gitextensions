@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces;
+﻿using System.Collections.Generic;
 
 namespace GitCommands.Settings
 {
@@ -39,7 +35,7 @@ namespace GitCommands.Settings
 
         public virtual bool ValueIsEmpty(T aValue)
         {
-            return EqualityComparer<T>.Default.Equals(aValue, default(T));
+            return EqualityComparer<T>.Default.Equals(aValue, default);
         }
 
         public string FullPath

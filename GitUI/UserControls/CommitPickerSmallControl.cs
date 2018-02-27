@@ -17,13 +17,9 @@ namespace GitUI.UserControls
 
         ////public event EventHandler<EventArgs> OnCommitSelected;
 
-        private string _selectedCommitHash;
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string SelectedCommitHash
-        {
-            get { return _selectedCommitHash; }
-        }
+        public string SelectedCommitHash { get; private set; }
 
         /// <summary>
         /// shows a message box if commitHash is invalid
@@ -31,26 +27,26 @@ namespace GitUI.UserControls
         /// <param name="commitHash"></param>
         public void SetSelectedCommitHash(string commitHash)
         {
-            string oldCommitHash = _selectedCommitHash;
+            string oldCommitHash = SelectedCommitHash;
 
-            _selectedCommitHash = Module.RevParse(commitHash);
+            SelectedCommitHash = Module.RevParse(commitHash);
 
-            if (_selectedCommitHash.IsNullOrEmpty() && !commitHash.IsNullOrWhiteSpace())
+            if (SelectedCommitHash.IsNullOrEmpty() && !commitHash.IsNullOrWhiteSpace())
             {
-                _selectedCommitHash = oldCommitHash;
+                SelectedCommitHash = oldCommitHash;
                 MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.");
             }
 
-            var isArtificialCommitForEmptyRepo = _selectedCommitHash == "HEAD";
-            if (_selectedCommitHash.IsNullOrEmpty() || isArtificialCommitForEmptyRepo)
+            var isArtificialCommitForEmptyRepo = SelectedCommitHash == "HEAD";
+            if (SelectedCommitHash.IsNullOrEmpty() || isArtificialCommitForEmptyRepo)
             {
                 textBoxCommitHash.Text = "";
                 lbCommits.Text = "";
             }
             else
             {
-                textBoxCommitHash.Text = GitRevision.ToShortSha(_selectedCommitHash);
-                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), _selectedCommitHash))
+                textBoxCommitHash.Text = GitRevision.ToShortSha(SelectedCommitHash);
+                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), SelectedCommitHash))
                      .ContinueWith(t => lbCommits.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }

@@ -75,7 +75,7 @@ namespace TeamCityIntegration
 
             string url = serverUrl + "ntlmLogin.html";
             var cookieContainer = new CookieContainer();
-            var request = (HttpWebRequest)HttpWebRequest.Create (url);
+            var request = (HttpWebRequest)WebRequest.Create (url);
             request.CookieContainer = cookieContainer;
 
             if (buildServerCredentials != null
@@ -534,10 +534,7 @@ namespace TeamCityIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (httpClient != null)
-            {
-                httpClient.Dispose();
-            }
+            httpClient?.Dispose();
         }
 
         public Project GetProjectsTree()

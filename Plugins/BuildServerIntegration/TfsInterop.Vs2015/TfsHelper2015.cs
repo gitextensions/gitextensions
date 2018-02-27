@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.TeamFoundation.Build.WebApi;
-using Microsoft.VisualStudio.Services.Client;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
 using System.Text.RegularExpressions;
@@ -396,8 +395,7 @@ namespace TfsInterop
         public void Dispose()
         {
             _buildServer = null;
-            if (_tfsCollection != null)
-                _tfsCollection.Dispose();
+            _tfsCollection?.Dispose();
             _buildDefinitions = null;
             _buildDefinitions2015 = null;
             _connection = null;

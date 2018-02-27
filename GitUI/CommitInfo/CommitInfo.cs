@@ -445,8 +445,7 @@ namespace GitUI.CommitInfo
 
             foreach (string tag in tagNames)
             {
-                string annotatedContents;
-                if (annotatedTagsMessages.TryGetValue(tag, out annotatedContents))
+                if (annotatedTagsMessages.TryGetValue(tag, out var annotatedContents))
                     result += "<u>" + tag + "</u>: " + annotatedContents + Environment.NewLine;
             }
 
@@ -608,10 +607,7 @@ namespace GitUI.CommitInfo
 
         private void DoCommandClick(string command, string data)
         {
-            if (CommandClick != null)
-            {
-                CommandClick(this, new CommandEventArgs(command, data));
-            }
+            CommandClick?.Invoke(this, new CommandEventArgs(command, data));
         }
 
         private void _RevisionHeader_MouseDown(object sender, MouseEventArgs e)

@@ -119,8 +119,7 @@ namespace GitCommands
         private void ProccessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
-            if (Updated != null)
-                Updated(this, new RevisionGraphUpdatedEventArgs(null));
+            Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             const string shaOnlyFormat =
@@ -190,8 +189,7 @@ namespace GitCommands
                 return;
 
             _previousFileName = null;
-            if (BeginUpdate != null)
-                BeginUpdate(this, EventArgs.Empty);
+            BeginUpdate?.Invoke(this, EventArgs.Empty);
 
             _nextStep = ReadStep.Commit;
             foreach (string data in ReadDataBlocks(p.StandardOutput))
@@ -249,8 +247,7 @@ namespace GitCommands
             FinishRevision();
             _previousFileName = null;
 
-            if (Exited != null)
-                Exited(this, EventArgs.Empty);
+            Exited?.Invoke(this, EventArgs.Empty);
         }
 
         private IList<IGitRef> GetRefs()
@@ -315,8 +312,7 @@ namespace GitCommands
                     _revision.Body = null;
 
                     RevisionCount++;
-                    if (Updated != null)
-                        Updated(this, new RevisionGraphUpdatedEventArgs(_revision));
+                    Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(_revision));
                 }
             }
         }
@@ -343,8 +339,7 @@ namespace GitCommands
 
                     _revision.Guid = lines[1];
                     {
-                        List<IGitRef> gitRefs;
-                        if (_refs.TryGetValue(_revision.Guid, out gitRefs))
+                        if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
                             _revision.Refs.AddRange(gitRefs);
                     }
 
@@ -355,16 +350,14 @@ namespace GitCommands
                     _revision.Author = lines[4];
                     _revision.AuthorEmail = lines[5];
                     {
-                        DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(lines[6], out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[6], out var dateTime))
                             _revision.AuthorDate = dateTime;
                     }
 
                     _revision.Committer = lines[7];
                     _revision.CommitterEmail = lines[8];
                     {
-                        DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(lines[9], out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[9], out var dateTime))
                             _revision.CommitDate = dateTime;
                     }
 

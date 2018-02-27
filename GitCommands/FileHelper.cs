@@ -74,27 +74,26 @@ namespace GitCommands
                 attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();
             }
 
-            string val;
-            if (attributes.TryGetValue("diff", out val))
+            if (attributes.TryGetValue("diff", out var diff))
             {
-                if (val == "unset")
+                if (diff == "unset")
                     return true;
-                if (diffvals.Contains(val))
+                if (diffvals.Contains(diff))
                     return false;
             }
-            if (attributes.TryGetValue("text", out val))
+            if (attributes.TryGetValue("text", out var text))
             {
-                if (val != "unset" && val != "unspecified")
+                if (text != "unset" && text != "unspecified")
                     return false;
             }
-            if (attributes.TryGetValue("crlf", out val))
+            if (attributes.TryGetValue("crlf", out var crlf))
             {
-                if (val != "unset" && val != "unspecified")
+                if (crlf != "unset" && crlf != "unspecified")
                     return false;
             }
-            if (attributes.TryGetValue("eol", out val))
+            if (attributes.TryGetValue("eol", out var eol))
             {
-                if (val != "unset" && val != "unspecified")
+                if (eol != "unset" && eol != "unspecified")
                     return false;
             }
             return null;

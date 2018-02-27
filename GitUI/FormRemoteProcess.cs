@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -102,8 +101,7 @@ namespace GitUI
                 // If the authentication failed because of a missing key, ask the user to supply one. 
                 if (GetOutputString().Contains("FATAL ERROR") && GetOutputString().Contains("authentication"))
                 {
-                    string loadedKey;
-                    if (FormPuttyError.AskForKey(this, out loadedKey))
+                    if (FormPuttyError.AskForKey(this, out var loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 

@@ -81,15 +81,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             var control =
                 buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
                                         .SingleOrDefault();
-            if (control != null)
-                control.SaveSettings(CurrentSettings.BuildServer.TypeSettings);
+            control?.SaveSettings(CurrentSettings.BuildServer.TypeSettings);
         }
 
         private void ActivateBuildServerSettingsControl()
         {
             var controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
             var previousControl = controls.SingleOrDefault();
-            if (previousControl != null) previousControl.Dispose();
+            previousControl?.Dispose();
 
             var control = CreateBuildServerSettingsUserControl();
 

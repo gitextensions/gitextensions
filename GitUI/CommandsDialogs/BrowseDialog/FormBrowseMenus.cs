@@ -4,9 +4,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs
@@ -176,15 +174,9 @@ namespace GitUI.CommandsDialogs
             // don't forget to clear old associated menu items
             if (_itemsRegisteredWithMenuCommand != null)
             {
-                if (_navigateMenuCommands != null)
-                {
-                    _navigateMenuCommands.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
-                }
+                _navigateMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
 
-                if (_viewMenuCommands != null)
-                {
-                    _viewMenuCommands.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
-                }
+                _viewMenuCommands?.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
 
                 _itemsRegisteredWithMenuCommand.Clear();
             }

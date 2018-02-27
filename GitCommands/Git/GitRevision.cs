@@ -23,7 +23,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
 
         public string[] ParentGuids;
-        private readonly List<IGitRef> _refs = new List<IGitRef>();
         private BuildInfo _buildStatus;
 
         public GitRevision(string guid)
@@ -34,7 +33,7 @@ namespace GitCommands
             SubjectCount = "";
         }
 
-        public List<IGitRef> Refs { get { return _refs; } }
+        public List<IGitRef> Refs { get; } = new List<IGitRef>();
 
         public string TreeGuid { get; set; }
 
@@ -52,7 +51,7 @@ namespace GitCommands
             {
                 if (Equals(value, _buildStatus)) return;
                 _buildStatus = value;
-                OnPropertyChanged("BuildStatus");
+                OnPropertyChanged(nameof(BuildStatus));
             }
         }
 
@@ -83,7 +82,7 @@ namespace GitCommands
         public static string ToShortSha(String sha)
         {
             if (sha == null)
-                throw new ArgumentNullException("sha");
+                throw new ArgumentNullException(nameof(sha));
             const int maxShaLength = 10;
             if (sha.Length > maxShaLength)
             {
@@ -132,10 +131,8 @@ namespace GitCommands
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged(string propertyName)
         {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
         public static bool IsFullSha1Hash(string id)
         {

@@ -13,7 +13,7 @@ namespace GitCommands
         public GitDeleteBranchCmd(IEnumerable<IGitRef> branches, bool force)
         {
             if (branches == null)
-                throw new ArgumentNullException("branches");
+                throw new ArgumentNullException(nameof(branches));
 
             this.branches = branches.ToArray();
             this.force = force;

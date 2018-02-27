@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace GitCommands.Settings
 {
@@ -32,11 +28,8 @@ namespace GitCommands.Settings
 
         protected override string GetValueImpl(string key)
         {
-            string value = null;
-            if (stringSettings.TryGetValue(key, out value))
-            {
+            if (stringSettings.TryGetValue(key, out var value))
                 return value;
-            }
 
             return null;
         }

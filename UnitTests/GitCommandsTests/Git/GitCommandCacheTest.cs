@@ -43,12 +43,10 @@ namespace GitCommandsTests.Git
         {
             byte[] originalOutput = new byte[] { 11, 12 };
             byte[] originalError = new byte[] { 13, 14 };
-            byte[] cachedOutput = null;
-            byte[] cachedError = null;
 
             GitCommandCache.Add("git command", originalOutput, originalError);
 
-            Assert.IsTrue(GitCommandCache.TryGet("git command", out cachedOutput, out cachedError));
+            Assert.IsTrue(GitCommandCache.TryGet("git command", out var cachedOutput, out var cachedError));
             Assert.AreEqual(cachedOutput, originalOutput);
             Assert.AreEqual(cachedError, originalError);
         }
@@ -69,10 +67,7 @@ namespace GitCommandsTests.Git
         [TestMethod]
         public void TestTryGetFails()
         {
-            byte[] output = null;
-            byte[] error = null;
-
-            Assert.IsFalse(GitCommandCache.TryGet(null, out output, out error));
+            Assert.IsFalse(GitCommandCache.TryGet(null, out var output, out var error));
             Assert.IsFalse(GitCommandCache.TryGet(String.Empty, out output, out error));
             Assert.IsNull(output);
             Assert.IsNull(error);

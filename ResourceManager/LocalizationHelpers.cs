@@ -100,7 +100,7 @@ namespace ResourceManager
 
         public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
         {
-            string text = patch != null ? patch.Text : null;
+            string text = patch?.Text;
             var status = GitCommandHelpers.GetSubmoduleStatus(text, module, fileName);
             if (status == null)
                 return "";
@@ -110,20 +110,20 @@ namespace ResourceManager
         public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
             if (module == null)
-                throw new ArgumentNullException("module");
+                throw new ArgumentNullException(nameof(module));
             if (status == null)
-                throw new ArgumentNullException("status");
-            GitModule gitmodule = module.GetSubmodule(status.Name);
+                throw new ArgumentNullException(nameof(status));
+            GitModule gitModule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
             // TEMP, will be moved in the follow up refactor
-            ICommitDataManager commitDataManager = new CommitDataManager(() => gitmodule);
+            ICommitDataManager commitDataManager = new CommitDataManager(() => gitModule);
 
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
             CommitData oldCommitData = null;
-            if (gitmodule.IsValidGitWorkingDir())
+            if (gitModule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.OldCommit != null)
@@ -149,7 +149,7 @@ namespace ResourceManager
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
             CommitData commitData = null;
-            if (gitmodule.IsValidGitWorkingDir())
+            if (gitModule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.Commit != null)
@@ -172,7 +172,7 @@ namespace ResourceManager
             }
 
             sb.AppendLine();
-            var submoduleStatus = gitmodule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
+            var submoduleStatus = gitModule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
             sb.Append("Type: ");
             switch (submoduleStatus)
             {
@@ -222,7 +222,7 @@ namespace ResourceManager
             {
                 if (status.IsDirty)
                 {
-                    string statusText = gitmodule.GetStatusText(false);
+                    string statusText = gitModule.GetStatusText(false);
                     if (!String.IsNullOrEmpty(statusText))
                     {
                         sb.AppendLine("\nStatus:");
@@ -230,7 +230,7 @@ namespace ResourceManager
                     }
                 }
 
-                string diffs = gitmodule.GetDiffFilesText(status.OldCommit, status.Commit);
+                string diffs = gitModule.GetDiffFilesText(status.OldCommit, status.Commit);
                 if (!String.IsNullOrEmpty(diffs))
                 {
                     sb.AppendLine("\nDifferences:");

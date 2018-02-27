@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -167,9 +166,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            var handler = GitModuleChanged;
-            if (handler != null)
-                handler(this, e);
+            GitModuleChanged?.Invoke(this, e);
         }
 
         private void AddDashboardEntry(RepositoryCategory entry)

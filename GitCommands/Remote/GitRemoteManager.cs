@@ -109,7 +109,7 @@ namespace GitCommands.Remote
         {
             if (remote == null)
             {
-                throw new ArgumentNullException("remote");
+                throw new ArgumentNullException(nameof(remote));
             }
 
             var _module = GetModule();
@@ -126,7 +126,7 @@ namespace GitCommands.Remote
                                    .Select(t => new GitRef(_module, string.Empty, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
-            return remoteHead == null ? null : remoteHead.Name;
+            return remoteHead?.Name;
         }
 
         /// <summary>

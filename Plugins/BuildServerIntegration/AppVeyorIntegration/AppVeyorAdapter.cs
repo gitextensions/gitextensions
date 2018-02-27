@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
@@ -250,7 +249,7 @@ namespace AppVeyorIntegration
                                     CommitId = commitSha1,
                                     CommitHashList = new[] { commitSha1 },
                                     Status = status,
-                                    StartDate = b["started"] == null ? DateTime.MinValue : b["started"].ToObject<DateTime>(),
+                                    StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                                     BaseWebUrl = baseWebUrl,
                                     Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                     BaseApiUrl = baseApiUrl,
@@ -494,14 +493,8 @@ namespace AppVeyorIntegration
         {
             GC.SuppressFinalize(this);
 
-            if (_httpClientAppVeyor != null)
-            {
-                _httpClientAppVeyor.Dispose();
-            }
-            if (_httpClientGitHub != null)
-            {
-                _httpClientGitHub.Dispose();
-            }
+            _httpClientAppVeyor?.Dispose();
+            _httpClientGitHub?.Dispose();
         }
     }
 

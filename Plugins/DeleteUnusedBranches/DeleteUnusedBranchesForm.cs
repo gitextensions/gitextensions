@@ -74,8 +74,7 @@ namespace DeleteUnusedBranches
                 context.CancellationToken.ThrowIfCancellationRequested();
 
                 var commitLog = context.Commands.RunGitCmd(string.Concat("log --pretty=%ci\n%an\n%s ", branchName, "^1..", branchName)).Split('\n');
-                DateTime commitDate;
-                DateTime.TryParse(commitLog[0], out commitDate);
+                DateTime.TryParse(commitLog[0], out var commitDate);
                 var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
                 var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 
@@ -265,82 +264,32 @@ namespace DeleteUnusedBranches
 
         private struct RefreshContext
         {
-            private readonly IGitModule _commands;
-            private readonly bool _includeRemotes;
-            private readonly bool _includeUnmerged;
-            private readonly string _referenceBranch;
-            private readonly string _remoteRepositoryName;
-            private readonly string _regexFilter;
-            private readonly bool _regexIgnoreCase;
-            private readonly bool _regexDoesNotMatch;
-            private readonly TimeSpan _obsolescenceDuration;
-            private readonly CancellationToken _cancellationToken;
-
             public RefreshContext(IGitModule commands, bool includeRemotes, bool includeUnmerged, string referenceBranch,
                 string remoteRepositoryName, string regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,
                 TimeSpan obsolescenceDuration, CancellationToken cancellationToken)
             {
-                this._commands = commands;
-                this._includeRemotes = includeRemotes;
-                this._includeUnmerged = includeUnmerged;
-                this._referenceBranch = referenceBranch;
-                this._remoteRepositoryName = remoteRepositoryName;
-                this._regexFilter = regexFilter;
-                this._regexIgnoreCase = regexIgnoreCase;
-                this._regexDoesNotMatch = regexDoesNotMatch;
-                this._obsolescenceDuration = obsolescenceDuration;
-                this._cancellationToken = cancellationToken;
+                Commands = commands;
+                IncludeRemotes = includeRemotes;
+                IncludeUnmerged = includeUnmerged;
+                ReferenceBranch = referenceBranch;
+                RemoteRepositoryName = remoteRepositoryName;
+                RegexFilter = regexFilter;
+                RegexIgnoreCase = regexIgnoreCase;
+                RegexDoesNotMatch = regexDoesNotMatch;
+                ObsolescenceDuration = obsolescenceDuration;
+                CancellationToken = cancellationToken;
             }
 
-            public IGitModule Commands
-            {
-                get { return _commands; }
-            }
-
-            public bool IncludeRemotes
-            {
-                get { return _includeRemotes; }
-            }
-
-            public bool IncludeUnmerged
-            {
-                get { return _includeUnmerged; }
-            }
-
-            public string ReferenceBranch
-            {
-                get { return _referenceBranch; }
-            }
-
-            public string RemoteRepositoryName
-            {
-                get { return _remoteRepositoryName; }
-            }
-
-            public string RegexFilter
-            {
-                get { return _regexFilter; }
-            }
-
-            public bool RegexIgnoreCase
-            {
-                get { return _regexIgnoreCase; }
-            }
-
-            public bool RegexDoesNotMatch
-            {
-                get { return _regexDoesNotMatch; }
-            }
-
-            public TimeSpan ObsolescenceDuration
-            {
-                get { return _obsolescenceDuration; }
-            }
-
-            public CancellationToken CancellationToken
-            {
-                get { return _cancellationToken; }
-            }
+            public IGitModule Commands { get; }
+            public bool IncludeRemotes { get; }
+            public bool IncludeUnmerged { get; }
+            public string ReferenceBranch { get; }
+            public string RemoteRepositoryName { get; }
+            public string RegexFilter { get; }
+            public bool RegexIgnoreCase { get; }
+            public bool RegexDoesNotMatch { get; }
+            public TimeSpan ObsolescenceDuration { get; }
+            public CancellationToken CancellationToken { get; }
         }
     }
 }

@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _undoLastCommitText =
             new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
- 
+
         private readonly TranslationString _undoLastCommitCaption =
             new TranslationString("Undo last commit");
        #endregion
@@ -461,10 +461,8 @@ namespace GitUI.CommandsDialogs
         private void ItemClick(object sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
-            if (menuItem == null)
-                return;
 
-            var plugin = menuItem.Tag as IGitPlugin;
+            var plugin = menuItem?.Tag as IGitPlugin;
             if (plugin == null)
                 return;
 
@@ -1545,10 +1543,7 @@ namespace GitUI.CommandsDialogs
             Repositories.RepositoryHistory.Repositories.Clear();
             Repositories.SaveSettings();
             // Force clear recent repositories list from dashboard.
-            if (_dashboard != null)
-            {
-                _dashboard.ShowRecentRepositories();
-            }
+            _dashboard?.ShowRecentRepositories();
         }
 
         private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
@@ -2622,8 +2617,7 @@ namespace GitUI.CommandsDialogs
                 var startinfoBaseConfiguration = startinfo.BaseConfiguration;
                 if (!string.IsNullOrWhiteSpace(AppSettings.ConEmuFontSize.ValueOrDefault))
                 {
-                    int fontSize;
-                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out fontSize))
+                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out var fontSize))
                     {
                         var nodeFontSize =
                             startinfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
@@ -2651,13 +2645,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string cmdPath = exeList.
-                      Select(shell =>
-                      {
-                          string shellPath;
-                          if (PathUtil.TryFindShellPath(shell, out shellPath))
-                              return shellPath;
-                          return null;
-                      }).
+                      Select(shell => PathUtil.TryFindShellPath(shell, out var shellPath) ? shellPath : null).
                       FirstOrDefault(shellPath => shellPath != null);
 
                 if (cmdPath == null)
@@ -2697,8 +2685,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
             {
-                string posixPath;
-                if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
+                if (PathUtil.TryConvertWindowsPathToPosix(path, out var posixPath))
                 {
                     ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
                 }

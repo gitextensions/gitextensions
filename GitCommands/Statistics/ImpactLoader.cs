@@ -94,10 +94,10 @@ namespace GitCommands.Statistics
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
             Task[] tasks = GetTasks(token);
-            Task.Factory.ContinueWhenAll(tasks, (task) =>
+            Task.Factory.ContinueWhenAll(tasks, task =>
                 {
-                    if (!token.IsCancellationRequested && Exited != null)
-                        Exited(this, EventArgs.Empty);
+                    if (!token.IsCancellationRequested)
+                        Exited?.Invoke(this, EventArgs.Empty);
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.None,

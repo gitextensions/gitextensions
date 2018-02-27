@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using GitCommands;
-using GitCommands.Utils;
 using ICSharpCode.TextEditor;
 
 namespace GitUI.Editor.Diff
@@ -129,8 +128,8 @@ namespace GitUI.Editor.Diff
 
         public string GetLineDesc(int lineNumInDiffFile)
         {
-            DiffLineNum line;
-            if (!DiffLines.TryGetValue(lineNumInDiffFile, out line)) return null;
+            if (!DiffLines.TryGetValue(lineNumInDiffFile, out var line))
+                return null;
 
             if (line.LeftLineNum != DiffLineNum.NotApplicableLineNum)
             {

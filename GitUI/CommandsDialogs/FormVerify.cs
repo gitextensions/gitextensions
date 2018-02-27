@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager;
-using GitCommands.Git;
 using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
@@ -297,8 +296,7 @@ namespace GitUI.CommandsDialogs
                 _selectedItemsHeader.Detach();
                 _selectedItemsHeader.Dispose();
 
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

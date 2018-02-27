@@ -180,10 +180,7 @@ namespace GitCommands.Repository
             }
             finally
             {
-                if (stringReader != null)
-                {
-                    stringReader.Dispose();
-                }
+                stringReader?.Dispose();
             }
             return repositories;
         }
@@ -229,8 +226,7 @@ namespace GitCommands.Repository
                 }
                 finally
                 {
-                    if (stringReader != null)
-                        stringReader.Dispose();
+                    stringReader?.Dispose();
                 }
             }
             catch (Exception ex)

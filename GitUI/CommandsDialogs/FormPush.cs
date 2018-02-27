@@ -589,8 +589,7 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                bool pullCompleted;
-                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedRemote.Name, out pullCompleted, false);
+                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedRemote.Name, out var pullCompleted, false);
                 if (pullCompleted)
                 {
                     form.Retry();
@@ -1029,8 +1028,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }

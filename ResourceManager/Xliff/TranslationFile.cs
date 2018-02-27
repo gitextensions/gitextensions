@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
@@ -19,8 +18,8 @@ namespace ResourceManager.Xliff
             : this()
         {
             GitExVersion = gitExVersion;
-            _sourceLanguage = sourceLanguage;
-            _targetLanguage = targetLanguage;
+            SourceLanguage = sourceLanguage;
+            TargetLanguage = targetLanguage;
         }
 
         [XmlAttribute("version")]
@@ -29,21 +28,11 @@ namespace ResourceManager.Xliff
         [XmlAttribute("GitExVersion")]
         public string GitExVersion { get; set; }
 
-        private string _sourceLanguage;
-        [XmlIgnore()]
-        public string SourceLanguage
-        {
-            get { return _sourceLanguage; }
-            set { _sourceLanguage = value; }
-        }
+        [XmlIgnore]
+        public string SourceLanguage { get; set; }
 
-        private string _targetLanguage;
-        [XmlIgnore()]
-        public string TargetLanguage
-        {
-            get { return _targetLanguage; }
-            set { _targetLanguage = value; }
-        }
+        [XmlIgnore]
+        public string TargetLanguage { get; set; }
 
         [XmlElement(ElementName = "file")]
         public List<TranslationCategory> TranslationCategories { get; set; }

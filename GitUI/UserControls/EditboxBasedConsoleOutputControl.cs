@@ -49,8 +49,7 @@ namespace GitUI.UserControls
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            if (_timer != null)
-                _timer.Append(text);
+            _timer?.Append(text);
         }
 
         public override void KillProcess()
@@ -156,7 +155,7 @@ namespace GitUI.UserControls
         private void AppendMessage([NotNull] string text)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             if (InvokeRequired)
                 throw new InvalidOperationException("This operation must be called on the GUI thread.");
             //if not disposed

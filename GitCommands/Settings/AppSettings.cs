@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.IO.Abstractions;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -13,7 +12,6 @@ using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
 using System.Linq;
-using GitCommands.Utils;
 
 namespace GitCommands
 {
@@ -37,8 +35,8 @@ namespace GitCommands
         public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static RepoDistSettings _SettingsContainer;
-        public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
+        public static RepoDistSettings SettingsContainer { get; private set; }
+
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
         public static readonly int BranchDropDownMinWidth = 300;
@@ -60,7 +58,7 @@ namespace GitCommands
             }
             );
 
-            _SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
 
@@ -107,12 +105,12 @@ namespace GitCommands
                     var oldSC = SettingsContainer;
                     try
                     {
-                        _SettingsContainer = aSettingsContainer;
+                        SettingsContainer = aSettingsContainer;
                         action();
                     }
                     finally
                     {
-                        _SettingsContainer = oldSC;
+                        SettingsContainer = oldSC;
                         //refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }
@@ -446,8 +444,7 @@ namespace GitCommands
         {
             get
             {
-                string code;
-                if (_languageCodes.TryGetValue(CurrentTranslation, out code))
+                if (_languageCodes.TryGetValue(CurrentTranslation, out var code))
                     return code;
                 return "en";
             }
@@ -1424,7 +1421,7 @@ namespace GitCommands
 
         public static DateTime LastUpdateCheck
         {
-            get { return GetDate("LastUpdateCheck", default(DateTime)); }
+            get { return GetDate("LastUpdateCheck", default); }
             set { SetDate("LastUpdateCheck", value); }
         }
 

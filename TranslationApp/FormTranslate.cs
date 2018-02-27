@@ -171,8 +171,7 @@ namespace TranslationApp
                     {
                         foreach (Type type in types.Value)
                         {
-                            ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
-                            if (obj != null)
+                            if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
                                 obj.AddTranslationItems(translation);
 
                             progressBar.Value = index;

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Win32;
-using System.Diagnostics;
 using System.ComponentModel;
 
 namespace GitUI
@@ -26,8 +22,7 @@ namespace GitUI
 
             var featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
-            UInt32 emulationMode;
-            if (TryGetBrowserEmulationMode(out emulationMode))
+            if (TryGetBrowserEmulationMode(out var emulationMode))
             {
                 Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, emulationMode, RegistryValueKind.DWord);
             }

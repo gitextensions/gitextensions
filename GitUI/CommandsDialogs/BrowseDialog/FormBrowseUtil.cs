@@ -1,6 +1,4 @@
-﻿using GitCommands;
-using System.IO;
-using GitCommands.Git;
+﻿using System.IO;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

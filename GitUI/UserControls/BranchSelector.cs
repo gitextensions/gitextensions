@@ -172,10 +172,7 @@ namespace GitUI.UserControls
 
         private void FireSelectionChangedEvent(object sender, EventArgs e)
         {
-            if (SelectedIndexChanged != null)
-            {
-                SelectedIndexChanged(sender, e);
-            }
+            SelectedIndexChanged?.Invoke(sender, e);
         }
 
         public new void Focus()

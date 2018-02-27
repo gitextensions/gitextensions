@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
@@ -95,10 +94,7 @@ namespace GitUI
 
         protected override void DisposeCustomResources()
         {
-            if (selectedIndexChangeSubscription != null)
-            {
-                selectedIndexChangeSubscription.Dispose();
-            }
+            selectedIndexChangeSubscription?.Dispose();
         }
 
         private bool _enableSelectedIndexChangeEvent = true;
@@ -382,8 +378,7 @@ namespace GitUI
                     item.Selected = true;
                 }
                 var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
-                if (first != null)
-                    first.EnsureVisible();
+                first?.EnsureVisible();
                 StoreNextIndexToSelect();
             }
         }
@@ -438,7 +433,7 @@ namespace GitUI
             get
             {
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                    return item.Group != null ? (string)item.Group.Tag : null;
+                    return (string)item.Group?.Tag;
                 return null;
             }
         }
@@ -574,8 +569,7 @@ namespace GitUI
 
         void FileStatusListView_SelectedIndexChanged()
         {
-            if (SelectedIndexChanged != null)
-                SelectedIndexChanged(this, EventArgs.Empty);
+            SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private static int GetItemImageIndex(GitItemStatus gitItemStatus)
@@ -711,8 +705,7 @@ namespace GitUI
                     previouslySelectedItems.Add((GitItemStatus)Item.Tag);
                 }
 
-                if (DataSourceChanged != null)
-                    DataSourceChanged(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, new EventArgs());
             }
 
             FileStatusListView.BeginUpdate();
@@ -786,8 +779,7 @@ namespace GitUI
             if (updateCausedByFilter == false)
             {
                 FileStatusListView_SelectedIndexChanged();
-                if (DataSourceChanged != null)
-                    DataSourceChanged(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, new EventArgs());
                 if (SelectFirstItemOnSetItems)
                     SelectFirstVisibleItem();
             }
@@ -868,8 +860,7 @@ namespace GitUI
                         break;
                     }
                 default:
-                    if (KeyDown != null)
-                        KeyDown(sender, e);
+                    KeyDown?.Invoke(sender, e);
                     break;
             }
         }
@@ -967,10 +958,9 @@ namespace GitUI
                 else if (keys.Count == 1 && (GitItemStatusesWithParents[keys[0]] == null || GitItemStatusesWithParents[keys[0]].Count == 0))
                     HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
-            else if (GitItemStatuses != null)
+            else if (GitItemStatuses?.Count == 0)
             {
-                if (GitItemStatuses.Count == 0)
-                    HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
+                HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
         }
 

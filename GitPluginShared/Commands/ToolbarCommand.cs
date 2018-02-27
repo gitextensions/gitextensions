@@ -1,4 +1,3 @@
-using System.IO;
 // Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
 using EnvDTE;
 using EnvDTE80;

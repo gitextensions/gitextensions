@@ -118,9 +118,7 @@ namespace GitUI.RevisionGridClasses
 
             public bool IsRevisionRelative(string aGuid)
             {
-                Node startNode;
-
-                if (Nodes.TryGetValue(aGuid, out startNode))
+                if (Nodes.TryGetValue(aGuid, out var startNode))
                 {
                     return startNode.Ancestors.Any(a => a.IsRelative);
                 }
@@ -130,9 +128,7 @@ namespace GitUI.RevisionGridClasses
 
             public void HighlightBranchRecursive(string aId)
             {
-                Node startNode;
-
-                if (Nodes.TryGetValue(aId, out startNode))
+                if (Nodes.TryGetValue(aId, out var startNode))
                 {
                     foreach (Junction junction in startNode.Ancestors)
                     {
@@ -151,8 +147,7 @@ namespace GitUI.RevisionGridClasses
             public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
             {
                 // If we haven't seen this node yet, create a new junction.
-                Node node;
-                if (!GetNode(aId, out node) && (aParentIds == null || aParentIds.Length == 0))
+                if (!GetNode(aId, out var node) && (aParentIds == null || aParentIds.Length == 0))
                 {
                     var newJunction = new Junction(node, node);
                     junctions.Add(newJunction);
@@ -165,8 +160,8 @@ namespace GitUI.RevisionGridClasses
 
                 foreach (string parentId in aParentIds)
                 {
-                    Node parent;
-                    GetNode(parentId, out parent);
+                    GetNode(parentId, out var parent);
+
                     if (parent.Index < node.Index)
                     {
                         // TODO: We might be able to recover from this with some work, but
@@ -248,10 +243,7 @@ namespace GitUI.RevisionGridClasses
                     lanes.CacheTo(lastLane);
 
                     // We need to signal the DvcsGraph object that it needs to redraw everything.
-                    if (Updated != null)
-                    {
-                        Updated(this);
-                    }
+                    Updated?.Invoke(this);
                 }
                 else
                 {
@@ -293,10 +285,8 @@ namespace GitUI.RevisionGridClasses
                         }
 
                         // Signal that these rows have changed
-                        if (isChanged && Updated != null)
-                        {
-                            Updated(this);
-                        }
+                        if (isChanged)
+                            Updated?.Invoke(this);
 
                         processedNodes++;
                         break;
@@ -439,20 +429,15 @@ namespace GitUI.RevisionGridClasses
 
             public struct LaneInfo
             {
-                private int connectLane;
                 private List<Junction> junctions;
 
                 public LaneInfo(int aConnectLane, Junction aJunction)
                 {
-                    connectLane = aConnectLane;
+                    ConnectLane = aConnectLane;
                     junctions = new List<Junction>(1) { aJunction };
                 }
 
-                public int ConnectLane
-                {
-                    get { return connectLane; }
-                    set { connectLane = value; }
-                }
+                public int ConnectLane { get; set; }
 
                 public IEnumerable<Junction> Junctions
                 {
@@ -461,7 +446,7 @@ namespace GitUI.RevisionGridClasses
 
                 public LaneInfo Clone()
                 {
-                    var other = new LaneInfo { connectLane = connectLane, junctions = new List<Junction>(junctions) };
+                    var other = new LaneInfo { ConnectLane = ConnectLane, junctions = new List<Junction>(junctions) };
                     return other;
                 }
 

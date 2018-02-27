@@ -11,24 +11,15 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        private List<Patch> _patches = new List<Patch>();
-
         public string PatchFileName { get; set; }
 
         public string DirToPatch { get; set; }
 
-        public List<Patch> Patches
-        {
-            get { return _patches; }
-            set { _patches = value; }
-        }
+        public List<Patch> Patches { get; set; } = new List<Patch>();
 
         public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
-
-            string header;
-
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
                 return null;
@@ -48,10 +39,7 @@ namespace PatchApply
 
         public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
         {
-
-            string header;
-
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
                 return null;
@@ -64,8 +52,7 @@ namespace PatchApply
 
             if (header == null || body == null)
                 return null;
-            else
-                return GetPatchBytes(header, body, fileContentEncoding);
+            return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         private static string CorrectHeaderForNewFile(string header)
@@ -163,12 +150,12 @@ namespace PatchApply
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            _patches = patchProcessor.CreatePatchesFromString(text).ToList();
+            Patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
                 return;
 
-            foreach (Patch patchApply in _patches)
+            foreach (Patch patchApply in Patches)
             {
                 if (patchApply.Apply)
                     patchApply.ApplyPatch(filesContentEncoding);

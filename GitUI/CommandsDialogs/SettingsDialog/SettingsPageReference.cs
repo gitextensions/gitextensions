@@ -17,14 +17,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public class SettingsPageReferenceByType : SettingsPageReference
     {
-        private readonly Type _settingsPageType;
-
         public SettingsPageReferenceByType(Type settingsPageType)
         {
-            _settingsPageType = settingsPageType;
+            SettingsPageType = settingsPageType;
         }
 
-        public Type SettingsPageType { get { return _settingsPageType; } }
+        public Type SettingsPageType { get; }
 
         public override bool Equals(object obj)
         {
