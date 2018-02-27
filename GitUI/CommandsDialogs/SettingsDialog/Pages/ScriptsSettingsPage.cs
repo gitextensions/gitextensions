@@ -117,7 +117,7 @@ Current Branch:
 
         private void SaveScripts()
         {
-            AppSettings.ownScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()

@@ -16,7 +16,6 @@ namespace GitCommands.Repository
         {
         }
 
-
         private int _maxCount;
 
         [XmlIgnore]
@@ -49,7 +48,10 @@ namespace GitCommands.Repository
             foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                {
                     continue;
+                }
+
                 Repositories.Remove(recentRepository);
                 break;
             }
@@ -58,12 +60,16 @@ namespace GitCommands.Repository
         public void AddMostRecentRepository(string repo)
         {
             if (string.IsNullOrEmpty(repo))
+            {
                 return;
+            }
 
             repo = repo.Trim();
 
             if (string.IsNullOrEmpty(repo))
+            {
                 return;
+            }
 
             if (!Repository.PathIsUrl(repo))
             {
@@ -74,13 +80,17 @@ namespace GitCommands.Repository
             foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))
+                {
                     continue;
+                }
+
                 anchor = recentRepository.Anchor;
                 Repositories.Remove(recentRepository);
                 break;
             }
 
-            var repository = new Repository(repo, null, null) {
+            var repository = new Repository(repo, null, null)
+            {
                 RepositoryType = RepositoryType.History,
                 Anchor = anchor
             };

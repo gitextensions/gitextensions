@@ -29,10 +29,13 @@ namespace GitCommands.Repository
             }
 
             if (Repo.Title != null)
+            {
                 ShortName = Repo.Title;
+            }
             else if (DirInfo != null)
+            {
                 ShortName = DirInfo.Name;
-
+            }
 
             DirInfo = DirInfo?.Parent;
 
@@ -61,7 +64,7 @@ namespace GitCommands.Repository
         public bool SortMostRecentRepos { get; set; }
         public bool SortLessRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
-        //need to be set before shortening using middleDots strategy
+        // need to be set before shortening using middleDots strategy
         public Graphics Graphics { get; set; }
         public Font MeasureFont { get; set; }
 
@@ -84,29 +87,41 @@ namespace GitCommands.Repository
             bool signDir = ShorteningStrategy_MostSignDir.Equals(ShorteningStrategy);
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
-            //the maxRecentRepositories repositories will be added at beginning
-            //rest will be added in alphabetical order
+            // the maxRecentRepositories repositories will be added at beginning
+            // rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
             {
-                bool mostRecent = mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None ||
+                bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
                 RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
                 if (ri.MostRecent)
+                {
                     mostRecentRepos.Add(ri);
+                }
                 else
+                {
                     lessRecentRepos.Add(ri);
+                }
+
                 if (middleDot)
+                {
                     AddToOrderedMiddleDots(orderedRepos, ri);
+                }
                 else
+                {
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
+                }
             }
+
             int r = mostRecentRepos.Count - 1;
-            //remove not anchored repos if there is more than maxRecentRepositories repos
-            while (mostRecentRepos.Count > n && r >= 0 )
+            // remove not anchored repos if there is more than maxRecentRepositories repos
+            while (mostRecentRepos.Count > n && r >= 0)
             {
                 var repo = mostRecentRepos[r];
                 if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
+                {
                     r--;
+                }
                 else
                 {
                     repo.MostRecent = false;
@@ -120,44 +135,66 @@ namespace GitCommands.Repository
                 {
                     List<RecentRepoInfo> list = orderedRepos[caption];
                     foreach (RecentRepoInfo repo in list)
+                    {
                         if (repo.MostRecent == mostRecent)
+                        {
                             addToList.Add(repo);
+                        }
+                    }
                 }
             }
 
             void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
                 foreach (RecentRepoInfo repo in list)
+                {
                     addToList.Add(repo);
+                }
             }
 
             if (SortMostRecentRepos)
+            {
                 AddSortedRepos(true, mostRecentRepoList);
+            }
             else
+            {
                 AddNotSortedRepos(mostRecentRepos, mostRecentRepoList);
+            }
 
             if (SortLessRecentRepos)
+            {
                 AddSortedRepos(false, lessRecentRepoList);
+            }
             else
+            {
                 AddNotSortedRepos(lessRecentRepos, lessRecentRepoList);
+            }
         }
 
         private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
-            //if there is no short name for a repo, then try to find unique caption extending short directory path
+            // if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
                 if (!s.IsNullOrEmpty())
+                {
                     s = s.Trim(Path.DirectorySeparatorChar);
-                //candidate for short name
+                }
+
+                // candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())
+                {
                     repoInfo.Caption += " (" + s + ")";
+                }
+
                 repoInfo.DirInfo = repoInfo.DirInfo.Parent;
             }
             else
+            {
                 repoInfo.Caption = repoInfo.Repo.Path;
+            }
 
             var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out var list);
             if (!existsShortName)
@@ -168,6 +205,7 @@ namespace GitCommands.Repository
 
             List<RecentRepoInfo> tmpList = new List<RecentRepoInfo>();
             if (existsShortName)
+            {
                 for (int i = list.Count - 1; i >= 0; i--)
                 {
                     RecentRepoInfo r = list[i];
@@ -177,21 +215,31 @@ namespace GitCommands.Repository
                         list.RemoveAt(i);
                     }
                 }
+            }
 
             if (repoInfo.FullPath || !existsShortName)
+            {
                 list.Add(repoInfo);
+            }
             else
+            {
                 tmpList.Add(repoInfo);
+            }
 
-            //find unique caption for repos with no title
+            // find unique caption for repos with no title
             foreach (RecentRepoInfo r in tmpList)
+            {
                 AddToOrderedSignDir(orderedRepos, r, shortenPath);
+            }
         }
 
         private string MakePath(string l, string r)
         {
             if (l == null)
+            {
                 return r;
+            }
+
             return Path.Combine(l, r);
         }
 
@@ -218,12 +266,10 @@ namespace GitCommands.Repository
             }
             else
             {
-
                 string root = null;
                 string company = null;
                 string repository = null;
                 string workingDir = null;
-
 
                 workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
@@ -232,6 +278,7 @@ namespace GitCommands.Repository
                     repository = dirInfo.Name;
                     dirInfo = dirInfo.Parent;
                 }
+
                 bool addDots = false;
 
                 if (dirInfo != null)
@@ -241,9 +288,12 @@ namespace GitCommands.Repository
                         dirInfo = dirInfo.Parent;
                         addDots = true;
                     }
+
                     company = dirInfo.Name;
                     if (dirInfo.Parent != null)
+                    {
                         root = dirInfo.Parent.Name;
+                    }
                 }
 
                 bool ShortenPathWithCompany(int skipCount)
@@ -265,14 +315,15 @@ namespace GitCommands.Repository
 
                     repoInfo.Caption = MakePath(root, c);
                     if (addDots)
+                    {
                         repoInfo.Caption = MakePath(repoInfo.Caption, "..");
+                    }
 
                     repoInfo.Caption = MakePath(repoInfo.Caption, r);
                     repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
 
                     return result && addDots;
                 }
-
 
                 bool ShortenPath(int skipCount)
                 {
@@ -281,29 +332,35 @@ namespace GitCommands.Repository
                     string lastDir = workingDir;
                     if (fistDir != null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
                     {
-                        int middle = (path.Length - lastDir.Length) / 2 + (path.Length - lastDir.Length) % 2;
-                        int leftEnd = middle - skipCount / 2;
-                        int rightStart = middle + skipCount / 2 + skipCount % 2;
+                        int middle = ((path.Length - lastDir.Length) / 2) + ((path.Length - lastDir.Length) % 2);
+                        int leftEnd = middle - (skipCount / 2);
+                        int rightStart = middle + (skipCount / 2) + (skipCount % 2);
 
                         if (leftEnd == rightStart)
+                        {
                             repoInfo.Caption = path;
+                        }
                         else
+                        {
                             repoInfo.Caption = path.Substring(0, leftEnd) + ".." + path.Substring(rightStart, path.Length - rightStart);
+                        }
+
                         return true;
                     }
 
                     return false;
                 }
 
-                //if fixed width is not set then short as in pull request vccp's example
-                //full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
-                //short "E:\CompanyName\...\RepositoryName\WorkingDirName"
+                // if fixed width is not set then short as in pull request vccp's example
+                // full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
+                // short "E:\CompanyName\...\RepositoryName\WorkingDirName"
                 if (this.RecentReposComboMinWidth == 0)
                 {
                     ShortenPathWithCompany(0);
                 }
-                //else skip symbols beginning from the middle to both sides,
-                //so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
+
+                // else skip symbols beginning from the middle to both sides,
+                // so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
                 else
                 {
                     SizeF captionSize;

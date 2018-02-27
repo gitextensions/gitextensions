@@ -9,14 +9,14 @@ namespace GitCommands.Git
         private const string NameFormat = "stash@{{{0}}}";
         private readonly string _stash;
 
-
         /// <summary>Name of the stash. <remarks>Usually, "stash@{n}"</remarks></summary>
         public string Name { get; set; }
+
         /// <summary>Short description of the commit the stash was based on.</summary>
         public string Message { get; set; }
+
         /// <summary>Gets the index of the stash in the list.</summary>
         public int Index { get; set; }
-
 
         /// <summary>Initializes a new <see cref="GitStash"/> with all properties null.</summary>
         public GitStash(string stash)
@@ -25,6 +25,7 @@ namespace GitCommands.Git
             {
                 throw new ArgumentException("stash");
             }
+
             _stash = stash;
         }
 
@@ -46,13 +47,22 @@ namespace GitCommands.Git
             }
         }
 
-
-        public override string ToString() { return Message; }
+        public override string ToString()
+        {
+            return Message;
+        }
 
         public override bool Equals(object obj)
         {
-            if (null == obj) { return false; }
-            if (this == obj) { return true; }
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (this == obj)
+            {
+                return true;
+            }
 
             GitStash other = obj as GitStash;
             return other != null && Equals(other);
@@ -65,7 +75,7 @@ namespace GitCommands.Git
 
         public override int GetHashCode()
         {
-            return (_stash.GetHashCode());
+            return _stash.GetHashCode();
         }
     }
 }

@@ -1096,7 +1096,7 @@ namespace GitUI.Editor
 
         private string DoAutoCRLF(string s)
         {
-            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            if (Module.EffectiveConfigFile.Core.Autocrlf.ValueOrDefault == AutoCRLFType.@true)
             {
                 return s.Replace("\n", Environment.NewLine);
             }

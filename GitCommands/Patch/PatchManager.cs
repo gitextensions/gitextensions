@@ -22,19 +22,27 @@ namespace PatchApply
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
+            {
                 return null;
+            }
 
             string body = selectedChunks.ToResetUnstagedLinesPatch();
 
-            //git apply has problem with dealing with autocrlf
-            //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            // git apply has problem with dealing with autocrlf
+            // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
+            if (body != null && module.EffectiveConfigFile.Core.Autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            {
                 body = body.Replace("\r", "");
+            }
 
             if (header == null || body == null)
+            {
                 return null;
+            }
             else
+            {
                 return GetPatchBytes(header, body, fileContentEncoding);
+            }
         }
 
         public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
@@ -42,44 +50,59 @@ namespace PatchApply
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
+            {
                 return null;
+            }
 
-            //if file is new, --- /dev/null has to be replaced by --- a/fileName
+            // if file is new, --- /dev/null has to be replaced by --- a/fileName
             if (isNewFile)
+            {
                 header = CorrectHeaderForNewFile(header);
+            }
 
             string body = selectedChunks.ToStagePatch(staged, false);
 
             if (header == null || body == null)
+            {
                 return null;
+            }
+
             return GetPatchBytes(header, body, fileContentEncoding);
         }
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
+            {
                 if (line.StartsWith("+++"))
+                {
                     pppLine = "---" + line.Substring(3);
+                }
+            }
 
             StringBuilder sb = new StringBuilder();
 
             foreach (string line in headerLines)
             {
                 if (line.StartsWith("---"))
+                {
                     sb.Append(pppLine + "\n");
+                }
                 else if (!line.StartsWith("new file mode"))
+                {
                     sb.Append(line + "\n");
+                }
             }
 
             return sb.ToString();
         }
 
-        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] FilePreabmle)
+        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreabmle)
         {
             StringBuilder sb = new StringBuilder();
-            string fileMode = "100000";//given fake mode to satisfy patch format, git will override this
+            string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
             sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
             sb.Append("\n");
             if (!reset)
@@ -87,33 +110,48 @@ namespace PatchApply
                 sb.Append("new file mode " + fileMode);
                 sb.Append("\n");
             }
+
             sb.Append("index 0000000..0000000");
             sb.Append("\n");
             if (reset)
+            {
                 sb.Append("--- a/" + newFileName);
+            }
             else
+            {
                 sb.Append("--- /dev/null");
+            }
+
             sb.Append("\n");
             sb.Append("+++ b/" + newFileName);
             sb.Append("\n");
 
             string header = sb.ToString();
 
-            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
+            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
 
             if (selectedChunks == null)
+            {
                 return null;
+            }
 
             string body = selectedChunks.ToStagePatch(false, true);
-            //git apply has problem with dealing with autocrlf
-            //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+
+            // git apply has problem with dealing with autocrlf
+            // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
+            if (reset && body != null && module.EffectiveConfigFile.Core.Autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            {
                 body = body.Replace("\r", "");
+            }
 
             if (header == null || body == null)
+            {
                 return null;
+            }
             else
+            {
                 return GetPatchBytes(header, body, fileContentEncoding);
+            }
         }
 
         public static byte[] GetPatchBytes(string header, string body, Encoding fileContentEncoding)
@@ -134,6 +172,7 @@ namespace PatchApply
             {
                 s.Append(b.ToString("x2").ToLower());
             }
+
             return s.ToString();
         }
 
@@ -145,7 +184,7 @@ namespace PatchApply
             return bs;
         }
 
-        //TODO encoding for each file in patch should be obtained separately from .gitattributes
+        // TODO encoding for each file in patch should be obtained separately from .gitattributes
         public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
@@ -153,12 +192,16 @@ namespace PatchApply
             Patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
+            {
                 return;
+            }
 
             foreach (Patch patchApply in Patches)
             {
                 if (patchApply.Apply)
+                {
                     patchApply.ApplyPatch(filesContentEncoding);
+                }
             }
         }
 
@@ -204,7 +247,6 @@ namespace PatchApply
         public string WasNoNewLineAtTheEnd = null;
         public string IsNoNewLineAtTheEnd = null;
 
-
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
             string diff = null;
@@ -218,7 +260,9 @@ namespace PatchApply
             removedCount += PreContext.Count + PostContext.Count;
 
             foreach (PatchLine line in PreContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
 
             for (int i = 0; i < RemovedLines.Count; i++)
             {
@@ -234,9 +278,14 @@ namespace PatchApply
                 else if (!staged)
                 {
                     if (inPostPart)
+                    {
                         removePart = removePart.Combine("\n", " " + removedLine.Text.Substring(1));
+                    }
                     else
+                    {
                         prePart = prePart.Combine("\n", " " + removedLine.Text.Substring(1));
+                    }
+
                     addedCount++;
                     removedCount++;
                 }
@@ -255,37 +304,51 @@ namespace PatchApply
                     addPart = addPart.Combine("\n", addedLine.Text);
                     addedCount++;
                 }
-
                 else if (staged)
                 {
                     if (inPostPart)
+                    {
                         postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
                     else
+                    {
                         prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
+
                     addedCount++;
                     removedCount++;
                 }
-
             }
 
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
             if (PostContext.Count == 0 && (!staged || selectedLastRemovedLine))
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
+
             diff = diff.Combine("\n", addPart);
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
+            {
                 diff = diff.Combine("\n", line.Text);
-            //stage no new line at the end only if last +- line is selected
+            }
+
+            // stage no new line at the end only if last +- line is selected
             if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
+            {
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
+            }
+
             if (PostContext.Count > 0)
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
 
             return diff;
         }
 
-        //patch base is changed file
+        // patch base is changed file
         public string ToResetUnstagedLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
         {
             string diff = null;
@@ -298,7 +361,9 @@ namespace PatchApply
             removedCount += PreContext.Count + PostContext.Count;
 
             foreach (PatchLine line in PreContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
 
             foreach (PatchLine removedLine in RemovedLines)
             {
@@ -323,9 +388,14 @@ namespace PatchApply
                 else
                 {
                     if (inPostPart)
+                    {
                         postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
                     else
+                    {
                         prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
+
                     addedCount++;
                     removedCount++;
                 }
@@ -334,15 +404,25 @@ namespace PatchApply
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
             if (PostContext.Count == 0)
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
+
             diff = diff.Combine("\n", addPart);
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
+
             if (PostContext.Count == 0)
+            {
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
+            }
             else
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
 
             return diff;
         }
@@ -352,41 +432,52 @@ namespace PatchApply
 
     internal class Chunk
     {
-        private int StartLine;
-        private List<SubChunk> SubChunks = new List<SubChunk>();
-        private SubChunk _CurrentSubChunk = null;
+        private int startLine;
+        private List<SubChunk> subChunks = new List<SubChunk>();
+        private SubChunk _currentSubChunk = null;
 
         public SubChunk CurrentSubChunk
         {
             get
             {
-                if (_CurrentSubChunk == null)
+                if (_currentSubChunk == null)
                 {
-                    _CurrentSubChunk = new SubChunk();
-                    SubChunks.Add(_CurrentSubChunk);
+                    _currentSubChunk = new SubChunk();
+                    subChunks.Add(_currentSubChunk);
                 }
-                return _CurrentSubChunk;
+
+                return _currentSubChunk;
             }
         }
 
         public void AddContextLine(PatchLine line, bool preContext)
         {
             if (preContext)
+            {
                 CurrentSubChunk.PreContext.Add(line);
+            }
             else
+            {
                 CurrentSubChunk.PostContext.Add(line);
+            }
         }
 
         public void AddDiffLine(PatchLine line, bool removed)
         {
-            //if postContext is not empty @line comes from next SubChunk
+            // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
-                _CurrentSubChunk = null;//start new SubChunk
+            {
+                _currentSubChunk = null; // start new SubChunk
+            }
 
             if (removed)
+            {
                 CurrentSubChunk.RemovedLines.Add(line);
+            }
             else
+            {
                 CurrentSubChunk.AddedLines.Add(line);
+            }
         }
 
         public bool ParseHeader(string header)
@@ -394,14 +485,16 @@ namespace PatchApply
             header = header.SkipStr("-");
             header = header.TakeUntilStr(",");
 
-            return int.TryParse(header, out StartLine);
+            return int.TryParse(header, out startLine);
         }
 
         public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
         {
             string[] lines = chunkStr.Split('\n');
             if (lines.Length < 2)
+            {
                 return null;
+            }
 
             bool inPatch = true;
             bool inPreContext = true;
@@ -420,12 +513,17 @@ namespace PatchApply
                     {
                         Text = line
                     };
-                    //do not refactor, there are no break points condition in VS Experss
+
+                    // do not refactor, there are no break points condition in VS Experss
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
+                    {
                         patchLine.Selected = true;
+                    }
 
                     if (line.StartsWith(" "))
+                    {
                         result.AddContextLine(patchLine, inPreContext);
+                    }
                     else if (line.StartsWith("-"))
                     {
                         inPreContext = false;
@@ -439,13 +537,18 @@ namespace PatchApply
                     else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
                     {
                         if (result.CurrentSubChunk.AddedLines.Count > 0 && result.CurrentSubChunk.PostContext.Count == 0)
+                        {
                             result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
+                        }
                         else
+                        {
                             result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
+                        }
                     }
                     else
+                    {
                         inPatch = false;
-
+                    }
                 }
 
                 currentPos += line.Length + 1;
@@ -455,19 +558,25 @@ namespace PatchApply
             return result;
         }
 
-        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
+        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
-            result.StartLine = 0;
+            result.startLine = 0;
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
             if ("crlf".Equals(gitEol))
+            {
                 eol = "\r\n";
+            }
             else if ("native".Equals(gitEol))
+            {
                 eol = Environment.NewLine;
+            }
             else
+            {
                 eol = "\n";
+            }
 
             int eolLength = eol.Length;
 
@@ -477,14 +586,16 @@ namespace PatchApply
             while (i < lines.Length)
             {
                 string line = lines[i];
-                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
+                string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreabmle)) : string.Empty;
                 PatchLine patchLine = new PatchLine()
                 {
                     Text = (reset ? "-" : "+") + preamble + line
                 };
-                //do not refactor, there are no breakpoints condition in VS Experss
+                // do not refactor, there are no breakpoints condition in VS Experss
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
+                {
                     patchLine.Selected = true;
+                }
 
                 if (i == lines.Length - 1)
                 {
@@ -494,8 +605,8 @@ namespace PatchApply
                         result.AddDiffLine(patchLine, reset);
                         if (reset && patchLine.Selected)
                         {
-                            //if the last line is selected to be reset and there is no new line at the end of file
-                            //then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
+                            // if the last line is selected to be reset and there is no new line at the end of file
+                            // then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
                             PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(aLine => !aLine.Selected);
                             if (lastNotSelectedLine != null)
                             {
@@ -504,19 +615,22 @@ namespace PatchApply
                                 clonedLine.SetOperation("+");
                                 result.CurrentSubChunk.AddedLines.Add(clonedLine);
                             }
+
                             result.CurrentSubChunk.WasNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         }
                     }
                 }
                 else
+                {
                     result.AddDiffLine(patchLine, reset);
+                }
 
                 currentPos += line.Length + eolLength;
                 i++;
             }
+
             return result;
         }
-
 
         public string ToPatch(SubChunkToPatchFnc subChunkToPatch)
         {
@@ -525,16 +639,18 @@ namespace PatchApply
             int addedCount = 0;
             int removedCount = 0;
 
-            foreach (SubChunk subChunk in SubChunks)
+            foreach (SubChunk subChunk in subChunks)
             {
                 string subDiff = subChunkToPatch(subChunk, ref addedCount, ref removedCount, ref wereSelectedLines);
                 diff = diff.Combine("\n", subDiff);
             }
 
             if (!wereSelectedLines)
+            {
                 return null;
+            }
 
-            diff = "@@ -" + StartLine + "," + removedCount + " +" + StartLine + "," + addedCount + " @@".Combine("\n", diff);
+            diff = "@@ -" + startLine + "," + removedCount + " +" + startLine + "," + addedCount + " @@".Combine("\n", diff);
 
             return diff;
         }
@@ -542,19 +658,22 @@ namespace PatchApply
 
     internal class ChunkList : List<Chunk>
     {
-
         public static ChunkList GetSelectedChunks(string text, int selectionPosition, int selectionLength, bool staged, out string header)
         {
             header = null;
-            //When there is no patch, return nothing
+            // When there is no patch, return nothing
             if (string.IsNullOrEmpty(text))
+            {
                 return null;
+            }
 
             // TODO: handling submodules
             // Divide diff into header and patch
             int patchPos = text.IndexOf("@@");
             if (patchPos < 1)
+            {
                 return null;
+            }
 
             header = text.Substring(0, patchPos);
             string diff = text.Substring(patchPos - 1);
@@ -568,13 +687,16 @@ namespace PatchApply
             {
                 string chunkStr = chunks[i];
                 currentPos += 3;
-                //if selection intersects with chunsk
+                // if selection intersects with chunsk
                 if (currentPos + chunkStr.Length >= selectionPosition)
                 {
                     Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
                     if (chunk != null)
+                    {
                         selectedChunks.Add(chunk);
+                    }
                 }
+
                 currentPos += chunkStr.Length;
                 i++;
             }
@@ -582,9 +704,9 @@ namespace PatchApply
             return selectedChunks;
         }
 
-        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
+        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
+            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
             ChunkList result = new ChunkList();
             result.Add(chunk);
             return result;
@@ -615,19 +737,17 @@ namespace PatchApply
             string result = null;
 
             foreach (Chunk chunk in this)
+            {
                 result = result.Combine("\n", chunk.ToPatch(subChunkToPatch));
-
+            }
 
             if (result != null)
             {
                 result = result.Combine("\n", "--");
                 result = result.Combine("\n", Application.ProductName + " " + AppSettings.ProductVersion);
             }
+
             return result;
-
         }
-
     }
-
-
 }

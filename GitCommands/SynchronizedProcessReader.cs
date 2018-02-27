@@ -68,8 +68,8 @@ namespace GitCommands
         {
             byte[] stdOutputLoader = null;
 
-            //We cannot use the async functions because these functions will read the output to a string, this
-            //can cause problems because the correct encoding is not used.
+            // We cannot use the async functions because these functions will read the output to a string, this
+            // can cause problems because the correct encoding is not used.
             Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
             stdOutputLoaderThread.Start();
 

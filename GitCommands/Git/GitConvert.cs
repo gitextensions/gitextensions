@@ -7,21 +7,31 @@ namespace GitCommands
         public static byte[] ConvertCrLfToWorktree(byte[] buf)
         {
             if (buf == null)
+            {
                 return buf;
+            }
 
             BufStatistic bufStatistic = GetBufStatistic(buf);
 
-            if (bufStatistic.cntLf == 0)
+            if (bufStatistic.CntLf == 0)
+            {
                 return buf;
+            }
 
-            if (bufStatistic.cntLf == bufStatistic.cntCrlf)
+            if (bufStatistic.CntLf == bufStatistic.CntCrlf)
+            {
                 return buf;
+            }
 
-            if (bufStatistic.cntCr != bufStatistic.cntCrlf)
+            if (bufStatistic.CntCr != bufStatistic.CntCrlf)
+            {
                 return buf;
+            }
 
             if (IsBinary(buf))
+            {
                 return buf;
+            }
 
             List<byte> byteList = new List<byte>();
 
@@ -63,22 +73,22 @@ namespace GitCommands
 
         private struct BufStatistic
         {
-            public long cntNul;
-            public long cntCr;
-            public long cntLf;
-            public long cntCrlf;
+            public long CntNul;
+            public long CntCr;
+            public long CntLf;
+            public long CntCrlf;
 
-            public long cntPrintable;
-            public long cntNonPrintable;
+            public long CntPrintable;
+            public long CntNonPrintable;
 
             public void ResetBufStatistic()
             {
-                cntNul = 0;
-                cntCr = 0;
-                cntLf = 0;
-                cntCrlf = 0;
-                cntPrintable = 0;
-                cntNonPrintable = 0;
+                CntNul = 0;
+                CntCr = 0;
+                CntLf = 0;
+                CntCrlf = 0;
+                CntPrintable = 0;
+                CntNonPrintable = 0;
             }
         }
 
@@ -88,32 +98,35 @@ namespace GitCommands
             bufStatistic.ResetBufStatistic();
 
             if (buf == null)
+            {
                 return bufStatistic;
+            }
 
             for (long i = 0; i < buf.Length; i++)
             {
                 if (buf[i] == 0x0D)
                 {
-                    bufStatistic.cntCr++;
+                    bufStatistic.CntCr++;
                     if (i + 1 < buf.Length)
                     {
                         if (buf[i + 1] == 0x0A)
                         {
-                            bufStatistic.cntCrlf++;
+                            bufStatistic.CntCrlf++;
                         }
                     }
+
                     continue;
                 }
 
                 if (buf[i] == 0x0A)
                 {
-                    bufStatistic.cntLf++;
+                    bufStatistic.CntLf++;
                     continue;
                 }
 
                 if (buf[i] == 0x7F)
                 {
-                    bufStatistic.cntNonPrintable++;
+                    bufStatistic.CntNonPrintable++;
                 }
                 else if (buf[i] < 0x20)
                 {
@@ -123,22 +136,22 @@ namespace GitCommands
                         case 0x09:
                         case 0x1B:
                         case 0x0C:
-                            bufStatistic.cntPrintable++;
+                            bufStatistic.CntPrintable++;
                             break;
 
                         case 0:
-                            bufStatistic.cntNul++;
-                            bufStatistic.cntNonPrintable++;
+                            bufStatistic.CntNul++;
+                            bufStatistic.CntNonPrintable++;
                             break;
 
                         default:
-                            bufStatistic.cntNonPrintable++;
+                            bufStatistic.CntNonPrintable++;
                             break;
                     }
                 }
                 else
                 {
-                    bufStatistic.cntPrintable++;
+                    bufStatistic.CntPrintable++;
                 }
             }
 
@@ -146,7 +159,7 @@ namespace GitCommands
             {
                 if (buf[buf.Length - 1] == 0x1A)
                 {
-                    bufStatistic.cntNonPrintable--;
+                    bufStatistic.CntNonPrintable--;
                 }
             }
 
@@ -156,15 +169,17 @@ namespace GitCommands
         public static bool IsBinary(byte[] buf)
         {
             BufStatistic bufStatistic = GetBufStatistic(buf);
-            if (bufStatistic.cntNul > 0)
+            if (bufStatistic.CntNul > 0)
+            {
                 return true;
+            }
 
-            if ((bufStatistic.cntPrintable / 128) < bufStatistic.cntNonPrintable)
+            if ((bufStatistic.CntPrintable / 128) < bufStatistic.CntNonPrintable)
+            {
                 return true;
+            }
 
             return false;
         }
-
-
     }
 }

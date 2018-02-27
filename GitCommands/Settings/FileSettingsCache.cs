@@ -30,9 +30,9 @@ namespace GitCommands.Settings
 
             _fileWatcher.IncludeSubdirectories = false;
             _fileWatcher.EnableRaisingEvents = false;
-            _fileWatcher.Changed += _fileWatcher_Changed;
-            _fileWatcher.Renamed += _fileWatcher_Renamed;
-            _fileWatcher.Created += _fileWatcher_Created;
+            _fileWatcher.Changed += FileWatcher_Changed;
+            _fileWatcher.Renamed += FileWatcher_Renamed;
+            _fileWatcher.Created += FileWatcher_Created;
             var dir = Path.GetDirectoryName(SettingsFilePath);
             if (Directory.Exists(dir))
             {
@@ -41,16 +41,17 @@ namespace GitCommands.Settings
                 _canEnableFileWatcher = true;
                 _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
             }
+
             FileChanged();
         }
 
-        void _fileWatcher_Created(object sender, FileSystemEventArgs e)
+        private void FileWatcher_Created(object sender, FileSystemEventArgs e)
         {
             _lastFileRead = null;
             FileChanged();
         }
 
-        void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
+        private void FileWatcher_Renamed(object sender, RenamedEventArgs e)
         {
             FileChanged();
         }
@@ -65,12 +66,11 @@ namespace GitCommands.Settings
                 {
                     if (_saveTimer != null)
                     {
-
                         _saveTimer.Dispose();
                         _saveTimer = null;
-                        _fileWatcher.Changed -= _fileWatcher_Changed;
-                        _fileWatcher.Renamed -= _fileWatcher_Renamed;
-                        _fileWatcher.Created -= _fileWatcher_Created;
+                        _fileWatcher.Changed -= FileWatcher_Changed;
+                        _fileWatcher.Renamed -= FileWatcher_Renamed;
+                        _fileWatcher.Created -= FileWatcher_Created;
 
                         if (_autoSave)
                         {
@@ -91,7 +91,7 @@ namespace GitCommands.Settings
             return WeakRefCache.Default.Get(aSettingsFilePath + ":" + typeof(T).FullName, createSettingsCache);
         }
 
-        private void _fileWatcher_Changed(object sender, FileSystemEventArgs e)
+        private void FileWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             FileChanged();
         }
@@ -114,6 +114,7 @@ namespace GitCommands.Settings
             {
                 // no-op
             }
+
             return DateTime.MaxValue;
         }
 
@@ -138,6 +139,7 @@ namespace GitCommands.Settings
                     var backupName = SettingsFilePath + ".backup";
                     File.Copy(SettingsFilePath, backupName, true);
                 }
+
                 File.Copy(tmpFile, SettingsFilePath, true);
                 File.Delete(tmpFile);
 
@@ -190,10 +192,12 @@ namespace GitCommands.Settings
             _lastModificationDate = DateTime.UtcNow;
 
             if (_autoSave)
+            {
                 StartSaveTimer();
+            }
         }
 
-        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
+        // Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
         private void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
         {
             System.Timers.Timer t = (System.Timers.Timer)source;
@@ -203,7 +207,7 @@ namespace GitCommands.Settings
 
         private void StartSaveTimer()
         {
-            //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
+            // Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
             _saveTimer.Stop();
             _saveTimer.AutoReset = true;
             _saveTimer.Interval = SaveTime;

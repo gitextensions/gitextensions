@@ -1,6 +1,5 @@
 ﻿namespace GitCommands.Settings
 {
-
     public class StringSetting : Setting<string>
     {
         public StringSetting(string aName, SettingsPath settingsSource, string aDefaultValue)
@@ -26,7 +25,8 @@
     {
         public BoolNullableSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
-        { }
+        {
+        }
 
         public override bool? Value
         {
@@ -54,7 +54,8 @@
     {
         public IntNullableSetting(string aName, SettingsPath settingsSource, int aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
-        { }
+        {
+        }
 
         public override int? Value
         {
@@ -82,7 +83,8 @@
     {
         public BoolSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
-        { }
+        {
+        }
 
         public override bool Value
         {
@@ -102,7 +104,8 @@
     {
         public EnumSetting(string aName, SettingsPath settingsSource, T aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
-        { }
+        {
+        }
 
         public override T Value
         {
@@ -122,7 +125,8 @@
     {
         public EnumNullableSetting(string aName, SettingsPath settingsSource)
             : base(aName, settingsSource, null)
-        { }
+        {
+        }
 
         public override T? Value
         {

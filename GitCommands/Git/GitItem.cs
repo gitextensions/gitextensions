@@ -16,7 +16,6 @@ namespace GitCommands.Git
             FileName = Name = name;
         }
 
-
         public string Guid { get; }
         public GitObjectType ObjectType { get; }
         public string Name { get; }

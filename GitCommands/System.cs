@@ -8,45 +8,61 @@ namespace System
     public static class StringExtensions
     {
         /// <summary>'\n'</summary>
-        static readonly char[] NewLineSeparator = new char[] { '\n' };
+        private static readonly char[] NewLineSeparator = new char[] { '\n' };
 
         public static string SkipStr(this string str, string toSkip)
         {
             if (str == null)
+            {
                 return null;
+            }
 
             int idx;
             idx = str.IndexOf(toSkip);
             if (idx != -1)
+            {
                 return str.Substring(idx + toSkip.Length);
+            }
             else
+            {
                 return null;
+            }
         }
 
-        public static String TakeUntilStr(this string str, String untilStr)
+        public static string TakeUntilStr(this string str, string untilStr)
         {
             if (str == null)
+            {
                 return null;
+            }
 
             int idx;
             idx = str.IndexOf(untilStr);
             if (idx != -1)
+            {
                 return str.Substring(0, idx);
+            }
             else
+            {
                 return str;
+            }
         }
 
         public static string CommonPrefix(this string s, string other)
         {
             if (s.IsNullOrEmpty() || other.IsNullOrEmpty())
+            {
                 return string.Empty;
+            }
 
             int prefixLength = 0;
 
             foreach (char c in other)
             {
                 if (s.Length <= prefixLength || s[prefixLength] != c)
+                {
                     return s.Substring(0, prefixLength);
+                }
 
                 prefixLength++;
             }
@@ -59,15 +75,20 @@ namespace System
             return string.IsNullOrEmpty(s);
         }
 
-
         public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())
+            {
                 return right;
+            }
             else if (right.IsNullOrEmpty())
+            {
                 return left;
+            }
             else
+            {
                 return left + sep + right;
+            }
         }
 
         /// <summary>
@@ -84,7 +105,9 @@ namespace System
         public static string Quote(this string s, string quotationMark)
         {
             if (s == null)
+            {
                 return string.Empty;
+            }
 
             return quotationMark + s + quotationMark;
         }
@@ -145,17 +168,25 @@ namespace System
         public static string RemoveLines(this string value, Func<string, bool> shouldRemoveLine)
         {
             if (value.IsNullOrEmpty())
+            {
                 return value;
+            }
 
             if (value[value.Length - 1] == '\n')
+            {
                 value = value.Substring(0, value.Length - 1);
+            }
 
             StringBuilder sb = new StringBuilder();
             string[] lines = value.Split('\n');
 
             foreach (string line in lines)
+            {
                 if (!shouldRemoveLine(line))
+                {
                     sb.Append(line + '\n');
+                }
+            }
 
             return sb.ToString();
         }
@@ -196,8 +227,10 @@ namespace System
             {// "origin/master/" OR "master" -> return original
                 return value;
             }
+
             return value.Substring(1 + value.LastIndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
         }
+
         public static string SubstringAfterFirst(this string value, string separator)
         {
             return value.Substring(1 + value.IndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
@@ -211,19 +244,23 @@ namespace System
         public static string ShortenTo(this string str, int maxLength)
         {
             if (str.IsNullOrEmpty())
+            {
                 return string.Empty;
+            }
 
             if (str.Length <= maxLength)
+            {
                 return str;
+            }
             else
+            {
                 return str.Substring(0, maxLength - 3) + "...";
+            }
         }
-
     }
 
     public static class BoolExtensions
     {
-
         /// <summary>
         /// Translates this bool value to the git command line force flag
         /// </summary>
@@ -231,6 +268,5 @@ namespace System
         {
             return force ? " -f " : string.Empty;
         }
-
     }
 }

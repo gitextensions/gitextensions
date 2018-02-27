@@ -20,11 +20,11 @@ namespace GitCommands
             _fileSystem = fileSystem;
             _environment = environment;
         }
+
         public SshPathLocator()
             : this(new FileSystem(), new EnvironmentAbstraction())
         {
         }
-
 
         /// <summary>
         /// Gets the git SSH command;
@@ -49,6 +49,7 @@ namespace GitCommands
             {
                 return null;
             }
+
             try
             {
                 var gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory);
@@ -56,13 +57,13 @@ namespace GitCommands
                 {
                     return null;
                 }
+
                 return _fileSystem.Directory.EnumerateFiles(gitDirInfo.FullName, "ssh.exe", SearchOption.AllDirectories).FirstOrDefault();
             }
             catch (Exception)
             {
                 return null;
             }
-            
         }
     }
 }

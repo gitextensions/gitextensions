@@ -15,19 +15,16 @@ namespace GitCommands.ExternalLinks
     {
         private readonly IGitRemoteManager _gitRemoteManager;
 
-
         public ExternalLinkRevisionParser(IGitRemoteManager gitRemoteManager)
         {
             _gitRemoteManager = gitRemoteManager;
         }
-
 
         public IEnumerable<ExternalLink> Parse(GitRevision revision, ExternalLinkDefinition definition)
         {
             var remoteMatches = ParseRemotes(definition);
             return remoteMatches.SelectMany(remoteMatch => ParseRevision(revision, definition, remoteMatch));
         }
-
 
         private static IEnumerable<GitRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<GitRemote> remotes)
         {
@@ -70,6 +67,7 @@ namespace GitCommands.ExternalLinks
                         remoteUrls.Add(remote.Url.ToLower());
                     }
                 }
+
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.PushURL))
                 {
                     if (remote.PushUrl.IsNotNullOrWhitespace())
@@ -126,7 +124,9 @@ namespace GitCommands.ExternalLinks
         private IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
             if (definition.SearchPattern.IsNullOrEmpty() || definition.SearchPatternRegex.Value == null || part == null)
+            {
                 yield break;
+            }
 
             IList<Match> allMatches = new List<Match>();
 
@@ -160,6 +160,5 @@ namespace GitCommands.ExternalLinks
                 }
             }
         }
-
     }
 }

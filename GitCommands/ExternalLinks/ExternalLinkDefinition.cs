@@ -11,7 +11,7 @@ namespace GitCommands.ExternalLinks
     [XmlType("GitExtLinkDef")]
     public class ExternalLinkDefinition : SimpleStructured
     {
-        //revision's parts that can be searched for candidates for a link
+        // revision's parts that can be searched for candidates for a link
         public enum RevisionPart
         {
             Message,
@@ -29,7 +29,6 @@ namespace GitCommands.ExternalLinks
         private string _nestedSearchPattern;
         private string _remoteSearchPattern;
         private string _useRemotesPattern;
-
 
         /// <summary>
         /// Non-local link def can be locally disabled
@@ -68,10 +67,7 @@ namespace GitCommands.ExternalLinks
                         System.Diagnostics.Debug.Print(e.ToStringWithData());
                         return null;
                     }
-                }
-                );
-
-
+                });
             }
         }
 
@@ -101,8 +97,7 @@ namespace GitCommands.ExternalLinks
                         System.Diagnostics.Debug.Print(e.ToStringWithData());
                         return null;
                     }
-                }
-                );
+                });
             }
         }
 
@@ -132,8 +127,7 @@ namespace GitCommands.ExternalLinks
                             System.Diagnostics.Debug.Print(e.ToStringWithData());
                             return null;
                         }
-                    }
-                        );
+                    });
             }
         }
 
@@ -161,14 +155,12 @@ namespace GitCommands.ExternalLinks
                             System.Diagnostics.Debug.Print(e.ToStringWithData());
                             return null;
                         }
-                    }
-                );
+                    });
             }
         }
 
         /// <summary>Indicates if only the first among the matching remotes should be used</summary>
         public bool UseOnlyFirstRemote { get; set; }
-
 
         /// <summary>Compiled SearchPattern</summary>
         [XmlIgnore]
@@ -185,8 +177,6 @@ namespace GitCommands.ExternalLinks
         /// <summary>Compiled UseRemotesPattern</summary>
         [XmlIgnore]
         public Lazy<Regex> UseRemotesRegex { get; private set; }
-
-
 
         public override int GetHashCode()
         {

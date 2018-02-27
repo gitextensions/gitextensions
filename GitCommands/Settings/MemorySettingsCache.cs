@@ -8,7 +8,7 @@ namespace GitCommands.Settings
 
         protected override void LoadImpl()
         {
-            //cached in memory, do nothing
+            // cached in memory, do nothing
         }
 
         protected override bool NeedRefresh()
@@ -18,7 +18,7 @@ namespace GitCommands.Settings
 
         protected override void SaveImpl()
         {
-            //cached in memory, do nothing
+            // cached in memory, do nothing
         }
 
         protected override void SetValueImpl(string key, string value)
@@ -29,7 +29,9 @@ namespace GitCommands.Settings
         protected override string GetValueImpl(string key)
         {
             if (stringSettings.TryGetValue(key, out var value))
+            {
                 return value;
+            }
 
             return null;
         }

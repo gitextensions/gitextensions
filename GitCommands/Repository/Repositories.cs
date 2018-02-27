@@ -18,7 +18,10 @@ namespace GitCommands.Repository
         public static Task<RepositoryHistory> LoadRepositoryHistoryAsync()
         {
             if (_repositoryHistory != null)
+            {
                 return _repositoryHistory;
+            }
+
             _repositoryHistory = Task.Factory.StartNew(() => LoadRepositoryHistory());
             return _repositoryHistory;
         }
@@ -34,7 +37,9 @@ namespace GitCommands.Repository
 
             RepositoryHistory repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
             if (repositoryHistory == null)
+            {
                 return new RepositoryHistory(size);
+            }
 
             repositoryHistory.MaxCount = size;
             AssignRepositoryHistoryFromCategories(repositoryHistory, null);
@@ -51,6 +56,7 @@ namespace GitCommands.Repository
                         _remoteRepositoryHistory.AddRepository(repo);
                     }
                 }
+
                 foreach (Repository repo in _remoteRepositoryHistory.Repositories)
                 {
                     repositoryHistory.RemoveRepository(repo);
@@ -65,7 +71,10 @@ namespace GitCommands.Repository
             get
             {
                 if (_repositoryHistory == null)
+                {
                     LoadRepositoryHistoryAsync();
+                }
+
                 return _repositoryHistory.Result;
             }
         }
@@ -75,7 +84,9 @@ namespace GitCommands.Repository
             get
             {
                 if (_repositoryHistory != null && _repositoryHistory.Status == TaskStatus.Running)
+                {
                     _repositoryHistory.Wait();
+                }
 
                 int size = AppSettings.RecentRepositoriesHistorySize;
                 if (_remoteRepositoryHistory == null)
@@ -100,7 +111,9 @@ namespace GitCommands.Repository
                 {
                     Repository catRepo = FindFirstCategoryRepository(repo.Path);
                     if (catRepo != null)
+                    {
                         repo.Assign(catRepo);
+                    }
                 }
             }
         }
@@ -115,8 +128,11 @@ namespace GitCommands.Repository
             foreach (Repository repo in RepositoryCategories.SelectMany(category => category.Repositories))
             {
                 if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
+                {
                     return repo;
+                }
             }
+
             return null;
         }
 
@@ -182,6 +198,7 @@ namespace GitCommands.Repository
             {
                 stringReader?.Dispose();
             }
+
             return repositories;
         }
 
@@ -203,7 +220,9 @@ namespace GitCommands.Repository
         private static RepositoryHistory DeserializeHistoryFromXml(string xml)
         {
             if (string.IsNullOrEmpty(xml))
+            {
                 return null;
+            }
 
             RepositoryHistory history = null;
             try
@@ -233,17 +252,26 @@ namespace GitCommands.Repository
             {
                 Trace.WriteLine(ex.Message);
             }
+
             return history;
         }
 
         public static void SaveSettings()
         {
             if (_repositoryHistory != null)
+            {
                 AppSettings.SetString("history", SerializeHistoryIntoXml(_repositoryHistory.Result));
+            }
+
             if (_remoteRepositoryHistory != null)
+            {
                 AppSettings.SetString("history remote", SerializeHistoryIntoXml(_remoteRepositoryHistory));
+            }
+
             if (_repositoryCategories != null)
+            {
                 AppSettings.SetString("repositories", SerializeRepositories(_repositoryCategories));
+            }
         }
 
         public static void AddCategory(string title)

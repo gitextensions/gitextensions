@@ -2,7 +2,6 @@
 using System.Threading;
 using GitUIPluginInterfaces;
 
-
 namespace GitCommands
 {
     public abstract class LockableNotifier : ILockableNotifier
@@ -20,6 +19,7 @@ namespace GitCommands
                 InternalNotify();
             }
         }
+
         /// <summary>
         /// notifies if is unlocked
         /// </summary>
@@ -47,10 +47,14 @@ namespace GitCommands
             int newCount = Interlocked.Decrement(ref lockCount);
 
             if (newCount < 0)
+            {
                 throw new InvalidOperationException("There was no counterpart call to Lock");
+            }
 
             if (requestNotify)
+            {
                 notifyRequested = true;
+            }
 
             CheckNotify(newCount);
         }
@@ -58,24 +62,29 @@ namespace GitCommands
         /// <summary>
         /// true if raising notification is locked
         /// </summary>
-        public bool IsLocked { get { return lockCount != 0; } }
-
+        public bool IsLocked
+        {
+            get { return lockCount != 0; }
+        }
     }
 
     public class ActionNotifier : LockableNotifier
     {
-        private Action NotifyAction;
+        private Action notifyAction;
 
         public ActionNotifier(Action aNotifyAction)
         {
             if (aNotifyAction == null)
+            {
                 throw new ArgumentNullException(nameof(aNotifyAction));
-            NotifyAction = aNotifyAction;
+            }
+
+            notifyAction = aNotifyAction;
         }
 
         protected override void InternalNotify()
         {
-            NotifyAction();
+            notifyAction();
         }
     }
 }

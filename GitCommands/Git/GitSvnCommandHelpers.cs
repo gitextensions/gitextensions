@@ -14,9 +14,15 @@ namespace GitCommands
     {
         private const string SvnPrefix = "svn";
 
-        public static string CloneCmd(string fromSvn, string toPath, string username,
-            string authorsFile, int fromRevision,
-            string trunk, string tags, string branches)
+        public static string CloneCmd(
+            string fromSvn,
+            string toPath,
+            string username,
+            string authorsFile,
+            int fromRevision,
+            string trunk,
+            string tags,
+            string branches)
         {
             toPath = toPath.ToPosixPath();
             StringBuilder sb = new StringBuilder();
@@ -25,26 +31,32 @@ namespace GitCommands
             {
                 sb.AppendFormat(" --username=\"{0}\"", username);
             }
+
             if (!string.IsNullOrEmpty(authorsFile))
             {
                 sb.AppendFormat(" --authors-file=\"{0}\"", authorsFile);
             }
+
             if (fromRevision != 0)
             {
                 sb.AppendFormat(" -r \"{0}\"", fromRevision);
             }
+
             if (!string.IsNullOrEmpty(trunk))
             {
                 sb.AppendFormat(" --trunk=\"{0}\"", trunk);
             }
+
             if (!string.IsNullOrEmpty(tags))
             {
                 sb.AppendFormat(" --tags=\"{0}\"", tags);
             }
+
             if (!string.IsNullOrEmpty(branches))
             {
                 sb.AppendFormat(" --branches=\"{0}\"", branches);
             }
+
             sb.Append(" --prefix=origin/");
             return sb.ToString();
         }
@@ -83,10 +95,15 @@ namespace GitCommands
         public static bool ValidSvnWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
+            {
                 return false;
+            }
+
             string gitDirectory = GitModule.GetGitDirectory(dir);
             if (string.IsNullOrEmpty(gitDirectory))
+            {
                 return false;
+            }
 
             string path = Path.Combine(gitDirectory, "svn");
             return Directory.Exists(path) || File.Exists(path);

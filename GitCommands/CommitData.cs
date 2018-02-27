@@ -6,10 +6,14 @@ namespace GitCommands
 {
     public class CommitData
     {
-        public CommitData(string guid,
-            string treeGuid, ReadOnlyCollection<string> parentGuids,
-            string author, DateTimeOffset authorDate,
-            string committer, DateTimeOffset commitDate,
+        public CommitData(
+            string guid,
+            string treeGuid,
+            ReadOnlyCollection<string> parentGuids,
+            string author,
+            DateTimeOffset authorDate,
+            string committer,
+            DateTimeOffset commitDate,
             string body)
         {
             Guid = guid;
@@ -34,6 +38,5 @@ namespace GitCommands
 
         // TODO: this needs review, it shouldn't be mutable
         public string Body { get;  set; }
-
     }
 }

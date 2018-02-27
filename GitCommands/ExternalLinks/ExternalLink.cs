@@ -3,7 +3,7 @@ using GitCommands.Core;
 
 namespace GitCommands.ExternalLinks
 {
-    public class ExternalLink: SimpleStructured
+    public class ExternalLink : SimpleStructured
     {
         public string Caption { get; set; }
         public string URI { get; set; }

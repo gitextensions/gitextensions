@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+        private readonly Dictionary<string, object> byNameMap = new Dictionary<string, object>();
 
         public SettingsCache()
         {
@@ -33,7 +32,7 @@ namespace GitCommands
 
         public T LockedAction<T>(Func<T> action)
         {
-            lock (ByNameMap)
+            lock (byNameMap)
             {
                 return action();
             }
@@ -41,7 +40,7 @@ namespace GitCommands
 
         protected abstract void SaveImpl();
         protected abstract void LoadImpl();
-        protected abstract void SetValueImpl(string key, string value);        
+        protected abstract void SetValueImpl(string key, string value);
         protected abstract string GetValueImpl(string key);
         protected abstract bool NeedRefresh();
         protected abstract void ClearImpl();
@@ -51,7 +50,7 @@ namespace GitCommands
             LockedAction(() =>
             {
                 ClearImpl();
-                ByNameMap.Clear();
+                byNameMap.Clear();
             });
         }
 
@@ -73,15 +72,16 @@ namespace GitCommands
         {
                 LockedAction(() =>
                 {
-                    foreach(var pair in keyValuePairs)
+                    foreach (var pair in keyValuePairs)
                     {
                         if (pair.Item2 != null)
+                        {
                             SetValueImpl(pair.Item1, pair.Item2);
+                        }
                     }
 
                     Save();
                 });
-
         }
 
         protected void EnsureSettingsAreUpToDate()
@@ -93,18 +93,20 @@ namespace GitCommands
         }
 
         protected virtual void SettingsChanged()
-        { 
+        {
         }
 
         private void SetValue(string name, string value)
         {
             LockedAction(() =>
             {
-                //will refresh EncodedNameMap if needed
+                // will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
 
                 if (string.Equals(inMemValue, value))
+                {
                     return;
+                }
 
                 SetValueImpl(name, value);
 
@@ -131,9 +133,13 @@ namespace GitCommands
             string s;
 
             if (value == null)
+            {
                 s = null;
+            }
             else
+            {
                 s = encode(value);
+            }
 
             return LockedAction<bool>(() =>
             {
@@ -147,20 +153,24 @@ namespace GitCommands
             string s;
 
             if (value == null)
+            {
                 s = null;
+            }
             else
+            {
                 s = encode(value);
+            }
 
             LockedAction(() =>
             {
                 SetValue(name, s);
                 if (s == null)
                 {
-                    ByNameMap[name] = null;
+                    byNameMap[name] = null;
                 }
                 else
                 {
-                    ByNameMap[name] = value;
+                    byNameMap[name] = value;
                 }
             });
         }
@@ -174,7 +184,7 @@ namespace GitCommands
             {
                 EnsureSettingsAreUpToDate();
 
-                if (ByNameMap.TryGetValue(name, out o))
+                if (byNameMap.TryGetValue(name, out o))
                 {
                     if (o == null)
                     {
@@ -194,7 +204,9 @@ namespace GitCommands
                 else
                 {
                     if (decode == null)
+                    {
                         throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
+                    }
 
                     string s = GetValue(name);
 
@@ -205,7 +217,7 @@ namespace GitCommands
                     }
 
                     val = decode(s);
-                    ByNameMap[name] = val;
+                    byNameMap[name] = val;
                     return true;
                 }
             });

@@ -97,27 +97,27 @@ namespace GitImpact
                 // UPDATE IMPACT
 
                 // If week does not exist yet in the impact dictionary
-                if (!_impact.ContainsKey(commit.week))
+                if (!_impact.ContainsKey(commit.Week))
                     // Create it
-                    _impact.Add(commit.week, new Dictionary<string, ImpactLoader.DataPoint>());
+                    _impact.Add(commit.Week, new Dictionary<string, ImpactLoader.DataPoint>());
 
                 // If author does not exist yet for this week in the impact dictionary
-                if (!_impact[commit.week].ContainsKey(commit.author))
+                if (!_impact[commit.Week].ContainsKey(commit.Author))
                     // Create it
-                    _impact[commit.week].Add(commit.author, commit.data);
+                    _impact[commit.Week].Add(commit.Author, commit.Data);
                 else
                     // Otherwise just add the changes
-                    _impact[commit.week][commit.author] += commit.data;
+                    _impact[commit.Week][commit.Author] += commit.Data;
 
                 // UPDATE AUTHORS
 
                 // If author does not exist yet in the authors dictionary
-                if (!_authors.ContainsKey(commit.author))
+                if (!_authors.ContainsKey(commit.Author))
                     // Create it
-                    _authors.Add(commit.author, commit.data);
+                    _authors.Add(commit.Author, commit.Data);
                 else
                     // Otherwise just add the changes
-                    _authors[commit.author] += commit.data;
+                    _authors[commit.Author] += commit.Data;
 
                 // Add authors to intermediate weeks where they didn't create commits
                 ImpactLoader.AddIntermediateEmptyWeeks(ref _impact, _authors);
@@ -125,9 +125,9 @@ namespace GitImpact
                 // UPDATE AUTHORSTACK
 
                 // If author does not exist yet in the author_stack
-                if (!_authorStack.Contains(commit.author))
+                if (!_authorStack.Contains(commit.Author))
                     // Add it to the front (drawn first)
-                    _authorStack.Insert(0, commit.author);
+                    _authorStack.Insert(0, commit.Author);
             }
 
             UpdatePathsAndLabels();

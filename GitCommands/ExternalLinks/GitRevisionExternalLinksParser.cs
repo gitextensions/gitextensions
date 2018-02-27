@@ -14,13 +14,11 @@ namespace GitCommands.ExternalLinks
         private readonly IConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
 
-
         public GitRevisionExternalLinksParser(IConfiguredLinkDefinitionsProvider effectiveLinkDefinitionsProvider, IExternalLinkRevisionParser externalLinkRevisionParser)
         {
             _effectiveLinkDefinitionsProvider = effectiveLinkDefinitionsProvider;
             _externalLinkRevisionParser = externalLinkRevisionParser;
         }
-
 
         public IEnumerable<ExternalLink> Parse(GitRevision revision, RepoDistSettings settings)
         {

@@ -25,6 +25,7 @@ namespace GitCommands
             {
                 path = path.ToLower();
             }
+
             return path.GetHashCode();
         }
     }

@@ -88,12 +88,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DifftoolPath.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text));
             DifftoolCmd.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.cmd", _NO_TRANSLATE_GlobalDiffTool.Text));
 
-            GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.mergetool.keepBackup.Value);
+            GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.Mergetool.KeepBackup.Value);
 
-            globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@false;
-            globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.input;
-            globalAutoCrlfTrue.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@true;
-            globalAutoCrlfNotSet.Checked = !CurrentSettings.core.autocrlf.Value.HasValue;
+            globalAutoCrlfFalse.Checked = CurrentSettings.Core.Autocrlf.Value == AutoCRLFType.@false;
+            globalAutoCrlfInput.Checked = CurrentSettings.Core.Autocrlf.Value == AutoCRLFType.input;
+            globalAutoCrlfTrue.Checked = CurrentSettings.Core.Autocrlf.Value == AutoCRLFType.@true;
+            globalAutoCrlfNotSet.Checked = !CurrentSettings.Core.Autocrlf.Value.HasValue;
         }
 
         /// <summary>
@@ -121,12 +121,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text), MergetoolPath.Text);
                 CurrentSettings.SetPathValue(string.Format("mergetool.{0}.cmd", _NO_TRANSLATE_GlobalMergeTool.Text), MergeToolCmd.Text);
 
-                CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
+                CurrentSettings.Mergetool.KeepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
-                if (globalAutoCrlfFalse.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
-                if (globalAutoCrlfInput.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
-                if (globalAutoCrlfTrue.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
-                if (globalAutoCrlfNotSet.Checked) CurrentSettings.core.autocrlf.Value = null;
+                if (globalAutoCrlfFalse.Checked) CurrentSettings.Core.Autocrlf.Value = AutoCRLFType.@false;
+                if (globalAutoCrlfInput.Checked) CurrentSettings.Core.Autocrlf.Value = AutoCRLFType.input;
+                if (globalAutoCrlfTrue.Checked) CurrentSettings.Core.Autocrlf.Value = AutoCRLFType.@true;
+                if (globalAutoCrlfNotSet.Checked) CurrentSettings.Core.Autocrlf.Value = null;
             }
         }
 

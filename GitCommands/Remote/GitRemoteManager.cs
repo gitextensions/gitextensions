@@ -63,23 +63,20 @@ namespace GitCommands.Remote
         internal static readonly string SectionRemote = "remote";
         private readonly Func<IGitModule> _getModule;
 
-
         public GitRemoteManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
 
-
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
-        [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
         public void ConfigureRemotes(string remoteName)
         {
-            var _module = GetModule();
-            var localConfig = _module.LocalConfigFile;
+            var module = GetModule();
+            var localConfig = module.LocalConfigFile;
 
-            foreach (var remoteHead in _module.GetRefs(true, true))
+            foreach (var remoteHead in module.GetRefs(true, true))
             {
-                foreach (var localHead in _module.GetRefs(true, true))
+                foreach (var localHead in module.GetRefs(true, true))
                 {
                     if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
@@ -112,10 +109,10 @@ namespace GitCommands.Remote
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            var _module = GetModule();
+            var module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
             {
-                var head = new GitRef(_module, string.Empty, setting);
+                var head = new GitRef(module, string.Empty, setting);
                 return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
             }
 
@@ -123,7 +120,7 @@ namespace GitCommands.Remote
                                    .Select(s => s.Split(':'))
                                    .Where(t => t.Length == 2)
                                    .Where(t => IsSettingForBranch(t[0], branch))
-                                   .Select(t => new GitRef(_module, string.Empty, t[1]))
+                                   .Select(t => new GitRef(module, string.Empty, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
             return remoteHead?.Name;
@@ -134,8 +131,8 @@ namespace GitCommands.Remote
         /// </summary>
         public string[] GetDisabledRemotes()
         {
-            var _module = GetModule();
-            return _module.LocalConfigFile.GetConfigSections()
+            var module = GetModule();
+            return module.LocalConfigFile.GetConfigSections()
                                           .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
                                           .Select(s => s.SubSection)
                                           .ToArray();
@@ -227,8 +224,8 @@ namespace GitCommands.Remote
             {
                 if (remote.Disabled)
                 {
-                    // disabled branches can't updated as it poses to many problems, i.e. 
-                    // - verify that the branch name is valid, and 
+                    // disabled branches can't updated as it poses to many problems, i.e.
+                    // - verify that the branch name is valid, and
                     // - it does not duplicate an active branch name etc.
                     return new GitRemoteSaveResult(null, false);
                 }
@@ -294,7 +291,6 @@ namespace GitCommands.Remote
             module.LocalConfigFile.Save();
         }
 
-
         // pass the list in to minimise allocations
         private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
@@ -308,7 +304,6 @@ namespace GitCommands.Remote
             {
                 func = GetDisabledRemotes;
             }
-
 
             var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())
@@ -332,6 +327,7 @@ namespace GitCommands.Remote
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
 
