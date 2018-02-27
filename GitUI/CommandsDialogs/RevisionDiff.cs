@@ -32,6 +32,7 @@ namespace GitUI.CommandsDialogs
         private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
         public RevisionDiff()
         {
@@ -39,6 +40,7 @@ namespace GitUI.CommandsDialogs
             Translate();
             this.HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
         public void ForceRefreshRevisions()
@@ -449,15 +451,8 @@ namespace GitUI.CommandsDialogs
 
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
             {
-
-                string nameAsLower = name.ToLower();
-
-                return candidates.Where(item =>
-                {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                }
-                    ).ToList();
+                var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
+                return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
             };
 
             GitItemStatus selectedItem;

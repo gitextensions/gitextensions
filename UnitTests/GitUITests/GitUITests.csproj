@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
+    <Compile Include="FindFilePredicateProviderTest.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="SplitterManagerTest.cs" />
