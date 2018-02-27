@@ -353,6 +353,12 @@
       <DependentUpon>BranchSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ComboBoxHelper.cs" />
+    <Compile Include="UserControls\CommitDiff.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CommitDiff.Designer.cs">
+      <DependentUpon>CommitDiff.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CommitPickerSmallControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1231,6 +1237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
       <DependentUpon>BranchSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CommitDiff.resx">
+      <DependentUpon>CommitDiff.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\CommitPickerSmallControl.resx">
       <DependentUpon>CommitPickerSmallControl.cs</DependentUpon>
