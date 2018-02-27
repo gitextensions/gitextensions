@@ -118,6 +118,7 @@
     <Compile Include="Git\Tag\GitTagController.cs" />
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Repository\RepositoryDescriptionProvider.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
@@ -211,6 +212,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
