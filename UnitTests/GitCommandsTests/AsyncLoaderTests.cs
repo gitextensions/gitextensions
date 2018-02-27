@@ -178,7 +178,7 @@ namespace GitCommandsTests
                 () => sw.Stop(),
                 () => { });
 
-            Assert.GreaterOrEqual(sw.Elapsed, _loader.Delay);
+            Assert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(10));
         }
 
         [Test]
