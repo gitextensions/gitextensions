@@ -3,12 +3,12 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class SettingsContainer<L, C> : ISettingsSource where L : SettingsContainer<L, C> where C : SettingsCache
+    public class SettingsContainer<TL, TC> : ISettingsSource where TL : SettingsContainer<TL, TC> where TC : SettingsCache
     {
-        public L LowerPriority { get; private set; }
-        public C SettingsCache { get; private set; }
+        public TL LowerPriority { get; private set; }
+        public TC SettingsCache { get; private set; }
 
-        public SettingsContainer(L aLowerPriority, C aSettingsCache)
+        public SettingsContainer(TL aLowerPriority, TC aSettingsCache)
         {
             LowerPriority = aLowerPriority;
             SettingsCache = aSettingsCache;
@@ -51,21 +51,28 @@ namespace GitCommands.Settings
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             if (LowerPriority == null || SettingsCache.HasValue(name))
+            {
                 SettingsCache.SetValue(name, value, encode);
+            }
             else
+            {
                 LowerPriority.SetValue(name, value, encode);
+            }
         }
 
         public virtual bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
             if (SettingsCache.TryGetValue<T>(name, defaultValue, decode, out value))
+            {
                 return true;
+            }
 
             if (LowerPriority != null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
+            {
                 return true;
+            }
 
             return false;
         }
-
     }
 }

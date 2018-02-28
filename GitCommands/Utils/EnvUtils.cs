@@ -18,7 +18,7 @@ namespace GitCommands.Utils
                     return false;
             }
         }
-        
+
         public static bool IsWindowsVistaOrGreater()
         {
             return Environment.OSVersion.Platform == PlatformID.Win32NT
@@ -68,12 +68,16 @@ namespace GitCommands.Utils
         public static bool IsNet4FullOrHigher()
         {
             if (System.Environment.Version.Major > 4)
+            {
                 return true;
+            }
 
             if (System.Environment.Version.Major == 4)
             {
                 if (System.Environment.Version.Minor >= 5)
+                {
                     return true;
+                }
 
                 try
                 {

@@ -14,13 +14,13 @@ namespace GitCommands.Git
     {
         internal static readonly int MinimumStringLength = 53;
 
-
         public IEnumerable<IGitItem> Parse(string tree)
         {
             if (string.IsNullOrWhiteSpace(tree))
             {
                 return Enumerable.Empty<IGitItem>();
             }
+
             var items = tree.Split('\0', '\n');
             return items.Select(ParseSingle).Where(item => item != null);
         }

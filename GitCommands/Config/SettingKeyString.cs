@@ -1,5 +1,4 @@
-﻿
-namespace GitCommands.Config
+﻿namespace GitCommands.Config
 {
     /// <summary>
     /// Defines the strings to access certain git config settings.

@@ -28,7 +28,6 @@ namespace GitCommands
             _getWorkingDir = getWorkingDir;
         }
 
-
         /// <inheritdoc />
         /// <summary>
         /// Resolves the provided path (folder or file) against the current working directory.
@@ -50,7 +49,7 @@ namespace GitCommands
                 return path;
             }
 
-            var fullPath = Path.GetFullPath(Path.Combine(_getWorkingDir () ?? "", path));
+            var fullPath = Path.GetFullPath(Path.Combine(_getWorkingDir() ?? "", path));
             var uri = new Uri(fullPath);
             return uri.LocalPath;
         }

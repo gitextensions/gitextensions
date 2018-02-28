@@ -18,7 +18,6 @@ namespace GitCommands.Git
             FileName = fileName;
         }
 
-
         /// <summary>
         /// Gets the name of the file which could not be deleted.
         /// </summary>

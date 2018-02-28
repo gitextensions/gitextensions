@@ -23,12 +23,10 @@ namespace GitCommands.ExternalLinks
     {
         private readonly IExternalLinksLoader _externalLinksLoader;
 
-
         public ConfiguredLinkDefinitionsProvider(IExternalLinksLoader externalLinksLoader)
         {
             _externalLinksLoader = externalLinksLoader;
         }
-
 
         /// <summary>
         /// Loads all persisted external link definitions across all setting layers.

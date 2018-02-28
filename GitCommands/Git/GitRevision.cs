@@ -14,8 +14,10 @@ namespace GitCommands
     {
         /// <summary>40 characters of 0's</summary>
         public const string UnstagedGuid = "0000000000000000000000000000000000000000";
+
         /// <summary>40 characters of 1's</summary>
         public const string IndexGuid = "1111111111111111111111111111111111111111";
+
         /// <summary>40 characters of a-f or any digit.</summary>
         public const string Sha1HashPattern = @"[a-f\d]{40}";
         public const string Sha1HashShortPattern = @"[a-f\d]{7,40}";
@@ -49,17 +51,21 @@ namespace GitCommands
             get { return _buildStatus; }
             set
             {
-                if (Equals(value, _buildStatus)) return;
+                if (Equals(value, _buildStatus))
+                {
+                    return;
+                }
+
                 _buildStatus = value;
                 OnPropertyChanged(nameof(BuildStatus));
             }
         }
 
         public string Subject { get; set; }
-        //Count for artificial commits (could be changed to object lists)
+        // Count for artificial commits (could be changed to object lists)
         public string SubjectCount { get; set; }
         public string Body { get; set; }
-        //UTF-8 when is null or empty
+        // UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
 
         #region IGitItem Members
@@ -76,13 +82,17 @@ namespace GitCommands
             {
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
-            return String.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
+
+            return string.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
         }
 
-        public static string ToShortSha(String sha)
+        public static string ToShortSha(string sha)
         {
             if (sha == null)
+            {
                 throw new ArgumentNullException(nameof(sha));
+            }
+
             const int maxShaLength = 10;
             if (sha.Length > maxShaLength)
             {
@@ -95,15 +105,18 @@ namespace GitCommands
         public bool MatchesSearchString(string searchString)
         {
             if (Refs.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
+            {
                 return true;
+            }
 
             if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
+            {
                 return true;
+            }
 
             return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
                     Subject.ToLower().Contains(searchString);
         }
-
 
         /// <summary>
         /// Indicates whether the commit is an artificial commit.

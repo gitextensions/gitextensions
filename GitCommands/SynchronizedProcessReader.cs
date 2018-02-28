@@ -13,22 +13,22 @@ namespace GitCommands
         public byte[] Output { get; private set; }
         public byte[] Error { get; private set; }
 
-        private readonly Thread stdOutputLoaderThread;
-        private readonly Thread stdErrLoaderThread;
+        private readonly Thread _stdOutputLoaderThread;
+        private readonly Thread _stdErrLoaderThread;
 
         public SynchronizedProcessReader(Process aProcess)
         {
             Process = aProcess;
-            stdOutputLoaderThread = new Thread(_ => Output = ReadByte(Process.StandardOutput.BaseStream));
-            stdOutputLoaderThread.Start();
-            stdErrLoaderThread = new Thread(_ => Error = ReadByte(Process.StandardError.BaseStream));
-            stdErrLoaderThread.Start();
+            _stdOutputLoaderThread = new Thread(_ => Output = ReadByte(Process.StandardOutput.BaseStream));
+            _stdOutputLoaderThread.Start();
+            _stdErrLoaderThread = new Thread(_ => Error = ReadByte(Process.StandardError.BaseStream));
+            _stdErrLoaderThread.Start();
         }
 
         public void WaitForExit()
         {
-            stdOutputLoaderThread.Join();
-            stdErrLoaderThread.Join();
+            _stdOutputLoaderThread.Join();
+            _stdErrLoaderThread.Join();
             Process.WaitForExit();
         }
 
@@ -68,8 +68,8 @@ namespace GitCommands
         {
             byte[] stdOutputLoader = null;
 
-            //We cannot use the async functions because these functions will read the output to a string, this
-            //can cause problems because the correct encoding is not used.
+            // We cannot use the async functions because these functions will read the output to a string, this
+            // can cause problems because the correct encoding is not used.
             Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
             stdOutputLoaderThread.Start();
 

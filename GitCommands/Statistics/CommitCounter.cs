@@ -28,31 +28,40 @@ namespace GitCommands.Statistics
             IEnumerable<string> unformattedCommitsPerContributor)
         {
             var commitsPerContributor = new Dictionary<string, int>();
-            var delimiter = new[] {' ', '\t'};
+            var delimiter = new[] { ' ', '\t' };
             var totalCommits = 0;
 
             foreach (var userCommitCount in unformattedCommitsPerContributor)
             {
-                var commitCount = userCommitCount.Trim(); //remove whitespaces at start and end
+                var commitCount = userCommitCount.Trim(); // remove whitespaces at start and end
 
-                var tab = commitCount.IndexOfAny(delimiter); //find space or tab
+                var tab = commitCount.IndexOfAny(delimiter); // find space or tab
 
                 if (tab <= 0)
+                {
                     continue;
+                }
 
                 if (!int.TryParse(commitCount.Substring(0, tab), out var count))
+                {
                     continue;
+                }
 
                 var contributor = commitCount.Substring(tab + 1);
 
                 totalCommits += count;
 
                 if (!commitsPerContributor.TryGetValue(contributor, out var oldCount))
+                {
                     commitsPerContributor.Add(contributor, count);
+                }
                 else
+                {
                     // Sometimes this happen because of wrong encoding
                     commitsPerContributor[contributor] = oldCount + count;
+                }
             }
+
             return Tuple.Create(commitsPerContributor, totalCommits);
         }
 

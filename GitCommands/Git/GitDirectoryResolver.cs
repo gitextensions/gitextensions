@@ -25,7 +25,6 @@ namespace GitCommands.Git
     {
         private readonly IFileSystem _fileSystem;
 
-
         public GitDirectoryResolver(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
@@ -35,7 +34,6 @@ namespace GitCommands.Git
             : this(new FileSystem())
         {
         }
-
 
         /// <summary>
         /// Resolves the .git folder for the given repository.
@@ -86,6 +84,7 @@ namespace GitCommands.Git
                     {
                         return path.EnsureTrailingPathSeparator();
                     }
+
                     return Path.GetFullPath(Path.Combine(repositoryPath, path)).EnsureTrailingPathSeparator();
                 }
             }

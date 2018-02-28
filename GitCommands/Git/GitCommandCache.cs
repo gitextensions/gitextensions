@@ -23,33 +23,33 @@ namespace GitCommands
             public readonly byte[] Error;
         }
 
-        //Cache limit
+        // Cache limit
         private const int CacheLimit = 40;
 
-        public static event EventHandler CachedCommandsChanged = delegate { };
+        public static event EventHandler CachedCommandsChanged = (sender, args) => { };
 
         /// <summary>
         /// Simple dictionary to store cmd/output pairs
         /// </summary>
-        private static readonly Dictionary<string, CacheItem> commandCache = new Dictionary<string, CacheItem>(CacheLimit);
+        private static readonly Dictionary<string, CacheItem> CommandCache = new Dictionary<string, CacheItem>(CacheLimit);
 
         /// <summary>
         /// Queue used to limit commandCache. The oldest item is removed
         /// when the limit is reached.
         /// </summary>
-        private static readonly Queue<string> queue = new Queue<string>(CacheLimit);
+        private static readonly Queue<string> Queue = new Queue<string>(CacheLimit);
 
         public static string[] CachedCommands()
         {
-            lock (queue)
+            lock (Queue)
             {
-                return queue.ToArray();
+                return Queue.ToArray();
             }
         }
 
         public static bool TryGet(string cmd, out byte[] output, out byte[] error)
         {
-            //Never cache empty commands
+            // Never cache empty commands
             if (string.IsNullOrEmpty(cmd))
             {
                 output = null;
@@ -58,9 +58,9 @@ namespace GitCommands
             }
 
             CacheItem item;
-            lock (queue)
+            lock (Queue)
             {
-                if (!commandCache.TryGetValue(cmd, out item))
+                if (!CommandCache.TryGetValue(cmd, out item))
                 {
                     output = null;
                     error = null;
@@ -75,26 +75,33 @@ namespace GitCommands
 
         public static void Add(string cmd, byte[] output, byte[] error)
         {
-            //Never cache empty commands
+            // Never cache empty commands
             if (string.IsNullOrEmpty(cmd))
-                return;
-
-            lock (queue)
             {
-                commandCache[cmd] = new CacheItem(output, error);
-                queue.Enqueue(cmd);
-
-                //Limit cache to X commands
-                if (queue.Count >= CacheLimit)
-                    commandCache.Remove(queue.Dequeue());
+                return;
             }
+
+            lock (Queue)
+            {
+                CommandCache[cmd] = new CacheItem(output, error);
+                Queue.Enqueue(cmd);
+
+                // Limit cache to X commands
+                if (Queue.Count >= CacheLimit)
+                {
+                    CommandCache.Remove(Queue.Dequeue());
+                }
+            }
+
             CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }
 
         public static void CleanCache()
         {
-            lock (queue)
-                queue?.Clear();
+            lock (Queue)
+            {
+                Queue?.Clear();
+            }
 
             CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }

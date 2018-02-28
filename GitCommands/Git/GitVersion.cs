@@ -5,96 +5,96 @@ namespace GitCommands
 {
     public class GitVersion : IComparable<GitVersion>
     {
-        private static readonly GitVersion v1_7_0 = new GitVersion("1.7.0");
-        private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
-        private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
-        private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
-        private static readonly GitVersion v1_8_4 = new GitVersion("1.8.4");
-        private static readonly GitVersion v1_8_5 = new GitVersion("1.8.5");
-        private static readonly GitVersion v2_0_1 = new GitVersion("2.0.1");
-        private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
-        private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
-        private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
+        private static readonly GitVersion V1_7_0 = new GitVersion("1.7.0");
+        private static readonly GitVersion V1_7_1 = new GitVersion("1.7.1");
+        private static readonly GitVersion V1_7_7 = new GitVersion("1.7.7");
+        private static readonly GitVersion V1_7_11 = new GitVersion("1.7.11");
+        private static readonly GitVersion V1_8_4 = new GitVersion("1.8.4");
+        private static readonly GitVersion V1_8_5 = new GitVersion("1.8.5");
+        private static readonly GitVersion V2_0_1 = new GitVersion("2.0.1");
+        private static readonly GitVersion V2_5_1 = new GitVersion("2.5.1");
+        private static readonly GitVersion V2_7_0 = new GitVersion("2.7.0");
+        private static readonly GitVersion V2_9_0 = new GitVersion("2.9.0");
 
-        public static readonly GitVersion LastSupportedVersion = v1_7_0;
+        public static readonly GitVersion LastSupportedVersion = V1_7_0;
 
         private const string Prefix = "git version";
 
         public readonly string Full;
-        private readonly int a;
-        private readonly int b;
-        private readonly int c;
-        private readonly int d;
+        private readonly int _a;
+        private readonly int _b;
+        private readonly int _c;
+        private readonly int _d;
 
         public GitVersion(string version)
         {
             Full = Fix(version);
 
             IList<int> numbers = GetNumbers(Full);
-            a = Get(numbers, 0);
-            b = Get(numbers, 1);
-            c = Get(numbers, 2);
-            d = Get(numbers, 3);
+            _a = Get(numbers, 0);
+            _b = Get(numbers, 1);
+            _c = Get(numbers, 2);
+            _d = Get(numbers, 3);
         }
 
         public bool FetchCanAskForProgress
         {
-            get { return this >= v1_7_1; }
+            get { return this >= V1_7_1; }
         }
 
         public bool LogFormatRecodesCommitMessage
         {
-            get { return this >= v1_8_4; }
+            get { return this >= V1_8_4; }
         }
 
         public bool PushCanAskForProgress
         {
-            get { return this >= v1_7_1; }
+            get { return this >= V1_7_1; }
         }
 
         public bool StashUntrackedFilesSupported
         {
-            get { return this >= v1_7_7; }
+            get { return this >= V1_7_7; }
         }
 
         public bool SupportPushWithRecursiveSubmodulesCheck
         {
-            get { return this >= v1_7_7; }
+            get { return this >= V1_7_7; }
         }
 
         public bool SupportPushWithRecursiveSubmodulesOnDemand
         {
-            get { return this >= v1_7_11; }
+            get { return this >= V1_7_11; }
         }
 
         public bool SupportPushForceWithLease
         {
-            get { return this >= v1_8_5; }
+            get { return this >= V1_8_5; }
         }
 
         public bool RaceConditionWhenGitStatusIsUpdatingIndex
         {
-            get { return this < v2_0_1; }
+            get { return this < V2_0_1; }
         }
 
         public bool SupportWorktree
         {
-            get { return this >= v2_5_1; }
+            get { return this >= V2_5_1; }
         }
 
         public bool SupportWorktreeList
         {
-            get { return this >= v2_7_0; }
+            get { return this >= V2_7_0; }
         }
 
         public bool SupportMergeUnrelatedHistory
         {
-            get { return this >= v2_9_0; }
+            get { return this >= V2_9_0; }
         }
 
         public bool IsUnknown
         {
-            get { return a == 0 && b == 0 && c == 0 && d == 0; }
+            get { return _a == 0 && _b == 0 && _c == 0 && _d == 0; }
         }
 
         // Returns true if it's possible to pass given string as command line
@@ -112,19 +112,33 @@ namespace GitCommands
         // outside ASCII (7bit) range.
         public bool IsRegExStringCmdPassable(string s)
         {
-            if (s==null) return true;
+            if (s == null)
+            {
+                return true;
+            }
+
             foreach (char ch in s)
-                if ((uint)ch >= 0x80) return false;
+            {
+                if ((uint)ch >= 0x80)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
         private static string Fix(string version)
         {
             if (version == null)
-                return String.Empty;
+            {
+                return string.Empty;
+            }
 
             if (version.StartsWith(Prefix))
+            {
                 return version.Substring(Prefix.Length).Trim();
+            }
 
             return version.Trim();
         }
@@ -146,8 +160,10 @@ namespace GitCommands
 
             foreach (var number in numbers)
             {
-                if (Int32.TryParse(number, out var value))
+                if (int.TryParse(number, out var value))
+                {
                     yield return value;
+                }
             }
         }
 
@@ -158,20 +174,40 @@ namespace GitCommands
 
         private static int Compare(GitVersion left, GitVersion right)
         {
-            if (left == null && right == null) return 0;
-            if (right == null) return 1;
-            if (left == null) return -1;
+            if (left == null && right == null)
+            {
+                return 0;
+            }
 
-            int compareA = left.a.CompareTo(right.a);
-            if (compareA != 0) return compareA;
+            if (right == null)
+            {
+                return 1;
+            }
 
-            int compareB = left.b.CompareTo(right.b);
-            if (compareB != 0) return compareB;
+            if (left == null)
+            {
+                return -1;
+            }
 
-            int compareC = left.c.CompareTo(right.c);
-            if (compareC != 0) return compareC;
+            int compareA = left._a.CompareTo(right._a);
+            if (compareA != 0)
+            {
+                return compareA;
+            }
 
-            return left.d.CompareTo(right.d);
+            int compareB = left._b.CompareTo(right._b);
+            if (compareB != 0)
+            {
+                return compareB;
+            }
+
+            int compareC = left._c.CompareTo(right._c);
+            if (compareC != 0)
+            {
+                return compareC;
+            }
+
+            return left._d.CompareTo(right._d);
         }
 
         public static bool operator >(GitVersion left, GitVersion right)

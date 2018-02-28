@@ -23,12 +23,10 @@ namespace GitCommands.Repository
         private const string DefaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
 
-
         public RepositoryDescriptionProvider(IGitDirectoryResolver gitDirectoryResolver)
         {
             _gitDirectoryResolver = gitDirectoryResolver;
         }
-
 
         /// <summary>
         /// Returns a short name for repository.
@@ -53,6 +51,7 @@ namespace GitCommands.Repository
                                         .Select(repo => repo.Title)
                                         .FirstOrDefault();
             }
+
             return desc ?? dirInfo.Name;
         }
 
@@ -63,7 +62,6 @@ namespace GitCommands.Repository
         /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
         private string ReadRepositoryDescription(string workingDir)
         {
-
             var repositoryPath = _gitDirectoryResolver.Resolve(workingDir);
             var repositoryDescriptionFilePath = Path.Combine(repositoryPath, RepositoryDescriptionFileName);
             if (!File.Exists(repositoryDescriptionFilePath))
@@ -83,6 +81,5 @@ namespace GitCommands.Repository
                 return null;
             }
         }
-
     }
 }

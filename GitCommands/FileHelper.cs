@@ -8,37 +8,37 @@ namespace GitCommands
     {
         private static readonly IEnumerable<string> BinaryExtensions = new[]
         {
-            ".avi",//movie
-            ".bmp",//image
-            ".dat",//data file
-            ".bin", //binary file
-            ".dll",//dynamic link library
-            ".doc", //office word
-            ".docx",//office word
-            ".ppt",//office powerpoint
-            ".pps",//office powerpoint
-            ".pptx",//office powerpoint
-            ".ppsx",//office powerpoint
-            ".dwg",//autocad
-            ".exe",//executable
-            ".gif",//image
-            ".ico",//icon
-            ".jpg",//image
-            ".jpeg",//image
-            ".mpg",//movie
-            ".mpeg",//movie
-            ".msi",//installer
-            ".pdf",//pdf document
-            ".png",//image
-            ".pdb",//debug file
-            ".sc1",//screen file
-            ".tif",//image
-            ".tiff",//image
-            ".vsd",//microsoft visio
-            ".vsdx",//microsoft
-            ".xls",//microsoft excel
-            ".xlsx",//microsoft excel
-            ".odt" //Open office
+            ".avi", // movie
+            ".bmp", // image
+            ".dat", // data file
+            ".bin", // binary file
+            ".dll", // dynamic link library
+            ".doc", // office word
+            ".docx", // office word
+            ".ppt", // office powerpoint
+            ".pps", // office powerpoint
+            ".pptx", // office powerpoint
+            ".ppsx", // office powerpoint
+            ".dwg", // autocad
+            ".exe", // executable
+            ".gif", // image
+            ".ico", // icon
+            ".jpg", // image
+            ".jpeg", // image
+            ".mpg", // movie
+            ".mpeg", // movie
+            ".msi", // installer
+            ".pdf", // pdf document
+            ".png", // image
+            ".pdb", // debug file
+            ".sc1", // screen file
+            ".tif", // image
+            ".tiff", // image
+            ".vsd", // microsoft visio
+            ".vsdx", // microsoft
+            ".xls", // microsoft excel
+            ".xlsx", // microsoft excel
+            ".odt" // Open office
         };
 
         private static readonly IEnumerable<string> ImageExtensions = new[]
@@ -57,7 +57,10 @@ namespace GitCommands
         {
             var t = IsBinaryAccordingToGitAttributes(aModule, fileName);
             if (t.HasValue)
+            {
                 return t.Value;
+            }
+
             return HasMatchingExtension(BinaryExtensions, fileName);
         }
 
@@ -77,25 +80,40 @@ namespace GitCommands
             if (attributes.TryGetValue("diff", out var diff))
             {
                 if (diff == "unset")
+                {
                     return true;
+                }
+
                 if (diffvals.Contains(diff))
+                {
                     return false;
+                }
             }
+
             if (attributes.TryGetValue("text", out var text))
             {
                 if (text != "unset" && text != "unspecified")
+                {
                     return false;
+                }
             }
+
             if (attributes.TryGetValue("crlf", out var crlf))
             {
                 if (crlf != "unset" && crlf != "unspecified")
+                {
                     return false;
+                }
             }
+
             if (attributes.TryGetValue("eol", out var eol))
             {
                 if (eol != "unset" && eol != "unspecified")
+                {
                     return false;
+                }
             }
+
             return null;
         }
 
@@ -112,19 +130,27 @@ namespace GitCommands
         #region binary file check
         public static bool IsBinaryFileAccordingToContent(byte[] content)
         {
-            //Check for binary file.
+            // Check for binary file.
             if (content != null && content.Length > 0)
             {
                 int nullCount = 0;
                 foreach (char c in content)
                 {
                     if (c == '\0')
+                    {
                         nullCount++;
-                    if (nullCount > 5) break;
+                    }
+
+                    if (nullCount > 5)
+                    {
+                        break;
+                    }
                 }
 
                 if (nullCount > 5)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -132,19 +158,27 @@ namespace GitCommands
 
         public static bool IsBinaryFileAccordingToContent(string content)
         {
-            //Check for binary file.
+            // Check for binary file.
             if (!string.IsNullOrEmpty(content))
             {
                 int nullCount = 0;
                 foreach (char c in content)
                 {
                     if (c == '\0')
+                    {
                         nullCount++;
-                    if (nullCount > 5) break;
+                    }
+
+                    if (nullCount > 5)
+                    {
+                        break;
+                    }
                 }
 
                 if (nullCount > 5)
+                {
                     return true;
+                }
             }
 
             return false;

@@ -13,6 +13,7 @@ namespace GitCommands
             Headers = new List<GitBlameHeader>();
             Lines = new List<GitBlameLine>();
         }
+
         public IList<GitBlameHeader> Headers { get; private set; }
         public IList<GitBlameLine> Lines { get; private set; }
 
@@ -24,17 +25,17 @@ namespace GitCommands
 
     public class GitBlameLine
     {
-        //Line
+        // Line
         public string CommitGuid { get; set; }
-        public int    FinalLineNumber { get; set; }
-        public int    OriginLineNumber { get; set; }
+        public int FinalLineNumber { get; set; }
+        public int OriginLineNumber { get; set; }
 
         public string LineText { get; set; }
     }
 
     public class GitBlameHeader
     {
-        //Header
+        // Header
         public string CommitGuid { get; set; }
         public string AuthorMail { get; set; }
         public DateTime AuthorTime { get; set; }
@@ -50,9 +51,9 @@ namespace GitCommands
         public Color GetColor()
         {
             int partLength = CommitGuid.Length / 3;
-            return Color.FromArgb(GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength)) % 55 + 200);
+            return Color.FromArgb((GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength)) % 55) + 200);
 
-            //return Color.White;
+            // return Color.White;
         }
 
         private int GenerateIntFromString(string text)
@@ -62,6 +63,7 @@ namespace GitCommands
             {
                 number += (int)c;
             }
+
             return number;
         }
 
@@ -91,10 +93,16 @@ namespace GitCommands
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
-            if (Object.ReferenceEquals(x, y))
+            if (object.ReferenceEquals(x, y))
+            {
                 return true;
-            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+            }
+
+            if (object.ReferenceEquals(x, null) || object.ReferenceEquals(y, null))
+            {
                 return false;
+            }
+
             return x.Author == y.Author && x.AuthorTime == y.AuthorTime &&
                 x.Committer == y.Committer && x.CommitterTime == y.CommitterTime &&
                 x.Summary == y.Summary && x.FileName == y.FileName;

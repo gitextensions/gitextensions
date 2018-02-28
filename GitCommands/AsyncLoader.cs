@@ -22,14 +22,14 @@ namespace GitCommands
         }
 
         private static int _defaultThreadId = -1;
-        private static TaskScheduler _DefaultContinuationTaskScheduler;
+        private static TaskScheduler _defaultContinuationTaskScheduler;
         public static TaskScheduler DefaultContinuationTaskScheduler
         {
             get
             {
-                if (_defaultThreadId == Thread.CurrentThread.ManagedThreadId && _DefaultContinuationTaskScheduler != null)
+                if (_defaultThreadId == Thread.CurrentThread.ManagedThreadId && _defaultContinuationTaskScheduler != null)
                 {
-                    return _DefaultContinuationTaskScheduler;
+                    return _defaultContinuationTaskScheduler;
                 }
 
                 return TaskScheduler.FromCurrentSynchronizationContext();
@@ -38,11 +38,11 @@ namespace GitCommands
             set
             {
                 _defaultThreadId = Thread.CurrentThread.ManagedThreadId;
-                _DefaultContinuationTaskScheduler = value;
+                _defaultContinuationTaskScheduler = value;
             }
         }
 
-        public event EventHandler<AsyncErrorEventArgs> LoadingError = delegate { };
+        public event EventHandler<AsyncErrorEventArgs> LoadingError = (sender, args) => { };
 
         /// <summary>
         /// Does something on threadpool, executes continuation on current sync context thread, executes onError if the async request fails.
@@ -72,7 +72,7 @@ namespace GitCommands
         }
 
         public Task Load(Action loadContent, Action onLoaded)
-        { 
+        {
             return Load((token) => loadContent(), onLoaded);
         }
 
@@ -82,26 +82,35 @@ namespace GitCommands
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(
+                () =>
                 {
                     if (Delay > 0)
                     {
                         token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
+
                     if (!token.IsCancellationRequested)
                     {
                         loadContent(token);
                     }
                 }, token)
-                .ContinueWith((task) =>
+                .ContinueWith(
+                    (task) =>
                     {
                         if (task.IsFaulted)
                         {
                             foreach (var e in task.Exception.InnerExceptions)
+                            {
                                 if (!OnLoadingError(e))
+                                {
                                     throw e;
+                                }
+                            }
+
                             return;
                         }
+
                         try
                         {
                             if (!token.IsCancellationRequested)
@@ -112,9 +121,14 @@ namespace GitCommands
                         catch (Exception exception)
                         {
                             if (!OnLoadingError(exception))
+                            {
                                 throw;
+                            }
                         }
-                    }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.NotOnCanceled,
+                    _continuationTaskScheduler);
         }
 
         public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
@@ -128,43 +142,59 @@ namespace GitCommands
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() => 
+            return Task.Factory.StartNew(
+                () =>
                 {
                     if (Delay > 0)
                     {
                         token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
+
                     if (token.IsCancellationRequested)
                     {
                         return default;
                     }
-                    return loadContent(token);
 
+                    return loadContent(token);
                 }, token)
-                .ContinueWith((task) =>
+                .ContinueWith(
+                    (task) =>
             {
                 if (task.IsFaulted)
                 {
                     foreach (var e in task.Exception.InnerExceptions)
+                    {
                         if (!OnLoadingError(e))
+                        {
                             throw e;
+                        }
+                    }
+
                     return default;
                 }
+
                 try
                 {
                     if (!token.IsCancellationRequested)
                     {
                         onLoaded(task.Result);
                     }
+
                     return task.Result;
                 }
                 catch (Exception exception)
                 {
                     if (!OnLoadingError(exception))
+                    {
                         throw;
+                    }
+
                     return default;
                 }
-            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
+            },
+                    CancellationToken.None,
+                    TaskContinuationOptions.NotOnCanceled,
+                    _continuationTaskScheduler);
         }
 
         public void Cancel()
@@ -182,7 +212,9 @@ namespace GitCommands
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _cancelledTokenSource?.Dispose();
+            }
         }
 
         public void Dispose()

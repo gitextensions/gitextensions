@@ -26,7 +26,8 @@ namespace GitCommands.Git.Tag
 
         public GitTagController(Func<string> getWorkingDir)
             : this(getWorkingDir, new FileSystem())
-        { }
+        {
+        }
 
         /// <summary>
         /// Create the Tag depending on input parameter.

@@ -36,14 +36,12 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
         void UpdateCommitMessage(CommitData data, string sha1, ref string error);
-
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -52,12 +50,10 @@ namespace GitCommands
         private const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
 
-
         public CommitDataManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
-
 
         /// <summary>
         /// Gets the commit info for submodule.
@@ -66,11 +62,15 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
+            {
                 throw new ArgumentNullException(nameof(sha1));
+            }
 
-            //Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
+            // Do not cache this command, since notes can be added
+            string arguments = string.Format(
+                CultureInfo.InvariantCulture,
+                "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}",
+                sha1);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
@@ -86,6 +86,7 @@ namespace GitCommands
                 error = "Cannot find commit " + sha1;
                 return;
             }
+
             if (index >= info.Length)
             {
                 error = info;
@@ -102,11 +103,15 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
+            {
                 throw new ArgumentNullException(nameof(sha1));
+            }
 
-            //Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + LogFormat + "\" {0}", sha1);
+            // Do not cache this command, since notes can be added
+            string arguments = string.Format(
+                CultureInfo.InvariantCulture,
+                "log -1 --pretty=\"format:" + LogFormat + "\" {0}",
+                sha1);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
@@ -122,6 +127,7 @@ namespace GitCommands
                 error = "Cannot find commit " + sha1;
                 return null;
             }
+
             if (index >= info.Length)
             {
                 error = info;
@@ -142,7 +148,10 @@ namespace GitCommands
         public CommitData CreateFromFormatedData(string data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException(nameof(data));
+            }
+
             var module = GetModule();
 
             var lines = data.Split('\n');
@@ -167,11 +176,10 @@ namespace GitCommands
             const int startIndex = 8;
             string message = ProccessDiffNotes(startIndex, lines);
 
-            //commit message is not reencoded by git when format is given
+            // commit message is not reencoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
-            var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
-                committer, commitDate, body);
+            var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);
 
             return commitInformation;
         }
@@ -182,11 +190,13 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException(nameof(data));
+            }
+
             var module = GetModule();
 
             var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -198,8 +208,8 @@ namespace GitCommands
             const int startIndex = 2;
             string message = ProccessDiffNotes(startIndex, lines);
 
-            //commit message is not reencoded by git when format is given
-            Debug.Assert(commitData.Guid == guid);
+            // commit message is not reencoded by git when format is given
+            Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
             commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
         }
 
@@ -211,15 +221,21 @@ namespace GitCommands
         public CommitData CreateFromRevision(GitRevision revision)
         {
             if (revision == null)
+            {
                 throw new ArgumentNullException(nameof(revision));
+            }
 
-            CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
-                String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
-                String.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
+            CommitData data = new CommitData(
+                revision.Guid,
+                revision.TreeGuid,
+                revision.ParentGuids.ToList().AsReadOnly(),
+                string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail),
+                revision.AuthorDate,
+                string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail),
+                revision.CommitDate,
                 revision.Body ?? revision.Subject);
             return data;
         }
-
 
         private IGitModule GetModule()
         {
@@ -228,6 +244,7 @@ namespace GitCommands
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
 
@@ -235,7 +252,9 @@ namespace GitCommands
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
+            {
                 endIndex--;
+            }
 
             var message = new StringBuilder();
             bool bNotesStart = false;
@@ -243,10 +262,15 @@ namespace GitCommands
             {
                 string line = lines[i];
                 if (bNotesStart)
+                {
                     line = "    " + line;
+                }
+
                 message.AppendLine(line);
                 if (lines[i] == "Notes:")
+                {
                     bNotesStart = true;
+                }
             }
 
             return message.ToString();

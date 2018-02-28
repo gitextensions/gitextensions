@@ -29,7 +29,9 @@ namespace GitCommands.Statistics
 
         public struct DataPoint
         {
-            public int Commits, AddedLines, DeletedLines;
+            public int Commits;
+            public int AddedLines;
+            public int DeletedLines;
 
             public int ChangedLines
             {
@@ -38,9 +40,9 @@ namespace GitCommands.Statistics
 
             public DataPoint(int commits, int added, int deleted)
             {
-                this.Commits = commits;
-                this.AddedLines = added;
-                this.DeletedLines = deleted;
+                Commits = commits;
+                AddedLines = added;
+                DeletedLines = deleted;
             }
 
             public static DataPoint operator +(DataPoint d1, DataPoint d2)
@@ -55,17 +57,17 @@ namespace GitCommands.Statistics
 
         public struct Commit
         {
-            public DateTime week;
-            public string author;
-            public DataPoint data;
+            public DateTime Week;
+            public string Author;
+            public DataPoint Data;
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly IGitModule Module;
+        private readonly IGitModule _module;
 
         public ImpactLoader(IGitModule aModule)
         {
-            Module = aModule;
+            _module = aModule;
         }
 
         public void Dispose()
@@ -94,21 +96,29 @@ namespace GitCommands.Statistics
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
             Task[] tasks = GetTasks(token);
-            Task.Factory.ContinueWhenAll(tasks, task =>
+            Task.Factory.ContinueWhenAll(
+                tasks,
+                task =>
                 {
                     if (!token.IsCancellationRequested)
+                    {
                         Exited?.Invoke(this, EventArgs.Empty);
+                    }
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.None,
                 TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private bool showSubmodules;
+        private bool _showSubmodules;
         public bool ShowSubmodules
         {
-            get { return showSubmodules; }
-            set { Stop(); showSubmodules = value; }
+            get { return _showSubmodules; }
+            set
+            {
+                Stop();
+                _showSubmodules = value;
+            }
         }
 
         private Task[] GetTasks(CancellationToken token)
@@ -118,18 +128,21 @@ namespace GitCommands.Statistics
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, Module, token), token));
+            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, _module, token), token));
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = Module.GetSubmodulesLocalPaths();
+                IList<string> submodules = _module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
-                    IGitModule submodule = Module.GetSubmodule(submoduleName);
+                    IGitModule submodule = _module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
+                    {
                         tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
+                    }
                 }
             }
+
             return tasks.ToArray();
         }
 
@@ -147,7 +160,9 @@ namespace GitCommands.Statistics
 
                 // Reached the end ?
                 if (line == null)
+                {
                     break;
+                }
 
                 // Look for commit delimiters
                 if (!line.StartsWith("--- "))
@@ -156,46 +171,57 @@ namespace GitCommands.Statistics
                     continue;
                 }
 
-                // Strip "--- " 
+                // Strip "--- "
                 line = line.Substring(4);
 
                 // Split date and author
                 string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 if (header.Length != 2)
+                {
                     continue;
+                }
 
                 // Save author in variable
-                commit.author = header[1];
+                commit.Author = header[1];
 
                 // Parse commit date
                 DateTime date = DateTime.Parse(header[0]).Date;
                 // Calculate first day of the commit week
-                date = commit.week = date.AddDays(-(int)date.DayOfWeek);
+                date = commit.Week = date.AddDays(-(int)date.DayOfWeek);
 
                 // Reset commit data
-                commit.data.Commits = 1;
-                commit.data.AddedLines = 0;
-                commit.data.DeletedLines = 0;
+                commit.Data.Commits = 1;
+                commit.Data.AddedLines = 0;
+                commit.Data.DeletedLines = 0;
 
                 // Parse commit lines
                 while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
                 {
                     // Skip empty line
                     if (string.IsNullOrEmpty(line))
+                    {
                         continue;
+                    }
 
                     string[] fileLine = line.Split('\t');
                     if (fileLine.Length >= 2)
                     {
                         if (fileLine[0] != "-")
-                            commit.data.AddedLines += int.Parse(fileLine[0]);
+                        {
+                            commit.Data.AddedLines += int.Parse(fileLine[0]);
+                        }
+
                         if (fileLine[1] != "-")
-                            commit.data.DeletedLines += int.Parse(fileLine[1]);
+                        {
+                            commit.Data.DeletedLines += int.Parse(fileLine[1]);
+                        }
                     }
                 }
 
                 if (Updated != null && !token.IsCancellationRequested)
+                {
                     Updated(this, new CommitEventArgs(commit));
+                }
             }
         }
 
@@ -218,17 +244,24 @@ namespace GitCommands.Statistics
                             start = week.Key;
                             startFound = true;
                         }
+
                         end = week.Key;
                     }
                 }
+
                 if (!startFound)
+                {
                     continue;
+                }
 
                 // Add 0 commits weeks in between
                 foreach (var week in impact)
-                    if (!week.Value.ContainsKey(author) &&
-                        week.Key > start && week.Key < end)
+                {
+                    if (!week.Value.ContainsKey(author) && week.Key > start && week.Key < end)
+                    {
                         week.Value.Add(author, new DataPoint(0, 0, 0));
+                    }
+                }
             }
         }
     }

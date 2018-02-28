@@ -19,10 +19,13 @@ namespace GitCommands
     {
         /// <summary>Default is <see cref="All"/>; when <see cref="UntrackedFilesMode"/> is NOT used, 'git status' uses <see cref="Normal"/>.</summary>
         Default = 1,
+
         /// <summary>Show no untracked files.</summary>
         No = 2,
+
         /// <summary>Shows untracked files and directories.</summary>
         Normal = 3,
+
         /// <summary>Shows untracked files and directories, and individual files in untracked directories.</summary>
         All = 4
     }
@@ -32,16 +35,20 @@ namespace GitCommands
     {
         /// <summary>Default is <see cref="All"/> (hides all changes to submodules).</summary>
         Default = 1,
+
         /// <summary>Consider a submodule modified when it either:
         ///  contains untracked or modified files,
         ///  or its HEAD differs from the commit recorded in the superproject.</summary>
         None = 2,
+
         /// <summary>Submodules NOT considered dirty when they only contain <i>untracked</i> content
         ///  (but they are still scanned for modified content).</summary>
         Untracked = 3,
+
         /// <summary>Ignores all changes to the work tree of submodules,
         ///  only changes to the <i>commits</i> stored in the superproject are shown.</summary>
         Dirty = 4,
+
         /// <summary>Hides all changes to submodules
         ///  (and suppresses the output of submodule summaries when the config option status.submodulesummary is set).</summary>
         All = 5
@@ -55,7 +62,9 @@ namespace GitCommands
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
             if (!string.IsNullOrEmpty(AppSettings.GitBinDir) && !path.Contains(AppSettings.GitBinDir))
+            {
                 Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", AppSettings.GitBinDir), EnvironmentVariableTarget.Process);
+            }
 
             if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
             {
@@ -80,18 +89,22 @@ namespace GitCommands
                     UserHomeDir);
             }
 
-            //Default!
+            // Default!
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
-            //to prevent from leaking processes see issue #1092 for details
+            // to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
             string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
             if (EnvUtils.RunningOnWindows())
             {
                 if (File.Exists(sshAskPass))
+                {
                     Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
+                }
             }
             else if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_ASKPASS")))
+            {
                 Environment.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
+            }
         }
 
         public static string GetHomeDir()
@@ -102,12 +115,15 @@ namespace GitCommands
         public static string GetDefaultHomeDir()
         {
             if (!string.IsNullOrEmpty(UserHomeDir))
+            {
                 return UserHomeDir;
+            }
 
             if (EnvUtils.RunningOnWindows())
             {
                 return WindowsDefaultHomeDir;
             }
+
             return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
@@ -121,6 +137,7 @@ namespace GitCommands
                     homePath += Environment.GetEnvironmentVariable("HOMEPATH");
                     return homePath;
                 }
+
                 return Environment.GetEnvironmentVariable("USERPROFILE");
             }
         }
@@ -159,7 +176,10 @@ namespace GitCommands
 
                 string quotedCmd = fileName;
                 if (quotedCmd.IndexOf(' ') != -1)
+                {
                     quotedCmd = quotedCmd.Quote();
+                }
+
                 var executionEndTimestamp = DateTime.Now;
                 AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
             }
@@ -179,13 +199,13 @@ namespace GitCommands
         {
             return (arguments.Contains("@") && arguments.Contains("://")) ||
                    (arguments.Contains("@") && arguments.Contains(":")) ||
-                   (arguments.Contains("ssh://")) ||
-                   (arguments.Contains("http://")) ||
-                   (arguments.Contains("git://")) ||
-                   (arguments.Contains("push")) ||
-                   (arguments.Contains("remote")) ||
-                   (arguments.Contains("fetch")) ||
-                   (arguments.Contains("pull"));
+                   arguments.Contains("ssh://") ||
+                   arguments.Contains("http://") ||
+                   arguments.Contains("git://") ||
+                   arguments.Contains("push") ||
+                   arguments.Contains("remote") ||
+                   arguments.Contains("fetch") ||
+                   arguments.Contains("pull");
         }
 
         /// <summary>
@@ -196,17 +216,25 @@ namespace GitCommands
             // We don't need putty for http:// links and git@... urls are already usable.
             // But ssh:// urls can cause problems
             if (!inputUrl.StartsWith("ssh") || !Uri.IsWellFormedUriString(inputUrl, UriKind.Absolute))
+            {
                 return "\"" + inputUrl + "\"";
+            }
 
             // Turn ssh://user@host/path into user@host:path, which works better
             Uri uri = new Uri(inputUrl, UriKind.Absolute);
             string fixedUrl = "";
             if (!uri.IsDefaultPort)
+            {
                 fixedUrl += "-P " + uri.Port + " ";
+            }
+
             fixedUrl += "\"";
 
-            if (!String.IsNullOrEmpty(uri.UserInfo))
+            if (!string.IsNullOrEmpty(uri.UserInfo))
+            {
                 fixedUrl += uri.UserInfo + "@";
+            }
+
             fixedUrl += uri.Host;
             fixedUrl += ":" + uri.LocalPath.Substring(1) + "\"";
 
@@ -216,9 +244,11 @@ namespace GitCommands
         private static IEnumerable<string> StartProcessAndReadLines(string arguments, string cmd, string workDir, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
+            {
                 yield break;
+            }
 
-            //process used to execute external commands
+            // process used to execute external commands
             using (var process = StartProcess(cmd, arguments, workDir, GitModule.SystemEncoding))
             {
                 if (!string.IsNullOrEmpty(stdInput))
@@ -232,15 +262,21 @@ namespace GitCommands
                 {
                     line = process.StandardOutput.ReadLine();
                     if (line != null)
+                    {
                         yield return line;
-                } while (line != null);
+                    }
+                }
+                while (line != null);
 
                 do
                 {
                     line = process.StandardError.ReadLine();
                     if (line != null)
+                    {
                         yield return line;
-                } while (line != null);
+                    }
+                }
+                while (line != null);
 
                 process.WaitForExit();
             }
@@ -264,7 +300,7 @@ namespace GitCommands
                 return null;
             }
 
-            //process used to execute external commands
+            // process used to execute external commands
             var process = StartProcess(cmd, arguments, workDir, GitModule.SystemEncoding);
             if (!string.IsNullOrEmpty(stdInput))
             {
@@ -297,6 +333,7 @@ namespace GitCommands
                 {
                     output += Environment.NewLine + error;
                 }
+
                 return output;
             }
             catch (Win32Exception)
@@ -313,7 +350,7 @@ namespace GitCommands
                 return null;
             }
 
-            //process used to execute external commands
+            // process used to execute external commands
             var process = StartProcess(cmd, arguments, workDir, Encoding.Default);
             if (stdInput != null && stdInput.Length > 0)
             {
@@ -382,12 +419,16 @@ namespace GitCommands
         public static string GetFullBranchName(string branch)
         {
             if (branch == null)
+            {
                 return null;
+            }
 
             branch = branch.Trim();
 
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
+            {
                 return branch;
+            }
 
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
             // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
@@ -405,7 +446,9 @@ namespace GitCommands
             cmd.Append(force ? " -D" : " -d");
 
             if (remoteBranch)
+            {
                 cmd.Append(" -r");
+            }
 
             cmd.Append(" \"");
             cmd.Append(branchName);
@@ -422,7 +465,9 @@ namespace GitCommands
         public static string SubmoduleUpdateCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
+            {
                 return "submodule update --init --recursive";
+            }
 
             return "submodule update --init --recursive \"" + name.Trim() + "\"";
         }
@@ -430,7 +475,9 @@ namespace GitCommands
         public static string SubmoduleSyncCmd(string name)
         {
             if (string.IsNullOrEmpty(name))
+            {
                 return "submodule sync";
+            }
 
             return "submodule sync \"" + name.Trim() + "\"";
         }
@@ -441,7 +488,9 @@ namespace GitCommands
             localPath = localPath.ToPosixPath();
 
             if (!string.IsNullOrEmpty(branch))
+            {
                 branch = " -b \"" + branch.Trim() + "\"";
+            }
 
             var forceCmd = force ? " -f" : string.Empty;
 
@@ -512,18 +561,35 @@ namespace GitCommands
             var to = toPath.ToPosixPath();
             var options = new List<string> { "-v" };
             if (central)
+            {
                 options.Add("--bare");
+            }
+
             if (initSubmodules)
+            {
                 options.Add("--recurse-submodules");
+            }
+
             if (depth.HasValue)
+            {
                 options.Add("--depth " + depth);
-            if(isSingleBranch.HasValue)
+            }
+
+            if (isSingleBranch.HasValue)
+            {
                 options.Add(isSingleBranch.Value ? "--single-branch" : "--no-single-branch");
+            }
+
             options.Add("--progress");
             if (branch == null)
+            {
                 options.Add("--no-checkout");
+            }
             else if (branch != "")
+            {
                 options.Add("--branch " + branch);
+            }
+
             options.Add(string.Format("\"{0}\"", from.Trim()));
             options.Add(string.Format("\"{0}\"", to.Trim()));
 
@@ -544,6 +610,7 @@ namespace GitCommands
                     args = " --force";
                     break;
             }
+
             return string.Format("checkout{0} \"{1}\"", args, branchOrRevisionName);
         }
 
@@ -561,13 +628,15 @@ namespace GitCommands
         {
             string file = ".";
             if (files.Any())
+            {
                 file = string.Join(" ", files);
+            }
 
-            return string.Format("rm {0} {1} {2}",
+            return string.Format(
+                "rm {0} {1} {2}",
                 force ? "--force" : string.Empty,
                 isRecursive ? "-r" : string.Empty,
-                file
-            );
+                file);
         }
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
@@ -581,6 +650,7 @@ namespace GitCommands
             {
                 cmd = string.Format("branch \"{0}\"", branchName.Trim());
             }
+
             if (revision.IsNullOrWhiteSpace())
             {
                 return cmd;
@@ -613,7 +683,9 @@ namespace GitCommands
         public static void SetSsh(string path)
         {
             if (!string.IsNullOrEmpty(path))
+            {
                 Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
+            }
         }
 
         public static bool Plink()
@@ -633,8 +705,7 @@ namespace GitCommands
             }.ToString();
         }
 
-        public static string PushTagCmd(string path, string tag, bool all,
-            ForcePushOptions force = ForcePushOptions.DoNotForce)
+        public static string PushTagCmd(string path, string tag, bool all, ForcePushOptions force = ForcePushOptions.DoNotForce)
         {
             path = path.ToPosixPath();
 
@@ -644,14 +715,21 @@ namespace GitCommands
 
             var sprogressOption = "";
             if (VersionInUse.PushCanAskForProgress)
+            {
                 sprogressOption = "--progress ";
+            }
 
-            var options = String.Concat(sforce, sprogressOption);
+            var options = string.Concat(sforce, sprogressOption);
 
             if (all)
+            {
                 return "push " + options + "\"" + path.Trim() + "\" --tags";
+            }
+
             if (!string.IsNullOrEmpty(tag))
+            {
                 return "push " + options + "\"" + path.Trim() + "\" tag " + tag;
+            }
 
             return "";
         }
@@ -660,9 +738,14 @@ namespace GitCommands
         {
             var sforce = "";
             if (force == ForcePushOptions.Force)
+            {
                 sforce = "-f ";
+            }
             else if (force == ForcePushOptions.ForceWithLease)
+            {
                 sforce = "--force-with-lease ";
+            }
+
             return sforce;
         }
 
@@ -671,15 +754,22 @@ namespace GitCommands
             var isPartialStash = selectedFiles != null && selectedFiles.Any();
             var cmd = isPartialStash ? "stash push" : "stash save";
             if (untracked && VersionInUse.StashUntrackedFilesSupported)
+            {
                 cmd += " -u";
+            }
+
             if (keepIndex)
+            {
                 cmd += " --keep-index";
+            }
+
             cmd = cmd.Combine(" ", message.QuoteNE());
 
             if (isPartialStash)
             {
                 cmd += " -- " + string.Join(" ", selectedFiles);
             }
+
             return cmd;
         }
 
@@ -702,7 +792,10 @@ namespace GitCommands
         {
             var bisectCommand = GetBisectCommand(bisectOption);
             if (revisions.Length == 0)
+            {
                 return bisectCommand;
+            }
+
             return string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
         }
 
@@ -750,10 +843,8 @@ namespace GitCommands
             sb.Append(branch);
             sb.Append('"');
 
-
             return sb.ToString();
         }
-
 
         public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
         {
@@ -779,18 +870,15 @@ namespace GitCommands
               .Append(from)
               .Append("\" ");
 
-
             sb.Append('"')
               .Append(branch)
               .Append("\"");
-
 
             sb.Append(" --onto ")
               .Append(onto);
 
             return sb.ToString();
         }
-
 
         public static string AbortRebaseCmd()
         {
@@ -815,17 +903,25 @@ namespace GitCommands
         public static string PatchCmd(string patchFile)
         {
             if (IsDiffFile(patchFile))
+            {
                 return "apply \"" + patchFile.ToPosixPath() + "\"";
+            }
             else
+            {
                 return "am --3way --signoff \"" + patchFile.ToPosixPath() + "\"";
+            }
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
             if (IsDiffFile(patchFile))
+            {
                 return "apply --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
+            }
             else
+            {
                 return "am --3way --signoff --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
+            }
         }
 
         public static string PatchDirCmd()
@@ -843,18 +939,34 @@ namespace GitCommands
             string command = "clean";
 
             if (directories)
+            {
                 command += " -d";
+            }
+
             if (!nonignored && !ignored)
+            {
                 command += " -x";
+            }
+
             if (ignored)
+            {
                 command += " -X";
+            }
+
             if (dryrun)
+            {
                 command += " --dry-run";
+            }
+
             if (!dryrun)
+            {
                 command += " -f";
+            }
 
             if (!paths.IsNullOrWhiteSpace())
+            {
                 command += " " + paths;
+            }
 
             return command;
         }
@@ -878,6 +990,7 @@ namespace GitCommands
                     stringBuilder.Append(" --untracked-files=all");
                     break;
             }
+
             switch (ignoreSubmodules)
             {
                 case IgnoreSubmodulesMode.Default:
@@ -896,8 +1009,11 @@ namespace GitCommands
                     stringBuilder.Append(" --ignore-submodules=all");
                     break;
             }
+
             if (!excludeIgnoredFiles)
+            {
                 stringBuilder.Append(" --ignored");
+            }
 
             return stringBuilder.ToString();
         }
@@ -919,7 +1035,10 @@ namespace GitCommands
         public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return null;
+            }
+
             var status = new GitSubmoduleStatus();
             using (StringReader reader = new StringReader(text))
             {
@@ -947,14 +1066,19 @@ namespace GitCommands
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (!line.Contains("Subproject"))
+                    {
                         continue;
+                    }
 
                     char c = line[0];
                     const string commit = "commit ";
                     string hash = "";
                     int pos = line.IndexOf(commit);
                     if (pos >= 0)
+                    {
                         hash = line.Substring(pos + commit.Length);
+                    }
+
                     bool bdirty = hash.EndsWith("-dirty");
                     hash = hash.Replace("-dirty", "");
                     if (c == '-')
@@ -966,6 +1090,7 @@ namespace GitCommands
                         status.Commit = hash;
                         status.IsDirty = bdirty;
                     }
+
                     // TODO: Support combined merge
                 }
             }
@@ -988,7 +1113,9 @@ namespace GitCommands
             var diffFiles = new List<GitItemStatus>();
 
             if (string.IsNullOrEmpty(statusString))
+            {
                 return diffFiles;
+            }
 
             /*The status string can show warnings. This is a text block at the start or at the beginning
               of the file status. Strip it. Example:
@@ -1002,24 +1129,30 @@ namespace GitCommands
             if (lastNewLinePos > 0)
             {
                 int ind = trimmedStatus.LastIndexOf('\0');
-                if (ind < lastNewLinePos) //Warning at end
+                if (ind < lastNewLinePos)
                 {
+                    // Warning at end
                     lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind : 0);
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(nl);
                 }
-                else                                              //Warning at beginning
+                else
+                {
+                    // Warning at beginning
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
+                }
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = module.GetSubmodulesLocalPaths();
+            IList<string> submodules = module.GetSubmodulesLocalPaths();
 
-            //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
+            // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
+                {
                     continue;
+                }
 
                 int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
 
@@ -1044,35 +1177,51 @@ namespace GitCommands
                 if (x != '?' && x != '!' && x != ' ')
                 {
                     GitItemStatus gitItemStatusX = null;
-                    if (x == 'R' || x == 'C') // Find renamed files...
+                    if (x == 'R' || x == 'C')
                     {
+                        // Find renamed files...
                         string nextfile = n + 1 < files.Length ? files[n + 1] : "";
                         gitItemStatusX = GitItemStatusFromCopyRename(fromDiff, nextfile, fileName, x, status);
                         n++;
                     }
                     else
+                    {
                         gitItemStatusX = GitItemStatusFromStatusCharacter(fileName, x);
+                    }
 
                     gitItemStatusX.IsStaged = true;
-                    if (Submodules.Contains(gitItemStatusX.Name))
+                    if (submodules.Contains(gitItemStatusX.Name))
+                    {
                         gitItemStatusX.IsSubmodule = true;
+                    }
+
                     diffFiles.Add(gitItemStatusX);
                 }
 
                 if (fromDiff || y == ' ')
-                    continue;
-                GitItemStatus gitItemStatusY;
-                if (y == 'R' || y == 'C') // Find renamed files...
                 {
+                    continue;
+                }
+
+                GitItemStatus gitItemStatusY;
+                if (y == 'R' || y == 'C')
+                {
+                    // Find renamed files...
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
                     gitItemStatusY = GitItemStatusFromCopyRename(false, nextfile, fileName, y, status);
                     n++;
                 }
                 else
+                {
                     gitItemStatusY = GitItemStatusFromStatusCharacter(fileName, y);
+                }
+
                 gitItemStatusY.IsStaged = false;
-                if (Submodules.Contains(gitItemStatusY.Name))
+                if (submodules.Contains(gitItemStatusY.Name))
+                {
                     gitItemStatusY.IsSubmodule = true;
+                }
+
                 diffFiles.Add(gitItemStatusY);
             }
 
@@ -1087,7 +1236,9 @@ namespace GitCommands
             {
                 char statusCharacter = line[0];
                 if (char.IsUpper(statusCharacter))
+                {
                     continue;
+                }
 
                 string fileName = line.Substring(line.IndexOf(' ') + 1);
                 GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(fileName, statusCharacter);
@@ -1122,7 +1273,7 @@ namespace GitCommands
         private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
-            //Find renamed files...
+            // Find renamed files...
             if (fromDiff)
             {
                 gitItemStatus.OldName = fileName.Trim();
@@ -1133,16 +1284,25 @@ namespace GitCommands
                 gitItemStatus.Name = fileName.Trim();
                 gitItemStatus.OldName = nextfile.Trim();
             }
+
             gitItemStatus.IsNew = false;
             gitItemStatus.IsChanged = false;
             gitItemStatus.IsDeleted = false;
             if (x == 'R')
+            {
                 gitItemStatus.IsRenamed = true;
+            }
             else
+            {
                 gitItemStatus.IsCopied = true;
+            }
+
             gitItemStatus.IsTracked = true;
             if (status.Length > 2)
+            {
                 gitItemStatus.RenameCopyPercentage = status.Substring(1);
+            }
+
             return gitItemStatus;
         }
 
@@ -1155,7 +1315,7 @@ namespace GitCommands
             gitItemStatus.IsDeleted = x == 'D';
             gitItemStatus.IsSkipWorktree = x == 'S';
             gitItemStatus.IsRenamed = false;
-            gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
+            gitItemStatus.IsTracked = (x != '?' && x != '!' && x != ' ') || !gitItemStatus.IsNew;
             gitItemStatus.IsIgnored = x == '!';
             gitItemStatus.IsConflict = x == 'U';
             return gitItemStatus;
@@ -1168,7 +1328,9 @@ namespace GitCommands
             foreach (string remote in remotes)
             {
                 if (trimmedName.StartsWith(string.Concat(remote, "/")))
+                {
                     return remote;
+                }
             }
 
             return string.Empty;
@@ -1179,24 +1341,40 @@ namespace GitCommands
             StringBuilder command = new StringBuilder("merge");
 
             if (!allowFastForward)
+            {
                 command.Append(" --no-ff");
+            }
+
             if (!string.IsNullOrEmpty(strategy))
             {
                 command.Append(" --strategy=");
                 command.Append(strategy);
             }
+
             if (squash)
+            {
                 command.Append(" --squash");
+            }
+
             if (noCommit)
+            {
                 command.Append(" --no-commit");
+            }
+
             if (allowUnrelatedHistories)
+            {
                 command.Append(" --allow-unrelated-histories");
+            }
 
             if (!string.IsNullOrEmpty(message))
+            {
                 command.AppendFormat(" -m {0}", message.Quote());
+            }
 
             if (log.HasValue)
+            {
                 command.AppendFormat(" --log={0}", log.Value);
+            }
 
             command.Append(" ");
             command.Append(branch);
@@ -1206,7 +1384,9 @@ namespace GitCommands
         public static string GetFileExtension(string fileName)
         {
             if (fileName.Contains(".") && fileName.LastIndexOf(".") < fileName.Length)
+            {
                 return fileName.Substring(fileName.LastIndexOf('.') + 1);
+            }
 
             return null;
         }
@@ -1238,6 +1418,7 @@ namespace GitCommands
             {
                 result += "=\"100%\"";
             }
+
             return result;
         }
 
@@ -1249,22 +1430,25 @@ namespace GitCommands
             {
                 findCopies += "=\"100%\"";
             }
+
             return FindRenamesOpt() + findCopies;
         }
 
-        static class NativeMethods
+        private static class NativeMethods
         {
             [DllImport("kernel32.dll")]
-            public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
-               bool Add);
+            public static extern bool SetConsoleCtrlHandler(
+                IntPtr HandlerRoutine,
+                bool Add);
 
             [DllImport("kernel32.dll", SetLastError = true)]
             public static extern bool AttachConsole(int dwProcessId);
 
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
-               int dwProcessGroupId);
+            public static extern bool GenerateConsoleCtrlEvent(
+                uint dwCtrlEvent,
+                int dwProcessGroupId);
         }
 
         public static void TerminateTree(this Process process)
@@ -1276,10 +1460,15 @@ namespace GitCommands
                 NativeMethods.SetConsoleCtrlHandler(IntPtr.Zero, true);
                 NativeMethods.GenerateConsoleCtrlEvent(0, 0);
                 if (!process.HasExited)
+                {
                     System.Threading.Thread.Sleep(500);
+                }
             }
+
             if (!process.HasExited)
+            {
                 process.Kill();
+            }
         }
     }
 }

@@ -31,8 +31,8 @@ namespace GitCommands
 
         public CommitTemplateItem()
         {
-            Name = String.Empty;
-            Text = String.Empty;
+            Name = string.Empty;
+            Text = string.Empty;
         }
 
         private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
@@ -58,11 +58,12 @@ namespace GitCommands
             string serializedString = AppSettings.CommitTemplates;
             var templates = DeserializeCommitTemplates(serializedString, out var shouldBeUpdated);
             if (shouldBeUpdated)
+            {
                 SaveToSettings(templates);
+            }
 
             return templates;
         }
-
 
         private static string SerializeCommitTemplates(CommitTemplateItem[] items)
         {
@@ -73,7 +74,9 @@ namespace GitCommands
         {
             shouldBeUpdated = false;
             if (string.IsNullOrEmpty(serializedString))
+            {
                 return null;
+            }
 
             CommitTemplateItem[] commitTemplateItem = null;
             try
@@ -98,6 +101,7 @@ namespace GitCommands
                         BinaryFormatter sf = new BinaryFormatter() { Binder = new MoveNamespaceDeserializationBinder() };
                         commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
+
                     shouldBeUpdated = true;
                 }
                 catch (Exception /*e*/)
@@ -108,7 +112,6 @@ namespace GitCommands
 
             return commitTemplateItem;
         }
-    
     }
 
     public sealed class MoveNamespaceDeserializationBinder : SerializationBinder
@@ -119,7 +122,7 @@ namespace GitCommands
         public override Type BindToType(string assemblyName, string typeName)
         {
             typeName = typeName.Replace(OldNamespace, NewNamespace);
-            //assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
+            // assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
             var type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
             return type;
         }

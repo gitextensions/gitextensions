@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -11,7 +12,6 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
-using System.Linq;
 
 namespace GitCommands
 {
@@ -25,15 +25,26 @@ namespace GitCommands
 
     public static class AppSettings
     {
-        //semi-constants
+        // semi-constants
         public static readonly char PosixPathSeparator = '/';
-        public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
-        public static string ProductVersion { get { return Application.ProductVersion; } }
+        public static Version AppVersion
+        {
+            get { return Assembly.GetCallingAssembly().GetName().Version; }
+        }
+
+        public static string ProductVersion
+        {
+            get { return Application.ProductVersion; }
+        }
+
         public static readonly string SettingsFileName = "GitExtensions.settings";
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
-        public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
+        public static string SettingsFilePath
+        {
+            get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); }
+        }
 
         public static RepoDistSettings SettingsContainer { get; private set; }
 
@@ -52,11 +63,10 @@ namespace GitCommands
                 }
                 else
                 {
-                    //Make applicationdatapath version independent
+                    // Make applicationdatapath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
-            }
-            );
+            });
 
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
@@ -88,6 +98,7 @@ namespace GitCommands
                 {
                     value = "+";
                 }
+
                 SetString("AutoNormaliseSymbol", value);
             }
         }
@@ -111,21 +122,25 @@ namespace GitCommands
                     finally
                     {
                         SettingsContainer = oldSC;
-                        //refresh settings if needed
+                        // refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }
-                }
-             );
+                });
         }
 
         public static string GetInstallDir()
         {
             if (IsPortable())
+            {
                 return GetGitExtensionsDirectory();
+            }
 
             string dir = ReadStringRegValue("InstallDir", string.Empty);
-            if (String.IsNullOrEmpty(dir))
+            if (string.IsNullOrEmpty(dir))
+            {
                 return GetGitExtensionsDirectory();
+            }
+
             return dir;
         }
 
@@ -148,7 +163,7 @@ namespace GitCommands
             return GetInstallDir();
         }
 
-        //for repair only
+        // for repair only
         public static void SetInstallDir(string dir)
         {
             WriteStringRegValue("InstallDir", dir);
@@ -158,9 +173,15 @@ namespace GitCommands
         {
             object obj = VersionIndependentRegKey.GetValue(key);
             if (!(obj is string))
+            {
                 obj = null;
+            }
+
             if (obj == null)
+            {
                 return defaultValue;
+            }
+
             return ((string)obj).Equals("true", StringComparison.CurrentCultureIgnoreCase);
         }
 
@@ -205,8 +226,8 @@ namespace GitCommands
 
         public static bool ShowCurrentBranchInVisualStudio
         {
-            //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
-            //other changes in the Visual Studio plugin itself.
+            // This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
+            // other changes in the Visual Studio plugin itself.
             get { return ReadBoolRegKey("ShowCurrentBranchInVS", true); }
             set { WriteBoolRegKey("ShowCurrentBranchInVS", value); }
         }
@@ -216,16 +237,24 @@ namespace GitCommands
             get
             {
                 if (IsPortable())
+                {
                     return GetString("gitcommand", "");
+                }
                 else
+                {
                     return ReadStringRegValue("gitcommand", "");
+                }
             }
             set
             {
                 if (IsPortable())
+                {
                     SetString("gitcommand", value);
+                }
                 else
+                {
                     WriteStringRegValue("gitcommand", value);
+                }
             }
         }
 
@@ -233,8 +262,11 @@ namespace GitCommands
         {
             get
             {
-                if (String.IsNullOrEmpty(GitCommandValue))
+                if (string.IsNullOrEmpty(GitCommandValue))
+                {
                     return "git";
+                }
+
                 return GitCommandValue;
             }
         }
@@ -316,7 +348,7 @@ namespace GitCommands
             get { return GetBool("showresetallchanges", true); }
             set { SetBool("showresetallchanges", value); }
         }
-        
+
         public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
         public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
         public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
@@ -417,27 +449,26 @@ namespace GitCommands
             set { _currentTranslation = value; }
         }
 
-
         private static readonly Dictionary<string, string> _languageCodes =
             new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"Czech", "cs"},
-                {"Dutch", "nl"},
-                {"English", "en"},
-                {"French", "fr"},
-                {"German", "de"},
-                {"Indonesian", "id"},
-                {"Italian", "it"},
-                {"Japanese", "ja"},
-                {"Korean", "ko"},
-                {"Polish", "pl"},
-                {"Portuguese (Brazil)", "pt-BR"},
-                {"Portuguese (Portugal)", "pt-PT"},
-                {"Romanian", "ro"},
-                {"Russian", "ru"},
-                {"Simplified Chinese", "zh-CN"},
-                {"Spanish", "es"},
-                {"Traditional Chinese", "zh-TW"}
+                { "Czech", "cs" },
+                { "Dutch", "nl" },
+                { "English", "en" },
+                { "French", "fr" },
+                { "German", "de" },
+                { "Indonesian", "id" },
+                { "Italian", "it" },
+                { "Japanese", "ja" },
+                { "Korean", "ko" },
+                { "Polish", "pl" },
+                { "Portuguese (Brazil)", "pt-BR" },
+                { "Portuguese (Portugal)", "pt-PT" },
+                { "Romanian", "ro" },
+                { "Russian", "ru" },
+                { "Simplified Chinese", "zh-CN" },
+                { "Spanish", "es" },
+                { "Traditional Chinese", "zh-TW" }
             };
 
         public static string CurrentLanguageCode
@@ -445,7 +476,10 @@ namespace GitCommands
             get
             {
                 if (_languageCodes.TryGetValue(CurrentTranslation, out var code))
+                {
                     return code;
+                }
+
                 return "en";
             }
         }
@@ -457,7 +491,6 @@ namespace GitCommands
                 try
                 {
                     return CultureInfo.GetCultureInfo(CurrentLanguageCode);
-
                 }
                 catch (System.Globalization.CultureNotFoundException)
                 {
@@ -592,7 +625,6 @@ namespace GitCommands
             get { return GetBool("IgnoreWhitespaceOnBlame", true); }
             set { SetBool("IgnoreWhitespaceOnBlame", value); }
         }
-
 
         public static bool OpenSubmoduleDiffInSeparateWindow
         {
@@ -963,13 +995,13 @@ namespace GitCommands
                 var temp = value.EnsureTrailingPathSeparator();
                 SetString("gitbindir", temp);
 
-                //if (string.IsNullOrEmpty(_gitBinDir))
+                // if (string.IsNullOrEmpty(_gitBinDir))
                 //    return;
 
-                //var path =
+                // var path =
                 //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
                 //    _gitBinDir;
-                //Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                // Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 
@@ -987,8 +1019,8 @@ namespace GitCommands
 
         public static int DiffVerticalRulerPosition
         {
-            get { return GetInt( "diffverticalrulerposition", 80 ); }
-            set { SetInt( "diffverticalrulerposition", value ); }
+            get { return GetInt("diffverticalrulerposition", 80); }
+            set { SetInt("diffverticalrulerposition", value); }
         }
 
         public static string RecentWorkingDir
@@ -1008,19 +1040,38 @@ namespace GitCommands
         public static string Plink
         {
             get { return GetString("plink", Environment.GetEnvironmentVariable("GITEXT_PLINK") ?? ReadStringRegValue("plink", "")); }
-            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK")) SetString("plink", value); }
+            set
+            {
+                if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK"))
+                {
+                    SetString("plink", value);
+                }
+            }
         }
+
         public static string Puttygen
         {
             get { return GetString("puttygen", Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN") ?? ReadStringRegValue("puttygen", "")); }
-            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN")) SetString("puttygen", value); }
+            set
+            {
+                if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN"))
+                {
+                    SetString("puttygen", value);
+                }
+            }
         }
 
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
             get { return GetString("pageant", Environment.GetEnvironmentVariable("GITEXT_PAGEANT") ?? ReadStringRegValue("pageant", "")); }
-            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT")) SetString("pageant", value); }
+            set
+            {
+                if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT"))
+                {
+                    SetString("pageant", value);
+                }
+            }
         }
 
         public static bool AutoStartPageant
@@ -1272,7 +1323,8 @@ namespace GitCommands
                 });
             }
             catch
-            { }
+            {
+            }
         }
 
         public static void LoadSettings()
@@ -1284,7 +1336,8 @@ namespace GitCommands
                 GitCommandHelpers.SetSsh(SshPath);
             }
             catch
-            { }
+            {
+            }
         }
 
         public static bool DashboardShowCurrentBranch
@@ -1293,7 +1346,7 @@ namespace GitCommands
             set { SetBool("dashboardshowcurrentbranch", value); }
         }
 
-        public static string ownScripts
+        public static string OwnScripts
         {
             get { return GetString("ownScripts", ""); }
             set { SetString("ownScripts", value); }
@@ -1385,13 +1438,13 @@ namespace GitCommands
 
         public static string CommitValidationRegEx
         {
-            get { return GetString("CommitValidationRegEx", String.Empty); }
+            get { return GetString("CommitValidationRegEx", string.Empty); }
             set { SetString("CommitValidationRegEx", value); }
         }
 
         public static string CommitTemplates
         {
-            get { return GetString("CommitTemplates", String.Empty); }
+            get { return GetString("CommitTemplates", string.Empty); }
             set { SetString("CommitTemplates", value); }
         }
 
@@ -1459,35 +1512,41 @@ namespace GitCommands
             return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
-        private static RegistryKey _VersionIndependentRegKey;
+        private static RegistryKey _versionIndependentRegKey;
 
         private static RegistryKey VersionIndependentRegKey
         {
             get
             {
-                if (_VersionIndependentRegKey == null)
-                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
-                return _VersionIndependentRegKey;
+                if (_versionIndependentRegKey == null)
+                {
+                    _versionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
+
+                return _versionIndependentRegKey;
             }
         }
 
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;
-
         }
 
         private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
             if (oldSettings == null)
+            {
                 yield break;
+            }
 
-            foreach (String name in oldSettings.GetValueNames())
+            foreach (string name in oldSettings.GetValueNames())
             {
                 object value = oldSettings.GetValue(name, null);
                 if (value != null)
+                {
                     yield return new Tuple<string, string>(name, value.ToString());
+                }
             }
         }
 
@@ -1603,9 +1662,21 @@ namespace GitCommands
 
         private static void LoadEncodings()
         {
-            void AddEncoding(Encoding e) { AvailableEncodings[e.HeaderName] = e; }
+            void AddEncoding(Encoding e)
+            {
+                AvailableEncodings[e.HeaderName] = e;
+            }
 
-            void AddEncodingByName(string s) { try { AddEncoding(Encoding.GetEncoding(s)); } catch { } }
+            void AddEncodingByName(string s)
+            {
+                try
+                {
+                    AddEncoding(Encoding.GetEncoding(s));
+                }
+                catch
+                {
+                }
+            }
 
             string availableEncodings = GetString("AvailableEncodings", "");
             if (string.IsNullOrWhiteSpace(availableEncodings))
@@ -1622,23 +1693,29 @@ namespace GitCommands
                 }
                 catch
                 {
-                    //there are CultureInfos without a code page
+                    // there are CultureInfos without a code page
                 }
             }
             else
             {
                 var utf8 = new UTF8Encoding(false);
-                foreach(var encodingName in availableEncodings.Split(';'))
+                foreach (var encodingName in availableEncodings.Split(';'))
                 {
-                    // create utf-8 without BOM
                     if (encodingName == utf8.HeaderName)
+                    {
+                        // create utf-8 without BOM
                         AddEncoding(utf8);
-                    // default encoding
+                    }
                     else if (encodingName == "Default")
+                    {
+                        // default encoding
                         AddEncoding(Encoding.Default);
-                    // add encoding by name
+                    }
                     else
+                    {
+                        // add encoding by name
                         AddEncodingByName(encodingName);
+                    }
                 }
             }
         }
@@ -1649,7 +1726,6 @@ namespace GitCommands
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
         }
-
     }
 
     public class AppSettingsPath : SettingsPath
@@ -1667,7 +1743,5 @@ namespace GitCommands
         {
             AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
         }
-
     }
-
 }

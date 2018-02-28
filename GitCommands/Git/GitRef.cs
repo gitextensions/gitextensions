@@ -10,22 +10,28 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-       
+
         /// <summary>"refs/tags/"</summary>
         public static readonly string RefsTagsPrefix = "refs/tags/";
+
         /// <summary>"refs/heads/"</summary>
         public static readonly string RefsHeadsPrefix = "refs/heads/";
+
         /// <summary>"refs/remotes/"</summary>
         public static readonly string RefsRemotesPrefix = "refs/remotes/";
+
         /// <summary>"refs/bisect/"</summary>
         public static readonly string RefsBisectPrefix = "refs/bisect/";
+
         /// <summary>"^{}"</summary>
         public static readonly string TagDereferenceSuffix = "^{}";
-       
+
         public IGitModule Module { get; private set; }
 
         public GitRef(IGitModule module, string guid, string completeName)
-            : this(module, guid, completeName, string.Empty) { }
+            : this(module, guid, completeName, string.Empty)
+        {
+        }
 
         public GitRef(IGitModule module, string guid, string completeName, string remote)
         {
@@ -43,7 +49,7 @@ namespace GitCommands
             ParseName();
 
             _remoteSettingName = RemoteSettingName(Name);
-            _mergeSettingName = String.Format("branch.{0}.merge", Name);
+            _mergeSettingName = string.Format("branch.{0}.merge", Name);
         }
 
         public static GitRef CreateBranchRef(GitModule module, string guid, string name)
@@ -60,8 +66,8 @@ namespace GitCommands
         public bool IsBisect { get; private set; }
 
         /// <summary>
-        /// True when Guid is a checksum of an object (e.g. commit) to which another object 
-        /// with Name (e.g. annotated tag) is applied. 
+        /// True when Guid is a checksum of an object (e.g. commit) to which another object
+        /// with Name (e.g. annotated tag) is applied.
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
         public bool IsDereference { get; private set; }
@@ -86,14 +92,18 @@ namespace GitCommands
             }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
+                {
                     Module.UnsetSetting(_remoteSettingName);
+                }
                 else
                 {
                     Module.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
+                    {
                         MergeWith = Name;
+                    }
                 }
             }
         }
@@ -101,7 +111,7 @@ namespace GitCommands
         /// <summary>Gets the setting name for a branch's remote.</summary>
         public static string RemoteSettingName(string branch)
         {
-            return String.Format(SettingKeyString.BranchRemote, branch);
+            return string.Format(SettingKeyString.BranchRemote, branch);
         }
 
         /// <summary>
@@ -122,10 +132,14 @@ namespace GitCommands
             }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
+                {
                     Module.UnsetSetting(_mergeSettingName);
+                }
                 else
+                {
                     Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
+                }
             }
         }
 
@@ -139,7 +153,6 @@ namespace GitCommands
             string merge = configFile.GetValue(_mergeSettingName);
             return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
         }
-
 
         public static GitRef NoHead(GitModule module)
         {
@@ -180,7 +193,7 @@ namespace GitCommands
             }
             else
             {
-                //if we don't know ref type then we don't know if '/' is a valid ref character
+                // if we don't know ref type then we don't know if '/' is a valid ref character
                 Name = CompleteName.SkipStr("refs/");
             }
 

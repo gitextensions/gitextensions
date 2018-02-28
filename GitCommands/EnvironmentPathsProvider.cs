@@ -25,12 +25,10 @@ namespace GitCommands
     {
         private readonly IEnvironmentAbstraction _environment;
 
-
         public EnvironmentPathsProvider(IEnvironmentAbstraction environment)
         {
             _environment = environment;
         }
-
 
         /// <summary>
         /// Gets the list of paths defined under %PATH% environment variable.
@@ -55,6 +53,7 @@ namespace GitCommands
                 {
                     continue;
                 }
+
                 yield return dir;
             }
         }
@@ -69,7 +68,6 @@ namespace GitCommands
             return envPaths.Where(IsValidPath);
         }
 
-
         // TODO: optimise?
         internal static bool IsValidPath(string aPath)
         {
@@ -78,9 +76,15 @@ namespace GitCommands
             {
                 fi = new FileInfo(aPath);
             }
-            catch (ArgumentException) { }
-            catch (PathTooLongException) { }
-            catch (NotSupportedException) { }
+            catch (ArgumentException)
+            {
+            }
+            catch (PathTooLongException)
+            {
+            }
+            catch (NotSupportedException)
+            {
+            }
 
             return fi != null;
         }

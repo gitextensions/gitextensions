@@ -26,7 +26,6 @@ namespace GitCommands.ExternalLinks
     {
         private const string SettingName = "RevisionLinkDefs";
 
-
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
@@ -67,7 +66,6 @@ namespace GitCommands.ExternalLinks
                 Debug.WriteLine(e);
             }
         }
-
 
         // TODO: refactor and outsource to the centralised SettingsSerialiser implementations.
         private static IList<ExternalLinkDefinition> LoadFromXmlString(string xmlString)

@@ -101,7 +101,6 @@ namespace GitCommands.Git
             return branchName;
         }
 
-
         /// <summary>
         /// Indicates whether the given character can be used in a branch name.
         /// </summary>
@@ -114,9 +113,8 @@ namespace GitCommands.Git
                     Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
         }
 
-
         /// <summary>
-        /// Branch name can include slash '/' for hierarchical (directory) grouping, 
+        /// Branch name can include slash '/' for hierarchical (directory) grouping,
         /// but no slash-separated component can begin with a dot '.' or end with the sequence '.lock'.
         /// </summary>
         /// <param name="branchName"></param>
@@ -131,11 +129,13 @@ namespace GitCommands.Git
                 {
                     tokens[i] = Regex.Replace(tokens[i], "^(\\.)*", options.ReplacementToken);
                 }
+
                 if (tokens[i].EndsWith(".lock", StringComparison.OrdinalIgnoreCase))
                 {
                     tokens[i] = Regex.Replace(tokens[i], "(\\.lock)$", options.ReplacementToken + "lock");
                 }
             }
+
             return tokens.Join("/");
         }
 
@@ -172,6 +172,7 @@ namespace GitCommands.Git
                     result.Append(options.ReplacementToken);
                 }
             }
+
             return result.ToString();
         }
 
@@ -199,10 +200,12 @@ namespace GitCommands.Git
             {
                 branchName = branchName.Substring(1);
             }
+
             if (branchName.EndsWith("/"))
             {
                 branchName = branchName.Substring(0, branchName.Length - 1);
             }
+
             return branchName;
         }
 
