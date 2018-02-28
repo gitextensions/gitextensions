@@ -81,10 +81,7 @@ namespace GitUI.CommandsDialogs
             return new GitIgnoreModel(Module);
         }
 
-        private string ExcludeFile
-        {
-            get { return _dialogModel.ExcludeFile; }
-        }
+        private string ExcludeFile => _dialogModel.ExcludeFile;
 
 
         protected override void OnRuntimeLoad(EventArgs e)

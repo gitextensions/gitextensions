@@ -51,15 +51,9 @@ namespace GitUI.RevisionGridClasses
                 AddNode(aNode);
             }
 
-            public Node Youngest
-            {
-                get { return this[0]; }
-            }
+            public Node Youngest => this[0];
 
-            public Node Oldest
-            {
-                get { return this[NodesCount - 1]; }
-            }
+            public Node Oldest => this[NodesCount - 1];
 
             public Node ChildOf(Node aParent)
             {
@@ -74,15 +68,9 @@ namespace GitUI.RevisionGridClasses
                 throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent.ToString());
             }
 
-            public int NodesCount
-            {
-                get { return nodes.Count; }
-            }
+            public int NodesCount => nodes.Count;
 
-            public Node this[int index]
-            {
-                get { return nodes[index]; }
-            }
+            public Node this[int index] => nodes[index];
 
             public void Add(Node aParent)
             {

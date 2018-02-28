@@ -16,13 +16,7 @@ namespace ResourceManager
         }
 
         //Store settings to use later
-        public ISettingsSource Settings
-        {
-            get
-            {
-                return SettingsContainer.GetSettingsSource();
-            }
-        }
+        public ISettingsSource Settings => SettingsContainer.GetSettingsSource();
 
         public IGitPluginSettingsContainer SettingsContainer { get; set; }
 

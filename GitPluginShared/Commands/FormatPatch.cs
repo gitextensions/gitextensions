@@ -9,9 +9,6 @@ namespace GitPluginShared.Commands
             RunGitEx("formatpatch", fileName);
         }
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.SolutionExplorerFileItem; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.SolutionExplorerFileItem;
     }
 }

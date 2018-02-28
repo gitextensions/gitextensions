@@ -106,10 +106,7 @@ namespace TfsIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return _tfsServer + "/" + _tfsTeamCollectionName + "/" + _projectName; }
-        }
+        public string UniqueKey => _tfsServer + "/" + _tfsTeamCollectionName + "/" + _projectName;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {

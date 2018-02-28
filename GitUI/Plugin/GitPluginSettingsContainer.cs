@@ -24,13 +24,7 @@ namespace GitUI
             _settingsSource = settingsSource;
         }
 
-        private ISettingsSource ExternalSettings
-        {
-            get
-            {
-                return _settingsSource ?? AppSettings.SettingsContainer;
-            }
-        }
+        private ISettingsSource ExternalSettings => _settingsSource ?? AppSettings.SettingsContainer;
 
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {

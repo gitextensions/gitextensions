@@ -12,12 +12,6 @@
     /// </summary>
     internal partial class Resources
     {
-        public static System.Drawing.Bitmap loadingpanel
-        {
-            get
-            {
-                return loadingpanel_animated;
-            }
-        }
+        public static System.Drawing.Bitmap loadingpanel => loadingpanel_animated;
     }
 }

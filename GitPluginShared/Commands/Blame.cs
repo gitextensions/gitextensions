@@ -17,9 +17,6 @@ namespace GitPluginShared.Commands
             RunGitEx ("blame", fileName, arguments);
         }
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.File; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.File;
     }
 }

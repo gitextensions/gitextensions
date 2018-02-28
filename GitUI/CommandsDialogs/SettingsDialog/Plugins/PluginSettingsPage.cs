@@ -60,10 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             return _gitPlugin.GetSettings();
         }
 
-        public override SettingsPageReference PageReference
-        {
-            get { return new SettingsPageReferenceByType(_gitPlugin.GetType()); }
-        }
+        public override SettingsPageReference PageReference => new SettingsPageReferenceByType(_gitPlugin.GetType());
 
         protected override SettingsLayout CreateSettingsLayout()
         {

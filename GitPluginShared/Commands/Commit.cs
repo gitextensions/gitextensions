@@ -71,10 +71,7 @@ namespace GitPluginShared.Commands
             RunGitEx("commit", fileName);
         }
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.Any; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.Any;
 
         private static string GetSelectedFile(EnvDTE80.DTE2 application)
         {

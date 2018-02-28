@@ -19,10 +19,7 @@ namespace GitUI.UserControls.ToolStripClasses
 
         internal static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
 
-        public Image DefaultIcon
-        {
-            get { return IconClean; }
-        }
+        public Image DefaultIcon => IconClean;
 
         public Image GetCommitIcon(IList<GitItemStatus> allChangedFiles)
         {

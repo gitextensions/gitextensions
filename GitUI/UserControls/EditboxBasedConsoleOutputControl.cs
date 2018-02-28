@@ -31,21 +31,9 @@ namespace GitUI.UserControls
             _timer.Start();
         }
 
-        public override int ExitCode
-        {
-            get
-            {
-                return _exitcode;
-            }
-        }
+        public override int ExitCode => _exitcode;
 
-        public override bool IsDisplayingFullProcessOutput
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool IsDisplayingFullProcessOutput => false;
 
         public override void AppendMessageFreeThreaded(string text)
         {

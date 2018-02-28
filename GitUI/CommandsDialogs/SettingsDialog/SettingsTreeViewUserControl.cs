@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly IList<ISettingsPage> _SettingsPages = new List<ISettingsPage>();
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
-        public IEnumerable<ISettingsPage> SettingsPages { get { return _SettingsPages; } }
+        public IEnumerable<ISettingsPage> SettingsPages => _SettingsPages;
 
         public SettingsTreeViewUserControl()
         {

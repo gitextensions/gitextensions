@@ -20,10 +20,7 @@ namespace GitPluginShared.Commands
         }
 
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.SolutionExplorerFileItem; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.SolutionExplorerFileItem;
 
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {

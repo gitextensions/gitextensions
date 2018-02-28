@@ -32,24 +32,12 @@ namespace Bitbucket
             _branch = branchName;
         }
 
-        protected override object RequestBody
-        {
-            get { return null; }
-        }
+        protected override object RequestBody => null;
 
-        protected override Method RequestMethod
-        {
-            get { return Method.GET; }
-        }
+        protected override Method RequestMethod => Method.GET;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/projects/{0}/repos/{1}/commits/refs/heads/{2}",
-                                     _repo.ProjectKey, _repo.RepoName, _branch);
-            }
-        }
+        protected override string ApiUrl => string.Format("/projects/{0}/repos/{1}/commits/refs/heads/{2}",
+            _repo.ProjectKey, _repo.RepoName, _branch);
 
         protected override Commit ParseResponse(JObject json)
         {

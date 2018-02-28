@@ -125,15 +125,11 @@ namespace GitUI.SpellChecker
         public Font MistakeFont { get; set; }
 
         [Browsable(false)]
-        public int CurrentColumn
-        {
-            get { return TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1; }
-        }
+        public int CurrentColumn => TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1;
+
         [Browsable(false)]
-        public int CurrentLine
-        {
-            get { return TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1; }
-        }
+        public int CurrentLine => TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1;
+
         public event EventHandler SelectionChanged;
 
         private void EditNetSpellEnabledChanged(object sender, EventArgs e)
@@ -212,15 +208,9 @@ namespace GitUI.SpellChecker
             }
         }
 
-        protected RepoDistSettings Settings
-        {
-            get
-            {
-                return IsUICommandsInitialized ?
-                    Module.EffectiveSettings :
-                    AppSettings.SettingsContainer;
-            }
-        }
+        protected RepoDistSettings Settings => IsUICommandsInitialized ?
+            Module.EffectiveSettings :
+            AppSettings.SettingsContainer;
 
 
         public void SelectAll()

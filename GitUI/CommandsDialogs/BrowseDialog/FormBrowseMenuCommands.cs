@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs
     class FormBrowseMenuCommands : MenuCommandsBase
     {
         FormBrowse _formBrowse;
-        GitUICommands UICommands { get { return _formBrowse.UICommands; } }
+        GitUICommands UICommands => _formBrowse.UICommands;
 
         // must be created only once because of translation
         IEnumerable<MenuCommand> _navigateMenuCommands;

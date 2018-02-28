@@ -161,24 +161,24 @@ namespace GitUI.RevisionGridClasses
         /// <summary>
         /// 0
         /// </summary>
-        internal DataGridViewColumn GraphColumn { get { return Columns[0]; } }
+        internal DataGridViewColumn GraphColumn => Columns[0];
 
         /// <summary>
         /// 1
         /// </summary>
-        internal DataGridViewColumn MessageColumn { get { return Columns[1]; } }
+        internal DataGridViewColumn MessageColumn => Columns[1];
 
         /// <summary>
         /// 2
         /// </summary>
-        internal DataGridViewColumn AuthorColumn { get { return Columns[2]; } }
+        internal DataGridViewColumn AuthorColumn => Columns[2];
 
         /// <summary>
         /// 3
         /// </summary>
-        internal DataGridViewColumn DateColumn { get { return Columns[3]; } }
+        internal DataGridViewColumn DateColumn => Columns[3];
 
-        internal DataGridViewColumn IdColumn { get { return Columns[4]; } }
+        internal DataGridViewColumn IdColumn => Columns[4];
 
         public void ShowAuthor(bool show)
         {
@@ -341,13 +341,7 @@ namespace GitUI.RevisionGridClasses
 
         [DefaultValue(true)]
         [Browsable(false)]
-        public bool RevisionGraphVisible
-        {
-            get
-            {
-                return GraphColumn.Visible;
-            }
-        }
+        public bool RevisionGraphVisible => GraphColumn.Visible;
 
         public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
         {
@@ -1314,10 +1308,7 @@ namespace GitUI.RevisionGridClasses
                 Id = aId;
             }
 
-            public bool IsActive
-            {
-                get { return (DataType & DataType.Active) == DataType.Active; }
-            }
+            public bool IsActive => (DataType & DataType.Active) == DataType.Active;
 
             public bool IsFiltered
             {
@@ -1335,10 +1326,7 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public bool IsSpecial
-            {
-                get { return (DataType & DataType.Special) == DataType.Special; }
-            }
+            public bool IsSpecial => (DataType & DataType.Special) == DataType.Special;
 
             public override string ToString()
             {

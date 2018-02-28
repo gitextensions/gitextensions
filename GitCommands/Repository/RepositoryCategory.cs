@@ -24,8 +24,8 @@ namespace GitCommands.Repository
 
         public BindingList<Repository> Repositories
         {
-            get { return _repositories ?? (_repositories = new BindingList<Repository>()); }
-            set { _repositories = value; }
+            get => _repositories ?? (_repositories = new BindingList<Repository>());
+            set => _repositories = value;
         }
 
         public string Description { get; set; }

@@ -22,20 +22,14 @@ namespace GitUI.CommandsDialogs
                 OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
 
-            protected override bool SupportsSortingCore
-            {
-                get { return true; }
-            }
+            protected override bool SupportsSortingCore => true;
 
             protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
             {
                 LostObjects.Sort(LostObjectsComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
             }
 
-            private List<LostObject> LostObjects
-            {
-                get { return (List<LostObject>)Items; }
-            }
+            private List<LostObject> LostObjects => (List<LostObject>)Items;
 
             private static class LostObjectsComparer
             {

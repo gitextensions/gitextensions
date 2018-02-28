@@ -74,10 +74,7 @@ namespace GitCommands
         public ConflictedFileData Local;
         public ConflictedFileData Remote;
 
-        public string Filename
-        {
-            get { return Local.Filename ?? Base.Filename ?? Remote.Filename; }
-        }
+        public string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
     }
 
     /// <summary>Provides manipulation with git module.
@@ -123,29 +120,11 @@ namespace GitCommands
         public string WorkingDirGitDir { get; private set; }
 
         /// <summary>Gets the path to the git application executable.</summary>
-        public string GitCommand
-        {
-            get
-            {
-                return AppSettings.GitCommand;
-            }
-        }
+        public string GitCommand => AppSettings.GitCommand;
 
-        public Version AppVersion
-        {
-            get
-            {
-                return AppSettings.AppVersion;
-            }
-        }
+        public Version AppVersion => AppSettings.AppVersion;
 
-        public string GravatarCacheDir
-        {
-            get
-            {
-                return AppSettings.GravatarCachePath;
-            }
-        }
+        public string GravatarCacheDir => AppSettings.GravatarCachePath;
 
         #endregion
 
@@ -270,15 +249,9 @@ namespace GitCommands
             }
         }
 
-        public ConfigFileSettings LocalConfigFile
-        {
-            get { return new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache); }
-        }
+        public ConfigFileSettings LocalConfigFile => new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache);
 
-        IConfigFileSettings IGitModule.LocalConfigFile
-        {
-            get { return LocalConfigFile; }
-        }
+        IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
 
         //encoding for files paths
         private static Encoding _systemEncoding;
@@ -338,8 +311,8 @@ namespace GitCommands
 
         public AppSettings.PullAction LastPullAction
         {
-            get { return AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None); }
-            set { AppSettings.SetEnum("LastPullAction_" + WorkingDir, value); }
+            get => AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None);
+            set => AppSettings.SetEnum("LastPullAction_" + WorkingDir, value);
         }
 
         public void LastPullActionToFormPullAction()

@@ -21,15 +21,9 @@ namespace GitUI.UserControls.RevisionGridClasses
             _setSelectedRevision = setSelectedRevision;
         }
 
-        public bool HasPreviousChild
-        {
-            get { return _childHistory.Count > 0; }
-        }
+        public bool HasPreviousChild => _childHistory.Count > 0;
 
-        public bool HasPreviousParent
-        {
-            get { return _parentHistory.Count > 0; }
-        }
+        public bool HasPreviousParent => _parentHistory.Count > 0;
 
         public void NavigateToPreviousParent (string current)
         {

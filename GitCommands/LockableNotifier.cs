@@ -58,8 +58,7 @@ namespace GitCommands
         /// <summary>
         /// true if raising notification is locked
         /// </summary>
-        public bool IsLocked { get { return lockCount != 0; } }
-
+        public bool IsLocked => lockCount != 0;
     }
 
     public class ActionNotifier : LockableNotifier

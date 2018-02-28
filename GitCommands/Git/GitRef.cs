@@ -66,24 +66,15 @@ namespace GitCommands
         /// </summary>
         public bool IsDereference { get; private set; }
 
-        public bool IsOther
-        {
-            get { return !IsHead && !IsRemote && !IsTag; }
-        }
+        public bool IsOther => !IsHead && !IsRemote && !IsTag;
 
-        public string LocalName
-        {
-            get { return IsRemote ? Name.Substring(Remote.Length + 1) : Name; }
-        }
+        public string LocalName => IsRemote ? Name.Substring(Remote.Length + 1) : Name;
 
         public string Remote { get; private set; }
 
         public string TrackingRemote
         {
-            get
-            {
-                return GetTrackingRemote(Module.LocalConfigFile);
-            }
+            get => GetTrackingRemote(Module.LocalConfigFile);
             set
             {
                 if (String.IsNullOrEmpty(value))
@@ -116,10 +107,7 @@ namespace GitCommands
 
         public string MergeWith
         {
-            get
-            {
-                return GetMergeWith(Module.LocalConfigFile);
-            }
+            get => GetMergeWith(Module.LocalConfigFile);
             set
             {
                 if (String.IsNullOrEmpty(value))

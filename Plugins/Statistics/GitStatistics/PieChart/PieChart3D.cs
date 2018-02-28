@@ -236,34 +236,22 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Gets the y-coordinate of the bounding rectangle top edge.
         /// </summary>
-        public float Top
-        {
-            get { return Y; }
-        }
+        public float Top => Y;
 
         /// <summary>
         ///   Gets the y-coordinate of the bounding rectangle bottom edge.
         /// </summary>
-        public float Bottom
-        {
-            get { return Y + Height; }
-        }
+        public float Bottom => Y + Height;
 
         /// <summary>
         ///   Gets the x-coordinate of the bounding rectangle left edge.
         /// </summary>
-        public float Left
-        {
-            get { return X; }
-        }
+        public float Left => X;
 
         /// <summary>
         ///   Gets the x-coordinate of the bounding rectangle right edge.
         /// </summary>
-        public float Right
-        {
-            get { return X + Width; }
-        }
+        public float Right => X + Width;
 
         /// <summary>
         ///   Gets or sets the x-coordinate of the upper-left corner of the 
@@ -338,10 +326,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Calculates the pie height.
         /// </summary>
-        protected float PieHeight
-        {
-            get { return Height/(1 + LargestDisplacement)*SliceRelativeHeight; }
-        }
+        protected float PieHeight => Height/(1 + LargestDisplacement)*SliceRelativeHeight;
 
         #region IDisposable Members
 

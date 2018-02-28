@@ -39,10 +39,7 @@ namespace GitCommands.Repository
             DirName = DirInfo?.FullName ?? "";
         }
 
-        public bool FullPath
-        {
-            get { return DirInfo == null; }
-        }
+        public bool FullPath => DirInfo == null;
 
         public override string ToString()
         {
