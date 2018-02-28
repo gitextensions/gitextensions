@@ -212,7 +212,18 @@ namespace GitUI.CommandsDialogs
         private string GetSelectedPatch(IList<GitRevision> revisions, GitItemStatus file)
         {
             string firstRevision = revisions.Count > 0 ? revisions[0].Guid : null;
-            string secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
+            string secondRevision = DiffFiles.SelectedItemParent;
+            if (secondRevision == DiffFiles.CombinedDiff.Text)
+            {
+                //We cannot show the diff directly, see ShowSelectedFileDiff() for how it should be done
+                //This is handled better in later revisions
+                return null;
+            }
+            if (secondRevision == null)
+            {
+                //In 2.51 SelectedItemParent is not always set
+                secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions.Count == 1 ? revisions[0].FirstParentGuid : null;
+            }
             return DiffText.GetSelectedPatch(firstRevision, secondRevision, file);
         }
 
