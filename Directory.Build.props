@@ -1,5 +1,13 @@
 <Project>
+
   <PropertyGroup>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+
 </Project>
