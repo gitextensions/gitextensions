@@ -10,6 +10,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using ResourceManager;
+using System.Threading.Tasks;
 
 namespace GitUI.CommandsDialogs
 {
@@ -172,52 +173,30 @@ namespace GitUI.CommandsDialogs
             return _revisionGrid.DescribeRevision(revision);
         }
 
-        private static int GetNextIdx(int curIdx, int maxIdx, bool searchBackward)
+        private bool GetNextPatchFile(bool searchBackward, bool loop, out int fileIndex, out Task loadFileContent)
         {
-            if (searchBackward)
+            fileIndex = -1;
+            loadFileContent = Task.FromResult<string>(null);
+            var revisions = _revisionGrid.GetSelectedRevisions();
+            if (revisions.Count == 0)
+                return false;
+
+            int idx = DiffFiles.SelectedIndex;
+            if (idx == -1)
+                return false;
+
+            fileIndex = DiffFiles.GetNextIndex(searchBackward, loop);
+            if (fileIndex == idx)
             {
-                if (curIdx == 0)
-                {
-                    curIdx = maxIdx;
-                }
-                else
-                {
-                    curIdx--;
-                }
+                if (!loop)
+                    return false;
             }
             else
             {
-                if (curIdx == maxIdx)
-                {
-                    curIdx = 0;
-                }
-                else
-                {
-                    curIdx++;
-                }
+                DiffFiles.SetSelectedIndex(fileIndex, notify: false);
             }
-            return curIdx;
-        }
-
-        private Tuple<int, string> GetNextPatchFile(bool searchBackward)
-        {
-            var revisions = _revisionGrid.GetSelectedRevisions();
-            if (revisions.Count == 0)
-                return null;
-            int idx = DiffFiles.SelectedIndex;
-            if (idx == -1)
-                return new Tuple<int, string>(idx, null);
-
-            idx = GetNextIdx(idx, DiffFiles.GitItemStatuses.Count() - 1, searchBackward);
-            DiffFiles.SetSelectedIndex(idx, notify: false);
-            return new Tuple<int, string>(idx, GetSelectedPatch(revisions, DiffFiles.SelectedItem));
-        }
-
-        private string GetSelectedPatch(IList<GitRevision> revisions, GitItemStatus file)
-        {
-            string firstRevision = revisions.Count > 0 ? revisions[0].Guid : null;
-            string secondRevision = revisions.Count == 2 ? revisions[1].Guid : revisions.Count == 1 ? revisions[0].FirstParentGuid : null;
-            return DiffText.GetSelectedPatch(firstRevision, secondRevision, file);
+            loadFileContent = ShowSelectedFileDiff();
+            return true;
         }
 
         private ContextMenuSelectionInfo GetSelectionInfo()
@@ -258,7 +237,7 @@ namespace GitUI.CommandsDialogs
             RefreshArtificial();
         }
 
-        private void ShowSelectedFileDiff()
+        private async Task ShowSelectedFileDiff()
         {
             var items = _revisionGrid.GetSelectedRevisions();
             if (DiffFiles.SelectedItem == null || items.Count() == 0)
@@ -286,13 +265,13 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
             }
-            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            await DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
 
-        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowSelectedFileDiff();
+            await ShowSelectedFileDiff();
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -325,9 +304,9 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch(String.Empty);
         }
 
-        private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private async void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            ShowSelectedFileDiff();
+            await ShowSelectedFileDiff();
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)

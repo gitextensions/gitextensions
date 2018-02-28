@@ -25,6 +25,7 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
+        private GetNextFileFnc _fileLoader;
         private readonly IFullPathResolver _fullPathResolver;
 
         public FileViewer()
@@ -444,9 +445,9 @@ namespace GitUI.Editor
             Reset(true, true, true);
         }
 
-        public void ViewPatch(Func<string> loadPatchText)
+        public Task ViewPatch(Func<string> loadPatchText)
         {
-            _async.Load(loadPatchText, ViewPatch);
+            return _async.Load(loadPatchText, ViewPatch);
         }
 
         public void ViewText(string fileName, string text)
@@ -1013,9 +1014,10 @@ namespace GitUI.Editor
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
 
-        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        public void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _internalFileViewer.SetFileLoader(fileLoader);
+            _fileLoader = fileLoader;
         }
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
