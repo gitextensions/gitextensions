@@ -74,7 +74,7 @@ namespace GitCommands
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
-            foreach (TKey key in from k in this.Keys orderby k select k)
+            foreach (TKey key in from k in Keys orderby k select k)
             {
                 writer.WriteStartElement("item");
 

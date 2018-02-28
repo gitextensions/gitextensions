@@ -6,16 +6,16 @@ namespace GitCommands
 {
     public abstract class LockableNotifier : ILockableNotifier
     {
-        private int lockCount = 0;
-        private bool notifyRequested = false;
+        private int _lockCount = 0;
+        private bool _notifyRequested = false;
 
         protected abstract void InternalNotify();
 
         private void CheckNotify(int aLockCount)
         {
-            if (aLockCount == 0 && notifyRequested)
+            if (aLockCount == 0 && _notifyRequested)
             {
-                notifyRequested = false;
+                _notifyRequested = false;
                 InternalNotify();
             }
         }
@@ -25,8 +25,8 @@ namespace GitCommands
         /// </summary>
         public void Notify()
         {
-            notifyRequested = true;
-            CheckNotify(lockCount);
+            _notifyRequested = true;
+            CheckNotify(_lockCount);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace GitCommands
         /// </summary>
         public void Lock()
         {
-            Interlocked.Increment(ref lockCount);
+            Interlocked.Increment(ref _lockCount);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace GitCommands
         /// <param name="requestNotify">true if Notify has to be called</param>
         public void UnLock(bool requestNotify)
         {
-            int newCount = Interlocked.Decrement(ref lockCount);
+            int newCount = Interlocked.Decrement(ref _lockCount);
 
             if (newCount < 0)
             {
@@ -53,7 +53,7 @@ namespace GitCommands
 
             if (requestNotify)
             {
-                notifyRequested = true;
+                _notifyRequested = true;
             }
 
             CheckNotify(newCount);
@@ -64,13 +64,13 @@ namespace GitCommands
         /// </summary>
         public bool IsLocked
         {
-            get { return lockCount != 0; }
+            get { return _lockCount != 0; }
         }
     }
 
     public class ActionNotifier : LockableNotifier
     {
-        private Action notifyAction;
+        private Action _notifyAction;
 
         public ActionNotifier(Action aNotifyAction)
         {
@@ -79,12 +79,12 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(aNotifyAction));
             }
 
-            notifyAction = aNotifyAction;
+            _notifyAction = aNotifyAction;
         }
 
         protected override void InternalNotify()
         {
-            notifyAction();
+            _notifyAction();
         }
     }
 }

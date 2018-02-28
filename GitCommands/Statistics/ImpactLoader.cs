@@ -40,9 +40,9 @@ namespace GitCommands.Statistics
 
             public DataPoint(int commits, int added, int deleted)
             {
-                this.Commits = commits;
-                this.AddedLines = added;
-                this.DeletedLines = deleted;
+                Commits = commits;
+                AddedLines = added;
+                DeletedLines = deleted;
             }
 
             public static DataPoint operator +(DataPoint d1, DataPoint d2)
@@ -63,11 +63,11 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly IGitModule module;
+        private readonly IGitModule _module;
 
         public ImpactLoader(IGitModule aModule)
         {
-            module = aModule;
+            _module = aModule;
         }
 
         public void Dispose()
@@ -110,14 +110,14 @@ namespace GitCommands.Statistics
                 TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private bool showSubmodules;
+        private bool _showSubmodules;
         public bool ShowSubmodules
         {
-            get { return showSubmodules; }
+            get { return _showSubmodules; }
             set
             {
                 Stop();
-                showSubmodules = value;
+                _showSubmodules = value;
             }
         }
 
@@ -128,14 +128,14 @@ namespace GitCommands.Statistics
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, module, token), token));
+            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, _module, token), token));
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = module.GetSubmodulesLocalPaths();
+                IList<string> submodules = _module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
-                    IGitModule submodule = module.GetSubmodule(submoduleName);
+                    IGitModule submodule = _module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                     {
                         tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));

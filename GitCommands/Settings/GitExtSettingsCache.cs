@@ -6,7 +6,7 @@ namespace GitCommands.Settings
 {
     public class GitExtSettingsCache : FileSettingsCache
     {
-        private readonly XmlSerializableDictionary<string, string> encodedNameMap = new XmlSerializableDictionary<string, string>();
+        private readonly XmlSerializableDictionary<string, string> _encodedNameMap = new XmlSerializableDictionary<string, string>();
 
         public GitExtSettingsCache(string aSettingsFilePath, bool autoSave = true)
             : base(aSettingsFilePath, autoSave)
@@ -37,7 +37,7 @@ namespace GitCommands.Settings
 
         protected override void ClearImpl()
         {
-            encodedNameMap.Clear();
+            _encodedNameMap.Clear();
         }
 
         protected override void WriteSettings(string fileName)
@@ -48,7 +48,7 @@ namespace GitCommands.Settings
                 xtw.WriteStartDocument();
                 xtw.WriteStartElement("dictionary");
 
-                encodedNameMap.WriteXml(xtw);
+                _encodedNameMap.WriteXml(xtw);
                 xtw.WriteEndElement();
             }
         }
@@ -63,7 +63,7 @@ namespace GitCommands.Settings
 
             using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))
             {
-                encodedNameMap.ReadXml(xr);
+                _encodedNameMap.ReadXml(xr);
             }
         }
 
@@ -71,17 +71,17 @@ namespace GitCommands.Settings
         {
             if (value == null)
             {
-                encodedNameMap.Remove(key);
+                _encodedNameMap.Remove(key);
             }
             else
             {
-                encodedNameMap[key] = value;
+                _encodedNameMap[key] = value;
             }
         }
 
         protected override string GetValueImpl(string key)
         {
-            encodedNameMap.TryGetValue(key, out var value);
+            _encodedNameMap.TryGetValue(key, out var value);
             return value;
         }
     }

@@ -102,14 +102,14 @@ namespace GitCommands.Settings
 
         public bool NoFastForwardMerge
         {
-            get { return this.GetBool("NoFastForwardMerge", false); }
-            set { this.SetBool("NoFastForwardMerge", value); }
+            get { return GetBool("NoFastForwardMerge", false); }
+            set { SetBool("NoFastForwardMerge", value); }
         }
 
         public string Dictionary
         {
-            get { return this.GetString("dictionary", "en-US"); }
-            set { this.SetString("dictionary", value); }
+            get { return GetString("dictionary", "en-US"); }
+            set { SetString("dictionary", value); }
         }
     }
 

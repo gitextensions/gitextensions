@@ -432,8 +432,8 @@ namespace PatchApply
 
     internal class Chunk
     {
-        private int startLine;
-        private List<SubChunk> subChunks = new List<SubChunk>();
+        private int _startLine;
+        private List<SubChunk> _subChunks = new List<SubChunk>();
         private SubChunk _currentSubChunk = null;
 
         public SubChunk CurrentSubChunk
@@ -443,7 +443,7 @@ namespace PatchApply
                 if (_currentSubChunk == null)
                 {
                     _currentSubChunk = new SubChunk();
-                    subChunks.Add(_currentSubChunk);
+                    _subChunks.Add(_currentSubChunk);
                 }
 
                 return _currentSubChunk;
@@ -485,7 +485,7 @@ namespace PatchApply
             header = header.SkipStr("-");
             header = header.TakeUntilStr(",");
 
-            return int.TryParse(header, out startLine);
+            return int.TryParse(header, out _startLine);
         }
 
         public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
@@ -561,7 +561,7 @@ namespace PatchApply
         public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
-            result.startLine = 0;
+            result._startLine = 0;
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
@@ -639,7 +639,7 @@ namespace PatchApply
             int addedCount = 0;
             int removedCount = 0;
 
-            foreach (SubChunk subChunk in subChunks)
+            foreach (SubChunk subChunk in _subChunks)
             {
                 string subDiff = subChunkToPatch(subChunk, ref addedCount, ref removedCount, ref wereSelectedLines);
                 diff = diff.Combine("\n", subDiff);
@@ -650,7 +650,7 @@ namespace PatchApply
                 return null;
             }
 
-            diff = "@@ -" + startLine + "," + removedCount + " +" + startLine + "," + addedCount + " @@".Combine("\n", diff);
+            diff = "@@ -" + _startLine + "," + removedCount + " +" + _startLine + "," + addedCount + " @@".Combine("\n", diff);
 
             return diff;
         }
