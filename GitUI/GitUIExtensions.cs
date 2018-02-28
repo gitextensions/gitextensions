@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
 using ResourceManager;
+using System.Threading.Tasks;
 
 namespace GitUI
 {
@@ -68,22 +69,22 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static void ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
+        public static Task ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 0)
-                return;
+                return Task.FromResult(string.Empty);
 
             var selectedRevision = revisions[0];
             string secondRevision = selectedRevision?.Guid;
             string firstRevision = revisions.Count >= 2 ? revisions[1].Guid : null;
             if (firstRevision == null && selectedRevision != null)
                 firstRevision = selectedRevision.FirstParentGuid;
-            ViewChanges(diffViewer, firstRevision, secondRevision, file, defaultText);
+            return ViewChanges(diffViewer, firstRevision, secondRevision, file, defaultText);
         }
 
-        public static void ViewChanges(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
+        public static Task ViewChanges(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
         {
-            diffViewer.ViewPatch(() =>
+            return diffViewer.ViewPatch(() =>
             {
                 string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
                 return selectedPatch ?? defaultText;
