@@ -59,6 +59,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\GitCommands.xml</DocumentationFile>
+    <NoWarn>1573;1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SmartFormat, Version=2.0.0.0, Culture=neutral, PublicKeyToken=568866805651201f, processorArchitecture=MSIL">
