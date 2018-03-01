@@ -69,7 +69,7 @@ namespace GitUI
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

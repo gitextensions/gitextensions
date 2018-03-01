@@ -314,7 +314,7 @@ namespace GitCommands
             get => GetBool("showresetallchanges", true);
             set => SetBool("showresetallchanges", value);
         }
-        
+
         public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
         public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
         public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");

@@ -87,7 +87,7 @@ namespace GitUI.AutoCompletion
         private static Dictionary<string, Regex> ParseRegexes()
         {
             var autoCompleteRegexes = ReadOrInitializeAutoCompleteRegexes();
-            
+
             var regexes = new Dictionary<string, Regex>();
 
             foreach (var line in autoCompleteRegexes)

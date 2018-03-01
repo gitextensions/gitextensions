@@ -82,25 +82,25 @@ namespace GitStatistics.PieChart
         protected Pen Pen;
 
         /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the end cut 
+        ///   <c>PointF</c> on the periphery corresponding to the end cut
         ///   side.
         /// </summary>
         protected PointF PointEnd;
 
         /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the end cut 
+        ///   <c>PointF</c> on the periphery corresponding to the end cut
         ///   side.
         /// </summary>
         protected PointF PointEndBelow;
 
         /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the start cut 
+        ///   <c>PointF</c> on the periphery corresponding to the start cut
         ///   side.
         /// </summary>
         protected PointF PointStart;
 
         /// <summary>
-        ///   <c>PointF</c> on the periphery corresponding to the start cut 
+        ///   <c>PointF</c> on the periphery corresponding to the start cut
         ///   side.
         /// </summary>
         protected PointF PointStartBelow;
@@ -111,23 +111,23 @@ namespace GitStatistics.PieChart
         protected Quadrilateral StartSide = Quadrilateral.Empty;
 
         /// <summary>
-        ///   Initializes a new instance of flat <c>PieSlice</c> class with given 
+        ///   Initializes a new instance of flat <c>PieSlice</c> class with given
         ///   bounds and visual style.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "widthBoundingRect">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "heightBoundingRect">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "startAngle">
@@ -148,23 +148,23 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes a new instance of <c>PieSlice</c> class with given 
+        ///   Initializes a new instance of <c>PieSlice</c> class with given
         ///   bounds and visual style.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "widthBoundingRect">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "heightBoundingRect">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -201,7 +201,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes a new instance of <c>PieSlice</c> class with given 
+        ///   Initializes a new instance of <c>PieSlice</c> class with given
         ///   bounds and visual style.
         /// </summary>
         /// <param name = "boundingRect">
@@ -234,23 +234,23 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes a new instance of <c>PieSlice</c> class with given 
+        ///   Initializes a new instance of <c>PieSlice</c> class with given
         ///   bounds and visual style.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "widthBoundingRect">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "heightBoundingRect">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -284,7 +284,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes a new instance of <c>PieSlice</c> class with given 
+        ///   Initializes a new instance of <c>PieSlice</c> class with given
         ///   bounds and visual style.
         /// </summary>
         /// <param name = "boundingRect">
@@ -422,19 +422,19 @@ namespace GitStatistics.PieChart
         ///   Reajusts the pie slice to fit new bounding rectangle provided.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "widthBoundingRect">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "heightBoundingRect">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -698,7 +698,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Creates a brush for start and end sides of the pie slice for 
+        ///   Creates a brush for start and end sides of the pie slice for
         ///   gradual  shade.
         /// </summary>
         /// <param name = "color">
@@ -721,7 +721,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Creates a brush for outer periphery of the pie slice used for 
+        ///   Creates a brush for outer periphery of the pie slice used for
         ///   gradual shadow.
         /// </summary>
         /// <param name = "color">
@@ -789,7 +789,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Transforms actual angle to angle used for rendering. They are 
+        ///   Transforms actual angle to angle used for rendering. They are
         ///   different because of perspective.
         /// </summary>
         /// <param name = "angle">
@@ -824,7 +824,7 @@ namespace GitStatistics.PieChart
         ///   Vertical semi-axis.
         /// </param>
         /// <param name = "angleDegrees">
-        ///   Angle (in degrees) for which corresponding periphery point has to 
+        ///   Angle (in degrees) for which corresponding periphery point has to
         ///   be obtained.
         /// </param>
         /// <returns>
@@ -839,23 +839,23 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes pie bounding rectangle, pie height, corners 
+        ///   Initializes pie bounding rectangle, pie height, corners
         ///   coordinates and brushes used for rendering.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the pie slice.
         /// </param>
         /// <param name = "widthBoundingRect">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "heightBoundingRect">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the pie slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -918,7 +918,7 @@ namespace GitStatistics.PieChart
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
             var peripherySurfaceBounds = new ArrayList();
-            // outer periphery side is visible only when startAngle or endAngle 
+            // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees
             if (!(SweepAngle == 0 || (StartAngle >= 180 && StartAngle + SweepAngle <= 360)))
             {
@@ -938,7 +938,7 @@ namespace GitStatistics.PieChart
                     }
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
                 }
-                // if lateral surface is visible from the right edge 
+                // if lateral surface is visible from the right edge
                 if (StartAngle + SweepAngle > 360)
                 {
                     const float fi1 = 0;
@@ -958,7 +958,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Creates <c>GraphicsPath</c> for cylinder surface section. This 
+        ///   Creates <c>GraphicsPath</c> for cylinder surface section. This
         ///   path consists of two arcs and two vertical lines.
         /// </summary>
         /// <param name = "startAngle">
@@ -989,7 +989,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Checks if given point is contained within upper and lower pie 
+        ///   Checks if given point is contained within upper and lower pie
         ///   slice surfaces or within the outer slice brink.
         /// </summary>
         /// <param name = "point">
@@ -1035,7 +1035,7 @@ namespace GitStatistics.PieChart
         ///   y-coordinate of the rectangle that bounds the ellipse from which
         ///   slice is cut.
         /// </param>
-        /// <param name = "widthBoundingRectangle"> 
+        /// <param name = "widthBoundingRectangle">
         ///   Width of the rectangle that bounds the ellipse from which
         ///   slice is cut.
         /// </param>

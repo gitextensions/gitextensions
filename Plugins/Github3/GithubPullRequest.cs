@@ -26,8 +26,8 @@ namespace Github3
 
 
         private string _diffData;
-        public string DiffData 
-        { 
+        public string DiffData
+        {
             get
             {
                 if (_diffData == null)

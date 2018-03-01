@@ -442,12 +442,12 @@ namespace GitUI.CommandsDialogs
                     // Check if there is a base file. If not, ask user to fall back to 2-way merge.
                     // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
-                    // filenames are quoted, this takes a little extra effort. We need to remove these 
+                    // filenames are quoted, this takes a little extra effort. We need to remove these
                     // quotes also. For tortoise and araxis a little bit more magic is needed.
                     if (item.Base.Filename == null)
                     {
                         var text = string.Format(noBaseRevision.Text, item.Filename);
-                        DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text, 
+                        DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
                             MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
                             Use2WayMerge(ref arguments);
@@ -897,7 +897,7 @@ namespace GitUI.CommandsDialogs
                     // do nothing, choices are limited commands already
                     return;
                 }
-                
+
                 System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
                 int LastRow = hti.RowIndex;

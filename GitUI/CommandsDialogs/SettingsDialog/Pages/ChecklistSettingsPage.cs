@@ -293,7 +293,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 catch (System.ComponentModel.Win32Exception)
                 {
                     // User cancel operation, continue;
-                }               
+                }
             }
             else
             {

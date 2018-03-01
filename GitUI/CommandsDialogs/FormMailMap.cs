@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Save changes to .mailmap?");
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
-        
+
 
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;

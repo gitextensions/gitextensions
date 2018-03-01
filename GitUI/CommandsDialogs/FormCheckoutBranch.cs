@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (LocalBranch.Checked)
                     {
-                        branchNames = GetLocalBranches().Select(b => b.Name);                        
+                        branchNames = GetLocalBranches().Select(b => b.Name);
                     }
                     else
                     {

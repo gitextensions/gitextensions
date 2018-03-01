@@ -7,7 +7,7 @@ namespace GitUI.UserManual
     public class SingleHtmlUserManual : IProvideUserManual
     {
         private static string _Location;
-        public static string Location 
+        public static string Location
         {
             get
             {

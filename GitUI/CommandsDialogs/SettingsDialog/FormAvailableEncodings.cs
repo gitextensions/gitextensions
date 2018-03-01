@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (encoding != null)
                 encodingType = encoding.GetType();
             // If selected encoding and encoding not default list
-            ToRight.Enabled = encoding != null && 
+            ToRight.Enabled = encoding != null &&
                 !(
                     encodingType == typeof(ASCIIEncoding) ||
                     encodingType == typeof(UnicodeEncoding) ||

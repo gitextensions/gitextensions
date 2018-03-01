@@ -3,10 +3,10 @@ using System;
 namespace NetSpell.SpellChecker
 {
     /// <summary>
-    ///     Class sent to the event handler when the DoubleWord or 
+    ///     Class sent to the event handler when the DoubleWord or
     ///     MisspelledWord event occurs
     /// </summary>
-    public class SpellingEventArgs : EventArgs 
+    public class SpellingEventArgs : EventArgs
     {
         /// <summary>
         ///     Constructor used to pass in properties

@@ -218,7 +218,7 @@ namespace GitUI.CommandsDialogs
         private void MergePatch_Load(object sender, EventArgs e)
         {
             PatchFile.Select();
-            
+
             Text = _applyPatchMsgBox.Text + " (" + Module.WorkingDir + ")";
             IgnoreWhitespace.Checked = AppSettings.ApplyPatchIgnoreWhitespace;
         }

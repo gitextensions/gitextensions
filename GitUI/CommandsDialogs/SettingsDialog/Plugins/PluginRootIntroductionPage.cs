@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         }
 
         protected override void SettingsToPage()
-        {            
+        {
         }
 
         protected override void PageToSettings()

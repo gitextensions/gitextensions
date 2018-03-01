@@ -27,7 +27,7 @@ namespace GitUI.Editor.Diff
                 if (!_visible)
                 {
                     _lastSize = new Size(0, 0);
-                } 
+                }
                 else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);

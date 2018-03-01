@@ -18,7 +18,7 @@ namespace GitStatistics.PieChart
                     (byte)PathPointType.Line,
                     (byte)PathPointType.Line,
                     (byte)PathPointType.Line
-                    // | (byte)PathPointType.CloseSubpath 
+                    // | (byte)PathPointType.CloseSubpath
                 };
 
         public static readonly Quadrilateral Empty = new Quadrilateral();
@@ -71,7 +71,7 @@ namespace GitStatistics.PieChart
         ///   <c>Pen</c> used to draw outline.
         /// </param>
         /// <param name = "brush">
-        ///   <c>Brush</c> used to fill the inside. 
+        ///   <c>Brush</c> used to fill the inside.
         /// </param>
         public void Draw(Graphics graphics, Pen pen, Brush brush)
         {
@@ -80,7 +80,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Checks if the given <c>PointF</c> is contained within the 
+        ///   Checks if the given <c>PointF</c> is contained within the
         ///   quadrilateral.
         /// </summary>
         /// <param name = "point">
@@ -124,7 +124,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Checks if the line coming out of the <c>point</c> downwards 
+        ///   Checks if the line coming out of the <c>point</c> downwards
         ///   intersects with a line through <c>point1</c> and <c>point2</c>.
         /// </summary>
         /// <param name = "point">

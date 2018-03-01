@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     if (foreignHostedRemotes.Length == 0)
                     {
-                        MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine + 
+                        MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
                             _strPleaseCloneGitHubRep.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Close();
                         return;
@@ -187,7 +187,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine + 
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
                     ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

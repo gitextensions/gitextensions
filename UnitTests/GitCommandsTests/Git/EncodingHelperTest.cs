@@ -166,7 +166,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(new UTF8Encoding(), enc);
         }
 
-        // Insert a Test here which checks whether EncodingHelper.DecodeString 
+        // Insert a Test here which checks whether EncodingHelper.DecodeString
         // detects correct encoding (StreamReader.CurrentEncoding).
         // Couldn't find a test so far where StreamReader.CurrentEncoding is different than given Encoding
 

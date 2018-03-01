@@ -10,7 +10,7 @@ namespace GitUI.UserControls
     public enum ListViewGroupState : uint
     {
         /// <summary>
-        /// Groups are expanded, the group name is displayed, 
+        /// Groups are expanded, the group name is displayed,
         /// and all items in the group are displayed.
         /// </summary>
         Normal = 0,
@@ -279,7 +279,7 @@ namespace GitUI.UserControls
 
         public void SetGroupState(ListViewGroupState state)
         {
-            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward 
+            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward
                 // allows collapse of ListViewGroups
                 return;
             foreach (ListViewGroup lvg in Groups)

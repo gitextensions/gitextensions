@@ -14,7 +14,7 @@ namespace GitUITests.UserManual
         {
             var sut = new SingleHtmlUserManual(anchor);
 
-            var expected = SingleHtmlUserManual.Location + "/index.html".Combine("#", anchor); 
+            var expected = SingleHtmlUserManual.Location + "/index.html".Combine("#", anchor);
 
             sut.GetUrl().Should().Be(expected);
         }

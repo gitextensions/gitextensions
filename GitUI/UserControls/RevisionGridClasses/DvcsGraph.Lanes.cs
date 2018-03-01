@@ -158,8 +158,8 @@ namespace GitUI.RevisionGridClasses
 
                 #endregion
 
-                // Check for multiple junctions with this node at the top. Remove the 
-                // node from that junction as well. This will happen when there is a branch 
+                // Check for multiple junctions with this node at the top. Remove the
+                // node from that junction as well. This will happen when there is a branch
 
                 #region Check for branches
 
@@ -180,7 +180,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Remove the item from the lane, since it is being drawn now.
-                    // We need to draw the graph line for this lane. If there are no items 
+                    // We need to draw the graph line for this lane. If there are no items
                     // left in the lane we don't draw it.
                     int intoLane = AdvanceLane(curLane);
                     if (intoLane < curLane)
@@ -248,7 +248,7 @@ namespace GitUI.RevisionGridClasses
                 //            if (currentRow.LaneInfoCount(laneInfo.ConnectLane) == 0)
                 //            {
                 //                // Remove the row laneInfo.ConnectLane and insert
-                //                // it at currentRow.NodeLane+1. 
+                //                // it at currentRow.NodeLane+1.
                 //                // Then start over searching for others if i != mergeFromCount-1?
                 //                int adjacentLane = currentRow.NodeLane + 1;
                 //                if (adjacentLane >= laneNodes.Count) Debugger.Break();

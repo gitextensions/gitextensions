@@ -36,7 +36,7 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return 
+        /// <param name="defaultBitmap">The default image to return
         /// if the requested image does not exist in the cache.</param>
         Image GetImage(string imageFileName, Bitmap defaultBitmap);
 
@@ -44,7 +44,7 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return 
+        /// <param name="defaultBitmap">The default image to return
         /// if the requested image does not exist in the cache.</param>
         Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap);
     }
@@ -168,7 +168,7 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return 
+        /// <param name="defaultBitmap">The default image to return
         /// if the requested image does not exist in the cache.</param>
         public Image GetImage(string imageFileName, Bitmap defaultBitmap)
         {
@@ -199,7 +199,7 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return 
+        /// <param name="defaultBitmap">The default image to return
         /// if the requested image does not exist in the cache.</param>
         public async Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap)
         {

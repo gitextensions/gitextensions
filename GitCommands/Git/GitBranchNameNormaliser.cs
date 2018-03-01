@@ -116,7 +116,7 @@ namespace GitCommands.Git
 
 
         /// <summary>
-        /// Branch name can include slash '/' for hierarchical (directory) grouping, 
+        /// Branch name can include slash '/' for hierarchical (directory) grouping,
         /// but no slash-separated component can begin with a dot '.' or end with the sequence '.lock'.
         /// </summary>
         /// <param name="branchName"></param>

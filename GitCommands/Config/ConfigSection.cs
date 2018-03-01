@@ -11,7 +11,7 @@ namespace GitCommands.Config
     ///   [section "subsection"] (subsection is case sensitive)
     ///   or
     ///   [section.subsection] (subsection is case insensitive)
-    ///   
+    ///
     ///   Case insensitive sections are deprecated. Dot separated subsections are treated
     ///   as case insensitive only when loaded from config file. Dot separated subsections
     ///   added from code, are treated as case sensitive.

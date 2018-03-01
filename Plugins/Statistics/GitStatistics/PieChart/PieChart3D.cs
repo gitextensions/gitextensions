@@ -17,7 +17,7 @@ namespace GitStatistics.PieChart
         protected float InitialAngle;
 
         /// <summary>
-        ///   Array of ordered pie slices constituting the chart, starting from 
+        ///   Array of ordered pie slices constituting the chart, starting from
         ///   270 degrees axis.
         /// </summary>
         protected PieSlice[] PieSlices;
@@ -75,15 +75,15 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes an instance of a flat <c>PieChart3D</c> with 
+        ///   Initializes an instance of a flat <c>PieChart3D</c> with
         ///   specified bounds, values to chart and relative thickness.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that 
+        ///   x-coordinate of the upper-left corner of the rectangle that
         ///   bounds the chart.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that 
+        ///   y-coordinate of the upper-left corner of the rectangle that
         ///   bounds the chart.
         /// </param>
         /// <param name = "widthBoundingRect">
@@ -106,11 +106,11 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes an instance of <c>PieChart3D</c> with specified 
+        ///   Initializes an instance of <c>PieChart3D</c> with specified
         ///   bounds, values to chart and relative thickness.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle bounding 
+        ///   x-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
         /// <param name = "yBoundingRect">
@@ -138,7 +138,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes a new instance of <c>PieChart3D</c> with given bounds, 
+        ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
         ///   array of values and pie slice thickness.
         /// </summary>
         /// <param name = "boundingRectangle">
@@ -160,7 +160,7 @@ namespace GitStatistics.PieChart
         ///   array of values and relative pie slice height.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle bounding 
+        ///   x-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
         /// <param name = "yBoundingRect">
@@ -254,13 +254,13 @@ namespace GitStatistics.PieChart
         public float Right => X + Width;
 
         /// <summary>
-        ///   Gets or sets the x-coordinate of the upper-left corner of the 
+        ///   Gets or sets the x-coordinate of the upper-left corner of the
         ///   bounding rectangle.
         /// </summary>
         public float X { get; set; }
 
         /// <summary>
-        ///   Gets or sets the y-coordinate of the upper-left corner of the 
+        ///   Gets or sets the y-coordinate of the upper-left corner of the
         ///   bounding rectangle.
         /// </summary>
         public float Y { get; set; }
@@ -271,7 +271,7 @@ namespace GitStatistics.PieChart
         public ShadowStyle ShadowStyle { protected get; set; }
 
         /// <summary>
-        ///   Sets the flag that controls if chart is fit to bounding rectangle 
+        ///   Sets the flag that controls if chart is fit to bounding rectangle
         ///   exactly.
         /// </summary>
         public bool FitToBoundingRectangle { protected get; set; }
@@ -430,7 +430,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Searches the chart to find the index of the pie slice which 
+        ///   Searches the chart to find the index of the pie slice which
         ///   contains point given. Search order goes in the direction opposite
         ///   to drawing order.
         /// </summary>
@@ -486,7 +486,7 @@ namespace GitStatistics.PieChart
             if (indexFound < 0)
             {
                 var foremostPieIndex = GetForemostPieSlice(pieSlices);
-                // check for start sides from the foremost slice to the left 
+                // check for start sides from the foremost slice to the left
                 // side
                 var i = foremostPieIndex;
                 while (i < pieSlices.Length)
@@ -603,12 +603,12 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Initializes pies.
         /// </summary>
-        /// Creates a list of pies, starting with the pie that is crossing the 
-        /// 270 degrees boundary, i.e. "backmost" pie that always has to be 
+        /// Creates a list of pies, starting with the pie that is crossing the
+        /// 270 degrees boundary, i.e. "backmost" pie that always has to be
         /// drawn first to ensure correct surface overlapping.
         protected virtual void InitializePieSlices()
         {
-            // calculates the sum of values required to evaluate sweep angles 
+            // calculates the sum of values required to evaluate sweep angles
             // for individual pies
             double sum = 0;
             foreach (var itemValue in Values)
@@ -687,19 +687,19 @@ namespace GitStatistics.PieChart
         ///   Creates a <c>PieSlice</c> object.
         /// </summary>
         /// <param name = "boundingRectLeft">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectTop">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectWidth">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "boundingRectHeight">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -739,19 +739,19 @@ namespace GitStatistics.PieChart
         ///   Creates highlighted <c>PieSlice</c> object.
         /// </summary>
         /// <param name = "boundingRectLeft">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectTop">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectWidth">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "boundingRectHeight">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -823,7 +823,7 @@ namespace GitStatistics.PieChart
         {
             var pieSlices = new ArrayList(PieSlices);
             // if the first slice spreads across 180 and 360 degrees boundaries it
-            // will appear on both left and right edge so its periphery has to be 
+            // will appear on both left and right edge so its periphery has to be
             // drawn twice
             var splitSlices = PieSlices[0].Split(270F);
             pieSlices[0] = splitSlices[0];
@@ -884,7 +884,7 @@ namespace GitStatistics.PieChart
                     --decrementIndex;
                 }
             }
-            // for the foremost slice only periphery has to be drawn 
+            // for the foremost slice only periphery has to be drawn
             ((PieSlice)pieSlices[incrementIndex]).DrawVisiblePeriphery(graphics);
         }
 
@@ -903,14 +903,14 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Helper function used in assertions. Checks the validity of 
+        ///   Helper function used in assertions. Checks the validity of
         ///   slice displacements.
         /// </summary>
         /// <param name = "displacements">
         ///   Array of displacements to check.
         /// </param>
         /// <returns>
-        ///   <c>true</c> if all displacements have a valid value; otherwise 
+        ///   <c>true</c> if all displacements have a valid value; otherwise
         ///   <c>false</c>.
         /// </returns>
         private static bool AreDisplacementsValid(IEnumerable<float> displacements)
@@ -924,14 +924,14 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Helper function used in assertions. Checks the validity of 
+        ///   Helper function used in assertions. Checks the validity of
         ///   a slice displacement.
         /// </summary>
         /// <param name = "value">
         ///   Displacement value to check.
         /// </param>
         /// <returns>
-        ///   <c>true</c> if displacement has a valid value; otherwise 
+        ///   <c>true</c> if displacement has a valid value; otherwise
         ///   <c>false</c>.
         /// </returns>
         private static bool IsDisplacementValid(float value)

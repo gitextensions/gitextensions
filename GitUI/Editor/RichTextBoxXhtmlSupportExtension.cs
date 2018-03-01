@@ -181,7 +181,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         [Flags]
         public enum PFM : uint
         {
-            // PARAFORMAT mask values 
+            // PARAFORMAT mask values
             STARTINDENT = 0x00000001,
             RIGHTINDENT = 0x00000002,
             OFFSET = 0x00000004,
@@ -190,34 +190,34 @@ namespace GitUI.Editor.RichTextBoxExtension
             NUMBERING = 0x00000020,
             OFFSETINDENT = 0x80000000,
 
-            // PARAFORMAT 2.0 masks and effects 
+            // PARAFORMAT 2.0 masks and effects
             SPACEBEFORE = 0x00000040,
             SPACEAFTER = 0x00000080,
             LINESPACING = 0x00000100,
             STYLE = 0x00000400,
-            BORDER = 0x00000800,    // (*)  
-            SHADING = 0x00001000,   // (*)  
-            NUMBERINGSTYLE = 0x00002000,    // RE 3.0   
-            NUMBERINGTAB = 0x00004000,  // RE 3.0   
-            NUMBERINGSTART = 0x00008000,    // RE 3.0   
+            BORDER = 0x00000800,    // (*)
+            SHADING = 0x00001000,   // (*)
+            NUMBERINGSTYLE = 0x00002000,    // RE 3.0
+            NUMBERINGTAB = 0x00004000,  // RE 3.0
+            NUMBERINGSTART = 0x00008000,    // RE 3.0
 
             RTLPARA = 0x00010000,
-            KEEP = 0x00020000,  // (*)  
-            KEEPNEXT = 0x00040000,  // (*)  
-            PAGEBREAKBEFORE = 0x00080000,   // (*)  
-            NOLINENUMBER = 0x00100000,  // (*)  
-            NOWIDOWCONTROL = 0x00200000,    // (*)  
-            DONOTHYPHEN = 0x00400000,   // (*)  
-            SIDEBYSIDE = 0x00800000,    // (*)  
-            TABLE = 0x40000000, // RE 3.0 
-            TEXTWRAPPINGBREAK = 0x20000000, // RE 3.0 
-            TABLEROWDELIMITER = 0x10000000, // RE 4.0 
+            KEEP = 0x00020000,  // (*)
+            KEEPNEXT = 0x00040000,  // (*)
+            PAGEBREAKBEFORE = 0x00080000,   // (*)
+            NOLINENUMBER = 0x00100000,  // (*)
+            NOWIDOWCONTROL = 0x00200000,    // (*)
+            DONOTHYPHEN = 0x00400000,   // (*)
+            SIDEBYSIDE = 0x00800000,    // (*)
+            TABLE = 0x40000000, // RE 3.0
+            TEXTWRAPPINGBREAK = 0x20000000, // RE 3.0
+            TABLEROWDELIMITER = 0x10000000, // RE 4.0
 
             // The following three properties are read only
-            COLLAPSED = 0x01000000, // RE 3.0 
-            OUTLINELEVEL = 0x02000000,  // RE 3.0 
-            BOX = 0x04000000,   // RE 3.0 
-            RESERVED2 = 0x08000000 // RE 4.0 
+            COLLAPSED = 0x01000000, // RE 3.0
+            OUTLINELEVEL = 0x02000000,  // RE 3.0
+            BOX = 0x04000000,   // RE 3.0
+            RESERVED2 = 0x08000000 // RE 4.0
         }
 
         // PARAFORMAT numbering options
@@ -784,7 +784,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                     fontSet = strFont != "";
 
-                    // font size should be translate to 
+                    // font size should be translate to
                     // html size (Approximately)
                     int fsize = yHeight / (20 * 5);
 
@@ -912,7 +912,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                         bnumbering = ctformatStates.nctNone;
                 }
 
-                // bold 
+                // bold
                 UpdateState((cf.dwEffects & CFE.BOLD) == CFE.BOLD, ref bold);
                 AddTag(pos, "b", colFormat, ref bold);
 

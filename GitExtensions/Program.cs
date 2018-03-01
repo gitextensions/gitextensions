@@ -79,7 +79,7 @@ namespace GitExtensions
             try
             {
                 if (!(args.Length >= 2 && args[1].Equals("uninstall"))
-                    && (AppSettings.CheckSettings 
+                    && (AppSettings.CheckSettings
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
                 {

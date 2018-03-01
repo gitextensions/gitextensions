@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        public GitRevision Revision { get; set; } 
+        public GitRevision Revision { get; set; }
 
         private void Form_Load(object sender, EventArgs e)
         {
@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs
         {
             AutoCommit.Checked = AppSettings.CommitAutomaticallyAfterCherryPick;
             checkAddReference.Checked = AppSettings.AddCommitReferenceToCherryPick;
-        } 
+        }
 
         private void OnRevisionChanged()
         {
@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
         {
             List<string> argumentsList = new List<string>();
             bool canExecute = true;
-            
+
             if (isMerge)
             {
                 if (ParentsList.SelectedItems.Count == 0)

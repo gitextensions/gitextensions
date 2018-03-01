@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         public virtual void SetGlobalSettings()
-        {        
+        {
         }
 
         protected override bool AreEffectiveSettings => true;

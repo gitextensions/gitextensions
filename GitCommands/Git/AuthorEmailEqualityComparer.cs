@@ -18,7 +18,7 @@ namespace GitCommands.Git
         public int GetHashCode(GitRevision revision)
         {
             return GetHashCode(revision.AuthorEmail);
-        } 
+        }
 
         public bool Equals(string firstAuthorEmail, string secondAuthorEmail)
         {

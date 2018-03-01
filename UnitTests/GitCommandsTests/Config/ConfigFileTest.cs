@@ -13,7 +13,7 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace GitCommandsTests.Config
 {
     /// <summary>
-    /// Tests for configfile class. 
+    /// Tests for configfile class.
     /// The configfile class should respond the same as "git config".
     /// Since .gitconfig is often hidden, also make sure this is tested.
     /// </summary>

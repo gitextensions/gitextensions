@@ -7,9 +7,9 @@ using System.Reflection;
 /// </summary>
 internal static class TraceWriter
 {
-    
+
     public static TraceSwitch Switch = new TraceSwitch(Assembly.GetAssembly(typeof(TraceWriter)).GetName().Name, "Trace Helper Switch");
-    
+
     public static void TraceError(string format, params object[] args)
     {
         if (Switch.TraceError)
@@ -19,7 +19,7 @@ internal static class TraceWriter
     public static void TraceError(string value)
     {
         if (Switch.TraceError)
-            Trace.WriteLine(value, GetCallingMethod(new StackTrace(1)));        
+            Trace.WriteLine(value, GetCallingMethod(new StackTrace(1)));
     }
 
     public static void TraceInfo(string format, params object[] args)
@@ -31,7 +31,7 @@ internal static class TraceWriter
     public static void TraceInfo(string value)
     {
         if (Switch.TraceInfo)
-            Trace.WriteLine(value, GetCallingMethod(new StackTrace(1)));        
+            Trace.WriteLine(value, GetCallingMethod(new StackTrace(1)));
     }
 
     public static void TraceWarning(string format, params object[] args)

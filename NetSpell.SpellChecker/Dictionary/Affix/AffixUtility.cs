@@ -29,14 +29,14 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 if (word.Length >= entry.ConditionCount)
                 {
                     int passCount = 0;
-                    for (int i = 0;  i < entry.ConditionCount; i++) 
+                    for (int i = 0;  i < entry.ConditionCount; i++)
                     {
                         int charCode = word[i];
                         if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
                         {
                             passCount++;
                         }
-                        else 
+                        else
                         {
                             break;
                         }
@@ -76,14 +76,14 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 if (word.Length >= entry.ConditionCount)
                 {
                     int passCount = 0;
-                    for (int i = 0;  i < entry.ConditionCount; i++) 
+                    for (int i = 0;  i < entry.ConditionCount; i++)
                     {
                         int charCode = word[word.Length - (entry.ConditionCount - i)];
                         if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
                         {
                             passCount++;
                         }
-                        else 
+                        else
                         {
                             break;
                         }
@@ -122,7 +122,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
             }
 
             // if no condition just return
-            if (conditionText == ".") 
+            if (conditionText == ".")
             {
                 entry.ConditionCount = 0;
                 return;
@@ -132,7 +132,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
             bool group = false;  /* group indicator */
             bool end = false;   /* end condition indicator */
             int num = 0;    /* number of conditions */
-            
+
             char[] memberChars = new char[200];
             int numMember = 0;   /* number of member in group */
 
@@ -170,21 +170,21 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                         if (neg)
                         {
                             // turn all chars on
-                            for (int j = 0; j < entry.Condition.Length; j++) 
+                            for (int j = 0; j < entry.Condition.Length; j++)
                             {
                                 entry.Condition[j] = entry.Condition[j] | (1 << num);
                             }
                             // turn off chars in member group
-                            for (int j = 0; j < numMember; j++) 
+                            for (int j = 0; j < numMember; j++)
                             {
                                 int charCode = memberChars[j];
                                 entry.Condition[charCode] = entry.Condition[charCode] & ~(1 << num);
                             }
                         }
-                        else 
+                        else
                         {
                             // turn on chars in member group
-                            for (int j = 0; j < numMember; j++) 
+                            for (int j = 0; j < numMember; j++)
                             {
                                 int charCode = memberChars[j];
                                 entry.Condition[charCode] = entry.Condition[charCode] | (1 << num);
@@ -199,12 +199,12 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                         if (cond == '.')
                         {
                             // wild card character, turn all chars on
-                            for (int j = 0; j < entry.Condition.Length; j++) 
+                            for (int j = 0; j < entry.Condition.Length; j++)
                             {
                                 entry.Condition[j] = entry.Condition[j] | (1 << num);
                             }
                         }
-                        else 
+                        else
                         {
                             // turn on char
                             int charCode = cond;
@@ -245,8 +245,8 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
         {
 
             int tempLength = word.Length - entry.AddCharacters.Length;
-            if ((tempLength > 0)  
-                && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount) 
+            if ((tempLength > 0)
+                && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
                 && (word.StartsWith(entry.AddCharacters)))
             {
                 // word with out affix
@@ -255,7 +255,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 tempWord = entry.StripCharacters + tempWord;
                 // check that this is valid
                 int passCount = 0;
-                for (int i = 0;  i < entry.ConditionCount; i++) 
+                for (int i = 0;  i < entry.ConditionCount; i++)
                 {
                     int charCode = tempWord[i];
                     if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
@@ -267,7 +267,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 {
                     return tempWord;
                 }
-                
+
             }
             return word;
         }
@@ -293,7 +293,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
         public static string RemoveSuffix(string word, AffixEntry entry)
         {
             int tempLength = word.Length - entry.AddCharacters.Length;
-            if ((tempLength > 0)  
+            if ((tempLength > 0)
                 && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
                 && (word.EndsWith(entry.AddCharacters)))
             {
@@ -303,7 +303,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 tempWord += entry.StripCharacters;
                 // check that this is valid
                 int passCount = 0;
-                for (int i = 0;  i < entry.ConditionCount; i++) 
+                for (int i = 0;  i < entry.ConditionCount; i++)
                 {
                     int charCode = tempWord[tempWord.Length - (entry.ConditionCount - i)];
                     if ((entry.Condition[charCode] & (1 << i)) == (1 << i))

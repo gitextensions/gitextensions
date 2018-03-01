@@ -41,7 +41,7 @@ namespace GitCommands
 
         protected abstract void SaveImpl();
         protected abstract void LoadImpl();
-        protected abstract void SetValueImpl(string key, string value);        
+        protected abstract void SetValueImpl(string key, string value);
         protected abstract string GetValueImpl(string key);
         protected abstract bool NeedRefresh();
         protected abstract void ClearImpl();
@@ -93,7 +93,7 @@ namespace GitCommands
         }
 
         protected virtual void SettingsChanged()
-        { 
+        {
         }
 
         private void SetValue(string name, string value)

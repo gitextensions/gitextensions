@@ -98,7 +98,7 @@ namespace GitUIPluginInterfaces
 
         public object this[ISettingsSource settings]
         {
-            get 
+            get
             {
                 return settings.GetValue(Name, null, s =>
                     {
@@ -106,7 +106,7 @@ namespace GitUIPluginInterfaces
                     });
             }
 
-            set 
+            set
             {
                 settings.SetValue(Name, value, i => { return ConvertToString(i); });
             }
@@ -122,7 +122,7 @@ namespace GitUIPluginInterfaces
             else
             {
                 return (T)settingVal;
-            }            
+            }
         }
 
     }

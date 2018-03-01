@@ -6,7 +6,7 @@ namespace GitCommands
     public static class FileInfoExtensions
     {
         /// <summary>
-        ///   Remove all attributes that could cause the file to be read-only 
+        ///   Remove all attributes that could cause the file to be read-only
         ///   and restores them later
         /// </summary>
         public static void MakeFileTemporaryWritable(string fileName, Action<string> writableAction)

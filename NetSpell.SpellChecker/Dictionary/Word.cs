@@ -154,7 +154,7 @@ namespace NetSpell.SpellChecker.Dictionary
 
 
         /// <summary>
-        ///     Used for sorting suggestions by its edit distance for 
+        ///     Used for sorting suggestions by its edit distance for
         ///     the misspelled word
         /// </summary>
         internal int EditDistance { get; set; }

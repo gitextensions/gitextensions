@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                UICommands.StashDrop(this, stashName); 
+                UICommands.StashDrop(this, stashName);
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }

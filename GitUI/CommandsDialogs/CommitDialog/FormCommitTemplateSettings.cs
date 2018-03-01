@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
             _NO_TRANSLATE_comboBoxCommitTemplates.Items.Clear();
 
             for (int i = 0; i < _commitTemplates.Length; i++)
-            {           
+            {
                 _NO_TRANSLATE_comboBoxCommitTemplates.Items.Add(String.Empty);
                 RefreshLineInListBox(i);
             }

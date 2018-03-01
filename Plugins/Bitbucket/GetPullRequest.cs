@@ -27,7 +27,7 @@ namespace Bitbucket
                 DestRepo = json["toRef"]["repository"]["name"].ToString(),
                 DestBranch = json["toRef"]["displayId"].ToString(),
                 CreatedDate = Convert.ToDouble(json["createdDate"].ToString().Substring(0, 10))
-                
+
             };
             var reviewers = json["reviewers"];
             var participants = json["participants"];

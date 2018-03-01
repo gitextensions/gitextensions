@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Loads children items for the provided item in to the specified nodes. 
+        /// Loads children items for the provided item in to the specified nodes.
         /// Loaded children are cached until <see cref="ResetCache"/> method is called.
         /// For file type items it also loads icons associated with these types at the OS level.
         /// </summary>

@@ -16,7 +16,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             _allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
             _localBranches = _allBranches.Where(b => !b.IsRemote).ToArray();
-            _branchesWithNoIdenticalRemotes = _allBranches.Where(b => !b.IsRemote || 
+            _branchesWithNoIdenticalRemotes = _allBranches.Where(b => !b.IsRemote ||
                                                                       !_localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName))
                                                           .ToArray();
 

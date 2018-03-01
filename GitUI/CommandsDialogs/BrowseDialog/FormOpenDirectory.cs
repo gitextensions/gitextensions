@@ -65,7 +65,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     directories.Add(PathUtil.EnsureTrailingPathSeparator(homeDir));
                 }
             }
-            
+
             return directories.Distinct().ToList();
         }
 

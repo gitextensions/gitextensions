@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
                 var patternMatch = RawDataRegex.Match(raw);
 
                 // show failed assertion for unsupported cases (for developers)
-                // if you get this message, 
+                // if you get this message,
                 //     you can implement this format parsing
                 //     or post an issue to https://github.com/gitextensions/gitextensions/issues
                 Debug.Assert(patternMatch.Success, "Lost object's extracted diagnostics format not implemented", raw);

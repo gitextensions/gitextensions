@@ -25,7 +25,7 @@ namespace GitUI
 
         private readonly TranslationString _serverHostkeyNotCachedText =
             new TranslationString("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
- 
+
         private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules");
         private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
         private readonly TranslationString _updateSubmodulesToo = new TranslationString("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
@@ -50,7 +50,7 @@ namespace GitUI
                 return instance;
             }
         }
-        
+
         public static void NotValidGitDirectory(IWin32Window owner)
         {
             MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Instance._error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);

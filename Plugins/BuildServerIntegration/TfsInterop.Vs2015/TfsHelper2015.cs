@@ -224,7 +224,7 @@ namespace TfsInterop
                 }
 
                 VssConnection connection = new VssConnection(new Uri(url), new VssCredentials(true));
-                
+
                 connection.Settings.BypassProxyOnLocal = false;
                 BuildHttpClient buildClient = connection.GetClientAsync<BuildHttpClient>().Result;
                 var definitions = await buildClient.GetDefinitionsAsync(project: projectName);

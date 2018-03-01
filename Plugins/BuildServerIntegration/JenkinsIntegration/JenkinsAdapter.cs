@@ -179,7 +179,7 @@ namespace JenkinsIntegration
 
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            // Note that 'running' is ignored (attempt to fetch data when updated) 
+            // Note that 'running' is ignored (attempt to fetch data when updated)
             // Similar for 'sinceDate', not supported in Jenkins API
             try
             {

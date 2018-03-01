@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (cell == DataGridView.CurrentCell)
                     {
-                        // workaround for updating current cell                        
+                        // workaround for updating current cell
                         DataGridView.CurrentCell = null;
                     }
                     cell.Value = newStateIsChecked;

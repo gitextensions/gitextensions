@@ -27,7 +27,7 @@ namespace GitCommands.Git
 
     /// <summary>
     /// Translate GitRevision including artificial commits to diff options
-    /// Closely related to GitRevision.cs 
+    /// Closely related to GitRevision.cs
     /// </summary>
     public sealed class RevisionDiffProvider : IRevisionDiffProvider
     {
@@ -65,7 +65,7 @@ namespace GitCommands.Git
             firstRevision = ArtificialToDiffOptions(firstRevision);
             secondRevision = ArtificialToDiffOptions(secondRevision);
 
-            // Note: As artificial are options, diff unstage..unstage and 
+            // Note: As artificial are options, diff unstage..unstage and
             // stage..stage will show output, different from e.g. HEAD..HEAD
             // Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
             Debug.Assert(!(firstRevision == secondRevision && (firstRevision.IsNullOrEmpty() || firstRevision == StagedOpt)),

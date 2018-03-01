@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly Func<string, IList<T>> getCandidates;
         private AsyncLoader backgroundLoader = new AsyncLoader();
-        
+
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
             InitializeComponent();

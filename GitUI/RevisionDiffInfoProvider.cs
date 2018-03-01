@@ -54,7 +54,7 @@ namespace GitUI
             }
             else
             {
-                // Second revision is always local 
+                // Second revision is always local
                 secondRevision = null;
 
                 if (diffKind == RevisionDiffKind.DiffBLocal)

@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     /// From a MenuCommand a (theoretically) unlimited number of actual ToolStripItems can
     /// be created that all behave the same.
     /// A MenuCommand can also be a separator
-    /// 
+    ///
     /// Purpose: have methods from specific context menus also available in main menu
     /// </summary>
     internal class MenuCommand

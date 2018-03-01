@@ -12,7 +12,7 @@ namespace GitUI
     public partial class BranchComboBox : GitExtensionsControl
     {
         private readonly TranslationString _branchCheckoutError = new TranslationString("Branch '{0}' is not selectable, this branch has been removed from the selection.");
-        
+
         public BranchComboBox()
         {
             InitializeComponent();

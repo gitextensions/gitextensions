@@ -36,7 +36,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 
             foreach (char cond in ruleText)
             {
-                switch (cond) 
+                switch (cond)
                 {
                     case '(':
                         group = true;
@@ -87,7 +87,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
                     if (group)
                     {
                         // turn on chars in member group
-                        for (int j = 0; j < numMember; j++) 
+                        for (int j = 0; j < numMember; j++)
                         {
                             int charCode = memberChars[j];
                             rule.Condition[charCode] = rule.Condition[charCode] | (1 << rule.ConditionCount);

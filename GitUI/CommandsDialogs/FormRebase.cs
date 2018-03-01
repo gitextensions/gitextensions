@@ -224,7 +224,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, 
+                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked,
                                                         chkPreserveMerges.Checked, chkAutosquash.Checked,
                                                         chkStash.Checked);
             }

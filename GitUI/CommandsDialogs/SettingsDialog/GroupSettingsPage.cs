@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         public IEnumerable<string> GetSearchKeywords()
-        {            
+        {
             return new string[] { };
         }
 
