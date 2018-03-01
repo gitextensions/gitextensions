@@ -108,6 +108,7 @@ namespace GitCommands.Gpg
 
                 string gpg = module.RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}");
 
+                #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
                 switch (gpg)
                 {
                     case GoodSign:         // "G" for a good (valid) signature
@@ -128,6 +129,7 @@ namespace GitCommands.Gpg
                         cmtStatus = CommitStatus.NoSignature;
                         break;
                 }
+                #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
                 return cmtStatus;
             });

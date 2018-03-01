@@ -1890,6 +1890,7 @@ namespace GitUI
         // Please update FormCommandlineHelp if you add or change commands
         private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
+            #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             switch (args[1])
             {
                 case "about":
@@ -2025,6 +2026,8 @@ namespace GitUI
                     }
                     break;
             }
+            #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+
             var frmCmdLine = new FormCommandlineHelp();
             frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
             Application.Run(frmCmdLine);

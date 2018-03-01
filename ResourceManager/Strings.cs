@@ -99,6 +99,8 @@ namespace ResourceManager
             return Instance._uninterestingDiffOmitted.Text;
         }
 
+        #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
+
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -156,5 +158,7 @@ namespace ResourceManager
         private readonly TranslationString _weeksAgo   = new TranslationString("{0} {1:week|weeks} ago");
         private readonly TranslationString _monthsAgo  = new TranslationString("{0} {1:month|months} ago");
         private readonly TranslationString _yearsAgo   = new TranslationString("{0} {1:year|years} ago");
+
+        #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
     }
 }
