@@ -66,36 +66,36 @@ Current Branch:
 
         public override void OnPageShown()
         {
-			if (EnvUtils.RunningOnWindows())
-			{
-				System.Resources.ResourceManager rm =
-					new System.Resources.ResourceManager("GitUI.Properties.Resources",
-								System.Reflection.Assembly.GetExecutingAssembly());
+            if (EnvUtils.RunningOnWindows())
+            {
+                System.Resources.ResourceManager rm =
+                    new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                                System.Reflection.Assembly.GetExecutingAssembly());
 
-				// dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
-				rm.GetObject("dummy");
+                // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
+                rm.GetObject("dummy");
 
-				System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
+                System.Resources.ResourceSet resourceSet = rm.GetResourceSet(System.Globalization.CultureInfo.CurrentUICulture, true, true);
 
-				contextMenuStrip_SplitButton.Items.Clear();
+                contextMenuStrip_SplitButton.Items.Clear();
 
-				foreach (System.Collections.DictionaryEntry icon in resourceSet)
-				{
-					// add entry to toolstrip
-					if (icon.Value.GetType() == typeof(Icon))
-					{
-						// contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
-					}
-					else if (icon.Value.GetType() == typeof(Bitmap))
-					{
-						contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
-					}
-					// var aa = icon.Value.GetType();
-				}
+                foreach (System.Collections.DictionaryEntry icon in resourceSet)
+                {
+                    // add entry to toolstrip
+                    if (icon.Value.GetType() == typeof(Icon))
+                    {
+                        // contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+                    }
+                    else if (icon.Value.GetType() == typeof(Bitmap))
+                    {
+                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
+                    }
+                    // var aa = icon.Value.GetType();
+                }
 
-				resourceSet.Close();
-				rm.ReleaseAllResources();
-			}
+                resourceSet.Close();
+                rm.ReleaseAllResources();
+            }
         }
 
         protected override void SettingsToPage()

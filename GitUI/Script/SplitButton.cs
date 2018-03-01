@@ -607,7 +607,7 @@ namespace GitUI.Script
 
         private void LayoutTextBeforeOrAfterImage(Rectangle totalArea, bool textFirst, Size textSize, Size imageSize, out Rectangle textRect, out Rectangle imageRect)
         {
-            int element_spacing = 0;	// Spacing between the Text and the Image
+            int element_spacing = 0;    // Spacing between the Text and the Image
             int total_width = textSize.Width + element_spacing + imageSize.Width;
 
             if (!textFirst)
@@ -655,7 +655,7 @@ namespace GitUI.Script
 
         private void LayoutTextAboveOrBelowImage(Rectangle totalArea, bool textFirst, Size textSize, Size imageSize, out Rectangle textRect, out Rectangle imageRect)
         {
-            int element_spacing = 0;	// Spacing between the Text and the Image
+            int element_spacing = 0;    // Spacing between the Text and the Image
             int total_height = textSize.Height + element_spacing + imageSize.Height;
 
             if (textFirst)

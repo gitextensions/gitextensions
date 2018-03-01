@@ -11,10 +11,10 @@ namespace GitUI
         private readonly StringBuilder textToAdd = new StringBuilder();
         private DoOutputCallback doOutput;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="doOutput">Will be called on the home thread.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doOutput">Will be called on the home thread.</param>
         public ProcessOutputTimer(DoOutputCallback doOutput)
         {
             this.doOutput = doOutput;
@@ -41,9 +41,9 @@ namespace GitUI
                 _timer_Elapsed(null, null);
         }
 
-		/// <summary>
-		/// Can be called on any thread.
-		/// </summary>
+        /// <summary>
+        /// Can be called on any thread.
+        /// </summary>
         public void Append(string text)
         {
             lock (textToAdd)

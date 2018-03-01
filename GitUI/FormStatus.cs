@@ -257,7 +257,7 @@ namespace GitUI
             try
             {
                 AbortCallback(this);
-                OutputLog.Append(Environment.NewLine + "Aborted");	// TODO: write to display control also, if we pull the function up to this base class
+                OutputLog.Append(Environment.NewLine + "Aborted");  // TODO: write to display control also, if we pull the function up to this base class
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }

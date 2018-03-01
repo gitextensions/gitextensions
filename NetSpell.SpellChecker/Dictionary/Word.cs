@@ -122,7 +122,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Sorts a collection of words by EditDistance
         /// </summary>
         /// <remarks>
-        ///		The compare sorts in desc order, largest EditDistance first
+        ///     The compare sorts in desc order, largest EditDistance first
         /// </remarks>
         public int CompareTo(Word word)
         {
@@ -168,7 +168,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Converts the word object to a string
         /// </summary>
         /// <returns>
-        ///		Returns the Text Property contents
+        ///     Returns the Text Property contents
         /// </returns>
         public override string ToString()
         {
