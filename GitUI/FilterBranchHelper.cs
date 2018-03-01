@@ -54,7 +54,7 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
                 this.localToolStripMenuItem,
                 this.tagsToolStripMenuItem,
-                this.remoteToolStripMenuItem});
+                this.remoteToolStripMenuItem });
 
             this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
             this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;

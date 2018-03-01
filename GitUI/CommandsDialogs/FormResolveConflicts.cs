@@ -240,12 +240,12 @@ namespace GitUI.CommandsDialogs
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
             {
-                { ".doc",  "merge-doc.js"},
-                { ".docx", "merge-doc.js"},
-                { ".docm", "merge-doc.js"},
-                { ".ods",  "merge-ods.vbs"},
-                { ".odt",  "merge-ods.vbs"},
-                { ".sxw",  "merge-ods.vbs"},
+                { ".doc",  "merge-doc.js" },
+                { ".docx", "merge-doc.js" },
+                { ".docm", "merge-doc.js" },
+                { ".ods",  "merge-ods.vbs" },
+                { ".odt",  "merge-ods.vbs" },
+                { ".sxw",  "merge-ods.vbs" },
             };
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string localFileName, string remoteFileName)
@@ -545,7 +545,7 @@ namespace GitUI.CommandsDialogs
                     int idx = _mergetoolCmd.IndexOf(executablePattern);
                     if (idx >= 0)
                     {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' '});
+                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
                         _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
                     }
                 }

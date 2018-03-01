@@ -55,7 +55,7 @@ namespace Bitbucket
                 return new BitbucketResponse<T>
                     {
                         Success = false,
-                        Messages = new[] { response.ErrorMessage}
+                        Messages = new[] { response.ErrorMessage }
                     };
 
             if ((int)response.StatusCode >= 300)
@@ -92,7 +92,7 @@ namespace Bitbucket
             if (json["errors"] != null)
             {
                 var messages = new List<string>();
-                var errorResponse = new BitbucketResponse<T> { Success = false};
+                var errorResponse = new BitbucketResponse<T> { Success = false };
                 foreach (var error in json["errors"])
                 {
                     var sb = new StringBuilder();
@@ -113,9 +113,9 @@ namespace Bitbucket
             }
             if (json["message"] != null)
             {
-                return new BitbucketResponse<T> { Success = false, Messages = new[] { json["message"].ToString() }};
+                return new BitbucketResponse<T> { Success = false, Messages = new[] { json["message"].ToString() } };
             }
-            return new BitbucketResponse<T> { Success = false, Messages = new[] { "Unknown error."}};
+            return new BitbucketResponse<T> { Success = false, Messages = new[] { "Unknown error."} };
         }
 
     }

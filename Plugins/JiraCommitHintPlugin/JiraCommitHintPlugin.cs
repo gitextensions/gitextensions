@@ -79,9 +79,9 @@ namespace JiraCommitHintPlugin
             jqlQuerySettings.CustomControl = new TextBox();
             yield return jqlQuerySettings;
 
-            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = 300};
+            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = 300 };
             queryHelperLink.Click += QueryHelperLink_Click;
-            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = 300};
+            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = 300 };
             txtJiraQueryHelpLink.Controls.Add(queryHelperLink);
             jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
             yield return jiraQueryHelpLink;

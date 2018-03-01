@@ -606,7 +606,7 @@ See the changes in the commit form.");
             {
                 var extension = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
 
-                fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*.{extension})|*.{extension }| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
+                fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*.{extension})|*.{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);

@@ -50,7 +50,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Array of relative displacements from the common center.
         /// </summary>
-        protected float[] SliceRelativeDisplacements = new[] { 0F};
+        protected float[] SliceRelativeDisplacements = new[] { 0F };
 
         /// <summary>
         ///   Slice relative height.
@@ -375,7 +375,7 @@ namespace GitStatistics.PieChart
         public void SetSliceRelativeDisplacement(float value)
         {
             Debug.Assert(IsDisplacementValid(value));
-            SliceRelativeDisplacements = new[] { value};
+            SliceRelativeDisplacements = new[] { value };
         }
 
         /// <summary>

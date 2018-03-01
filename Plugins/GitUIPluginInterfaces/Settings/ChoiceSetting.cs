@@ -41,7 +41,7 @@ namespace GitUIPluginInterfaces
 
             public override ComboBox CreateControl()
             {
-                var comboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList};
+                var comboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
                 comboBox.Items.AddRange(Setting.Values.ToArray());
                 return comboBox;
             }

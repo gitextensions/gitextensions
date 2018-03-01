@@ -104,7 +104,7 @@ namespace TeamCityIntegration
 
             this.buildServerWatcher = buildServerWatcher;
 
-            ProjectNames = config.GetString("ProjectName", "").Split(new char[] { '|'}, StringSplitOptions.RemoveEmptyEntries);
+            ProjectNames = config.GetString("ProjectName", "").Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
             var buildIdFilerSetting = config.GetString("BuildIdFilter", "");
             if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))

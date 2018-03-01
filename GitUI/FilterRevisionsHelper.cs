@@ -77,7 +77,7 @@ namespace GitUI
                 this.commitToolStripMenuItem,
                 this.committerToolStripMenuItem,
                 this.authorToolStripMenuItem,
-                this.diffContainsToolStripMenuItem});
+                this.diffContainsToolStripMenuItem });
 
             this._NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 

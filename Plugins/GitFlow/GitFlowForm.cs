@@ -110,7 +110,7 @@ namespace GitFlow
         private void LoadBranches(string branchType)
         {
             cbManageType.Enabled = false;
-            cbBranches.DataSource = new List<string> { _loading.Text};
+            cbBranches.DataSource = new List<string> { _loading.Text };
             if (!Branches.ContainsKey(branchType))
                 _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
             else
@@ -122,14 +122,14 @@ namespace GitFlow
             var result = _gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
             if (result.ExitCode != 0)
                 return new List<string>();
-            string[] references = result.StdOutput.Split(new[] { '\n'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] references = result.StdOutput.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
         private List<string> GetLocalBranches()
         {
             string[] references = _gitUiCommands.GitModule.RunGitCmd("branch")
-                                                 .Split(new[] { '\n'}, StringSplitOptions.RemoveEmptyEntries);
+                                                 .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }

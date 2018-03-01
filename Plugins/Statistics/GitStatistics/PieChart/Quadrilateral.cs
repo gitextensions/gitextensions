@@ -58,7 +58,7 @@ namespace GitStatistics.PieChart
             var pointTypes = (byte[])QuadrilateralPointTypes.Clone();
             if (toClose)
                 pointTypes[3] |= (byte)PathPointType.CloseSubpath;
-            _path = new GraphicsPath(new[] { point1, point2, point3, point4}, pointTypes);
+            _path = new GraphicsPath(new[] { point1, point2, point3, point4 }, pointTypes);
         }
 
         /// <summary>

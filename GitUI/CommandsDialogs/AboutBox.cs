@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
         public AboutBox()
         {
             _contributersList = string.Join(", ", new [] { Coders, Translators,
-                Designers, Other})
+                Designers, Other })
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
