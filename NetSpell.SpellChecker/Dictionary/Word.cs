@@ -5,7 +5,7 @@ namespace NetSpell.SpellChecker.Dictionary
     /// <summary>
     /// The Word class represents a base word in the dictionary
     /// </summary>
-    public sealed class Word  : IComparable<Word>
+    public sealed class Word : IComparable<Word>
     {
         /// <summary>
         ///     Initializes a new instance of the class

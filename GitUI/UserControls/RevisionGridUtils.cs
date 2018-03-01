@@ -12,7 +12,7 @@ namespace GitUI.UserControls
             return rect;
         }
 
-        public static void  DrawColumnText(Graphics gc, string text, Font font, Color color, Rectangle bounds)
+        public static void DrawColumnText(Graphics gc, string text, Font font, Color color, Rectangle bounds)
         {
             TextRenderer.DrawText(gc, text, font, bounds, color,
                 TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);

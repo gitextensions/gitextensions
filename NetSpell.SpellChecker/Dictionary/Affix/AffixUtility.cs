@@ -294,7 +294,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 		{
 			int tempLength = word.Length - entry.AddCharacters.Length;
 			if ((tempLength > 0)  
-				&&  (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
+				&& (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
 				&& (word.EndsWith(entry.AddCharacters)))
 			{
 				// word with out affix

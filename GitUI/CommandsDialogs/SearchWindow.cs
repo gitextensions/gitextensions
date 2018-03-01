@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            string  _selectedText = textBox1.Text;
+            string _selectedText = textBox1.Text;
 
             backgroundLoader.Load(() => getCandidates(_selectedText), SearchForCandidates);
         }

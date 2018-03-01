@@ -22,7 +22,7 @@ namespace GitCommands
         ShowGitNotes = 32,          // --not --glob=notes --not
         NoMerges = 64,              // --no-merges
         FirstParent = 128,          // --first-parent
-        SimplifyByDecoration = 256  // --simplify-by-decoration
+        SimplifyByDecoration = 256 // --simplify-by-decoration
     }
 
     public abstract class RevisionGraphInMemFilter

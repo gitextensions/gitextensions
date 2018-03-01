@@ -169,7 +169,7 @@ namespace ResourceManager.CommitDataRenders
             return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
         }
 
-        private  string RenderHashCollection(IEnumerable<string> hashes, bool showRevisionsAsLinks)
+        private string RenderHashCollection(IEnumerable<string> hashes, bool showRevisionsAsLinks)
         {
             string commitsString;
             if (showRevisionsAsLinks)

@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
             // Tooltips support for the form
             var componentcontainer = new Container();
             _disposable1 = componentcontainer;
-            var tooltip = new ToolTip(componentcontainer) { AutomaticDelay =  100 };
+            var tooltip = new ToolTip(componentcontainer) { AutomaticDelay = 100 };
 
             Panel panelHeader = CreateViewHeader();
 

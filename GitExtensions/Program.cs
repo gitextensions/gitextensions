@@ -113,7 +113,7 @@ namespace GitExtensions
             {
                 uCommands.StartBrowseDialog();
             }
-            else  // if we are here args.Length > 1
+            else // if we are here args.Length > 1
             {
                 uCommands.RunCommand(args);
             }

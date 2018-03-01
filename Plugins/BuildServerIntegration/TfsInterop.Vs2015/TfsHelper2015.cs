@@ -305,7 +305,7 @@ namespace TfsInterop
                         IsFinished = (b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed),
                         Description = GetStatus2015(b) + duration,
                         Revision = GetCommitFromSourceVersion(b.SourceVersion),
-                        Url = _urlPrefix +  id
+                        Url = _urlPrefix + id
                         // Url = b.Url
                     };
                     result.Add(ibuild);

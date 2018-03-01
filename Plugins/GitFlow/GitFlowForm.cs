@@ -82,7 +82,7 @@ namespace GitFlow
                 cbManageType.DataSource = types;
 
                 cbBasedOn.Checked = false;
-                cbBaseBranch.Enabled  = false;
+                cbBaseBranch.Enabled = false;
                 LoadBaseBranches();
 
                 DisplayHead();
