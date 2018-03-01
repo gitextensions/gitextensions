@@ -725,7 +725,7 @@ namespace GitUI
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return 14;//icon unknown
+            return 14; //icon unknown
         }
 
         [Browsable(false)]

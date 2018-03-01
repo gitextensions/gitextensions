@@ -268,7 +268,7 @@ Current Branch:
 
         private void ScriptList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            ScriptList_SelectionChanged(null, null);//needed for linux
+            ScriptList_SelectionChanged(null, null); //needed for linux
         }
 
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)

@@ -53,7 +53,7 @@ namespace GitUI
                 return "..." + path.Substring(path.Length - length);
             }
 
-            return path;//.Substring(0, length+1);
+            return path; //.Substring(0, length+1);
         }
 
         public string FormatTextForDrawing(int width, string name, string oldName)

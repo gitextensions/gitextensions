@@ -209,7 +209,7 @@ namespace GitUI.Hotkey
                     HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
                     if (settings == null)
                     {
-                        AppSettings.SerializedHotkeys = " ";//mark settings as migrated
+                        AppSettings.SerializedHotkeys = " "; //mark settings as migrated
                     }
                     else
                     {
@@ -218,7 +218,7 @@ namespace GitUI.Hotkey
                 }
                 else
                 {
-                    AppSettings.SerializedHotkeys = " ";//mark settings as migrated
+                    AppSettings.SerializedHotkeys = " "; //mark settings as migrated
                 }
             }
         }

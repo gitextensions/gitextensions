@@ -293,7 +293,7 @@ namespace GitCommands
         //   when core.quotepath is on, every non ASCII character is escaped
         //   with \ followed by its code as a three digit octal number
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
-        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
+        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); //is any better?
 
         public Encoding FilesEncoding => EffectiveConfigFile.FilesEncoding ?? new UTF8Encoding(false);
 

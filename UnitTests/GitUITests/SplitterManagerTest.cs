@@ -188,7 +188,7 @@ namespace GitUITests
                 }
                 else
                 {
-                    splitter.SplitterDistance.Should().Be(108);//decreased by 10%
+                    splitter.SplitterDistance.Should().Be(108); //decreased by 10%
                 }
             }
         }

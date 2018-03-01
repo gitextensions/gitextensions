@@ -214,7 +214,7 @@ namespace GitUI
                 _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
                 int offset = 0, count = 0;
-                for (;;)
+                for (; ;)
                 {
                     TextRange range = _search.FindNext(offset, false, out var looped);
                     if (range == null || looped)
