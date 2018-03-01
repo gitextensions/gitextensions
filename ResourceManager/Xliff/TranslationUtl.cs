@@ -67,8 +67,8 @@ namespace ResourceManager.Xliff
             if (itemObj == null)
                 yield break;
 
-            //Skip controls with a name started with "_NO_TRANSLATE_"
-            //this is a naming convention, these are not translated
+            // Skip controls with a name started with "_NO_TRANSLATE_"
+            // this is a naming convention, these are not translated
             string itemName = item.Item1;
             if (itemName.StartsWith("_NO_TRANSLATE_"))
                 yield break;

@@ -309,7 +309,7 @@ namespace GitUI.Editor
             treatAllFilesAsTextToolStripMenuItem.Visible = visible;
             copyNewVersionToolStripMenuItem.Visible = visible;
             copyOldVersionToolStripMenuItem.Visible = visible;
-            //TODO The following should not be enabled if this is afile and the file does not exist
+            // TODO The following should not be enabled if this is afile and the file does not exist
             cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff && !Module.IsBareRepository();
             revertSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff && !Module.IsBareRepository();
             copyPatchToolStripMenuItem.Visible = visible;
@@ -454,7 +454,7 @@ namespace GitUI.Editor
         {
             ResetForText(fileName);
 
-            //Check for binary file.
+            // Check for binary file.
             if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
                 _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
@@ -472,12 +472,12 @@ namespace GitUI.Editor
         {
             if (guid == GitRevision.UnstagedGuid)
             {
-                //No blob exists for unstaged, present contents from file system
+                // No blob exists for unstaged, present contents from file system
                 ViewFile(fileName);
             }
             else
             {
-                //Retrieve blob, same as GitItemStatus.TreeGuid
+                // Retrieve blob, same as GitItemStatus.TreeGuid
                 string blob = Module.GetFileBlobHash(fileName, guid);
                 ViewGitItem(fileName, blob);
             }
@@ -539,7 +539,7 @@ namespace GitUI.Editor
                                 PictureBox.Image = image;
                             });
             }
-            //Check binary from extension/attributes (a secondary check for file contents before display)
+            // Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
                 ViewText(null, "Binary file: " + fileName);
@@ -754,11 +754,11 @@ namespace GitUI.Editor
 
             if (_currentViewIsPatch)
             {
-                //add artificail space if selected text is not starting from line begining, it will be removed later
+                // add artificail space if selected text is not starting from line begining, it will be removed later
                 int pos = _internalFileViewer.GetSelectionPosition();
                 string fileText = _internalFileViewer.GetText();
                 int hpos = fileText.IndexOf("\n@@");
-                //if header is selected then don't remove diff extra chars
+                // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
                     if (pos > 0)
@@ -874,8 +874,8 @@ namespace GitUI.Editor
                 }
             }
 
-            //Do not go to the end of the file if no change is found
-            //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+            // Do not go to the end of the file if no change is found
+            // TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
         }
 
         private static bool IsDiffLine(string wholeText, string lineContent)
@@ -891,7 +891,7 @@ namespace GitUI.Editor
 
             var firstVisibleLine = _internalFileViewer.LineAtCaret;
             var emptyLineCheck = false;
-            //go to the top of change block
+            // go to the top of change block
             while (firstVisibleLine > 0 &&
                 _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new string[] { "+", "-" }))
                 firstVisibleLine--;
@@ -916,8 +916,8 @@ namespace GitUI.Editor
                 }
             }
 
-            //Do not go to the start of the file if no change is found
-            //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
+            // Do not go to the start of the file if no change is found
+            // TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
         }
 
         private void IncreaseNumberOfLinesClick(object sender, EventArgs e)
@@ -1072,7 +1072,7 @@ namespace GitUI.Editor
 
             if (_currentViewIsPatch)
             {
-                //add artificail space if selected text is not starting from line begining, it will be removed later
+                // add artificail space if selected text is not starting from line begining, it will be removed later
                 int pos = noSelection ? 0 : _internalFileViewer.GetSelectionPosition();
                 string fileText = _internalFileViewer.GetText();
 
@@ -1083,7 +1083,7 @@ namespace GitUI.Editor
                 IEnumerable<string> lines = code.Split('\n');
                 lines = lines.Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
                 int hpos = fileText.IndexOf("\n@@");
-                //if header is selected then don't remove diff extra chars
+                // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
                     char[] specials = new char[] { ' ', '-', '+' };

@@ -68,7 +68,7 @@ namespace GitCommands
             if (sha1 == null)
                 throw new ArgumentNullException(nameof(sha1));
 
-            //Do not cache this command, since notes can be added
+            // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                 "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
@@ -104,7 +104,7 @@ namespace GitCommands
             if (sha1 == null)
                 throw new ArgumentNullException(nameof(sha1));
 
-            //Do not cache this command, since notes can be added
+            // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                 "log -1 --pretty=\"format:" + LogFormat + "\" {0}", sha1);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
@@ -167,7 +167,7 @@ namespace GitCommands
             const int startIndex = 8;
             string message = ProccessDiffNotes(startIndex, lines);
 
-            //commit message is not reencoded by git when format is given
+            // commit message is not reencoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
             var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
@@ -198,7 +198,7 @@ namespace GitCommands
             const int startIndex = 2;
             string message = ProccessDiffNotes(startIndex, lines);
 
-            //commit message is not reencoded by git when format is given
+            // commit message is not reencoded by git when format is given
             Debug.Assert(commitData.Guid == guid);
             commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
         }

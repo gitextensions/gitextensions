@@ -199,7 +199,7 @@ namespace GitUI.CommitInfo
             UpdateRevisionInfo();
             LoadAuthorImage(data.Author ?? data.Committer);
 
-            //No branch/tag data for artificial commands
+            // No branch/tag data for artificial commands
             if (_revision.IsArtificial)
                 return;
 
@@ -425,8 +425,8 @@ namespace GitUI.CommitInfo
 
             RevisionInfo.SuspendLayout();
             RevisionInfo.SetXHTMLText(body);
-            RevisionInfo.SelectionStart = 0; //scroll up
-            RevisionInfo.ScrollToCaret();    //scroll up
+            RevisionInfo.SelectionStart = 0; // scroll up
+            RevisionInfo.ScrollToCaret();    // scroll up
             RevisionInfo.ResumeLayout(true);
         }
 

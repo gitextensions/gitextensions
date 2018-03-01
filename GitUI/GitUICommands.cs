@@ -1342,7 +1342,7 @@ namespace GitUI
                 return true;
             };
 
-            //TODO: move Notify to FormVerify and friends
+            // TODO: move Notify to FormVerify and friends
             return DoActionOnRepo(owner, true, true, PreVerifyDatabase, PostVerifyDatabase, action);
         }
 
@@ -1975,7 +1975,7 @@ namespace GitUI
                 case "openrepo":    // [path]
                     RunOpenRepoCommand(args);
                     return;
-                case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
+                case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                     Pull(arguments);
                     return;
                 case "push":        // [--quiet]
@@ -2064,8 +2064,8 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-                //We need to return the file that has been found, the visual studio plugin uses the return value
-                //to open the selected file.
+                // We need to return the file that has been found, the visual studio plugin uses the return value
+                // to open the selected file.
                 Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
@@ -2129,8 +2129,8 @@ namespace GitUI
 
         private void RunFileHistoryCommand(string[] args)
         {
-            //Remove working directory from filename. This is to prevent filenames that are too
-            //long while there is room left when the workingdir was not in the path.
+            // Remove working directory from filename. This is to prevent filenames that are too
+            // long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 

@@ -81,7 +81,7 @@ namespace ReleaseNotesGenerator
                         Context = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
                         break;
 
-                    //  Byte count from the beginning of the clipboard to the start of the fragment.
+                    // Byte count from the beginning of the clipboard to the start of the fragment.
                     case "startfragment":
                         if (startFragment != 0) throw new FormatException("StartFragment is already declared");
                         startFragment = int.Parse(val);

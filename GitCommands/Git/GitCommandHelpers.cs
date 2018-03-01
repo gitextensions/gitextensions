@@ -80,9 +80,9 @@ namespace GitCommands
                     UserHomeDir);
             }
 
-            //Default!
+            // Default!
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
-            //to prevent from leaking processes see issue #1092 for details
+            // to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
             string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
             if (EnvUtils.RunningOnWindows())
@@ -218,7 +218,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(cmd))
                 yield break;
 
-            //process used to execute external commands
+            // process used to execute external commands
             using (var process = StartProcess(cmd, arguments, workDir, GitModule.SystemEncoding))
             {
                 if (!string.IsNullOrEmpty(stdInput))
@@ -264,7 +264,7 @@ namespace GitCommands
                 return null;
             }
 
-            //process used to execute external commands
+            // process used to execute external commands
             var process = StartProcess(cmd, arguments, workDir, GitModule.SystemEncoding);
             if (!string.IsNullOrEmpty(stdInput))
             {
@@ -313,7 +313,7 @@ namespace GitCommands
                 return null;
             }
 
-            //process used to execute external commands
+            // process used to execute external commands
             var process = StartProcess(cmd, arguments, workDir, Encoding.Default);
             if (stdInput != null && stdInput.Length > 0)
             {
@@ -1002,19 +1002,19 @@ namespace GitCommands
             if (lastNewLinePos > 0)
             {
                 int ind = trimmedStatus.LastIndexOf('\0');
-                if (ind < lastNewLinePos) //Warning at end
+                if (ind < lastNewLinePos) // Warning at end
                 {
                     lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind : 0);
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(nl);
                 }
-                else                                              //Warning at beginning
+                else                                              // Warning at beginning
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
             }
 
             // Doesn't work with removed submodules
             IList<string> Submodules = module.GetSubmodulesLocalPaths();
 
-            //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
+            // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
@@ -1122,7 +1122,7 @@ namespace GitCommands
         private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
-            //Find renamed files...
+            // Find renamed files...
             if (fromDiff)
             {
                 gitItemStatus.OldName = fileName.Trim();

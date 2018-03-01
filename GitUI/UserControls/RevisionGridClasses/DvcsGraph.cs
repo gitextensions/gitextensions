@@ -328,14 +328,14 @@ namespace GitUI.RevisionGridClasses
         public void ShowRevisionGraph()
         {
             GraphColumn.Visible = true;
-            //updateData();
+            // updateData();
             _backgroundEvent.Set();
         }
 
         public void HideRevisionGraph()
         {
             GraphColumn.Visible = false;
-            //updateData();
+            // updateData();
             _backgroundEvent.Set();
         }
 
@@ -471,7 +471,7 @@ namespace GitUI.RevisionGridClasses
                 //  when we're done processing we'll update with the final count, so the
                 //  problem will only be temporary, and not able to distinguish it from
                 //  just git giving us data slowly.
-                //Invoke(new MethodInvoker(delegate { setRowCount(count); }));
+                // Invoke(new MethodInvoker(delegate { setRowCount(count); }));
                 return;
             }
 
@@ -578,7 +578,7 @@ namespace GitUI.RevisionGridClasses
                             UpdateGraph(curCount, scrollTo);
                         else
                         {
-                            //do nothing... do not cache, the graph is invisible
+                            // do nothing... do not cache, the graph is invisible
                             Thread.Sleep(10);
                         }
                     }
@@ -627,11 +627,11 @@ namespace GitUI.RevisionGridClasses
             _visibleTop = FirstDisplayedCell?.RowIndex ?? 0;
             _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
 
-            //Add 5 for safe merge (1 for rounding and 1 for whitespace)....
+            // Add 5 for safe merge (1 for rounding and 1 for whitespace)....
             if (_visibleBottom + 2 > _graphData.Count)
             {
-                //Currently we are doing some important work; we are recieving
-                //rows that the user is viewing
+                // Currently we are doing some important work; we are recieving
+                // rows that the user is viewing
                 if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
                 {
                     Loading(this, new LoadingEventArgs(true));
@@ -639,8 +639,8 @@ namespace GitUI.RevisionGridClasses
             }
             else
             {
-                //All rows that the user is viewing are loaded. We now can hide the loading
-                //animation that is shown. (the event Loading(bool) triggers this!)
+                // All rows that the user is viewing are loaded. We now can hide the loading
+                // animation that is shown. (the event Loading(bool) triggers this!)
                 Loading?.Invoke(this, new LoadingEventArgs(false));
             }
 
@@ -668,7 +668,7 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            //We only need to invalidate if the row is visible
+            // We only need to invalidate if the row is visible
             if (_visibleBottom >= row &&
                 _visibleTop <= row &&
                 row < RowCount)
@@ -720,7 +720,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        //Color of non-relative branches.
+        // Color of non-relative branches.
 
         private List<Color> GetJunctionColors(IEnumerable<Junction> aJunction)
         {
@@ -762,11 +762,11 @@ namespace GitUI.RevisionGridClasses
 
         private Color GetJunctionColor(Junction aJunction)
         {
-            //Draw non-relative branches gray
+            // Draw non-relative branches gray
             if (!aJunction.IsRelative && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
                 return _nonRelativeColor;
 
-            //Draw non-highlighted branches gray
+            // Draw non-highlighted branches gray
             if (!aJunction.HighLight && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
                 return _nonRelativeColor;
 
@@ -801,11 +801,11 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            if (adjacentColors.Count == 0) //This is an end-point. We need to 'pick' a new color
+            if (adjacentColors.Count == 0) // This is an end-point. We need to 'pick' a new color
             {
                 colorIndex = 0;
             }
-            else //This is a parent branch, calculate new color based on parent branch
+            else // This is a parent branch, calculate new color based on parent branch
             {
                 int start = adjacentColors[0];
                 int i;
@@ -852,10 +852,10 @@ namespace GitUI.RevisionGridClasses
             int height = _cacheCountMax * _rowHeight;
             int width = GraphColumn.Width;
             if (_graphBitmap == null ||
-                //Resize the bitmap when the with or height is changed. The height won't change very often.
-                //The with changes more often, when branches become visible/invisible.
-                //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
-                //but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
+                // Resize the bitmap when the with or height is changed. The height won't change very often.
+                // The with changes more often, when branches become visible/invisible.
+                // Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
+                // but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
                 _graphBitmap.Width < width || _graphBitmap.Height != height)
             {
                 if (_graphBitmap != null)
@@ -1023,10 +1023,10 @@ namespace GitUI.RevisionGridClasses
             wa.Clip = newClip;
             wa.Clear(Color.Transparent);
 
-            //Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
+            // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
             revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
-            //for (int r = 0; r < 2; r++)
+            // for (int r = 0; r < 2; r++)
             for (int lane = 0; lane < row.Count; lane++)
             {
                 int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
@@ -1046,7 +1046,7 @@ namespace GitUI.RevisionGridClasses
                     Pen brushLineColorPen = null;
                     try
                     {
-                        bool drawBorder = highLight && AppSettings.BranchBorders; //hide border for "non-relatives"
+                        bool drawBorder = highLight && AppSettings.BranchBorders; // hide border for "non-relatives"
 
                         if (curColors.Count == 1 || !AppSettings.StripedBranchChange)
                         {
@@ -1243,9 +1243,9 @@ namespace GitUI.RevisionGridClasses
         {
             var childrenIds = new List<string>();
 
-            //We do not need a lock here since we load the data from the first commit and walkt through all
-            //parents. Children are always loaded, since we start at the newest commit.
-            //With lock, loading the commit info slows down terrible.
+            // We do not need a lock here since we load the data from the first commit and walkt through all
+            // parents. Children are always loaded, since we start at the newest commit.
+            // With lock, loading the commit info slows down terrible.
             if (_graphData.Nodes.TryGetValue(guid, out var node))
             {
                 foreach (var descendant in node.Descendants)

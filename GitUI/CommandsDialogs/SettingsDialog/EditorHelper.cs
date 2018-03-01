@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         [NotNull]
         private static string GetSublimeText3()
         {
-            //http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
+            // http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
             return GetEditorCommandLine("SublimeText", "sublime_text.exe", " -w --multiinstance", "Sublime Text 3");
         }
 

@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.SuspendLayout();
 
-            //if form is created for translation purpose
+            // if form is created for translation purpose
             if (aCommands == null)
                 return;
 

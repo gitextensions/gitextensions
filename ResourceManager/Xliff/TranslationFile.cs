@@ -81,10 +81,10 @@ namespace ResourceManager.Xliff
 
             if (ti == null)
             {
-                //if an item is not translated, then store its default value
-                //to be able to retrieve it later (eg. when to a caption
-                //is added an additional information like 'Commit (<number of changes>)',
-                //and then the caption needs to be refreshed)
+                // if an item is not translated, then store its default value
+                // to be able to retrieve it later (eg. when to a caption
+                // is added an additional information like 'Commit (<number of changes>)',
+                // and then the caption needs to be refreshed)
                 string defaultValue = provideDefaultValue();
                 tc.Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, defaultValue));
                 return defaultValue;

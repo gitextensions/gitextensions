@@ -310,7 +310,7 @@ namespace Bitbucket
                 TargetRepo = curItem.DestRepo,
             };
 
-            //Merge
+            // Merge
             var mergeRequest = new MergePullRequest(_settings, mergeInfo);
             var response = mergeRequest.Send();
             if (response.Success)
@@ -335,7 +335,7 @@ namespace Bitbucket
                 TargetRepo = curItem.DestRepo,
             };
 
-            //Approve
+            // Approve
             var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
             var response = approveRequest.Send();
             if (response.Success)
@@ -355,7 +355,7 @@ namespace Bitbucket
                 var link = (sender as LinkLabel).Text;
                 if (e.Button == MouseButtons.Right)
                 {
-                    //Just copy the text
+                    // Just copy the text
                     Clipboard.SetText(link);
                 }
                 else

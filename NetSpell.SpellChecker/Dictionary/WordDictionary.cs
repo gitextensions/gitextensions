@@ -435,7 +435,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                         SuffixRules.Add(currentRule.Name, currentRule);
                                     }
                                 }
-                                    //if 4 parts, then entry for current rule
+                                    // if 4 parts, then entry for current rule
                                 else if (partMatches.Count == 4)
                                 {
                                     // part 1 = affix key

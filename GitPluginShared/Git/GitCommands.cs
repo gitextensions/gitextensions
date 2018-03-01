@@ -153,7 +153,7 @@ namespace GitPluginShared.Git
             }
             catch
             {
-                //ignore
+                // ignore
             }
 
             return string.Empty;

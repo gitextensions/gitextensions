@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.ResolveConflictsDialog
 
         private void FormModifiedDeletedCreated_Load(object sender, EventArgs e)
         {
-            //save position of this dialog, since the teksts could be to large when larger font is used.
+            // save position of this dialog, since the teksts could be to large when larger font is used.
             CenterToParent();
         }
     }

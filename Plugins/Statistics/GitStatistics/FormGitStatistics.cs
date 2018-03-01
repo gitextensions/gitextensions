@@ -182,7 +182,7 @@ namespace GitStatistics
                 }
             }
 
-            //Send 'changed' event when done
+            // Send 'changed' event when done
             lineCounter_LinesOfCodeUpdated(_lineCounter, EventArgs.Empty);
         }
 
@@ -199,7 +199,7 @@ namespace GitStatistics
         {
             LineCounter lineCounter = (LineCounter)sender;
 
-            //Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
+            // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
             var extensionValues = new decimal[lineCounter.LinesOfCodePerExtension.Count];
             var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
 
@@ -217,7 +217,7 @@ namespace GitStatistics
                 n++;
             }
 
-            //Sync rest to UI thread
+            // Sync rest to UI thread
             _syncContext.Post(o => UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels), null);
         }
 

@@ -157,17 +157,17 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(fileName))
                 return null;
 
-            //Replace windows path separator to Linux path separator.
-            //This is needed to keep the file history working when started from file tree in
-            //browse dialog.
+            // Replace windows path separator to Linux path separator.
+            // This is needed to keep the file history working when started from file tree in
+            // browse dialog.
             fileName = fileName.ToPosixPath();
 
             // we will need this later to look up proper casing for the file
             var fullFilePath = _fullPathResolver.Resolve(fileName);
 
-            //The section below contains native windows (kernel32) calls
-            //and breaks on Linux. Only use it on Windows. Casing is only
-            //a Windows problem anyway.
+            // The section below contains native windows (kernel32) calls
+            // and breaks on Linux. Only use it on Windows. Casing is only
+            // a Windows problem anyway.
             if (EnvUtils.RunningOnWindows() && File.Exists(fullFilePath))
             {
                 // grab the 8.3 file path

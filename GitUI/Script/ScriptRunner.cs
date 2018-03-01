@@ -470,7 +470,7 @@ namespace GitUI.Script
 
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
-            //Make sure we are able to run git, even if git is not in the path
+            // Make sure we are able to run git, even if git is not in the path
             if (originalCommand.Equals("git", StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{git}", StringComparison.CurrentCultureIgnoreCase))
                 return AppSettings.GitCommand;
@@ -484,7 +484,7 @@ namespace GitUI.Script
             if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                 return "explorer";
 
-            //Prefix should be {plugin:pluginname},{plugin=pluginname}
+            // Prefix should be {plugin:pluginname},{plugin=pluginname}
             var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             if (match.Success && match.Groups.Count > 1)
                 originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());

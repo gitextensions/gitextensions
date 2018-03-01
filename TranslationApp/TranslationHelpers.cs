@@ -15,7 +15,7 @@ namespace TranslationApp
             IDictionary<string, TranslationFile> neutralTranslation = new Dictionary<string, TranslationFile>();
             try
             {
-                //Set language to neutral to get neutral translations
+                // Set language to neutral to get neutral translations
                 GitCommands.AppSettings.CurrentTranslation = "";
 
                 var translatableTypes = TranslationUtl.GetTranslatableTypes();
@@ -43,7 +43,7 @@ namespace TranslationApp
             }
             finally
             {
-                //Restore translation
+                // Restore translation
                 GitCommands.AppSettings.CurrentTranslation = null;
             }
 

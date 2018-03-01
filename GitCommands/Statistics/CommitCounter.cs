@@ -33,9 +33,9 @@ namespace GitCommands.Statistics
 
             foreach (var userCommitCount in unformattedCommitsPerContributor)
             {
-                var commitCount = userCommitCount.Trim(); //remove whitespaces at start and end
+                var commitCount = userCommitCount.Trim(); // remove whitespaces at start and end
 
-                var tab = commitCount.IndexOfAny(delimiter); //find space or tab
+                var tab = commitCount.IndexOfAny(delimiter); // find space or tab
 
                 if (tab <= 0)
                     continue;

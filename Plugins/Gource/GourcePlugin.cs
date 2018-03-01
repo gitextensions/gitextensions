@@ -43,7 +43,7 @@ namespace Gource
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            // return all settings or introduce implementation based on reflection on GitPluginBase level
             yield return GourcePath;
             yield return GourceArguments;
         }
@@ -238,8 +238,8 @@ namespace Gource
 
                 var response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
 
-                //find http://gource.googlecode.com/files/gource-0.26b.win32.zip
-                //find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
+                // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
+                // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
                 var regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
 
                 var matches = regEx.Matches(response);

@@ -76,7 +76,7 @@ namespace GitCommandsTests
             }
             else
             {
-                //I am not able to figure out any invalid (giving exception) path under mono
+                // I am not able to figure out any invalid (giving exception) path under mono
             }
         }
 

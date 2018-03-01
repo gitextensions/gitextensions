@@ -334,7 +334,7 @@ namespace GitUI
             }
             catch (Exception)
             {
-                //TODO: howto restore a corrupted config?
+                // TODO: howto restore a corrupted config?
             }
         }
 
@@ -365,7 +365,7 @@ namespace GitUI
             }
             catch (Exception)
             {
-                //TODO: howto restore a corrupted config?
+                // TODO: howto restore a corrupted config?
             }
 
             return null;

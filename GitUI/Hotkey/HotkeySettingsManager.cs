@@ -42,7 +42,7 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadHotkeys(string name)
         {
-            //var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
+            // var settings = LoadSettings().FirstOrDefault(s => s.Name == name);
             HotkeySettings[] allSettings;
             HotkeySettings settings = new HotkeySettings();
             HotkeySettings scriptkeys = new HotkeySettings();
@@ -58,11 +58,11 @@ namespace GitUI.Hotkey
                     scriptkeys = hs;
             }
 
-            //HotkeyCommand[] scriptkeys = LoadSettings().FirstOrDefault(s => s.Name == name);
+            // HotkeyCommand[] scriptkeys = LoadSettings().FirstOrDefault(s => s.Name == name);
 
             if (settings != null) {
-                //append general hotkeys to every form
-                //HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
+                // append general hotkeys to every form
+                // HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
                 HotkeyCommand[] allkeys = new HotkeyCommand[settings.Commands.Length + scriptkeys.Commands.Length];
                 settings.Commands.CopyTo(allkeys, 0);
                 scriptkeys.Commands.CopyTo(allkeys, settings.Commands.Length);
@@ -70,7 +70,7 @@ namespace GitUI.Hotkey
                 return allkeys;
             }
 
-            //return settings != null ? settings.Commands : null;
+            // return settings != null ? settings.Commands : null;
             return null;
         }
 
@@ -98,7 +98,7 @@ namespace GitUI.Hotkey
                         UsedKeys.Add(hotkeyCommand.KeyData);
                 }
             }
-            //MessageBox.Show(UsedKeys.Count.ToString());
+            // MessageBox.Show(UsedKeys.Count.ToString());
         }
 
         /// <summary>Serializes and saves the supplied settings</summary>
@@ -209,7 +209,7 @@ namespace GitUI.Hotkey
                     HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
                     if (settings == null)
                     {
-                        AppSettings.SerializedHotkeys = " "; //mark settings as migrated
+                        AppSettings.SerializedHotkeys = " "; // mark settings as migrated
                     }
                     else
                     {
@@ -218,7 +218,7 @@ namespace GitUI.Hotkey
                 }
                 else
                 {
-                    AppSettings.SerializedHotkeys = " "; //mark settings as migrated
+                    AppSettings.SerializedHotkeys = " "; // mark settings as migrated
                 }
             }
         }

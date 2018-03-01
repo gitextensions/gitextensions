@@ -87,10 +87,10 @@ namespace GitUI.RevisionGridClasses
                 // TODO: We could be smart and only clear items after Node[aId]. The check
                 // below isn't valid, since it could be either the filtered or unfiltered
                 // lane...
-                //if (node.InLane != int.MaxValue)
-                //{
+                // if (node.InLane != int.MaxValue)
+                // {
                 //    filteredLanes.Clear();
-                //}
+                // }
             }
 
             public void ClearHighlightBranch()
@@ -167,10 +167,10 @@ namespace GitUI.RevisionGridClasses
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Oldest == node
                         && parent.Ancestors.Count == 0
-                        //If this is true, the current revision is in the middle of a branch 
-                        //and is about to start a new branch. This will also mean that the last
-                        //revisions are non-relative. Make sure a new junction is added and this
-                        //is the start of a new branch (and color!)
+                        // If this is true, the current revision is in the middle of a branch 
+                        // and is about to start a new branch. This will also mean that the last
+                        // revisions are non-relative. Make sure a new junction is added and this
+                        // is the start of a new branch (and color!)
                         && (aType & DataType.Active) != DataType.Active
                         )
                     {
@@ -325,18 +325,18 @@ namespace GitUI.RevisionGridClasses
 
             public Node[] TopoSortedNodes()
             {
-                //http://en.wikipedia.org/wiki/Topological_ordering
-                //L ? Empty list that will contain the sorted nodes
-                //S ? Set of all nodes with no incoming edges
+                // http://en.wikipedia.org/wiki/Topological_ordering
+                // L ? Empty list that will contain the sorted nodes
+                // S ? Set of all nodes with no incoming edges
 
-                //function visit(node n)
+                // function visit(node n)
                 //    if n has not been visited yet then
                 //        mark n as visited
                 //        for each node m with an edge from n to m do
                 //            visit(m)
                 //        add n to L
 
-                //for each node n in S do
+                // for each node n in S do
                 //    visit(n)
 
                 var L = new Queue<Node>();

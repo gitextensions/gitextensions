@@ -11,7 +11,7 @@ namespace GitCommands.ExternalLinks
     [XmlType("GitExtLinkDef")]
     public class ExternalLinkDefinition : SimpleStructured
     {
-        //revision's parts that can be searched for candidates for a link
+        // revision's parts that can be searched for candidates for a link
         public enum RevisionPart
         {
             Message,

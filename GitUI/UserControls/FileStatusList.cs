@@ -329,7 +329,7 @@ namespace GitUI
 
         void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
         {
-            //SELECT
+            // SELECT
             if (e.Button == MouseButtons.Right)
             {
                 var hover = FileStatusListView.HitTest(e.Location);
@@ -342,7 +342,7 @@ namespace GitUI
                 }
             }
 
-            //DRAG
+            // DRAG
             if (e.Button == MouseButtons.Left)
             {
                 if (SelectedItems.Any())
@@ -398,7 +398,7 @@ namespace GitUI
         {
             ListView listView = sender as ListView;
 
-            //DRAG
+            // DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
                 !dragBoxFromMouseDown.Contains(e.X, e.Y))
@@ -423,7 +423,7 @@ namespace GitUI
                 }
             }
 
-            //TOOLTIP
+            // TOOLTIP
             if (listView != null)
             {
                 ListViewItem hoveredItem;
@@ -448,7 +448,7 @@ namespace GitUI
 
                     float fTextWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
 
-                    //Use width-itemheight because the icon drawn in front of the text is the itemheight
+                    // Use width-itemheight because the icon drawn in front of the text is the itemheight
                     if (fTextWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
                     {
                         if (!hoveredItem.ToolTipText.Equals(gitItemStatus.ToString()))
@@ -725,7 +725,7 @@ namespace GitUI
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return 14; //icon unknown
+            return 14; // icon unknown
         }
 
         [Browsable(false)]
@@ -1097,9 +1097,9 @@ namespace GitUI
                 GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
             else
             {
-                if (revision.Guid == GitRevision.UnstagedGuid) //working directory changes
+                if (revision.Guid == GitRevision.UnstagedGuid) // working directory changes
                     GitItemStatuses = Module.GetUnstagedFilesWithSubmodulesStatus();
-                else if (revision.Guid == GitRevision.IndexGuid) //index
+                else if (revision.Guid == GitRevision.IndexGuid) // index
                     GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
                 else
                 {
@@ -1108,8 +1108,8 @@ namespace GitUI
                     {
                         dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(parentRev, revision.Guid));
 
-                        //Only add the first parent to the dictionary if the setting to show diffs
-                        //for app parents is disabled
+                        // Only add the first parent to the dictionary if the setting to show diffs
+                        // for app parents is disabled
                         if (!AppSettings.ShowDiffForAllParents)
                             break;
                     }

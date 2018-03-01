@@ -68,7 +68,7 @@ namespace PatchApply
                     break;
                 }
 
-                //header lines are encoded in GitModule.SystemEncoding
+                // header lines are encoded in GitModule.SystemEncoding
                 input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
                 if (IsIndexLine(input))
                 {
@@ -98,7 +98,7 @@ namespace PatchApply
                         throw new FormatException("Change not parsed correct: " + input);
 
                     patch.File = Patch.FileType.Binary;
-                    //TODO: NOT SUPPORTED!
+                    // TODO: NOT SUPPORTED!
                     patch.Apply = false;
                     state = PatchProcessorState.OutsidePatch;
                     break;
@@ -107,7 +107,7 @@ namespace PatchApply
                 {
                     patch.File = Patch.FileType.Binary;
 
-                    //TODO: NOT SUPPORTED!
+                    // TODO: NOT SUPPORTED!
                     patch.Apply = false;
                     state = PatchProcessorState.OutsidePatch;
                     break;
@@ -131,12 +131,12 @@ namespace PatchApply
 
                 if (state == PatchProcessorState.InBody && input.StartsWithAny(new[] { " ", "-", "+", "@" }))
                 {
-                    //diff content
+                    // diff content
                     input = GitModule.ReEncodeStringFromLossless(input, FilesContentEncoding);
                 }
                 else
                 {
-                    //warnings, messages ...
+                    // warnings, messages ...
                     input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
                 }
                 if (i < lines.Length - 1)
@@ -188,13 +188,13 @@ namespace PatchApply
         private void ValidateHeader(ref string input, Patch patch)
         {
             //--- /dev/null
-            //means there is no old file, so this should be a new file
+            // means there is no old file, so this should be a new file
             if (IsOldFileMissing(input))
             {
                 if (patch.Type != Patch.PatchType.NewFile)
                     throw new FormatException("Change not parsed correct: " + input);
             }
-            //line starts with --- means, old file name
+            // line starts with --- means, old file name
             else if (input.StartsWith("--- "))
             {
                 input = GitModule.UnquoteFileName(input);
@@ -210,8 +210,8 @@ namespace PatchApply
                 if (patch.Type != Patch.PatchType.DeleteFile)
                     throw new FormatException("Change not parsed correct: " + input);
             }
-            //line starts with +++ means, new file name
-            //we expect a new file now!
+            // line starts with +++ means, new file name
+            // we expect a new file now!
             else if (input.StartsWith("+++ "))
             {
                 input = GitModule.UnquoteFileName(input);

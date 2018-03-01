@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.WaitCursor;
 
             if (stashedItem != null &&
-                gitStash == currentWorkingDirStashItem) //current working directory
+                gitStash == currentWorkingDirStashItem) // current working directory
             {
                 View.ViewCurrentChanges(stashedItem);
             }

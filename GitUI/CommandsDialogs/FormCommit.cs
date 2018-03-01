@@ -23,7 +23,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
+    public sealed partial class FormCommit : GitModuleForm // , IHotkeyable
     {
         #region Translation
         private readonly TranslationString _amendCommit =
@@ -529,7 +529,7 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                         Close();
-                    //trying to properly dispose loading image issue #1037
+                    // trying to properly dispose loading image issue #1037
                     Loading.Image.Dispose();
                 }, false
             );
@@ -539,7 +539,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            //to prevent multiple clicks
+            // to prevent multiple clicks
             if (!_selectedDiffReloaded)
                 return;
 
@@ -547,7 +547,7 @@ namespace GitUI.CommandsDialogs
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
 
-            if (_currentItemStaged) //staged
+            if (_currentItemStaged) // staged
                 args += " --reverse";
             byte[] patch;
             if (!_currentItemStaged && _currentItem.IsNew)
@@ -609,7 +609,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            //to prevent multiple clicks
+            // to prevent multiple clicks
             if (!_selectedDiffReloaded)
                 return;
 
@@ -621,7 +621,7 @@ namespace GitUI.CommandsDialogs
             // Prepare git command
             string args = "apply --whitespace=nowarn";
 
-            if (_currentItemStaged) //staged
+            if (_currentItemStaged) // staged
                 args += " --reverse --index";
 
             byte[] patch;
@@ -644,7 +644,7 @@ namespace GitUI.CommandsDialogs
                 string output = Module.RunGitCmd(args, null, patch);
                 if (EnvUtils.RunningOnWindows())
                 {
-                    //remove file mode warnings on windows
+                    // remove file mode warnings on windows
                     Regex regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
                     output = output.RemoveLines(regEx.IsMatch);
                 }
@@ -1195,7 +1195,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnstagedContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //Do not show if no item selected
+            // Do not show if no item selected
             e.Cancel = !Unstaged.SelectedItems.Any() || Module.IsBareRepository();
 
             var isTrackedSelected = Unstaged.SelectedItems.Any(s => s.IsTracked);
@@ -1350,7 +1350,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Staged.SelectedItems.Any() || Module.IsBareRepository())
             {
-                //Do not show if no item selected
+                // Do not show if no item selected
                 e.Cancel = true;
             }
             else
@@ -1568,7 +1568,7 @@ namespace GitUI.CommandsDialogs
 
                 Module.UnstageFiles(files);
 
-                //remember max selected index
+                // remember max selected index
                 _currentFilesList.StoreNextIndexToSelect();
 
                 var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
@@ -1733,13 +1733,13 @@ namespace GitUI.CommandsDialogs
 
         private void SetCommitMessageFromTextBox(string commitMessageText)
         {
-            //Save last commit message in settings. This way it can be used in multiple repositories.
+            // Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
             var path = CommitHelper.GetCommitMessagePath(Module);
 
-            //Commit messages are UTF-8 by default unless otherwise in the config file.
-            //The git manual states:
+            // Commit messages are UTF-8 by default unless otherwise in the config file.
+            // The git manual states:
             //  git commit and git commit-tree issues a warning if the commit log message
             //  given to it does not look like a valid UTF-8 string, unless you
             //  explicitly say your project uses a legacy encoding. The way to say
@@ -1753,8 +1753,8 @@ namespace GitUI.CommandsDialogs
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
                 {
-                    //When a committemplate is used, skip comments
-                    //otherwise: "#" is probably not used for comment but for issue number
+                    // When a committemplate is used, skip comments
+                    // otherwise: "#" is probably not used for comment but for issue number
                     if (!line.StartsWith("#") ||
                         string.IsNullOrEmpty(_commitTemplate))
                     {
@@ -2007,8 +2007,8 @@ namespace GitUI.CommandsDialogs
             var fileNames = new StringBuilder();
             foreach (var item in list.SelectedItems)
             {
-                //Only use append line when multiple items are selected.
-                //This to make it easier to use the text from clipboard when 1 file is selected.
+                // Only use append line when multiple items are selected.
+                // This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
@@ -2310,7 +2310,7 @@ namespace GitUI.CommandsDialogs
 
         private bool DidFormattedLineChange(int lineNumber)
         {
-            //line not formated yet
+            // line not formated yet
             if (formattedLines.Count <= lineNumber)
                 return true;
 
@@ -2325,7 +2325,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetFormattedLine(int lineNumber)
         {
-            //line not formated yet
+            // line not formated yet
             if (formattedLines.Count <= lineNumber)
             {
                 Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);

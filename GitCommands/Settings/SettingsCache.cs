@@ -100,7 +100,7 @@ namespace GitCommands
         {
             LockedAction(() =>
             {
-                //will refresh EncodedNameMap if needed
+                // will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
 
                 if (string.Equals(inMemValue, value))

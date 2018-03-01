@@ -137,14 +137,14 @@ namespace GitUI.RevisionGridClasses
                     {
                         currentRow.Node = lane.Current;
                         currentRow.NodeLane = curLane;
-                        //break;
+                        // break;
                     }
                 }
                 if (currentRow.Node == null)
                 {
                     // DEBUG: The check above didn't find anything, but should have
                     if (Debugger.IsAttached) Debugger.Break();
-                    //Node[] topo = this.sourceGraph.TopoSortedNodes();
+                    // Node[] topo = this.sourceGraph.TopoSortedNodes();
                     return false;
                 }
 
@@ -235,9 +235,9 @@ namespace GitUI.RevisionGridClasses
                     }
 
                 //// Keep the merge lanes next to each other
-                //int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);
-                //if (mergeFromCount > 1)
-                //{
+                // int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);
+                // if (mergeFromCount > 1)
+                // {
                 //    for (int i = 0; i < mergeFromCount; i++)
                 //    {
                 //        Graph.LaneInfo laneInfo = currentRow[currentRow.NodeLane, i];
@@ -255,13 +255,13 @@ namespace GitUI.RevisionGridClasses
                 //                currentRow.Expand(adjacentLane);
                 //                currentRow.Replace(laneInfo.ConnectLane + 1, adjacentLane);
 
-                //                LaneJunctionDetail temp = laneNodes[laneInfo.ConnectLane];
+                // LaneJunctionDetail temp = laneNodes[laneInfo.ConnectLane];
                 //                laneNodes.RemoveAt(laneInfo.ConnectLane);
                 //                laneNodes.Insert(adjacentLane, temp);
                 //            }
                 //        }
                 //    }
-                //}
+                // }
 
                 #endregion
 

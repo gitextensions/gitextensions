@@ -73,7 +73,7 @@ namespace GitUI
         public void Dispose()
         {
             Stop(false);
-            //clear will lock, to prevent outputting to disposed object
+            // clear will lock, to prevent outputting to disposed object
             Clear();
             doOutput = null;
             _timer.Dispose();

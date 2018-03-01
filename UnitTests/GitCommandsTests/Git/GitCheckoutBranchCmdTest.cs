@@ -61,7 +61,7 @@ namespace GitCommandsTests.Git
             IEnumerable<string> whenResetChangesWithRemoteNewBranchCreate = new List<string> { "checkout", "--force", "-b \"newBranchName\"", "\"branchName\"" };
             IEnumerable<string> whenResetChangesWithRemoteNewBranchReset = new List<string> { "checkout", "--force", "-B \"newBranchName\"", "\"branchName\"" };
 
-            //Merge
+            // Merge
             {
                 cmd.LocalChanges = LocalChangesAction.Merge;
                 cmd.Remote = false;
@@ -79,7 +79,7 @@ namespace GitCommandsTests.Git
                 Assert.AreEqual(cmd.ToLine(), whenMergeChangesWithRemoteNewBranchReset.Join(" "));
             }
 
-            //Reset
+            // Reset
             {
                 cmd.LocalChanges = LocalChangesAction.Reset;
                 cmd.Remote = false;

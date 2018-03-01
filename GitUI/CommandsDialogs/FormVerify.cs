@@ -203,7 +203,7 @@ namespace GitUI.CommandsDialogs
             SuspendLayout();
             _filteredLostObjects.Clear();
             _filteredLostObjects.AddRange(_lostObjects.Where(IsMatchToFilter));
-            //Warnings.DataSource = filteredLostObjects;
+            // Warnings.DataSource = filteredLostObjects;
             ResumeLayout();
         }
 

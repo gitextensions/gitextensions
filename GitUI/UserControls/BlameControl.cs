@@ -140,7 +140,7 @@ namespace GitUI.Blame
             if (_blame == null || selectedLine >= _blame.Lines.Count)
                 return;
 
-            //TODO: Request GitRevision from RevisionGrid that contain all commits
+            // TODO: Request GitRevision from RevisionGrid that contain all commits
             var newBlameLine = _blame.Lines[selectedLine];
             if (_lastBlameLine.CommitGuid == newBlameLine.CommitGuid)
                 return;
@@ -192,7 +192,7 @@ namespace GitUI.Blame
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
-            //refresh only when something changed
+            // refresh only when something changed
             string guid = revision.Guid;
             if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;

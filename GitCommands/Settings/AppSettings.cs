@@ -25,7 +25,7 @@ namespace GitCommands
 
     public static class AppSettings
     {
-        //semi-constants
+        // semi-constants
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
         public static string ProductVersion => Application.ProductVersion;
@@ -52,7 +52,7 @@ namespace GitCommands
                 }
                 else
                 {
-                    //Make applicationdatapath version independent
+                    // Make applicationdatapath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
             }
@@ -111,7 +111,7 @@ namespace GitCommands
                     finally
                     {
                         SettingsContainer = oldSC;
-                        //refresh settings if needed
+                        // refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }
                 }
@@ -148,7 +148,7 @@ namespace GitCommands
             return GetInstallDir();
         }
 
-        //for repair only
+        // for repair only
         public static void SetInstallDir(string dir)
         {
             WriteStringRegValue("InstallDir", dir);
@@ -205,8 +205,8 @@ namespace GitCommands
 
         public static bool ShowCurrentBranchInVisualStudio
         {
-            //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
-            //other changes in the Visual Studio plugin itself.
+            // This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
+            // other changes in the Visual Studio plugin itself.
             get => ReadBoolRegKey("ShowCurrentBranchInVS", true);
             set => WriteBoolRegKey("ShowCurrentBranchInVS", value);
         }
@@ -954,13 +954,13 @@ namespace GitCommands
                 var temp = value.EnsureTrailingPathSeparator();
                 SetString("gitbindir", temp);
 
-                //if (string.IsNullOrEmpty(_gitBinDir))
+                // if (string.IsNullOrEmpty(_gitBinDir))
                 //    return;
 
-                //var path =
+                // var path =
                 //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
                 //    _gitBinDir;
-                //Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                // Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 
@@ -1601,7 +1601,7 @@ namespace GitCommands
                 }
                 catch
                 {
-                    //there are CultureInfos without a code page
+                    // there are CultureInfos without a code page
                 }
             }
             else

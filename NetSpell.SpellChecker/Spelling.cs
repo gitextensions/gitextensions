@@ -458,7 +458,7 @@ namespace NetSpell.SpellChecker
                 && index + length < _text.Length
                 && _text[index + length] == ' ')
             {
-                length++; //removing trailing space
+                length++; // removing trailing space
             }
             // adjust length to remove double white space
             else if (index > 0
@@ -466,7 +466,7 @@ namespace NetSpell.SpellChecker
                 && _text[index - 1] == ' '
                 && _text[index + length] == ' ')
             {
-                length++; //removing trailing space
+                length++; // removing trailing space
             }
             // adjust index to remove extra white space before punctuation
             else if (index > 0
@@ -549,8 +549,8 @@ namespace NetSpell.SpellChecker
                     int insertion = matrix[i, j - 1];
                     int match = Math.Min(deletion + 1, insertion + 1);
                     matrix[i, j] = Math.Min(diag, match);
-                }//for j
-            }//for i
+                }// for j
+            }// for i
 
             int dist = matrix[source.Length, target.Length];
 
@@ -830,7 +830,7 @@ namespace NetSpell.SpellChecker
             if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
-                OnEndOfText(System.EventArgs.Empty);	//raise event
+                OnEndOfText(System.EventArgs.Empty);	// raise event
                 return false;
             }
 
@@ -856,23 +856,23 @@ namespace NetSpell.SpellChecker
                         else if (!IgnoreList.Contains(currentWord))
                         {
                             misspelledWord = true;
-                            OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
-                            //break;
+                            OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		// raise event
+                            // break;
                         }
                     }
                     else if (i > 0 && _words[i - 1].Value == currentWord
                         && (_words[i - 1].Index + _words[i - 1].Length + 1) == _words[i].Index)
                     {
                         misspelledWord = true;
-                        OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
-                        //break;
+                        OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		// raise event
+                        // break;
                     }
                 }
             } // for
 
             if (_wordIndex >= _words.Count - 1 && !misspelledWord)
             {
-                OnEndOfText(System.EventArgs.Empty);	//raise event
+                OnEndOfText(System.EventArgs.Empty);	// raise event
             }
 
             return misspelledWord;

@@ -81,8 +81,8 @@ namespace GitUI.CommandsDialogs
                 {
                     // We tried.
                 }
-                //if the From field is empty, then fill it with the current repository remote URL in hope
-                //that the cloned repository is hosted on the same server
+                // if the From field is empty, then fill it with the current repository remote URL in hope
+                // that the cloned repository is hosted on the same server
                 if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
                 {
                     var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
@@ -118,8 +118,8 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            //if there is no destination directory, then use the parent of the current working directory
-            //this would clone the new repo at the same level as the current one by default
+            // if there is no destination directory, then use the parent of the current working directory
+            // this would clone the new repo at the same level as the current one by default
             if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
                 _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
 

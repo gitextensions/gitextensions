@@ -81,7 +81,7 @@ namespace GitUI.UserControls
 
                 DateTime executionStartTimestamp = DateTime.Now;
 
-                //process used to execute external commands
+                // process used to execute external commands
                 var process = new Process();
                 ProcessStartInfo startInfo = GitCommandHelpers.CreateProcessStartInfo(command, arguments, workdir, GitModule.SystemEncoding);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
@@ -101,10 +101,10 @@ namespace GitUI.UserControls
                         if (_process == null)
                             return;
                         // From GitCommandsInstance:
-                        //The process is exited already, but this command waits also until all output is received.
-                        //Only WaitForExit when someone is connected to the exited event. For some reason a
-                        //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                        //we wait for exit, probably a timing issue...
+                        // The process is exited already, but this command waits also until all output is received.
+                        // Only WaitForExit when someone is connected to the exited event. For some reason a
+                        // null reference is thrown sometimes when staging/unstaging in the commit dialog when
+                        // we wait for exit, probably a timing issue...
                         try
                         {
                             _process.WaitForExit();
@@ -146,7 +146,7 @@ namespace GitUI.UserControls
                 throw new ArgumentNullException(nameof(text));
             if (InvokeRequired)
                 throw new InvalidOperationException("This operation must be called on the GUI thread.");
-            //if not disposed
+            // if not disposed
             if (!IsDisposed)
             {
                 _editbox.Visible = true;

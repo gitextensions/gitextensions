@@ -232,7 +232,7 @@ namespace GitImpact
                         e.Graphics.FillPath(_brushes[author], _paths[author]);
                 }
 
-                //Draw black border around selected author
+                // Draw black border around selected author
                 string selectedAuthor = _authorStack[_authorStack.Count - 1];
                 if (_brushes.ContainsKey(selectedAuthor) && _paths.ContainsKey(selectedAuthor))
                     e.Graphics.DrawPath(new Pen(Color.Black, 2), _paths[selectedAuthor]);

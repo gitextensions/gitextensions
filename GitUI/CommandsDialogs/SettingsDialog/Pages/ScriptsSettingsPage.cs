@@ -81,16 +81,16 @@ Current Branch:
 
 				foreach (System.Collections.DictionaryEntry icon in resourceSet)
 				{
-					//add entry to toolstrip
+					// add entry to toolstrip
 					if (icon.Value.GetType() == typeof(Icon))
 					{
-						//contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+						// contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
 					}
 					else if (icon.Value.GetType() == typeof(Bitmap))
 					{
 						contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
 					}
-					//var aa = icon.Value.GetType();
+					// var aa = icon.Value.GetType();
 				}
 
 				resourceSet.Close();
@@ -161,7 +161,7 @@ Current Branch:
             ScriptInfo script = ScriptManager.GetScripts().AddNew();
             script.HotkeyCommandIdentifier = ScriptManager.NextHotkeyCommandIdentifier();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
-            ScriptList_SelectionChanged(null, null); //needed for linux
+            ScriptList_SelectionChanged(null, null); // needed for linux
         }
 
         private void removeScriptButton_Click(object sender, EventArgs e)
@@ -268,25 +268,25 @@ Current Branch:
 
         private void ScriptList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            ScriptList_SelectionChanged(null, null); //needed for linux
+            ScriptList_SelectionChanged(null, null); // needed for linux
         }
 
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
         {
-            //reset bold item to regular
+            // reset bold item to regular
             var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().FirstOrDefault(s => s.Font.Bold);
             if (item != null)
                 item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
 
-            //make new item bold
+            // make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
-            //set new image on button
+            // set new image on button
             sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
 
             IconName = ((ToolStripMenuItem)sender).Text;
 
-            //store variables
+            // store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
         }
 

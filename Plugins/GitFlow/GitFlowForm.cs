@@ -195,7 +195,7 @@ namespace GitFlow
             if (branchType == Branch.release.ToString("G"))
                 return string.Empty;
             if (branchType == Branch.support.ToString("G"))
-                return " HEAD"; //Hoping that's a revision on master (How to get the sha of the selected line in GitExtension?)
+                return " HEAD"; // Hoping that's a revision on master (How to get the sha of the selected line in GitExtension?)
             if (!cbBasedOn.Checked)
                 return string.Empty;
             return " " + cbBaseBranch.SelectedValue;

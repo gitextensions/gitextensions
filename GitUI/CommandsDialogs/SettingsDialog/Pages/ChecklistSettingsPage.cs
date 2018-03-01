@@ -616,7 +616,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                       "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2",
                                                       null)))
             {
-                //Check if shell extensions are installed
+                // Check if shell extensions are installed
                 string path32 = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
                 string path64 = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
                 if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))

@@ -130,7 +130,7 @@ namespace GitCommands
                 /* Committer Name          */ "%cN%n" +
                 /* Committer Email         */ "%cE%n" +
                 /* Committer Date          */ "%ct%n" +
-                /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
+                /* Commit message encoding */ "%e%x00" + // there is a bug: git does not recode commit message when format is given
                 /* Commit Subject          */ "%s%x00" +
                 /* Commit Body             */ "%B%x00";
 

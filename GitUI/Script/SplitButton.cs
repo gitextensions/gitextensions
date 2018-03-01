@@ -79,13 +79,13 @@ namespace GitUI.Script
             get { return m_SplitMenu; }
             set
             {
-                //remove the event handlers for the old SplitMenu
+                // remove the event handlers for the old SplitMenu
                 if (m_SplitMenu != null)
                 {
                     m_SplitMenu.Popup -= SplitMenu_Popup;
                 }
 
-                //add the event handlers for the new SplitMenu
+                // add the event handlers for the new SplitMenu
                 if (value != null)
                 {
                     ShowSplit = true;
@@ -107,14 +107,14 @@ namespace GitUI.Script
             }
             set
             {
-                //remove the event handlers for the old SplitMenuStrip
+                // remove the event handlers for the old SplitMenuStrip
                 if (m_SplitMenuStrip != null)
                 {
                     m_SplitMenuStrip.Closing -= SplitMenuStrip_Closing;
                     m_SplitMenuStrip.Opening -= SplitMenuStrip_Opening;
                 }
 
-                //add the event handlers for the new SplitMenuStrip
+                // add the event handlers for the new SplitMenuStrip
                 if (value != null)
                 {
                     ShowSplit = true;
@@ -289,7 +289,7 @@ namespace GitUI.Script
                 return;
             }
 
-            //handle ContextMenu re-clicking the drop-down region to close the menu
+            // handle ContextMenu re-clicking the drop-down region to close the menu
             if (m_SplitMenu != null && e.Button == MouseButtons.Left && !isMouseEntered)
                 skipNextOpen = true;
 
@@ -391,7 +391,7 @@ namespace GitUI.Script
             // Draw an arrow in the correct location
             PaintArrow(g, dropDownRectangle);
 
-            //paint the image and text in the "button" part of the splitButton
+            // paint the image and text in the "button" part of the splitButton
             PaintTextandImage(g, new Rectangle(0, 0, ClientRectangle.Width - SplitSectionWidth, ClientRectangle.Height));
 
             // draw the focus rectangle.
@@ -407,7 +407,7 @@ namespace GitUI.Script
 
             CalculateButtonTextAndImageLayout(ref bounds, out var text_rectangle, out var image_rectangle);
 
-            //draw the image
+            // draw the image
             if (Image != null)
             {
                 if (Enabled)
@@ -422,7 +422,7 @@ namespace GitUI.Script
             else if (!ShowKeyboardCues)
                 textFormatFlags = textFormatFlags | TextFormatFlags.HidePrefix;
 
-            //draw the text
+            // draw the text
             if (!string.IsNullOrEmpty(Text))
             {
                 if (Enabled)
@@ -436,7 +436,7 @@ namespace GitUI.Script
         {
             Point middle = new Point(Convert.ToInt32(dropDownRect.Left + dropDownRect.Width / 2), Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));
 
-            //if the width is odd - favor pushing it over one pixel right.
+            // if the width is odd - favor pushing it over one pixel right.
             middle.X += (dropDownRect.Width % 2);
 
             Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
@@ -451,7 +451,7 @@ namespace GitUI.Script
         {
             Size preferredSize = base.GetPreferredSize(proposedSize);
 
-            //autosize correctly for splitbuttons
+            // autosize correctly for splitbuttons
             if (showSplit)
             {
                 if (AutoSize)
@@ -499,7 +499,7 @@ namespace GitUI.Script
             ret_size.Height += (Padding.Vertical + 6);
             ret_size.Width += (Padding.Horizontal + 6);
 
-            //pad the splitButton arrow region
+            // pad the splitButton arrow region
             if (showSplit)
                 ret_size.Width += SplitSectionWidth;
 
@@ -508,9 +508,9 @@ namespace GitUI.Script
 
         #region Button Layout Calculations
 
-        //The following layout functions were taken from Mono's Windows.Forms 
-        //implementation, specifically "ThemeWin32Classic.cs", 
-        //then modified to fit the context of this splitButton
+        // The following layout functions were taken from Mono's Windows.Forms 
+        // implementation, specifically "ThemeWin32Classic.cs", 
+        // then modified to fit the context of this splitButton
 
         private void CalculateButtonTextAndImageLayout(ref Rectangle content_rect, out Rectangle textRectangle, out Rectangle imageRectangle)
         {
@@ -526,7 +526,7 @@ namespace GitUI.Script
                     // Overlay is easy, text always goes here
                     textRectangle = OverlayObjectRect(ref content_rect, ref text_size, TextAlign); // Rectangle.Inflate(content_rect, -4, -4);
 
-                    //Offset on Windows 98 style when button is pressed
+                    // Offset on Windows 98 style when button is pressed
                     if (_state == PushButtonState.Pressed && !Application.RenderWithVisualStyles)
                         textRectangle.Offset(1, 1);
 
@@ -820,10 +820,10 @@ namespace GitUI.Script
 
         protected override void WndProc(ref Message m)
         {
-            //0x0212 == WM_EXITMENULOOP
+            // 0x0212 == WM_EXITMENULOOP
             if (m.Msg == 0x0212)
             {
-                //this message is only sent when a ContextMenu is closed (not a ContextMenuStrip)
+                // this message is only sent when a ContextMenu is closed (not a ContextMenuStrip)
                 isSplitMenuVisible = false;
                 SetButtonDrawState();
             }

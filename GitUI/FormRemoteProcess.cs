@@ -89,7 +89,7 @@ namespace GitUI
             // An error occurred!
             if (isError && Plink)
             {
-                //there might be an other error, this condition is too weak
+                // there might be an other error, this condition is too weak
                 /*
                 if (GetOutputString().Contains("successfully authenticated"))
                 {

@@ -14,7 +14,7 @@ namespace GitCommands
             var fileInfo = new FileInfo(fileName);
             if (!fileInfo.Exists)
             {
-                //The file doesn't exist yet, no need to make it writable
+                // The file doesn't exist yet, no need to make it writable
                 writableAction(fileName);
                 return;
             }
