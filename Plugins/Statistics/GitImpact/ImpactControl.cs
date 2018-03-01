@@ -258,7 +258,7 @@ namespace GitImpact
                     foreach (var label in _lineLabels[author])
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString(), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width/2, label.Item1.Y - sz.Height/2);
+                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y - sz.Height / 2);
                         g.DrawString(label.Item2.ToString(), font, brush, pt);
                     }
                 }
@@ -276,7 +276,7 @@ namespace GitImpact
                     foreach (var label in _weekLabels)
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM yy"), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width/2, label.Item1.Y + sz.Height/2);
+                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y + sz.Height / 2);
                         g.DrawString(label.Item2.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
@@ -422,7 +422,7 @@ namespace GitImpact
 
         private int GenerateIntFromString(string text)
         {
-            return text.Sum(c => (int) c);
+            return text.Sum(c => (int)c);
         }
 
         /// <summary>

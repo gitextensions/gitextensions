@@ -154,7 +154,7 @@ namespace GitUI.SpellChecker
                     pl.Add(new Point(i, start.Y));
                     pl.Add(new Point(i + 2, start.Y + 2));
                 }
-                var p = (Point[]) pl.ToArray(typeof(Point));
+                var p = (Point[])pl.ToArray(typeof(Point));
                 _bufferGraphics.DrawLines(pen, p);
             }
             else
@@ -169,8 +169,8 @@ namespace GitUI.SpellChecker
             var linHeight = LineHeight();
             using (var pen = new Pen(col, linHeight))
             {
-                start.Offset(0, -linHeight/2);
-                end.Offset(0, -linHeight/2);
+                start.Offset(0, -linHeight / 2);
+                end.Offset(0, -linHeight / 2);
                 _bufferGraphics.DrawLine(pen, start, end);
             }
         }

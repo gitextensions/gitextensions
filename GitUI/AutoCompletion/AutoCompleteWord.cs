@@ -36,7 +36,7 @@ namespace GitUI.AutoCompletion
                 return true;
             if (obj.GetType() != this.GetType())
                 return false;
-            return Equals((AutoCompleteWord) obj);
+            return Equals((AutoCompleteWord)obj);
         }
 
         public override int GetHashCode ()

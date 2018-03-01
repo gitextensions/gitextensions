@@ -537,7 +537,7 @@ namespace TeamCityIntegration
         public Project GetProjectsTree()
         {
             var projectsRootElement = GetProjectsResponseAsync(CancellationToken.None).Result;
-            var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e=>new Project
+            var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e => new Project
             {
                 Id = (string)e.Attribute("id"),
                 Name = (string)e.Attribute("name"),
@@ -545,7 +545,7 @@ namespace TeamCityIntegration
                 SubProjects = new List<Project>()
             } ).ToList();
 
-            var projectDictionary = projects.ToDictionary(p => p.Id, p=>p);
+            var projectDictionary = projects.ToDictionary(p => p.Id, p => p);
 
             Project rootProject = null;
             foreach (var project in projects)
@@ -568,9 +568,9 @@ namespace TeamCityIntegration
             var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
             return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
             {
-                Id = (string) e.Attribute("id"),
-                Name = (string) e.Attribute("name"),
-                ParentProject = (string) e.Attribute("projectId")
+                Id = (string)e.Attribute("id"),
+                Name = (string)e.Attribute("name"),
+                ParentProject = (string)e.Attribute("projectId")
             }).ToList();
         }
 
@@ -581,8 +581,8 @@ namespace TeamCityIntegration
             return new Build
             {
                 Id = buildId,
-                Name = (string) buildType.Attribute("name"),
-                ParentProject = (string) buildType.Attribute("projectId")
+                Name = (string)buildType.Attribute("name"),
+                ParentProject = (string)buildType.Attribute("projectId")
             };
         }
     }

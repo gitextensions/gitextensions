@@ -10,7 +10,7 @@ namespace GitUI.HelperDialogs
         public FormRunScriptSpecify(IEnumerable<IGitRef> options, string label)
         {
             InitializeComponent();
-            specifyLabel.Text = "Specify '" + label+"':";
+            specifyLabel.Text = "Specify '" + label + "':";
             foreach (var head in options)
             {
                 branchesListView.Items.Add(head.Name);

@@ -384,9 +384,9 @@ namespace GitPlugin
                     command = commands.AddNamedCommand2(_addIn,
                         commandName, caption, tooltip, false, iconIndex,
                         ref contextGUIDS,
-                        (int) vsCommandStatus.vsCommandStatusSupported |
-                        (int) vsCommandStatus.vsCommandStatusEnabled,
-                        (int) commandStyle);
+                        (int)vsCommandStatus.vsCommandStatusSupported |
+                        (int)vsCommandStatus.vsCommandStatusEnabled,
+                        (int)commandStyle);
                 }
                 catch (Exception)
                 {
@@ -397,9 +397,9 @@ namespace GitPlugin
             {
                 command = commands.AddNamedCommand2(_addIn,
                     commandName, caption, tooltip, true, -1, ref contextGUIDS,
-                    (int) vsCommandStatus.vsCommandStatusSupported |
-                    (int) vsCommandStatus.vsCommandStatusEnabled,
-                    (int) commandStyle);
+                    (int)vsCommandStatus.vsCommandStatusSupported |
+                    (int)vsCommandStatus.vsCommandStatusEnabled,
+                    (int)commandStyle);
             }
 
             if (command != null)

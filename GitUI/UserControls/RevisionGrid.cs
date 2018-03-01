@@ -2028,7 +2028,7 @@ namespace GitUI
             var points = new[]
                                  {
                                      new PointF(x + horShift, y + verShift),
-                                     new PointF(x + horShift + width, y + verShift + height/2),
+                                     new PointF(x + horShift + width, y + verShift + height / 2),
                                      new PointF(x + horShift, y + verShift + height),
                                      new PointF(x + horShift, y + verShift)
                                  };

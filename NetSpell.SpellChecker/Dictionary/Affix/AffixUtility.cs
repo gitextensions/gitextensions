@@ -116,7 +116,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 		public static void EncodeConditions(string conditionText, AffixEntry entry)
 		{
 			// clear the conditions array
-			for (int i=0; i < entry.Condition.Length; i++)
+			for (int i = 0; i < entry.Condition.Length; i++)
 			{
 				entry.Condition[i] = 0;
 			}
@@ -170,12 +170,12 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 						if (neg)
 						{
 							// turn all chars on
-							for (int j=0; j < entry.Condition.Length; j++) 
+							for (int j = 0; j < entry.Condition.Length; j++) 
 							{
 								entry.Condition[j] = entry.Condition[j] | (1 << num);
 							}
 							// turn off chars in member group
-							for (int j=0; j < numMember; j++) 
+							for (int j = 0; j < numMember; j++) 
 							{
 								int charCode = memberChars[j];
 								entry.Condition[charCode] = entry.Condition[charCode] & ~(1 << num);
@@ -184,7 +184,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 						else 
 						{
 							// turn on chars in member group
-							for (int j=0; j < numMember; j++) 
+							for (int j = 0; j < numMember; j++) 
 							{
 								int charCode = memberChars[j];
 								entry.Condition[charCode] = entry.Condition[charCode] | (1 << num);
@@ -199,7 +199,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 						if (cond == '.')
 						{
 							// wild card character, turn all chars on
-							for (int j=0; j < entry.Condition.Length; j++) 
+							for (int j = 0; j < entry.Condition.Length; j++) 
 							{
 								entry.Condition[j] = entry.Condition[j] | (1 << num);
 							}

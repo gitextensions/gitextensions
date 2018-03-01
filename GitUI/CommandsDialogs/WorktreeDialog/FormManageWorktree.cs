@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 {
                     if (Directory.Exists(workTree.Path))
                     {
-                        ((FormBrowse) Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTree.Path));
+                        ((FormBrowse)Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTree.Path));
                         Close();
                     }
                 }

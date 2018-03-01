@@ -23,7 +23,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 		public static void EncodeRule(string ruleText, ref PhoneticRule rule)
 		{
 			// clear the conditions array
-			for (int i=0; i < rule.Condition.Length; i++)
+			for (int i = 0; i < rule.Condition.Length; i++)
 			{
 				rule.Condition[i] = 0;
 			}
@@ -87,7 +87,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 					if (group)
 					{
 						// turn on chars in member group
-						for (int j=0; j < numMember; j++) 
+						for (int j = 0; j < numMember; j++) 
 						{
 							int charCode = memberChars[j];
 							rule.Condition[charCode] = rule.Condition[charCode] | (1 << rule.ConditionCount);

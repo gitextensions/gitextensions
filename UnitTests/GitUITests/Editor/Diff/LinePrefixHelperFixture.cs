@@ -92,7 +92,7 @@ namespace GitUITests.Editor.Diff
         private static IDocument PreDocumentForDiffText(string diffText)
         {
             var doc = Substitute.For<IDocument>();
-            doc.GetCharAt(Arg.Any<int>()).Returns(args => diffText[(int) args[0]]);
+            doc.GetCharAt(Arg.Any<int>()).Returns(args => diffText[(int)args[0]]);
             doc.TotalNumberOfLines.Returns(diffText.Split('\n').Count());
             doc.TextLength.Returns(diffText.Length);
             return doc;
@@ -103,7 +103,7 @@ namespace GitUITests.Editor.Diff
             var lineSegments = GetSegmentsForDiffText(diffText);
             var lineSegmentGetter = Substitute.For<LineSegmentGetter>();
             lineSegmentGetter.GetSegment(Arg.Any<IDocument>(), Arg.Any<int>())
-                .Returns(args => lineSegments[(int) args[1]]);
+                .Returns(args => lineSegments[(int)args[1]]);
             return lineSegmentGetter;
         }
 

@@ -43,7 +43,7 @@ namespace GitCommandsTests
         {
             const string path = @"C:\";
             var directoryBase = Substitute.For<DirectoryBase>();
-            directoryBase.GetParent(path).Returns((DirectoryInfoBase) null);
+            directoryBase.GetParent(path).Returns((DirectoryInfoBase)null);
             _fileSystem.Directory.Returns(directoryBase);
             var sshPathLocator = new SshPathLocator(_fileSystem, _environment);
             sshPathLocator.Find(path).Should().Be(string.Empty);

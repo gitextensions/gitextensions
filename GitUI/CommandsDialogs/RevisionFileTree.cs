@@ -518,7 +518,7 @@ See the changes in the commit form.");
             stopTrackingThisFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isFile;
             assumeUnchangedTheFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
-            findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count>0;
+            findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count > 0;
 
             toolStripSeparatorFileTreeActions.Visible = isFile;
             expandSubtreeToolStripMenuItem.Visible = isFolder;

@@ -696,7 +696,7 @@ namespace GitUI.RevisionGridClasses
                 if (_graphData != null)
                 {
                     int width = 1;
-                    int start = VerticalScrollBar.Value/_rowHeight;
+                    int start = VerticalScrollBar.Value / _rowHeight;
                     int stop = start + DisplayedRowCount(true);
                     lock (_graphData)
                     {
@@ -712,11 +712,11 @@ namespace GitUI.RevisionGridClasses
                     int maxLanes =
                         (AppSettings.ShowFirstParent &&
                         AppSettings.ShowCurrentBranchOnly &&
-                        AppSettings.BranchFilterEnabled) ? 1: MaxLanes;
+                        AppSettings.BranchFilterEnabled) ? 1 : MaxLanes;
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
-                if (GraphColumn.Width != _laneWidth*laneCount && _laneWidth*laneCount > GraphColumn.MinimumWidth)
-                    GraphColumn.Width = _laneWidth*laneCount;
+                if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
+                    GraphColumn.Width = _laneWidth * laneCount;
             }
         }
 

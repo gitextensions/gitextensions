@@ -65,7 +65,7 @@ namespace GitUI.RevisionGridClasses
                         throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
                 }
 
-                throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent.ToString());
+                throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + aParent.ToString());
             }
 
             public int NodesCount => nodes.Count;

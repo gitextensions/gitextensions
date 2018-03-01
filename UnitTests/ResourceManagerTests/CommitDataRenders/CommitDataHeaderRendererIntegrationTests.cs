@@ -70,7 +70,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                  "Commit hash:	" + _data.Guid + Environment.NewLine +
                                  "Children:		" +
                                    GitRevision.ToShortSha(_data.ChildrenGuids[0]) + " " +
-                                   GitRevision.ToShortSha(_data.ChildrenGuids[1]) + " "+
+                                   GitRevision.ToShortSha(_data.ChildrenGuids[1]) + " " +
                                    GitRevision.ToShortSha(_data.ChildrenGuids[2]) + Environment.NewLine +
                                  "Parent(s):		" + 
                                    GitRevision.ToShortSha(_data.ParentGuids[0]) + " " +

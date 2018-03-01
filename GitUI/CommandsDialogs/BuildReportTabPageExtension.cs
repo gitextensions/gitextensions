@@ -191,7 +191,7 @@ namespace GitUI.CommandsDialogs
 
         private static Task<Stream> DownloadRemoteImageFileAsync(string uri)
         {
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
 
             return GetWebResponseAsync(request).ContinueWith(
                 task =>

@@ -20,7 +20,7 @@ namespace GitUI
         private readonly bool UseDialogSettings = true;
         private DispatcherFrameModalControler ModalControler;
 
-        public FormStatus(): this(true)
+        public FormStatus() : this(true)
         { }
 
         public FormStatus(bool useDialogSettings)

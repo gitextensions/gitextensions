@@ -402,8 +402,8 @@ namespace NetSpell.SpellChecker
                 StringBuilder tempWord = new StringBuilder(CurrentWord);
 
                 char swap = tempWord[i];
-                tempWord[i] = tempWord[i+1];
-                tempWord[i+1] = swap;
+                tempWord[i] = tempWord[i + 1];
+                tempWord[i + 1] = swap;
 
                 string word = tempWord.ToString();
                 if (FindWord(ref word))
@@ -456,23 +456,23 @@ namespace NetSpell.SpellChecker
             // adjust length to remove extra white space after first word
             if (index == 0
                 && index + length < _text.Length
-                && _text[index+length] == ' ')
+                && _text[index + length] == ' ')
             {
                 length++; //removing trailing space
             }
             // adjust length to remove double white space
             else if (index > 0
                 && index + length < _text.Length
-                && _text[index-1] == ' '
-                && _text[index+length] == ' ')
+                && _text[index - 1] == ' '
+                && _text[index + length] == ' ')
             {
                 length++; //removing trailing space
             }
             // adjust index to remove extra white space before punctuation
             else if (index > 0
                 && index + length < _text.Length
-                && _text[index-1] == ' '
-                && char.IsPunctuation(_text[index+length]))
+                && _text[index - 1] == ' '
+                && char.IsPunctuation(_text[index + length]))
             {
                 index--;
                 length++;
@@ -480,7 +480,7 @@ namespace NetSpell.SpellChecker
             // adjust index to remove extra white space before last word
             else if (index > 0
                 && index + length == _text.Length
-                && _text[index-1] == ' ')
+                && _text[index - 1] == ' ')
             {
                 index--;
                 length++;
@@ -518,36 +518,36 @@ namespace NetSpell.SpellChecker
         public int EditDistance(string source, string target, bool positionPriority)
         {
             // i.e. 2-D array
-            int [,] matrix = new int[source.Length+1, target.Length+1];
+            int [,] matrix = new int[source.Length + 1, target.Length + 1];
 
             // boundary conditions
             matrix[0, 0] = 0;
 
-            for (int j=1; j <= target.Length; j++)
+            for (int j = 1; j <= target.Length; j++)
             {
                 // boundary conditions
-                int val = matrix[0, j-1];
+                int val = matrix[0, j - 1];
                 matrix[0, j] = val + 1;
             }
 
             // outer loop
-            for (int i=1; i <= source.Length; i++)
+            for (int i = 1; i <= source.Length; i++)
             {
                 // boundary conditions
-                int val = matrix[i-1, 0];
-                matrix[i, 0] = val+1;
+                int val = matrix[i - 1, 0];
+                matrix[i, 0] = val + 1;
 
                 // inner loop
-                for (int j=1; j <= target.Length; j++)
+                for (int j = 1; j <= target.Length; j++)
                 {
-                    int diag = matrix[i-1, j-1];
+                    int diag = matrix[i - 1, j - 1];
 
-                    if (source.Substring(i-1, 1) != target.Substring(j-1, 1))
+                    if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
                         diag++;
 
-                    int deletion = matrix[i-1, j];
-                    int insertion = matrix[i, j-1];
-                    int match = Math.Min(deletion+1, insertion+1);
+                    int deletion = matrix[i - 1, j];
+                    int insertion = matrix[i, j - 1];
+                    int match = Math.Min(deletion + 1, insertion + 1);
                     matrix[i, j] = Math.Min(diag, match);
                 }//for j
             }//for i
@@ -559,7 +559,7 @@ namespace NetSpell.SpellChecker
             {
                 if (char.ToLowerInvariant(source[0]) != char.ToLowerInvariant(target[0]))
                     dist++;
-                if (char.ToLowerInvariant(source[source.Length-1]) != char.ToLowerInvariant(target[target.Length-1]))
+                if (char.ToLowerInvariant(source[source.Length - 1]) != char.ToLowerInvariant(target[target.Length - 1]))
                     dist++;
             }
             return dist;
@@ -613,30 +613,30 @@ namespace NetSpell.SpellChecker
             if (_words.Count == 1)
                 return 0;
 
-            int low=0;
-            int high=_words.Count-1;
+            int low = 0;
+            int high = _words.Count - 1;
 
             // binary search
-            while (low<=high)
+            while (low <= high)
             {
-                int mid=(low+high)/2;
+                int mid = (low + high) / 2;
                 int wordStartIndex = _words[mid].Index;
                 int wordEndIndex = _words[mid].Index + _words[mid].Length - 1;
 
                 // add white space to end of word by finding the start of the next word
-                if ((mid+1) < _words.Count)
-                    wordEndIndex = _words[mid+1].Index - 1;
+                if ((mid + 1) < _words.Count)
+                    wordEndIndex = _words[mid + 1].Index - 1;
 
                 if (textIndex < wordStartIndex)
-                    high=mid-1;
+                    high = mid - 1;
                 else if (textIndex > wordEndIndex)
-                    low=mid+1;
+                    low = mid + 1;
                 else if (wordStartIndex <= textIndex && textIndex <= wordEndIndex)
                     return mid;
             }
 
             // return last word if not found
-            return _words.Count-1;
+            return _words.Count - 1;
         }
 
         /// <summary>
@@ -780,7 +780,7 @@ namespace NetSpell.SpellChecker
         /// <seealso cref="WordIndex"/>
         public bool SpellCheck()
         {
-            return SpellCheck(_wordIndex, WordCount-1);
+            return SpellCheck(_wordIndex, WordCount - 1);
         }
 
         /// <summary>
@@ -860,8 +860,8 @@ namespace NetSpell.SpellChecker
                             //break;
                         }
                     }
-                    else if (i > 0 && _words[i-1].Value == currentWord
-                        && (_words[i-1].Index + _words[i-1].Length + 1) == _words[i].Index)
+                    else if (i > 0 && _words[i - 1].Value == currentWord
+                        && (_words[i - 1].Index + _words[i - 1].Length + 1) == _words[i].Index)
                     {
                         misspelledWord = true;
                         OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
@@ -870,7 +870,7 @@ namespace NetSpell.SpellChecker
                 }
             } // for
 
-            if (_wordIndex >= _words.Count-1 && !misspelledWord)
+            if (_wordIndex >= _words.Count - 1 && !misspelledWord)
             {
                 OnEndOfText(System.EventArgs.Empty);	//raise event
             }
@@ -1353,7 +1353,7 @@ namespace NetSpell.SpellChecker
                     return 0;
 
                 // make sure word index can't be higher then word count
-                return Math.Max(0, Math.Min(_wordIndex, (WordCount-1)));
+                return Math.Max(0, Math.Min(_wordIndex, (WordCount - 1)));
             }
             set
             {

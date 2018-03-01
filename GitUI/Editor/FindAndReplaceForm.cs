@@ -113,8 +113,8 @@ namespace GitUI
 
             ReplaceMode = replaceMode;
 
-            Owner = (Form) editor.TopLevelControl;
-            Location = new Point(Owner.Location.X + 100, Owner.Location.Y+100);
+            Owner = (Form)editor.TopLevelControl;
+            Location = new Point(Owner.Location.X + 100, Owner.Location.Y + 100);
             Show();
 
             txtLookFor.SelectAll();

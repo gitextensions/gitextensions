@@ -14,10 +14,10 @@ namespace GitStatistics.PieChart
         private static readonly byte[] QuadrilateralPointTypes =
             new[]
                 {
-                    (byte) PathPointType.Start,
-                    (byte) PathPointType.Line,
-                    (byte) PathPointType.Line,
-                    (byte) PathPointType.Line
+                    (byte)PathPointType.Start,
+                    (byte)PathPointType.Line,
+                    (byte)PathPointType.Line,
+                    (byte)PathPointType.Line
                     // | (byte)PathPointType.CloseSubpath 
                 };
 
@@ -55,9 +55,9 @@ namespace GitStatistics.PieChart
         /// </param>
         public Quadrilateral(PointF point1, PointF point2, PointF point3, PointF point4, bool toClose)
         {
-            var pointTypes = (byte[]) QuadrilateralPointTypes.Clone();
+            var pointTypes = (byte[])QuadrilateralPointTypes.Clone();
             if (toClose)
-                pointTypes[3] |= (byte) PathPointType.CloseSubpath;
+                pointTypes[3] |= (byte)PathPointType.CloseSubpath;
             _path = new GraphicsPath(new[] {point1, point2, point3, point4}, pointTypes);
         }
 
@@ -120,7 +120,7 @@ namespace GitStatistics.PieChart
             }
             if (DoesIntersects(point, cornerPoints[cornerPoints.Length - 1], cornerPoints[0]))
                 ++intersections;
-            return (intersections%2 != 0);
+            return (intersections % 2 != 0);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace GitStatistics.PieChart
             var y1 = point1.Y;
             if ((x2 < point.X && x1 >= point.X) || (x2 >= point.X && x1 < point.X))
             {
-                var y = (y2 - y1)/(x2 - x1)*(point.X - x1) + y1;
+                var y = (y2 - y1) / (x2 - x1) * (point.X - x1) + y1;
                 return y > point.Y;
             }
             return false;

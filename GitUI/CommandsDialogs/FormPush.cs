@@ -255,7 +255,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
                 return false;
             }
-            if (/* PushToRemote.Checked */ !CheckIfRemoteExist())
+            if (/* PushToRemote.Checked */!CheckIfRemoteExist())
             {
                 return false;
             }

@@ -148,7 +148,7 @@ namespace ResourceManager.Xliff
                     string propertyName = property.Name;
                     if (propertyName == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
                     {
-                        var list = (IList) property.GetValue(itemObj, null);
+                        var list = (IList)property.GetValue(itemObj, null);
                         for (int index = 0; index < list.Count; index++)
                         {
                             propertyName = "Item" + index;

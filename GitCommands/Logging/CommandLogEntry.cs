@@ -17,7 +17,7 @@ namespace GitCommands.Logging
 
     public override string ToString ()
     {
-      var durationInMillis = (long) ExecutionEndTimestamp.Subtract (ExecutionStartTimestamp).TotalMilliseconds;
+      var durationInMillis = (long)ExecutionEndTimestamp.Subtract (ExecutionStartTimestamp).TotalMilliseconds;
       return string.Format ("{0}    {1}    #(took {2} ms)", ExecutionStartTimestamp.ToString ("O"), Command, durationInMillis);
     }
   }

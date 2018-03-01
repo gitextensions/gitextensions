@@ -41,7 +41,7 @@ namespace GitUI.Editor.Diff
         public override void Paint(Graphics g, Rectangle rect)
         {
             var totalWidth = Size.Width;
-            var leftWidth = (int)(totalWidth/2.0);
+            var leftWidth = (int)(totalWidth / 2.0);
             var rightWidth = rect.Width - leftWidth;
 
             var fontHeight = textArea.TextView.FontHeight;

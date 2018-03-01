@@ -232,9 +232,9 @@ namespace GitStatistics
                     lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
                 });
 
-            string percent_t = ((double) lineCounter.NumberTestCodeLines/lineCounter.NumberCodeLines).ToString("P1");
+            string percent_t = ((double)lineCounter.NumberTestCodeLines / lineCounter.NumberCodeLines).ToString("P1");
             string percent_p =
-                ((double) (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines)/lineCounter.NumberCodeLines).ToString(
+                ((double)(lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) / lineCounter.NumberCodeLines).ToString(
                     "P1");
             TestCodePie.ToolTips =
                 new[]
@@ -247,10 +247,10 @@ namespace GitStatistics
                 string.Format(_linesOfProductionCodeP.Text, (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines), percent_p);
 
 
-            string percentBlank = ((double) lineCounter.NumberBlankLines/lineCounter.NumberLines).ToString("P1");
-            string percentComments = ((double) lineCounter.NumberCommentsLines/lineCounter.NumberLines).ToString("P1");
-            string percentCode = ((double) lineCounter.NumberCodeLines/lineCounter.NumberLines).ToString("P1");
-            string percentDesigner = ((double) lineCounter.NumberLinesInDesignerFiles/lineCounter.NumberLines).ToString("P1");
+            string percentBlank = ((double)lineCounter.NumberBlankLines / lineCounter.NumberLines).ToString("P1");
+            string percentComments = ((double)lineCounter.NumberCommentsLines / lineCounter.NumberLines).ToString("P1");
+            string percentCode = ((double)lineCounter.NumberCodeLines / lineCounter.NumberLines).ToString("P1");
+            string percentDesigner = ((double)lineCounter.NumberLinesInDesignerFiles / lineCounter.NumberLines).ToString("P1");
             LinesOfCodePie.SetValues(new decimal[]
                 {
                     lineCounter.NumberBlankLines,

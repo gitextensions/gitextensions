@@ -149,7 +149,7 @@ namespace GitFlow
                 CurrentBranch = null;
             }
 
-            btnFinish.Enabled = isThereABranch &&(branchType != Branch.support.ToString("G"));
+            btnFinish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             btnPublish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             btnPull.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             pnlPull.Enabled = (branchType != Branch.support.ToString("G"));

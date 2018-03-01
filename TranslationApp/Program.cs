@@ -88,7 +88,7 @@ namespace TranslationApp
                 stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
                 foreach (var item in list.OrderByDescending(item => item.Value))
                 {
-                    stream.WriteLine("{0};{1:F}%;{2};{3}", item.Key, 100.0f*item.Value/neutralItems.Count, item.Value,
+                    stream.WriteLine("{0};{1:F}%;{2};{3}", item.Key, 100.0f * item.Value / neutralItems.Count, item.Value,
                         neutralItems.Count);
                 }
             }

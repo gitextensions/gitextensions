@@ -34,15 +34,15 @@ namespace GitUI.SpellChecker
 
             NativeMethods.RECT rect;
             rect.Top = 0;
-            rect.Bottom = (int) AnInch;
+            rect.Bottom = (int)AnInch;
             rect.Left = 0;
-            rect.Right = (int) (richTextBox.ClientSize.Width*AnInch);
+            rect.Right = (int)(richTextBox.ClientSize.Width * AnInch);
 
             NativeMethods.RECT rectPage;
             rectPage.Top = 0;
-            rectPage.Bottom = (int) AnInch;
+            rectPage.Bottom = (int)AnInch;
             rectPage.Left = 0;
-            rectPage.Right = (int) (richTextBox.ClientSize.Width*AnInch);
+            rectPage.Right = (int)(richTextBox.ClientSize.Width * AnInch);
 
             var canvas = Graphics.FromHwnd(richTextBox.Handle);
             var canvasHdc = canvas.GetHdc();
@@ -59,7 +59,7 @@ namespace GitUI.SpellChecker
             canvas.ReleaseHdc(canvasHdc);
             canvas.Dispose();
 
-            return (int) ((formatRange.rc.Right - formatRange.rc.Left)/AnInch);
+            return (int)((formatRange.rc.Right - formatRange.rc.Left) / AnInch);
         }
 
         internal static int GetBaselineOffsetAtCharIndex(TextBoxBase tb, int index)
@@ -85,14 +85,14 @@ namespace GitUI.SpellChecker
 
             NativeMethods.RECT rect;
             rect.Top = 0;
-            rect.Bottom = (int) AnInch;
+            rect.Bottom = (int)AnInch;
             rect.Left = 0;
             rect.Right = 10000000; //(int)(rtb.Width * anInch + 20); 
 
 
             NativeMethods.RECT rectPage;
             rectPage.Top = 0;
-            rectPage.Bottom = (int) AnInch;
+            rectPage.Bottom = (int)AnInch;
             rectPage.Left = 0;
             rectPage.Right = 10000000; //(int)(rtb.Width * anInch + 20); 
 
@@ -106,7 +106,7 @@ namespace GitUI.SpellChecker
             canvas.ReleaseHdc(canvasHdc);
             canvas.Dispose();
 
-            return (int) ((formatRange.rc.Bottom - formatRange.rc.Top)/AnInch);
+            return (int)((formatRange.rc.Bottom - formatRange.rc.Top) / AnInch);
         }
 
         private static NativeMethods.FORMATRANGE GetFormatRange(NativeMethods.CHARRANGE charRange, IntPtr canvasHdc,

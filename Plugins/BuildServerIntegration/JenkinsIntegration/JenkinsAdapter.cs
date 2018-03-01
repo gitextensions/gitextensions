@@ -246,7 +246,7 @@ namespace JenkinsIntegration
                         {
                             return;
                         }
-                        var buildInfo = CreateBuildInfo((JObject) buildDetails);
+                        var buildInfo = CreateBuildInfo((JObject)buildDetails);
                         observer.OnNext(buildInfo);
 
                         if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
