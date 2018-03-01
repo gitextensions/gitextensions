@@ -133,7 +133,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 			bool end = false;   /* end condition indicator */
 			int num = 0;    /* number of conditions */
 			
-			char [] memberChars = new char[200];
+			char[] memberChars = new char[200];
 			int numMember = 0;   /* number of member in group */
 
 			foreach (char cond in conditionText)

@@ -518,7 +518,7 @@ namespace NetSpell.SpellChecker
         public int EditDistance(string source, string target, bool positionPriority)
         {
             // i.e. 2-D array
-            int [,] matrix = new int[source.Length + 1, target.Length + 1];
+            int[,] matrix = new int[source.Length + 1, target.Length + 1];
 
             // boundary conditions
             matrix[0, 0] = 0;
