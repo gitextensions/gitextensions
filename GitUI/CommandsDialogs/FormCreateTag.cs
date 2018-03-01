@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitTagController = new GitTagController(() => aCommands.Module.WorkingDir);
+                _gitTagController = new GitTagController(aCommands);
             }
         }
 
@@ -83,8 +83,8 @@ namespace GitUI.CommandsDialogs
                                                      tagMessage.Text,
                                                      textBoxGpgKey.Text,
                                                      ForceTag.Checked);
-            var cmd = _gitTagController.GetCreateTagCommand(createTagArgs);
-            if (!UICommands.StartCommandLineProcessDialog(cmd, this))
+            var success = _gitTagController.CreateTag(createTagArgs, this);
+            if (!success)
             {
                 return string.Empty;
             }
