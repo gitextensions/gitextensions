@@ -503,6 +503,7 @@ See the changes in the commit form.");
             fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFileOrFolder;
             fileTreeCleanWorkingTreeToolStripMenuItem.Enabled = isExistingFileOrDirectory;
 
+            fileHistoryToolStripMenuItem.Enabled = itemSelected;
             blameToolStripMenuItem1.Visible = isFile;
 
             editCheckedOutFileToolStripMenuItem.Visible = isFile;
@@ -513,10 +514,10 @@ See the changes in the commit form.");
             openFileWithToolStripMenuItem.Visible = isFile;
 
             toolStripSeparatorGitActions.Visible = isFile;
-            stopTrackingThisFileToolStripMenuItem.Visible = 
-                stopTrackingThisFileToolStripMenuItem.Enabled = isFile;
-            assumeUnchangedTheFileToolStripMenuItem.Visible = 
-                assumeUnchangedTheFileToolStripMenuItem.Enabled = isFile;
+            stopTrackingThisFileToolStripMenuItem.Visible = isFile;
+            stopTrackingThisFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            assumeUnchangedTheFileToolStripMenuItem.Visible = isFile;
+            assumeUnchangedTheFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count>0;
 
             toolStripSeparatorFileTreeActions.Visible = isFile;
