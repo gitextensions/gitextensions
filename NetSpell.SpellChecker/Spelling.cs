@@ -940,13 +940,13 @@ namespace NetSpell.SpellChecker
         /// </param>
         /// <remarks>
         ///		This method sets the <see cref="Text"/> property to the word.
-        ///		Then calls <see cref="TestWord"/> on the word to generate the need
+        ///		Then calls <see cref="TestWord(string)"/> on the word to generate the need
         ///		information for suggestions. Note that the Text, CurrentWord and WordIndex
         ///		properties are set when calling this method.
         /// </remarks>
         /// <seealso cref="CurrentWord"/>
         /// <seealso cref="Suggestions"/>
-        /// <seealso cref="TestWord"/>
+        /// <seealso cref="TestWord(string)"/>
         public void Suggest(string word)
         {
             Text = word;
@@ -959,11 +959,12 @@ namespace NetSpell.SpellChecker
         ///     for the <see cref="CurrentWord"/>
         /// </summary>
         /// <remarks>
-        ///		<see cref="TestWord"/> must have been called before calling this method
+        ///		<see cref="TestWord()"/> or <see cref="TestWord(string)"/> must have been called before calling this method
         /// </remarks>
         /// <seealso cref="CurrentWord"/>
         /// <seealso cref="Suggestions"/>
-        /// <seealso cref="TestWord"/>
+        /// <seealso cref="TestWord()"/>
+        /// <seealso cref="TestWord(string)"/>
         public void Suggest()
         {
             // can't generate suggestions with out current word
