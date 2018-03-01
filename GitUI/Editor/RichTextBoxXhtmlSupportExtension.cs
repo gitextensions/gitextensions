@@ -217,7 +217,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             COLLAPSED = 0x01000000, // RE 3.0 
             OUTLINELEVEL = 0x02000000,  // RE 3.0 
             BOX = 0x04000000,   // RE 3.0 
-            RESERVED2 = 0x08000000  // RE 4.0 
+            RESERVED2 = 0x08000000 // RE 4.0 
         }
 
         // PARAFORMAT numbering options
