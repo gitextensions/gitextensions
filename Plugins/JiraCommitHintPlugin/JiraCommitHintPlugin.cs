@@ -124,7 +124,7 @@ namespace JiraCommitHintPlugin
                 GetMessageToCommit(localJira, localQuery, localStringTemplate).ContinueWith(t =>
                 {
                     var preview = t.Result.FirstOrDefault();
-                    MessageBox.Show(null, preview == null ? EmptyQueryResultMessage : preview.Text ,EmptyQueryResultCaption);
+                    MessageBox.Show(null, preview == null ? EmptyQueryResultMessage : preview.Text, EmptyQueryResultCaption);
                 });
             }
             catch (Exception ex)

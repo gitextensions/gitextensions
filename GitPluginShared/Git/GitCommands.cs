@@ -184,7 +184,7 @@ namespace GitPluginShared.Git
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(Path.Combine(dir, ".git")) || File.Exists(Path.Combine(dir , ".git")))
+            if (Directory.Exists(Path.Combine(dir, ".git")) || File.Exists(Path.Combine(dir, ".git")))
                 return true;
 
             return !dir.Contains(".git") &&

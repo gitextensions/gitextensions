@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var body = _bodyTB.Text.Trim();
             if (title.Length == 0)
             {
-                MessageBox.Show(this, _strYouMustSpecifyATitle.Text , _strError.Text);
+                MessageBox.Show(this, _strYouMustSpecifyATitle.Text, _strError.Text);
                 return;
             }
 

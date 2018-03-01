@@ -156,7 +156,7 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
+        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (Branches.ContainsKey(selectedRepo))
@@ -218,7 +218,7 @@ namespace Bitbucket
 
             ddlBranchSource.Tag = commit;
             UpdateCommitInfo(lblCommitInfoSource, commit);
-            txtTitle.Text = ddlBranchSource.SelectedValue.ToString().Replace("-"," ");
+            txtTitle.Text = ddlBranchSource.SelectedValue.ToString().Replace("-", " ");
             UpdatePullRequestDescription();
         }
 

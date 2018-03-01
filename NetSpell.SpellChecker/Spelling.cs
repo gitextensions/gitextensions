@@ -419,7 +419,7 @@ namespace NetSpell.SpellChecker
         {
             for (int i = 1; i < CurrentWord.Length - 1; i++)
             {
-                string firstWord = CurrentWord.Substring(0,i);
+                string firstWord = CurrentWord.Substring(0, i);
                 string secondWord = CurrentWord.Substring(i);
 
                 if (FindWord(ref firstWord) && FindWord(ref secondWord))
@@ -526,7 +526,7 @@ namespace NetSpell.SpellChecker
             for (int j=1; j <= target.Length; j++)
             {
                 // boundary conditions
-                int val = matrix[0,j-1];
+                int val = matrix[0, j-1];
                 matrix[0, j] = val + 1;
             }
 
@@ -740,7 +740,7 @@ namespace NetSpell.SpellChecker
             // if first letter upper case, match case for replacement word
             if (char.IsUpper(_words[replacedIndex].ToString(), 0))
             {
-                _replacementWord = _replacementWord.Substring(0,1).ToUpper(CultureInfo.CurrentUICulture)
+                _replacementWord = _replacementWord.Substring(0, 1).ToUpper(CultureInfo.CurrentUICulture)
                     + _replacementWord.Substring(1);
             }
             _text.Insert(index, _replacementWord);
@@ -1007,7 +1007,7 @@ namespace NetSpell.SpellChecker
                         }
                     }
                 }
-                TraceWriter.TraceVerbose("Suggestiongs Found with Phonetic Stratagy: {0}" , tempSuggestion.Count);
+                TraceWriter.TraceVerbose("Suggestiongs Found with Phonetic Stratagy: {0}", tempSuggestion.Count);
             }
 
             if (SuggestionMode == SuggestionEnum.PhoneticNearMiss
@@ -1035,7 +1035,7 @@ namespace NetSpell.SpellChecker
                 SwapChar(tempSuggestion);
             }
 
-            TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}" , tempSuggestion.Count);
+            TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}", tempSuggestion.Count);
 
             tempSuggestion.Sort();  // sorts by edit score
             Suggestions.Clear();

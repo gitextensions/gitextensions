@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository()) return;
-            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 

@@ -248,7 +248,7 @@ namespace TfsInterop
             }
         }
 
-        public List<IBuild> QueryBuilds2015(List<IBuild> result,DateTime? sinceDate, bool? running)
+        public List<IBuild> QueryBuilds2015(List<IBuild> result, DateTime? sinceDate, bool? running)
         {
             //var result = new List<IBuild>();
             if (_buildDefinitions2015 == null)

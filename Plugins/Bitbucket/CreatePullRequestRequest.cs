@@ -44,12 +44,12 @@ namespace Bitbucket
             resource["description"] = _info.Description;
 
             resource["fromRef"] = CreatePullRequestRef(
-                _info.SourceRepo.ProjectKey
-                , _info.SourceRepo.RepoName, _info.SourceBranch);
+                _info.SourceRepo.ProjectKey,
+                _info.SourceRepo.RepoName, _info.SourceBranch);
 
             resource["toRef"] = CreatePullRequestRef(
-                _info.TargetRepo.ProjectKey
-                , _info.TargetRepo.RepoName, _info.TargetBranch);
+                _info.TargetRepo.ProjectKey,
+                _info.TargetRepo.RepoName, _info.TargetBranch);
 
             var reviewers = new JArray();
             foreach (var reviewer in _info.Reviewers)

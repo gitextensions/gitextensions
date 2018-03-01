@@ -12,7 +12,7 @@ namespace Bitbucket
         private readonly Commit _targetCommit;
 
         public GetInBetweenCommitsRequest(Repository sourceRepo, Repository targetRepo,
-            Commit sourceCommit, Commit targetCommit,Settings settings)
+            Commit sourceCommit, Commit targetCommit, Settings settings)
             : base(settings)
         {
             _sourceRepo = sourceRepo;
