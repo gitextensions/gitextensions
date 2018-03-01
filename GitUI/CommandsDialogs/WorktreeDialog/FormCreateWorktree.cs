@@ -51,8 +51,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     comboBoxBranches.Text = string.Empty;
                     comboBoxBranches.DataSource = list;
                     comboBoxBranches.DisplayMember = "LocalName";
-                }
-            ).ContinueWith(_ =>
+                })
+            .ContinueWith(_ =>
             {
                 if (comboBoxBranches.Items.Count == 0)
                 {

@@ -55,8 +55,7 @@ namespace GitCommands
                     // Make applicationdatapath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
-            }
-            );
+            });
 
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
@@ -114,8 +113,7 @@ namespace GitCommands
                         // refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }
-                }
-             );
+                });
         }
 
         public static string GetInstallDir()
@@ -978,8 +976,8 @@ namespace GitCommands
 
         public static int DiffVerticalRulerPosition
         {
-            get => GetInt("diffverticalrulerposition", 80 );
-            set => SetInt("diffverticalrulerposition", value );
+            get => GetInt("diffverticalrulerposition", 80);
+            set => SetInt("diffverticalrulerposition", value);
         }
 
         public static string RecentWorkingDir

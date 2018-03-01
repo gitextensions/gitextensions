@@ -298,8 +298,7 @@ namespace GitUI
                     using (var form = new FormDeleteBranch(this, branch))
                         form.ShowDialog(owner);
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartDeleteRemoteBranchDialog(IWin32Window owner, string remoteBranch)
@@ -311,8 +310,7 @@ namespace GitUI
                         form.ShowDialog(owner);
                     }
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartDeleteBranchDialog(string branch)
@@ -329,8 +327,7 @@ namespace GitUI
                         form.SetRevision(revision);
                         return form.ShowDialog(owner) == DialogResult.OK;
                     }
-                }
-            );
+                });
         }
 
         public bool StartCheckoutRevisionDialog()
@@ -498,8 +495,7 @@ namespace GitUI
             {
                 using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
-            }
-            );
+            });
         }
 
         public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote)
@@ -560,8 +556,7 @@ namespace GitUI
                     form.ShowDialog(owner);
 
                 return true;
-            }
-            );
+            });
         }
 
         public bool StartAddFilesDialog(IWin32Window owner)
@@ -1305,8 +1300,7 @@ namespace GitUI
                     }
 
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartArchiveDialog()
@@ -1667,8 +1661,7 @@ namespace GitUI
 
                         return true;
                     }
-                }
-            );
+                });
         }
 
         public bool StartApplyPatchDialog(string patchFile)
@@ -1753,8 +1746,7 @@ namespace GitUI
                         frm.ShowDialog(owner);
 
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartBlameDialog(string fileName, int? initialLine = null)

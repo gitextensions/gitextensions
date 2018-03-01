@@ -2893,8 +2893,7 @@ namespace GitCommands
                 RunCacheableCmd(
                     AppSettings.GitCommand,
                     blameCommand,
-                    LosslessEncoding
-                    )
+                    LosslessEncoding)
                     .Split('\n');
 
             GitBlame blame = new GitBlame();

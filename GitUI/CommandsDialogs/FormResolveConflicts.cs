@@ -620,7 +620,7 @@ namespace GitUI.CommandsDialogs
             return ConflictedFiles.SelectedRows.Count > 1;
         }
 
-        private void HandleMultipleSelect(){
+        private void HandleMultipleSelect() {
             SetAvailableCommands(false);
         }
 
@@ -1025,8 +1025,7 @@ namespace GitUI.CommandsDialogs
                         string output = Module.RunGitCmd("add -- \"" + filename + "\"");
                         form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));
-                    }
-                );
+                    });
             using (var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) })
                 process.ShowDialogOnError(this);
         }

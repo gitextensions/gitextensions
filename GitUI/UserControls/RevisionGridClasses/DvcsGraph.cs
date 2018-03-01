@@ -531,8 +531,7 @@ namespace GitUI.RevisionGridClasses
                         _graphBitmap,
                         e.CellBounds,
                         srcRect,
-                        GraphicsUnit.Pixel
-                    );
+                        GraphicsUnit.Pixel);
             }
 
             e.Handled = true;
@@ -632,7 +631,7 @@ namespace GitUI.RevisionGridClasses
             {
                 // Currently we are doing some important work; we are recieving
                 // rows that the user is viewing
-                if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
+                if (Loading != null && _graphData.Count > RowCount) // && graphData.Count != RowCount)
                 {
                     Loading(this, new LoadingEventArgs(true));
                 }
@@ -998,8 +997,7 @@ namespace GitUI.RevisionGridClasses
                 0,
                 (_cacheHeadRow + aNeededRow - _cacheHead) % _cacheCountMax * RowTemplate.Height,
                 width,
-                _rowHeight
-                );
+                _rowHeight);
         }
 
         // end drawGraph
@@ -1149,8 +1147,7 @@ namespace GitUI.RevisionGridClasses
                     wa.RenderingOrigin.X + (_laneWidth - _nodeDimension) / 2 + row.NodeLane * _laneWidth,
                     wa.RenderingOrigin.Y + (_rowHeight - _nodeDimension) / 2,
                     _nodeDimension,
-                    _nodeDimension
-                    );
+                    _nodeDimension);
 
                 Brush nodeBrush;
 

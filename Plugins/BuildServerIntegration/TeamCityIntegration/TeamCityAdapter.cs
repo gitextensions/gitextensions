@@ -543,7 +543,7 @@ namespace TeamCityIntegration
                 Name = (string)e.Attribute("name"),
                 ParentProject = (string)e.Attribute("parentProjectId"),
                 SubProjects = new List<Project>()
-            } ).ToList();
+            }).ToList();
 
             var projectDictionary = projects.ToDictionary(p => p.Id, p => p);
 

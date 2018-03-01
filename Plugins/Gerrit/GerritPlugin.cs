@@ -171,8 +171,7 @@ namespace Gerrit
 
             repositoryMenu.DropDownItems.Insert(
                 repositoryMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
-                _gitReviewMenuItem
-            );
+                _gitReviewMenuItem);
 
             // Create the toolstrip items.
 
@@ -261,8 +260,7 @@ namespace Gerrit
                 _installCommitMsgHookMessage.Text,
                 _installCommitMsgHookShortText.Text,
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+                MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
                 InstallCommitMsgHook();
@@ -279,8 +277,7 @@ namespace Gerrit
 
             string path = Path.Combine(
                 _gitUiCommands.GitModule.ResolveGitInternalPath("hooks"),
-                "commit-msg"
-            );
+                "commit-msg");
 
             string content;
 
@@ -300,8 +297,7 @@ namespace Gerrit
                     _installCommitMsgHookFailed.Text,
                     _installCommitMsgHookShortText.Text,
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                    MessageBoxIcon.Error);
             }
             else
             {
@@ -324,8 +320,7 @@ namespace Gerrit
                 _gitUiCommands.GitModule,
                 "scp -f hooks/commit-msg",
                 settings.DefaultRemote,
-                new byte[] { 0, 0, 0, 0, 0, 0, 0 }
-            );
+                new byte[] { 0, 0, 0, 0, 0, 0, 0 });
 
             // The first line of the output contains the file we're receiving
             // in a format like "C0755 4248 commit-msg".

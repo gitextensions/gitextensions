@@ -86,8 +86,7 @@ namespace Gerrit
                 sshCmd,
                 sb.ToString(),
                 null,
-                stdIn
-            );
+                stdIn);
         }
 
         public static void StartAgent([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string remote)

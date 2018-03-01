@@ -195,11 +195,11 @@ namespace NetSpell.SpellChecker
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose(bool disposing )
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
                 components?.Dispose();
-            base.Dispose(disposing );
+            base.Dispose(disposing);
         }
 
         /// <summary>

@@ -2096,8 +2096,7 @@ namespace GitUI.CommandsDialogs
                 {
                     Module.LastPullAction = AppSettings.PullAction.Merge;
                     PullToolStripMenuItemClick(sender, e);
-                }
-            );
+                });
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2106,8 +2105,7 @@ namespace GitUI.CommandsDialogs
             {
                 Module.LastPullAction = AppSettings.PullAction.Rebase;
                 PullToolStripMenuItemClick(sender, e);
-            }
-            );
+            });
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2116,8 +2114,7 @@ namespace GitUI.CommandsDialogs
             {
                 Module.LastPullAction = AppSettings.PullAction.Fetch;
                 PullToolStripMenuItemClick(sender, e);
-            }
-            );
+            });
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2601,8 +2598,7 @@ namespace GitUI.CommandsDialogs
                             Dock = DockStyle.Fill,
                             AutoStartInfo = null,
                             IsStatusbarVisible = false
-                        }
-                    );
+                        });
                 }
                 if (_terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
                     return;

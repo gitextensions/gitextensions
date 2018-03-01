@@ -47,8 +47,7 @@ namespace GitUI
             IntPtr handle,
             uint msg,
             IntPtr wParam,
-            IntPtr lParam
-            );
+            IntPtr lParam);
         internal const int EM_LINEINDEX = 0x00BB;
         internal const int EM_LINELENGTH = 0x00C1;
         internal const int EM_POSFROMCHAR = 0x00D6;

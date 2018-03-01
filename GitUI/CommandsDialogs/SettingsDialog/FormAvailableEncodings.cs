@@ -104,8 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     encodingType == typeof(UnicodeEncoding) ||
                     encodingType == typeof(UTF8Encoding) ||
                     encodingType == typeof(UTF7Encoding) ||
-                    encoding == Encoding.Default
-                );
+                    encoding == Encoding.Default);
         }
 
         private void ListAvailableEncodings_SelectedValueChanged(object sender, EventArgs e)

@@ -566,8 +566,7 @@ namespace GitCommands
             return string.Format("rm {0} {1} {2}",
                 force ? "--force" : string.Empty,
                 isRecursive ? "-r" : string.Empty,
-                file
-            );
+                file);
         }
 
         public static string BranchCmd(string branchName, string revision, bool checkout)

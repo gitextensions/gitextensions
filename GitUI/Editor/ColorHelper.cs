@@ -57,7 +57,7 @@ namespace GitUI.Editor
 
         public static int GetColorBrightnessDifference(Color a, Color b)
         {
-            return System.Math.Abs(GetColorBrightnessIndex(a) - GetColorBrightnessIndex(b) );
+            return System.Math.Abs(GetColorBrightnessIndex(a) - GetColorBrightnessIndex(b));
         }
     }
 }

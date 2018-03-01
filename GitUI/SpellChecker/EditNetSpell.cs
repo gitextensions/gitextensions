@@ -249,8 +249,7 @@ namespace GitUI.SpellChecker
                     },
                     _autoCompleteCancellationTokenSource.Token,
                     TaskContinuationOptions.NotOnCanceled,
-                    TaskScheduler.FromCurrentSynchronizationContext()
-                );
+                    TaskScheduler.FromCurrentSynchronizationContext());
             }
             //
             // spelling

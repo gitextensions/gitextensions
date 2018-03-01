@@ -99,7 +99,7 @@ namespace GitCommands.Repository
             }
             int r = mostRecentRepos.Count - 1;
             // remove not anchored repos if there is more than maxRecentRepositories repos
-            while (mostRecentRepos.Count > n && r >= 0 )
+            while (mostRecentRepos.Count > n && r >= 0)
             {
                 var repo = mostRecentRepos[r];
                 if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)

@@ -74,8 +74,7 @@ namespace GitUITests.Hotkey
             return Enumerable.Range(1, count).Select(i =>
                 new HotkeySettings("settings" + i,
                     new HotkeyCommand(1, "C1") { KeyData = Keys.A },
-                    new HotkeyCommand(2, "C2") { KeyData = Keys.B }
-                )).ToArray();
+                    new HotkeyCommand(2, "C2") { KeyData = Keys.B })).ToArray();
         }
     }
 }

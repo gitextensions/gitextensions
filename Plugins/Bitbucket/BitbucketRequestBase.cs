@@ -113,7 +113,7 @@ namespace Bitbucket
             }
             if (json["message"] != null)
             {
-                return new BitbucketResponse<T> {Success = false, Messages = new[] {json["message"].ToString()}};
+                return new BitbucketResponse<T> {Success = false, Messages = new[] {json["message"].ToString() }};
             }
             return new BitbucketResponse<T> {Success = false, Messages = new[] {"Unknown error."}};
         }

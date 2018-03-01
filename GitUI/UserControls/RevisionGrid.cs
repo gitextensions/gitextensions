@@ -1258,8 +1258,7 @@ namespace GitUI
             this.InvokeAsync(() =>
                 {
                     throw new AggregateException(e.Exception);
-                }
-            );
+                });
             e.Handled = true;
         }
 

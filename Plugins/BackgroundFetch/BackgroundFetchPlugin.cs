@@ -89,8 +89,7 @@ namespace BackgroundFetch
                                           else
                                               currentGitUiCommands.RepoChangedNotifier.Notify();
                                       }
-                                  }
-                                  );
+                                  });
             }
         }
 

@@ -29,7 +29,7 @@ namespace GitCommands.Git.Tag
         }
 
         public GitTagController(IGitUICommands uiCommands)
-            : this(uiCommands, new FileSystem() )
+            : this(uiCommands, new FileSystem())
         { }
 
         /// <summary>

@@ -65,8 +65,7 @@ namespace GitCommands.ExternalLinks
                         System.Diagnostics.Debug.Print(e.ToStringWithData());
                         return null;
                     }
-                }
-                );
+                });
 
 
             }
@@ -95,8 +94,7 @@ namespace GitCommands.ExternalLinks
                         System.Diagnostics.Debug.Print(e.ToStringWithData());
                         return null;
                     }
-                }
-                );
+                });
             }
         }
 
@@ -123,8 +121,7 @@ namespace GitCommands.ExternalLinks
                             System.Diagnostics.Debug.Print(e.ToStringWithData());
                             return null;
                         }
-                    }
-                        );
+                    });
             }
         }
 
@@ -149,8 +146,7 @@ namespace GitCommands.ExternalLinks
                             System.Diagnostics.Debug.Print(e.ToStringWithData());
                             return null;
                         }
-                    }
-                );
+                    });
             }
         }
 

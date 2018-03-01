@@ -531,8 +531,7 @@ namespace GitUI.CommandsDialogs
                         Close();
                     // trying to properly dispose loading image issue #1037
                     Loading.Image.Dispose();
-                }, false
-            );
+                }, false);
         }
 
         private bool _selectedDiffReloaded = true;

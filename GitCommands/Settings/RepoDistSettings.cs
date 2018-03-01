@@ -62,7 +62,7 @@ namespace GitCommands.Settings
             bool isDetachedOrGlobal = LowerPriority == null;
 
             if (isDetachedOrGlobal || // there is no lower level
-                SettingsCache.HasValue(name))// or the setting is assigned on this level
+                SettingsCache.HasValue(name)) // or the setting is assigned on this level
             {
                 SettingsCache.SetValue(name, value, encode);
             }

@@ -95,7 +95,7 @@ namespace Bitbucket
                         lbxPullRequests.DisplayMember = "DisplayName";
                     });
                 }
-                catch (System.InvalidOperationException){
+                catch (System.InvalidOperationException) {
                     return;
                 }
             });

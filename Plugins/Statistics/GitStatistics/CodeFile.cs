@@ -124,8 +124,7 @@ namespace GitStatistics
                 line.StartsWith("#region Component Designer generated code") ||
                 line.StartsWith("#Region \" Component Designer generated code \"") ||
                 line.StartsWith("#region Web Form Designer generated code") ||
-                line.StartsWith("#Region \" Web Form Designer Generated Code \"")
-                )
+                line.StartsWith("#Region \" Web Form Designer Generated Code \""))
                 _inCodeGeneratedRegion = true;
 
             if (line.StartsWith("/*"))
