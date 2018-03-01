@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
-    public class StringSetting: ISetting
+    public class StringSetting : ISetting
     {
         public StringSetting(string aName, string aDefaultValue)
             : this(aName, aName, aDefaultValue)

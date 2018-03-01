@@ -38,34 +38,34 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 			{
 				switch (cond) 
 				{
-					case '(' :
+					case '(':
 						group = true;
 						break;
-					case ')' :
+					case ')':
 						end = true;
 						break;
-					case '^' :
+					case '^':
 						rule.BeginningOnly = true;
 						break;
-					case '$' :
+					case '$':
 						rule.EndOnly = true;
 						break;
-					case '-' :
+					case '-':
 						rule.ConsumeCount++;
 						break;
-					case '<' :
+					case '<':
 						rule.ReplaceMode = true;
 						break;
-					case '0' :
-					case '1' :
-					case '2' :
-					case '3' :
-					case '4' :
-					case '5' :
-					case '6' :
-					case '7' :
-					case '8' :
-					case '9' :
+					case '0':
+					case '1':
+					case '2':
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+					case '9':
 						rule.Priority = int.Parse(cond.ToString(CultureInfo.CurrentUICulture));
 						break;
 					default:

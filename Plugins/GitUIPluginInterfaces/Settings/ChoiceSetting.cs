@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
-    public class ChoiceSetting: ISetting
+    public class ChoiceSetting : ISetting
     {
         public ChoiceSetting(string aName, IList<string> values, string aDefaultValue = null)
             : this(aName, aName, values, aDefaultValue)
