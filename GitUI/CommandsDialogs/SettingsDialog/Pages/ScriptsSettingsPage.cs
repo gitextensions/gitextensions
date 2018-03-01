@@ -338,7 +338,7 @@ Current Branch:
             }
         }
 
-        private void inMenuCheckBox_CheckedChanged( object sender, EventArgs e )
+        private void inMenuCheckBox_CheckedChanged(object sender, EventArgs e )
         {
             UpdateIconVisibility();
         }

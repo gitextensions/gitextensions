@@ -978,8 +978,8 @@ namespace GitCommands
 
         public static int DiffVerticalRulerPosition
         {
-            get => GetInt( "diffverticalrulerposition", 80 );
-            set => SetInt( "diffverticalrulerposition", value );
+            get => GetInt("diffverticalrulerposition", 80 );
+            set => SetInt("diffverticalrulerposition", value );
         }
 
         public static string RecentWorkingDir

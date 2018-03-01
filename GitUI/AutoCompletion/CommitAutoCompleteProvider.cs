@@ -15,12 +15,12 @@ namespace GitUI.AutoCompletion
         private static readonly Lazy<Dictionary<string, Regex>> s_regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
         private readonly GitModule _module;
 
-        public CommitAutoCompleteProvider (GitModule module)
+        public CommitAutoCompleteProvider(GitModule module)
         {
             _module = module;
         }
 
-        public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWords (CancellationTokenSource cts)
+        public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWords(CancellationTokenSource cts)
         {
             var cancellationToken = cts.Token;
 
@@ -61,7 +61,7 @@ namespace GitUI.AutoCompletion
                     }, cancellationToken);
         }
 
-        private static Regex GetRegexForExtension (string extension)
+        private static Regex GetRegexForExtension(string extension)
         {
             return s_regexes.Value.ContainsKey(extension) ? s_regexes.Value[extension] : null;
         }
@@ -78,13 +78,13 @@ namespace GitUI.AutoCompletion
                 {
                     throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }
-            using (var sr = new StreamReader (s))
+            using (var sr = new StreamReader(s))
             {
-                return sr.ReadToEnd ().Split (new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                return sr.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
-        private static Dictionary<string, Regex> ParseRegexes ()
+        private static Dictionary<string, Regex> ParseRegexes()
         {
             var autoCompleteRegexes = ReadOrInitializeAutoCompleteRegexes();
             
@@ -106,7 +106,7 @@ namespace GitUI.AutoCompletion
             return regexes;
         }
 
-        private static string GetChangedFileText (GitModule module, GitItemStatus file)
+        private static string GetChangedFileText(GitModule module, GitItemStatus file)
         {
             var changes = module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding);
 

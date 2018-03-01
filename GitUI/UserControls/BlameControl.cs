@@ -201,7 +201,7 @@ namespace GitUI.Blame
 
             var scrollpos = BlameFile.ScrollPos;
 
-            int line = initialLine.GetValueOrDefault( 0 );
+            int line = initialLine.GetValueOrDefault(0 );
             if (_clickedBlameLine.CommitGuid == guid)
                 line = _clickedBlameLine.OriginLineNumber;
             _revGrid = revGrid;

@@ -9,7 +9,7 @@ namespace NetSpell.SpellChecker
 	    /// <summary>
 		///     Class sent to the event handler when the ReplacedWord Event is fired
 		/// </summary>
-		public ReplaceWordEventArgs(string replacementWord, string word, int wordIndex, int textIndex) : base (word, wordIndex, textIndex)
+		public ReplaceWordEventArgs(string replacementWord, string word, int wordIndex, int textIndex) : base(word, wordIndex, textIndex)
 		{
 			ReplacementWord = replacementWord;
 		}

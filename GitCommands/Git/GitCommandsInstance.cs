@@ -49,7 +49,7 @@ namespace GitCommands
                 process.Exited += (sender, args) =>
                 {
                   var executionEndTimestamp = DateTime.Now;
-                  AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                  AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
                 };
 
                 process.Start();

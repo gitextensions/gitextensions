@@ -195,11 +195,11 @@ namespace NetSpell.SpellChecker
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        protected override void Dispose( bool disposing )
+        protected override void Dispose(bool disposing )
         {
             if (disposing)
                 components?.Dispose();
-            base.Dispose( disposing );
+            base.Dispose(disposing );
         }
 
         /// <summary>
@@ -1380,7 +1380,7 @@ namespace NetSpell.SpellChecker
 
         #endregion
 
-        public void AddAutoCompleteWords (IEnumerable<string> words)
+        public void AddAutoCompleteWords(IEnumerable<string> words)
         {
             foreach (var word in words)
                 _autoCompleteWords.Add(word);
