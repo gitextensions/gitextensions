@@ -50,10 +50,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private LostObject CurrentItem
-        {
-            get { return Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index]; }
-        }
+        private LostObject CurrentItem => Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index];
 
         #region Event Handlers
 

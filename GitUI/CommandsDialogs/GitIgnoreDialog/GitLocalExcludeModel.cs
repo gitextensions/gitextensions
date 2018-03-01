@@ -33,34 +33,16 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        public string FormCaption
-        {
-            get { return _editLocalExcludeTitle.Text; }
-        }
+        public string FormCaption => _editLocalExcludeTitle.Text;
 
-        public string ExcludeFile
-        {
-            get { return Path.Combine(_module.ResolveGitInternalPath("info"), "exclude"); }
-        }
+        public string ExcludeFile => Path.Combine(_module.ResolveGitInternalPath("info"), "exclude");
 
-        public string FileOnlyInWorkingDirSupported
-        {
-            get { return _localExcludeOnlyInWorkingDirSupported.Text; }
-        }
+        public string FileOnlyInWorkingDirSupported => _localExcludeOnlyInWorkingDirSupported.Text;
 
-        public string CannotAccessFile
-        {
-            get { return _cannotAccessLocalExclude.Text; }
-        }
+        public string CannotAccessFile => _cannotAccessLocalExclude.Text;
 
-        public string CannotAccessFileCaption
-        {
-            get { return _cannotAccessLocalExcludeCaption.Text; }
-        }
+        public string CannotAccessFileCaption => _cannotAccessLocalExcludeCaption.Text;
 
-        public string SaveFileQuestion
-        {
-            get { return _saveFileQuestion.Text; }
-        }
+        public string SaveFileQuestion => _saveFileQuestion.Text;
     }
 }

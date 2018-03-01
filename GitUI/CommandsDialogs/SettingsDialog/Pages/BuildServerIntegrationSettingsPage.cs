@@ -51,10 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        public override bool IsInstantSavePage
-        {
-            get { return false; }
-        }
+        public override bool IsInstantSavePage => false;
 
         protected override void SettingsToPage()
         {

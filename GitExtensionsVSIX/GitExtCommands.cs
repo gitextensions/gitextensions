@@ -126,15 +126,9 @@ namespace GitExtensionsVSIX
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider
-        {
-            get { return _package; }
-        }
+        private IServiceProvider ServiceProvider => _package;
 
-        public OutputWindowPane OutputPane
-        {
-            get { return _outputPane ?? (_outputPane = PluginHelpers.AquireOutputPane(_application, Vsix.Name)); }
-        }
+        public OutputWindowPane OutputPane => _outputPane ?? (_outputPane = PluginHelpers.AquireOutputPane(_application, Vsix.Name));
 
         /// <summary>
         /// Initializes the singleton instance of the command.

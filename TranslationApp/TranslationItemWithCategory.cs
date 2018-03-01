@@ -27,12 +27,18 @@ namespace TranslationApp
             return _item;
         }
 
-        public string Name { get { return _item.Name; } set { _item.Name = value; } }
-        public string Property { get { return _item.Property; } set { _item.Property = value; } }
-        public string NeutralValue { get { return _item.Source; } set { _item.Source = value; } }
+        public string Name { get => _item.Name;
+            set => _item.Name = value;
+        }
+        public string Property { get => _item.Property;
+            set => _item.Property = value;
+        }
+        public string NeutralValue { get => _item.Source;
+            set => _item.Source = value;
+        }
         public string TranslatedValue
         {
-            get { return _item.Value; }
+            get => _item.Value;
             set
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TranslatedValue)));
@@ -55,13 +61,7 @@ namespace TranslationApp
             return equal;
         }
 
-        private string DebuggerDisplay
-        {
-            get
-            {
-                return string.Format("\"{0}\" - \"{1}\"", Category, NeutralValue);
-            }
-        }
+        private string DebuggerDisplay => string.Format("\"{0}\" - \"{1}\"", Category, NeutralValue);
 
         object ICloneable.Clone()
         {

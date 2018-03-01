@@ -76,10 +76,7 @@ namespace GitUI
             }
         }
 
-        public string LookFor
-        {
-            get { return txtLookFor.Text; }
-        }
+        public string LookFor => txtLookFor.Text;
 
         private void UpdateTitleBar()
         {
@@ -385,10 +382,7 @@ namespace GitUI
             }
         }
 
-        public bool HasScanRegion
-        {
-            get { return _region != null; }
-        }
+        public bool HasScanRegion => _region != null;
 
         /// <summary>Begins the start offset for searching</summary>
         public int BeginOffset
@@ -580,10 +574,7 @@ namespace GitUI
             _document = editor.Document;
         }
 
-        public IList<TextMarker> Markers
-        {
-            get { return _markers.AsReadOnly(); }
-        }
+        public IList<TextMarker> Markers => _markers.AsReadOnly();
 
         #region IDisposable Members
 

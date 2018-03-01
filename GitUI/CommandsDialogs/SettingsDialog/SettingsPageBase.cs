@@ -27,11 +27,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
-        protected CheckSettingsLogic CheckSettingsLogic { get { return PageHost.CheckSettingsLogic; } }
-        protected CommonLogic CommonLogic { get { return CheckSettingsLogic.CommonLogic; } }
+        protected CheckSettingsLogic CheckSettingsLogic => PageHost.CheckSettingsLogic;
+        protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
 
-        protected GitModule Module { get { return this.CommonLogic.Module; } }
+        protected GitModule Module => this.CommonLogic.Module;
 
         protected virtual void Init(ISettingsPageHost aPageHost)
         {
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return Text;
         }
 
-        public virtual Control GuiControl { get { return this; } }
+        public virtual Control GuiControl => this;
 
         /// <summary>
         /// Called when SettingsPage is shown (again);
@@ -164,15 +164,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return "";
         }
 
-        public virtual bool IsInstantSavePage
-        {
-            get { return false; }
-        }
+        public virtual bool IsInstantSavePage => false;
 
-        public virtual SettingsPageReference PageReference
-        {
-            get { return new SettingsPageReferenceByType(GetType()); }
-        }
+        public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
     }
 
     public class BoolCheckBoxAdapter : GitUIPluginInterfaces.BoolSetting

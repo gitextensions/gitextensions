@@ -19,7 +19,7 @@ namespace GitCommands.Git
         private LocalChangesAction _localChanges;
         public LocalChangesAction LocalChanges
         {
-            get { return _localChanges; }
+            get => _localChanges;
             set
             {
                 if (value == LocalChangesAction.Stash)

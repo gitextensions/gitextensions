@@ -15,14 +15,14 @@ namespace Github3
             this.repo = repo;
         }
 
-        public string Owner { get { return repo.Owner?.Login; } }
-        public string Name { get { return repo.Name; } }
-        public string Description { get { return repo.Description; } }
-        public bool IsAFork { get { return repo.Fork; } }
-        public bool IsMine { get { return Owner == GithubLoginInfo.username; } }
-        public bool IsPrivate { get { return repo.Private; } }
-        public int Forks { get { return repo.Forks; } }
-        public string Homepage { get { return repo.Homepage; } }
+        public string Owner => repo.Owner?.Login;
+        public string Name => repo.Name;
+        public string Description => repo.Description;
+        public bool IsAFork => repo.Fork;
+        public bool IsMine => Owner == GithubLoginInfo.username;
+        public bool IsPrivate => repo.Private;
+        public int Forks => repo.Forks;
+        public string Homepage => repo.Homepage;
 
         public string ParentReadOnlyUrl
         {
@@ -61,8 +61,8 @@ namespace Github3
             }
         }
 
-        public string CloneReadWriteUrl { get { return repo.SshUrl; } }
-        public string CloneReadOnlyUrl { get { return repo.GitUrl; } }
+        public string CloneReadWriteUrl => repo.SshUrl;
+        public string CloneReadOnlyUrl => repo.GitUrl;
 
         public List<IHostedBranch> Branches
         {

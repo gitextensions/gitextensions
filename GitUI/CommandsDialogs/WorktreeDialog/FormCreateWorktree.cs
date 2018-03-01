@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly char[] _invalidCharsInPath;
         private string _initialDirectoryPath;
 
-        public string WorktreeDirectory { get { return newWorktreeDirectory.Text; } }
-        public bool OpenWorktree { get { return openWorktreeCheckBox.Checked; } }
+        public string WorktreeDirectory => newWorktreeDirectory.Text;
+        public bool OpenWorktree => openWorktreeCheckBox.Checked;
 
         public FormCreateWorktree(GitUICommands aCommands)
             : base(aCommands)

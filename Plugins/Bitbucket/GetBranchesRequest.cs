@@ -13,24 +13,12 @@ namespace Bitbucket
             _repo = repo;
         }
 
-        protected override object RequestBody
-        {
-            get { return null; }
-        }
+        protected override object RequestBody => null;
 
-        protected override Method RequestMethod
-        {
-            get { return Method.GET; }
-        }
+        protected override Method RequestMethod => Method.GET;
 
-        protected override string ApiUrl
-        {
-            get
-            {
-                return string.Format("/rest/api/1.0/projects/{0}/repos/{1}/branches?limit=1000",
-                                     _repo.ProjectKey, _repo.RepoName);
-            }
-        }
+        protected override string ApiUrl => string.Format("/rest/api/1.0/projects/{0}/repos/{1}/branches?limit=1000",
+            _repo.ProjectKey, _repo.RepoName);
 
         protected override JObject ParseResponse(JObject json)
         {

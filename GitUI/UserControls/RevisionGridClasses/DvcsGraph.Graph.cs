@@ -69,15 +69,9 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public ILaneRow this[int col]
-            {
-                get { return lanes[col]; }
-            }
+            public ILaneRow this[int col] => lanes[col];
 
-            public int CachedCount
-            {
-                get { return lanes.CachedCount; }
-            }
+            public int CachedCount => lanes.CachedCount;
 
             public void Filter(string aId)
             {
@@ -439,10 +433,7 @@ namespace GitUI.RevisionGridClasses
 
                 public int ConnectLane { get; set; }
 
-                public IEnumerable<Junction> Junctions
-                {
-                    get { return junctions; }
-                }
+                public IEnumerable<Junction> Junctions => junctions;
 
                 public LaneInfo Clone()
                 {

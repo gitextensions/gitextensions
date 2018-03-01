@@ -55,15 +55,9 @@ namespace GitUI
             private string FontSizeSettingsKey => SettingName + "_FontSize";
             private float? _latestFontSize;
 
-            private int SplitterSize
-            {
-                get
-                {
-                    return (Splitter.Orientation == Orientation.Horizontal)
-                       ? Splitter.Height
-                       : Splitter.Width;
-                }
-            }
+            private int SplitterSize => (Splitter.Orientation == Orientation.Horizontal)
+                ? Splitter.Height
+                : Splitter.Width;
 
             public void RestoreFromSettings(ISettingsSource settings)
             {

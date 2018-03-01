@@ -14,9 +14,6 @@ namespace GitPluginShared.Commands
             RunGitEx("clone", directoryName);
         }
 
-        protected override CommandTarget SupportedTargets
-        {
-            get { return CommandTarget.Any; }
-        }
+        protected override CommandTarget SupportedTargets => CommandTarget.Any;
     }
 }

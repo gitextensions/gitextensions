@@ -12,7 +12,7 @@ namespace Github3
             this.branch = branch;
         }
 
-        public string Name { get { return branch.Name; } }
-        public string Sha { get { return branch.Commit.Sha; } }
+        public string Name => branch.Name;
+        public string Sha => branch.Commit.Sha;
     }
 }

@@ -56,12 +56,9 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		/// CodeBase of Assembly
 		/// </summary>
-		public string CodeBase
-		{
-			get {return myType.Assembly.CodeBase.ToString(CultureInfo.CurrentUICulture);}
-		}
+		public string CodeBase => myType.Assembly.CodeBase.ToString(CultureInfo.CurrentUICulture);
 
-		/// <summary>
+	    /// <summary>
 		/// Company of Assembly
 		/// </summary>
 		public string Company
@@ -103,20 +100,14 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		///		FullName of Assembly
 		/// </summary>
-		public string FullName
-		{
-			get {return myType.Assembly.GetName().FullName.ToString(CultureInfo.CurrentUICulture);}
-		}
+		public string FullName => myType.Assembly.GetName().FullName.ToString(CultureInfo.CurrentUICulture);
 
-		/// <summary>
+	    /// <summary>
 		/// Name of Assembly
 		/// </summary>
-		public string Name
-		{
-			get	{return myType.Assembly.GetName().Name.ToString(CultureInfo.CurrentUICulture);}
-		}
+		public string Name => myType.Assembly.GetName().Name.ToString(CultureInfo.CurrentUICulture);
 
-		/// <summary>
+	    /// <summary>
 		/// Product of Assembly
 		/// </summary>
 		public string Product
@@ -145,10 +136,7 @@ namespace NetSpell.SpellChecker
 		/// <summary>
 		/// Version of Assembly
 		/// </summary>
-		public string Version
-		{
-			get { return myType.Assembly.GetName().Version.ToString(); }
-		}
+		public string Version => myType.Assembly.GetName().Version.ToString();
 	}
 }
 

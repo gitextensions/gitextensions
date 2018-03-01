@@ -18,25 +18,13 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        private string Coders
-        {
-            get { return Resources.Coders.Replace(Environment.NewLine, " "); }
-        }
+        private string Coders => Resources.Coders.Replace(Environment.NewLine, " ");
 
-        private string Translators
-        {
-            get { return Resources.Translators.Replace(Environment.NewLine, " "); }
-        }
+        private string Translators => Resources.Translators.Replace(Environment.NewLine, " ");
 
-        private string Designers
-        {
-            get { return Resources.Designers.Replace(Environment.NewLine, " "); }
-        }
+        private string Designers => Resources.Designers.Replace(Environment.NewLine, " ");
 
-        private string Other
-        {
-            get { return Resources.Other.Replace(Environment.NewLine, " "); }
-        }
+        private string Other => Resources.Other.Replace(Environment.NewLine, " ");
 
         private void okButton_Click(object sender, EventArgs e)
         {

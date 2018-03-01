@@ -47,10 +47,7 @@ namespace GitUI
 
         /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
-        public GitUICommands UICommands
-        {
-            get { return UICommandsSource.UICommands; }
-        }
+        public GitUICommands UICommands => UICommandsSource.UICommands;
 
         /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
         public bool IsUICommandsInitialized
@@ -69,13 +66,7 @@ namespace GitUI
         }
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module
-        {
-            get
-            {
-                return UICommands.Module;
-            }
-        }
+        public GitModule Module => UICommands.Module;
 
         public GitModuleControl()
         {

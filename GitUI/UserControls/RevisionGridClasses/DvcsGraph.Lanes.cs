@@ -45,15 +45,9 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public int Count
-            {
-                get { return sourceGraph.Count; }
-            }
+            public int Count => sourceGraph.Count;
 
-            public int CachedCount
-            {
-                get { return laneRows.Count; }
-            }
+            public int CachedCount => laneRows.Count;
 
             #region IEnumerable<LaneRow> Members
 
@@ -425,10 +419,7 @@ namespace GitUI.RevisionGridClasses
             {
                 private Edges edges;
 
-                public Edge[] EdgeList
-                {
-                    get { return edges.EdgeList.ToArray(); }
-                }
+                public Edge[] EdgeList => edges.EdgeList.ToArray();
 
                 #region LaneRow Members
 
@@ -436,20 +427,14 @@ namespace GitUI.RevisionGridClasses
 
                 public Node Node { get; set; }
 
-                public int Count
-                {
-                    get { return edges.CountCurrent(); }
-                }
+                public int Count => edges.CountCurrent();
 
                 public int LaneInfoCount(int lane)
                 {
                     return edges.CountCurrent(lane);
                 }
 
-                public Graph.LaneInfo this[int col, int row]
-                {
-                    get { return edges.Current(col, row); }
-                }
+                public Graph.LaneInfo this[int col, int row] => edges.Current(col, row);
 
                 #endregion
 
@@ -726,10 +711,7 @@ namespace GitUI.RevisionGridClasses
                     Start = start;
                 }
 
-                public int End
-                {
-                    get { return Data.ConnectLane; }
-                }
+                public int End => Data.ConnectLane;
 
                 public override string ToString()
                 {
@@ -763,15 +745,9 @@ namespace GitUI.RevisionGridClasses
                 {
                 }
 
-                object IEnumerator.Current
-                {
-                    get { return Current; }
-                }
+                object IEnumerator.Current => Current;
 
-                public Graph.ILaneRow Current
-                {
-                    get { return lanes[index]; }
-                }
+                public Graph.ILaneRow Current => lanes[index];
 
                 public bool MoveNext()
                 {

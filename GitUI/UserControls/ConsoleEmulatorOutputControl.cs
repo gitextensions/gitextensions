@@ -31,29 +31,11 @@ namespace GitUI.UserControls
             Controls.Add(_panel = new Panel() { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
         }
 
-        public override int ExitCode
-        {
-            get
-            {
-                return _nLastExitCode;
-            }
-        }
+        public override int ExitCode => _nLastExitCode;
 
-        public override bool IsDisplayingFullProcessOutput
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsDisplayingFullProcessOutput => true;
 
-        public static bool IsSupportedInThisEnvironment
-        {
-            get
-            {
-                return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
-            }
-        }
+        public static bool IsSupportedInThisEnvironment => EnvUtils.RunningOnWindows();
 
         public override void AppendMessageFreeThreaded(string text)
         {

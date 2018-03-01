@@ -229,7 +229,7 @@ namespace GitUI
             _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
 
-        public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } }
+        public Icon FormIcon => GitExtensionsForm.ApplicationIcon;
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {
@@ -1712,13 +1712,7 @@ namespace GitUI
 
         public GitModule Module { get; private set; }
 
-        public IGitModule GitModule
-        {
-            get
-            {
-                return Module;
-            }
-        }
+        public IGitModule GitModule => Module;
 
         private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, GitUIPostActionEventHandler gitUIEventHandler)
         {

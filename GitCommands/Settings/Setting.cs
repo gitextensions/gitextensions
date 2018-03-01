@@ -38,12 +38,6 @@ namespace GitCommands.Settings
             return EqualityComparer<T>.Default.Equals(aValue, default);
         }
 
-        public string FullPath
-        {
-            get
-            {
-                return SettingsSource.PathFor(Name);
-            }
-        }
+        public string FullPath => SettingsSource.PathFor(Name);
     }
 }

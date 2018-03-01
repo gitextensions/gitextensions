@@ -625,7 +625,7 @@ namespace NetSpell.SpellChecker.Dictionary
         [NotifyParentProperty(true)]
         public string DictionaryFile
         {
-            get { return _dictionaryFile; }
+            get => _dictionaryFile;
             set
             {
                 _dictionaryFile = value;

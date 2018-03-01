@@ -1259,8 +1259,8 @@ namespace NetSpell.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ReplacementWord
         {
-            get {return _replacementWord;}
-            set {_replacementWord = value.Trim();}
+            get => _replacementWord;
+            set => _replacementWord = value.Trim();
         }
 
         /// <summary>
@@ -1298,7 +1298,7 @@ namespace NetSpell.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string Text
         {
-            get {return _text.ToString();}
+            get => _text.ToString();
             set
             {
                 _text = new StringBuilder(value);

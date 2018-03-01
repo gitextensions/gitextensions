@@ -50,10 +50,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string NestedSearchPattern
         {
-            get
-            {
-                return _nestedSearchPattern;
-            }
+            get => _nestedSearchPattern;
             set
             {
                 _nestedSearchPattern = value;
@@ -83,10 +80,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string RemoteSearchPattern
         {
-            get
-            {
-                return _remoteSearchPattern;
-            }
+            get => _remoteSearchPattern;
             set
             {
                 _remoteSearchPattern = value;
@@ -114,10 +108,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string SearchPattern
         {
-            get
-            {
-                return _searchPattern;
-            }
+            get => _searchPattern;
             set
             {
                 _searchPattern = value;
@@ -143,10 +134,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public string UseRemotesPattern
         {
-            get
-            {
-                return _useRemotesPattern;
-            }
+            get => _useRemotesPattern;
             set
             {
                 _useRemotesPattern = value;

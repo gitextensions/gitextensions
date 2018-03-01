@@ -18,12 +18,6 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
 
         public string BuildServerType { get; private set; }
 
-        public virtual string CanBeLoaded
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual string CanBeLoaded => null;
     }
 }

@@ -157,10 +157,7 @@ namespace TeamCityIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey
-        {
-            get { return httpClient.BaseAddress.Host; }
-        }
+        public string UniqueKey => httpClient.BaseAddress.Host;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -604,6 +601,6 @@ namespace TeamCityIntegration
         public string ParentProject { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
-        public string DisplayName { get { return Name + " (" + Id + ")"; } }
+        public string DisplayName => Name + " (" + Id + ")";
     }
 }

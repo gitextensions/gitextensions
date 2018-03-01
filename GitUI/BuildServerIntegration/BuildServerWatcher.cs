@@ -24,7 +24,7 @@ namespace GitUI.BuildServerIntegration
     {
         private readonly RevisionGrid revisionGrid;
         private readonly DvcsGraph revisions;
-        private GitModule Module { get { return revisionGrid.Module; } }
+        private GitModule Module => revisionGrid.Module;
 
         public int BuildStatusImageColumnIndex { get; private set; }
         public int BuildStatusMessageColumnIndex { get; private set; }

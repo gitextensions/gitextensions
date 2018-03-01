@@ -16,20 +16,14 @@ namespace FindLargeFiles
             gitObjects.AddRange(objects);
         }
 
-        protected override bool SupportsSortingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSortingCore => true;
 
         protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
         {
             gitObjects.Sort(GitObjectsComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
         }
 
-        private List<GitObject> gitObjects
-        {
-            get { return (List<GitObject>)Items; }
-        }
+        private List<GitObject> gitObjects => (List<GitObject>)Items;
 
         private static class GitObjectsComparer
         {

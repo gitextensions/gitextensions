@@ -12,15 +12,15 @@ namespace GitCommands
         private string _name;
         public string Name
         {
-            get { return _name; }
-            set { _name = value; }
+            get => _name;
+            set => _name = value;
         }
 
         private string _text;
         public string Text
         {
-            get { return _text; }
-            set { _text = value; }
+            get => _text;
+            set => _text = value;
         }
 
         public CommitTemplateItem(string name, string text)

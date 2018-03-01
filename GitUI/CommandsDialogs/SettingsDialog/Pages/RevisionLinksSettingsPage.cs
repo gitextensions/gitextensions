@@ -52,13 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_Categories.DataSource = effectiveLinkDefinitions;
         }
 
-        private ExternalLinkDefinition SelectedLinkDefinition
-        {
-            get
-            {
-                return _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
-            }
-        }
+        private ExternalLinkDefinition SelectedLinkDefinition => _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
 
         private void CategoryChanged()
         {

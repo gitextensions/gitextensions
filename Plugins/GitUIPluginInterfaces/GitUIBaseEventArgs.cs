@@ -23,14 +23,7 @@ namespace GitUIPluginInterfaces
 
         public IWin32Window OwnerForm { get; private set; }
 
-        public IGitModule GitModule
-        {
-            get
-            {
-                return GitUICommands.GitModule;
-            }
-            
-        }
+        public IGitModule GitModule => GitUICommands.GitModule;
 
         public string Arguments { get; private set; }
 

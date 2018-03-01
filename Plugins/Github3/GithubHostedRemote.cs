@@ -37,8 +37,8 @@ namespace Github3
         /// </summary>
         public string RemoteRepositoryName { get; private set; }
 
-        public string Data { get { return Owner + "/" + RemoteRepositoryName; } }
-        public string DisplayData { get { return Data; } }
-        public bool IsOwnedByMe { get { return GithubLoginInfo.username == Owner; } }
+        public string Data => Owner + "/" + RemoteRepositoryName;
+        public string DisplayData => Data;
+        public bool IsOwnedByMe => GithubLoginInfo.username == Owner;
     }
 }

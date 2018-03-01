@@ -16,26 +16,13 @@ namespace Github3
             this.pullrequest = pullrequest;
         }
 
-        public string Title
-        {
-            get { return pullrequest.Title; }
-        }
+        public string Title => pullrequest.Title;
 
-        public string Body
-        {
-            get { return pullrequest.Body; }
-        }
+        public string Body => pullrequest.Body;
 
-        public string Owner
-        {
-            get { return pullrequest.User.Login; }
-        }
+        public string Owner => pullrequest.User.Login;
 
-        public DateTime Created
-        {
-            get { return pullrequest.CreatedAt; }
-        }
-
+        public DateTime Created => pullrequest.CreatedAt;
 
 
         private string _diffData;
@@ -80,35 +67,17 @@ namespace Github3
             }
         }
 
-        public string BaseSha
-        {
-            get { return pullrequest.Base.Sha; }
-        }
+        public string BaseSha => pullrequest.Base.Sha;
 
-        public string HeadSha
-        {
-            get { return pullrequest.Head.Sha; }
-        }
+        public string HeadSha => pullrequest.Head.Sha;
 
-        public string BaseRef
-        {
-            get { return pullrequest.Base.Ref; }
-        }
+        public string BaseRef => pullrequest.Base.Ref;
 
-        public string HeadRef
-        {
-            get { return pullrequest.Head.Ref; }
-        }
+        public string HeadRef => pullrequest.Head.Ref;
 
-        public string Id
-        {
-            get { return pullrequest.Number.ToString(); }
-        }
+        public string Id => pullrequest.Number.ToString();
 
-        public string DetailedInfo
-        {
-            get { return string.Format("Base repo owner: {0}\nHead repo owner: {1}", BaseRepo.Owner, HeadRepo.Owner); }
-        }
+        public string DetailedInfo => string.Format("Base repo owner: {0}\nHead repo owner: {1}", BaseRepo.Owner, HeadRepo.Owner);
 
         public void Close()
         {

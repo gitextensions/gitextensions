@@ -9,13 +9,7 @@
             Translate();
         }
 
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsInstantSavePage => true;
 
         protected override void SettingsToPage()
         {
