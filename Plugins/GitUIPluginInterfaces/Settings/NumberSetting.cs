@@ -2,7 +2,7 @@
 
 namespace GitUIPluginInterfaces
 {
-    public class NumberSetting<T>: ISetting
+    public class NumberSetting<T> : ISetting
     {
         public NumberSetting(string aName, T aDefaultValue)
             : this(aName, aName, aDefaultValue)
