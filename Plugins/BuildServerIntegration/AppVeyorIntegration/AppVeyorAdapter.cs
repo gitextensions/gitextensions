@@ -89,7 +89,7 @@ namespace AppVeyorIntegration
             var useAllProjets = string.IsNullOrWhiteSpace(projectNamesSetting);
             string[] projectNames = null;
             if (!useAllProjets)
-                projectNames = projectNamesSetting.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+                projectNames = projectNamesSetting.Split(new[] { '|'}, StringSplitOptions.RemoveEmptyEntries);
             if (Projects.Count == 0 ||
                 (!useAllProjets && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {

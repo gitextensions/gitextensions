@@ -223,7 +223,7 @@ namespace GitUI.CommandsDialogs
 
             // Adjust the rules
             // Comment out all existing nonempty lines, add the single “/*” line to make a total pass filter
-            RulesText = new[] {"/*"}.Concat(RulesText.SplitLines().Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
+            RulesText = new[] { "/*"}.Concat(RulesText.SplitLines().Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
         }
 
         /// <summary>

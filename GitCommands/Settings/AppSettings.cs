@@ -410,23 +410,23 @@ namespace GitCommands
         private static readonly Dictionary<string, string> _languageCodes =
             new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"Czech", "cs"},
-                {"Dutch", "nl"},
-                {"English", "en"},
-                {"French", "fr"},
-                {"German", "de"},
-                {"Indonesian", "id"},
-                {"Italian", "it"},
-                {"Japanese", "ja"},
-                {"Korean", "ko"},
-                {"Polish", "pl"},
-                {"Portuguese (Brazil)", "pt-BR"},
-                {"Portuguese (Portugal)", "pt-PT"},
-                {"Romanian", "ro"},
-                {"Russian", "ru"},
-                {"Simplified Chinese", "zh-CN"},
-                {"Spanish", "es"},
-                {"Traditional Chinese", "zh-TW"}
+                { "Czech", "cs"},
+                { "Dutch", "nl"},
+                { "English", "en"},
+                { "French", "fr"},
+                { "German", "de"},
+                { "Indonesian", "id"},
+                { "Italian", "it"},
+                { "Japanese", "ja"},
+                { "Korean", "ko"},
+                { "Polish", "pl"},
+                { "Portuguese (Brazil)", "pt-BR"},
+                { "Portuguese (Portugal)", "pt-PT"},
+                { "Romanian", "ro"},
+                { "Russian", "ru"},
+                { "Simplified Chinese", "zh-CN"},
+                { "Spanish", "es"},
+                { "Traditional Chinese", "zh-TW"}
             };
 
         public static string CurrentLanguageCode

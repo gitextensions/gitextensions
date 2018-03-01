@@ -57,7 +57,7 @@ namespace PatchApply
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new string[] { "\n"}, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
                 if (line.StartsWith("+++"))

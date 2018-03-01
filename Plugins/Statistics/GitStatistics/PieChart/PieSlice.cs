@@ -196,7 +196,7 @@ namespace GitStatistics.PieChart
             _shadowStyle = shadowStyle;
             // create pens for rendering
             var edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
-            Pen = new Pen(edgeLineColor) {LineJoin = LineJoin.Round};
+            Pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round};
             InitializePieSlice(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, sliceHeight);
         }
 
@@ -415,7 +415,7 @@ namespace GitStatistics.PieChart
             var pieSlice2 = (PieSlice)MemberwiseClone();
             pieSlice2.SweepAngle = (transformedSplitAngle - StartAngle + 360) % 360;
             pieSlice2.InitializeSides();
-            return new[] {pieSlice1, pieSlice2};
+            return new[] { pieSlice1, pieSlice2};
         }
 
         /// <summary>
@@ -750,8 +750,8 @@ namespace GitStatistics.PieChart
                         InterpolationColors =
                             new ColorBlend
                                 {
-                                    Colors = new[] {color1, color, color2},
-                                    Positions = new[] {0F, 0.1F, 1.0F}
+                                    Colors = new[] { color1, color, color2},
+                                    Positions = new[] { 0F, 0.1F, 1.0F}
                                 }
                     };
         }

@@ -28,7 +28,7 @@ namespace GitCommands.Statistics
             IEnumerable<string> unformattedCommitsPerContributor)
         {
             var commitsPerContributor = new Dictionary<string, int>();
-            var delimiter = new[] {' ', '\t'};
+            var delimiter = new[] { ' ', '\t'};
             var totalCommits = 0;
 
             foreach (var userCommitCount in unformattedCommitsPerContributor)
