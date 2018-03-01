@@ -457,7 +457,7 @@ namespace GitStatistics.PieChart
             {
                 pieSlicesList.Add(splitSlices[1]);
             }
-            var pieSlices = (PieSlice[]) pieSlicesList.ToArray(typeof (PieSlice));
+            var pieSlices = (PieSlice[]) pieSlicesList.ToArray(typeof(PieSlice));
             var indexFound = -1;
             // if not found yet, then check for periferies
             var incrementIndex = 0;
@@ -680,7 +680,7 @@ namespace GitStatistics.PieChart
                 if (startAngle > 360)
                     startAngle -= 360;
             }
-            PieSlices = (PieSlice[]) listPieSlices.ToArray(typeof (PieSlice));
+            PieSlices = (PieSlice[]) listPieSlices.ToArray(typeof(PieSlice));
         }
 
         /// <summary>

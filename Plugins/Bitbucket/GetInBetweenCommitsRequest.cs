@@ -33,7 +33,7 @@ namespace Bitbucket
         protected override List<Commit> ParseResponse(JObject json)
         {
             var result = new List<Commit>();
-            foreach(JObject commit in json["values"])
+            foreach (JObject commit in json["values"])
             {
                 result.Add(Commit.Parse(commit));
             }

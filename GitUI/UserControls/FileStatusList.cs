@@ -762,7 +762,7 @@ namespace GitUI
             get
             {
                 var result = new List<GitItemStatus>();
-                foreach(ListViewItem listViewItem in FileStatusListView.Items)
+                foreach (ListViewItem listViewItem in FileStatusListView.Items)
                 {
                     result.Add((GitItemStatus)listViewItem.Tag);
                 }

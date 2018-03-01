@@ -954,7 +954,7 @@ namespace GitStatistics.PieChart
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
                 }
             }
-            return (PeripherySurfaceBounds[]) peripherySurfaceBounds.ToArray(typeof (PeripherySurfaceBounds));
+            return (PeripherySurfaceBounds[]) peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
         /// <summary>

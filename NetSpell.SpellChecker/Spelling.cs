@@ -231,19 +231,19 @@ namespace NetSpell.SpellChecker
             {
                 return false;
             }
-            if(IgnoreAllCapsWords && !_upperRegex.IsMatch(characters))
+            if (IgnoreAllCapsWords && !_upperRegex.IsMatch(characters))
             {
                 return false;
             }
-            if(IgnoreWordsWithDigits && _digitRegex.IsMatch(characters))
+            if (IgnoreWordsWithDigits && _digitRegex.IsMatch(characters))
             {
                 return false;
             }
-            if(!_letterRegex.IsMatch(characters))
+            if (!_letterRegex.IsMatch(characters))
             {
                 return false;
             }
-            if(IgnoreHtml)
+            if (IgnoreHtml)
             {
                 int startIndex = GetWordIndex();
 
@@ -265,10 +265,10 @@ namespace NetSpell.SpellChecker
 
         private void Initialize()
         {
-            if(_dictionary == null)
+            if (_dictionary == null)
                 _dictionary = new WordDictionary();
 
-            if(!_dictionary.Initialized)
+            if (!_dictionary.Initialized)
                 _dictionary.Initialize();
         }
 
@@ -523,7 +523,7 @@ namespace NetSpell.SpellChecker
             // boundary conditions
             matrix[0, 0] = 0;
 
-            for(int j=1; j <= target.Length; j++)
+            for (int j=1; j <= target.Length; j++)
             {
                 // boundary conditions
                 int val = matrix[0,j-1];
@@ -531,18 +531,18 @@ namespace NetSpell.SpellChecker
             }
 
             // outer loop
-            for(int i=1; i <= source.Length; i++)
+            for (int i=1; i <= source.Length; i++)
             {
                 // boundary conditions
                 int val = matrix[i-1, 0];
                 matrix[i, 0] = val+1;
 
                 // inner loop
-                for(int j=1; j <= target.Length; j++)
+                for (int j=1; j <= target.Length; j++)
                 {
                     int diag = matrix[i-1, j-1];
 
-                    if(source.Substring(i-1, 1) != target.Substring(j-1, 1))
+                    if (source.Substring(i-1, 1) != target.Substring(j-1, 1))
                         diag++;
 
                     int deletion = matrix[i-1, j];
@@ -610,14 +610,14 @@ namespace NetSpell.SpellChecker
                 return 0;
             }
 
-            if(_words.Count == 1)
+            if (_words.Count == 1)
                 return 0;
 
             int low=0;
             int high=_words.Count-1;
 
             // binary search
-            while(low<=high)
+            while (low<=high)
             {
                 int mid=(low+high)/2;
                 int wordStartIndex = _words[mid].Index;
@@ -627,11 +627,11 @@ namespace NetSpell.SpellChecker
                 if ((mid+1) < _words.Count)
                     wordEndIndex = _words[mid+1].Index - 1;
 
-                if(textIndex < wordStartIndex)
+                if (textIndex < wordStartIndex)
                     high=mid-1;
-                else if(textIndex > wordEndIndex)
+                else if (textIndex > wordEndIndex)
                     low=mid+1;
-                else if(wordStartIndex <= textIndex && textIndex <= wordEndIndex)
+                else if (wordStartIndex <= textIndex && textIndex <= wordEndIndex)
                     return mid;
             }
 
@@ -691,7 +691,7 @@ namespace NetSpell.SpellChecker
             }
 
             // if not in list and replacement word has length
-            if(!ReplaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0)
+            if (!ReplaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0)
             {
                 ReplaceList.Add(CurrentWord, _replacementWord);
             }
@@ -827,7 +827,7 @@ namespace NetSpell.SpellChecker
         /// <seealso cref="WordIndex"/>
         public bool SpellCheck(int startWordIndex, int endWordIndex)
         {
-            if(startWordIndex > endWordIndex || _words == null || _words.Count == 0)
+            if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
                 OnEndOfText(System.EventArgs.Empty);	//raise event
@@ -844,23 +844,23 @@ namespace NetSpell.SpellChecker
                 WordIndex = i; // saving the current word index
                 currentWord = CurrentWord;
 
-                if(CheckString(currentWord))
+                if (CheckString(currentWord))
                 {
-                    if(!TestWord())
+                    if (!TestWord())
                     {
-                        if(ReplaceList.ContainsKey(currentWord))
+                        if (ReplaceList.ContainsKey(currentWord))
                         {
                             ReplacementWord = ReplaceList[currentWord];
                             ReplaceWord();
                         }
-                        else if(!IgnoreList.Contains(currentWord))
+                        else if (!IgnoreList.Contains(currentWord))
                         {
                             misspelledWord = true;
                             OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));		//raise event
                             //break;
                         }
                     }
-                    else if(i > 0 && _words[i-1].Value == currentWord
+                    else if (i > 0 && _words[i-1].Value == currentWord
                         && (_words[i-1].Index + _words[i-1].Length + 1) == _words[i].Index)
                     {
                         misspelledWord = true;
@@ -870,7 +870,7 @@ namespace NetSpell.SpellChecker
                 }
             } // for
 
-            if(_wordIndex >= _words.Count-1 && !misspelledWord)
+            if (_wordIndex >= _words.Count-1 && !misspelledWord)
             {
                 OnEndOfText(System.EventArgs.Empty);	//raise event
             }
@@ -950,7 +950,7 @@ namespace NetSpell.SpellChecker
         public void Suggest(string word)
         {
             Text = word;
-            if(!TestWord(word))
+            if (!TestWord(word))
                 Suggest();
         }
 
@@ -1186,7 +1186,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if(!DesignMode && _dictionary == null)
+                if (!DesignMode && _dictionary == null)
                     _dictionary = new WordDictionary();
 
                 return _dictionary;
@@ -1333,7 +1333,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if(_words == null)
+                if (_words == null)
                     return 0;
 
                 return _words.Count;
@@ -1349,7 +1349,7 @@ namespace NetSpell.SpellChecker
         {
             get
             {
-                if(_words == null)
+                if (_words == null)
                     return 0;
 
                 // make sure word index can't be higher then word count

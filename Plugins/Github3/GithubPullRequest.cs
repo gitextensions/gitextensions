@@ -60,7 +60,7 @@ namespace Github3
         {
             get
             {
-                if(_HeadRepo == null)
+                if (_HeadRepo == null)
                     _HeadRepo = new GithubRepo(pullrequest.Head.Repo);
 
                 return _HeadRepo;
@@ -89,7 +89,7 @@ namespace Github3
         {
             get
             {
-                if(_Discussion == null)
+                if (_Discussion == null)
                     _Discussion = new GithubPullRequestDiscussion(pullrequest);
 
                 return _Discussion;

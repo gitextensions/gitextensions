@@ -73,7 +73,7 @@ namespace GitCommands
         {
                 LockedAction(() =>
                 {
-                    foreach(var pair in keyValuePairs)
+                    foreach (var pair in keyValuePairs)
                     {
                         if (pair.Item2 != null)
                             SetValueImpl(pair.Item1, pair.Item2);

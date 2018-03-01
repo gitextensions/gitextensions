@@ -1418,7 +1418,7 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
-                if(Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
+                if (Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
                 {
                     Staged.SelectedIndex = 0;
                 }
@@ -2800,7 +2800,7 @@ namespace GitUI.CommandsDialogs
 
         private void Message_Enter(object sender, EventArgs e)
         {
-            if(Staged.AllItems.Count() != 0 && !Staged.SelectedItems.Any())
+            if (Staged.AllItems.Count() != 0 && !Staged.SelectedItems.Any())
             {
                 _currentFilesList = Staged;
                 Staged.SelectedIndex = 0;

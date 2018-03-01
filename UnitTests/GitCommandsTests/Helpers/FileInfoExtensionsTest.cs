@@ -95,11 +95,11 @@ namespace GitCommandsTests.Helpers
         [TestCleanup]
         public void Cleanup()
         {
-            if(File.Exists(_file1Path))
+            if (File.Exists(_file1Path))
                 File.Delete(_file1Path);
-            if(File.Exists(_file2Path))
+            if (File.Exists(_file2Path))
                 File.Delete(_file2Path);
-            if(File.Exists(_file3Path))
+            if (File.Exists(_file3Path))
                 File.Delete(_file3Path);
         }
 

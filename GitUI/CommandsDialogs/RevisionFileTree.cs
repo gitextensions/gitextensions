@@ -666,7 +666,7 @@ See the changes in the commit form.");
             if (answer == DialogResult.No)
                 return;
 
-            if(Module.StopTrackingFile(filename))
+            if (Module.StopTrackingFile(filename))
             {
                 MessageBox.Show(_stopTrackingSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

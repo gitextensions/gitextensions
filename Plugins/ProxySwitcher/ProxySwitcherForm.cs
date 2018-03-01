@@ -74,7 +74,7 @@ namespace ProxySwitcher
             {
                 var password = _plugin.Password.ValueOrDefault(_settings);
                 sb.Append(username);
-                if(!string.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(password))
                 {
                     sb.Append(":");
                     sb.Append(password);

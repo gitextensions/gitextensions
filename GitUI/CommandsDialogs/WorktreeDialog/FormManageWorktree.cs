@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 if (i == 0)
                 {
                     Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
-                    if(IsCurrentlyOpenedWorktree(_worktrees[0]))
+                    if (IsCurrentlyOpenedWorktree(_worktrees[0]))
                         Worktrees.Rows[i].Cells["Open"].Value = Resources.IconBlank;
 
                 }
@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             if (e.ColumnIndex == 6)
             {
-                if(e.RowIndex == 0)
+                if (e.RowIndex == 0)
                     return;
                 if (MessageBox.Show(this, "Are you sure you want to delete this worktree?", "Delete a worktree",
                         MessageBoxButtons.YesNo) == DialogResult.Yes)

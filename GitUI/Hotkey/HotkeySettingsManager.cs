@@ -50,17 +50,17 @@ namespace GitUI.Hotkey
 
             GetUsedHotkeys(allSettings);
 
-            foreach(HotkeySettings hs in allSettings)
+            foreach (HotkeySettings hs in allSettings)
             {
-                if(hs.Name == name)
+                if (hs.Name == name)
                     settings = hs;
-                if(hs.Name == "Scripts")
+                if (hs.Name == "Scripts")
                     scriptkeys = hs;
             }
 
             //HotkeyCommand[] scriptkeys = LoadSettings().FirstOrDefault(s => s.Name == name);
 
-            if(settings != null) {
+            if (settings != null) {
                 //append general hotkeys to every form
                 //HotkeyCommand[] scriptkeys = LoadScriptHotkeys();
                 HotkeyCommand[] allkeys = new HotkeyCommand[settings.Commands.Length + scriptkeys.Commands.Length];
@@ -153,7 +153,7 @@ namespace GitUI.Hotkey
 
         private static void FillDictionaryWithCommands(Dictionary<string, HotkeyCommand> dict, HotkeySettings[] settings)
         {
-            foreach(HotkeySettings setting in settings)
+            foreach (HotkeySettings setting in settings)
             {
                 foreach (HotkeyCommand command in setting.Commands)
                 {

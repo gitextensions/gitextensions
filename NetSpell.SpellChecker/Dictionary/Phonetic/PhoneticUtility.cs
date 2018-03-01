@@ -68,7 +68,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 					case '9' :
 						rule.Priority = int.Parse(cond.ToString(CultureInfo.CurrentUICulture));
 						break;
-					default :
+					default:
 						if (group)
 						{
 							// add chars to group

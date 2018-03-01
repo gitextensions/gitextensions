@@ -12,9 +12,9 @@ namespace GitUI
 
 		public void Append([NotNull] string text)
 		{
-			if(text == null)
+			if (text == null)
 				throw new ArgumentNullException(nameof(text));
-			lock(_outputString)
+			lock (_outputString)
 				_outputString.Append(text);
 		}
 
@@ -25,14 +25,14 @@ namespace GitUI
 
 		public void Clear()
 		{
-			lock(_outputString)
+			lock (_outputString)
 				_outputString.Clear();
 		}
 
 		[NotNull]
 		public string GetString()
 		{
-			lock(_outputString)
+			lock (_outputString)
 				return _outputString.ToString();
 		}
 	}

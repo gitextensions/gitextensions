@@ -154,7 +154,7 @@ namespace GitUI
             {
                 yield return node;
 
-                foreach(TreeNode subNode in node.Nodes.AllNodes())
+                foreach (TreeNode subNode in node.Nodes.AllNodes())
                     yield return subNode;
             }
         }

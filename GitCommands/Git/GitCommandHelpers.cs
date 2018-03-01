@@ -517,7 +517,7 @@ namespace GitCommands
                 options.Add("--recurse-submodules");
             if (depth.HasValue)
                 options.Add("--depth " + depth);
-            if(isSingleBranch.HasValue)
+            if (isSingleBranch.HasValue)
                 options.Add(isSingleBranch.Value ? "--single-branch" : "--no-single-branch");
             options.Add("--progress");
             if (branch == null)

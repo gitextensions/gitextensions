@@ -385,7 +385,7 @@ namespace GitCommands.Config
                 else
                 {
                     // closing square bracket not in quoted section lead to start new section
-                    if(c == ']' && !_quotedStringInSection)
+                    if (c == ']' && !_quotedStringInSection)
                     {
                         NewSection();
                         return ReadUnknown;

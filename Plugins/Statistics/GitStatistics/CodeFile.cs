@@ -157,7 +157,7 @@ namespace GitStatistics
                 File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
                 File.Extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
             {
-                if(line.Contains("<!--"))
+                if (line.Contains("<!--"))
                 {
                     _inCommentBlock = true;
                 }

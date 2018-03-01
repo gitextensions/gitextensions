@@ -105,7 +105,7 @@ namespace GitUI
                         }
                     }
                     // Show last progress message in the title, unless it's showin in the control body already
-                    if(!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    if (!ConsoleOutput.IsDisplayingFullProcessOutput)
                       Text = text;
                 };
             BeginInvoke(method, this);

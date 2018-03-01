@@ -928,7 +928,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                using(var form = new FormSparseWorkingCopy(this))
+                using (var form = new FormSparseWorkingCopy(this))
                     form.ShowDialog(owner);
 
                 return true;

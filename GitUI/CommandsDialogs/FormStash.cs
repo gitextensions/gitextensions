@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
             {
                 Stashed.GitItemStatuses = null;
             }
-            else if(gitStash == currentWorkingDirStashItem)
+            else if (gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
                 _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);

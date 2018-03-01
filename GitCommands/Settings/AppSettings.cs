@@ -1607,7 +1607,7 @@ namespace GitCommands
             else
             {
                 var utf8 = new UTF8Encoding(false);
-                foreach(var encodingName in availableEncodings.Split(';'))
+                foreach (var encodingName in availableEncodings.Split(';'))
                 {
                     // create utf-8 without BOM
                     if (encodingName == utf8.HeaderName)

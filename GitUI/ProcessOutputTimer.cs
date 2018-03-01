@@ -46,7 +46,7 @@ namespace GitUI
 		/// </summary>
         public void Append(string text)
         {
-            lock(textToAdd)
+            lock (textToAdd)
             {
                 textToAdd.Append(text);
             }

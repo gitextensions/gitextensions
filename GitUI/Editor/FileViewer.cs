@@ -192,11 +192,11 @@ namespace GitUI.Editor
 
         private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
         {
-            if(e?.OldCommands != null)
+            if (e?.OldCommands != null)
                 e.OldCommands.PostSettings -= UICommands_PostSettings;
 
             var commandSource = sender as IGitUICommandsSource;
-            if( commandSource?.UICommands != null)
+            if ( commandSource?.UICommands != null)
                 commandSource.UICommands.PostSettings += UICommands_PostSettings;
 
             this.Encoding = null;

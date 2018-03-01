@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
 
         private IGitIgnoreDialogModel CreateGitIgnoreDialogModel(bool localExclude)
         {
-            if(localExclude)
+            if (localExclude)
                 return new GitLocalExcludeModel(Module);
 
             return new GitIgnoreModel(Module);

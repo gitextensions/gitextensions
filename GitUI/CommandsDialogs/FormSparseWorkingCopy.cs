@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
         public FormSparseWorkingCopy([CanBeNull] GitUICommands aCommands /* Translation tests set it to NULL */)
             : base(aCommands)
         {
-            if(aCommands == null)
+            if (aCommands == null)
                 return;
             var sparse = new FormSparseWorkingCopyViewModel(aCommands);
             BindToViewModelGlobal(sparse);
@@ -33,23 +33,23 @@ namespace GitUI.CommandsDialogs
 
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
-            if(sparse == null)
+            if (sparse == null)
                 throw new ArgumentNullException(nameof(sparse));
             Closing += (sender, args) =>
             {
                 try
                 {
                     // Save on OK — even if not dirty, to upd the rules if checkbox is ON
-                    if(DialogResult == DialogResult.OK)
+                    if (DialogResult == DialogResult.OK)
                     {
                         sparse.SaveChanges();
                         return;
                     }
 
                     // Closing/canceling, prompt to save if dirty
-                    if(sparse.IsWithUnsavedChanges())
+                    if (sparse.IsWithUnsavedChanges())
                     {
-                        switch(MessageBox.Show(this, Globalized.Strings.YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.Cancel.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                        switch (MessageBox.Show(this, Globalized.Strings.YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.Cancel.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                         {
                         case DialogResult.Yes:
                             sparse.SaveChanges();
@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ActiveForm, Globalized.Strings.CouldNotSave.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.SaveFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -73,11 +73,11 @@ namespace GitUI.CommandsDialogs
 
         private void BindToViewModelGlobal([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
-            if(sparse == null)
+            if (sparse == null)
                 throw new ArgumentNullException(nameof(sparse));
             sparse.ComfirmAdjustingRulesOnDeactRequested += (sender, args) =>
             {
-                if(!args.Cancel)
+                if (!args.Cancel)
 
                     args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, (args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text)), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
             };
@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
             KeyPreview = true;
             PreviewKeyDown += (sender, args) =>
             {
-                if(args.KeyData == (Keys.Enter | Keys.Control))
+                if (args.KeyData == (Keys.Enter | Keys.Control))
                 {
                     DialogResult = DialogResult.OK;
                     Close();
@@ -199,10 +199,10 @@ namespace GitUI.CommandsDialogs
             try
             {
                 FileInfo sparsefile = sparse.GetPathToSparseCheckoutFile();
-                if(sparsefile.Exists)
+                if (sparsefile.Exists)
                     editor.ViewFile(sparsefile.FullName);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ActiveForm, Globalized.Strings.CannotLoadTheTextOfTheSparseFile.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.LoadFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

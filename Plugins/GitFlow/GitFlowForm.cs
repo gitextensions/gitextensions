@@ -39,7 +39,7 @@ namespace GitFlow
 
         private List<string> BranchTypes
         {
-            get { return Enum.GetValues(typeof (Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
+            get { return Enum.GetValues(typeof(Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
 
         private bool IsGitFlowInited => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
@@ -169,7 +169,7 @@ namespace GitFlow
         #region Run GitFlow commands
         private void btnInit_Click(object sender, EventArgs e)
         {
-            if(RunCommand("flow init -d"))
+            if (RunCommand("flow init -d"))
                 Init();
         }
 
@@ -196,7 +196,7 @@ namespace GitFlow
                 return string.Empty;
             if (branchType == Branch.support.ToString("G"))
                 return " HEAD"; //Hoping that's a revision on master (How to get the sha of the selected line in GitExtension?)
-            if(!cbBasedOn.Checked)
+            if (!cbBasedOn.Checked)
                 return string.Empty;
             return " " + cbBaseBranch.SelectedValue;
         }

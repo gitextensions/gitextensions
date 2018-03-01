@@ -493,7 +493,7 @@ namespace GitImpact
         }
 
         [Browsable(false)]
-        public List<string> Authors { get { lock(_dataLock) return _authorStack; } }
+        public List<string> Authors { get { lock (_dataLock) return _authorStack; } }
 
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
         {

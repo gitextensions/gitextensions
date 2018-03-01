@@ -293,7 +293,7 @@ namespace ResourceManager.Xliff
                     continue;
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.IsClass && typeof (ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                    if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
                         var val = !assembly.IsPlugin() ? "" : ".Plugins";
                         if (!dictionary.TryGetValue(val, out var list))

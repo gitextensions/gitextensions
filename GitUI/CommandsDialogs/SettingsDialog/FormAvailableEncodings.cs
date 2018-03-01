@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void ButtonOk_Click(object sender, EventArgs e)
         {
             AppSettings.AvailableEncodings.Clear();
-            foreach(Encoding encoding in ListIncludedEncodings.Items)
+            foreach (Encoding encoding in ListIncludedEncodings.Items)
             {
                 AppSettings.AvailableEncodings.Add(encoding.HeaderName, encoding);
             }

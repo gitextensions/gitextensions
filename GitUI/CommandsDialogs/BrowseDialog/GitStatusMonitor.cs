@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void CalculateNextUpdateTime(int delay)
         {
             var next = Environment.TickCount + delay;
-            if(_nextUpdateTime > Environment.TickCount)
+            if (_nextUpdateTime > Environment.TickCount)
             {
                 //A time is already set, use closest
                 next = Math.Min(_nextUpdateTime, next);
