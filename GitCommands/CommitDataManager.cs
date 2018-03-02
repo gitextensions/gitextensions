@@ -48,7 +48,7 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateBody(CommitData commitData, out string error)
         {
-            if (!TryGetCommitLog(commitData.Guid, ShortLogFormat, out error, out var data))
+            if (!TryGetCommitLog(commitData.Guid.ToString(), ShortLogFormat, out error, out var data))
             {
                 return;
             }
@@ -74,7 +74,7 @@ namespace GitCommands
             var commitEncoding = lines[1];
             var message = ProcessDiffNotes(startIndex: 2, lines);
 
-            Debug.Assert(commitData.Guid == guid, "Guid in response doesn't match that of request");
+            Debug.Assert(commitData.Guid.ToString() == guid, "Guid in response doesn't match that of request");
 
             // Commit message is not reencoded by git when format is given
             commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
@@ -131,7 +131,7 @@ namespace GitCommands
 
             var lines = data.Split('\n');
 
-            var guid = lines[0];
+            var guid = ObjectId.Parse(lines[0]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
             var treeGuid = lines[1];
@@ -159,7 +159,12 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            return new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
+            if (revision.ObjectId == null)
+            {
+                throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
+            }
+
+            return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentGuids,
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject);
