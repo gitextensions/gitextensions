@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public sealed class CommitData
     {
-        public CommitData(string guid,
+        public CommitData(ObjectId guid,
             string treeGuid, IReadOnlyList<string> parentGuids,
             string author, DateTimeOffset authorDate,
             string committer, DateTimeOffset commitDate,
@@ -23,7 +24,7 @@ namespace GitCommands
             Body = body;
         }
 
-        public string Guid { get; }
+        public ObjectId Guid { get; }
         public string TreeGuid { get; }
         public IReadOnlyList<string> ParentGuids { get; }
         public string Author { get; }
