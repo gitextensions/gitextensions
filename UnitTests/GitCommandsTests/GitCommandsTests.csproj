@@ -74,6 +74,7 @@
     <Compile Include="Git\GitRevisionTesterTests.cs" />
     <Compile Include="Git\GitStashTests.cs" />
     <Compile Include="Git\Gpg\GitGpgControllerTests.cs" />
+    <Compile Include="Git\ObjectIdTests.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmdTests.cs" />
     <Compile Include="Git\RevisionDiffProviderTest.cs" />
     <Compile Include="Git\GitBranchNameNormaliserTest.cs" />
