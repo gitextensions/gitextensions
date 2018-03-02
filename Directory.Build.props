@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>7.2</LangVersion>
+    <NoWarn>$(NoWarn);1573;1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

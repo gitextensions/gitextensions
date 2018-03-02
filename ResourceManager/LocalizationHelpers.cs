@@ -25,7 +25,7 @@ namespace ResourceManager
         /// <param name="previousDate">The date to get relative time string for.</param>
         /// <param name="displayWeeks">Indicates whether to display weeks.</param>
         /// <returns>The human readable string for relative date.</returns>
-        /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
+        /// <see href="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks = true)
         {
             var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);

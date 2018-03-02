@@ -2,9 +2,6 @@
 {
     partial class DvcsGraph
     {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
         #region Component Designer generated code
 
         /// <summary> 

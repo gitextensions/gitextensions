@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GitCommands.Config;
 
 namespace GitCommands.Remote
 {

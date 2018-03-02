@@ -11,12 +11,14 @@ namespace Gravatar
         /// </summary>
         None = 0,
 
+#if false
         /// <summary>
         /// Return a simple, cartoon-style silhouetted outline of a person 
         /// (does not vary by email hash)
         /// </summary>
         /// Don't use it, use Resources.User image instead 
-        //MysteryMan,
+        MysteryMan,
+#endif
 
         /// <summary>
         /// Return a generated monster based on the email hash.
