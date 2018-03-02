@@ -3727,12 +3727,12 @@ namespace GitUI
                 refName = sha1;
             }
 
-            string revisionGuid = Module.RevParse(refName);
-            if (!string.IsNullOrEmpty(revisionGuid))
+            var revisionGuid = Module.RevParse(refName);
+            if (revisionGuid != null)
             {
-                if (_isLoading || !SetSelectedRevision(new GitRevision(revisionGuid)))
+                if (_isLoading || !SetSelectedRevision(new GitRevision(revisionGuid.ToString())))
                 {
-                    _initialSelectedRevision = revisionGuid;
+                    _initialSelectedRevision = revisionGuid.ToString();
                     Revisions.SelectedIds = null;
                     LastSelectedRows = null;
                 }
@@ -3758,7 +3758,7 @@ namespace GitUI
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var baseCommit = Module.RevParse(form.BranchName);
-                    UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit, headCommit.Guid,
+                    UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit, headCommit.ObjectId,
                         form.BranchName, headCommit.Subject);
                 }
             }
@@ -3769,7 +3769,7 @@ namespace GitUI
             var baseCommit = GetSelectedRevisions().First();
             var headBranch = Module.GetSelectedBranch();
             var headBranchName = Module.RevParse(headBranch);
-            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.Guid, headBranchName,
+            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headBranchName,
                 baseCommit.Subject, headBranch);
         }
 
@@ -3788,7 +3788,7 @@ namespace GitUI
             }
 
             var headCommit = GetSelectedRevisions().First();
-            UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.Guid, headCommit.Guid,
+            UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.ObjectId, headCommit.ObjectId,
                 _baseCommitToCompare.Subject, headCommit.Subject);
         }
 

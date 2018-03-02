@@ -29,7 +29,7 @@ namespace GitUI.UserControls
         {
             string oldCommitHash = SelectedCommitHash;
 
-            SelectedCommitHash = Module.RevParse(commitHash);
+            SelectedCommitHash = Module.RevParse(commitHash)?.ToString() ?? "";
 
             if (SelectedCommitHash.IsNullOrEmpty() && !commitHash.IsNullOrWhiteSpace())
             {

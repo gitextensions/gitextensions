@@ -276,15 +276,17 @@ namespace GitUI.CommandsDialogs
                     IGitRef remoteBranchRef = GetRemoteBranchRef(cmd.BranchName);
                     if (localBranchRef != null && remoteBranchRef != null)
                     {
-                        string mergeBaseGuid = Module.GetMergeBase(localBranchRef.Guid, remoteBranchRef.Guid);
-                        bool isResetFastForward = localBranchRef.Guid == mergeBaseGuid;
+                        var mergeBaseGuid = Module.GetMergeBase(localBranchRef.Guid, remoteBranchRef.Guid);
+                        var isResetFastForward = localBranchRef.Guid == mergeBaseGuid?.ToString();
+
                         if (!isResetFastForward)
                         {
-                            string mergeBaseText = mergeBaseGuid.IsNullOrWhiteSpace()
+                            string mergeBaseText = mergeBaseGuid == null
                                 ? "merge base"
-                                : GitRevision.ToShortSha(mergeBaseGuid);
+                                : mergeBaseGuid.ToShortString();
 
                             string warningMessage = string.Format(_resetNonFastForwardBranch.Text, _localBranchName, mergeBaseText);
+
                             if (MessageBox.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                             {
                                 DialogResult = DialogResult.None;

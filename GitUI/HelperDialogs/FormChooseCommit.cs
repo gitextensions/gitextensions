@@ -29,10 +29,10 @@ namespace GitUI.HelperDialogs
 
             if (!string.IsNullOrEmpty(preselectCommit))
             {
-                string guid = Module.RevParse(preselectCommit);
-                if (!string.IsNullOrEmpty(guid))
+                var guid = Module.RevParse(preselectCommit);
+                if (guid != null)
                 {
-                    revisionGrid.SetInitialRevision(guid);
+                    revisionGrid.SetInitialRevision(guid.ToString());
                 }
             }
         }

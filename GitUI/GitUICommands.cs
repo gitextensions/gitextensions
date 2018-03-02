@@ -1124,11 +1124,11 @@ namespace GitUI
             }
         }
 
-        public FormDiff ShowFormDiff(bool firstParentIsValid, string baseCommitSha,
-            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        public FormDiff ShowFormDiff(bool firstParentIsValid, ObjectId baseCommitSha,
+            ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
         {
-            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha,
-                headCommitSha, baseCommitDisplayStr, headCommitDisplayStr);
+            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha.ToString(),
+                headCommitSha.ToString(), baseCommitDisplayStr, headCommitDisplayStr);
             diffForm.Show();
             diffForm.ShowInTaskbar = true;
 
