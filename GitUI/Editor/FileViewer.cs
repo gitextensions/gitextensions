@@ -8,13 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.CommandsDialogs;
-using GitUI.Hotkey;
-using ICSharpCode.TextEditor.Util;
-using PatchApply;
 using GitCommands.Settings;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
+using GitUI.Hotkey;
+using PatchApply;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -191,17 +190,17 @@ namespace GitUI.Editor
 
         private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
         {
-            if(e?.OldCommands != null)
+            if (e?.OldCommands != null)
                 e.OldCommands.PostSettings -= UICommands_PostSettings;
 
             var commandSource = sender as IGitUICommandsSource;
-            if( commandSource?.UICommands != null)
+            if (commandSource?.UICommands != null)
                 commandSource.UICommands.PostSettings += UICommands_PostSettings;
 
             this.Encoding = null;
         }
 
-        private void UICommands_PostSettings( object sender, GitUIPluginInterfaces.GitUIPostActionEventArgs e )
+        private void UICommands_PostSettings(object sender, GitUIPluginInterfaces.GitUIPostActionEventArgs e)
         {
             _internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
@@ -455,9 +454,9 @@ namespace GitUI.Editor
             Reset(true, true, true);
         }
 
-        public void ViewPatch(Func<string> loadPatchText)
+        public Task ViewPatch(Func<string> loadPatchText)
         {
-            _async.Load(loadPatchText, ViewPatch);
+            return _async.Load(loadPatchText, ViewPatch);
         }
 
         public void ViewText(string fileName, string text)
@@ -1026,7 +1025,7 @@ namespace GitUI.Editor
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
 
-        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        public void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _internalFileViewer.SetFileLoader(fileLoader);
         }

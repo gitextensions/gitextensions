@@ -183,6 +183,136 @@ namespace GitUI
             FileStatusListView.EndUpdate();
         }
 
+        public int GetNextIndex(bool searchBackward, bool loop)
+        {
+            int curIdx = SelectedIndex;
+            if (curIdx >= 0)
+            {
+                ListViewItem currentItem = FileStatusListView.Items[curIdx];
+                var currentGroup = currentItem.Group;
+
+                int maxIdx = GitItemStatuses.Count() - 1;
+
+                if (searchBackward)
+                {
+                    var nextItem = FindPrevItemInGroups(curIdx, currentGroup);
+                    if (nextItem == null)
+                    {
+                        return loop ? GetLastIndex() : curIdx;
+                    }
+                    return nextItem.Index;
+                }
+                else
+                {
+                    var nextItem = FindNextItemInGroups(curIdx, currentGroup);
+                    if (nextItem == null)
+                    {
+                        return loop ? 0 : curIdx;
+                    }
+                    return nextItem.Index;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        private ListViewItem FindPrevItemInGroups(int curIdx, ListViewGroup currentGroup)
+        {
+            List<ListViewGroup> searchInGroups = new List<ListViewGroup>();
+            bool foundCurrentGroup = false;
+            for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
+            {
+                if (FileStatusListView.Groups[i] == currentGroup)
+                {
+                    foundCurrentGroup = true;
+                }
+                if (foundCurrentGroup)
+                {
+                    searchInGroups.Add(FileStatusListView.Groups[i]);
+                }
+            }
+
+            foreach (ListViewGroup grp in searchInGroups)
+            {
+                for (int i = curIdx - 1; i >= 0; i--)
+                {
+                    if (FileStatusListView.Items[i].Group == grp)
+                    {
+                        return FileStatusListView.Items[i];
+                    }
+                }
+                curIdx = FileStatusListView.Items.Count;
+            }
+
+            return null;
+        }
+
+        private ListViewItem FindNextItemInGroups(int curIdx, ListViewGroup currentGroup)
+        {
+            List<ListViewGroup> searchInGroups = new List<ListViewGroup>();
+            bool foundCurrentGroup = false;
+            for (int i = 0; i < FileStatusListView.Groups.Count; i++)
+            {
+                if (FileStatusListView.Groups[i] == currentGroup)
+                {
+                    foundCurrentGroup = true;
+                }
+                if (foundCurrentGroup)
+                {
+                    searchInGroups.Add(FileStatusListView.Groups[i]);
+                }
+            }
+
+            foreach (ListViewGroup grp in searchInGroups)
+            {
+                for (int i = curIdx + 1; i < FileStatusListView.Items.Count; i++)
+                {
+                    if (FileStatusListView.Items[i].Group == grp)
+                    {
+                        return FileStatusListView.Items[i];
+                    }
+                }
+                curIdx = -1;
+            }
+
+            return null;
+        }
+
+        private int GetLastIndex()
+        {
+            if (FileStatusListView.Items.Count == 0)
+            {
+                return -1;
+            }
+
+            if (FileStatusListView.Groups.Count < 2)
+            {
+                return FileStatusListView.Items.Count - 1;
+            }
+
+            ListViewGroup lastNonEmptyGroup = null;
+            for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
+            {
+                if (FileStatusListView.Groups[i].Items.Count > 0)
+                {
+                    lastNonEmptyGroup = FileStatusListView.Groups[i];
+                    break;
+                }
+            }
+
+            for (int i = FileStatusListView.Items.Count - 1; i >= 0; i--)
+            {
+                if (FileStatusListView.Items[i].Group == lastNonEmptyGroup)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)
         {
             var pathFormatter = new PathFormatter(graphics, FileStatusListView.Font);
@@ -603,7 +733,7 @@ namespace GitUI
             if (isSubmoduleSelected)
             {
                 _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ?
-                    new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) :
+                    new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold) :
                     new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
         }
@@ -683,7 +813,7 @@ namespace GitUI
             get
             {
                 var result = new List<GitItemStatus>();
-                foreach(ListViewItem listViewItem in FileStatusListView.Items)
+                foreach (ListViewItem listViewItem in FileStatusListView.Items)
                 {
                     result.Add((GitItemStatus)listViewItem.Tag);
                 }
