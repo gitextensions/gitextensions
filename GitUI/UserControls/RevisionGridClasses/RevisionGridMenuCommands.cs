@@ -401,10 +401,10 @@ namespace GitUI.UserControls.RevisionGridClasses
                     return;
                 }
 
-                string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
-                if (!string.IsNullOrEmpty(revisionGuid))
+                var revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
+                if (revisionGuid != null)
                 {
-                    _revisionGrid.SetSelectedRevision(new GitRevision(revisionGuid));
+                    _revisionGrid.SetSelectedRevision(new GitRevision(revisionGuid.ToString()));
                 }
                 else
                 {

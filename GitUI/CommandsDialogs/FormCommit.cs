@@ -17,6 +17,7 @@ using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using Timer = System.Windows.Forms.Timer;
@@ -768,8 +769,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateMergeHead()
         {
-            var mergeHead = Module.RevParse("MERGE_HEAD");
-            IsMergeCommit = GitRevision.IsFullSha1Hash(mergeHead);
+            IsMergeCommit = Module.RevParse("MERGE_HEAD") != null;
         }
 
         private void InitializedStaged()

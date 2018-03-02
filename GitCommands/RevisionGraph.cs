@@ -365,14 +365,11 @@ namespace GitCommands
                     Debug.Assert(lines.Length == 11, "lines.Length == 11");
                     Debug.Assert(lines[0] == CommitBegin, "lines[0] == CommitBegin");
 
-                    _revision = new GitRevision(null);
+                    _revision = new GitRevision(lines[1]);
 
-                    _revision.Guid = lines[1];
+                    if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
                     {
-                        if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
-                        {
-                            _revision.Refs.AddRange(gitRefs);
-                        }
+                        _revision.Refs.AddRange(gitRefs);
                     }
 
                     // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
