@@ -120,7 +120,6 @@
     <Rule Id="SA1614" Action="None" />
     <Rule Id="SA1615" Action="None" />
     <Rule Id="SA1616" Action="None" />
-    <Rule Id="SA1617" Action="None" />
     <Rule Id="SA1618" Action="None" />
     <Rule Id="SA1619" Action="None" />
     <Rule Id="SA1620" Action="None" />

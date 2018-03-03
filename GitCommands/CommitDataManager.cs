@@ -36,7 +36,6 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
         /// <summary>
@@ -181,7 +180,6 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
             if (data == null)
