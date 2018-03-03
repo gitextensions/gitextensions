@@ -236,14 +236,13 @@ namespace GitPlugin
                 this.GitPluginUISetupCommandBar();
                 this.GitPluginUISetupContextMenu();
 
-                // /*
-                //     * Uncomment the code block below to help find the name of commandbars in
-                //     * visual studio. All commandbars (and context menu's) will get a new entry
-                //     * with the name of that commandbar.
-                //    foreach (var commandBar in _gitPlugin.CommandBars)
-                //    {
-                //        _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
-                //    }*/
+                // Uncomment the code block below to help find the name of commandbars in
+                // visual studio. All commandbars (and context menu's) will get a new entry
+                // with the name of that commandbar.
+                ////foreach (var commandBar in _gitPlugin.CommandBars)
+                ////{
+                ////    _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
+                ////}
 
             }
             catch (Exception ex)
@@ -300,7 +299,7 @@ namespace GitPlugin
 
         private void RegisterGitPluginCommand()
         {
-            // GitPlugin.DeleteCommandBar("GitExtensions");
+            ////GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
                 this._gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
@@ -359,29 +358,28 @@ namespace GitPlugin
 
         public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
         {
-            // if (disconnectMode == ext_DisconnectMode.ext_dm_HostShutdown
-            //    || disconnectMode == ext_DisconnectMode.ext_dm_UserClosed)
-            // {
-            //    _gitPlugin.DeleteCommands();
-            //    _gitPlugin.DeleteCommandBar(GitToolBarName);
-            //    //Place the command on the tools menu.
-            //    //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
-            //    var menuBarCommandBar = ((CommandBars)_applicationObject.CommandBars)["MenuBar"];
-
-
-            // CommandBarControl toolsControl;
-            //    try
-            //    {
-            //        toolsControl = menuBarCommandBar.Controls["Git"];
-            //        if (toolsControl != null)
-            //        {
-            //            toolsControl.Delete();
-            //        }
-            //    }
-            //    catch
-            //    {
-            //    }
-            // }
+            ////if (disconnectMode == ext_DisconnectMode.ext_dm_HostShutdown
+            ////   || disconnectMode == ext_DisconnectMode.ext_dm_UserClosed)
+            ////{
+            ////   _gitPlugin.DeleteCommands();
+            ////   _gitPlugin.DeleteCommandBar(GitToolBarName);
+            ////   //Place the command on the tools menu.
+            ////   //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
+            ////   var menuBarCommandBar = ((CommandBars)_applicationObject.CommandBars)["MenuBar"];
+            ////
+            ////CommandBarControl toolsControl;
+            ////   try
+            ////   {
+            ////       toolsControl = menuBarCommandBar.Controls["Git"];
+            ////       if (toolsControl != null)
+            ////       {
+            ////           toolsControl.Delete();
+            ////       }
+            ////   }
+            ////   catch
+            ////   {
+            ////   }
+            ////}
         }
 
         public void OnAddInsUpdate(ref Array custom)

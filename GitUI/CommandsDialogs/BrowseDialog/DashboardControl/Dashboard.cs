@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RecentRepositories.RepositoryRemoved += RecentRepositories_RepositoryRemoved;
             RecentRepositories.DisableContextMenu();
             RecentRepositories.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
-            // Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
+            ////Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
 
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)

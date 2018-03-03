@@ -952,13 +952,13 @@ namespace GitCommands
                 var temp = value.EnsureTrailingPathSeparator();
                 SetString("gitbindir", temp);
 
-                // if (string.IsNullOrEmpty(_gitBinDir))
-                //    return;
-
-                // var path =
-                //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
-                //    _gitBinDir;
-                // Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                ////if (string.IsNullOrEmpty(_gitBinDir))
+                ////   return;
+                ////
+                ////var path =
+                ////   Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
+                ////   _gitBinDir;
+                ////Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 

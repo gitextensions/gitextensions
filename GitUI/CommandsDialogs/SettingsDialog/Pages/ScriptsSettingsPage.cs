@@ -84,13 +84,13 @@ Current Branch:
                     // add entry to toolstrip
                     if (icon.Value.GetType() == typeof(Icon))
                     {
-                        // contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
+                        ////contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                     }
                     else if (icon.Value.GetType() == typeof(Bitmap))
                     {
                         contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
                     }
-                    // var aa = icon.Value.GetType();
+                    ////var aa = icon.Value.GetType();
                 }
 
                 resourceSet.Close();

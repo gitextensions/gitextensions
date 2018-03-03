@@ -8,7 +8,7 @@ namespace Bitbucket
 {
     class PullRequest
     {
-        // public string Ref { get; set; }
+        ////public string Ref { get; set; }
         public static PullRequest Parse(JObject json)
         {
             var request = new PullRequest

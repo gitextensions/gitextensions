@@ -87,10 +87,10 @@ namespace GitUI.RevisionGridClasses
                 // TODO: We could be smart and only clear items after Node[aId]. The check
                 // below isn't valid, since it could be either the filtered or unfiltered
                 // lane...
-                // if (node.InLane != int.MaxValue)
-                // {
-                //    filteredLanes.Clear();
-                // }
+                ////if (node.InLane != int.MaxValue)
+                ////{
+                ////   filteredLanes.Clear();
+                ////}
             }
 
             public void ClearHighlightBranch()

@@ -374,7 +374,7 @@ namespace GitUI.CommandsDialogs
         private void LocalBranchCheckedChanged(object sender, EventArgs e)
         {
             // We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
-            // BranchTypeChanged();
+            ////BranchTypeChanged();
         }
 
         private void RemoteBranchCheckedChanged(object sender, EventArgs e)

@@ -422,7 +422,7 @@ namespace TranslationApp
 
         private void translatedText_Leave(object sender, System.EventArgs e)
         {
-            // Debug.Assert(_translationItemWithCategoryInEditing != null);
+            ////Debug.Assert(_translationItemWithCategoryInEditing != null);
 
             if (_translationItemWithCategoryInEditing != null)
             {

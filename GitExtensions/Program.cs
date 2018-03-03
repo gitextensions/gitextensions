@@ -143,8 +143,8 @@ namespace GitExtensions
 
                 // Do not add this working directory to the recent repositories. It is a nice feature, but it
                 // also increases the startup time
-                // if (Module.ValidWorkingDir())
-                //    Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
+                ////if (Module.ValidWorkingDir())
+                ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && AppSettings.StartWithRecentWorkingDir)

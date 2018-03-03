@@ -328,14 +328,14 @@ namespace GitUI.RevisionGridClasses
         public void ShowRevisionGraph()
         {
             GraphColumn.Visible = true;
-            // updateData();
+            ////updateData();
             _backgroundEvent.Set();
         }
 
         public void HideRevisionGraph()
         {
             GraphColumn.Visible = false;
-            // updateData();
+            ////updateData();
             _backgroundEvent.Set();
         }
 
@@ -471,7 +471,7 @@ namespace GitUI.RevisionGridClasses
                 //  when we're done processing we'll update with the final count, so the
                 //  problem will only be temporary, and not able to distinguish it from
                 //  just git giving us data slowly.
-                // Invoke(new MethodInvoker(delegate { setRowCount(count); }));
+                ////Invoke(new MethodInvoker(delegate { setRowCount(count); }));
                 return;
             }
 
@@ -1024,7 +1024,7 @@ namespace GitUI.RevisionGridClasses
             // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
             revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
-            // for (int r = 0; r < 2; r++)
+            ////for (int r = 0; r < 2; r++)
             for (int lane = 0; lane < row.Count; lane++)
             {
                 int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);

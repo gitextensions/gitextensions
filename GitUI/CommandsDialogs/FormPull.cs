@@ -250,7 +250,7 @@ namespace GitUI.CommandsDialogs
             }
             Branches.DisplayMember = "LocalName";
 
-            // _heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
+            ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
 

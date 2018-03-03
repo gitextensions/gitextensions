@@ -87,14 +87,14 @@ namespace GitUI.SpellChecker
             rect.Top = 0;
             rect.Bottom = (int)AnInch;
             rect.Left = 0;
-            rect.Right = 10000000; // (int)(rtb.Width * anInch + 20);
+            rect.Right = 10000000; ////(int)(rtb.Width * anInch + 20);
 
 
             NativeMethods.RECT rectPage;
             rectPage.Top = 0;
             rectPage.Bottom = (int)AnInch;
             rectPage.Left = 0;
-            rectPage.Right = 10000000; // (int)(rtb.Width * anInch + 20);
+            rectPage.Right = 10000000; ////(int)(rtb.Width * anInch + 20);
 
             var canvas = Graphics.FromHwnd(rtb.Handle);
             var canvasHdc = canvas.GetHdc();

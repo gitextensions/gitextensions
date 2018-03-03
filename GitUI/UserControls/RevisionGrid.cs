@@ -1247,7 +1247,7 @@ namespace GitUI
             this.InvokeAsync(o =>
                                   {
                                       Error.Visible = true;
-                                      // Error.BringToFront();
+                                      ////Error.BringToFront();
                                       NoGit.Visible = false;
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
@@ -1314,7 +1314,7 @@ namespace GitUI
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
-                                          // NoCommits.BringToFront();
+                                          ////NoCommits.BringToFront();
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                           _isRefreshingRevisions = false;

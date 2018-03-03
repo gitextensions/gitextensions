@@ -155,7 +155,7 @@ See the changes in the commit form.");
                 if (_revision != null)
                 {
                     _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
-                    // GitTree.Sort();
+                    ////GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state
                     var currenNodes = tvGitTree.Nodes;

@@ -148,7 +148,7 @@ namespace GitUI.UserControls
         {
             Branches.Focus();
             // We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
-            // BranchTypeChanged();
+            ////BranchTypeChanged();
         }
 
         private void Remotebranch_CheckedChanged(object sender, EventArgs e)

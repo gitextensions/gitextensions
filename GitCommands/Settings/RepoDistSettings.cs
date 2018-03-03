@@ -28,7 +28,7 @@ namespace GitCommands.Settings
 
         private static RepoDistSettings CreateLocal(GitModule aModule, RepoDistSettings aLowerPriority, bool allowCache = true)
         {
-            // if (aModule.IsBareRepository()
+            ////if (aModule.IsBareRepository()
             return new RepoDistSettings(aLowerPriority,
                 GitExtSettingsCache.Create(Path.Combine(aModule.GitCommonDirectory, AppSettings.SettingsFileName), allowCache));
         }

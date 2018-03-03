@@ -23,7 +23,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormCommit : GitModuleForm // , IHotkeyable
+    public sealed partial class FormCommit : GitModuleForm ////, IHotkeyable
     {
         #region Translation
         private readonly TranslationString _amendCommit =

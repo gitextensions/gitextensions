@@ -707,7 +707,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             catch (Exception /*ex*/)
             {
-                // MessageBox.Show(ex.Message);
+                ////MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -1037,7 +1037,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetPlaintText(this RichTextBox rtb)
         {
-            // rtb.HideSelection = true;
+            ////rtb.HideSelection = true;
             IntPtr oldMask = rtb.BeginUpdate();
 
             int nStart = rtb.SelectionStart;
@@ -1060,7 +1060,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             catch (Exception /*ex*/)
             {
-                // MessageBox.Show(ex.Message);
+                ////MessageBox.Show(ex.Message);
             }
             finally
             {

@@ -287,11 +287,11 @@ namespace GitCommands
         // Encoding that let us read all bytes without replacing any char
         // It is using to read output of commands, which may consist of:
         // 1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
-        //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
+        //    pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
         // 2) file content encoded in its original encoding
         // 3) file path (file name is encoded in system default encoding),
-        //   when core.quotepath is on, every non ASCII character is escaped
-        //   with \ followed by its code as a three digit octal number
+        //    when core.quotepath is on, every non ASCII character is escaped
+        //    with \ followed by its code as a three digit octal number
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
@@ -1837,7 +1837,7 @@ namespace GitCommands
 
         private void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
         {
-            // process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
+            ////process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
                                                       "\"" + filename.ToPosixPath() + "\"" + processReader.Value.Process.StandardInput.NewLine);
             processReader.Value.Process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);

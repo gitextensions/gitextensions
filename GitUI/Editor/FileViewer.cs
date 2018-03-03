@@ -875,7 +875,7 @@ namespace GitUI.Editor
             }
 
             // Do not go to the end of the file if no change is found
-            // TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+            ////TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
         }
 
         private static bool IsDiffLine(string wholeText, string lineContent)
@@ -917,7 +917,7 @@ namespace GitUI.Editor
             }
 
             // Do not go to the start of the file if no change is found
-            // TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
+            ////TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = 0;
         }
 
         private void IncreaseNumberOfLinesClick(object sender, EventArgs e)
