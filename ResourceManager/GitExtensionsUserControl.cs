@@ -63,14 +63,14 @@ namespace ResourceManager
                 OnRuntimeLoad(e);
         }
 
-        private bool translated;
+        private bool _translated;
 
         void GitExtensionsControl_Load(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
             bool isComponentInDesignMode = CheckComponent(this);
 
-            if (!translated && !isComponentInDesignMode)
+            if (!_translated && !isComponentInDesignMode)
                 throw new Exception("The control " + GetType().Name + " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
         }
 
@@ -78,7 +78,7 @@ namespace ResourceManager
         protected void Translate()
         {
             Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
-            translated = true;
+            _translated = true;
         }
 
         public virtual void AddTranslationItems(ITranslation translation)

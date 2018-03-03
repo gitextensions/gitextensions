@@ -2278,10 +2278,10 @@ namespace GitUI.CommandsDialogs
             var lineLength = Message.LineLength(line);
             int offset = 0;
             bool textAppended = false;
-            if (!fullRefresh && formattedLines.Count > line)
+            if (!fullRefresh && _formattedLines.Count > line)
             {
-                offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
-                textAppended = offset > 0 && offset == formattedLines[line].Length;
+                offset = _formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+                textAppended = offset > 0 && offset == _formattedLines[line].Length;
             }
 
             int len = Math.Min(lineLimit, lineLength) - offset;
@@ -2301,33 +2301,33 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private List<string> formattedLines = new List<string>();
+        private List<string> _formattedLines = new List<string>();
 
         private bool DidFormattedLineChange(int lineNumber)
         {
             // line not formated yet
-            if (formattedLines.Count <= lineNumber)
+            if (_formattedLines.Count <= lineNumber)
                 return true;
 
-            return !formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
+            return !_formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
         }
 
         private void TrimFormattedLines(int lineCount)
         {
-            if (formattedLines.Count > lineCount)
-                formattedLines.RemoveRange(lineCount, formattedLines.Count - lineCount);
+            if (_formattedLines.Count > lineCount)
+                _formattedLines.RemoveRange(lineCount, _formattedLines.Count - lineCount);
         }
 
         private void SetFormattedLine(int lineNumber)
         {
             // line not formated yet
-            if (formattedLines.Count <= lineNumber)
+            if (_formattedLines.Count <= lineNumber)
             {
-                Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
-                formattedLines.Add(Message.Line(lineNumber));
+                Debug.Assert(_formattedLines.Count == lineNumber, _formattedLines.Count + ":" + lineNumber);
+                _formattedLines.Add(Message.Line(lineNumber));
             }
             else
-                formattedLines[lineNumber] = Message.Line(lineNumber);
+                _formattedLines[lineNumber] = Message.Line(lineNumber);
         }
 
         private void FormatAllText(int startLine)

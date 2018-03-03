@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs
 {
     public partial class SearchWindow<T> : Form where T : class
     {
-        private readonly Func<string, IList<T>> getCandidates;
-        private AsyncLoader backgroundLoader = new AsyncLoader();
+        private readonly Func<string, IList<T>> _getCandidates;
+        private AsyncLoader _backgroundLoader = new AsyncLoader();
 
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {
@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
             {
                 throw new InvalidOperationException("getCandidates cannot be null");
             }
-            this.getCandidates = getCandidates;
+            _getCandidates = getCandidates;
             AutoFit();
 
             if (Parent == null)
@@ -80,14 +80,14 @@ namespace GitUI.CommandsDialogs
 
         private void SearchWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            backgroundLoader.Cancel();
+            _backgroundLoader.Cancel();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string _selectedText = textBox1.Text;
 
-            backgroundLoader.Load(() => getCandidates(_selectedText), SearchForCandidates);
+            _backgroundLoader.Load(() => _getCandidates(_selectedText), SearchForCandidates);
         }
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)

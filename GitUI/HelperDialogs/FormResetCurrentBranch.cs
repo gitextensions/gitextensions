@@ -7,9 +7,9 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormResetCurrentBranch : GitModuleForm
     {
-        readonly TranslationString branchInfo = new TranslationString("Reset branch '{0}' to revision:");
-        readonly TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
-        readonly TranslationString resetCaption = new TranslationString("Reset branch");
+        readonly TranslationString _branchInfo = new TranslationString("Reset branch '{0}' to revision:");
+        readonly TranslationString _resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
+        readonly TranslationString _resetCaption = new TranslationString("Reset branch");
 
         public enum ResetType
         {
@@ -46,7 +46,7 @@ namespace GitUI.HelperDialogs
             if (Revision == null)
                 throw new Exception("No revision");
 
-            _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, Module.GetSelectedBranch());
+            _NO_TRANSLATE_BranchInfo.Text = string.Format(_branchInfo.Text, Module.GetSelectedBranch());
             commitSummaryUserControl1.Revision = Revision;
         }
 
@@ -62,7 +62,7 @@ namespace GitUI.HelperDialogs
             }
             else if (Hard.Checked)
             {
-                if (MessageBox.Show(this, resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     var originalHash = Module.GetCurrentCheckout();
                     if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid)))

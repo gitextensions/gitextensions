@@ -25,13 +25,13 @@ namespace Gerrit
         public string DefaultBranch { get; private set; }
         public string DefaultRemote { get; private set; }
         public bool DefaultRebase { get; private set; }
-        private readonly IGitModule Module;
+        private readonly IGitModule _Module;
 
         // public only because of FormTranslate
         public GerritSettings(IGitModule aModule)
         {
             Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
-            Module = aModule;
+            _Module = aModule;
             Port = 29418;
             DefaultBranch = "master";
             DefaultRemote = "gerrit";
@@ -45,7 +45,7 @@ namespace Gerrit
             if (string.IsNullOrEmpty(Project))
                 throw new GerritSettingsException(_settingsErrorProjectNotEntered.Text);
 
-            var remotes = Module.GetRemotes(true);
+            var remotes = _Module.GetRemotes(true);
 
             if (!remotes.Contains(DefaultRemote))
                 throw new GerritSettingsException(String.Format(_settingsErrorDefaultRemoteNotPresent.Text, DefaultRemote));

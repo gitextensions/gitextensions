@@ -16,20 +16,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public partial class Dashboard : GitModuleControl
     {
-        private readonly TranslationString cloneFork = new TranslationString("Clone {0} repository");
-        private readonly TranslationString cloneRepository = new TranslationString("Clone repository");
-        private readonly TranslationString cloneSvnRepository = new TranslationString("Clone SVN repository");
-        private readonly TranslationString createRepository = new TranslationString("Create new repository");
-        private readonly TranslationString develop = new TranslationString("Develop");
-        private readonly TranslationString donate = new TranslationString("Donate");
-        private readonly TranslationString issues = new TranslationString("Issues");
-        private readonly TranslationString openRepository = new TranslationString("Open repository");
-        private readonly TranslationString translate = new TranslationString("Translate");
-        private readonly TranslationString directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
-        private readonly TranslationString directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
+        private readonly TranslationString _cloneFork = new TranslationString("Clone {0} repository");
+        private readonly TranslationString _cloneRepository = new TranslationString("Clone repository");
+        private readonly TranslationString _cloneSvnRepository = new TranslationString("Clone SVN repository");
+        private readonly TranslationString _createRepository = new TranslationString("Create new repository");
+        private readonly TranslationString _develop = new TranslationString("Develop");
+        private readonly TranslationString _donate = new TranslationString("Donate");
+        private readonly TranslationString _issues = new TranslationString("Issues");
+        private readonly TranslationString _openRepository = new TranslationString("Open repository");
+        private readonly TranslationString _translate = new TranslationString("Translate");
+        private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
+        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
+        private readonly TranslationString _directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
-        private bool initialized;
+        private bool _initialized;
         private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
 
         public Dashboard()
@@ -68,41 +68,41 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             DonateCategory.Dock = DockStyle.Top;
             // Show buttons
             CommonActions.DisableContextMenu();
-            var openItem = new DashboardItem(Resources.IconRepoOpen, openRepository.Text);
+            var openItem = new DashboardItem(Resources.IconRepoOpen, _openRepository.Text);
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
-            var cloneItem = new DashboardItem(Resources.IconCloneRepoGit, cloneRepository.Text);
+            var cloneItem = new DashboardItem(Resources.IconCloneRepoGit, _cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
 
-            var cloneSvnItem = new DashboardItem(Resources.IconCloneRepoSvn, cloneSvnRepository.Text);
+            var cloneSvnItem = new DashboardItem(Resources.IconCloneRepoSvn, _cloneSvnRepository.Text);
             cloneSvnItem.Click += cloneSvnItem_Click;
             CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
                 IRepositoryHostPlugin gitHoster = el;
-                var di = new DashboardItem(Resources.IconCloneRepoGithub, string.Format(cloneFork.Text, el.Description));
+                var di = new DashboardItem(Resources.IconCloneRepoGithub, string.Format(_cloneFork.Text, el.Description));
                 di.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
                 CommonActions.AddItem(di);
             }
 
-            var createItem = new DashboardItem(Resources.IconRepoCreate, createRepository.Text);
+            var createItem = new DashboardItem(Resources.IconRepoCreate, _createRepository.Text);
             createItem.Click += createItem_Click;
             CommonActions.AddItem(createItem);
 
             DonateCategory.DisableContextMenu();
-            var GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), develop.Text);
+            var GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), _develop.Text);
             GitHubItem.Click += GitHubItem_Click;
             DonateCategory.AddItem(GitHubItem);
-            var DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), donate.Text);
+            var DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), _donate.Text);
             DonateItem.Click += DonateItem_Click;
             DonateCategory.AddItem(DonateItem);
-            var TranslateItem = new DashboardItem(Resources.EditItem, translate.Text);
+            var TranslateItem = new DashboardItem(Resources.EditItem, _translate.Text);
             TranslateItem.Click += TranslateItem_Click;
             DonateCategory.AddItem(TranslateItem);
-            var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
+            var IssuesItem = new DashboardItem(Resources.bug, _issues.Text);
             IssuesItem.Click += IssuesItem_Click;
             DonateCategory.AddItem(IssuesItem);
 
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public override void Refresh()
         {
-            initialized = false;
+            _initialized = false;
             ShowRecentRepositories();
         }
 
@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             // Make sure the dashboard is only initialized once
-            if (!initialized)
+            if (!_initialized)
             {
                 // Remove favorites
                 var categories = (from DashboardCategory i in groupLayoutPanel.Controls
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     AddDashboardEntry(category);
                 }
 
-                initialized = true;
+                _initialized = true;
             }
 
             commonSplitContainer.Panel1MinSize = 1;
@@ -298,8 +298,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             if (!module.IsValidGitWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
-                    directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
+                DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
+                    _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
                 {
@@ -365,8 +365,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     if (!module.IsValidGitWorkingDir())
                     {
-                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text,
-                            directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
+                        DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepositoryOpenIt.Text,
+                            _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                         if (dialogResult == DialogResult.No)
                             return;

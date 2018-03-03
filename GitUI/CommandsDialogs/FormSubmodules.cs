@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
-        private BindingList<IGitSubmoduleInfo> modules = new BindingList<IGitSubmoduleInfo>();
+        private BindingList<IGitSubmoduleInfo> _modules = new BindingList<IGitSubmoduleInfo>();
         private GitSubmoduleInfo _oldSubmoduleInfo;
 
         public FormSubmodules(GitUICommands aCommands)
@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            gitSubmoduleBindingSource.DataSource = modules;
+            gitSubmoduleBindingSource.DataSource = _modules;
         }
 
         private void AddSubmoduleClick(object sender, EventArgs e)
@@ -55,10 +55,10 @@ namespace GitUI.CommandsDialogs
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            lock (modules)
+            lock (_modules)
             {
-                lock (modules)
-                    modules.Add(e.UserState as GitSubmoduleInfo);
+                lock (_modules)
+                    _modules.Add(e.UserState as GitSubmoduleInfo);
                 if (_oldSubmoduleInfo != null)
                 {
                     DataGridViewRow row = Submodules.Rows
@@ -76,24 +76,24 @@ namespace GitUI.CommandsDialogs
             UseWaitCursor = false;
         }
 
-        private BackgroundWorker bw;
+        private BackgroundWorker _bw;
 
         private void Initialize()
         {
-            bw?.CancelAsync();
+            _bw?.CancelAsync();
             UseWaitCursor = true;
             _oldSubmoduleInfo = null;
             if (Submodules.SelectedRows.Count == 1)
                 _oldSubmoduleInfo = Submodules.SelectedRows[0].DataBoundItem as GitSubmoduleInfo;
-            lock (modules)
-                modules.Clear();
-            bw = new BackgroundWorker();
-            bw.DoWork += bw_DoWork;
-            bw.ProgressChanged += bw_ProgressChanged;
-            bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-            bw.WorkerReportsProgress = true;
-            bw.WorkerSupportsCancellation = true;
-            bw.RunWorkerAsync();
+            lock (_modules)
+                _modules.Clear();
+            _bw = new BackgroundWorker();
+            _bw.DoWork += bw_DoWork;
+            _bw.ProgressChanged += bw_ProgressChanged;
+            _bw.RunWorkerCompleted += bw_RunWorkerCompleted;
+            _bw.WorkerReportsProgress = true;
+            _bw.WorkerSupportsCancellation = true;
+            _bw.RunWorkerAsync();
         }
 
         private void SynchronizeSubmoduleClick(object sender, EventArgs e)

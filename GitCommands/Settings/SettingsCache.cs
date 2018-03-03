@@ -6,7 +6,7 @@ namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+        private readonly Dictionary<String, object> _ByNameMap = new Dictionary<String, object>();
 
         public SettingsCache()
         {
@@ -33,7 +33,7 @@ namespace GitCommands
 
         public T LockedAction<T>(Func<T> action)
         {
-            lock (ByNameMap)
+            lock (_ByNameMap)
             {
                 return action();
             }
@@ -51,7 +51,7 @@ namespace GitCommands
             LockedAction(() =>
             {
                 ClearImpl();
-                ByNameMap.Clear();
+                _ByNameMap.Clear();
             });
         }
 
@@ -156,11 +156,11 @@ namespace GitCommands
                 SetValue(name, s);
                 if (s == null)
                 {
-                    ByNameMap[name] = null;
+                    _ByNameMap[name] = null;
                 }
                 else
                 {
-                    ByNameMap[name] = value;
+                    _ByNameMap[name] = value;
                 }
             });
         }
@@ -174,7 +174,7 @@ namespace GitCommands
             {
                 EnsureSettingsAreUpToDate();
 
-                if (ByNameMap.TryGetValue(name, out o))
+                if (_ByNameMap.TryGetValue(name, out o))
                 {
                     if (o == null)
                     {
@@ -205,7 +205,7 @@ namespace GitCommands
                     }
 
                     val = decode(s);
-                    ByNameMap[name] = val;
+                    _ByNameMap[name] = val;
                     return true;
                 }
             });

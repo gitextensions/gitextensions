@@ -15,13 +15,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        bool loadedDefaultClone = false;
+        bool _loadedDefaultClone = false;
         private void defaultCloneDropDown(object sender, EventArgs e)
         {
-            if (!loadedDefaultClone)
+            if (!_loadedDefaultClone)
             {
                 FillDefaultCloneDestinationDropDown();
-                loadedDefaultClone = true;
+                _loadedDefaultClone = true;
             }
         }
 

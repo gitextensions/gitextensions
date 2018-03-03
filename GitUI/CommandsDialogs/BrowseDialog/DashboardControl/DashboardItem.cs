@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public sealed partial class DashboardItem : GitExtensionsControl
     {
-        private ToolTip toolTip;
+        private ToolTip _toolTip;
         private readonly AsyncLoader _branchNameLoader;
 
         private DashboardItem()
@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void Close()
         {
-            toolTip?.RemoveAll();
+            _toolTip?.RemoveAll();
         }
 
         private void Initialize(Bitmap icon, string path, string title, string text)
@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (icon != null)
                 Icon.Image = icon;
 
-            toolTip = new ToolTip
+            _toolTip = new ToolTip
             {
                 InitialDelay = 1,
                 AutomaticDelay = 100,
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 UseAnimation = false,
                 ReshowDelay = 1
             };
-            toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
+            _toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
 
             _NO_TRANSLATE_Title.MouseDown += Title_MouseDown;
             _NO_TRANSLATE_Title.Click += Title_Click;

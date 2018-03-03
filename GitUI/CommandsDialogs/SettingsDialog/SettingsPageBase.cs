@@ -124,14 +124,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        IList<string> childrenText;
+        IList<string> _childrenText;
 
         /// <summary>
         /// override to provide search keywords
         /// </summary>
         public virtual IEnumerable<string> GetSearchKeywords()
         {
-            return childrenText ?? (childrenText = GetChildrenText(this));
+            return _childrenText ?? (_childrenText = GetChildrenText(this));
         }
 
         /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>

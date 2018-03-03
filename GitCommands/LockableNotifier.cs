@@ -7,16 +7,16 @@ namespace GitCommands
 {
     public abstract class LockableNotifier : ILockableNotifier
     {
-        private int lockCount = 0;
-        private bool notifyRequested = false;
+        private int _lockCount = 0;
+        private bool _notifyRequested = false;
 
         protected abstract void InternalNotify();
 
         private void CheckNotify(int aLockCount)
         {
-            if (aLockCount == 0 && notifyRequested)
+            if (aLockCount == 0 && _notifyRequested)
             {
-                notifyRequested = false;
+                _notifyRequested = false;
                 InternalNotify();
             }
         }
@@ -25,8 +25,8 @@ namespace GitCommands
         /// </summary>
         public void Notify()
         {
-            notifyRequested = true;
-            CheckNotify(lockCount);
+            _notifyRequested = true;
+            CheckNotify(_lockCount);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace GitCommands
         /// </summary>
         public void Lock()
         {
-            Interlocked.Increment(ref lockCount);
+            Interlocked.Increment(ref _lockCount);
         }
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace GitCommands
         /// <param name="requestNotify">true if Notify has to be called</param>
         public void UnLock(bool requestNotify)
         {
-            int newCount = Interlocked.Decrement(ref lockCount);
+            int newCount = Interlocked.Decrement(ref _lockCount);
 
             if (newCount < 0)
                 throw new InvalidOperationException("There was no counterpart call to Lock");
 
             if (requestNotify)
-                notifyRequested = true;
+                _notifyRequested = true;
 
             CheckNotify(newCount);
         }
@@ -58,23 +58,23 @@ namespace GitCommands
         /// <summary>
         /// true if raising notification is locked
         /// </summary>
-        public bool IsLocked => lockCount != 0;
+        public bool IsLocked => _lockCount != 0;
     }
 
     public class ActionNotifier : LockableNotifier
     {
-        private Action NotifyAction;
+        private Action _NotifyAction;
 
         public ActionNotifier(Action aNotifyAction)
         {
             if (aNotifyAction == null)
                 throw new ArgumentNullException(nameof(aNotifyAction));
-            NotifyAction = aNotifyAction;
+            _NotifyAction = aNotifyAction;
         }
 
         protected override void InternalNotify()
         {
-            NotifyAction();
+            _NotifyAction();
         }
     }
 }

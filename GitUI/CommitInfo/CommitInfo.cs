@@ -22,11 +22,11 @@ namespace GitUI.CommitInfo
 {
     public partial class CommitInfo : GitModuleControl
     {
-        private readonly TranslationString containedInBranches = new TranslationString("Contained in branches:");
-        private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
-        private readonly TranslationString containedInTags = new TranslationString("Contained in tags:");
-        private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
-        private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
+        private readonly TranslationString _containedInBranches = new TranslationString("Contained in branches:");
+        private readonly TranslationString _containedInNoBranch = new TranslationString("Contained in no branch");
+        private readonly TranslationString _containedInTags = new TranslationString("Contained in tags:");
+        private readonly TranslationString _containedInNoTag = new TranslationString("Contained in no tag");
+        private readonly TranslationString _trsLinksRelatedToRevision = new TranslationString("Related links:");
 
         private const int MaximumDisplayedRefs = 20;
         private readonly ILinkFactory _linkFactory = new LinkFactory();
@@ -527,8 +527,8 @@ namespace GitUI.CommitInfo
                     allowRemote = false;
             }
             if (links.Any())
-                return Environment.NewLine + WebUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
-            return Environment.NewLine + WebUtility.HtmlEncode(containedInNoBranch.Text);
+                return Environment.NewLine + WebUtility.HtmlEncode(_containedInBranches.Text) + " " + links.Join(", ");
+            return Environment.NewLine + WebUtility.HtmlEncode(_containedInNoBranch.Text);
         }
 
         private string GetTagsWhichContainsThisCommit(IEnumerable<string> tags, bool showBranchesAsLinks)
@@ -537,8 +537,8 @@ namespace GitUI.CommitInfo
                 .Select(s => showBranchesAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
             if (!String.IsNullOrEmpty(tagString))
-                return Environment.NewLine + WebUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
-            return Environment.NewLine + WebUtility.HtmlEncode(containedInNoTag.Text);
+                return Environment.NewLine + WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
+            return Environment.NewLine + WebUtility.HtmlEncode(_containedInNoTag.Text);
         }
 
         private string GetLinksForRevision(GitRevision revision)
@@ -554,7 +554,7 @@ namespace GitUI.CommitInfo
             if (linksString.IsNullOrEmpty())
                 return string.Empty;
             else
-                return Environment.NewLine + WebUtility.HtmlEncode(trsLinksRelatedToRevision.Text) + " " + linksString;
+                return Environment.NewLine + WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text) + " " + linksString;
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

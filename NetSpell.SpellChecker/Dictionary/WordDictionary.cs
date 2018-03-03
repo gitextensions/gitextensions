@@ -24,7 +24,7 @@ namespace NetSpell.SpellChecker.Dictionary
     public class WordDictionary : System.ComponentModel.Component
     {
         private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";
-        private System.ComponentModel.Container components;
+        private System.ComponentModel.Container _components;
 
         /// <summary>
         ///     Initializes a new instance of the class
@@ -595,7 +595,7 @@ namespace NetSpell.SpellChecker.Dictionary
         {
             if (disposing)
             {
-                components?.Dispose();
+                _components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -740,7 +740,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            _components = new System.ComponentModel.Container();
         }
         #endregion
 

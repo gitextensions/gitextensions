@@ -951,18 +951,18 @@ namespace GitUI
 
         private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
         {
-            private RevisionGraphInMemFilter fFilter1;
-            private RevisionGraphInMemFilter fFilter2;
+            private RevisionGraphInMemFilter _fFilter1;
+            private RevisionGraphInMemFilter _fFilter2;
             public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter aFilter1,
                                               RevisionGraphInMemFilter aFilter2)
             {
-                fFilter1 = aFilter1;
-                fFilter2 = aFilter2;
+                _fFilter1 = aFilter1;
+                _fFilter2 = aFilter2;
             }
 
             public override bool PassThru(GitRevision rev)
             {
-                return fFilter1.PassThru(rev) || fFilter2.PassThru(rev);
+                return _fFilter1.PassThru(rev) || _fFilter2.PassThru(rev);
             }
         }
 

@@ -11,30 +11,30 @@ namespace GitStatistics
             Translate();
         }
 
-        StringSetting CodeFiles = new StringSetting("Code files",
+        StringSetting _CodeFiles = new StringSetting("Code files",
                                 "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
                                 "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.mk;*.java");
-        StringSetting IgnoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
-        BoolSetting IgnoreSubmodules = new BoolSetting("Ignore submodules", true);
+        StringSetting _IgnoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+        BoolSetting _IgnoreSubmodules = new BoolSetting("Ignore submodules", true);
 
         #region IGitPlugin Members
 
         public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {
-            yield return CodeFiles;
-            yield return IgnoreDirectories;
-            yield return IgnoreSubmodules;
+            yield return _CodeFiles;
+            yield return _IgnoreDirectories;
+            yield return _IgnoreSubmodules;
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
-            bool countSubmodule = !IgnoreSubmodules.ValueOrDefault(Settings);
+            bool countSubmodule = !_IgnoreSubmodules.ValueOrDefault(Settings);
             using (var formGitStatistics =
-                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles.ValueOrDefault(Settings), countSubmodule)
+                new FormGitStatistics(gitUIEventArgs.GitModule, _CodeFiles.ValueOrDefault(Settings), countSubmodule)
                 {
-                    DirectoriesToIgnore = IgnoreDirectories.ValueOrDefault(Settings)
+                    DirectoriesToIgnore = _IgnoreDirectories.ValueOrDefault(Settings)
                 })
             {
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");

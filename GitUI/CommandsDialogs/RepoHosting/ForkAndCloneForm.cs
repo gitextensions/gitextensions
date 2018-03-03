@@ -35,11 +35,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         readonly IRepositoryHostPlugin _gitHoster;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
 
         public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
-            this.GitModuleChanged = GitModuleChanged;
+            _GitModuleChanged = GitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
@@ -301,7 +301,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }
 
-            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+            _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Close();
         }

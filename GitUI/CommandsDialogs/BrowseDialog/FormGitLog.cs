@@ -9,13 +9,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public sealed partial class FormGitLog : GitExtensionsForm
     {
-        private readonly SynchronizationContext syncContext;
+        private readonly SynchronizationContext _syncContext;
 
         private FormGitLog()
             : base(true)
         {
             ShowInTaskbar = true;
-            syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current;
             InitializeComponent();
             Translate();
         }
@@ -101,12 +101,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void OnCommandsLogChanged(object sender, EventArgs e)
         {
-            syncContext.Post(_ => RefreshLogItems(), null);
+            _syncContext.Post(_ => RefreshLogItems(), null);
         }
 
         private void OnCachedCommandsLogChanged(object sender, EventArgs e)
         {
-            syncContext.Post(_ => RefreshCommandCacheItems(), null);
+            _syncContext.Post(_ => RefreshCommandCacheItems(), null);
         }
 
         #region Single instance static members

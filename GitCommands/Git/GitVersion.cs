@@ -21,20 +21,20 @@ namespace GitCommands
         private const string Prefix = "git version";
 
         public readonly string Full;
-        private readonly int a;
-        private readonly int b;
-        private readonly int c;
-        private readonly int d;
+        private readonly int _a;
+        private readonly int _b;
+        private readonly int _c;
+        private readonly int _d;
 
         public GitVersion(string version)
         {
             Full = Fix(version);
 
             IList<int> numbers = GetNumbers(Full);
-            a = Get(numbers, 0);
-            b = Get(numbers, 1);
-            c = Get(numbers, 2);
-            d = Get(numbers, 3);
+            _a = Get(numbers, 0);
+            _b = Get(numbers, 1);
+            _c = Get(numbers, 2);
+            _d = Get(numbers, 3);
         }
 
         public bool FetchCanAskForProgress => this >= v1_7_1;
@@ -59,7 +59,7 @@ namespace GitCommands
 
         public bool SupportMergeUnrelatedHistory => this >= v2_9_0;
 
-        public bool IsUnknown => a == 0 && b == 0 && c == 0 && d == 0;
+        public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 
         // Returns true if it's possible to pass given string as command line
         // argument to git for searching.
@@ -126,16 +126,16 @@ namespace GitCommands
             if (right == null) return 1;
             if (left == null) return -1;
 
-            int compareA = left.a.CompareTo(right.a);
+            int compareA = left._a.CompareTo(right._a);
             if (compareA != 0) return compareA;
 
-            int compareB = left.b.CompareTo(right.b);
+            int compareB = left._b.CompareTo(right._b);
             if (compareB != 0) return compareB;
 
-            int compareC = left.c.CompareTo(right.c);
+            int compareC = left._c.CompareTo(right._c);
             if (compareC != 0) return compareC;
 
-            return left.d.CompareTo(right.d);
+            return left._d.CompareTo(right._d);
         }
 
         public static bool operator >(GitVersion left, GitVersion right)

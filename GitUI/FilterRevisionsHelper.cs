@@ -12,55 +12,55 @@ namespace GitUI
         private ToolStripLabel _NO_TRANSLATE_label;
         private ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
-        private ToolStripMenuItem commitToolStripMenuItem;
-        private ToolStripMenuItem committerToolStripMenuItem;
-        private ToolStripMenuItem authorToolStripMenuItem;
-        private ToolStripMenuItem diffContainsToolStripMenuItem;
-        private ToolStripMenuItem hashToolStripMenuItem;
+        private ToolStripMenuItem _commitToolStripMenuItem;
+        private ToolStripMenuItem _committerToolStripMenuItem;
+        private ToolStripMenuItem _authorToolStripMenuItem;
+        private ToolStripMenuItem _diffContainsToolStripMenuItem;
+        private ToolStripMenuItem _hashToolStripMenuItem;
 
         private Form _NO_TRANSLATE_form;
 
         public FilterRevisionsHelper()
         {
-            commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 
             //
             // commitToolStripMenuItem1
             //
-            commitToolStripMenuItem.Checked = true;
-            commitToolStripMenuItem.CheckOnClick = true;
-            commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
-            commitToolStripMenuItem.Text = "Commit";
+            _commitToolStripMenuItem.Checked = true;
+            _commitToolStripMenuItem.CheckOnClick = true;
+            _commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
+            _commitToolStripMenuItem.Text = "Commit";
             //
             // committerToolStripMenuItem
             //
-            committerToolStripMenuItem.CheckOnClick = true;
-            committerToolStripMenuItem.Name = "committerToolStripMenuItem";
-            committerToolStripMenuItem.Text = "Committer";
+            _committerToolStripMenuItem.CheckOnClick = true;
+            _committerToolStripMenuItem.Name = "committerToolStripMenuItem";
+            _committerToolStripMenuItem.Text = "Committer";
             //
             // authorToolStripMenuItem
             //
-            authorToolStripMenuItem.CheckOnClick = true;
-            authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            authorToolStripMenuItem.Text = "Author";
+            _authorToolStripMenuItem.CheckOnClick = true;
+            _authorToolStripMenuItem.Name = "authorToolStripMenuItem";
+            _authorToolStripMenuItem.Text = "Author";
             //
             // diffContainsToolStripMenuItem
             //
-            diffContainsToolStripMenuItem.CheckOnClick = true;
-            diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
-            diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
-            diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
+            _diffContainsToolStripMenuItem.CheckOnClick = true;
+            _diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
+            _diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
+            _diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
             //
             // hashToolStripMenuItem
             //
-            hashToolStripMenuItem.CheckOnClick = true;
-            hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            hashToolStripMenuItem.Text = "Hash";
+            _hashToolStripMenuItem.CheckOnClick = true;
+            _hashToolStripMenuItem.Name = "hashToolStripMenuItem";
+            _hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
+            _hashToolStripMenuItem.Text = "Hash";
         }
 
         public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
@@ -74,10 +74,10 @@ namespace GitUI
             _NO_TRANSLATE_form = form;
 
             _NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[] {
-                commitToolStripMenuItem,
-                committerToolStripMenuItem,
-                authorToolStripMenuItem,
-                diffContainsToolStripMenuItem });
+                _commitToolStripMenuItem,
+                _committerToolStripMenuItem,
+                _authorToolStripMenuItem,
+                _diffContainsToolStripMenuItem });
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
@@ -101,10 +101,10 @@ namespace GitUI
             string inMemCommitterFilter;
             string inMemAuthorFilter;
             var filterParams = new bool[4];
-            filterParams[0] = commitToolStripMenuItem.Checked;
-            filterParams[1] = committerToolStripMenuItem.Checked;
-            filterParams[2] = authorToolStripMenuItem.Checked;
-            filterParams[3] = diffContainsToolStripMenuItem.Checked;
+            filterParams[0] = _commitToolStripMenuItem.Checked;
+            filterParams[1] = _committerToolStripMenuItem.Checked;
+            filterParams[2] = _authorToolStripMenuItem.Checked;
+            filterParams[3] = _diffContainsToolStripMenuItem.Checked;
             try
             {
                 _NO_TRANSLATE_revisionGrid.FormatQuickFilter(_NO_TRANSLATE_textBox.Text,
@@ -164,15 +164,15 @@ namespace GitUI
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (diffContainsToolStripMenuItem.Checked)
+            if (_diffContainsToolStripMenuItem.Checked)
             {
-                commitToolStripMenuItem.Checked = false;
-                committerToolStripMenuItem.Checked = false;
-                authorToolStripMenuItem.Checked = false;
-                hashToolStripMenuItem.Checked = false;
+                _commitToolStripMenuItem.Checked = false;
+                _committerToolStripMenuItem.Checked = false;
+                _authorToolStripMenuItem.Checked = false;
+                _hashToolStripMenuItem.Checked = false;
             }
             else
-                commitToolStripMenuItem.Checked = true;
+                _commitToolStripMenuItem.Checked = true;
         }
 
         public void SetLimit(int limit)
@@ -190,11 +190,11 @@ namespace GitUI
         {
             if (disposing)
             {
-                commitToolStripMenuItem.Dispose();
-                committerToolStripMenuItem.Dispose();
-                authorToolStripMenuItem.Dispose();
-                diffContainsToolStripMenuItem.Dispose();
-                hashToolStripMenuItem.Dispose();
+                _commitToolStripMenuItem.Dispose();
+                _committerToolStripMenuItem.Dispose();
+                _authorToolStripMenuItem.Dispose();
+                _diffContainsToolStripMenuItem.Dispose();
+                _hashToolStripMenuItem.Dispose();
             }
         }
     }

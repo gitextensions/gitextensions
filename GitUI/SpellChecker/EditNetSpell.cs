@@ -20,17 +20,17 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitModuleControl
     {
-        private readonly TranslationString cutMenuItemText = new TranslationString("Cut");
-        private readonly TranslationString copyMenuItemText = new TranslationString("Copy");
-        private readonly TranslationString pasteMenuItemText = new TranslationString("Paste");
-        private readonly TranslationString deleteMenuItemText = new TranslationString("Delete");
-        private readonly TranslationString selectAllMenuItemText = new TranslationString("Select all");
+        private readonly TranslationString _cutMenuItemText = new TranslationString("Cut");
+        private readonly TranslationString _copyMenuItemText = new TranslationString("Copy");
+        private readonly TranslationString _pasteMenuItemText = new TranslationString("Paste");
+        private readonly TranslationString _deleteMenuItemText = new TranslationString("Delete");
+        private readonly TranslationString _selectAllMenuItemText = new TranslationString("Select all");
 
-        private readonly TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
-        private readonly TranslationString ignoreWordText = new TranslationString("Ignore word");
-        private readonly TranslationString removeWordText = new TranslationString("Remove word");
-        private readonly TranslationString dictionaryText = new TranslationString("Dictionary");
-        private readonly TranslationString markIllFormedLinesText = new TranslationString("Mark ill formed lines");
+        private readonly TranslationString _addToDictionaryText = new TranslationString("Add to dictionary");
+        private readonly TranslationString _ignoreWordText = new TranslationString("Ignore word");
+        private readonly TranslationString _removeWordText = new TranslationString("Remove word");
+        private readonly TranslationString _dictionaryText = new TranslationString("Dictionary");
+        private readonly TranslationString _markIllFormedLinesText = new TranslationString("Mark ill formed lines");
 
         private SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
@@ -77,7 +77,7 @@ namespace GitUI.SpellChecker
                 if (TextBox == null)
                     return string.Empty;
 
-                return IsWatermarkShowing ? string.Empty : TextBox.Text;
+                return _IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
             {
@@ -146,7 +146,7 @@ namespace GitUI.SpellChecker
             }
         }
 
-        private bool IsWatermarkShowing;
+        private bool _IsWatermarkShowing;
         private string _WatermarkText = "";
         [Category("Appearance")]
         [DefaultValue("")]
@@ -295,7 +295,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
 
             // Do not check spelling of watermark text
-            if (!IsWatermarkShowing)
+            if (!_IsWatermarkShowing)
             {
                 try
                 {
@@ -419,11 +419,11 @@ namespace GitUI.SpellChecker
                         si.Font = new System.Drawing.Font(si.Font, FontStyle.Bold);
                     }
 
-                    AddContextMenuItem(addToDictionaryText.Text, AddToDictionaryClick)
+                    AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick)
                         .Enabled = (_spelling.CurrentWord.Length > 0);
-                    AddContextMenuItem(ignoreWordText.Text, IgnoreWordClick)
+                    AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick)
                         .Enabled = (_spelling.CurrentWord.Length > 0);
-                    AddContextMenuItem(removeWordText.Text, RemoveWordClick)
+                    AddContextMenuItem(_removeWordText.Text, RemoveWordClick)
                         .Enabled = (_spelling.CurrentWord.Length > 0);
 
                     if (_spelling.Suggestions.Count > 0)
@@ -435,15 +435,15 @@ namespace GitUI.SpellChecker
                 Trace.WriteLine(ex);
             }
 
-            AddContextMenuItem(cutMenuItemText.Text, CutMenuItemClick)
+            AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick)
                 .Enabled = (TextBox.SelectedText.Length > 0);
-            AddContextMenuItem(copyMenuItemText.Text, CopyMenuItemdClick)
+            AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick)
                 .Enabled = (TextBox.SelectedText.Length > 0);
-            AddContextMenuItem(pasteMenuItemText.Text, PasteMenuItemClick)
+            AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick)
                 .Enabled = Clipboard.ContainsText();
-            AddContextMenuItem(deleteMenuItemText.Text, DeleteMenuItemClick)
+            AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick)
                 .Enabled = (TextBox.SelectedText.Length > 0);
-            AddContextMenuItem(selectAllMenuItemText.Text, SelectAllMenuItemClick);
+            AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
             /*AddContextMenuSeparator();
 
@@ -460,7 +460,7 @@ namespace GitUI.SpellChecker
 
             try
             {
-                var dictionaryToolStripMenuItem = new ToolStripMenuItem(dictionaryText.Text);
+                var dictionaryToolStripMenuItem = new ToolStripMenuItem(_dictionaryText.Text);
                 SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
 
                 var toolStripDropDown = new ContextMenuStrip();
@@ -500,7 +500,7 @@ namespace GitUI.SpellChecker
             AddContextMenuSeparator();
 
             var mi =
-                new ToolStripMenuItem(markIllFormedLinesText.Text)
+                new ToolStripMenuItem(_markIllFormedLinesText.Text)
                 {
                     Checked = AppSettings.MarkIllFormedLinesInCommitMsg
                 };
@@ -583,7 +583,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
-            if (!IsWatermarkShowing)
+            if (!_IsWatermarkShowing)
             {
                 OnTextChanged(e);
 
@@ -607,11 +607,11 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
-        private bool skipSelectionUndo = false;
+        private bool _skipSelectionUndo = false;
 
         private void UndoHighlighting()
         {
-            if (!skipSelectionUndo)
+            if (!_skipSelectionUndo)
                 return;
 
             IsUndoInProgress = true;
@@ -620,7 +620,7 @@ namespace GitUI.SpellChecker
                 TextBox.Undo();
             }
             TextBox.Undo();
-            skipSelectionUndo = false;
+            _skipSelectionUndo = false;
             IsUndoInProgress = false;
         }
 
@@ -690,7 +690,7 @@ namespace GitUI.SpellChecker
         {
             if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
-                IsWatermarkShowing = true;
+                _IsWatermarkShowing = true;
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
                 TextBox.Text = WatermarkText;
@@ -699,10 +699,10 @@ namespace GitUI.SpellChecker
 
         private void HideWatermark()
         {
-            if (IsWatermarkShowing && TextBoxFont != null)
+            if (_IsWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
-                IsWatermarkShowing = false;
+                _IsWatermarkShowing = false;
                 TextBox.Text = string.Empty;
                 TextBox.ForeColor = SystemColors.WindowText;
             }
@@ -763,7 +763,7 @@ namespace GitUI.SpellChecker
             if (restoreColor)
                 TextBox.SelectionColor = oldColor;
             // undoes all recent selections while ctrl-z pressed
-            skipSelectionUndo = true;
+            _skipSelectionUndo = true;
         }
 
         /// <summary>

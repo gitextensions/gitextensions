@@ -8,8 +8,8 @@ namespace GitUI
     {
         public delegate void DoOutputCallback(string text);
         private readonly Timer _timer;
-        private readonly StringBuilder textToAdd = new StringBuilder();
-        private DoOutputCallback doOutput;
+        private readonly StringBuilder _textToAdd = new StringBuilder();
+        private DoOutputCallback _doOutput;
 
         /// <summary>
         ///
@@ -17,7 +17,7 @@ namespace GitUI
         /// <param name="doOutput">Will be called on the home thread.</param>
         public ProcessOutputTimer(DoOutputCallback doOutput)
         {
-            this.doOutput = doOutput;
+            _doOutput = doOutput;
             _timer = new Timer();
             _timer.Tick += _timer_Elapsed;
         }
@@ -46,27 +46,27 @@ namespace GitUI
         /// </summary>
         public void Append(string text)
         {
-            lock (textToAdd)
+            lock (_textToAdd)
             {
-                textToAdd.Append(text);
+                _textToAdd.Append(text);
             }
         }
 
         private void _timer_Elapsed(object sender, EventArgs eventArgs)
         {
-            lock (textToAdd)
+            lock (_textToAdd)
             {
-                if (textToAdd.Length > 0)
-                    doOutput?.Invoke(textToAdd.ToString());
+                if (_textToAdd.Length > 0)
+                    _doOutput?.Invoke(_textToAdd.ToString());
                 Clear();
             }
         }
 
         public void Clear()
         {
-            lock (textToAdd)
+            lock (_textToAdd)
             {
-                textToAdd.Remove(0, textToAdd.Length);
+                _textToAdd.Remove(0, _textToAdd.Length);
             }
         }
 
@@ -75,7 +75,7 @@ namespace GitUI
             Stop(false);
             // clear will lock, to prevent outputting to disposed object
             Clear();
-            doOutput = null;
+            _doOutput = null;
             _timer.Dispose();
         }
     }

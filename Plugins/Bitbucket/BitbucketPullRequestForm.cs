@@ -157,12 +157,12 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository, IEnumerable<string>>();
+        Dictionary<Repository, IEnumerable<string>> _Branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
-            if (Branches.ContainsKey(selectedRepo))
+            if (_Branches.ContainsKey(selectedRepo))
             {
-                return Branches[selectedRepo];
+                return _Branches[selectedRepo];
             }
             var list = new List<string>();
             var getBranches = new GetBranchesRequest(selectedRepo, _settings);
@@ -174,7 +174,7 @@ namespace Bitbucket
                     list.Add(value["displayId"].ToString());
                 }
             }
-            Branches.Add(selectedRepo, list);
+            _Branches.Add(selectedRepo, list);
             return list;
         }
 

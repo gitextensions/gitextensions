@@ -25,14 +25,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             repositoryCategory.SetIcon();
         }
 
-        private bool bChangingDataSource;
+        private bool _bChangingDataSource;
 
         public void Initialize()
         {
-            bChangingDataSource = true;
+            _bChangingDataSource = true;
             _NO_TRANSLATE_Categories.DataSource = null;
             _NO_TRANSLATE_Categories.DataSource = Repositories.RepositoryCategories;
-            bChangingDataSource = false;
+            _bChangingDataSource = false;
             _NO_TRANSLATE_Categories.DisplayMember = "Description";
         }
 
@@ -40,12 +40,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
             {
-                if (!bChangingDataSource)
+                if (!_bChangingDataSource)
                     splitContainer1.Panel2.Enabled = false;
                 return;
             }
 
-            if (!bChangingDataSource)
+            if (!_bChangingDataSource)
                 splitContainer1.Panel2.Enabled = true;
             var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             RepositoriesGrid.DataSource = repositoryCategory.Repositories;

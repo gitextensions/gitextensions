@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             new TranslationString("New category");
         #endregion
 
-        private RepositoryCategory m_repositoryCategory;
+        private RepositoryCategory _m_repositoryCategory;
 
         public DashboardCategory()
         {
@@ -49,10 +49,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public RepositoryCategory RepositoryCategory
         {
-            get { return m_repositoryCategory; }
+            get { return _m_repositoryCategory; }
             set
             {
-                m_repositoryCategory = value;
+                _m_repositoryCategory = value;
                 InitRepositoryCategory();
             }
         }
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void InitRepositoryCategory()
         {
-            if (m_repositoryCategory == null)
+            if (_m_repositoryCategory == null)
                 return;
 
             var contextMenu = new ContextMenuStrip();
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             SuspendLayout();
             flowLayoutPanel.SuspendLayout();
 
-            foreach (Repository repository in m_repositoryCategory.Repositories)
+            foreach (Repository repository in _m_repositoryCategory.Repositories)
             {
                 var dashboardItem = new DashboardItem(repository);
                 dashboardItem.Click += dashboardItem_Click;
@@ -117,23 +117,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             ResumeLayout();
         }
 
-        private Repository repository;
+        private Repository _repository;
 
         void contextMenu_Opening(object sender, EventArgs e)
         {
-            repository = (Repository)(((ContextMenuStrip)sender).SourceControl.Tag);
+            _repository = (Repository)(((ContextMenuStrip)sender).SourceControl.Tag);
         }
 
         private void MoveItem(bool moveUp)
         {
-            if (repository == null)
+            if (_repository == null)
                 return;
 
-            int index = RepositoryCategory.Repositories.IndexOf(repository);
-            RepositoryCategory.Repositories.Remove(repository);
+            int index = RepositoryCategory.Repositories.IndexOf(_repository);
+            RepositoryCategory.Repositories.Remove(_repository);
             int newIndex = moveUp ? Math.Max(index - 1, 0) :
                 Math.Min(index + 1, RepositoryCategory.Repositories.Count);
-            RepositoryCategory.Repositories.Insert(newIndex, repository);
+            RepositoryCategory.Repositories.Insert(newIndex, _repository);
             Recalculate();
         }
 
@@ -162,11 +162,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void removeMenuItem_Click(object sender, EventArgs e)
         {
-            if (repository == null)
+            if (_repository == null)
                 return;
 
-            RepositoryCategory.RemoveRepository(repository);
-            repositoryRemoved(repository);
+            RepositoryCategory.RemoveRepository(_repository);
+            repositoryRemoved(_repository);
             dashboardCategoryChanged(this, null);
         }
 
@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void newCategoryMenuItem_Click(object sender, EventArgs e)
         {
-            if (repository == null)
+            if (_repository == null)
                 return;
 
             RepositoryCategory newRepositoryCategory;
@@ -207,9 +207,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 newRepositoryCategory = new RepositoryCategory(formDashboardCategoryTitle.GetTitle());
             }
 
-            RepositoryCategory.RemoveRepository(repository);
-            repository.RepositoryType = RepositoryType.Repository;
-            newRepositoryCategory.AddRepository(repository);
+            RepositoryCategory.RemoveRepository(_repository);
+            _repository.RepositoryType = RepositoryType.Repository;
+            newRepositoryCategory.AddRepository(_repository);
 
             Repositories.RepositoryCategories.Add(newRepositoryCategory);
 
@@ -275,16 +275,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (toolStripItem == null)
                 return;
 
-            if (repository == null)
+            if (_repository == null)
                 return;
 
             foreach (RepositoryCategory newRepositoryCategory in Repositories.RepositoryCategories)
             {
                 if (newRepositoryCategory.Description.Equals(toolStripItem.Text))
                 {
-                    RepositoryCategory.RemoveRepository(repository);
-                    repository.RepositoryType = RepositoryType.Repository;
-                    newRepositoryCategory.AddRepository(repository);
+                    RepositoryCategory.RemoveRepository(_repository);
+                    _repository.RepositoryType = RepositoryType.Repository;
+                    newRepositoryCategory.AddRepository(_repository);
                 }
             }
 

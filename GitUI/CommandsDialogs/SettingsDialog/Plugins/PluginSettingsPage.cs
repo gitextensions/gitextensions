@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
     public partial class PluginSettingsPage : AutoLayoutSettingsPage
     {
         private IGitPlugin _gitPlugin;
-        private GitPluginSettingsContainer settingsCointainer;
+        private GitPluginSettingsContainer _settingsCointainer;
 
         public PluginSettingsPage()
         {
@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private void Init(IGitPlugin _gitPlugin)
         {
             this._gitPlugin = _gitPlugin;
-            settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Name);
+            _settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Name);
             CreateSettingsControls();
             Translate();
         }
@@ -43,8 +43,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         protected override ISettingsSource GetCurrentSettings()
         {
-            settingsCointainer.SetSettingsSource(base.GetCurrentSettings());
-            return settingsCointainer;
+            _settingsCointainer.SetSettingsSource(base.GetCurrentSettings());
+            return _settingsCointainer;
         }
 
         public override string GetTitle()

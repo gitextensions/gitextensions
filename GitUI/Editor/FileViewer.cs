@@ -284,7 +284,7 @@ namespace GitUI.Editor
 
         void TextEditor_TextChanged(object sender, EventArgs e)
         {
-            if (patchHighlighting)
+            if (_patchHighlighting)
                 _internalFileViewer.AddPatchHighlighting();
 
             TextChanged?.Invoke(sender, e);
@@ -671,13 +671,13 @@ namespace GitUI.Editor
             }
         }
 
-        private bool patchHighlighting;
+        private bool _patchHighlighting;
 
         private void ResetForDiff()
         {
             Reset(true, true);
             _internalFileViewer.SetHighlighting("");
-            patchHighlighting = true;
+            _patchHighlighting = true;
         }
 
         private void Reset(bool diff, bool text)
@@ -687,7 +687,7 @@ namespace GitUI.Editor
 
         private void Reset(bool diff, bool text, bool staging_diff)
         {
-            patchHighlighting = diff;
+            _patchHighlighting = diff;
             SetVisibilityDiffContextMenu(diff, staging_diff);
             ClearImage();
             PictureBox.Visible = !text;

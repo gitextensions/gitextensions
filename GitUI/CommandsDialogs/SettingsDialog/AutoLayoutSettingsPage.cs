@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public abstract partial class AutoLayoutSettingsPage : RepoDistSettingsPage, SettingsLayout
     {
         internal readonly IList<string> _autoGenKeywords = new List<string>();
-        private SettingsLayout settingsLayout;
+        private SettingsLayout _settingsLayout;
 
         protected override string GetCommaSeparatedKeywordList()
         {
@@ -24,16 +24,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected virtual SettingsLayout GetSettingsLayout()
         {
-            if (settingsLayout == null)
+            if (_settingsLayout == null)
             {
-                settingsLayout = CreateSettingsLayout();
-                if (settingsLayout.GetControl().Parent == null)
+                _settingsLayout = CreateSettingsLayout();
+                if (_settingsLayout.GetControl().Parent == null)
                 {
-                    Controls.Add(settingsLayout.GetControl());
+                    Controls.Add(_settingsLayout.GetControl());
                 }
             }
 
-            return settingsLayout;
+            return _settingsLayout;
         }
 
         protected virtual SettingsLayout CreateSettingsLayout()
@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public class TableSettingsLayout : BaseSettingsLayout
     {
         protected TableLayoutPanel Panel;
-        private int currentRow = -1;
+        private int _currentRow = -1;
 
         public TableSettingsLayout(SettingsLayout aParentLayout, TableLayoutPanel aPanel)
             : base(aParentLayout)
@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public override void AddSettingControlImpl(ISettingControlBinding controlBinding)
         {
-            currentRow++;
+            _currentRow++;
             var tableLayout = Panel;
 
             var caption = controlBinding.Caption();
@@ -148,19 +148,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     };
 
                 label.Anchor = AnchorStyles.Left;
-                tableLayout.Controls.Add(label, 0, currentRow);
+                tableLayout.Controls.Add(label, 0, _currentRow);
             }
             var control = controlBinding.GetControl();
             control.Dock = DockStyle.Fill;
-            tableLayout.Controls.Add(control, 1, currentRow);
+            tableLayout.Controls.Add(control, 1, _currentRow);
         }
 
         public override void AddSettingsLayout(SettingsLayout aLayout)
         {
-            currentRow++;
+            _currentRow++;
             var control = aLayout.GetControl();
             control.Dock = DockStyle.Fill;
-            Panel.Controls.Add(control, 1, currentRow);
+            Panel.Controls.Add(control, 1, _currentRow);
         }
 
         public override Control GetControl()

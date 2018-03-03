@@ -22,8 +22,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine +
                                   "Do not forget to delete these tags when finished.");
 
-        private readonly TranslationString selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
-        private readonly TranslationString selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
+        private readonly TranslationString _selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
+        private readonly TranslationString _selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
 
         private readonly List<LostObject> _lostObjects = new List<LostObject>();
         private readonly SortableLostObjectsList _filteredLostObjects = new SortableLostObjectsList();
@@ -249,7 +249,7 @@ namespace GitUI.CommandsDialogs
 
             if (selectedLostObjects.Count == 0)
             {
-                MessageBox.Show(this, selectLostObjectsToRestoreMessage.Text, selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, _selectLostObjectsToRestoreMessage.Text, _selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return 0;
             }
             var currentTag = 0;

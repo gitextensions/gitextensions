@@ -55,9 +55,9 @@ namespace GitUI.Blame
             blameTooltip.Hide(this);
         }
 
-        int lastTooltipX = -100;
-        int lastTooltipY = -100;
-        string lastTooltip = "";
+        int _lastTooltipX = -100;
+        int _lastTooltipY = -100;
+        string _lastTooltip = "";
         void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
         {
             if (!BlameFile.Focused)
@@ -78,11 +78,11 @@ namespace GitUI.Blame
             int newTooltipX = splitContainer2.SplitterDistance + 60;
             int newTooltipY = e.Y + splitContainer1.SplitterDistance + 20;
 
-            if (lastTooltip != tooltipText || Math.Abs(lastTooltipX - newTooltipX) > 5 || Math.Abs(lastTooltipY - newTooltipY) > 5)
+            if (_lastTooltip != tooltipText || Math.Abs(_lastTooltipX - newTooltipX) > 5 || Math.Abs(_lastTooltipY - newTooltipY) > 5)
             {
-                lastTooltip = tooltipText;
-                lastTooltipX = newTooltipX;
-                lastTooltipY = newTooltipY;
+                _lastTooltip = tooltipText;
+                _lastTooltipX = newTooltipX;
+                _lastTooltipY = newTooltipY;
                 blameTooltip.Show(tooltipText, this, newTooltipX, newTooltipY);
             }
         }
@@ -188,7 +188,7 @@ namespace GitUI.Blame
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
 
-        private AsyncLoader blameLoader = new AsyncLoader();
+        private AsyncLoader _blameLoader = new AsyncLoader();
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
@@ -208,7 +208,7 @@ namespace GitUI.Blame
             _fileName = fileName;
             _encoding = encoding;
 
-            blameLoader.Load(() => _blame = Module.Blame(fileName, guid, encoding),
+            _blameLoader.Load(() => _blame = Module.Blame(fileName, guid, encoding),
                 () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
         }
 
@@ -349,7 +349,7 @@ namespace GitUI.Blame
             {
                 if (components != null)
                     components.Dispose();
-                blameLoader.Dispose();
+                _blameLoader.Dispose();
             }
             base.Dispose(disposing);
         }

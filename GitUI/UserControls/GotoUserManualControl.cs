@@ -15,11 +15,11 @@ namespace GitUI.UserControls
             Translate();
         }
 
-        bool isLoaded = false;
+        bool _isLoaded = false;
 
         private void GotoUserManualControl_Load(object sender, EventArgs e)
         {
-            isLoaded = true;
+            _isLoaded = true;
             UpdateTooltip();
         }
 
@@ -27,14 +27,14 @@ namespace GitUI.UserControls
         public string ManualSectionAnchorName
         {
             get { return _manualSectionAnchorName; }
-            set { _manualSectionAnchorName = value; if (isLoaded) { UpdateTooltip(); } }
+            set { _manualSectionAnchorName = value; if (_isLoaded) { UpdateTooltip(); } }
         }
 
         string _manualSectionSubfolder;
         public string ManualSectionSubfolder
         {
             get { return _manualSectionSubfolder; }
-            set { _manualSectionSubfolder = value; if (isLoaded) { UpdateTooltip(); } }
+            set { _manualSectionSubfolder = value; if (_isLoaded) { UpdateTooltip(); } }
         }
 
         private void UpdateTooltip()

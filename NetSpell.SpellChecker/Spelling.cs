@@ -32,7 +32,7 @@ namespace NetSpell.SpellChecker
         #endregion
 
         #region private variables
-        private System.ComponentModel.Container components;
+        private System.ComponentModel.Container _components;
         #endregion
 
         #region Events
@@ -197,7 +197,7 @@ namespace NetSpell.SpellChecker
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                components?.Dispose();
+                _components?.Dispose();
             base.Dispose(disposing);
         }
 
@@ -1372,7 +1372,7 @@ namespace NetSpell.SpellChecker
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            _components = new System.ComponentModel.Container();
         }
 
         #endregion

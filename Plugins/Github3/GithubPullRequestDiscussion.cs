@@ -8,11 +8,11 @@ namespace Github3
 {
     class GithubPullRequestDiscussion : IPullRequestDiscussion
     {
-        private PullRequest pullrequest;
+        private PullRequest _pullrequest;
 
         public GithubPullRequestDiscussion(PullRequest pullrequest)
         {
-            this.pullrequest = pullrequest;
+            _pullrequest = pullrequest;
             Entries = new List<IDiscussionEntry>();
             ForceReload();
         }
@@ -21,19 +21,19 @@ namespace Github3
 
         public void Post(string data)
         {
-            pullrequest.ToIssue().CreateComment(data);
+            _pullrequest.ToIssue().CreateComment(data);
         }
 
         public void ForceReload()
         {
             Entries.Clear();
 
-            foreach (var commit in pullrequest.GetCommits())
+            foreach (var commit in _pullrequest.GetCommits())
             {
                 Entries.Add(new GithubDiscussionCommit { Sha = commit.Sha, Author = commit.AuthorName.Replace("<", "&lt;").Replace(">", "&gt;"), Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
             }
 
-            foreach (var comment in pullrequest.GetIssueComments())
+            foreach (var comment in _pullrequest.GetIssueComments())
             {
                 Entries.Add(new GithubDiscussionComment { Author = comment.User.Login, Created = comment.CreatedAt, Body = comment.Body });
             }

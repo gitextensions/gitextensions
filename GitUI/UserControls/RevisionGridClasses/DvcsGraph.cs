@@ -761,11 +761,11 @@ namespace GitUI.RevisionGridClasses
         private Color GetJunctionColor(Junction aJunction)
         {
             // Draw non-relative branches gray
-            if (!aJunction.IsRelative && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+            if (!aJunction.IsRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
                 return _nonRelativeColor;
 
             // Draw non-highlighted branches gray
-            if (!aJunction.HighLight && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
+            if (!aJunction.HighLight && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
                 return _nonRelativeColor;
 
             if (!AppSettings.MulticolorBranches)
@@ -1001,7 +1001,7 @@ namespace GitUI.RevisionGridClasses
 
         // end drawGraph
 
-        private RevisionGraphDrawStyleEnum revisionGraphDrawStyleCache;
+        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private bool DrawItem(Graphics wa, Graph.ILaneRow row)
         {
             if (row == null || row.NodeLane == -1)
@@ -1021,7 +1021,7 @@ namespace GitUI.RevisionGridClasses
             wa.Clear(Color.Transparent);
 
             // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
-            revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
+            _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
             ////for (int r = 0; r < 2; r++)
             for (int lane = 0; lane < row.Count; lane++)
@@ -1032,9 +1032,9 @@ namespace GitUI.RevisionGridClasses
                 {
                     Graph.LaneInfo laneInfo = row[lane, item];
 
-                    bool highLight = (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
-                                     (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
-                                     (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+                    bool highLight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
+                                     (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
+                                     (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
                     List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
 
@@ -1152,9 +1152,9 @@ namespace GitUI.RevisionGridClasses
 
                 List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
 
-                bool highlight = (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                                 (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
-                                 (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+                bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
                 bool drawBorder = AppSettings.BranchBorders && highlight;
 

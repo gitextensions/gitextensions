@@ -128,16 +128,16 @@ namespace System.Linq
 
         private class FuncComparer<T> : IComparer<T>
         {
-            private Func<T, T, int> comparer;
+            private Func<T, T, int> _comparer;
 
             public FuncComparer(Func<T, T, int> comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             public int Compare(T x, T y)
             {
-                return comparer(x, y);
+                return _comparer(x, y);
             }
         }
 

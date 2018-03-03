@@ -8,37 +8,37 @@ namespace Github3
 {
     public class GithubRepo : IHostedRepository
     {
-        private Repository repo;
+        private Repository _repo;
 
         public GithubRepo(Repository repo)
         {
-            this.repo = repo;
+            _repo = repo;
         }
 
-        public string Owner => repo.Owner?.Login;
-        public string Name => repo.Name;
-        public string Description => repo.Description;
-        public bool IsAFork => repo.Fork;
+        public string Owner => _repo.Owner?.Login;
+        public string Name => _repo.Name;
+        public string Description => _repo.Description;
+        public bool IsAFork => _repo.Fork;
         public bool IsMine => Owner == GithubLoginInfo.username;
-        public bool IsPrivate => repo.Private;
-        public int Forks => repo.Forks;
-        public string Homepage => repo.Homepage;
+        public bool IsPrivate => _repo.Private;
+        public int Forks => _repo.Forks;
+        public string Homepage => _repo.Homepage;
 
         public string ParentReadOnlyUrl
         {
             get
             {
-                if (!repo.Fork)
+                if (!_repo.Fork)
                     return null;
 
-                if (!repo.Detailed)
+                if (!_repo.Detailed)
                 {
-                    if (repo.Organization != null)
+                    if (_repo.Organization != null)
                         return null;
 
-                    repo = Github3Plugin.github.getRepository(Owner, Name);
+                    _repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
-                return repo.Parent?.GitUrl;
+                return _repo.Parent?.GitUrl;
             }
         }
 
@@ -46,37 +46,37 @@ namespace Github3
         {
             get
             {
-                if (!repo.Fork)
+                if (!_repo.Fork)
                     return null;
 
-                if (!repo.Detailed)
+                if (!_repo.Detailed)
                 {
-                    if (repo.Organization != null)
+                    if (_repo.Organization != null)
                         return null;
 
-                    repo = Github3Plugin.github.getRepository(Owner, Name);
+                    _repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
 
-                return repo.Parent?.Owner.Login;
+                return _repo.Parent?.Owner.Login;
             }
         }
 
-        public string CloneReadWriteUrl => repo.SshUrl;
-        public string CloneReadOnlyUrl => repo.GitUrl;
+        public string CloneReadWriteUrl => _repo.SshUrl;
+        public string CloneReadOnlyUrl => _repo.GitUrl;
 
         public List<IHostedBranch> Branches
         {
-            get { return repo.GetBranches().Select(branch => (IHostedBranch)new GithubBranch(branch)).ToList(); }
+            get { return _repo.GetBranches().Select(branch => (IHostedBranch)new GithubBranch(branch)).ToList(); }
         }
 
         public IHostedRepository Fork()
         {
-            return new GithubRepo(repo.CreateFork());
+            return new GithubRepo(_repo.CreateFork());
         }
 
         public List<IPullRequestInformation> GetPullRequests()
         {
-            var pullRequests = repo?.GetPullRequests();
+            var pullRequests = _repo?.GetPullRequests();
             if (pullRequests != null)
             {
                 return pullRequests
@@ -89,7 +89,7 @@ namespace Github3
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
-            var pullrequest = repo.CreatePullRequest(GithubLoginInfo.username + ":" + myBranch, remoteBranch, title, body);
+            var pullrequest = _repo.CreatePullRequest(GithubLoginInfo.username + ":" + myBranch, remoteBranch, title, body);
             if (pullrequest == null || pullrequest.Number == 0)
                 throw new Exception("Failed to create pull request.");
 

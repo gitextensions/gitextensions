@@ -80,10 +80,10 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Configure this menu");
 
         // ReSharper disable InconsistentNaming
-        private readonly TranslationString directoryIsNotAValidRepositoryCaption =
+        private readonly TranslationString _directoryIsNotAValidRepositoryCaption =
             new TranslationString("Open");
 
-        private readonly TranslationString directoryIsNotAValidRepository =
+        private readonly TranslationString _directoryIsNotAValidRepository =
             new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
         // ReSharper restore InconsistentNaming
 
@@ -1512,8 +1512,8 @@ namespace GitUI.CommandsDialogs
 
             if (!module.IsValidGitWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
-                    directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
+                DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
+                    _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Yes)
                 {

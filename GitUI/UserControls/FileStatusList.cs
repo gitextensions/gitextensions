@@ -32,7 +32,7 @@ namespace GitUI
         public readonly TranslationString CombinedDiff =
             new TranslationString("Combined Diff");
 
-        private IDisposable selectedIndexChangeSubscription;
+        private IDisposable _selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         private bool _filterVisible;
@@ -96,7 +96,7 @@ namespace GitUI
 
         protected override void DisposeCustomResources()
         {
-            selectedIndexChangeSubscription?.Dispose();
+            _selectedIndexChangeSubscription?.Dispose();
         }
 
         private bool _enableSelectedIndexChangeEvent = true;
@@ -110,9 +110,9 @@ namespace GitUI
 
         private void EnsureSelectedIndexChangeSubscription()
         {
-            if (selectedIndexChangeSubscription == null)
+            if (_selectedIndexChangeSubscription == null)
             {
-                selectedIndexChangeSubscription = Observable.FromEventPattern(
+                _selectedIndexChangeSubscription = Observable.FromEventPattern(
                     h => FileStatusListView.SelectedIndexChanged += h,
                     h => FileStatusListView.SelectedIndexChanged -= h)
                     .Where(x => _enableSelectedIndexChangeEvent)
@@ -356,13 +356,13 @@ namespace GitUI
 
                     // Create a rectangle using the DragSize, with the mouse position being
                     // at the center of the rectangle.
-                    dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
+                    _dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
                                                                    e.Y - (dragSize.Height / 2)),
                                                             dragSize);
                 }
                 else
                     // Reset the rectangle if the mouse is not over an item in the ListView.
-                    dragBoxFromMouseDown = Rectangle.Empty;
+                    _dragBoxFromMouseDown = Rectangle.Empty;
             }
         }
 
@@ -394,7 +394,7 @@ namespace GitUI
             }
         }
 
-        private Rectangle dragBoxFromMouseDown;
+        private Rectangle _dragBoxFromMouseDown;
 
         void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
         {
@@ -402,8 +402,8 @@ namespace GitUI
 
             // DRAG
             // If the mouse moves outside the rectangle, start the drag.
-            if (dragBoxFromMouseDown != Rectangle.Empty &&
-                !dragBoxFromMouseDown.Contains(e.X, e.Y))
+            if (_dragBoxFromMouseDown != Rectangle.Empty &&
+                !_dragBoxFromMouseDown.Contains(e.X, e.Y))
             {
                 if (SelectedItems.Any())
                 {
@@ -421,7 +421,7 @@ namespace GitUI
 
                     // Proceed with the drag and drop, passing in the list item.
                     DoDragDrop(obj, DragDropEffects.Copy);
-                    dragBoxFromMouseDown = Rectangle.Empty;
+                    _dragBoxFromMouseDown = Rectangle.Empty;
                 }
             }
 

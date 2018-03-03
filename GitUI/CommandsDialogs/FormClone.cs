@@ -25,9 +25,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
         private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
 
-        private bool openedFromProtocolHandler;
-        private readonly string url;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private bool _openedFromProtocolHandler;
+        private readonly string _url;
+        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
         private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 
@@ -40,11 +40,11 @@ namespace GitUI.CommandsDialogs
         public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
             : base(aCommands)
         {
-            this.GitModuleChanged = GitModuleChanged;
+            _GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
-            this.openedFromProtocolHandler = openedFromProtocolHandler;
-            this.url = url;
+            _openedFromProtocolHandler = openedFromProtocolHandler;
+            _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
             _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
         }
@@ -56,9 +56,9 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (CanBeGitURL(url) || GitModule.IsValidGitWorkingDir(url))
+            if (CanBeGitURL(_url) || GitModule.IsValidGitWorkingDir(_url))
             {
-                _NO_TRANSLATE_From.Text = url;
+                _NO_TRANSLATE_From.Text = _url;
             }
             else
             {
@@ -214,15 +214,15 @@ namespace GitUI.CommandsDialogs
                     clonedGitModule.LocalConfigFile.Save();
                 }
 
-                if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
+                if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
                     GitUICommands uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && GitModuleChanged != null &&
+                else if (ShowInTaskbar == false && _GitModuleChanged != null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
-                    GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                    _GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
 
                 Close();
             }

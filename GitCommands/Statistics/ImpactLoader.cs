@@ -58,11 +58,11 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly IGitModule Module;
+        private readonly IGitModule _Module;
 
         public ImpactLoader(IGitModule aModule)
         {
-            Module = aModule;
+            _Module = aModule;
         }
 
         public void Dispose()
@@ -101,11 +101,11 @@ namespace GitCommands.Statistics
                 TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private bool showSubmodules;
+        private bool _showSubmodules;
         public bool ShowSubmodules
         {
-            get => showSubmodules;
-            set { Stop(); showSubmodules = value; }
+            get => _showSubmodules;
+            set { Stop(); _showSubmodules = value; }
         }
 
         private Task[] GetTasks(CancellationToken token)
@@ -115,14 +115,14 @@ namespace GitCommands.Statistics
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, Module, token), token));
+            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, _Module, token), token));
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = Module.GetSubmodulesLocalPaths();
+                IList<string> submodules = _Module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
-                    IGitModule submodule = Module.GetSubmodule(submoduleName);
+                    IGitModule submodule = _Module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                         tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
                 }

@@ -13,60 +13,60 @@ namespace GitUI.CommandsDialogs
 {
     public class BuildReportTabPageExtension
     {
-        private readonly TabControl tabControl;
+        private readonly TabControl _tabControl;
         private readonly string _caption;
 
-        private TabPage buildReportTabPage;
-        private WebBrowserCtrl buildReportWebBrowser;
-        private GitRevision selectedGitRevision;
-        private String url;
+        private TabPage _buildReportTabPage;
+        private WebBrowserCtrl _buildReportWebBrowser;
+        private GitRevision _selectedGitRevision;
+        private String _url;
 
         public BuildReportTabPageExtension(TabControl tabControl, string caption)
         {
-            this.tabControl = tabControl;
+            _tabControl = tabControl;
             _caption = caption;
         }
 
         public void FillBuildReport(GitRevision revision)
         {
-            if (selectedGitRevision != null) selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
-            selectedGitRevision = revision;
-            if (selectedGitRevision != null) selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
+            if (_selectedGitRevision != null) _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
+            _selectedGitRevision = revision;
+            if (_selectedGitRevision != null) _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
 
             var buildInfoIsAvailable =
                 !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
 
-            tabControl.SuspendLayout();
+            _tabControl.SuspendLayout();
 
             try
             {
                 if (buildInfoIsAvailable)
                 {
-                    if (buildReportTabPage == null)
+                    if (_buildReportTabPage == null)
                     {
-                        CreateBuildReportTabPage(tabControl);
+                        CreateBuildReportTabPage(_tabControl);
                     }
 
-                    var isFavIconMissing = buildReportTabPage.ImageIndex < 0;
+                    var isFavIconMissing = _buildReportTabPage.ImageIndex < 0;
 
-                    if (isFavIconMissing || tabControl.SelectedTab == buildReportTabPage)
+                    if (isFavIconMissing || _tabControl.SelectedTab == _buildReportTabPage)
                     {
                         try
                         {
                             if (revision.BuildStatus.ShowInBuildReportTab)
                             {
-                                url = null;
-                                buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                                _url = null;
+                                _buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
                             }
                             else
                             {
-                                url = revision.BuildStatus.Url;
-                                buildReportWebBrowser.Navigate("about:blank");
+                                _url = revision.BuildStatus.Url;
+                                _buildReportWebBrowser.Navigate("about:blank");
                             }
 
                             if (isFavIconMissing)
                             {
-                                buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                                _buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
                             }
                         }
                         catch
@@ -75,24 +75,24 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    if (!tabControl.Controls.Contains(buildReportTabPage))
+                    if (!_tabControl.Controls.Contains(_buildReportTabPage))
                     {
-                        tabControl.Controls.Add(buildReportTabPage);
+                        _tabControl.Controls.Add(_buildReportTabPage);
                     }
                 }
                 else
                 {
-                    if (buildReportTabPage != null && tabControl.Controls.Contains(buildReportTabPage))
+                    if (_buildReportTabPage != null && _tabControl.Controls.Contains(_buildReportTabPage))
                     {
-                        buildReportWebBrowser.Stop();
-                        buildReportWebBrowser.Document.Write(string.Empty);
-                        tabControl.Controls.Remove(buildReportTabPage);
+                        _buildReportWebBrowser.Stop();
+                        _buildReportWebBrowser.Document.Write(string.Empty);
+                        _tabControl.Controls.Remove(_buildReportTabPage);
                     }
                 }
             }
             finally
             {
-                tabControl.ResumeLayout();
+                _tabControl.ResumeLayout();
             }
         }
 
@@ -101,32 +101,32 @@ namespace GitUI.CommandsDialogs
             if (e.PropertyName == "BuildStatus")
             {
                 // Refresh the selected Git revision
-                FillBuildReport(selectedGitRevision);
+                FillBuildReport(_selectedGitRevision);
             }
         }
 
         private void CreateBuildReportTabPage(TabControl tabControl)
         {
-            buildReportTabPage = new TabPage
+            _buildReportTabPage = new TabPage
             {
                 Padding = new Padding(3),
                 TabIndex = tabControl.Controls.Count,
                 Text = _caption,
                 UseVisualStyleBackColor = true
             };
-            buildReportWebBrowser = new WebBrowserCtrl
+            _buildReportWebBrowser = new WebBrowserCtrl
             {
                 Dock = DockStyle.Fill
             };
-            buildReportTabPage.Controls.Add(buildReportWebBrowser);
+            _buildReportTabPage.Controls.Add(_buildReportWebBrowser);
         }
 
         private void BuildReportWebBrowserOnNavigated(object sender,
                                                       WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
         {
-            buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
+            _buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
 
-            var favIconUrl = DetermineFavIconUrl(buildReportWebBrowser.Document);
+            var favIconUrl = DetermineFavIconUrl(_buildReportWebBrowser.Document);
 
             if (favIconUrl != null)
             {
@@ -139,12 +139,12 @@ namespace GitUI.CommandsDialogs
                                 {
                                     var favIconImage = Image.FromStream(imageStream)
                                                             .GetThumbnailImage(16, 16, null, IntPtr.Zero);
-                                    var imageCollection = tabControl.ImageList.Images;
-                                    var imageIndex = buildReportTabPage.ImageIndex;
+                                    var imageCollection = _tabControl.ImageList.Images;
+                                    var imageIndex = _buildReportTabPage.ImageIndex;
 
                                     if (imageIndex < 0)
                                     {
-                                        buildReportTabPage.ImageIndex = imageCollection.Count;
+                                        _buildReportTabPage.ImageIndex = imageCollection.Count;
                                         imageCollection.Add(favIconImage);
                                     }
                                     else
@@ -152,15 +152,15 @@ namespace GitUI.CommandsDialogs
                                         imageCollection[imageIndex] = favIconImage;
                                     }
 
-                                    tabControl.Invalidate(false);
+                                    _tabControl.Invalidate(false);
                                 }
                             }
                         },
                     TaskScheduler.FromCurrentSynchronizationContext());
             }
-            if (url != null)
+            if (_url != null)
             {
-                buildReportWebBrowser.Document.Write("<HTML><a href=\"" + url + "\" target=\"_blank\">Open report</a></HTML>");
+                _buildReportWebBrowser.Document.Write("<HTML><a href=\"" + _url + "\" target=\"_blank\">Open report</a></HTML>");
             }
         }
 

@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormGitAttributes : GitModuleForm
     {
-        private readonly TranslationString noWorkingDir =
+        private readonly TranslationString _noWorkingDir =
             new TranslationString(".gitattributes is only supported when there is a working directory.");
         private readonly TranslationString _noWorkingDirCaption =
             new TranslationString("No working directory");
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs
         private void FormGitAttributesLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository()) return;
-            MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);
+            MessageBox.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }
 

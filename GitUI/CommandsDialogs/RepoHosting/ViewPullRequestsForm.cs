@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
-        private AsyncLoader loader = new AsyncLoader();
+        private AsyncLoader _loader = new AsyncLoader();
 
         // only for translation
         private ViewPullRequestsForm()
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             InitializeComponent();
             Translate();
-            loader.LoadingError += (sender, ex) =>
+            _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _isFirstLoad = true;
 
             this.Mask();
-            loader.Load(
+            _loader.Load(
                 () =>
                 {
                     var t = _gitHoster.GetHostedRemotesForModule(Module).ToList();
@@ -432,8 +432,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (disposing)
             {
-                loader.Cancel();
-                loader.Dispose();
+                _loader.Cancel();
+                _loader.Dispose();
                 components?.Dispose();
             }
 

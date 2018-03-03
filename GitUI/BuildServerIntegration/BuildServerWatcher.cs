@@ -22,22 +22,22 @@ namespace GitUI.BuildServerIntegration
 {
     public class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
-        private readonly RevisionGrid revisionGrid;
-        private readonly DvcsGraph revisions;
-        private GitModule Module => revisionGrid.Module;
+        private readonly RevisionGrid _revisionGrid;
+        private readonly DvcsGraph _revisions;
+        private GitModule Module => _revisionGrid.Module;
 
         public int BuildStatusImageColumnIndex { get; private set; }
         public int BuildStatusMessageColumnIndex { get; private set; }
 
-        private IDisposable buildStatusCancellationToken;
-        private IBuildServerAdapter buildServerAdapter;
+        private IDisposable _buildStatusCancellationToken;
+        private IBuildServerAdapter _buildServerAdapter;
 
-        private readonly object buildServerCredentialsLock = new object();
+        private readonly object _buildServerCredentialsLock = new object();
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
-            this.revisionGrid = revisionGrid;
-            this.revisions = revisions;
+            _revisionGrid = revisionGrid;
+            _revisions = revisions;
             BuildStatusImageColumnIndex = -1;
             BuildStatusMessageColumnIndex = -1;
         }
@@ -51,23 +51,23 @@ namespace GitUI.BuildServerIntegration
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
             {
-                if (revisions.IsDisposed)
+                if (_revisions.IsDisposed)
                 {
                     return;
                 }
 
-                buildServerAdapter = task.Result;
+                _buildServerAdapter = task.Result;
 
                 UpdateUI();
 
-                if (buildServerAdapter == null)
+                if (_buildServerAdapter == null)
                     return;
 
                 var scheduler = NewThreadScheduler.Default;
-                var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-                var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
-                var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
-                var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
+                var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+                var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
+                var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+                var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
 
                 var cancellationToken = new CompositeDisposable
                 {
@@ -88,14 +88,14 @@ namespace GitUI.BuildServerIntegration
                                            .Subscribe(OnBuildInfoUpdate)
                 };
 
-                buildStatusCancellationToken = cancellationToken;
+                _buildStatusCancellationToken = cancellationToken;
             },
             TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void CancelBuildStatusFetchOperation()
         {
-            var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
+            var cancellationToken = Interlocked.Exchange(ref _buildStatusCancellationToken, null);
 
             cancellationToken?.Dispose();
         }
@@ -103,7 +103,7 @@ namespace GitUI.BuildServerIntegration
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
         public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
-            lock (buildServerCredentialsLock)
+            lock (_buildServerCredentialsLock)
             {
                 IBuildServerCredentials buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
                 var foundInConfig = false;
@@ -199,16 +199,16 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerCredentials ShowBuildServerCredentialsForm(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
         {
-            if (revisionGrid.InvokeRequired)
+            if (_revisionGrid.InvokeRequired)
             {
-                return (IBuildServerCredentials)revisionGrid.Invoke(new Func<IBuildServerCredentials>(() => ShowBuildServerCredentialsForm(buildServerUniqueKey, buildServerCredentials)));
+                return (IBuildServerCredentials)_revisionGrid.Invoke(new Func<IBuildServerCredentials>(() => ShowBuildServerCredentialsForm(buildServerUniqueKey, buildServerCredentials)));
             }
 
             using (var form = new FormBuildServerCredentials(buildServerUniqueKey))
             {
                 form.BuildServerCredentials = buildServerCredentials;
 
-                if (form.ShowDialog(revisionGrid) == DialogResult.OK)
+                if (form.ShowDialog(_revisionGrid) == DialogResult.OK)
                 {
                     return buildServerCredentials;
                 }
@@ -229,7 +229,7 @@ namespace GitUI.BuildServerIntegration
                     Resizable = DataGridViewTriState.False,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
-                BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
+                BuildStatusImageColumnIndex = _revisions.Columns.Add(buildStatusImageColumn);
             }
 
             if (BuildStatusMessageColumnIndex == -1 && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
@@ -242,33 +242,33 @@ namespace GitUI.BuildServerIntegration
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
 
-                BuildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
+                BuildStatusMessageColumnIndex = _revisions.Columns.Add(buildMessageTextBoxColumn);
             }
         }
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
         {
-            if (buildStatusCancellationToken == null)
+            if (_buildStatusCancellationToken == null)
                 return;
 
             foreach (var commitHash in buildInfo.CommitHashList)
             {
-                var index = revisions.TryGetRevisionIndex(commitHash);
+                var index = _revisions.TryGetRevisionIndex(commitHash);
                 if (index.HasValue)
                 {
-                    var rowData = revisions.GetRowData(index.Value);
+                    var rowData = _revisions.GetRowData(index.Value);
                     if (rowData.BuildStatus == null ||
                         buildInfo.StartDate >= rowData.BuildStatus.StartDate)
                     {
                         rowData.BuildStatus = buildInfo;
-                        if (index.Value < revisions.RowCount)
+                        if (index.Value < _revisions.RowCount)
                         {
                             if (BuildStatusImageColumnIndex != -1 &&
-                                revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
-                                revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
+                                _revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                                _revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
                             if (BuildStatusMessageColumnIndex != -1 &&
-                                revisions.Rows[index.Value].Cells[BuildStatusMessageColumnIndex].Displayed)
-                                revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
+                                _revisions.Rows[index.Value].Cells[BuildStatusMessageColumnIndex].Displayed)
+                                _revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
                         }
                     }
                 }
@@ -298,7 +298,7 @@ namespace GitUI.BuildServerIntegration
                             return null;
                         }
                         var buildServerAdapter = export.Value;
-                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => revisionGrid.GetRevision(sha1) != null);
+                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
                         return buildServerAdapter;
                     }
                     catch (InvalidOperationException ex)
@@ -314,7 +314,7 @@ namespace GitUI.BuildServerIntegration
 
         private void UpdateUI()
         {
-            var columnsAreVisible = buildServerAdapter != null;
+            var columnsAreVisible = _buildServerAdapter != null;
 
             if (columnsAreVisible)
             {
@@ -322,10 +322,10 @@ namespace GitUI.BuildServerIntegration
             }
 
             if (BuildStatusImageColumnIndex != -1)
-                revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
+                _revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
 
             if (BuildStatusMessageColumnIndex != -1)
-                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
+                _revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
         }
 
         public void Dispose()
@@ -346,10 +346,10 @@ namespace GitUI.BuildServerIntegration
 
         private void DisposeBuildServerAdapter()
         {
-            if (buildServerAdapter != null)
+            if (_buildServerAdapter != null)
             {
-                buildServerAdapter.Dispose();
-                buildServerAdapter = null;
+                _buildServerAdapter.Dispose();
+                _buildServerAdapter = null;
             }
         }
 

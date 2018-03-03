@@ -11,11 +11,11 @@ namespace GitImpact
     {
         private readonly TranslationString _authorCommits = new TranslationString("{0} ({1} Commits, {2} Changed Lines)");
 
-        private readonly SynchronizationContext syncContext;
+        private readonly SynchronizationContext _syncContext;
 
         public FormImpact(IGitModule Module)
         {
-            syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             Translate();
@@ -37,7 +37,7 @@ namespace GitImpact
 
         void Impact_Invalidated(object sender, InvalidateEventArgs e)
         {
-            syncContext.Send(o => UpdateAuthorInfo(Impact.GetSelectedAuthor()), this);
+            _syncContext.Send(o => UpdateAuthorInfo(Impact.GetSelectedAuthor()), this);
         }
 
         private void UpdateAuthorInfo(string author)

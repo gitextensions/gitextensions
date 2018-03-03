@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private readonly RevisionGrid RevisionGrid;
+        private readonly RevisionGrid _RevisionGrid;
         private string _baseCommitDisplayStr;
         private string _headCommitDisplayStr;
         private GitRevision _baseRevision;
@@ -21,28 +21,28 @@ namespace GitUI.CommandsDialogs
 
         ToolTip _toolTipControl = new ToolTip();
 
-        private readonly TranslationString anotherBranchTooltip =
+        private readonly TranslationString _anotherBranchTooltip =
             new TranslationString("Select another branch");
-        private readonly TranslationString anotherCommitTooltip =
+        private readonly TranslationString _anotherCommitTooltip =
             new TranslationString("Select another commit");
-        private readonly TranslationString btnSwapTooltip =
+        private readonly TranslationString _btnSwapTooltip =
             new TranslationString("Swap BASE and Compare commits");
 
         public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
         {
-            RevisionGrid = revisionGrid;
+            _RevisionGrid = revisionGrid;
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
 
             InitializeComponent();
             Translate();
 
-            _toolTipControl.SetToolTip(btnAnotherBaseBranch, anotherBranchTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherHeadBranch, anotherBranchTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherBaseCommit, anotherCommitTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherHeadCommit, anotherCommitTooltip.Text);
-            _toolTipControl.SetToolTip(btnSwap, btnSwapTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherBaseBranch, _anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherHeadBranch, _anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherBaseCommit, _anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherHeadCommit, _anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnSwap, _btnSwapTooltip.Text);
 
             if (!IsUICommandsInitialized)
             {// UICommands is not initialized in translation unit test.
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
+                _RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
             }
         }
 

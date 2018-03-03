@@ -30,7 +30,7 @@ namespace Github3
             }
         }
 
-        private bool gotToken = false;
+        private bool _gotToken = false;
 
         public void web_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
@@ -51,7 +51,7 @@ namespace Github3
 
         public void checkAuth(string url)
         {
-            if (gotToken)
+            if (_gotToken)
                 return;
 
             if (url.Contains("?code="))
@@ -65,7 +65,7 @@ namespace Github3
                     string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
                     if (token == null)
                         return;
-                    gotToken = true;
+                    _gotToken = true;
 
                     GithubLoginInfo.OAuthToken = token;
 

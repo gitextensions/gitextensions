@@ -4,7 +4,7 @@ namespace Github3
 {
     class GithubHostedRemote : IHostedRemote
     {
-        private GithubRepo repo;
+        private GithubRepo _repo;
         public GithubHostedRemote(string Name, string Owner, string RemoteRepositoryName)
         {
             this.Name = Name;
@@ -14,10 +14,10 @@ namespace Github3
 
         public IHostedRepository GetHostedRepository()
         {
-            if (repo == null)
-                repo = new GithubRepo(Github3Plugin.github.getRepository(Owner, RemoteRepositoryName));
+            if (_repo == null)
+                _repo = new GithubRepo(Github3Plugin.github.getRepository(Owner, RemoteRepositoryName));
 
-            return repo;
+            return _repo;
         }
 
         /// <summary>

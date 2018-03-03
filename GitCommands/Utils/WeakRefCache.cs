@@ -7,7 +7,7 @@ namespace GitCommands.Utils
 {
     public class WeakRefCache : IDisposable
     {
-        private Dictionary<string, WeakReference> weakMap = new Dictionary<string, WeakReference>();
+        private Dictionary<string, WeakReference> _weakMap = new Dictionary<string, WeakReference>();
         private readonly Timer _clearTimer = new Timer(60 * 1000);
 
         public static readonly WeakRefCache Default = new WeakRefCache();
@@ -29,15 +29,15 @@ namespace GitCommands.Utils
         {
             object cached = null;
 
-            lock (weakMap)
+            lock (_weakMap)
             {
-                if (weakMap.TryGetValue(objectUniqueKey, out var wref))
+                if (_weakMap.TryGetValue(objectUniqueKey, out var wref))
                     cached = wref.Target;
 
                 if (cached == null)
                 {
                     cached = provideObject.Value;
-                    weakMap[objectUniqueKey] = new WeakReference(cached);
+                    _weakMap[objectUniqueKey] = new WeakReference(cached);
                 }
                 else
                 {
@@ -53,11 +53,11 @@ namespace GitCommands.Utils
 
         private void OnClearTimer(object source, System.Timers.ElapsedEventArgs e)
         {
-            lock (weakMap)
+            lock (_weakMap)
             {
-                var toRemove = weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
+                var toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
                 foreach (var key in toRemove)
-                    weakMap.Remove(key);
+                    _weakMap.Remove(key);
             }
         }
 

@@ -14,14 +14,14 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormStash : GitModuleForm
     {
-        readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working directory changes");
-        readonly TranslationString noStashes = new TranslationString("There are no stashes.");
-        readonly TranslationString stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
-        readonly TranslationString stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
-        readonly TranslationString stashDropConfirmTitle = new TranslationString("Drop Stash Confirmation");
-        readonly TranslationString cannotBeUndone = new TranslationString("This action cannot be undone.");
-        readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
-        readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
+        readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current working directory changes");
+        readonly TranslationString _noStashes = new TranslationString("There are no stashes.");
+        readonly TranslationString _stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
+        readonly TranslationString _stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
+        readonly TranslationString _stashDropConfirmTitle = new TranslationString("Drop Stash Confirmation");
+        readonly TranslationString _cannotBeUndone = new TranslationString("This action cannot be undone.");
+        readonly TranslationString _areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
+        readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool ManageStashes { get; set; }
 
 
@@ -59,19 +59,19 @@ namespace GitUI.CommandsDialogs
             ResizeStashesWidth();
         }
 
-        GitStash currentWorkingDirStashItem;
+        GitStash _currentWorkingDirStashItem;
 
         private void Initialize()
         {
             IList<GitStash> stashedItems = Module.GetStashes();
 
-            currentWorkingDirStashItem = new GitStash("currentWorkingDirStashItem")
+            _currentWorkingDirStashItem = new GitStash("currentWorkingDirStashItem")
             {
-                Name = currentWorkingDirChanges.Text,
-                Message = currentWorkingDirChanges.Text
+                Name = _currentWorkingDirChanges.Text,
+                Message = _currentWorkingDirChanges.Text
             };
 
-            stashedItems.Insert(0, currentWorkingDirStashItem);
+            stashedItems.Insert(0, _currentWorkingDirStashItem);
 
             Stashes.Text = "";
             StashMessage.Text = "";
@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
             Stashes.Enabled = false;
             refreshToolStripButton.Enabled = false;
             toolStripButton_customMessage.Enabled = false;
-            if (gitStash == currentWorkingDirStashItem)
+            if (gitStash == _currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
                 _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.WaitCursor;
 
             if (stashedItem != null &&
-                gitStash == currentWorkingDirStashItem) // current working directory
+                gitStash == _currentWorkingDirStashItem) // current working directory
             {
                 View.ViewCurrentChanges(stashedItem);
             }
@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                     return;
             }
 
@@ -188,7 +188,7 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
                     return;
             }
 
@@ -208,12 +208,12 @@ namespace GitUI.CommandsDialogs
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
                                         this,
-                                       stashDropConfirmTitle.Text,
-                                       cannotBeUndone.Text,
-                                       areYouSure.Text,
+                                       _stashDropConfirmTitle.Text,
+                                       _cannotBeUndone.Text,
+                                       _areYouSure.Text,
                                        "",
                                        "",
-                                       dontShowAgain.Text,
+                                       _dontShowAgain.Text,
                                        PSTaskDialog.eTaskDialogButtons.OKCancel,
                                        PSTaskDialog.eSysIcons.Information,
                                        PSTaskDialog.eSysIcons.Information);
@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
                 StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
 
             if (Stashes.Items.Count == 1)
-                StashMessage.Text = noStashes.Text;
+                StashMessage.Text = _noStashes.Text;
 
             Cursor.Current = Cursors.Default;
         }

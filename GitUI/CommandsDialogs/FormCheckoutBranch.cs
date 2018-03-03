@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetNonFastForwardBranch =
             new TranslationString("You are going to reset the “{0}” branch to a new location\n" +
                 "discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
-        readonly TranslationString resetCaption = new TranslationString("Reset branch");
+        readonly TranslationString _resetCaption = new TranslationString("Reset branch");
         #endregion
 
         private readonly string[] _containRevisons;
@@ -275,7 +275,7 @@ namespace GitUI.CommandsDialogs
                                 : GitRevision.ToShortSha(mergeBaseGuid);
 
                             string warningMessage = string.Format(_resetNonFastForwardBranch.Text, _localBranchName, mergeBaseText);
-                            if (MessageBox.Show(this, warningMessage, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                            if (MessageBox.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                             {
                                 DialogResult = DialogResult.None;
                                 return DialogResult.None;
