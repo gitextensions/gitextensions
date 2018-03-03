@@ -75,7 +75,7 @@ namespace GitCommands
 
 
 
-            foreach (TKey key in from k in this.Keys orderby k select k)
+            foreach (TKey key in from k in Keys orderby k select k)
             {
                 writer.WriteStartElement("item");
 

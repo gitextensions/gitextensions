@@ -14,9 +14,9 @@ namespace GitUIPluginInterfaces
         protected GitUIBaseEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands, string arguments = null)
             : base(false)
         {
-            this.OwnerForm = ownerForm;
-            this.GitUICommands = gitUICommands;
-            this.Arguments = arguments;
+            OwnerForm = ownerForm;
+            GitUICommands = gitUICommands;
+            Arguments = arguments;
         }
 
         public IGitUICommands GitUICommands { get; private set; }

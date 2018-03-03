@@ -56,10 +56,10 @@ namespace GitUI
                 tagsToolStripMenuItem,
                 remoteToolStripMenuItem });
 
-            this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
-            this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
-            this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
+            _NO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
+            _NO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;
+            _NO_TRANSLATE_toolStripBranches.Leave += toolStripBranches_Leave;
+            _NO_TRANSLATE_toolStripBranches.KeyUp += toolStripBranches_KeyUp;
         }
 
         public void InitToolStripBranchFilter()

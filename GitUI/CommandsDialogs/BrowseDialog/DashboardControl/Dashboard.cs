@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             // Do this at runtime, because it is difficult to keep consistent at design time.
             pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(this.Width - pictureBox1.Image.Width - 10, this.Height - pictureBox1.Image.Height - 10);
+            pictureBox1.Location = new Point(Width - pictureBox1.Image.Width - 10, Height - pictureBox1.Image.Height - 10);
 
             Load += Dashboard_Load;
         }

@@ -118,8 +118,8 @@ namespace GitUI.CommandsDialogs
             merge.Focus();
             merge.Select();
 
-            this.HotkeysEnabled = true;
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            HotkeysEnabled = true;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -1071,11 +1071,11 @@ namespace GitUI.CommandsDialogs
 
             switch (command)
             {
-                case Commands.Merge: this.OpenMergetool_Click(null, null); break;
-                case Commands.Rescan: this.Rescan_Click(null, null); break;
-                case Commands.ChooseBase: this.ContextChooseBase_Click(null, null); break;
-                case Commands.ChooseLocal: this.ContextChooseLocal_Click(null, null); break;
-                case Commands.ChooseRemote: this.ContextChooseRemote_Click(null, null); break;
+                case Commands.Merge: OpenMergetool_Click(null, null); break;
+                case Commands.Rescan: Rescan_Click(null, null); break;
+                case Commands.ChooseBase: ContextChooseBase_Click(null, null); break;
+                case Commands.ChooseLocal: ContextChooseLocal_Click(null, null); break;
+                case Commands.ChooseRemote: ContextChooseRemote_Click(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

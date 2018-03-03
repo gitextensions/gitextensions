@@ -75,7 +75,7 @@ namespace GitUI
             FileStatusListView.LargeImageList = _images;
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
-            this.Controls.SetChildIndex(NoFiles, 0);
+            Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _filter = new Regex(".*");

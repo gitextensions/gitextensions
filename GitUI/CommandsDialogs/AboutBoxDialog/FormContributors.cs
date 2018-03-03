@@ -73,16 +73,16 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
             Controls.Add(tabControl);
 
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.ClientSize = new Size(624, 442);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.Text = "Thanks to...";
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(624, 442);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Thanks to...";
 
-            this.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         public void LoadContributors(string coders, string translators, string designers, string others)

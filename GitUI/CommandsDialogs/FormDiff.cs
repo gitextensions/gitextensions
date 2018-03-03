@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
 
-            this.Load += (sender, args) => PopulateDiffFiles();
+            Load += (sender, args) => PopulateDiffFiles();
             DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
         }
 

@@ -939,7 +939,7 @@ namespace GitUI.CommandsDialogs
                     {
                         // unsubscribe the event handler so that after the message box is closed, the RescanChanges call is suppressed
                         // (otherwise it would move all changed files from staged back to unstaged file list)
-                        this.Activated -= FormCommitActivated;
+                        Activated -= FormCommitActivated;
 
                         // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
                         if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -947,7 +947,7 @@ namespace GitUI.CommandsDialogs
                     }
                     finally
                     {
-                        this.Activated += FormCommitActivated;
+                        Activated += FormCommitActivated;
                     }
 
                     StageAllAccordingToFilter();

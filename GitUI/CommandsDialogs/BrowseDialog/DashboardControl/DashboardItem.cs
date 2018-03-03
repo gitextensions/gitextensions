@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComponent();
             Translate();
             flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Icon.Width = Icon.Height;
         }
 
@@ -129,16 +129,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
         {
-            this.BackColor = SystemColors.ControlLight;
+            BackColor = SystemColors.ControlLight;
         }
 
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             if ((sender == Icon || sender == _NO_TRANSLATE_Title) &&
-                this.ClientRectangle.Contains(this.PointToClient(Control.MousePosition)))
+                ClientRectangle.Contains(PointToClient(Control.MousePosition)))
                 return;
 
-            this.BackColor = SystemColors.Control;
+            BackColor = SystemColors.Control;
         }
 
         void DashboardItem_VisibleChanged(object sender, System.EventArgs e)

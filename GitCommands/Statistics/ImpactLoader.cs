@@ -35,9 +35,9 @@ namespace GitCommands.Statistics
 
             public DataPoint(int commits, int added, int deleted)
             {
-                this.Commits = commits;
-                this.AddedLines = added;
-                this.DeletedLines = deleted;
+                Commits = commits;
+                AddedLines = added;
+                DeletedLines = deleted;
             }
 
             public static DataPoint operator +(DataPoint d1, DataPoint d2)

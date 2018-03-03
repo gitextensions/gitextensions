@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            this.HotkeysEnabled = true;
+            HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
         }
@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
 
         public void RefreshArtificial()
         {
-            if (this.Visible)
+            if (Visible)
             {
                 var revisions = _revisionGrid.GetSelectedRevisions();
 
@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             DiffText.ReloadHotkeys();
         }

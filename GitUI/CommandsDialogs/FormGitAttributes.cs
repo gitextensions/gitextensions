@@ -73,10 +73,10 @@ namespace GitUI.CommandsDialogs
                         _fullPathResolver.Resolve(".gitattributes"),
                         x =>
                         {
-                            this.GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
-                            if (!this.GitAttributesFile.EndsWith(Environment.NewLine))
-                                this.GitAttributesFile += Environment.NewLine;
-                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(this.GitAttributesFile));
+                            GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
+                            if (!GitAttributesFile.EndsWith(Environment.NewLine))
+                                GitAttributesFile += Environment.NewLine;
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(GitAttributesFile));
                         });
 
                 return true;

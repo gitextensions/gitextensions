@@ -19,8 +19,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 _KeyData = value;
                 // TODO: do not change text color on already assigned keys, which occur only once
-                this.ForeColor = (HotkeySettingsManager.IsUniqueKey(_KeyData)) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
-                this.Text = value.ToText() ?? _hotkeyNotSet.Text;
+                ForeColor = (HotkeySettingsManager.IsUniqueKey(_KeyData)) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                Text = value.ToText() ?? _hotkeyNotSet.Text;
             }
         }
         #endregion
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // We don't want only a modifier key pressed
             // TODO Further restrict the allowed keys
             if (!keyData.GetKeyCode().IsModifierKey())
-                this.KeyData = keyData;
+                KeyData = keyData;
 
             // Swallow all keys
             return true;

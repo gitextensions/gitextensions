@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 settingsLayout = CreateSettingsLayout();
                 if (settingsLayout.GetControl().Parent == null)
                 {
-                    this.Controls.Add(settingsLayout.GetControl());
+                    Controls.Add(settingsLayout.GetControl());
                 }
             }
 

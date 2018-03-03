@@ -67,17 +67,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public void SaveSettings()
         {
-            HotkeySettingsManager.SaveSettings(this.Settings);
+            HotkeySettingsManager.SaveSettings(Settings);
         }
 
         public void ReloadSettings()
         {
-            this.Settings = HotkeySettingsManager.LoadSettings();
+            Settings = HotkeySettingsManager.LoadSettings();
         }
 
         private void UpdateCombobox(HotkeySettings[] settings)
         {
-            this.SelectedHotkeySettings = null;
+            SelectedHotkeySettings = null;
 
             cmbSettings.Items.Clear();
             if (settings != null)
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void UpdateListViewItems(HotkeySettings setting)
         {
-            this.SelectedHotkeyCommand = null;
+            SelectedHotkeyCommand = null;
 
             listMappings.Items.Clear();
             if (setting != null)
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cmbSettings_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.SelectedHotkeySettings = cmbSettings.SelectedItem as HotkeySettings;
+            SelectedHotkeySettings = cmbSettings.SelectedItem as HotkeySettings;
         }
 
         private void listMappings_SelectedIndexChanged(object sender, EventArgs e)
@@ -127,39 +127,39 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (lvi != null)
             {
                 var hotkey = lvi.Tag as HotkeyCommand;
-                this.SelectedHotkeyCommand = hotkey;
+                SelectedHotkeyCommand = hotkey;
             }
         }
 
         private void bApply_Click(object sender, EventArgs e)
         {
-            var hotkey = this.SelectedHotkeyCommand;
+            var hotkey = SelectedHotkeyCommand;
             if (hotkey != null)
             {
                 // Update the KeyData with the chosen one
                 hotkey.KeyData = txtHotkey.KeyData;
 
                 // Refresh the ListView
-                UpdateListViewItems(this.SelectedHotkeySettings);
+                UpdateListViewItems(SelectedHotkeySettings);
             }
         }
 
         private void bClear_Click(object sender, EventArgs e)
         {
-            var hotkey = this.SelectedHotkeyCommand;
+            var hotkey = SelectedHotkeyCommand;
             if (hotkey != null)
             {
                 // Update the KeyData with the chosen one
                 hotkey.KeyData = Keys.None;
                 // Refresh the ListView
-                UpdateListViewItems(this.SelectedHotkeySettings);
+                UpdateListViewItems(SelectedHotkeySettings);
                 txtHotkey.KeyData = hotkey.KeyData;
             }
         }
 
         private void bResetToDefaults_Click(object sender, EventArgs e)
         {
-            this.Settings = HotkeySettingsManager.CreateDefaultSettings();
+            Settings = HotkeySettingsManager.CreateDefaultSettings();
         }
 
         #endregion

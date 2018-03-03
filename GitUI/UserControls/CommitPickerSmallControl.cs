@@ -46,7 +46,7 @@ namespace GitUI.UserControls
             else
             {
                 textBoxCommitHash.Text = GitRevision.ToShortSha(SelectedCommitHash);
-                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), SelectedCommitHash))
+                Task.Factory.StartNew(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), SelectedCommitHash))
                      .ContinueWith(t => lbCommits.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }

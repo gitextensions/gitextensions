@@ -96,7 +96,7 @@ namespace GitStatistics
                 var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(_module);
                 _syncContext.Post(o =>
                 {
-                    if (this.IsDisposed)
+                    if (IsDisposed)
                         return;
                     var totalCommits = allCommitsByUser.Item2;
                     var commitsPerUser = allCommitsByUser.Item1;

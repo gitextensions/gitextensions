@@ -294,7 +294,7 @@ namespace GitCommands.Repository
                 // if fixed width is not set then short as in pull request vccp's example
                 // full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
                 // short "E:\CompanyName\...\RepositoryName\WorkingDirName"
-                if (this.RecentReposComboMinWidth == 0)
+                if (RecentReposComboMinWidth == 0)
                 {
                     ShortenPathWithCompany(0);
                 }

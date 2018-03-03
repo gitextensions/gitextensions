@@ -292,7 +292,7 @@ namespace GitUI.Script
             if (m_SplitMenu != null && e.Button == MouseButtons.Left && !isMouseEntered)
                 skipNextOpen = true;
 
-            if ((dropDownRectangle.Contains(e.Location) || this.WholeButtonDropdown) &&
+            if ((dropDownRectangle.Contains(e.Location) || WholeButtonDropdown) &&
                 !isSplitMenuVisible && e.Button == MouseButtons.Left)
             {
                 ShowContextMenuStrip();

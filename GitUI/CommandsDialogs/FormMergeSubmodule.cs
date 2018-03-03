@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
         {
             StageSubmodule();
             DialogResult = DialogResult.OK;
-            this.Close();
+            Close();
         }
 
         private void btOpenSubmodule_Click(object sender, EventArgs e)

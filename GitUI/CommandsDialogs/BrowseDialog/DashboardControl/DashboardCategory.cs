@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             // Do this here, so that at design time, the form will keep its size.
             flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             SetUpFonts();
             Translate();

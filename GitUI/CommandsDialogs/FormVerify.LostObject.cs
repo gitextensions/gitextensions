@@ -48,9 +48,9 @@ namespace GitUI.CommandsDialogs
 
             private LostObject(LostObjectType objectType, string rawType, string hash)
             {
-                this.ObjectType = objectType;
-                this.RawType = rawType;
-                this.Hash = hash;
+                ObjectType = objectType;
+                RawType = rawType;
+                Hash = hash;
             }
 
             public static LostObject TryParse(GitModule aModule, string raw)

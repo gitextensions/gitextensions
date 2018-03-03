@@ -53,7 +53,7 @@ namespace GitUI
             diffContainsToolStripMenuItem.CheckOnClick = true;
             diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
             diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
-            this.diffContainsToolStripMenuItem.Click += this.diffContainsToolStripMenuItem_Click;
+            diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
             //
             // hashToolStripMenuItem
             //
@@ -81,11 +81,11 @@ namespace GitUI
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
-            this._NO_TRANSLATE_label.Click += this.ToolStripLabelClick;
-            this._NO_TRANSLATE_textBox.Leave += this.ToolStripTextBoxFilterLeave;
-            this._NO_TRANSLATE_textBox.KeyPress += this.ToolStripTextBoxFilterKeyPress;
-            this._NO_TRANSLATE_showFirstParentButton.Click += this.ToolStripShowFirstParentButtonClick;
-            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += this.RevisionGridShowFirstParentsToggled;
+            _NO_TRANSLATE_label.Click += ToolStripLabelClick;
+            _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
+            _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
+            _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
+            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += RevisionGridShowFirstParentsToggled;
         }
 
         public void SetFilter(string filter)

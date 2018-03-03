@@ -228,13 +228,13 @@ namespace GitPlugin
             try
             {
 #if DEBUG
-                this._gitPlugin.OutputPane.OutputString("Git Extensions plugin UI setup" + Environment.NewLine);
+                _gitPlugin.OutputPane.OutputString("Git Extensions plugin UI setup" + Environment.NewLine);
 #endif
 
-                this.GitPluginInit();
-                this.GitPluginUISetupMainMenu();
-                this.GitPluginUISetupCommandBar();
-                this.GitPluginUISetupContextMenu();
+                GitPluginInit();
+                GitPluginUISetupMainMenu();
+                GitPluginUISetupCommandBar();
+                GitPluginUISetupContextMenu();
 
                 // Uncomment the code block below to help find the name of commandbars in
                 // visual studio. All commandbars (and context menu's) will get a new entry
@@ -247,7 +247,7 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
+                _gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
             }
         }
 
@@ -275,7 +275,7 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error installing GitExt menu: " + ex);
+                _gitPlugin.OutputPane.OutputString("Error installing GitExt menu: " + ex);
             }
         }
 
@@ -302,38 +302,38 @@ namespace GitPlugin
             ////GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
-                this._gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
-                this._gitPlugin.RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>());
-                this._gitPlugin.RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
-                this._gitPlugin.RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>());
-                this._gitPlugin.RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
-                this._gitPlugin.RegisterCommand("ResetChanges", new ToolbarCommand<Revert>());
-                this._gitPlugin.RegisterCommand("Commit", new ToolbarCommand<Commit>());
-                this._gitPlugin.RegisterCommand("Browse", new ToolbarCommand<Browse>());
-                this._gitPlugin.RegisterCommand("Clone", new ToolbarCommand<Clone>());
-                this._gitPlugin.RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>());
-                this._gitPlugin.RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>());
-                this._gitPlugin.RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>());
-                this._gitPlugin.RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>());
-                this._gitPlugin.RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>());
-                this._gitPlugin.RegisterCommand("Pull", new ToolbarCommand<Pull>());
-                this._gitPlugin.RegisterCommand("Push", new ToolbarCommand<Push>());
-                this._gitPlugin.RegisterCommand("Rebase", new ToolbarCommand<Rebase>());
-                this._gitPlugin.RegisterCommand("Merge", new ToolbarCommand<Merge>());
-                this._gitPlugin.RegisterCommand("CherryPick", new ToolbarCommand<Cherry>());
-                this._gitPlugin.RegisterCommand("Stash", new ToolbarCommand<Stash>());
-                this._gitPlugin.RegisterCommand("Settings", new ToolbarCommand<Settings>());
-                this._gitPlugin.RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>());
-                this._gitPlugin.RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>());
-                this._gitPlugin.RegisterCommand("About", new ToolbarCommand<About>());
-                this._gitPlugin.RegisterCommand("Bash", new ToolbarCommand<Bash>());
-                this._gitPlugin.RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>());
-                this._gitPlugin.RegisterCommand("Remotes", new ToolbarCommand<Remotes>());
-                this._gitPlugin.RegisterCommand("FindFile", new ToolbarCommand<FindFile>());
+                _gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
+                _gitPlugin.RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>());
+                _gitPlugin.RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
+                _gitPlugin.RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>());
+                _gitPlugin.RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
+                _gitPlugin.RegisterCommand("ResetChanges", new ToolbarCommand<Revert>());
+                _gitPlugin.RegisterCommand("Commit", new ToolbarCommand<Commit>());
+                _gitPlugin.RegisterCommand("Browse", new ToolbarCommand<Browse>());
+                _gitPlugin.RegisterCommand("Clone", new ToolbarCommand<Clone>());
+                _gitPlugin.RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>());
+                _gitPlugin.RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>());
+                _gitPlugin.RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>());
+                _gitPlugin.RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>());
+                _gitPlugin.RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>());
+                _gitPlugin.RegisterCommand("Pull", new ToolbarCommand<Pull>());
+                _gitPlugin.RegisterCommand("Push", new ToolbarCommand<Push>());
+                _gitPlugin.RegisterCommand("Rebase", new ToolbarCommand<Rebase>());
+                _gitPlugin.RegisterCommand("Merge", new ToolbarCommand<Merge>());
+                _gitPlugin.RegisterCommand("CherryPick", new ToolbarCommand<Cherry>());
+                _gitPlugin.RegisterCommand("Stash", new ToolbarCommand<Stash>());
+                _gitPlugin.RegisterCommand("Settings", new ToolbarCommand<Settings>());
+                _gitPlugin.RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>());
+                _gitPlugin.RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>());
+                _gitPlugin.RegisterCommand("About", new ToolbarCommand<About>());
+                _gitPlugin.RegisterCommand("Bash", new ToolbarCommand<Bash>());
+                _gitPlugin.RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>());
+                _gitPlugin.RegisterCommand("Remotes", new ToolbarCommand<Remotes>());
+                _gitPlugin.RegisterCommand("FindFile", new ToolbarCommand<FindFile>());
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error adding commands: " + ex);
+                _gitPlugin.OutputPane.OutputString("Error adding commands: " + ex);
             }
         }
 

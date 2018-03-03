@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs
             if (e.PropertyName == "BuildStatus")
             {
                 // Refresh the selected Git revision
-                this.FillBuildReport(selectedGitRevision);
+                FillBuildReport(selectedGitRevision);
             }
         }
 

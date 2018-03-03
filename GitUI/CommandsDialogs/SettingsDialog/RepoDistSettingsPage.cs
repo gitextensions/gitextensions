@@ -58,13 +58,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             //
             // RepoDistSettingsPage
             //
-            this.Name = "RepoDistSettingsPage";
-            this.Size = new System.Drawing.Size(951, 518);
-            this.ResumeLayout(false);
+            Name = "RepoDistSettingsPage";
+            Size = new System.Drawing.Size(951, 518);
+            ResumeLayout(false);
         }
     }
 }

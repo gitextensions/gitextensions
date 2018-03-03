@@ -60,8 +60,8 @@ namespace Github3
                 var queryParams = GetParams(uri.Query);
                 if (queryParams.TryGetValue("code", out var code))
                 {
-                    this.Hide();
-                    this.Close();
+                    Hide();
+                    Close();
                     string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
                     if (token == null)
                         return;
@@ -69,7 +69,7 @@ namespace Github3
 
                     GithubLoginInfo.OAuthToken = token;
 
-                    MessageBox.Show(this.Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
+                    MessageBox.Show(Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
                 }
             }
         }

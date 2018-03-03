@@ -48,7 +48,7 @@ namespace GitImpact
             InitializeComponent();
 
             // Set DoubleBuffer flag for flicker-free drawing
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             MouseWheel += ImpactControl_MouseWheel;
@@ -160,7 +160,7 @@ namespace GitImpact
         private void InitializeComponent()
         {
             _scrollBar = new System.Windows.Forms.HScrollBar();
-            this.SuspendLayout();
+            SuspendLayout();
             //
             // scrollBar
             //
@@ -172,15 +172,15 @@ namespace GitImpact
             _scrollBar.Size = new System.Drawing.Size(150, 17);
             _scrollBar.SmallChange = 0;
             _scrollBar.TabIndex = 0;
-            this._scrollBar.Scroll += this.OnScroll;
+            _scrollBar.Scroll += OnScroll;
             //
             // ImpactControl
             //
-            this.Controls.Add(_scrollBar);
-            this.Name = "ImpactControl";
-            this.Paint += this.OnPaint;
-            this.Resize += this.OnResize;
-            this.ResumeLayout(false);
+            Controls.Add(_scrollBar);
+            Name = "ImpactControl";
+            Paint += OnPaint;
+            Resize += OnResize;
+            ResumeLayout(false);
         }
 
         private int GetGraphWidth()

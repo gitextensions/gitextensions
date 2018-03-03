@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }
 
             UICommands.StartGitCommandProcessDialog(arguments);
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private bool IsTargetFolderValid()

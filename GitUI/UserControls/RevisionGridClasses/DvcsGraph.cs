@@ -182,8 +182,8 @@ namespace GitUI.RevisionGridClasses
 
         public void ShowAuthor(bool show)
         {
-            this.AuthorColumn.Visible = show;
-            this.DateColumn.Visible = show;
+            AuthorColumn.Visible = show;
+            DateColumn.Visible = show;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]

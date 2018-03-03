@@ -15,7 +15,7 @@ namespace GitUI.Script
         private void btn_OK_Click(object sender, EventArgs e)
         {
             UserInput = txt_UserInput.Text;
-            this.Close();
+            Close();
         }
 
         private void SimplePrompt_Shown(object sender, EventArgs e)

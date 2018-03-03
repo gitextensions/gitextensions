@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
         {
             this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
-            this.Translate();
+            Translate();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)

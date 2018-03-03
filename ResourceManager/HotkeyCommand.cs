@@ -29,8 +29,8 @@ namespace ResourceManager
         }
         public HotkeyCommand(int commandCode, string name)
         {
-            this.CommandCode = commandCode;
-            this.Name = name;
+            CommandCode = commandCode;
+            Name = name;
         }
 
         public static HotkeyCommand[] FromEnum(Type enumType)

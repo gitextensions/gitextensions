@@ -65,7 +65,7 @@ namespace Bitbucket
                 var repositories = GetRepositories();
                 try
                 {
-                    this.Invoke((MethodInvoker)delegate
+                    Invoke((MethodInvoker)delegate
                     {
                         ddlRepositorySource.DataSource = repositories.ToList();
                         ddlRepositoryTarget.DataSource = repositories.ToList();
@@ -89,7 +89,7 @@ namespace Bitbucket
                 var pullReqs = GetPullRequests();
                 try
                 {
-                    this.Invoke((MethodInvoker)delegate
+                    Invoke((MethodInvoker)delegate
                     {
                         lbxPullRequests.DataSource = pullReqs;
                         lbxPullRequests.DisplayMember = "DisplayName";
