@@ -2212,12 +2212,7 @@ namespace GitCommands
             return RunGitCmd(cmd);
         }
 
-        public string GetDiffFilesText(string firstRevision, string secondRevision)
-        {
-            return GetDiffFilesText(firstRevision, secondRevision, false);
-        }
-
-        public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache)
+        public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)
         {
             string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
