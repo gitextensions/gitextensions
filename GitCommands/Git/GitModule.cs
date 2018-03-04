@@ -2538,7 +2538,7 @@ namespace GitCommands
             return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
 
-        /// <summary>Gets the remote of the current branch; or "origin" if no remote is configured.</summary>
+        /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         public string GetCurrentRemote()
         {
             string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, GetSelectedBranch()));
