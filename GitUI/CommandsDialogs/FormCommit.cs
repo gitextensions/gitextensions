@@ -718,7 +718,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
-            Staged.GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
+            Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), Module.GetStagedFilesWithSubmodulesStatus());
             Cursor.Current = Cursors.Default;
         }
 
@@ -747,8 +747,8 @@ namespace GitUI.CommandsDialogs
                 else
                     unStagedFiles.Add(fileStatus);
             }
-            Unstaged.GitItemStatuses = unStagedFiles;
-            Staged.GitItemStatuses = stagedFiles;
+            Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
+            Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), stagedFiles);
 
             Loading.Visible = false;
             LoadingStaged.Visible = false;
@@ -1309,8 +1309,8 @@ namespace GitUI.CommandsDialogs
                     item.IsStaged = false;
                     unStagedFiles.Add(item);
                 }
-                Staged.GitItemStatuses = stagedFiles;
-                Unstaged.GitItemStatuses = unStagedFiles;
+                Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
+                Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), stagedFiles);
                 _skipUpdate = false;
                 Staged.SelectStoredNextIndex();
 
@@ -1498,7 +1498,7 @@ namespace GitUI.CommandsDialogs
                     {
                         item.SubmoduleStatus.Result.Status = SubmoduleStatus.Unknown;
                     }
-                    Unstaged.GitItemStatuses = unStagedFiles;
+                    Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
                     Unstaged.ClearSelected();
                     _skipUpdate = false;
                     Unstaged.SelectStoredNextIndex();

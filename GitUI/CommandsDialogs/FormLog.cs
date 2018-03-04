@@ -52,7 +52,6 @@ namespace GitUI.CommandsDialogs
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            DiffFiles.GitItemStatuses = null;
             DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions());
             Cursor.Current = Cursors.Default;
         }

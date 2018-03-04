@@ -90,24 +90,20 @@ namespace GitUI.CommandsDialogs
         {
             GitStash gitStash = Stashes.SelectedItem as GitStash;
 
-            Stashed.GitItemStatuses = null;
+            Stashed.SetDiffs();
 
             Loading.Visible = true;
             Stashes.Enabled = false;
             refreshToolStripButton.Enabled = false;
             toolStripButton_customMessage.Enabled = false;
-            if (gitStash == null)
-            {
-                Stashed.GitItemStatuses = null;
-            }
-            else if (gitStash == currentWorkingDirStashItem)
+            if (gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
                 _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
             }
-            else
+            else if (gitStash != null)
             {
                 _asyncLoader.Load(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
                 Clear.Enabled = true; // allow Drop
@@ -117,7 +113,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
         {
-            Stashed.GitItemStatuses = gitItemStatuses;
+            Stashed.SetDiffs(items: gitItemStatuses);
             Loading.Visible = false;
             Stashes.Enabled = true;
             refreshToolStripButton.Enabled = true;

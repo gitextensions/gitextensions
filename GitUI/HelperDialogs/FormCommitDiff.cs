@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -6,8 +6,6 @@ namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        private readonly GitRevision _revision;
-
         private FormCommitDiff(GitUICommands aCommands)
             : base(aCommands)
         {
@@ -15,30 +13,27 @@ namespace GitUI.HelperDialogs
             Translate();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
-            DiffFiles.GitItemStatuses = null;
+            DiffFiles.SetDiffs();
         }
 
         private FormCommitDiff()
             : this(null)
         {
-
         }
 
-        public FormCommitDiff(GitUICommands aCommands, string revision)
+        public FormCommitDiff(GitUICommands aCommands, string revisionGuid)
             : this(aCommands)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,
             // but the parents in the filtered list.
-            _revision = Module.GetRevision(revision);
+            GitRevision revision = Module.GetRevision(revisionGuid);
 
-            if (_revision != null)
+            if (revision != null)
             {
-                DiffFiles.SetDiff(_revision);
+                DiffFiles.SetDiffs(revision);
 
-                commitInfo.Revision = _revision;
-
-                Text = "Diff - " + GitRevision.ToShortSha(_revision.Guid) + " - " + _revision.AuthorDate + " - " + _revision.Author + " - " + Module.WorkingDir; ;
+                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir; ;
             }
         }
 
@@ -49,10 +44,10 @@ namespace GitUI.HelperDialogs
 
         private void ViewSelectedDiff()
         {
-            if (DiffFiles.SelectedItem != null && _revision != null)
+            if (DiffFiles.SelectedItem != null && DiffFiles.Revision != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DiffText.ViewChanges(DiffFiles.SelectedItemParent, _revision.Guid, DiffFiles.SelectedItem, String.Empty);
+                DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, String.Empty);
                 Cursor.Current = Cursors.Default;
             }
         }
