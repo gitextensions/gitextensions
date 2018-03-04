@@ -1193,7 +1193,7 @@ namespace GitUI.CommandsDialogs
                 Unstaged.ContextMenuStrip = UnstagedSubmoduleContext;
         }
 
-        private void UnstagedContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void UnstagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //Do not show if no item selected
             e.Cancel = !Unstaged.SelectedItems.Any() || Module.IsBareRepository();
