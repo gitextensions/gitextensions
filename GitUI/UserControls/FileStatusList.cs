@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;
@@ -39,6 +40,7 @@ namespace GitUI
 
         public DescribeRevisionDelegate DescribeRevision;
         private readonly IFullPathResolver _fullPathResolver;
+        private RevisionDiffController _revisionDiffController;
 
         public FileStatusList()
         {
@@ -79,6 +81,7 @@ namespace GitUI
 
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _revisionDiffController = new RevisionDiffController();
         }
 
         public bool AlwaysRevisionGroups
@@ -1181,7 +1184,7 @@ namespace GitUI
                     // Show combined (merge conflicts) only when A is only parent
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
                         Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1
-                        && revisions.Count == 1;
+                        && _revisionDiffController.AisParent(Revision.ParentGuids, parentRevs.Select(i => i.Guid));
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);

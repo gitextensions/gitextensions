@@ -1348,10 +1348,13 @@ namespace GitUI.CommandsDialogs
             var isAssumeUnchangedExist = Unstaged.SelectedItems.Any(s => s.IsAssumeUnchanged);
             var isAssumeUnchangedAll = Unstaged.SelectedItems.All(s => s.IsAssumeUnchanged);
             var isSkipWorktreeAll = Unstaged.SelectedItems.All(s => s.IsSkipWorktree);
+
+            openWithDifftoolToolStripMenuItem.Enabled = isTrackedSelected;
             assumeUnchangedToolStripMenuItem.Visible = isTrackedSelected && !isSkipWorktreeExist && !isAssumeUnchangedAll;
             doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked && !isSkipWorktreeExist && isAssumeUnchangedExist;
             skipWorktreeToolStripMenuItem.Visible = isTrackedSelected && !isAssumeUnchangedExist && !isSkipWorktreeAll;
             doNotSkipWorktreeToolStripMenuItem.Visible = showSkipWorktreeFilesToolStripMenuItem.Checked && !isAssumeUnchangedExist && isSkipWorktreeExist;
+            viewFileHistoryToolStripItem.Enabled = isTrackedSelected;
         }
 
         private void Unstaged_Enter(object sender, EventArgs e)
