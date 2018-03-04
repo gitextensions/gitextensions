@@ -25,8 +25,6 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private readonly TranslationString _unsupportedMultiselectAction =
-            new TranslationString("Operation not supported");
         private readonly TranslationString _diffWithParent =
             new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff =
@@ -37,6 +35,7 @@ namespace GitUI
 
         private bool _filterVisible;
         private ToolStripItem _openSubmoduleMenuItem;
+        private bool _alwaysRevisionGroups = false;
 
         public DescribeRevisionDelegate DescribeRevision;
         private readonly IFullPathResolver _fullPathResolver;
@@ -49,7 +48,6 @@ namespace GitUI
             FilterVisible = false;
 
             SelectFirstItemOnSetItems = true;
-            _noDiffFilesChangesDefaultText = NoFiles.Text;
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
             if (_images == null)
@@ -81,6 +79,14 @@ namespace GitUI
 
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        }
+
+        public bool AlwaysRevisionGroups
+        {
+            set
+            {
+                _alwaysRevisionGroups = value;
+            }
         }
 
         private void CreateOpenSubmoduleMenuItem()
@@ -124,8 +130,6 @@ namespace GitUI
         }
 
         private static ImageList _images;
-
-        private readonly string _noDiffFilesChangesDefaultText;
 
         public void SetNoFilesText(string text)
         {
@@ -879,7 +883,7 @@ namespace GitUI
             }
 
             FileStatusListView.BeginUpdate();
-            FileStatusListView.ShowGroups = GitItemStatusesWithParents.Count > 1;
+            FileStatusListView.ShowGroups = GitItemStatusesWithParents.Count > 1 || _alwaysRevisionGroups;
             FileStatusListView.Groups.Clear();
             FileStatusListView.Items.Clear();
 
@@ -1137,13 +1141,7 @@ namespace GitUI
             }
 
             var dictionary = new GitItemsWithParents();
-            NoFiles.Text = _noDiffFilesChangesDefaultText; // Temporary
-            if (revisions.Count > 2)
-            {
-                // Not a limitations, to keep compatibility with existing RevisionDiff
-                NoFiles.Text = _unsupportedMultiselectAction.Text;
-            }
-            else if (Revision != null)
+            if (Revision != null)
             {
                 GitRevision[] parentRevs;
                 if (revisions.Count == 1)

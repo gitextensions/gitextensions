@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,10 +18,6 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _saveFileFilterCurrentFormat = new TranslationString("Current format");
         private readonly TranslationString _saveFileFilterAllFiles = new TranslationString("All files");
-        private readonly TranslationString _diffNoSelection = new TranslationString("Diff (no selection)");
-        private readonly TranslationString _diffParentWithSelection = new TranslationString("Diff (A: parent --> B: selection)");
-        private readonly TranslationString _diffTwoSelected = new TranslationString("Diff (A: first --> B: second)");
-        private readonly TranslationString _diffNotSupported = new TranslationString("Diff (not supported)");
         private readonly TranslationString _deleteSelectedFilesCaption = new TranslationString("Delete");
         private readonly TranslationString _deleteSelectedFiles =
             new TranslationString("Are you sure you want delete the selected file(s)?");
@@ -38,6 +34,7 @@ namespace GitUI.CommandsDialogs
         public RevisionDiff()
         {
             InitializeComponent();
+            DiffFiles.AlwaysRevisionGroups = true;
             Translate();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
@@ -101,32 +98,17 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public string GetTabText()
+        public void DisplayDiffTab()
         {
-            var revisions = _revisionGrid.GetSelectedRevisions();
-
             DiffText.SaveCurrentScrollPos();
+            var revisions = _revisionGrid.GetSelectedRevisions();
             DiffFiles.SetDiffs(revisions);
-            if (_oldDiffItem != null && revisions.Count > 0 && revisions[0].Guid == _oldRevision)
+            if (_oldDiffItem != null && DiffFiles.Revision?.Guid == _oldRevision)
             {
                 DiffFiles.SelectedItem = _oldDiffItem;
                 _oldDiffItem = null;
                 _oldRevision = null;
             }
-
-            switch (revisions.Count)
-            {
-                case 0:
-                    return _diffNoSelection.Text;
-
-                case 1: // diff "parent" --> "selected revision"
-                    return _diffParentWithSelection.Text;
-
-                case 2: // diff "first clicked revision" --> "second clicked revision"
-                    return _diffTwoSelected.Text;
-            }
-
-            return _diffNotSupported.Text;
         }
 
         public void Bind(RevisionGrid revisionGrid, RevisionFileTree revisionFileTree)
@@ -177,8 +159,7 @@ namespace GitUI.CommandsDialogs
         {
             fileIndex = -1;
             loadFileContent = Task.CompletedTask;
-            var revisions = _revisionGrid.GetSelectedRevisions();
-            if (revisions.Count == 0)
+            if (DiffFiles.Revision == null)
             {
                 return false;
             }
@@ -396,8 +377,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
-                UICommands.StartFileHistoryDialog(this, item.Name, revision, true, true);
+                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision, true, true);
             }
         }
 
@@ -493,7 +473,7 @@ namespace GitUI.CommandsDialogs
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
                 return;
             }
