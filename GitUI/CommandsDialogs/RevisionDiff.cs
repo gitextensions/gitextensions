@@ -769,25 +769,28 @@ namespace GitUI.CommandsDialogs
 
         private void diffCommitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(DiffFiles.SelectedItem.Name.EnsureTrailingPathSeparator()));
-            submodulCommands.StartCommitDialog(this, false);
+            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct().ToList();
+
+            foreach (var name in submodules)
+            {
+                GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                submodulCommands.StartCommitDialog(this, false);
+            }
             RefreshArtificial();
         }
 
         private void diffResetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = DiffFiles.SelectedItems.ToList();
-            if (unStagedFiles.Count == 0)
-                return;
+            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct().ToList();
 
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, true, true);
             if (resetType == FormResetChanges.ActionEnum.Cancel)
                 return;
 
-            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
+            foreach (var name in submodules)
             {
-                GitModule module = Module.GetSubmodule(item.Name);
+                GitModule module = Module.GetSubmodule(name);
 
                 // Reset all changes.
                 module.ResetHard("");
@@ -816,26 +819,19 @@ namespace GitUI.CommandsDialogs
 
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = DiffFiles.SelectedItems.ToList();
-            if (unStagedFiles.Count == 0)
-                return;
+            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct();
 
-            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
-            {
-                FormProcess.ShowDialog((FindForm() as FormBrowse), GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
-            }
+            FormProcess.ShowDialog((FindForm() as FormBrowse), GitCommandHelpers.SubmoduleUpdateCmd(submodules));
             RefreshArtificial();
         }
 
         private void diffStashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = DiffFiles.SelectedItems.ToList();
-            if (unStagedFiles.Count == 0)
-                return;
+            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct().ToList();
 
-            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
+            foreach (var name in submodules)
             {
-                GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(item.Name));
+                GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
             RefreshArtificial();
@@ -843,7 +839,13 @@ namespace GitUI.CommandsDialogs
 
         private void diffSubmoduleSummaryMenuItem_Click(object sender, EventArgs e)
         {
-            string summary = Module.GetSubmoduleSummary(DiffFiles.SelectedItem.Name);
+            var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct().ToList();
+
+            string summary = "";
+            foreach (var name in submodules)
+            {
+                summary += Module.GetSubmoduleSummary(name);
+            }
             using (var frm = new FormEdit(summary)) frm.ShowDialog(this);
         }
     }

@@ -421,10 +421,19 @@ namespace GitCommands
 
         public static string SubmoduleUpdateCmd(string name)
         {
-            if (string.IsNullOrEmpty(name))
-                return "submodule update --init --recursive";
+            name = name ?? "";
+            return SubmoduleUpdateCommand(name.Trim().QuoteNE());
+        }
 
-            return "submodule update --init --recursive \"" + name.Trim() + "\"";
+        public static string SubmoduleUpdateCmd(IEnumerable<string> submodules)
+        {
+            string submodulesQuoted = String.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
+            return SubmoduleUpdateCommand(submodulesQuoted);
+        }
+
+        private static string SubmoduleUpdateCommand(string name)
+        {
+            return "submodule update --init --recursive " + name;
         }
 
         public static string SubmoduleSyncCmd(string name)
