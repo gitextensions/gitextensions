@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands.Git.Extensions;
 using GitUIPluginInterfaces;
@@ -92,17 +91,6 @@ namespace GitCommands
             return sha;
         }
 
-        public bool MatchesSearchString(string searchString)
-        {
-            if (Refs.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
-                return true;
-
-            if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
-                return true;
-
-            return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
-                    Subject.ToLower().Contains(searchString);
-        }
 
 
         /// <summary>
