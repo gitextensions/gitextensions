@@ -203,10 +203,10 @@ namespace GitUI.CommandsDialogs
         {
             IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
 
-            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
+            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
-            var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
+            var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent?.Guid;
             var selectedItemStatus = DiffFiles.SelectedItem;
             bool isBareRepository = Module.IsBareRepository();
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(DiffFiles.SelectedItem.Name));
@@ -248,10 +248,10 @@ namespace GitUI.CommandsDialogs
 
             if (items.Count() == 1)
             {
-                items.Add(new GitRevision(DiffFiles.SelectedItemParent));
+                items.Add(DiffFiles.SelectedItemParent);
 
-                if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent)
-                    && DiffFiles.SelectedItemParent == DiffFiles.CombinedDiff.Text)
+                if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent?.Guid)
+                    && DiffFiles.SelectedItemParent?.Guid == DiffFiles.CombinedDiff.Text)
                 {
                     var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name,
                         DiffText.GetExtraDiffArguments(), DiffText.Encoding);
@@ -496,8 +496,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
-                GitItemStatus selectedItem = itemWithParent.Item;
-                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, itemWithParent.Item.IsTracked);
+                _revisionGrid.OpenWithDifftool(itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }
 
@@ -710,7 +709,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (DiffFiles.SelectedItem == null || !DiffFiles.Revision.IsArtificial ||
+                if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null || !DiffFiles.Revision.IsArtificial ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                 {
@@ -718,7 +717,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var selectedItems = DiffFiles.SelectedItems;
-                if (DiffFiles.Revision.Guid == GitRevision.IndexGuid)
+                if (DiffFiles.Revision?.Guid == GitRevision.IndexGuid)
                 {
                     var files = new List<GitItemStatus>();
                     var stagedItems = selectedItems.Where(item => item.IsStaged);

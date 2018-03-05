@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _discussionWB.DocumentText = "";
             _diffViewer.ViewPatch("");
-            _fileStatusList.GitItemStatuses = null;
+            _fileStatusList.SetDiffs();
 
             _pullRequestsList.Items.Clear();
             var lvi = new ListViewItem("");
@@ -209,7 +209,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
             _diffViewer.ViewPatch("");
-            _fileStatusList.GitItemStatuses = null;
+            _fileStatusList.SetDiffs();
 
             LoadDiffPatch();
             LoadDiscussion();
@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 _diffCache.Add(gis.Name, match.Groups[3].Value);
             }
 
-            _fileStatusList.GitItemStatuses = giss;
+            _fileStatusList.SetDiffs(items: giss);
         }
 
         private void _fetchBtn_Click(object sender, EventArgs e)
