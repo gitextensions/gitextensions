@@ -173,7 +173,14 @@ namespace GitUI
                     if (_fileLoader(searchBackward, true, out var fileIndex, out var loadFileContent))
                     {
                         currentIdx = fileIndex;
-                        await loadFileContent;
+                        try
+                        {
+                            await loadFileContent;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
