@@ -267,7 +267,12 @@ namespace GitUI.CommandsDialogs
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            await ShowSelectedFileDiff();
+            try
+            {
+                await ShowSelectedFileDiff();
+            }
+            catch (OperationCanceledException)
+            { }
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -303,7 +308,12 @@ namespace GitUI.CommandsDialogs
 
         private async void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            await ShowSelectedFileDiff();
+            try
+            {
+                await ShowSelectedFileDiff();
+            }
+            catch (OperationCanceledException)
+            { }
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
