@@ -95,8 +95,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     GitRefsToDataSource(comboBoxTags, list);
                     comboBoxTags.DisplayMember = "LocalName";
                     SetSelectedRevisionByFocusedControl();
-                }
-            );
+                });
         }
 
         private void LoadBranchesAsync()
@@ -110,8 +109,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     GitRefsToDataSource(comboBoxBranches, list);
                     comboBoxBranches.DisplayMember = "LocalName";
                     SetSelectedRevisionByFocusedControl();
-                }
-            );
+                });
         }
 
         private static void GitRefsToDataSource(ComboBox cb, IList<IGitRef> refs)

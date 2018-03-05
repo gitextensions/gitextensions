@@ -8,7 +8,7 @@ using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    
+
     [TestClass]
     public class GitBlameHeaderTest
     {

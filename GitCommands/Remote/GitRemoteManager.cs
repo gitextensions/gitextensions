@@ -227,8 +227,8 @@ namespace GitCommands.Remote
             {
                 if (remote.Disabled)
                 {
-                    // disabled branches can't updated as it poses to many problems, i.e. 
-                    // - verify that the branch name is valid, and 
+                    // disabled branches can't updated as it poses to many problems, i.e.
+                    // - verify that the branch name is valid, and
                     // - it does not duplicate an active branch name etc.
                     return new GitRemoteSaveResult(null, false);
                 }

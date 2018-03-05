@@ -298,8 +298,7 @@ namespace GitUI
                     using (var form = new FormDeleteBranch(this, branch))
                         form.ShowDialog(owner);
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartDeleteRemoteBranchDialog(IWin32Window owner, string remoteBranch)
@@ -311,8 +310,7 @@ namespace GitUI
                         form.ShowDialog(owner);
                     }
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartDeleteBranchDialog(string branch)
@@ -329,8 +327,7 @@ namespace GitUI
                         form.SetRevision(revision);
                         return form.ShowDialog(owner) == DialogResult.OK;
                     }
-                }
-            );
+                });
         }
 
         public bool StartCheckoutRevisionDialog()
@@ -498,8 +495,7 @@ namespace GitUI
             {
                 using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
-            }
-            );
+            });
         }
 
         public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote)
@@ -560,8 +556,7 @@ namespace GitUI
                     form.ShowDialog(owner);
 
                 return true;
-            }
-            );
+            });
         }
 
         public bool StartAddFilesDialog(IWin32Window owner)
@@ -928,7 +923,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                using(var form = new FormSparseWorkingCopy(this))
+                using (var form = new FormSparseWorkingCopy(this))
                     form.ShowDialog(owner);
 
                 return true;
@@ -1305,8 +1300,7 @@ namespace GitUI
                     }
 
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartArchiveDialog()
@@ -1342,7 +1336,7 @@ namespace GitUI
                 return true;
             };
 
-            //TODO: move Notify to FormVerify and friends
+            // TODO: move Notify to FormVerify and friends
             return DoActionOnRepo(owner, true, true, PreVerifyDatabase, PostVerifyDatabase, action);
         }
 
@@ -1667,8 +1661,7 @@ namespace GitUI
 
                         return true;
                     }
-                }
-            );
+                });
         }
 
         public bool StartApplyPatchDialog(string patchFile)
@@ -1753,8 +1746,7 @@ namespace GitUI
                         frm.ShowDialog(owner);
 
                     return true;
-                }
-            );
+                });
         }
 
         public bool StartBlameDialog(string fileName, int? initialLine = null)
@@ -1898,6 +1890,7 @@ namespace GitUI
         // Please update FormCommandlineHelp if you add or change commands
         private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
+            #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             switch (args[1])
             {
                 case "about":
@@ -1975,7 +1968,7 @@ namespace GitUI
                 case "openrepo":    // [path]
                     RunOpenRepoCommand(args);
                     return;
-                case "pull":        //  [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
+                case "pull":        // [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
                     Pull(arguments);
                     return;
                 case "push":        // [--quiet]
@@ -2033,6 +2026,8 @@ namespace GitUI
                     }
                     break;
             }
+            #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+
             var frmCmdLine = new FormCommandlineHelp();
             frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
             Application.Run(frmCmdLine);
@@ -2064,8 +2059,8 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-                //We need to return the file that has been found, the visual studio plugin uses the return value
-                //to open the selected file.
+                // We need to return the file that has been found, the visual studio plugin uses the return value
+                // to open the selected file.
                 Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
@@ -2129,8 +2124,8 @@ namespace GitUI
 
         private void RunFileHistoryCommand(string[] args)
         {
-            //Remove working directory from filename. This is to prevent filenames that are too
-            //long while there is room left when the workingdir was not in the path.
+            // Remove working directory from filename. This is to prevent filenames that are too
+            // long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 

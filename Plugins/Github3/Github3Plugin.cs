@@ -35,7 +35,7 @@ namespace Github3
                     if (user != null)
                     {
                         _username = user.Login;
-                        //MessageBox.Show("Github username: " + _username);
+                        ////MessageBox.Show("Github username: " + _username);
                         return _username;
                     }
                     else

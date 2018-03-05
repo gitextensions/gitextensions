@@ -63,15 +63,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     }
                     catch
                     {
-                        //ignore
+                        // ignore
                     }
                 }
             }
             catch
             {
-                //Exception occurred while checking for home dir. 
-                //Could be a security issue. Just return true to let the user fix
-                //this manually.
+                // Exception occurred while checking for home dir.
+                // Could be a security issue. Just return true to let the user fix
+                // this manually.
                 return true;
             }
             return false;
@@ -134,9 +134,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                //Exception occured while checking for home dir. 
-                //Could be a security issue. Just ignore and let the user choose
-                //manually.
+                // Exception occured while checking for home dir.
+                // Could be a security issue. Just ignore and let the user choose
+                // manually.
             }
             try
             {
@@ -151,9 +151,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                //Exception occured while checking for home dir. 
-                //Could be a security issue. Just ignore and let the user choose
-                //manually.
+                // Exception occured while checking for home dir.
+                // Could be a security issue. Just ignore and let the user choose
+                // manually.
             }
             try
             {
@@ -167,9 +167,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                //Exception occured while checking for home dir. 
-                //Could be a security issue. Just ignore and let the user choose
-                //manually.
+                // Exception occured while checking for home dir.
+                // Could be a security issue. Just ignore and let the user choose
+                // manually.
             }
             try
             {
@@ -184,9 +184,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                //Exception occured while checking for home dir. 
-                //Could be a security issue. Just ignore and let the user choose
-                //manually.
+                // Exception occured while checking for home dir.
+                // Could be a security issue. Just ignore and let the user choose
+                // manually.
             }
 
         }

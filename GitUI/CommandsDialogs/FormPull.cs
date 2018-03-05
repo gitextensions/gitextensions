@@ -250,7 +250,7 @@ namespace GitUI.CommandsDialogs
             }
             Branches.DisplayMember = "LocalName";
 
-            //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
+            ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
 
@@ -431,7 +431,7 @@ namespace GitUI.CommandsDialogs
         {
             DialogResult dialogResult;
 
-            //ask only if exists commit not pushed to remote yet
+            // ask only if exists commit not pushed to remote yet
             if (Rebase.Checked && PullFromRemote.Checked && MergeCommitExists())
             {
                 dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
@@ -501,7 +501,7 @@ namespace GitUI.CommandsDialogs
             if (!PullFromRemote.Checked || string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
                 return false;
 
-            //auto pull only if current branch was rejected
+            // auto pull only if current branch was rejected
             Regex isRefRemoved = new Regex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
 
             if (isRefRemoved.IsMatch(form.GetOutputString()))
@@ -594,8 +594,8 @@ namespace GitUI.CommandsDialogs
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
                 && Fetch.Checked)
             {
-                //if local branch eq to current branch and remote branch is not specified
-                //then run fetch with no refspec
+                // if local branch eq to current branch and remote branch is not specified
+                // then run fetch with no refspec
                 if (_branch == curLocalBranch)
                 {
                     curLocalBranch = null;

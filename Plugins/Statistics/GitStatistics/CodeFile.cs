@@ -124,8 +124,7 @@ namespace GitStatistics
                 line.StartsWith("#region Component Designer generated code") ||
                 line.StartsWith("#Region \" Component Designer generated code \"") ||
                 line.StartsWith("#region Web Form Designer generated code") ||
-                line.StartsWith("#Region \" Web Form Designer Generated Code \"")
-                )
+                line.StartsWith("#Region \" Web Form Designer Generated Code \""))
                 _inCodeGeneratedRegion = true;
 
             if (line.StartsWith("/*"))
@@ -148,7 +147,7 @@ namespace GitStatistics
 
             if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%{"))
                 _inCommentBlock = true;
-            
+
             // If we're not in a code-generated region, we should still check for normal
             // comments. This should help improve accuracy on resx files
             if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
@@ -157,7 +156,7 @@ namespace GitStatistics
                 File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
                 File.Extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
             {
-                if(line.Contains("<!--"))
+                if (line.Contains("<!--"))
                 {
                     _inCommentBlock = true;
                 }
@@ -206,7 +205,7 @@ namespace GitStatistics
                 _inCommentBlock = false;
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
                 _inCommentBlock = false;
-            
+
              if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
                 _inCommentBlock = false;
 

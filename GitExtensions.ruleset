@@ -6,35 +6,6 @@
     <Rule Id="CA2101" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1000" Action="None" />
-    <Rule Id="SA1001" Action="None" />
-    <Rule Id="SA1002" Action="None" />
-    <Rule Id="SA1003" Action="None" />
-    <Rule Id="SA1004" Action="None" />
-    <Rule Id="SA1005" Action="None" />
-    <Rule Id="SA1006" Action="None" />
-    <Rule Id="SA1007" Action="None" />
-    <Rule Id="SA1008" Action="None" />
-    <Rule Id="SA1009" Action="None" />
-    <Rule Id="SA1010" Action="None" />
-    <Rule Id="SA1011" Action="None" />
-    <Rule Id="SA1012" Action="None" />
-    <Rule Id="SA1013" Action="None" />
-    <Rule Id="SA1014" Action="None" />
-    <Rule Id="SA1015" Action="None" />
-    <Rule Id="SA1016" Action="None" />
-    <Rule Id="SA1017" Action="None" />
-    <Rule Id="SA1018" Action="None" />
-    <Rule Id="SA1019" Action="None" />
-    <Rule Id="SA1020" Action="None" />
-    <Rule Id="SA1021" Action="None" />
-    <Rule Id="SA1022" Action="None" />
-    <Rule Id="SA1023" Action="None" />
-    <Rule Id="SA1024" Action="None" />
-    <Rule Id="SA1025" Action="None" />
-    <Rule Id="SA1026" Action="None" />
-    <Rule Id="SA1027" Action="None" />
-    <Rule Id="SA1028" Action="None" />
     <Rule Id="SA1100" Action="None" />
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1102" Action="None" />

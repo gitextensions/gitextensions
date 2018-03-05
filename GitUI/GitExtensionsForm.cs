@@ -113,7 +113,7 @@ namespace GitUI
         public static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
-            if (colorIndex == (int) ColorIndex.Unknown)
+            if (colorIndex == (int)ColorIndex.Unknown)
                 colorIndex = 0;
 
             Icon appIcon;
@@ -252,7 +252,7 @@ namespace GitUI
                 Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2,
                     Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
-            if(WindowState != position.State)
+            if (WindowState != position.State)
                 WindowState = position.State;
         }
 
@@ -334,7 +334,7 @@ namespace GitUI
             }
             catch (Exception)
             {
-                //TODO: howto restore a corrupted config?
+                // TODO: howto restore a corrupted config?
             }
         }
 
@@ -365,7 +365,7 @@ namespace GitUI
             }
             catch (Exception)
             {
-                //TODO: howto restore a corrupted config?
+                // TODO: howto restore a corrupted config?
             }
 
             return null;

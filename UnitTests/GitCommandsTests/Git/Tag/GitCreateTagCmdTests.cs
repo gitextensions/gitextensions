@@ -11,7 +11,7 @@ namespace GitCommandsTests.Git.Tag
         private const string Revision = "0123456789";
         private const string TagMessage = "foo";
         private const string KeyId = "A9876F";
-        private const string  TagMessageFile = "c:/.git/TAGMESSAGE";
+        private const string TagMessageFile = "c:/.git/TAGMESSAGE";
 
 
         [TestCase(null)]

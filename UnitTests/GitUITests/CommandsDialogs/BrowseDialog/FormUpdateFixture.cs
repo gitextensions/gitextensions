@@ -28,7 +28,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, true, availableVersions);
-            var expectedVersions = new Version[] 
+            var expectedVersions = new Version[]
             {
                 new Version(2, 48),
                 new Version(2, 49),
@@ -44,7 +44,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
-            var expectedVersions = new Version[] 
+            var expectedVersions = new Version[]
             {
                 new Version(2, 48)
             };

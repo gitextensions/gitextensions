@@ -108,7 +108,7 @@ namespace GitCommands
 
             return commitTemplateItem;
         }
-    
+
     }
 
     public sealed class MoveNamespaceDeserializationBinder : SerializationBinder
@@ -119,7 +119,7 @@ namespace GitCommands
         public override Type BindToType(string assemblyName, string typeName)
         {
             typeName = typeName.Replace(OldNamespace, NewNamespace);
-            //assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
+            ////assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
             var type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
             return type;
         }

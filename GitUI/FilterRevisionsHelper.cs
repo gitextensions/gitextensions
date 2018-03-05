@@ -28,39 +28,39 @@ namespace GitUI
             this.diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 
-            // 
+            //
             // commitToolStripMenuItem1
-            // 
+            //
             this.commitToolStripMenuItem.Checked = true;
             this.commitToolStripMenuItem.CheckOnClick = true;
             this.commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
             this.commitToolStripMenuItem.Text = "Commit";
-            // 
+            //
             // committerToolStripMenuItem
-            // 
+            //
             this.committerToolStripMenuItem.CheckOnClick = true;
             this.committerToolStripMenuItem.Name = "committerToolStripMenuItem";
             this.committerToolStripMenuItem.Text = "Committer";
-            // 
+            //
             // authorToolStripMenuItem
-            // 
+            //
             this.authorToolStripMenuItem.CheckOnClick = true;
             this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
             this.authorToolStripMenuItem.Text = "Author";
-            // 
+            //
             // diffContainsToolStripMenuItem
-            // 
+            //
             this.diffContainsToolStripMenuItem.CheckOnClick = true;
             this.diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
             this.diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
             this.diffContainsToolStripMenuItem.Click += this.diffContainsToolStripMenuItem_Click;
-            // 
+            //
             // hashToolStripMenuItem
-            // 
+            //
             this.hashToolStripMenuItem.CheckOnClick = true;
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            this.hashToolStripMenuItem.Text = "Hash";        
+            this.hashToolStripMenuItem.Text = "Hash";
         }
 
         public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
@@ -77,7 +77,7 @@ namespace GitUI
                 this.commitToolStripMenuItem,
                 this.committerToolStripMenuItem,
                 this.authorToolStripMenuItem,
-                this.diffContainsToolStripMenuItem});
+                this.diffContainsToolStripMenuItem });
 
             this._NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
@@ -85,7 +85,7 @@ namespace GitUI
             this._NO_TRANSLATE_textBox.Leave += this.ToolStripTextBoxFilterLeave;
             this._NO_TRANSLATE_textBox.KeyPress += this.ToolStripTextBoxFilterKeyPress;
             this._NO_TRANSLATE_showFirstParentButton.Click += this.ToolStripShowFirstParentButtonClick;
-            this._NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += this.RevisionGridShowFirstParentsToggled;       
+            this._NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += this.RevisionGridShowFirstParentsToggled;
         }
 
         public void SetFilter(string filter)

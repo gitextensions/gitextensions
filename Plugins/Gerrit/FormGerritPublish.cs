@@ -80,8 +80,7 @@ namespace Gerrit
 
             pushCommand.CommandText = PushCmd(
                 _NO_TRANSLATE_Remotes.Text,
-                targetBranch
-            );
+                targetBranch);
             pushCommand.Remote = _NO_TRANSLATE_Remotes.Text;
             pushCommand.Title = _publishCaption.Text;
 

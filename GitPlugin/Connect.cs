@@ -236,14 +236,13 @@ namespace GitPlugin
                 this.GitPluginUISetupCommandBar();
                 this.GitPluginUISetupContextMenu();
 
-                //    /*
-                //     * Uncomment the code block below to help find the name of commandbars in
-                //     * visual studio. All commandbars (and context menu's) will get a new entry
-                //     * with the name of that commandbar.
-                //    foreach (var commandBar in _gitPlugin.CommandBars)
-                //    {
-                //        _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
-                //    }*/
+                // Uncomment the code block below to help find the name of commandbars in
+                // visual studio. All commandbars (and context menu's) will get a new entry
+                // with the name of that commandbar.
+                ////foreach (var commandBar in _gitPlugin.CommandBars)
+                ////{
+                ////    _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
+                ////}
 
             }
             catch (Exception ex)
@@ -300,7 +299,7 @@ namespace GitPlugin
 
         private void RegisterGitPluginCommand()
         {
-            //GitPlugin.DeleteCommandBar("GitExtensions");
+            ////GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
                 this._gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
@@ -352,36 +351,35 @@ namespace GitPlugin
             }
             catch (Exception)
             {
-                //ignore all exceptions....
-                //When a commandbar is not found, an exception will be thrown -> todo avoid exceptions!
+                // ignore all exceptions....
+                // When a commandbar is not found, an exception will be thrown -> todo avoid exceptions!
             }
         }
 
         public void OnDisconnection(ext_DisconnectMode disconnectMode, ref Array custom)
         {
-            //if (disconnectMode == ext_DisconnectMode.ext_dm_HostShutdown
-            //    || disconnectMode == ext_DisconnectMode.ext_dm_UserClosed)
-            //{
-            //    _gitPlugin.DeleteCommands();
-            //    _gitPlugin.DeleteCommandBar(GitToolBarName);
-            //    //Place the command on the tools menu.
-            //    //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
-            //    var menuBarCommandBar = ((CommandBars)_applicationObject.CommandBars)["MenuBar"];
-
-
-            //    CommandBarControl toolsControl;
-            //    try
-            //    {
-            //        toolsControl = menuBarCommandBar.Controls["Git"];
-            //        if (toolsControl != null)
-            //        {
-            //            toolsControl.Delete();
-            //        }
-            //    }
-            //    catch
-            //    {
-            //    }
-            //}
+            ////if (disconnectMode == ext_DisconnectMode.ext_dm_HostShutdown
+            ////   || disconnectMode == ext_DisconnectMode.ext_dm_UserClosed)
+            ////{
+            ////   _gitPlugin.DeleteCommands();
+            ////   _gitPlugin.DeleteCommandBar(GitToolBarName);
+            ////   //Place the command on the tools menu.
+            ////   //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
+            ////   var menuBarCommandBar = ((CommandBars)_applicationObject.CommandBars)["MenuBar"];
+            ////
+            ////CommandBarControl toolsControl;
+            ////   try
+            ////   {
+            ////       toolsControl = menuBarCommandBar.Controls["Git"];
+            ////       if (toolsControl != null)
+            ////       {
+            ////           toolsControl.Delete();
+            ////       }
+            ////   }
+            ////   catch
+            ////   {
+            ////   }
+            ////}
         }
 
         public void OnAddInsUpdate(ref Array custom)
@@ -406,7 +404,7 @@ namespace GitPlugin
 
             try
             {
-                //If you would like to move the command to a different menu, change the word "Tools" to the
+                // If you would like to move the command to a different menu, change the word "Tools" to the
                 //  English version of the menu. This code will take the culture, append on the name of the menu
                 //  then add the command to that menu. You can find a list of all the top-level menus in the file
                 //  CommandBar.resx.
@@ -427,7 +425,7 @@ namespace GitPlugin
             }
             catch (Exception)
             {
-                //We tried to find a localized version of the word Tools, but one was not found.
+                // We tried to find a localized version of the word Tools, but one was not found.
                 //  Default to the en-US word, which may work for the current culture.
                 toolsMenuName = "Tools";
             }

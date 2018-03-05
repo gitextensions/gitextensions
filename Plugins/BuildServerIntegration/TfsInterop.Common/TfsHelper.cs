@@ -85,7 +85,7 @@ namespace TfsInterop
 
         public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
-            var result=new List<IBuild>();
+            var result = new List<IBuild>();
             foreach (var _buildDefinition in _buildDefinitions)
             {
                 var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);

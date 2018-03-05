@@ -6,10 +6,10 @@ namespace GitUI.Script
 {
     public static class PowerShellHelper
     {
-        internal static void RunPowerShell(string command, string argument,string workingDir, bool runInBackground)
+        internal static void RunPowerShell(string command, string argument, string workingDir, bool runInBackground)
         {
             var filename = "powershell.exe";
-            var psarguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \""+command+" "+argument+"\"";
+            var psarguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
             GitCommandHelpers.SetEnvironmentVariable();
 
             var executionStartTimestamp = DateTime.Now;

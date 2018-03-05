@@ -9,7 +9,7 @@
 
         public string Name { get; set; }
         public string OldName { get; set; }
-        public bool   IsDirty { get; set; }
+        public bool IsDirty { get; set; }
         public string Commit { get; set; }
         public string OldCommit { get; set; }
         public SubmoduleStatus Status { get; set; }

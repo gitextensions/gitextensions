@@ -195,8 +195,7 @@ namespace GitUI.Editor.Diff
             var markerStrategy = document.MarkerStrategy;
             var lineSegment = document.GetLineSegment(line);
             markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
-                                                    lineSegment.Length, TextMarkerType.SolidBlock, color
-                                                    ));
+                                                    lineSegment.Length, TextMarkerType.SolidBlock, color));
         }
 
         public void HighlightLines(IDocument document, int startLine, int endLine, Color color)
@@ -209,8 +208,7 @@ namespace GitUI.Editor.Diff
             var endLineSegment = document.GetLineSegment(endLine);
             markerStrategy.AddMarker(new TextMarker(startLineSegment.Offset,
                                                     endLineSegment.Offset - startLineSegment.Offset + endLineSegment.Length,
-                                                    TextMarkerType.SolidBlock, color
-                                                    ));
+                                                    TextMarkerType.SolidBlock, color));
         }
     }
 }

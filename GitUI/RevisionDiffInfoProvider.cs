@@ -17,9 +17,9 @@ namespace GitUI
         public static string Get(IList<GitRevision> revisions, RevisionDiffKind diffKind,
             out string extraDiffArgs, out string firstRevision, out string secondRevision)
         {
-            //Note: Order in revisions is that first clicked is last in array
+            // Note: Order in revisions is that first clicked is last in array
             string error = "";
-            //Detect rename and copy
+            // Detect rename and copy
             extraDiffArgs = "-M -C";
 
             if (revisions == null)
@@ -54,7 +54,7 @@ namespace GitUI
             }
             else
             {
-                //Second revision is always local 
+                // Second revision is always local
                 secondRevision = null;
 
                 if (diffKind == RevisionDiffKind.DiffBLocal)

@@ -87,8 +87,7 @@ namespace GitCommandsTests.ExternalLinks
                     new ExternalLinkDefinition { Name = "distributed definition 1" },
                     new ExternalLinkDefinition { Name = "distributed definition 2" },
                     new ExternalLinkDefinition { Name = "distributed definition 3" },
-                }
-            );
+                });
 
             var effectiveSettings = _provider.Get(_repoDistributed);
 
@@ -114,8 +113,7 @@ namespace GitCommandsTests.ExternalLinks
                 new List<ExternalLinkDefinition>
                 {
                     new ExternalLinkDefinition { Name = "user definition 1" },
-                }
-            );
+                });
 
             var effectiveSettings = _provider.Get(_repoLocal);
 

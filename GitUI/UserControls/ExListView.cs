@@ -10,7 +10,7 @@ namespace GitUI.UserControls
     public enum ListViewGroupState : uint
     {
         /// <summary>
-        /// Groups are expanded, the group name is displayed, 
+        /// Groups are expanded, the group name is displayed,
         /// and all items in the group are displayed.
         /// </summary>
         Normal = 0,
@@ -227,7 +227,7 @@ namespace GitUI.UserControls
 
                     info.pt = NativeMethods.LParamToPOINT((uint)m.LParam);
 
-                    //if the click is on the group header, exit, otherwise send message
+                    // if the click is on the group header, exit, otherwise send message
                     var handleRef = new HandleRef(this, Handle);
                     if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != new IntPtr(-1))
                         if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
@@ -279,7 +279,7 @@ namespace GitUI.UserControls
 
         public void SetGroupState(ListViewGroupState state)
         {
-            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6)   //Only Vista and forward 
+            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward
                 // allows collapse of ListViewGroups
                 return;
             foreach (ListViewGroup lvg in Groups)

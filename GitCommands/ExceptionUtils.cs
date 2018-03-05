@@ -45,7 +45,7 @@ namespace GitCommands
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(e.ToString());
             sb.AppendLine();
-            foreach(DictionaryEntry entry in e.Data)
+            foreach (DictionaryEntry entry in e.Data)
                 sb.AppendLine(entry.Key + " = " + entry.Value);
             return sb.ToString();
         }

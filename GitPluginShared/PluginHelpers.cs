@@ -34,7 +34,7 @@ namespace GitPluginShared
             }
             catch (Exception)
             {
-                //ignore!
+                // ignore!
                 return false;
             }
         }
@@ -65,7 +65,7 @@ namespace GitPluginShared
             }
             catch (Exception)
             {
-                //ignore!!
+                // ignore!!
                 return null;
             }
         }
@@ -91,7 +91,7 @@ namespace GitPluginShared
             }
             catch (Exception)
             {
-                //ignore!!
+                // ignore!!
             }
             return null;
         }

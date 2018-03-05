@@ -27,7 +27,7 @@ namespace GitUI.Editor.Diff
                 if (!_visible)
                 {
                     _lastSize = new Size(0, 0);
-                } 
+                }
                 else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
@@ -41,7 +41,7 @@ namespace GitUI.Editor.Diff
         public override void Paint(Graphics g, Rectangle rect)
         {
             var totalWidth = Size.Width;
-            var leftWidth = (int)(totalWidth/2.0);
+            var leftWidth = (int)(totalWidth / 2.0);
             var rightWidth = rect.Width - leftWidth;
 
             var fontHeight = textArea.TextView.FontHeight;

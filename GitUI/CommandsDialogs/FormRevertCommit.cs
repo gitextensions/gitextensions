@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRevertCommit : GitModuleForm
     {
-        private readonly TranslationString _noneParentSelectedText =  new TranslationString("None parent is selected!");
+        private readonly TranslationString _noneParentSelectedText = new TranslationString("None parent is selected!");
         private readonly TranslationString _noneParentSelectedTextCaption = new TranslationString("Error");
 
         private bool _isMerge;

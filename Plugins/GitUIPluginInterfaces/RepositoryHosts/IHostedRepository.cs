@@ -20,7 +20,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         string CloneReadWriteUrl { get; }
         string CloneReadOnlyUrl { get; }
 
-        //Slow op
+        // Slow op
         List<IHostedBranch> Branches { get; }
 
         /// <summary>

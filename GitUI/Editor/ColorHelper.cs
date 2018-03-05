@@ -7,7 +7,7 @@ namespace GitUI.Editor
     {
         public static Color GetForeColorForBackColor(Color backColor)
         {
-            return IsLightColor(backColor)? Color.Black : Color.White;
+            return IsLightColor(backColor) ? Color.Black : Color.White;
         }
 
         public static bool IsLightColor(Color color)
@@ -52,12 +52,12 @@ namespace GitUI.Editor
         public static int GetColorBrightnessIndex(Color c)
         {
             // From: http://www.had2know.com/technology/color-contrast-calculator-web-design.html
-            return (299*c.R + 587*c.G + 114*c.B) / 1000;
+            return (299 * c.R + 587 * c.G + 114 * c.B) / 1000;
         }
 
         public static int GetColorBrightnessDifference(Color a, Color b)
         {
-            return System.Math.Abs( GetColorBrightnessIndex(a) - GetColorBrightnessIndex(b) );
+            return System.Math.Abs(GetColorBrightnessIndex(a) - GetColorBrightnessIndex(b));
         }
     }
 }

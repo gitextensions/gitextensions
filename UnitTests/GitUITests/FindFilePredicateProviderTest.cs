@@ -102,14 +102,14 @@ namespace GitUITests
             return predicate(filePath);
         }
 
-        [TestCase( null )]
-        [TestCase( "" )]
-        [TestCase( " " )]
-        public void Get_should_not_throw_then_filePath_is_null_or_empty( string filePath )
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Get_should_not_throw_then_filePath_is_null_or_empty(string filePath)
         {
             var predicate = provider.Get(patternDefault, workingDirDefault);
 
-            Action executor = () => { predicate( filePath ); };
+            Action executor = () => { predicate(filePath); };
             executor.ShouldNotThrow<ArgumentNullException>();
         }
     }

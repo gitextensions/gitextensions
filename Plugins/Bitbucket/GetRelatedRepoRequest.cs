@@ -22,7 +22,7 @@ namespace Bitbucket
         public string RepoName { get; set; }
         public string DisplayName => string.Format("{0}/{1}", ProjectName, RepoName);
     }
-    
+
     class GetRelatedRepoRequest : BitbucketRequestBase<List<Repository>>
     {
         public GetRelatedRepoRequest(Settings settings) : base(settings)

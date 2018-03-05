@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs
             : this(null, null)
         {
         }
-        public FormCompareToBranch(GitUICommands aCommands, string selectedCommit): base(aCommands)
+        public FormCompareToBranch(GitUICommands aCommands, string selectedCommit) : base(aCommands)
         {
             MinimizeBox = false;
             MaximizeBox = false;

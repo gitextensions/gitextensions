@@ -46,7 +46,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         string Caption();
 
-        ISetting GetSetting();        
+        ISetting GetSetting();
     }
 
     public abstract class SettingControlBinding<S, T> : ISettingControlBinding where T : Control where S : ISetting

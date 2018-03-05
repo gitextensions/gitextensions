@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void RepositoriesGrid_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            //We handle this ourself, let .net think the action is cancelled.
+            // We handle this ourself, let .net think the action is cancelled.
             e.Cancel = true;
             if (e.Row.DataBoundItem == null)
                 return;

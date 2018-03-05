@@ -76,7 +76,7 @@ namespace GitCommands
         // outside ASCII (7bit) range.
         public bool IsRegExStringCmdPassable(string s)
         {
-            if (s==null) return true;
+            if (s == null) return true;
             foreach (char ch in s)
                 if ((uint)ch >= 0x80) return false;
             return true;

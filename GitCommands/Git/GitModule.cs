@@ -253,7 +253,7 @@ namespace GitCommands
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
 
-        //encoding for files paths
+        // encoding for files paths
         private static Encoding _systemEncoding;
         public static Encoding SystemEncoding
         {
@@ -261,7 +261,7 @@ namespace GitCommands
             {
                 if (_systemEncoding == null)
                 {
-                    //check whether GitExtensions works with standard msysgit or msysgit-unicode
+                    // check whether GitExtensions works with standard msysgit or msysgit-unicode
 
                     // invoke a git command that returns an invalid argument in its response, and
                     // check if a unicode-only character is reported back. If so assume msysgit-unicode
@@ -284,16 +284,16 @@ namespace GitCommands
             }
         }
 
-        //Encoding that let us read all bytes without replacing any char
-        //It is using to read output of commands, which may consist of:
-        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
-        //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
-        //2) file content encoded in its original encoding
-        //3) file path (file name is encoded in system default encoding),
-        //   when core.quotepath is on, every non ASCII character is escaped
-        //   with \ followed by its code as a three digit octal number
-        //4) branch, tag name, errors, warnings, hints encoded in system default encoding
-        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
+        // Encoding that let us read all bytes without replacing any char
+        // It is using to read output of commands, which may consist of:
+        // 1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
+        //    pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
+        // 2) file content encoded in its original encoding
+        // 3) file path (file name is encoded in system default encoding),
+        //    when core.quotepath is on, every non ASCII character is escaped
+        //    with \ followed by its code as a three digit octal number
+        // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
+        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
         public Encoding FilesEncoding => EffectiveConfigFile.FilesEncoding ?? new UTF8Encoding(false);
 
@@ -763,7 +763,7 @@ namespace GitCommands
 
         public void SaveBlobAs(string saveAs, string blob)
         {
-            using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
+            using (var ms = (MemoryStream)GetFileStream(blob)) // Ugly, has implementation info.
             {
                 byte[] buf = ms.ToArray();
                 if (EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
@@ -1116,7 +1116,7 @@ namespace GitCommands
             {
                 string message = ProccessDiffNotes(10, lines);
 
-                //commit message is not reencoded by git when format is given
+                // commit message is not reencoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
                 revision.Subject = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
             }
@@ -1473,7 +1473,7 @@ namespace GitCommands
             if (revision == GitRevision.UnstagedGuid)
             {
                 Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
-                //Not an error to user, just nothing happens
+                // Not an error to user, just nothing happens
                 return "";
             }
 
@@ -1512,8 +1512,8 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
-            //ensure pageant is loaded, so we can wait for loading a key in the next command
-            //otherwise we'll stuck there waiting until pageant exits
+            // ensure pageant is loaded, so we can wait for loading a key in the next command
+            // otherwise we'll stuck there waiting until pageant exits
             var pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
             if (Process.GetProcessesByName(pageantProcName).Length == 0)
             {
@@ -1567,7 +1567,7 @@ namespace GitCommands
         {
             remote = remote.ToPosixPath();
 
-            //Remove spaces...
+            // Remove spaces...
             remoteBranch = remoteBranch?.Replace(" ", "");
             localBranch = localBranch?.Replace(" ", "");
 
@@ -1837,7 +1837,7 @@ namespace GitCommands
 
         private void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
         {
-            //process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
+            ////process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
                                                       "\"" + filename.ToPosixPath() + "\"" + processReader.Value.Process.StandardInput.NewLine);
             processReader.Value.Process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
@@ -2170,7 +2170,7 @@ namespace GitCommands
                 oldFileName = oldFileName.ToPosixPath();
             }
 
-            //fix refs slashes
+            // fix refs slashes
             firstRevision = firstRevision?.ToPosixPath();
             secondRevision = secondRevision?.ToPosixPath();
             string diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
@@ -2233,11 +2233,11 @@ namespace GitCommands
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
             if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
-                //For unstaged the untracked must be added too
+                // For unstaged the untracked must be added too
                 var files = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
                 if (firstRevision == GitRevision.UnstagedGuid)
                 {
-                    //The file is seen as "deleted" in 'to' revision
+                    // The file is seen as "deleted" in 'to' revision
                     foreach (var item in files)
                     {
                         item.IsNew = false;
@@ -2370,7 +2370,7 @@ namespace GitCommands
 
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
-                //This command is a little more expensive because it will return both staged and unstaged files
+                // This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.No);
                 status = RunGitCmd(command, SystemEncoding);
                 IList<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
@@ -2888,8 +2888,7 @@ namespace GitCommands
                 RunCacheableCmd(
                     AppSettings.GitCommand,
                     blameCommand,
-                    LosslessEncoding
-                    )
+                    LosslessEncoding)
                     .Split('\n');
 
             GitBlame blame = new GitBlame();
@@ -2903,11 +2902,11 @@ namespace GitCommands
                 {
                     string line = itemsStrings[i];
 
-                    //The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
+                    // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                     if (line.StartsWith("\t"))
                     {
-                        blameLine.LineText = line.Substring(1) //trim ONLY first tab
-                                                 .Trim(new char[] { '\r' }); //trim \r, this is a workaround for a \r\n bug
+                        blameLine.LineText = line.Substring(1) // trim ONLY first tab
+                                                 .Trim(new char[] { '\r' }); // trim \r, this is a workaround for a \r\n bug
                         blameLine.LineText = ReEncodeStringFromLossless(blameLine.LineText, encoding);
                     }
                     else if (line.StartsWith("author-mail"))
@@ -2935,7 +2934,7 @@ namespace GitCommands
                         blameHeader.Summary = ReEncodeStringFromLossless(line.Substring("summary".Length).Trim());
                     else if (line.StartsWith("filename"))
                         blameHeader.FileName = ReEncodeFileNameFromLossless(line.Substring("filename".Length).Trim());
-                    else if (line.IndexOf(' ') == 40) //SHA1, create new line!
+                    else if (line.IndexOf(' ') == 40) // SHA1, create new line!
                     {
                         blameLine = new GitBlameLine();
                         var headerParams = line.Split(' ');
@@ -2950,8 +2949,8 @@ namespace GitCommands
                 }
                 catch
                 {
-                    //Catch all parser errors, and ignore them all!
-                    //We should never get here...
+                    // Catch all parser errors, and ignore them all!
+                    // We should never get here...
                     AppSettings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!", DateTime.Now, DateTime.Now);
                 }
             }
@@ -2966,12 +2965,12 @@ namespace GitCommands
 
         public string GetFileBlobHash(string fileName, string revision)
         {
-            if (revision == GitRevision.UnstagedGuid) //working directory changes
+            if (revision == GitRevision.UnstagedGuid) // working directory changes
             {
                 Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
-            if (revision == GitRevision.IndexGuid) //index
+            if (revision == GitRevision.IndexGuid) // index
             {
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
                 string[] s = blob.Split(new char[] { ' ', '\t' });
@@ -3195,7 +3194,7 @@ namespace GitCommands
                 char c = chars[i];
                 if (c == '\\')
                 {
-                    //there should be 3 digits
+                    // there should be 3 digits
                     if (chars.Length >= i + 3)
                     {
                         string octNumber = "" + chars[i + 1] + chars[i + 2] + chars[i + 3];
@@ -3266,9 +3265,9 @@ namespace GitCommands
             return ReEncodeStringFromLossless(s, LogOutputEncoding);
         }
 
-        //there was a bug: Git before v1.8.4 did not recode commit message when format is given
-        //Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
-        //characters could be replaced by replacement character while reencoding to LogOutputEncoding
+        // there was a bug: Git before v1.8.4 did not recode commit message when format is given
+        // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
+        // characters could be replaced by replacement character while reencoding to LogOutputEncoding
         public string ReEncodeCommitMessage(string s, string toEncodingName)
         {
 
@@ -3282,13 +3281,13 @@ namespace GitCommands
                     if (toEncodingName.IsNullOrEmpty())
                         encoding = Encoding.UTF8;
                     else if (toEncodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
-                        encoding = null; //no recoding is needed
+                        encoding = null; // no recoding is needed
                     else if (CpEncodingPattern.IsMatch(toEncodingName)) // Encodings written as e.g. "cp1251", which is not a supported encoding string
                         encoding = Encoding.GetEncoding(int.Parse(toEncodingName.Substring(2)));
                     else
                         encoding = Encoding.GetEncoding(toEncodingName);
                 }
-                else//bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
+                else// bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
                     encoding = LogOutputEncoding;
 
             }

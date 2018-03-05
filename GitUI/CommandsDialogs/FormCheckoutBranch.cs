@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
 
                 PopulateBranches();
 
-                //Set current branch after initialize, because initialize will reset it
+                // Set current branch after initialize, because initialize will reset it
                 if (!string.IsNullOrEmpty(branch))
                 {
                     Branches.Items.Add(branch);
@@ -105,8 +105,8 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                //The dirty check is very expensive on large repositories. Without this setting
-                //the checkout branch dialog is too slow.
+                // The dirty check is very expensive on large repositories. Without this setting
+                // the checkout branch dialog is too slow.
                 if (AppSettings.CheckForUncommittedChangesInCheckoutBranch)
                     _isDirtyDir = Module.IsDirtyDir();
                 else
@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (LocalBranch.Checked)
                     {
-                        branchNames = GetLocalBranches().Select(b => b.Name);                        
+                        branchNames = GetLocalBranches().Select(b => b.Name);
                     }
                     else
                     {
@@ -373,8 +373,8 @@ namespace GitUI.CommandsDialogs
 
         private void LocalBranchCheckedChanged(object sender, EventArgs e)
         {
-            //We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
-            //BranchTypeChanged();
+            // We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
+            ////BranchTypeChanged();
         }
 
         private void RemoteBranchCheckedChanged(object sender, EventArgs e)

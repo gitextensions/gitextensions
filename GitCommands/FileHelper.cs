@@ -8,37 +8,37 @@ namespace GitCommands
     {
         private static readonly IEnumerable<string> BinaryExtensions = new[]
         {
-            ".avi",//movie
-            ".bmp",//image
-            ".dat",//data file
-            ".bin", //binary file
-            ".dll",//dynamic link library
-            ".doc", //office word
-            ".docx",//office word
-            ".ppt",//office powerpoint
-            ".pps",//office powerpoint
-            ".pptx",//office powerpoint
-            ".ppsx",//office powerpoint
-            ".dwg",//autocad
-            ".exe",//executable
-            ".gif",//image
-            ".ico",//icon
-            ".jpg",//image
-            ".jpeg",//image
-            ".mpg",//movie
-            ".mpeg",//movie
-            ".msi",//installer
-            ".pdf",//pdf document
-            ".png",//image
-            ".pdb",//debug file
-            ".sc1",//screen file
-            ".tif",//image
-            ".tiff",//image
-            ".vsd",//microsoft visio
-            ".vsdx",//microsoft
-            ".xls",//microsoft excel
-            ".xlsx",//microsoft excel
-            ".odt" //Open office
+            ".avi", // movie
+            ".bmp", // image
+            ".dat", // data file
+            ".bin", // binary file
+            ".dll", // dynamic link library
+            ".doc", // office word
+            ".docx", // office word
+            ".ppt", // office powerpoint
+            ".pps", // office powerpoint
+            ".pptx", // office powerpoint
+            ".ppsx", // office powerpoint
+            ".dwg", // autocad
+            ".exe", // executable
+            ".gif", // image
+            ".ico", // icon
+            ".jpg", // image
+            ".jpeg", // image
+            ".mpg", // movie
+            ".mpeg", // movie
+            ".msi", // installer
+            ".pdf", // pdf document
+            ".png", // image
+            ".pdb", // debug file
+            ".sc1", // screen file
+            ".tif", // image
+            ".tiff", // image
+            ".vsd", // microsoft visio
+            ".vsdx", // microsoft
+            ".xls", // microsoft excel
+            ".xlsx", // microsoft excel
+            ".odt" // Open office
         };
 
         private static readonly IEnumerable<string> ImageExtensions = new[]
@@ -112,7 +112,7 @@ namespace GitCommands
         #region binary file check
         public static bool IsBinaryFileAccordingToContent(byte[] content)
         {
-            //Check for binary file.
+            // Check for binary file.
             if (content != null && content.Length > 0)
             {
                 int nullCount = 0;
@@ -132,7 +132,7 @@ namespace GitCommands
 
         public static bool IsBinaryFileAccordingToContent(string content)
         {
-            //Check for binary file.
+            // Check for binary file.
             if (!string.IsNullOrEmpty(content))
             {
                 int nullCount = 0;

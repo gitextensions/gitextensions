@@ -167,7 +167,7 @@ namespace GitUI.CommandsDialogs
                     result += _sendMailResultFailed.Text;
 
 
-                //Clean up
+                // Clean up
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))

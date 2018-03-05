@@ -23,7 +23,7 @@
         /// </summary>
         DarkerThanSurface,
         /// <summary>
-        ///   A color that is significantly darker than surface color is used 
+        ///   A color that is significantly darker than surface color is used
         ///   for edges.
         /// </summary>
         DarkerDarkerThanSurface,
@@ -33,7 +33,7 @@
         /// </summary>
         LighterThanSurface,
         /// <summary>
-        ///   A color that is significantly lighter than surface color is used 
+        ///   A color that is significantly lighter than surface color is used
         ///   for edges.
         /// </summary>
         LighterLighterThanSurface,
@@ -46,7 +46,7 @@
         /// </summary>
         EnhancedContrast,
         /// <summary>
-        ///   Black color is used for light surfaces and white for dark 
+        ///   Black color is used for light surfaces and white for dark
         ///   surfaces.
         /// </summary>
         FullContrast

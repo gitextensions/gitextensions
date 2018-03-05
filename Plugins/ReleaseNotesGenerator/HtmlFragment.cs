@@ -1,7 +1,7 @@
 ﻿// Sample class for Copying and Pasting HTML fragments to and from the clipboard.
 //
 // Mike Stall. http://blogs.msdn.com/jmstall
-// 
+//
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -18,7 +18,7 @@ namespace ReleaseNotesGenerator
         #region Read and decode from clipboard
         /// <summary>
         /// Get a HTML fragment from the clipboard.
-        /// </summary>    
+        /// </summary>
         /// <example>
         ///    string html = "<b>Hello!</b>";
         ///    HtmlFragment.CopyToClipboard(html);
@@ -33,7 +33,7 @@ namespace ReleaseNotesGenerator
         }
 
         /// <summary>
-        /// Create an HTML fragment decoder around raw HTML text from the clipboard. 
+        /// Create an HTML fragment decoder around raw HTML text from the clipboard.
         /// This text should have the header.
         /// </summary>
         /// <param name="rawClipboardText">raw html text, with header.</param>
@@ -46,7 +46,7 @@ namespace ReleaseNotesGenerator
             // Note the counters are byte counts in the original string, which may be Ansi. So byte counts
             // may be the same as character counts (since sizeof(char) == 1).
             // But System.String is unicode, and so byte couns are no longer the same as character counts,
-            // (since sizeof(wchar) == 2). 
+            // (since sizeof(wchar) == 2).
             int startHmtl = 0;
             int startFragment = 0;
 
@@ -62,7 +62,7 @@ namespace ReleaseNotesGenerator
 
                 switch (key)
                 {
-                    // Version number of the clipboard. Starting version is 0.9. 
+                    // Version number of the clipboard. Starting version is 0.9.
                     case "version":
                         Version = val;
                         break;
@@ -81,7 +81,7 @@ namespace ReleaseNotesGenerator
                         Context = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
                         break;
 
-                    //  Byte count from the beginning of the clipboard to the start of the fragment.
+                    // Byte count from the beginning of the clipboard to the start of the fragment.
                     case "startfragment":
                         if (startFragment != 0) throw new FormatException("StartFragment is already declared");
                         startFragment = int.Parse(val);
@@ -138,7 +138,7 @@ namespace ReleaseNotesGenerator
 
         #region Write to Clipboard
         // Helper to convert an integer into an 8 digit string.
-        // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.    
+        // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.
         internal static string To8DigitString(int x)
         {
             return string.Format("{0:00000000}", x);
@@ -179,7 +179,7 @@ namespace ReleaseNotesGenerator
             // Builds the CF_HTML header. See format specification here:
             // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
 
-            // The string contains index references to other spots in the string, so we need placeholders so we can compute the offsets. 
+            // The string contains index references to other spots in the string, so we need placeholders so we can compute the offsets.
             // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
@@ -207,7 +207,7 @@ namespace ReleaseNotesGenerator
             sb.Append(htmlFragment);
             int fragmentEnd = sb.Length;
 
-            const string post = 
+            const string post =
                 "<!--EndFragment-->\r\n" +
                 "</body></html>";
             sb.Append(post);

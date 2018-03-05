@@ -27,7 +27,7 @@ namespace GitCommands.Git
 
     /// <summary>
     /// Translate GitRevision including artificial commits to diff options
-    /// Closely related to GitRevision.cs 
+    /// Closely related to GitRevision.cs
     /// </summary>
     public sealed class RevisionDiffProvider : IRevisionDiffProvider
     {
@@ -65,14 +65,14 @@ namespace GitCommands.Git
             firstRevision = ArtificialToDiffOptions(firstRevision);
             secondRevision = ArtificialToDiffOptions(secondRevision);
 
-            //Note: As artificial are options, diff unstage..unstage and 
+            // Note: As artificial are options, diff unstage..unstage and
             // stage..stage will show output, different from e.g. HEAD..HEAD
-            //Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
+            // Diff-to-itself is not always disabled or is transient why this is not handled as error in release builds
             Debug.Assert(!(firstRevision == secondRevision && (firstRevision.IsNullOrEmpty() || firstRevision == StagedOpt)),
                 "Unexpectedly two identical artificial revisions to diff: " + firstRevision +
                 ". This will be displayed as diff to HEAD, not an identical diff.");
 
-            //As empty (unstaged) and --cached (staged) are options (not revisions),
+            // As empty (unstaged) and --cached (staged) are options (not revisions),
             // order must be preserved with -R
             if (firstRevision != secondRevision && (firstRevision.IsNullOrEmpty() ||
                                firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty()))
@@ -80,14 +80,14 @@ namespace GitCommands.Git
                 extra = "-R";
             }
 
-            //Special case: Remove options comparing unstaged-staged
+            // Special case: Remove options comparing unstaged-staged
             if (firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt ||
                 firstRevision == StagedOpt && secondRevision.IsNullOrEmpty())
             {
                 firstRevision = secondRevision = string.Empty;
             }
 
-            //Reorder options - not strictly required
+            // Reorder options - not strictly required
             if (secondRevision == StagedOpt)
             {
                 extra += " " + StagedOpt;
@@ -100,8 +100,8 @@ namespace GitCommands.Git
             }
             else
             {
-                //Untracked files can only be compared to /dev/null
-                //The UI should normall only allow this for unstaged to staged, but it can be included in multi selections
+                // Untracked files can only be compared to /dev/null
+                // The UI should normall only allow this for unstaged to staged, but it can be included in multi selections
                 if (!isTracked)
                 {
                     extra += " --no-index";
@@ -138,7 +138,7 @@ namespace GitCommands.Git
             }
             else
             {
-                //Normal commit
+                // Normal commit
                 if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^")
                 {
                     rev = "HEAD";

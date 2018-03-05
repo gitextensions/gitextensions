@@ -42,7 +42,7 @@ namespace GitUI
 
             string truncatePathMethod = AppSettings.TruncatePathMethod;
             if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
-                EnvUtils.RunningOnWindows()) //The win32 method PathCompactPathEx is only supported on Windows
+                EnvUtils.RunningOnWindows()) // The win32 method PathCompactPathEx is only supported on Windows
             {
                 var result = new StringBuilder(length);
                 NativeMethods.PathCompactPathEx(result, path, length, 0);
@@ -53,7 +53,7 @@ namespace GitUI
                 return "..." + path.Substring(path.Length - length);
             }
 
-            return path;//.Substring(0, length+1);
+            return path; ////.Substring(0, length+1);
         }
 
         public string FormatTextForDrawing(int width, string name, string oldName)

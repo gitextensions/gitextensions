@@ -62,7 +62,7 @@ namespace GitCommands
             {
                 return null;
             }
-            
+
         }
     }
 }

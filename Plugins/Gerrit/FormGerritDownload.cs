@@ -150,7 +150,7 @@ namespace Gerrit
 
             remote = FixPath(remote);
 
-            //Remove spaces...
+            // Remove spaces...
             remoteBranch = remoteBranch?.Replace(" ", "");
 
             return "fetch " + progressOption + "\"" + remote.Trim() + "\" " + remoteBranch;
@@ -177,12 +177,10 @@ namespace Gerrit
                 String.Format(
                     "gerrit query --format=JSON project:{0} --current-patch-set change:{1}",
                     projectName,
-                    _NO_TRANSLATE_Change.Text
-                ),
+                    _NO_TRANSLATE_Change.Text),
                 fetchUrl,
                 _currentBranchRemote,
-                null
-            );
+                null);
 
             foreach (string line in change.Split('\n'))
             {

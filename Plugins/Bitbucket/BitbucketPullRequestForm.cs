@@ -95,7 +95,7 @@ namespace Bitbucket
                         lbxPullRequests.DisplayMember = "DisplayName";
                     });
                 }
-                catch(System.InvalidOperationException){
+                catch (System.InvalidOperationException) {
                     return;
                 }
             });
@@ -156,7 +156,7 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
+        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (Branches.ContainsKey(selectedRepo))
@@ -218,7 +218,7 @@ namespace Bitbucket
 
             ddlBranchSource.Tag = commit;
             UpdateCommitInfo(lblCommitInfoSource, commit);
-            txtTitle.Text = ddlBranchSource.SelectedValue.ToString().Replace("-"," ");
+            txtTitle.Text = ddlBranchSource.SelectedValue.ToString().Replace("-", " ");
             UpdatePullRequestDescription();
         }
 
@@ -310,7 +310,7 @@ namespace Bitbucket
                 TargetRepo = curItem.DestRepo,
             };
 
-            //Merge
+            // Merge
             var mergeRequest = new MergePullRequest(_settings, mergeInfo);
             var response = mergeRequest.Send();
             if (response.Success)
@@ -335,7 +335,7 @@ namespace Bitbucket
                 TargetRepo = curItem.DestRepo,
             };
 
-            //Approve
+            // Approve
             var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
             var response = approveRequest.Send();
             if (response.Success)
@@ -355,7 +355,7 @@ namespace Bitbucket
                 var link = (sender as LinkLabel).Text;
                 if (e.Button == MouseButtons.Right)
                 {
-                    //Just copy the text
+                    // Just copy the text
                     Clipboard.SetText(link);
                 }
                 else

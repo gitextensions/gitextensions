@@ -64,7 +64,7 @@ namespace JetBrains.Annotations
     }
 
     /// <summary>
-    /// Indicates that marked method builds string by format pattern and (optional) arguments. 
+    /// Indicates that marked method builds string by format pattern and (optional) arguments.
     /// Parameter, which contains format string, should be given in constructor.
     /// The format string should be in <see cref="string.Format(IFormatProvider,string,object[])"/> -like form
     /// </summary>
@@ -174,15 +174,15 @@ namespace JetBrains.Annotations
     public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 
     /// <summary>
-    /// When applied to target attribute, specifies a requirement for any type which is marked with 
+    /// When applied to target attribute, specifies a requirement for any type which is marked with
     /// target attribute to implement or inherit specific type or types
     /// </summary>
     /// <example>
     /// <code>
     /// [BaseTypeRequired(typeof(IComponent)] // Specify requirement
-    /// public class ComponentAttribute : Attribute 
+    /// public class ComponentAttribute : Attribute
     /// {}
-    /// 
+    ///
     /// [Component] // ComponentAttribute requires implementing IComponent interface
     /// public class MyComponent : IComponent
     /// {}
@@ -339,7 +339,7 @@ namespace JetBrains.Annotations
     }
 
     /// <summary>
-    /// Tells code analysis engine if the parameter is completely handled when the invoked method is on stack. 
+    /// Tells code analysis engine if the parameter is completely handled when the invoked method is on stack.
     /// If the parameter is delegate, indicates that delegate is executed while the method is executed.
     /// If the parameter is enumerable, indicates that it is enumerated while the method is executed.
     /// </summary>

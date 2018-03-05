@@ -136,7 +136,7 @@ namespace GitUI.UserControls
         {
             _FireDataReceived = FireDataReceived;
             _commandLineCharsInOutput = commandLineCharsInOutput;
-            _commandLineCharsInOutput += Environment.NewLine.Length;//for \n after the command line
+            _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
         }
 
         private string FilterOutConsoleCommandLine(string outputChunk)

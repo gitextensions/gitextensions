@@ -79,19 +79,19 @@ namespace GitUI.SpellChecker
 
             // * Here’s where the magic happens
 
-            //Mark ill formed parts of commit message
+            // Mark ill formed parts of commit message
             DrawLines(IllFormedLines, DrawType.Mark);
 
-            //Mark first line if it is blank
+            // Mark first line if it is blank
             var lh = LineHeight();
             var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
             if (_richTextBox.Text.Length > 1 &&
-                //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
+                // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
                 _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
                 && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
                 DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
 
-            //Mark misspelled words
+            // Mark misspelled words
             DrawLines(Lines, DrawType.Wave);
             // Now we just draw our internal buffer on top of the TextBox.
             // Everything should be at the right place.
@@ -154,7 +154,7 @@ namespace GitUI.SpellChecker
                     pl.Add(new Point(i, start.Y));
                     pl.Add(new Point(i + 2, start.Y + 2));
                 }
-                var p = (Point[]) pl.ToArray(typeof (Point));
+                var p = (Point[])pl.ToArray(typeof(Point));
                 _bufferGraphics.DrawLines(pen, p);
             }
             else
@@ -169,8 +169,8 @@ namespace GitUI.SpellChecker
             var linHeight = LineHeight();
             using (var pen = new Pen(col, linHeight))
             {
-                start.Offset(0, -linHeight/2);
-                end.Offset(0, -linHeight/2);
+                start.Offset(0, -linHeight / 2);
+                end.Offset(0, -linHeight / 2);
                 _bufferGraphics.DrawLine(pen, start, end);
             }
         }
@@ -180,9 +180,9 @@ namespace GitUI.SpellChecker
             if (!EnvUtils.RunningOnWindows())
                 return 12;
 
-            if (_lineHeight == 0 && !EnvUtils.RunningOnWindows ()) {
-                if (_richTextBox.Lines.Any (line => line.Length != 0)) {
-                    _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex (_richTextBox, 0);
+            if (_lineHeight == 0 && !EnvUtils.RunningOnWindows()) {
+                if (_richTextBox.Lines.Any(line => line.Length != 0)) {
+                    _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, 0);
                 }
             }
 

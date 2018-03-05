@@ -34,9 +34,9 @@ namespace GitCommands
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
             bool wasEmpty = reader.IsEmptyElement;
-            
-            
-            
+
+
+
             reader.Read();
             if (reader.NodeType == System.Xml.XmlNodeType.XmlDeclaration)
                 reader.Read();
@@ -86,7 +86,7 @@ namespace GitCommands
                 writer.WriteStartElement("item");
 
 
-               
+
                 writer.WriteStartElement("key");
                 keySerializer.Serialize(writer, key);
                 writer.WriteEndElement();

@@ -14,7 +14,7 @@ namespace GitPluginShared.Commands
 
         public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
-            var command = new ItemCommandT {RunForSelection = RunForSelection};
+            var command = new ItemCommandT { RunForSelection = RunForSelection };
             command.OnCommand(application, pane);
         }
 

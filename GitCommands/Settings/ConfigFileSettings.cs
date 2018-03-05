@@ -82,7 +82,7 @@ namespace GitCommands.Settings
         {
             if (value.IsNullOrEmpty())
             {
-                //to remove setting
+                // to remove setting
                 value = null;
             }
 

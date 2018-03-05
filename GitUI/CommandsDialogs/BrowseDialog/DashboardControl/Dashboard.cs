@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RecentRepositories.RepositoryRemoved += RecentRepositories_RepositoryRemoved;
             RecentRepositories.DisableContextMenu();
             RecentRepositories.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
-            //Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
+            ////Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
 
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void Dashboard_Load(object sender, EventArgs e)
         {
             DonateCategory.Dock = DockStyle.Top;
-            //Show buttons
+            // Show buttons
             CommonActions.DisableContextMenu();
             var openItem = new DashboardItem(Resources.IconRepoOpen, openRepository.Text);
             openItem.Click += openItem_Click;
@@ -280,7 +280,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (label == null || string.IsNullOrEmpty(label.Path))
                 return;
 
-            //Open urls in browser, but open directories in GitExtensions
+            // Open urls in browser, but open directories in GitExtensions
             if (Regex.IsMatch(label.Path,
                               @"^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$"))
             {
@@ -401,7 +401,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
                 {
-                    //Allow drop (copy, not move) folders
+                    // Allow drop (copy, not move) folders
                     e.Effect = DragDropEffects.Copy;
                 }
                 return;
@@ -415,7 +415,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {
-                    //Allow drop (copy, not move) folders
+                    // Allow drop (copy, not move) folders
                     e.Effect = DragDropEffects.Copy;
                 }
             }

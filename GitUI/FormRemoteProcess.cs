@@ -89,7 +89,7 @@ namespace GitUI
             // An error occurred!
             if (isError && Plink)
             {
-                //there might be an other error, this condition is too weak
+                // there might be an other error, this condition is too weak
                 /*
                 if (GetOutputString().Contains("successfully authenticated"))
                 {
@@ -98,13 +98,13 @@ namespace GitUI
                 }
                 */
 
-                // If the authentication failed because of a missing key, ask the user to supply one. 
+                // If the authentication failed because of a missing key, ask the user to supply one.
                 if (GetOutputString().Contains("FATAL ERROR") && GetOutputString().Contains("authentication"))
                 {
                     if (FormPuttyError.AskForKey(this, out var loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
-                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
+                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) &&
                             String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
                             Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
 

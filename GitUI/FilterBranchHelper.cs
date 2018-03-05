@@ -22,9 +22,9 @@ namespace GitUI
             this.localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            // 
+            //
             // localToolStripMenuItem
-            // 
+            //
             this.localToolStripMenuItem.Checked = true;
             this.localToolStripMenuItem.CheckOnClick = true;
             this.localToolStripMenuItem.Name = "localToolStripMenuItem";
@@ -37,11 +37,11 @@ namespace GitUI
             this.tagsToolStripMenuItem.Text = "Tag";
             //
             // remoteToolStripMenuItem
-            // 
+            //
             this.remoteToolStripMenuItem.CheckOnClick = true;
             this.remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
             this.remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.remoteToolStripMenuItem.Text = "Remote";        
+            this.remoteToolStripMenuItem.Text = "Remote";
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid revisionGrid)
@@ -54,12 +54,12 @@ namespace GitUI
             this._NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
                 this.localToolStripMenuItem,
                 this.tagsToolStripMenuItem,
-                this.remoteToolStripMenuItem});
+                this.remoteToolStripMenuItem });
 
             this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
             this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
             this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;           
+            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
         }
 
         public void InitToolStripBranchFilter()

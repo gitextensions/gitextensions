@@ -17,7 +17,7 @@ namespace GitStatistics.PieChart
         protected float InitialAngle;
 
         /// <summary>
-        ///   Array of ordered pie slices constituting the chart, starting from 
+        ///   Array of ordered pie slices constituting the chart, starting from
         ///   270 degrees axis.
         /// </summary>
         protected PieSlice[] PieSlices;
@@ -50,7 +50,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Array of relative displacements from the common center.
         /// </summary>
-        protected float[] SliceRelativeDisplacements = new[] {0F};
+        protected float[] SliceRelativeDisplacements = new[] { 0F };
 
         /// <summary>
         ///   Slice relative height.
@@ -60,7 +60,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Array of values to be presented by the chart.
         /// </summary>
-        protected decimal[] Values = new decimal[] {};
+        protected decimal[] Values = new decimal[] { };
 
         /// <summary>
         ///   Initializes an empty instance of <c>PieChart3D</c>.
@@ -75,15 +75,15 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes an instance of a flat <c>PieChart3D</c> with 
+        ///   Initializes an instance of a flat <c>PieChart3D</c> with
         ///   specified bounds, values to chart and relative thickness.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle that 
+        ///   x-coordinate of the upper-left corner of the rectangle that
         ///   bounds the chart.
         /// </param>
         /// <param name = "yBoundingRect">
-        ///   y-coordinate of the upper-left corner of the rectangle that 
+        ///   y-coordinate of the upper-left corner of the rectangle that
         ///   bounds the chart.
         /// </param>
         /// <param name = "widthBoundingRect">
@@ -106,11 +106,11 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes an instance of <c>PieChart3D</c> with specified 
+        ///   Initializes an instance of <c>PieChart3D</c> with specified
         ///   bounds, values to chart and relative thickness.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle bounding 
+        ///   x-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
         /// <param name = "yBoundingRect">
@@ -138,7 +138,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initializes a new instance of <c>PieChart3D</c> with given bounds, 
+        ///   Initializes a new instance of <c>PieChart3D</c> with given bounds,
         ///   array of values and pie slice thickness.
         /// </summary>
         /// <param name = "boundingRectangle">
@@ -160,7 +160,7 @@ namespace GitStatistics.PieChart
         ///   array of values and relative pie slice height.
         /// </summary>
         /// <param name = "xBoundingRect">
-        ///   x-coordinate of the upper-left corner of the rectangle bounding 
+        ///   x-coordinate of the upper-left corner of the rectangle bounding
         ///   the chart.
         /// </param>
         /// <param name = "yBoundingRect">
@@ -254,13 +254,13 @@ namespace GitStatistics.PieChart
         public float Right => X + Width;
 
         /// <summary>
-        ///   Gets or sets the x-coordinate of the upper-left corner of the 
+        ///   Gets or sets the x-coordinate of the upper-left corner of the
         ///   bounding rectangle.
         /// </summary>
         public float X { get; set; }
 
         /// <summary>
-        ///   Gets or sets the y-coordinate of the upper-left corner of the 
+        ///   Gets or sets the y-coordinate of the upper-left corner of the
         ///   bounding rectangle.
         /// </summary>
         public float Y { get; set; }
@@ -271,7 +271,7 @@ namespace GitStatistics.PieChart
         public ShadowStyle ShadowStyle { protected get; set; }
 
         /// <summary>
-        ///   Sets the flag that controls if chart is fit to bounding rectangle 
+        ///   Sets the flag that controls if chart is fit to bounding rectangle
         ///   exactly.
         /// </summary>
         public bool FitToBoundingRectangle { protected get; set; }
@@ -303,8 +303,8 @@ namespace GitStatistics.PieChart
             get
             {
                 var factor = 1 + LargestDisplacement;
-                var widthTopEllipse = Width/factor;
-                var heightTopEllipse = Height/factor*(1 - SliceRelativeHeight);
+                var widthTopEllipse = Width / factor;
+                var heightTopEllipse = Height / factor * (1 - SliceRelativeHeight);
                 return new SizeF(widthTopEllipse, heightTopEllipse);
             }
         }
@@ -317,8 +317,8 @@ namespace GitStatistics.PieChart
             get
             {
                 var factor = LargestDisplacement;
-                var widthDisplacementEllipse = TopEllipseSize.Width*factor;
-                var heightDisplacementEllipse = TopEllipseSize.Height*factor;
+                var widthDisplacementEllipse = TopEllipseSize.Width * factor;
+                var heightDisplacementEllipse = TopEllipseSize.Height * factor;
                 return new SizeF(widthDisplacementEllipse, heightDisplacementEllipse);
             }
         }
@@ -326,7 +326,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Calculates the pie height.
         /// </summary>
-        protected float PieHeight => Height/(1 + LargestDisplacement)*SliceRelativeHeight;
+        protected float PieHeight => Height / (1 + LargestDisplacement) * SliceRelativeHeight;
 
         #region IDisposable Members
 
@@ -375,7 +375,7 @@ namespace GitStatistics.PieChart
         public void SetSliceRelativeDisplacement(float value)
         {
             Debug.Assert(IsDisplacementValid(value));
-            SliceRelativeDisplacements = new[] {value};
+            SliceRelativeDisplacements = new[] { value };
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public void SetInitialAngle(float value)
         {
-            InitialAngle = value%360;
+            InitialAngle = value % 360;
             if (InitialAngle < 0)
                 InitialAngle += 360;
         }
@@ -430,7 +430,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Searches the chart to find the index of the pie slice which 
+        ///   Searches the chart to find the index of the pie slice which
         ///   contains point given. Search order goes in the direction opposite
         ///   to drawing order.
         /// </summary>
@@ -447,7 +447,7 @@ namespace GitStatistics.PieChart
             {
                 var slice = PieSlices[i];
                 if (slice.PieSliceContainsPoint(point))
-                    return (int) PieSlicesMapping[i];
+                    return (int)PieSlicesMapping[i];
             }
             // split the backmost (at 270 degrees) pie slice
             var pieSlicesList = new ArrayList(PieSlices);
@@ -457,7 +457,7 @@ namespace GitStatistics.PieChart
             {
                 pieSlicesList.Add(splitSlices[1]);
             }
-            var pieSlices = (PieSlice[]) pieSlicesList.ToArray(typeof (PieSlice));
+            var pieSlices = (PieSlice[])pieSlicesList.ToArray(typeof(PieSlice));
             var indexFound = -1;
             // if not found yet, then check for periferies
             var incrementIndex = 0;
@@ -467,7 +467,7 @@ namespace GitStatistics.PieChart
                 var sliceLeft = pieSlices[decrementIndex];
                 var angle1 = 270 - sliceLeft.StartAngle;
                 var sliceRight = pieSlices[incrementIndex];
-                var angle2 = (sliceRight.EndAngle + 90)%360;
+                var angle2 = (sliceRight.EndAngle + 90) % 360;
                 Debug.Assert(angle2 >= 0);
                 if (angle2 < angle1)
                 {
@@ -486,7 +486,7 @@ namespace GitStatistics.PieChart
             if (indexFound < 0)
             {
                 var foremostPieIndex = GetForemostPieSlice(pieSlices);
-                // check for start sides from the foremost slice to the left 
+                // check for start sides from the foremost slice to the left
                 // side
                 var i = foremostPieIndex;
                 while (i < pieSlices.Length)
@@ -523,13 +523,13 @@ namespace GitStatistics.PieChart
                 {
                     var slice = PieSlices[i];
                     if (slice.BottomSurfaceSectionContainsPoint(point))
-                        return (int) PieSlicesMapping[i];
+                        return (int)PieSlicesMapping[i];
                 }
             }
             if (indexFound > -1)
             {
                 indexFound %= (PieSlicesMapping.Count);
-                return (int) PieSlicesMapping[indexFound];
+                return (int)PieSlicesMapping[indexFound];
             }
             return -1;
         }
@@ -585,17 +585,17 @@ namespace GitStatistics.PieChart
         /// </param>
         protected void ReadjustSlices(RectangleF newBoundingRectangle)
         {
-            var xResizeFactor = Width/newBoundingRectangle.Width;
-            var yResizeFactor = Height/newBoundingRectangle.Height;
+            var xResizeFactor = Width / newBoundingRectangle.Width;
+            var yResizeFactor = Height / newBoundingRectangle.Height;
             var xOffset = newBoundingRectangle.X - X;
             var yOffset = newBoundingRectangle.Y - Y;
             foreach (var slice in PieSlices)
             {
                 var x = slice.BoundingRectangle.X - xOffset;
                 var y = slice.BoundingRectangle.Y - yOffset;
-                var width = slice.BoundingRectangle.Width*xResizeFactor;
-                var height = slice.BoundingRectangle.Height*yResizeFactor;
-                var sliceHeight = slice.SliceHeight*yResizeFactor;
+                var width = slice.BoundingRectangle.Width * xResizeFactor;
+                var height = slice.BoundingRectangle.Height * yResizeFactor;
+                var sliceHeight = slice.SliceHeight * yResizeFactor;
                 slice.Readjust(x, y, width, height, sliceHeight);
             }
         }
@@ -603,16 +603,16 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Initializes pies.
         /// </summary>
-        /// Creates a list of pies, starting with the pie that is crossing the 
-        /// 270 degrees boundary, i.e. "backmost" pie that always has to be 
+        /// Creates a list of pies, starting with the pie that is crossing the
+        /// 270 degrees boundary, i.e. "backmost" pie that always has to be
         /// drawn first to ensure correct surface overlapping.
         protected virtual void InitializePieSlices()
         {
-            // calculates the sum of values required to evaluate sweep angles 
+            // calculates the sum of values required to evaluate sweep angles
             // for individual pies
             double sum = 0;
             foreach (var itemValue in Values)
-                sum += (double) itemValue;
+                sum += (double)itemValue;
             // some values and indices that will be used in the loop
             var topEllipeSize = TopEllipseSize;
             var largestDisplacementEllipseSize = LargestDisplacementEllipseSize;
@@ -628,14 +628,14 @@ namespace GitStatistics.PieChart
             {
                 var itemValue = Values[i];
 
-                var sweepAngle = sum == 0 ? 0 : (double) itemValue/sum*360;
+                var sweepAngle = sum == 0 ? 0 : (double)itemValue / sum * 360;
                 // displacement from the center of the ellipse
                 var xDisplacement = SliceRelativeDisplacements[displacementIndex];
                 var yDisplacement = SliceRelativeDisplacements[displacementIndex];
                 if (xDisplacement > 0F)
                 {
                     Debug.Assert(largestDisplacement > 0F);
-                    var pieDisplacement = GetSliceDisplacement((float) (startAngle + sweepAngle/2),
+                    var pieDisplacement = GetSliceDisplacement((float)(startAngle + sweepAngle / 2),
                                                                SliceRelativeDisplacements[displacementIndex]);
                     xDisplacement = pieDisplacement.Width;
                     yDisplacement = pieDisplacement.Height;
@@ -644,16 +644,16 @@ namespace GitStatistics.PieChart
                 if (i == HighlightedIndex)
                     slice =
                         CreatePieSliceHighlighted(
-                            X + largestDisplacementEllipseSize.Width/2 + xDisplacement,
-                            Y + largestDisplacementEllipseSize.Height/2 + yDisplacement,
-                            topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float) (startAngle%360),
-                            (float) (sweepAngle), SliceColors[colorIndex], ShadowStyle, EdgeColorType,
+                            X + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
+                            Y + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
+                            topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
+                            (float)(sweepAngle), SliceColors[colorIndex], ShadowStyle, EdgeColorType,
                             EdgeLineWidth);
                 else
-                    slice = CreatePieSlice(X + largestDisplacementEllipseSize.Width/2 + xDisplacement,
-                                           Y + largestDisplacementEllipseSize.Height/2 + yDisplacement,
+                    slice = CreatePieSlice(X + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
+                                           Y + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
                                            topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                           (float) (startAngle%360), (float) (sweepAngle), SliceColors[colorIndex],
+                                           (float)(startAngle % 360), (float)(sweepAngle), SliceColors[colorIndex],
                                            ShadowStyle, EdgeColorType, EdgeLineWidth);
                 // the backmost pie is inserted to the front of the list for correct drawing
                 if (backPieIndex > -1 || ((startAngle <= 270) && (startAngle + sweepAngle > 270)) ||
@@ -680,26 +680,26 @@ namespace GitStatistics.PieChart
                 if (startAngle > 360)
                     startAngle -= 360;
             }
-            PieSlices = (PieSlice[]) listPieSlices.ToArray(typeof (PieSlice));
+            PieSlices = (PieSlice[])listPieSlices.ToArray(typeof(PieSlice));
         }
 
         /// <summary>
         ///   Creates a <c>PieSlice</c> object.
         /// </summary>
         /// <param name = "boundingRectLeft">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectTop">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectWidth">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "boundingRectHeight">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -732,26 +732,26 @@ namespace GitStatistics.PieChart
                                                   EdgeColorType edgeColorType, float edgeLineWidth)
         {
             return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
-                                (startAngle%360), sweepAngle, color, shadowStyle, edgeColorType, edgeLineWidth);
+                                (startAngle % 360), sweepAngle, color, shadowStyle, edgeColorType, edgeLineWidth);
         }
 
         /// <summary>
         ///   Creates highlighted <c>PieSlice</c> object.
         /// </summary>
         /// <param name = "boundingRectLeft">
-        ///   x-coordinate of the upper-left corner of the rectangle that is 
+        ///   x-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectTop">
-        ///   y-coordinate of the upper-left corner of the rectangle that is 
+        ///   y-coordinate of the upper-left corner of the rectangle that is
         ///   used to draw the top surface of the slice.
         /// </param>
         /// <param name = "boundingRectWidth">
-        ///   Width of the rectangle that is used to draw the top surface of 
+        ///   Width of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "boundingRectHeight">
-        ///   Height of the rectangle that is used to draw the top surface of 
+        ///   Height of the rectangle that is used to draw the top surface of
         ///   the slice.
         /// </param>
         /// <param name = "sliceHeight">
@@ -787,7 +787,7 @@ namespace GitStatistics.PieChart
             var highLightedColor = ColorUtil.CreateColorWithCorrectedLightness(color,
                                                                                ColorUtil.BrightnessEnhancementFactor1);
             return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
-                                (startAngle%360), sweepAngle, highLightedColor, shadowStyle, edgeColorType,
+                                (startAngle % 360), sweepAngle, highLightedColor, shadowStyle, edgeColorType,
                                 edgeLineWidth);
         }
 
@@ -808,8 +808,8 @@ namespace GitStatistics.PieChart
             Debug.Assert(displacementFactor > 0F && displacementFactor <= 1F);
             if (displacementFactor == 0F)
                 return SizeF.Empty;
-            var xDisplacement = (float) (TopEllipseSize.Width*displacementFactor/2*Math.Cos(angle*Math.PI/180));
-            var yDisplacement = (float) (TopEllipseSize.Height*displacementFactor/2*Math.Sin(angle*Math.PI/180));
+            var xDisplacement = (float)(TopEllipseSize.Width * displacementFactor / 2 * Math.Cos(angle * Math.PI / 180));
+            var yDisplacement = (float)(TopEllipseSize.Height * displacementFactor / 2 * Math.Sin(angle * Math.PI / 180));
             return new SizeF(xDisplacement, yDisplacement);
         }
 
@@ -823,7 +823,7 @@ namespace GitStatistics.PieChart
         {
             var pieSlices = new ArrayList(PieSlices);
             // if the first slice spreads across 180 and 360 degrees boundaries it
-            // will appear on both left and right edge so its periphery has to be 
+            // will appear on both left and right edge so its periphery has to be
             // drawn twice
             var splitSlices = PieSlices[0].Split(270F);
             pieSlices[0] = splitSlices[0];
@@ -833,7 +833,7 @@ namespace GitStatistics.PieChart
             var decrementIndex = pieSlices.Count - 1;
             for (var i = decrementIndex; i > 0; --i)
             {
-                if (((PieSlice) pieSlices[i]).StartAngle >= 180)
+                if (((PieSlice)pieSlices[i]).StartAngle >= 180)
                     continue;
                 decrementIndex = i;
                 break;
@@ -842,7 +842,7 @@ namespace GitStatistics.PieChart
             var incrementIndex = decrementIndex;
             for (var i = 0; i < pieSlices.Count - 1; ++i)
             {
-                var slice = (PieSlice) pieSlices[i];
+                var slice = (PieSlice)pieSlices[i];
                 if ((slice.StartAngle + slice.SweepAngle <= 360) && (slice.EndAngle >= 180 || slice.EndAngle <= 0))
                     continue;
                 incrementIndex = i;
@@ -852,24 +852,24 @@ namespace GitStatistics.PieChart
             // to the leftmost one
             for (var i = pieSlices.Count - 1; i > decrementIndex; --i)
             {
-                var slice = (PieSlice) pieSlices[i];
+                var slice = (PieSlice)pieSlices[i];
                 slice.DrawVisibleStartSide(graphics);
             }
             // draws visible end sides for slices from the backmost (at 270 degrees)
             // to the rightmost one
             for (var i = 0; i < incrementIndex; ++i)
             {
-                var slice = (PieSlice) pieSlices[i];
+                var slice = (PieSlice)pieSlices[i];
                 slice.DrawVisibleEndSide(graphics);
             }
             // draws from leftmost and rightmost alternatively, drawing the slice
             // with larger offset from 90 degrees first
             while (incrementIndex < decrementIndex)
             {
-                var sliceLeft = (PieSlice) pieSlices[decrementIndex];
+                var sliceLeft = (PieSlice)pieSlices[decrementIndex];
                 var angle1 = 270 - sliceLeft.StartAngle;
-                var sliceRight = (PieSlice) pieSlices[incrementIndex];
-                var angle2 = (sliceRight.EndAngle + 90)%360;
+                var sliceRight = (PieSlice)pieSlices[incrementIndex];
+                var angle2 = (sliceRight.EndAngle + 90) % 360;
                 Debug.Assert(angle2 >= 0);
                 if (angle2 < angle1)
                 {
@@ -884,8 +884,8 @@ namespace GitStatistics.PieChart
                     --decrementIndex;
                 }
             }
-            // for the foremost slice only periphery has to be drawn 
-            ((PieSlice) pieSlices[incrementIndex]).DrawVisiblePeriphery(graphics);
+            // for the foremost slice only periphery has to be drawn
+            ((PieSlice)pieSlices[incrementIndex]).DrawVisiblePeriphery(graphics);
         }
 
         /// <summary>
@@ -903,14 +903,14 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Helper function used in assertions. Checks the validity of 
+        ///   Helper function used in assertions. Checks the validity of
         ///   slice displacements.
         /// </summary>
         /// <param name = "displacements">
         ///   Array of displacements to check.
         /// </param>
         /// <returns>
-        ///   <c>true</c> if all displacements have a valid value; otherwise 
+        ///   <c>true</c> if all displacements have a valid value; otherwise
         ///   <c>false</c>.
         /// </returns>
         private static bool AreDisplacementsValid(IEnumerable<float> displacements)
@@ -924,14 +924,14 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Helper function used in assertions. Checks the validity of 
+        ///   Helper function used in assertions. Checks the validity of
         ///   a slice displacement.
         /// </summary>
         /// <param name = "value">
         ///   Displacement value to check.
         /// </param>
         /// <returns>
-        ///   <c>true</c> if displacement has a valid value; otherwise 
+        ///   <c>true</c> if displacement has a valid value; otherwise
         ///   <c>false</c>.
         /// </returns>
         private static bool IsDisplacementValid(float value)

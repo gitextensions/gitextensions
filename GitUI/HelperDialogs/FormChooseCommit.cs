@@ -17,7 +17,7 @@ namespace GitUI.HelperDialogs
             : base(aCommands)
         {
             InitializeComponent();
-            Translate();        
+            Translate();
         }
 
         public FormChooseCommit(GitUICommands aCommands, string preselectCommit, bool showArtificial = false)
@@ -89,9 +89,9 @@ namespace GitUI.HelperDialogs
 
             flowLayoutPanelParents.Visible = SelectedRevision.HasParent;
 
-            if(!flowLayoutPanelParents.Visible)
+            if (!flowLayoutPanelParents.Visible)
                 return;
-            _parents = SelectedRevision.ParentGuids.ToDictionary(p=> GitRevision.ToShortSha(p), p=> p);
+            _parents = SelectedRevision.ParentGuids.ToDictionary(p => GitRevision.ToShortSha(p), p => p);
             linkLabelParent.Text = _parents.Keys.ElementAt(0);
 
             linkLabelParent2.Visible = _parents.Count > 1;

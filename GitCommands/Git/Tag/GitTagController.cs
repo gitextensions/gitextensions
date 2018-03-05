@@ -29,7 +29,7 @@ namespace GitCommands.Git.Tag
         }
 
         public GitTagController(IGitUICommands uiCommands)
-            : this(uiCommands, new FileSystem() )
+            : this(uiCommands, new FileSystem())
         { }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace GitCommands.Git.Tag
         /// <returns>the true if the tag is created.</returns>
         public bool CreateTag(GitCreateTagArgs args, IWin32Window parentWindow)
         {
-            if(parentWindow == null)
+            if (parentWindow == null)
             {
                 throw new ArgumentNullException(nameof(parentWindow));
             }
@@ -59,7 +59,7 @@ namespace GitCommands.Git.Tag
             }
             finally
             {
-                if(tagMessageFileName != null && _fileSystem.File.Exists(tagMessageFileName))
+                if (tagMessageFileName != null && _fileSystem.File.Exists(tagMessageFileName))
                 {
                     _fileSystem.File.Delete(tagMessageFileName);
                 }

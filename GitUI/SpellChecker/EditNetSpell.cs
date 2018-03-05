@@ -249,8 +249,7 @@ namespace GitUI.SpellChecker
                     },
                     _autoCompleteCancellationTokenSource.Token,
                     TaskContinuationOptions.NotOnCanceled,
-                    TaskScheduler.FromCurrentSynchronizationContext()
-                );
+                    TaskScheduler.FromCurrentSynchronizationContext());
             }
             //
             // spelling
@@ -295,7 +294,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.IllFormedLines.Clear();
             _customUnderlines.Lines.Clear();
 
-            //Do not check spelling of watermark text
+            // Do not check spelling of watermark text
             if (!IsWatermarkShowing)
             {
                 try
@@ -411,7 +410,7 @@ namespace GitUI.SpellChecker
                     _spelling.ShowDialog = false;
                     _spelling.MaxSuggestions = 5;
 
-                    //generate suggestions
+                    // generate suggestions
                     _spelling.Suggest();
 
                     foreach (var suggestion in _spelling.Suggestions)
@@ -542,8 +541,8 @@ namespace GitUI.SpellChecker
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
             RepoDistSettings settings;
-            //if a Module is available, then always change the "repository local" setting
-            //it will set a dictionary only for this Module (repository) localy
+            // if a Module is available, then always change the "repository local" setting
+            // it will set a dictionary only for this Module (repository) localy
             if (IsUICommandsInitialized)
                 settings = Module.LocalSettings;
             else
@@ -761,10 +760,10 @@ namespace GitUI.SpellChecker
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
-            //restore old color only if oldPos doesn't intersects with colored selection
+            // restore old color only if oldPos doesn't intersects with colored selection
             if (restoreColor)
                 TextBox.SelectionColor = oldColor;
-            //undoes all recent selections while ctrl-z pressed
+            // undoes all recent selections while ctrl-z pressed
             skipSelectionUndo = true;
         }
 

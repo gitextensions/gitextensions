@@ -199,7 +199,7 @@ namespace Gravatar
             }
             catch (Exception ex)
             {
-                //catch IO errors
+                // catch IO errors
                 Trace.WriteLine(ex.Message);
             }
 

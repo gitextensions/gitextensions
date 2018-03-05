@@ -20,18 +20,18 @@ namespace GitUI
         [StructLayout(LayoutKind.Sequential)]
         internal struct CHARRANGE
         {
-            public int cpMin;         //First character of range (0 for start of doc)
-            public int cpMax;           //Last character of range (-1 for end of doc)
+            public int cpMin;         // First character of range (0 for start of doc)
+            public int cpMax;           // Last character of range (-1 for end of doc)
         }
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct FORMATRANGE
         {
-            public IntPtr hdc;             //Actual DC to draw on
-            public IntPtr hdcTarget;       //Target DC for determining text formatting
-            public RECT rc;                //Region of the DC to draw to (in twips)
-            public RECT rcPage;            //Region of the whole DC (page size) (in twips)
-            public CHARRANGE chrg;         //Range of text to draw (see earlier declaration)
+            public IntPtr hdc;             // Actual DC to draw on
+            public IntPtr hdcTarget;       // Target DC for determining text formatting
+            public RECT rc;                // Region of the DC to draw to (in twips)
+            public RECT rcPage;            // Region of the whole DC (page size) (in twips)
+            public CHARRANGE chrg;         // Range of text to draw (see earlier declaration)
         }
 
         internal const int WM_USER = 0x0400;
@@ -47,8 +47,7 @@ namespace GitUI
             IntPtr handle,
             uint msg,
             IntPtr wParam,
-            IntPtr lParam
-            );
+            IntPtr lParam);
         internal const int EM_LINEINDEX = 0x00BB;
         internal const int EM_LINELENGTH = 0x00C1;
         internal const int EM_POSFROMCHAR = 0x00D6;

@@ -41,7 +41,7 @@ namespace GitCommands
 
         protected abstract void SaveImpl();
         protected abstract void LoadImpl();
-        protected abstract void SetValueImpl(string key, string value);        
+        protected abstract void SetValueImpl(string key, string value);
         protected abstract string GetValueImpl(string key);
         protected abstract bool NeedRefresh();
         protected abstract void ClearImpl();
@@ -73,7 +73,7 @@ namespace GitCommands
         {
                 LockedAction(() =>
                 {
-                    foreach(var pair in keyValuePairs)
+                    foreach (var pair in keyValuePairs)
                     {
                         if (pair.Item2 != null)
                             SetValueImpl(pair.Item1, pair.Item2);
@@ -93,14 +93,14 @@ namespace GitCommands
         }
 
         protected virtual void SettingsChanged()
-        { 
+        {
         }
 
         private void SetValue(string name, string value)
         {
             LockedAction(() =>
             {
-                //will refresh EncodedNameMap if needed
+                // will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
 
                 if (string.Equals(inMemValue, value))

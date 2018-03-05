@@ -232,7 +232,7 @@ namespace GitImpact
                         e.Graphics.FillPath(_brushes[author], _paths[author]);
                 }
 
-                //Draw black border around selected author
+                // Draw black border around selected author
                 string selectedAuthor = _authorStack[_authorStack.Count - 1];
                 if (_brushes.ContainsKey(selectedAuthor) && _paths.ContainsKey(selectedAuthor))
                     e.Graphics.DrawPath(new Pen(Color.Black, 2), _paths[selectedAuthor]);
@@ -258,7 +258,7 @@ namespace GitImpact
                     foreach (var label in _lineLabels[author])
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString(), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width/2, label.Item1.Y - sz.Height/2);
+                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y - sz.Height / 2);
                         g.DrawString(label.Item2.ToString(), font, brush, pt);
                     }
                 }
@@ -276,7 +276,7 @@ namespace GitImpact
                     foreach (var label in _weekLabels)
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM yy"), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width/2, label.Item1.Y + sz.Height/2);
+                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y + sz.Height / 2);
                         g.DrawString(label.Item2.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
@@ -422,7 +422,7 @@ namespace GitImpact
 
         private int GenerateIntFromString(string text)
         {
-            return text.Sum(c => (int) c);
+            return text.Sum(c => (int)c);
         }
 
         /// <summary>
@@ -493,7 +493,7 @@ namespace GitImpact
         }
 
         [Browsable(false)]
-        public List<string> Authors { get { lock(_dataLock) return _authorStack; } }
+        public List<string> Authors { get { lock (_dataLock) return _authorStack; } }
 
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
         {

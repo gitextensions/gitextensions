@@ -58,7 +58,7 @@ namespace GitCommands.Repository
         public bool SortMostRecentRepos { get; set; }
         public bool SortLessRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
-        //need to be set before shortening using middleDots strategy
+        // need to be set before shortening using middleDots strategy
         public Graphics Graphics { get; set; }
         public Font MeasureFont { get; set; }
 
@@ -81,8 +81,8 @@ namespace GitCommands.Repository
             bool signDir = ShorteningStrategy_MostSignDir.Equals(ShorteningStrategy);
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
-            //the maxRecentRepositories repositories will be added at beginning
-            //rest will be added in alphabetical order
+            // the maxRecentRepositories repositories will be added at beginning
+            // rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
             {
                 bool mostRecent = mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None ||
@@ -98,8 +98,8 @@ namespace GitCommands.Repository
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
             }
             int r = mostRecentRepos.Count - 1;
-            //remove not anchored repos if there is more than maxRecentRepositories repos
-            while (mostRecentRepos.Count > n && r >= 0 )
+            // remove not anchored repos if there is more than maxRecentRepositories repos
+            while (mostRecentRepos.Count > n && r >= 0)
             {
                 var repo = mostRecentRepos[r];
                 if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
@@ -141,13 +141,13 @@ namespace GitCommands.Repository
 
         private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
-            //if there is no short name for a repo, then try to find unique caption extending short directory path
+            // if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
                 if (!s.IsNullOrEmpty())
                     s = s.Trim(Path.DirectorySeparatorChar);
-                //candidate for short name
+                // candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())
                     repoInfo.Caption += " (" + s + ")";
@@ -180,7 +180,7 @@ namespace GitCommands.Repository
             else
                 tmpList.Add(repoInfo);
 
-            //find unique caption for repos with no title
+            // find unique caption for repos with no title
             foreach (RecentRepoInfo r in tmpList)
                 AddToOrderedSignDir(orderedRepos, r, shortenPath);
         }
@@ -292,15 +292,15 @@ namespace GitCommands.Repository
                     return false;
                 }
 
-                //if fixed width is not set then short as in pull request vccp's example
-                //full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
-                //short "E:\CompanyName\...\RepositoryName\WorkingDirName"
+                // if fixed width is not set then short as in pull request vccp's example
+                // full "E:\CompanyName\Projects\git\ProductName\Sources\RepositoryName\WorkingDirName"
+                // short "E:\CompanyName\...\RepositoryName\WorkingDirName"
                 if (this.RecentReposComboMinWidth == 0)
                 {
                     ShortenPathWithCompany(0);
                 }
-                //else skip symbols beginning from the middle to both sides,
-                //so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
+                // else skip symbols beginning from the middle to both sides,
+                // so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
                 else
                 {
                     SizeF captionSize;

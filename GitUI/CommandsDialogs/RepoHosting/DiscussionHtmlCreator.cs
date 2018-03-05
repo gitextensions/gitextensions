@@ -79,14 +79,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     var kvps = from prop in props
                                where prop.PropertyType.Equals(typeof(Color))
                                let c = (Color)prop.GetValue(null, null)
-                               select new KeyValuePair<string,string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
+                               select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
 
                     _systemInfoReplacement = kvps.ToList();
 
                     _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.DialogFont.Name));
-                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format( "{0}pt", SystemFonts.DialogFont.SizeInPoints)));
+                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.DialogFont.SizeInPoints)));
 
-                    _systemInfoReplacement.Sort((p1, p2) => p2.Key.CompareTo(p1.Key)); //Required.
+                    _systemInfoReplacement.Sort((p1, p2) => p2.Key.CompareTo(p1.Key)); // Required.
                 }
 
                 return _systemInfoReplacement;

@@ -56,8 +56,8 @@ namespace GitUI.Script
         public System.Drawing.Bitmap GetIcon() {
             // Get all resources
                     System.Resources.ResourceManager rm
-                        = new System.Resources.ResourceManager("GitUI.Properties.Resources"
-                            , System.Reflection.Assembly.GetExecutingAssembly());
+                        = new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                            System.Reflection.Assembly.GetExecutingAssembly());
             // return icon
                     return (System.Drawing.Bitmap)rm.GetObject(Icon);
         }

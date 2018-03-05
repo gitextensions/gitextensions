@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 if (i == 0)
                 {
                     Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
-                    if(IsCurrentlyOpenedWorktree(_worktrees[0]))
+                    if (IsCurrentlyOpenedWorktree(_worktrees[0]))
                         Worktrees.Rows[i].Cells["Open"].Value = Resources.IconBlank;
 
                 }
@@ -108,16 +108,16 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         /// <summary>
         /// Here are the 3 types of lines return by the `worktree list --porcelain` that should be handled:
-        /// 
+        ///
         /// 1:
         /// worktree /path/to/bare-source
         /// bare
-        /// 
+        ///
         /// 2:
         /// /worktree /path/to/linked-worktree
         /// /HEAD abcd1234abcd1234abcd1234abcd1234abcd1234
         /// /branch refs/heads/master
-        /// 
+        ///
         /// 3:
         /// worktree /path/to/other-linked-worktree
         /// HEAD 1234abc1234abc1234abc1234abc1234abc1234a
@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 {
                     if (Directory.Exists(workTree.Path))
                     {
-                        ((FormBrowse) Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTree.Path));
+                        ((FormBrowse)Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTree.Path));
                         Close();
                     }
                 }
@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             if (e.ColumnIndex == 6)
             {
-                if(e.RowIndex == 0)
+                if (e.RowIndex == 0)
                     return;
                 if (MessageBox.Show(this, "Are you sure you want to delete this worktree?", "Delete a worktree",
                         MessageBoxButtons.YesNo) == DialogResult.Yes)

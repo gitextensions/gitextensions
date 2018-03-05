@@ -16,7 +16,7 @@ namespace FindLargeFiles
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            // return all settings or introduce implementation based on reflection on GitPluginBase level
             yield return SizeLargeFile;
         }
 

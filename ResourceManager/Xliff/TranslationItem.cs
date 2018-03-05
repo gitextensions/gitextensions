@@ -39,7 +39,7 @@ namespace ResourceManager.Xliff
             get => Name + "." + Property;
             set
             {
-                var vals = value.Split(new[] {'.'}, 2);
+                var vals = value.Split(new[] { '.' }, 2);
                 Name = vals[0];
                 Property = vals.Length > 1 ? vals[1] : "";
             }

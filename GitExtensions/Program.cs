@@ -52,11 +52,11 @@ namespace GitExtensions
 
             string[] args = Environment.GetCommandLineArgs();
 
-            //This form created for obtain UI synchronization context only
+            // This form created for obtain UI synchronization context only
             using (new Form())
             {
-                //Store here SynchronizationContext.Current, because later sometimes it can be null
-                //see http://stackoverflow.com/questions/11621372/synchronizationcontext-current-is-null-in-continuation-on-the-main-ui-thread
+                // Store here SynchronizationContext.Current, because later sometimes it can be null
+                // see http://stackoverflow.com/questions/11621372/synchronizationcontext-current-is-null-in-continuation-on-the-main-ui-thread
                 GitUIExtensions.UISynchronizationContext = SynchronizationContext.Current;
                 AsyncLoader.DefaultContinuationTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             }
@@ -79,7 +79,7 @@ namespace GitExtensions
             try
             {
                 if (!(args.Length >= 2 && args[1].Equals("uninstall"))
-                    && (AppSettings.CheckSettings 
+                    && (AppSettings.CheckSettings
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
                 {
@@ -113,7 +113,7 @@ namespace GitExtensions
             {
                 uCommands.StartBrowseDialog();
             }
-            else  // if we are here args.Length > 1
+            else // if we are here args.Length > 1
             {
                 uCommands.RunCommand(args);
             }
@@ -126,9 +126,9 @@ namespace GitExtensions
             string workingDir = string.Empty;
             if (args.Length >= 3)
             {
-                //there is bug in .net
-                //while parsing command line arguments, it unescapes " incorectly
-                //https://github.com/gitextensions/gitextensions/issues/3489
+                // there is bug in .net
+                // while parsing command line arguments, it unescapes " incorectly
+                // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
                 if (Directory.Exists(dirArg))
                     workingDir = GitModule.FindGitWorkingDir(dirArg);
@@ -141,10 +141,10 @@ namespace GitExtensions
                 if (Directory.Exists(workingDir))
                     workingDir = Path.GetFullPath(workingDir);
 
-                //Do not add this working directory to the recent repositories. It is a nice feature, but it
-                //also increases the startup time
-                //if (Module.ValidWorkingDir())
-                //    Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
+                // Do not add this working directory to the recent repositories. It is a nice feature, but it
+                // also increases the startup time
+                ////if (Module.ValidWorkingDir())
+                ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && AppSettings.StartWithRecentWorkingDir)
@@ -180,7 +180,7 @@ namespace GitExtensions
                 {
                     var localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
-                    //assume that if we are having this error and the installation is not a portable one then the folder will exist.
+                    // assume that if we are having this error and the installation is not a portable one then the folder will exist.
                     if (Directory.Exists(localSettingsPath))
                     {
                         string messageContent = String.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
@@ -189,8 +189,8 @@ namespace GitExtensions
                         {
                             try
                             {
-                                Directory.Delete(localSettingsPath, true); //deletes all application settings not just for this instance - but should work
-                                //Restart GitExtensions with the same arguments after old config is deleted?
+                                Directory.Delete(localSettingsPath, true); // deletes all application settings not just for this instance - but should work
+                                // Restart GitExtensions with the same arguments after old config is deleted?
                                 if (DialogResult.OK.Equals(MessageBox.Show(String.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
@@ -210,7 +210,7 @@ namespace GitExtensions
                             }
                         }
                     }
-                    //assuming that there is no localSettingsPath directory in existence we probably have a portable installation.
+                    // assuming that there is no localSettingsPath directory in existence we probably have a portable installation.
                     else
                     {
                         string messageContent = String.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);

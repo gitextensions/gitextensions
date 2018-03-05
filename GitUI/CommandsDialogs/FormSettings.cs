@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.SuspendLayout();
 
-            //if form is created for translation purpose
+            // if form is created for translation purpose
             if (aCommands == null)
                 return;
 
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             _commonLogic = new CommonLogic(Module);
             CheckSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
-            var checklistSettingsPage = SettingsPageBase.Create <ChecklistSettingsPage>(this);
+            var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this);
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, true); // as root
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this), gitExtPageRef);

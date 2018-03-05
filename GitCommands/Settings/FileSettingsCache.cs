@@ -193,7 +193,7 @@ namespace GitCommands.Settings
                 StartSaveTimer();
         }
 
-        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
+        // Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
         private void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
         {
             System.Timers.Timer t = (System.Timers.Timer)source;
@@ -203,7 +203,7 @@ namespace GitCommands.Settings
 
         private void StartSaveTimer()
         {
-            //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
+            // Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
             _saveTimer.Stop();
             _saveTimer.AutoReset = true;
             _saveTimer.Interval = SaveTime;

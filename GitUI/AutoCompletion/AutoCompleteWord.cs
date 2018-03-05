@@ -8,18 +8,18 @@ namespace GitUI.AutoCompletion
         public string Word { get; private set; }
         private readonly string _camelHumps;
 
-        public AutoCompleteWord (string word)
+        public AutoCompleteWord(string word)
         {
             Word = word;
             _camelHumps = string.Join("", Word.Where(char.IsUpper));
         }
 
-        public bool Matches (string typedWord)
+        public bool Matches(string typedWord)
         {
             return Word.StartsWith(typedWord, StringComparison.OrdinalIgnoreCase) || (typedWord.All(char.IsUpper) && _camelHumps.StartsWith(typedWord));
         }
 
-        public bool Equals (AutoCompleteWord other)
+        public bool Equals(AutoCompleteWord other)
         {
             if (ReferenceEquals(null, other))
                 return false;
@@ -28,7 +28,7 @@ namespace GitUI.AutoCompletion
             return string.Equals(Word, other.Word);
         }
 
-        public override bool Equals (object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
                 return false;
@@ -36,10 +36,10 @@ namespace GitUI.AutoCompletion
                 return true;
             if (obj.GetType() != this.GetType())
                 return false;
-            return Equals((AutoCompleteWord) obj);
+            return Equals((AutoCompleteWord)obj);
         }
 
-        public override int GetHashCode ()
+        public override int GetHashCode()
         {
             return (Word != null ? Word.GetHashCode() : 0);
         }

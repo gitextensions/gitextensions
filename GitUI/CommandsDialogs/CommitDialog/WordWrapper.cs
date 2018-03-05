@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
     {
         public static string Wrap(string text, int lineLimit)
         {
-            var lines = text.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             var newLines = new List<string>();
             foreach (var line in lines)
             {

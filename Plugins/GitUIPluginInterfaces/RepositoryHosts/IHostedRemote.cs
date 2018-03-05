@@ -4,7 +4,7 @@
     {
         IHostedRepository GetHostedRepository();
 
-        string Name { get; } //This is the name of the remote in the local git repository. This might be null
+        string Name { get; } // This is the name of the remote in the local git repository. This might be null
         string Data { get; }
         string DisplayData { get; }
 

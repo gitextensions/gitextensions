@@ -89,7 +89,7 @@ namespace AppVeyorIntegration
             var useAllProjets = string.IsNullOrWhiteSpace(projectNamesSetting);
             string[] projectNames = null;
             if (!useAllProjets)
-                projectNames = projectNamesSetting.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+                projectNames = projectNamesSetting.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             if (Projects.Count == 0 ||
                 (!useAllProjets && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {
@@ -278,8 +278,8 @@ namespace AppVeyorIntegration
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
-            //AppVeyor api is different than TeamCity one and all build results are fetch in one call without
-            //filter parameters possible (so this call is useless!)
+            // AppVeyor api is different than TeamCity one and all build results are fetch in one call without
+            // filter parameters possible (so this call is useless!)
             return Observable.Empty<BuildInfo>();
         }
 
@@ -302,13 +302,13 @@ namespace AppVeyorIntegration
                 if (_allBuilds == null)
                     return;
 
-                //Display all builds found
+                // Display all builds found
                 foreach (var build in _allBuilds)
                 {
                     UpdateDisplay(observer, build);
                 }
 
-                //Update finished build with tests results
+                // Update finished build with tests results
                 if (_shouldLoadTestResults)
                 {
                     foreach (var build in _allBuilds.Where(b => b.Status == BuildInfo.BuildStatus.Success
@@ -319,7 +319,7 @@ namespace AppVeyorIntegration
                     }
                 }
 
-                //Manage in progress builds...
+                // Manage in progress builds...
                 var inProgressBuilds = _allBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
                 _allBuilds = null;
                 do
@@ -499,7 +499,7 @@ namespace AppVeyorIntegration
     {
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
         private int _buildProgressCount;
-        //From build build list
+        // From build build list
         public string BuildId { get; set; }
         public string CommitId { get; set; }
         public string AppVeyorBuildReportUrl { get; set; }

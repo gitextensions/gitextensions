@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Save changes to .mailmap?");
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
-        
+
 
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
         private void FormMailMapLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository()) return;
-            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text,_mailmapOnlyInWorkingDirSupportedCaption.Text);
+            MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
 

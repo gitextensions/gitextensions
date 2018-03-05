@@ -8,8 +8,8 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class RevisionDiffProviderTest
     {
-        //See RevisionDiffProvider.ArtificialToDiffOptions() for possible "aliases" for artificial commits
-        //All variants are not tested in all situations
+        // See RevisionDiffProvider.ArtificialToDiffOptions() for possible "aliases" for artificial commits
+        // All variants are not tested in all situations
 
         private RevisionDiffProvider _revisionDiffProvider;
 
@@ -89,42 +89,42 @@ namespace GitCommandsTests.Git
             _revisionDiffProvider.Get(firstRevision, secondRevision).Should().Be("\"123456789\" \"HEAD\"");
         }
 
-        //Standard usage when filename is included
+        // Standard usage when filename is included
         [TestCase("123456789", GitRevision.UnstagedGuid, "a.txt", null, true)]
         public void RevisionDiffProvider_fileName_tracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\"  -- \"a.txt\"");
         }
 
-        //If fileName is null, ignore oldFileName and tracked
+        // If fileName is null, ignore oldFileName and tracked
         [TestCase("123456789", "HEAD", null, "b.txt", true)]
         public void RevisionDiffProvider_fileName_null_with_oldname(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\" \"HEAD\"");
         }
 
-        //Include old filename if is included
+        // Include old filename if is included
         [TestCase("123456789", "234567890", "a.txt", "b.txt", true)]
         public void RevisionDiffProvider_fileName_oldfilename(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\" \"234567890\" -- \"a.txt\" \"b.txt\"");
         }
 
-        //normal testcase when untracked is set
+        // normal testcase when untracked is set
         [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid, "a.txt", null, false)]
         public void RevisionDiffProvider_fileName_untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("--no-index -- \"/dev/null\" \"a.txt\"");
         }
 
-        //If fileName is null, ignore oldFileName and tracked
+        // If fileName is null, ignore oldFileName and tracked
         [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid, null, "b.txt", false)]
         public void RevisionDiffProvider_fileName_null_Untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().BeEmpty();
         }
 
-        //Ignore revisions for untracked
+        // Ignore revisions for untracked
         [TestCase("123456789", "234567890", "a.txt", "b.txt", false)]
         public void RevisionDiffProvider_fileName_oldfilename_Untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {

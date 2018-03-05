@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             }
 
             return new GpgInfo(commitStatus,
-                               _gitGpgController.GetCommitVerificationMessage(revision), 
+                               _gitGpgController.GetCommitVerificationMessage(revision),
                                tagStatus,
                                _gitGpgController.GetTagVerifyMessage(revision));
         }

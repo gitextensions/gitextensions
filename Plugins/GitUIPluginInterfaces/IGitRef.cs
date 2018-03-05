@@ -5,8 +5,8 @@
         string CompleteName { get; }
         bool IsBisect { get; }
         /// <summary>
-        /// True when Guid is a checksum of an object (e.g. commit) to which another object 
-        /// with Name (e.g. annotated tag) is applied. 
+        /// True when Guid is a checksum of an object (e.g. commit) to which another object
+        /// with Name (e.g. annotated tag) is applied.
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
         bool IsDereference { get; }

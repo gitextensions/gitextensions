@@ -13,10 +13,10 @@ namespace Gravatar
 
 #if false
         /// <summary>
-        /// Return a simple, cartoon-style silhouetted outline of a person 
+        /// Return a simple, cartoon-style silhouetted outline of a person
         /// (does not vary by email hash)
         /// </summary>
-        /// Don't use it, use Resources.User image instead 
+        /// Don't use it, use Resources.User image instead
         MysteryMan,
 #endif
 

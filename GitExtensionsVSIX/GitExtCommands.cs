@@ -65,11 +65,11 @@ namespace GitExtensionsVSIX
 
         private void RegisterCommands()
         {
-            //RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
+            ////RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
             RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>(), gitExtDiffCommand);
-            //RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
+            ////RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
             RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>(), gitExtHistoryCommand);
-            //RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
+            ////RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
             RegisterCommand("ResetChanges", new ToolbarCommand<Revert>(), gitExtResetFileCommand);
             RegisterCommand("Browse", new ToolbarCommand<Browse>(), gitExtBrowseCommand);
             RegisterCommand("Clone", new ToolbarCommand<Clone>(), gitExtCloneCommand);

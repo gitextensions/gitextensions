@@ -41,7 +41,7 @@ See the changes in the commit form.");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
 
-        //store strings to not keep references to nodes
+        // store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
         private IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
@@ -151,11 +151,11 @@ See the changes in the commit form.");
 
                 // Refresh tree
                 tvGitTree.Nodes.Clear();
-                //restore selected file and scroll position when new selection is done
+                // restore selected file and scroll position when new selection is done
                 if (_revision != null)
                 {
                     _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
-                    //GitTree.Sort();
+                    ////GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state
                     var currenNodes = tvGitTree.Nodes;
@@ -180,7 +180,7 @@ See the changes in the commit form.");
                             currenNodes = matchedNode.Nodes;
                         }
                     }
-                    //if there is no exact match, don't restore scroll position
+                    // if there is no exact match, don't restore scroll position
                     if (lastMatchedNode != matchedNode)
                         FileText.ResetCurrentScrollPos();
                     tvGitTree.SelectedNode = lastMatchedNode;
@@ -212,9 +212,9 @@ See the changes in the commit form.");
             {
                 ColorDepth = ColorDepth.Depth32Bit
             };
-            tvGitTree.ImageList.Images.Add(Properties.Resources.New); //File
-            tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
-            tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); //Submodule
+            tvGitTree.ImageList.Images.Add(Properties.Resources.New); // File
+            tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); // Folder
+            tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); // Submodule
 
             GotFocus += (s, e1) => tvGitTree.Focus();
 
@@ -414,7 +414,7 @@ See the changes in the commit form.");
                 var selectedNode = _revisionFileTreeController.Find(nodes, items[i]);
                 if (selectedNode == null)
                 {
-                    return; //Item does not exist in the tree
+                    return; // Item does not exist in the tree
                 }
 
                 selectedNode.Expand();
@@ -465,7 +465,7 @@ See the changes in the commit form.");
             }
             else
             {
-                //No item selected is handled as the repo source
+                // No item selected is handled as the repo source
                 filePath = Module.WorkingDir;
             }
             UICommands.StartCleanupRepositoryDialog(this, filePath);
@@ -518,7 +518,7 @@ See the changes in the commit form.");
             stopTrackingThisFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isFile;
             assumeUnchangedTheFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
-            findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count>0;
+            findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count > 0;
 
             toolStripSeparatorFileTreeActions.Visible = isFile;
             expandSubtreeToolStripMenuItem.Visible = isFolder;
@@ -606,7 +606,7 @@ See the changes in the commit form.");
             {
                 var extension = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
 
-                fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*.{extension})|*.{extension }| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
+                fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*.{extension})|*.{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
@@ -666,7 +666,7 @@ See the changes in the commit form.");
             if (answer == DialogResult.No)
                 return;
 
-            if(Module.StopTrackingFile(filename))
+            if (Module.StopTrackingFile(filename))
             {
                 MessageBox.Show(_stopTrackingSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

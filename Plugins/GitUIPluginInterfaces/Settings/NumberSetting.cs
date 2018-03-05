@@ -2,7 +2,7 @@
 
 namespace GitUIPluginInterfaces
 {
-    public class NumberSetting<T>: ISetting
+    public class NumberSetting<T> : ISetting
     {
         public NumberSetting(string aName, T aDefaultValue)
             : this(aName, aName, aDefaultValue)
@@ -84,8 +84,8 @@ namespace GitUIPluginInterfaces
                 return null;
             }
 
-            var type = typeof (T);
-            if (type == typeof (int))
+            var type = typeof(T);
+            if (type == typeof(int))
                 return int.Parse(value);
             if (type == typeof(float))
                 return float.Parse(value);
@@ -98,7 +98,7 @@ namespace GitUIPluginInterfaces
 
         public object this[ISettingsSource settings]
         {
-            get 
+            get
             {
                 return settings.GetValue(Name, null, s =>
                     {
@@ -106,7 +106,7 @@ namespace GitUIPluginInterfaces
                     });
             }
 
-            set 
+            set
             {
                 settings.SetValue(Name, value, i => { return ConvertToString(i); });
             }
@@ -122,7 +122,7 @@ namespace GitUIPluginInterfaces
             else
             {
                 return (T)settingVal;
-            }            
+            }
         }
 
     }

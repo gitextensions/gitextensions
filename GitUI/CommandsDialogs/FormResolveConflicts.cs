@@ -162,8 +162,8 @@ namespace GitUI.CommandsDialogs
                     }
                     catch (InvalidOperationException)
                     {
-                        //ignore the exception - setting the row index is not so important to crash the app
-                        //see the #2975 issues for details
+                        // ignore the exception - setting the row index is not so important to crash the app
+                        // see the #2975 issues for details
                     }
                 }
             }
@@ -240,12 +240,12 @@ namespace GitUI.CommandsDialogs
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
             {
-                {".doc",  "merge-doc.js"},
-                {".docx", "merge-doc.js"},
-                {".docm", "merge-doc.js"},
-                {".ods",  "merge-ods.vbs"},
-                {".odt",  "merge-ods.vbs"},
-                {".sxw",  "merge-ods.vbs"},
+                { ".doc",  "merge-doc.js" },
+                { ".docx", "merge-doc.js" },
+                { ".docm", "merge-doc.js" },
+                { ".ods",  "merge-ods.vbs" },
+                { ".odt",  "merge-ods.vbs" },
+                { ".sxw",  "merge-ods.vbs" },
             };
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string localFileName, string remoteFileName)
@@ -285,7 +285,7 @@ namespace GitUI.CommandsDialogs
 
         private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string localFileName, string remoteFileName)
         {
-            //get timestamp of file before merge. This is an extra check to verify if merge was successfully
+            // get timestamp of file before merge. This is an extra check to verify if merge was successfully
             DateTime lastWriteTimeBeforeMerge = DateTime.Now;
             if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
                 lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
                 if (File.Exists(_fullPathResolver.Resolve(fileName)))
                     lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
 
-                //The file is not modified, do not stage file and present warning
+                // The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
                     MessageBox.Show(this, fileUnchangedAfterMerge.Text);
                 else
@@ -439,15 +439,15 @@ namespace GitUI.CommandsDialogs
                     }
 
                     string arguments = _mergetoolCmd;
-                    //Check if there is a base file. If not, ask user to fall back to 2-way merge.
-                    //git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
-                    //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
-                    //filenames are quoted, this takes a little extra effort. We need to remove these 
-                    //quotes also. For tortoise and araxis a little bit more magic is needed.
+                    // Check if there is a base file. If not, ask user to fall back to 2-way merge.
+                    // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
+                    // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
+                    // filenames are quoted, this takes a little extra effort. We need to remove these
+                    // quotes also. For tortoise and araxis a little bit more magic is needed.
                     if (item.Base.Filename == null)
                     {
                         var text = string.Format(noBaseRevision.Text, item.Filename);
-                        DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text, 
+                        DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
                             MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
                             Use2WayMerge(ref arguments);
@@ -461,7 +461,7 @@ namespace GitUI.CommandsDialogs
                     arguments = arguments.Replace("$REMOTE", filenames[2]);
                     arguments = arguments.Replace("$MERGED", item.Filename);
 
-                    //get timestamp of file before merge. This is an extra check to verify if merge was successful
+                    // get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
                     if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
                         lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
@@ -472,15 +472,15 @@ namespace GitUI.CommandsDialogs
                     if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
                         lastWriteTimeAfterMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
 
-                    //Check exitcode AND timestamp of the file. If exitcode is success and
-                    //time timestamp is changed, we are pretty sure the merge was done.
+                    // Check exitcode AND timestamp of the file. If exitcode is success and
+                    // time timestamp is changed, we are pretty sure the merge was done.
                     if (res.ExitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
                     {
                         StageFile(item.Filename);
                     }
 
-                    //If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
-                    //If the exitcode is 0, but the file is not changed, ask if the merge conflict is solved.
+                    // If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
+                    // If the exitcode is 0, but the file is not changed, ask if the merge conflict is solved.
                     if ((res.ExitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
                         (res.ExitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
                     {
@@ -540,12 +540,12 @@ namespace GitUI.CommandsDialogs
 
                 if (EnvUtils.RunningOnWindows())
                 {
-                    //This only works when on Windows....
+                    // This only works when on Windows....
                     const string executablePattern = ".exe";
                     int idx = _mergetoolCmd.IndexOf(executablePattern);
                     if (idx >= 0)
                     {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] {'\"', ' '});
+                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
                         _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
                     }
                 }
@@ -620,7 +620,7 @@ namespace GitUI.CommandsDialogs
             return ConflictedFiles.SelectedRows.Count > 1;
         }
 
-        private void HandleMultipleSelect(){
+        private void HandleMultipleSelect() {
             SetAvailableCommands(false);
         }
 
@@ -763,11 +763,11 @@ namespace GitUI.CommandsDialogs
                                                                             caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) //base
+                if (frm.KeepBase) // base
                     ChooseBaseOnConflict(item.Filename);
-                if (frm.KeepLocal) //local
+                if (frm.KeepLocal) // local
                     ChooseLocalOnConflict(item.Filename);
-                if (frm.KeepRemote) //remote
+                if (frm.KeepRemote) // remote
                     ChooseRemoteOnConflict(item.Filename);
             }
         }
@@ -788,11 +788,11 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) //delete
+                if (frm.KeepBase) // delete
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
-                if (frm.KeepLocal) //local
+                if (frm.KeepLocal) // local
                     ChooseLocalOnConflict(item.Filename);
-                if (frm.KeepRemote) //remote
+                if (frm.KeepRemote) // remote
                     ChooseRemoteOnConflict(item.Filename);
             }
             return false;
@@ -814,11 +814,11 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) //base
+                if (frm.KeepBase) // base
                     ChooseBaseOnConflict(item.Filename);
-                if (frm.KeepLocal) //delete
+                if (frm.KeepLocal) // delete
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
-                if (frm.KeepRemote) //remote
+                if (frm.KeepRemote) // remote
                     ChooseRemoteOnConflict(item.Filename);
             }
             return false;
@@ -840,11 +840,11 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) //base
+                if (frm.KeepBase) // base
                     ChooseBaseOnConflict(item.Filename);
-                if (frm.KeepLocal) //delete
+                if (frm.KeepLocal) // delete
                     ChooseLocalOnConflict(item.Filename);
-                if (frm.KeepRemote) //remote
+                if (frm.KeepRemote) // remote
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
             }
             return false;
@@ -897,7 +897,7 @@ namespace GitUI.CommandsDialogs
                     // do nothing, choices are limited commands already
                     return;
                 }
-                
+
                 System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
                 int LastRow = hti.RowIndex;
@@ -1025,8 +1025,7 @@ namespace GitUI.CommandsDialogs
                         string output = Module.RunGitCmd("add -- \"" + filename + "\"");
                         form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));
-                    }
-                );
+                    });
             using (var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) })
                 process.ShowDialogOnError(this);
         }

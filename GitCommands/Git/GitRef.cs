@@ -10,7 +10,7 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-       
+
         /// <summary>"refs/tags/"</summary>
         public static readonly string RefsTagsPrefix = "refs/tags/";
         /// <summary>"refs/heads/"</summary>
@@ -21,7 +21,7 @@ namespace GitCommands
         public static readonly string RefsBisectPrefix = "refs/bisect/";
         /// <summary>"^{}"</summary>
         public static readonly string TagDereferenceSuffix = "^{}";
-       
+
         public IGitModule Module { get; private set; }
 
         public GitRef(IGitModule module, string guid, string completeName)
@@ -60,8 +60,8 @@ namespace GitCommands
         public bool IsBisect { get; private set; }
 
         /// <summary>
-        /// True when Guid is a checksum of an object (e.g. commit) to which another object 
-        /// with Name (e.g. annotated tag) is applied. 
+        /// True when Guid is a checksum of an object (e.g. commit) to which another object
+        /// with Name (e.g. annotated tag) is applied.
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
         public bool IsDereference { get; private set; }
@@ -168,7 +168,7 @@ namespace GitCommands
             }
             else
             {
-                //if we don't know ref type then we don't know if '/' is a valid ref character
+                // if we don't know ref type then we don't know if '/' is a valid ref character
                 Name = CompleteName.SkipStr("refs/");
             }
 

@@ -11,7 +11,7 @@ namespace GitCommands.Config
     ///   [section "subsection"] (subsection is case sensitive)
     ///   or
     ///   [section.subsection] (subsection is case insensitive)
-    ///   
+    ///
     ///   Case insensitive sections are deprecated. Dot separated subsections are treated
     ///   as case insensitive only when loaded from config file. Dot separated subsections
     ///   added from code, are treated as case sensitive.
@@ -25,7 +25,7 @@ namespace GitCommands.Config
         {
             _configKeys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
 
-            if (name.Contains("\"")) //[section "subsection"] case sensitive
+            if (name.Contains("\"")) // [section "subsection"] case sensitive
             {
                 SectionName = name.Substring(0, name.IndexOf('\"')).Trim();
                 SubSection = name.Substring(name.IndexOf('\"') + 1, name.LastIndexOf('\"') - name.IndexOf('\"') - 1);
@@ -38,7 +38,7 @@ namespace GitCommands.Config
             }
             else
             {
-                //[section.subsection] case insensitive
+                // [section.subsection] case insensitive
                 var subSectionIndex = name.IndexOf('.');
 
                 if (subSectionIndex < 1)
@@ -58,7 +58,7 @@ namespace GitCommands.Config
 
         public static string FixPath(string path)
         {
-            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
+            if (path.StartsWith("\\\\")) // for using unc paths -> these need to be backward slashes
                 return path;
 
             return path.ToPosixPath();
@@ -105,7 +105,7 @@ namespace GitCommands.Config
             if (_configKeys.TryGetValue(key, out var list))
             {
                 if (list.Count > 0)
-                    return list[list.Count-1];
+                    return list[list.Count - 1];
             }
 
             return defaultValue;

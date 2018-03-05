@@ -8,7 +8,7 @@ namespace Bitbucket
 {
     class PullRequest
     {
-        //public string Ref { get; set; }
+        ////public string Ref { get; set; }
         public static PullRequest Parse(JObject json)
         {
             var request = new PullRequest
@@ -26,8 +26,8 @@ namespace Bitbucket
                 DestProjectKey = json["toRef"]["repository"]["project"]["key"].ToString(),
                 DestRepo = json["toRef"]["repository"]["name"].ToString(),
                 DestBranch = json["toRef"]["displayId"].ToString(),
-                CreatedDate = Convert.ToDouble(json["createdDate"].ToString().Substring(0,10))
-                
+                CreatedDate = Convert.ToDouble(json["createdDate"].ToString().Substring(0, 10))
+
             };
             var reviewers = json["reviewers"];
             var participants = json["participants"];

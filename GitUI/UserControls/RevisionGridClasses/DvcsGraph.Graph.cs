@@ -50,7 +50,7 @@ namespace GitUI.RevisionGridClasses
                         j.CurrentState = Junction.State.Unprocessed;
                     }
 
-                    // We need to signal the DvcsGraph object that it needs to 
+                    // We need to signal the DvcsGraph object that it needs to
                     // redraw everything.
                     Updated(this);
                 }
@@ -83,14 +83,14 @@ namespace GitUI.RevisionGridClasses
                     node.IsFiltered = true;
                 }
 
-                // Clear the filtered lane data. 
+                // Clear the filtered lane data.
                 // TODO: We could be smart and only clear items after Node[aId]. The check
                 // below isn't valid, since it could be either the filtered or unfiltered
                 // lane...
-                //if (node.InLane != int.MaxValue)
-                //{
-                //    filteredLanes.Clear();
-                //}
+                ////if (node.InLane != int.MaxValue)
+                ////{
+                ////   filteredLanes.Clear();
+                ////}
             }
 
             public void ClearHighlightBranch()
@@ -117,7 +117,7 @@ namespace GitUI.RevisionGridClasses
                     return startNode.Ancestors.Any(a => a.IsRelative);
                 }
 
-                return false;              
+                return false;
             }
 
             public void HighlightBranchRecursive(string aId)
@@ -167,12 +167,11 @@ namespace GitUI.RevisionGridClasses
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Oldest == node
                         && parent.Ancestors.Count == 0
-                        //If this is true, the current revision is in the middle of a branch 
-                        //and is about to start a new branch. This will also mean that the last
-                        //revisions are non-relative. Make sure a new junction is added and this
-                        //is the start of a new branch (and color!)
-                        && (aType & DataType.Active) != DataType.Active
-                        )
+                        // If this is true, the current revision is in the middle of a branch
+                        // and is about to start a new branch. This will also mean that the last
+                        // revisions are non-relative. Make sure a new junction is added and this
+                        // is the start of a new branch (and color!)
+                        && (aType & DataType.Active) != DataType.Active)
                     {
                         // The node isn't a junction point. Just the parent to the node's
                         // (only) ancestor junction.
@@ -180,7 +179,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     else if (node.Ancestors.Count == 1 && node.Ancestors[0].Youngest != node)
                     {
-                        // The node is in the middle of a junction. We need to split it.                   
+                        // The node is in the middle of a junction. We need to split it.
                         Junction splitNode = node.Ancestors[0].Split(node);
                         junctions.Add(splitNode);
 
@@ -190,7 +189,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     else if (parent.Descendants.Count == 1 && parent.Descendants[0].Oldest != parent)
                     {
-                        // The parent is in the middle of a junction. We need to split it.     
+                        // The parent is in the middle of a junction. We need to split it.
                         Junction splitNode = parent.Descendants[0].Split(parent);
                         junctions.Add(splitNode);
 
@@ -325,18 +324,18 @@ namespace GitUI.RevisionGridClasses
 
             public Node[] TopoSortedNodes()
             {
-                //http://en.wikipedia.org/wiki/Topological_ordering
-                //L ? Empty list that will contain the sorted nodes
-                //S ? Set of all nodes with no incoming edges
+                // http://en.wikipedia.org/wiki/Topological_ordering
+                // L ? Empty list that will contain the sorted nodes
+                // S ? Set of all nodes with no incoming edges
 
-                //function visit(node n)
+                // function visit(node n)
                 //    if n has not been visited yet then
                 //        mark n as visited
                 //        for each node m with an edge from n to m do
                 //            visit(m)
                 //        add n to L
 
-                //for each node n in S do
+                // for each node n in S do
                 //    visit(n)
 
                 var L = new Queue<Node>();

@@ -5,7 +5,7 @@ namespace NetSpell.SpellChecker.Dictionary
     /// <summary>
     /// The Word class represents a base word in the dictionary
     /// </summary>
-    public sealed class Word  : IComparable<Word>
+    public sealed class Word : IComparable<Word>
     {
         /// <summary>
         ///     Initializes a new instance of the class
@@ -122,7 +122,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Sorts a collection of words by EditDistance
         /// </summary>
         /// <remarks>
-        ///		The compare sorts in desc order, largest EditDistance first
+        ///     The compare sorts in desc order, largest EditDistance first
         /// </remarks>
         public int CompareTo(Word word)
         {
@@ -154,7 +154,7 @@ namespace NetSpell.SpellChecker.Dictionary
 
 
         /// <summary>
-        ///     Used for sorting suggestions by its edit distance for 
+        ///     Used for sorting suggestions by its edit distance for
         ///     the misspelled word
         /// </summary>
         internal int EditDistance { get; set; }
@@ -168,7 +168,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Converts the word object to a string
         /// </summary>
         /// <returns>
-        ///		Returns the Text Property contents
+        ///     Returns the Text Property contents
         /// </returns>
         public override string ToString()
         {

@@ -98,8 +98,8 @@ namespace GitUI.CommandsDialogs
             }
 
 
-            //can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
-            //they are reset to false
+            // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
+            // they are reset to false
             if (aCommands != null)
             {
                 _remoteManager = new GitRemoteManager(() => Module);
@@ -255,7 +255,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
                 return false;
             }
-            if (/* PushToRemote.Checked */ !CheckIfRemoteExist())
+            if (/* PushToRemote.Checked */!CheckIfRemoteExist())
             {
                 return false;
             }
@@ -267,19 +267,19 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            //Extra check if the branch is already known to the remote, give a warning when not.
-            //This is not possible when the remote is an URL, but this is ok since most users push to
-            //known remotes anyway.
+            // Extra check if the branch is already known to the remote, give a warning when not.
+            // This is not possible when the remote is an URL, but this is ok since most users push to
+            // known remotes anyway.
             if (TabControlTagBranch.SelectedTab == BranchTab && PushToRemote.Checked &&
                 !Module.IsBareRepository())
             {
-                //If the current branch is not the default push, and not known by the remote
-                //(as far as we know since we are disconnected....)
+                // If the current branch is not the default push, and not known by the remote
+                // (as far as we know since we are disconnected....)
                 if (_NO_TRANSLATE_Branch.Text != AllRefs &&
                     RemoteBranch.Text != _remoteManager.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
                     !IsBranchKnownToRemote(selectedRemoteName, RemoteBranch.Text))
                 {
-                    //Ask if this is really what the user wants
+                    // Ask if this is really what the user wants
                     if (!AppSettings.DontConfirmPushNewBranch &&
                         DialogResult.No == MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo))
                     {
@@ -397,7 +397,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-            //controls can be accessed only from UI thread
+            // controls can be accessed only from UI thread
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
             _candidateForRebasingMergeCommit = PushToRemote.Checked && (_selectedBranch != AllRefs) && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedRemoteBranchName = RemoteBranch.Text;
@@ -458,19 +458,19 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            //there is no way to pull to not current branch
+            // there is no way to pull to not current branch
             if (_selectedBranch != _currentBranchName)
             {
                 return false;
             }
 
-            //auto pull from URL not supported. See https://github.com/gitextensions/gitextensions/issues/1887
+            // auto pull from URL not supported. See https://github.com/gitextensions/gitextensions/issues/1887
             if (!PushToRemote.Checked)
             {
                 return false;
             }
 
-            //auto pull only if current branch was rejected
+            // auto pull only if current branch was rejected
             Regex isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
             if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
@@ -888,7 +888,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    //use remote branches from the git's local database if there were problems with receiving branches from the remote server
+                    // use remote branches from the git's local database if there were problems with receiving branches from the remote server
                     remoteHeads = Module.GetRemoteBranches().Where(r => r.Remote == remote).ToList();
                 }
                 ProcessHeads(remote, remoteHeads);
@@ -901,8 +901,8 @@ namespace GitUI.CommandsDialogs
 
         private static string TakeCommandOutput(string aProcessOutput)
         {
-            //the command output consists of lines in the format:
-            //fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
+            // the command output consists of lines in the format:
+            // fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
             int firstTabIdx = aProcessOutput.IndexOf('\t');
             if (firstTabIdx < 40)
             {

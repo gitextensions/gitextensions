@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             var sortedItems = from pair in items
-                        orderby pair.Value descending 
+                        orderby pair.Value descending
                         select pair;
 
             foreach (var keyValuePair in sortedItems)

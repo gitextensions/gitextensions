@@ -11,9 +11,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
 
             var autoNormaliseSymbols = new[] {
-                new { Key =  "_", Value = "_" },
-                new { Key =  "-", Value = "-" },
-                new { Key =  "(none)", Value = "" },
+                new { Key = "_", Value = "_" },
+                new { Key = "-", Value = "-" },
+                new { Key = "(none)", Value = "" },
             };
             cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
             cboAutoNormaliseSymbol.SelectedIndex = 0;

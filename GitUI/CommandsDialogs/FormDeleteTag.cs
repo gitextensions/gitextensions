@@ -6,7 +6,7 @@ using GitUI.Script;
 namespace GitUI.CommandsDialogs
 {
     public partial class FormDeleteTag : GitModuleForm
-    { 
+    {
         public FormDeleteTag(GitUICommands aCommands, string tag)
             : base(aCommands)
         {

@@ -35,7 +35,7 @@ namespace GitCommands
 
                 var executionStartTimestamp = DateTime.Now;
 
-                //process used to execute external commands
+                // process used to execute external commands
                 var process = new Process();
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
@@ -49,7 +49,7 @@ namespace GitCommands
                 process.Exited += (sender, args) =>
                 {
                   var executionEndTimestamp = DateTime.Now;
-                  AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                  AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
                 };
 
                 process.Start();
@@ -74,7 +74,7 @@ namespace GitCommands
         {
             lock (_processLock)
             {
-                //If there was another process running, kill it
+                // If there was another process running, kill it
                 if (_myProcess == null)
                     return;
                 try
@@ -112,10 +112,10 @@ namespace GitCommands
                     ExitCode = _myProcess.ExitCode;
                     if (Exited != null)
                     {
-                        //The process is exited already, but this command waits also until all output is received.
-                        //Only WaitForExit when someone is connected to the exited event. For some reason a
-                        //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                        //we wait for exit, probably a timing issue...
+                        // The process is exited already, but this command waits also until all output is received.
+                        // Only WaitForExit when someone is connected to the exited event. For some reason a
+                        // null reference is thrown sometimes when staging/unstaging in the commit dialog when
+                        // we wait for exit, probably a timing issue...
                         _myProcess.WaitForExit();
 
                         Exited(this, e);

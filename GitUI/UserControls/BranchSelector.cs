@@ -79,7 +79,7 @@ namespace GitUI.UserControls
             else
             {
                 var branchName = SelectedBranchName;
-                var currentCheckout = CommitToCompare??Module.GetCurrentCheckout();
+                var currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
                 Task.Factory.StartNew(() => this.Module.GetCommitCountString(currentCheckout, branchName))
                     .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
@@ -128,7 +128,7 @@ namespace GitUI.UserControls
 
         public void SetCurrentBranch(string branch, bool remote)
         {
-            //Set current branch after initialize, because initialize will reset it
+            // Set current branch after initialize, because initialize will reset it
             if (!string.IsNullOrEmpty(branch))
             {
                 Branches.Items.Add(branch);
@@ -147,8 +147,8 @@ namespace GitUI.UserControls
         private void LocalBranch_CheckedChanged(object sender, EventArgs e)
         {
             Branches.Focus();
-            //We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
-            //BranchTypeChanged();
+            // We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
+            ////BranchTypeChanged();
         }
 
         private void Remotebranch_CheckedChanged(object sender, EventArgs e)

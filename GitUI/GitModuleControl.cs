@@ -112,7 +112,7 @@ namespace GitUI
                         parent = parent.Parent;
                 }
 
-                if(cmdsSrc == null)
+                if (cmdsSrc == null)
                     throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
                 UICommandsSource = cmdsSrc;
             }

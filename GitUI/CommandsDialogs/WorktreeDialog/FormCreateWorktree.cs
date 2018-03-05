@@ -51,8 +51,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     comboBoxBranches.Text = string.Empty;
                     comboBoxBranches.DataSource = list;
                     comboBoxBranches.DisplayMember = "LocalName";
-                }
-            ).ContinueWith(_ =>
+                })
+            .ContinueWith(_ =>
             {
                 if (comboBoxBranches.Items.Count == 0)
                 {
@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void CreateWorktree()
         {
-            //https://git-scm.com/docs/git-worktree
+            // https://git-scm.com/docs/git-worktree
             var arguments = "worktree add \"" + WorktreeDirectory + "\"";
             if (radioButtonCreateNewBranch.Checked)
             {

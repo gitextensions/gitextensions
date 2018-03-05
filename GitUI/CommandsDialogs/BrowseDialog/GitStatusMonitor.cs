@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool _ignoredFilesAreStale;
         private string _gitPath;
         private string _submodulesPath;
-        //Timestamps to schedule status updates, limit the update interval dynamically
+        // Timestamps to schedule status updates, limit the update interval dynamically
         private int _nextUpdateTime;
         private int _previousUpdateTime;
         private int _currentUpdateInterval = MinUpdateInterval;
@@ -250,14 +250,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
                 if (_commandIsRunning ||
-                    //don't update status while repository is being modyfied by GitExt
-                    //or while any git process is running, mostly repository status will change
-                    //after these actions. Moreover, calling git status while other git command is performed
-                    //can cause repository crash
+                    // don't update status while repository is being modyfied by GitExt
+                    // or while any git process is running, mostly repository status will change
+                    // after these actions. Moreover, calling git status while other git command is performed
+                    // can cause repository crash
                     UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
                     GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess())
                 {
-                    _statusIsUpToDate = false; //tell that computed status isn't up to date
+                    _statusIsUpToDate = false; // tell that computed status isn't up to date
                     return;
                 }
 
@@ -273,7 +273,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string RunStatusCommand()
         {
             _ignoredFilesPending = _ignoredFilesAreStale;
-            //git-status with ignored files when needed only
+            // git-status with ignored files when needed only
             string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default);
             return Module.RunGitCmd(command);
         }
@@ -286,7 +286,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void UpdatedStatusReceived(string updatedStatus)
         {
-            //Adjust the interval between updates. (This does not affect an update already scheculed).
+            // Adjust the interval between updates. (This does not affect an update already scheculed).
             _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
             _commandIsRunning = false;
 
@@ -306,7 +306,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             if (!_statusIsUpToDate)
             {
-                //Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
+                // Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
                 CalculateNextUpdateTime(UpdateDelay);
             }
         }
@@ -314,12 +314,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void CalculateNextUpdateTime(int delay)
         {
             var next = Environment.TickCount + delay;
-            if(_nextUpdateTime > Environment.TickCount)
+            if (_nextUpdateTime > Environment.TickCount)
             {
-                //A time is already set, use closest
+                // A time is already set, use closest
                 next = Math.Min(_nextUpdateTime, next);
             }
-            //Enforce a minimal time between updates, to not update too frequently
+            // Enforce a minimal time between updates, to not update too frequently
             _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
         }
 
@@ -405,7 +405,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void WorkTreeChanged(object sender, FileSystemEventArgs e)
         {
-            //Update already scheduled?
+            // Update already scheduled?
             if (_nextUpdateTime < Environment.TickCount + UpdateDelay)
                 return;
 

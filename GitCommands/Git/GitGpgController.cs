@@ -34,7 +34,7 @@ namespace GitCommands.Gpg
         Task<CommitStatus> GetRevisionCommitSignatureStatusAsync(GitRevision revision);
 
         /// <summary>
-        /// Obtain the commit verification message, coming from --pretty="format:%GG" 
+        /// Obtain the commit verification message, coming from --pretty="format:%GG"
         /// </summary>
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
         string GetCommitVerificationMessage(GitRevision revision);
@@ -46,7 +46,7 @@ namespace GitCommands.Gpg
         Task<TagStatus> GetRevisionTagSignatureStatusAsync(GitRevision revision);
 
         /// <summary>
-        /// Obtain the tag verification message for all the tag in current git revision 
+        /// Obtain the tag verification message for all the tag in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
         string GetTagVerifyMessage(GitRevision revision);
@@ -80,7 +80,7 @@ namespace GitCommands.Gpg
         private static readonly Regex NoSignatureFoundTagRegex = new Regex(NoSignatureFound, RegexOptions.Compiled);
 
         /// <summary>
-        /// Obtain the tag verification message for all the tag in current git revision 
+        /// Obtain the tag verification message for all the tag in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
         public GitGpgController(Func<IGitModule> getModule)
@@ -108,13 +108,14 @@ namespace GitCommands.Gpg
 
                 string gpg = module.RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}");
 
+                #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
                 switch (gpg)
                 {
                     case GoodSign:         // "G" for a good (valid) signature
                         cmtStatus = CommitStatus.GoodSignature;
                         break;
                     case BadSign:          // "B" for a bad signature
-                    case UnkSignValidity:  // "U" for a good signature with unknown validity 
+                    case UnkSignValidity:  // "U" for a good signature with unknown validity
                     case ExpiredSign:      // "X" for a good signature that has expired
                     case ExpiredSignKey:   // "Y" for a good signature made by an expired key
                     case RevokedKey:       // "R" for a good signature made by a revoked key
@@ -128,6 +129,7 @@ namespace GitCommands.Gpg
                         cmtStatus = CommitStatus.NoSignature;
                         break;
                 }
+                #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
                 return cmtStatus;
             });
@@ -204,7 +206,7 @@ namespace GitCommands.Gpg
         }
 
         /// <summary>
-        /// Obtain the commit verification message, coming from --pretty="format:%GG" 
+        /// Obtain the commit verification message, coming from --pretty="format:%GG"
         /// </summary>
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
         public string GetCommitVerificationMessage(GitRevision revision)
@@ -219,7 +221,7 @@ namespace GitCommands.Gpg
         }
 
         /// <summary>
-        /// Obtain the tag verification message for all the tag on the revision 
+        /// Obtain the tag verification message for all the tag on the revision
         /// </summary>
         /// <returns>Full string coming from GPG analysis on current revision.</returns>
         public string GetTagVerifyMessage(GitRevision revision)

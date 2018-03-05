@@ -34,7 +34,7 @@ namespace GitCommands
         /// <param name="remote">Name or URL of the remote repository.</param>
         /// <param name="source">Name of the branch to push.</param>
         /// <param name="destination">Ref on the remote side to be updated.</param>
-        /// <param name="force">Indicates whether to update the <paramref name="destination"/> 
+        /// <param name="force">Indicates whether to update the <paramref name="destination"/>
         /// ref even when the update is not a fast-forward.</param>
         public GitPush(string remote, string source, string destination, bool force = false)
             : this(remote, new GitPushAction(source, destination, force)) { }
@@ -80,7 +80,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="source">Name of the branch to push.</param>
         /// <param name="destination">Ref on the remote side to be updated.</param>
-        /// <param name="force">Indicates whether to update the <paramref name="destination"/> 
+        /// <param name="force">Indicates whether to update the <paramref name="destination"/>
         /// ref even when the update is not a fast-forward.</param>
         public GitPushAction(string source, string destination, bool force = false)
         {

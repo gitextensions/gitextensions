@@ -20,7 +20,7 @@ namespace GitUI
         private readonly bool UseDialogSettings = true;
         private DispatcherFrameModalControler ModalControler;
 
-        public FormStatus(): this(true)
+        public FormStatus() : this(true)
         { }
 
         public FormStatus(bool useDialogSettings)
@@ -105,7 +105,7 @@ namespace GitUI
                         }
                     }
                     // Show last progress message in the title, unless it's showin in the control body already
-                    if(!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    if (!ConsoleOutput.IsDisplayingFullProcessOutput)
                       Text = text;
                 };
             BeginInvoke(method, this);
@@ -257,7 +257,7 @@ namespace GitUI
             try
             {
                 AbortCallback(this);
-                OutputLog.Append(Environment.NewLine + "Aborted");	// TODO: write to display control also, if we pull the function up to this base class
+                OutputLog.Append(Environment.NewLine + "Aborted");  // TODO: write to display control also, if we pull the function up to this base class
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }

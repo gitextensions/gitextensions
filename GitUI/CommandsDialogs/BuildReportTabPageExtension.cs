@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs
                         }
                         catch
                         {
-                            //No propagation to the user if the report fails
+                            // No propagation to the user if the report fails
                         }
                     }
 
@@ -179,19 +179,19 @@ namespace GitUI.CommandsDialogs
 
             if (htmlDocument.Url.PathAndQuery == "/")
             {
-                //Szenario: http://test.test/teamcity/....
+                // Szenario: http://test.test/teamcity/....
                 return htmlDocument.Url.AbsoluteUri.Replace(htmlDocument.Url.PathAndQuery, href);
             }
             else
             {
-                //Szenario: http://teamcity.domain.test/
+                // Szenario: http://teamcity.domain.test/
                 return new Uri(new Uri(htmlDocument.Url.AbsoluteUri), href).ToString();
             }
         }
 
         private static Task<Stream> DownloadRemoteImageFileAsync(string uri)
         {
-            var request = (HttpWebRequest) WebRequest.Create(uri);
+            var request = (HttpWebRequest)WebRequest.Create(uri);
 
             return GetWebResponseAsync(request).ContinueWith(
                 task =>

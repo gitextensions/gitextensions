@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
-    public class ChoiceSetting: ISetting
+    public class ChoiceSetting : ISetting
     {
         public ChoiceSetting(string aName, IList<string> values, string aDefaultValue = null)
             : this(aName, aName, values, aDefaultValue)
@@ -41,7 +41,7 @@ namespace GitUIPluginInterfaces
 
             public override ComboBox CreateControl()
             {
-                var comboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList};
+                var comboBox = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
                 comboBox.Items.AddRange(Setting.Values.ToArray());
                 return comboBox;
             }

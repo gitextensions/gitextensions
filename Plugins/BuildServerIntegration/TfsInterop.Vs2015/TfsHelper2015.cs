@@ -224,7 +224,7 @@ namespace TfsInterop
                 }
 
                 VssConnection connection = new VssConnection(new Uri(url), new VssCredentials(true));
-                
+
                 connection.Settings.BypassProxyOnLocal = false;
                 BuildHttpClient buildClient = connection.GetClientAsync<BuildHttpClient>().Result;
                 var definitions = await buildClient.GetDefinitionsAsync(project: projectName);
@@ -248,26 +248,26 @@ namespace TfsInterop
             }
         }
 
-        public List<IBuild> QueryBuilds2015(List<IBuild> result,DateTime? sinceDate, bool? running)
+        public List<IBuild> QueryBuilds2015(List<IBuild> result, DateTime? sinceDate, bool? running)
         {
-            //var result = new List<IBuild>();
+            ////var result = new List<IBuild>();
             if (_buildDefinitions2015 == null)
                 return result;
-            //foreach (var _buildDefinition in _buildDefinitions)
-            //{
+            ////foreach (var _buildDefinition in _buildDefinitions)
+            ////{
             Microsoft.TeamFoundation.Build.WebApi.BuildStatus statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.All;
             if (running.HasValue && running.Value)
                 statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress;
 
-            //List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { _buildDefinition.Id },
-            //                                        minFinishTime: sinceDate,
-            //                                        statusFilter: statusFilter));
+            ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { _buildDefinition.Id },
+            ////                                       minFinishTime: sinceDate,
+            ////                                       statusFilter: statusFilter));
             var task = _buildClient.GetBuildsAsync(project: _projectName,
                                                       definitions: _buildDefinitions2015.Select(b => b.Id),
                                                       minFinishTime: sinceDate,
                                                       statusFilter: statusFilter);
-            //while (!task.IsCompleted) { }
-            //task.Wait();
+            ////while (!task.IsCompleted) { }
+            ////task.Wait();
             List<Build> builds = task.Result;
             foreach (var b in builds)
             {
@@ -305,8 +305,8 @@ namespace TfsInterop
                         IsFinished = (b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed),
                         Description = GetStatus2015(b) + duration,
                         Revision = GetCommitFromSourceVersion(b.SourceVersion),
-                        Url = _urlPrefix +  id
-                        //Url = b.Url
+                        Url = _urlPrefix + id
+                        ////Url = b.Url
                     };
                     result.Add(ibuild);
                 }
@@ -354,14 +354,14 @@ namespace TfsInterop
             return "-";
         }
 
-        //private static string GetStatusDescription(BuildPhaseStatus status)
-        //{
-        //    if (status == BuildPhaseStatus.Succeeded)
-        //        return "OK";
-        //    if (status == BuildPhaseStatus.Failed)
-        //        return "KO";
-        //    return "-";
-        //}
+        ////private static string GetStatusDescription(BuildPhaseStatus status)
+        ////{
+        ////   if (status == BuildPhaseStatus.Succeeded)
+        ////       return "OK";
+        ////   if (status == BuildPhaseStatus.Failed)
+        ////       return "KO";
+        ////   return "-";
+        ////}
 
         private static BuildStatus ConvertStatus2015(Build build)
         {

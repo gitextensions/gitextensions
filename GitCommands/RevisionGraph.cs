@@ -13,16 +13,16 @@ namespace GitCommands
     [Flags]
     public enum RefsFiltringOptions
     {
-        Branches = 1,               // --branches
-        Remotes = 2,                // --remotes
-        Tags = 4,                   // --tags
-        Stashes = 8,                //
-        All = 15,                   // --all
-        Boundary = 16,              // --boundary
-        ShowGitNotes = 32,          // --not --glob=notes --not
-        NoMerges = 64,              // --no-merges
-        FirstParent = 128,          // --first-parent
-        SimplifyByDecoration = 256  // --simplify-by-decoration
+        Branches = 1,              // --branches
+        Remotes = 2,               // --remotes
+        Tags = 4,                  // --tags
+        Stashes = 8,               //
+        All = 15,                  // --all
+        Boundary = 16,             // --boundary
+        ShowGitNotes = 32,         // --not --glob=notes --not
+        NoMerges = 64,             // --no-merges
+        FirstParent = 128,         // --first-parent
+        SimplifyByDecoration = 256 // --simplify-by-decoration
     }
 
     public abstract class RevisionGraphInMemFilter
@@ -130,7 +130,7 @@ namespace GitCommands
                 /* Committer Name          */ "%cN%n" +
                 /* Committer Email         */ "%cE%n" +
                 /* Committer Date          */ "%ct%n" +
-                /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
+                /* Commit message encoding */ "%e%x00" + // there is a bug: git does not recode commit message when format is given
                 /* Commit Subject          */ "%s%x00" +
                 /* Commit Body             */ "%B%x00";
 
@@ -220,7 +220,7 @@ namespace GitCommands
 
                 int lastDataBlockIndex = dataBlocks.Length - 1;
 
-                // Return all the blocks until the last one 
+                // Return all the blocks until the last one
                 for (int i = 1; i < lastDataBlockIndex; i++)
                 {
                     yield return dataBlocks[i];
@@ -270,7 +270,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>Refs loaded while the latest processing of git log</returns>
         public IEnumerable<IGitRef> LatestRefs()
@@ -369,7 +369,7 @@ namespace GitCommands
                 case ReadStep.FileName:
                     if (!string.IsNullOrEmpty(data))
                     {
-                        // Git adds \n between the format string (ends with \0 in our case) 
+                        // Git adds \n between the format string (ends with \0 in our case)
                         // and the first file name. So, we need to remove it from the file name.
                         data = GitModule.ReEncodeFileNameFromLossless(data);
                         _revision.Name = data.TrimStart(new char[] { '\n' });

@@ -82,7 +82,7 @@ namespace TeamCityIntegration.Settings
             {
                 project.Builds = _teamCityAdapter.GetProjectBuilds(project.Id);
 
-                //Remove "Loading..." node
+                // Remove "Loading..." node
                 if (treeNode.Nodes.Count == 1 && treeNode.Nodes[0].Tag == null)
                 {
                     treeNode.Nodes.RemoveAt(0);

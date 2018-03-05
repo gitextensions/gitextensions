@@ -125,8 +125,8 @@ namespace PatchApply
             int lineNumber = 0;
             foreach (string line in Text.Split('\n'))
             {
-                //Parse first line
-                //@@ -1,4 +1,4 @@
+                // Parse first line
+                // @@ -1,4 +1,4 @@
                 if (line.StartsWith("@@") && line.LastIndexOf("@@") > 0)
                 {
                     string pos = line.Substring(3, line.LastIndexOf("@@") - 3).Trim();
@@ -139,7 +139,7 @@ namespace PatchApply
 
                 if (line.StartsWith(" "))
                 {
-                    //Do some extra checks
+                    // Do some extra checks
                     if (line.Length > 0)
                     {
                         if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
@@ -179,7 +179,7 @@ namespace PatchApply
                     if (line.Length > 1)
                         insertLine = line.Substring(1);
 
-                    //Is the patch allready applied?
+                    // Is the patch allready applied?
                     if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(insertLine) == 0)
                     {
                         Rate -= 20;

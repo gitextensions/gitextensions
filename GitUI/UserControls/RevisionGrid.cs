@@ -172,7 +172,7 @@ namespace GitUI
 
             Revisions.Loading += RevisionsLoading;
 
-            //Allow to drop patch file on revisiongrid
+            // Allow to drop patch file on revisiongrid
             Revisions.DragEnter += Revisions_DragEnter;
             Revisions.DragDrop += Revisions_DragDrop;
             Revisions.AllowDrop = true;
@@ -420,7 +420,7 @@ namespace GitUI
                 curIndex = Revisions.SelectedRows[0].Index;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
-            if (e.KeyChar == 8 && _quickSearchString.Length > 1) //backspace
+            if (e.KeyChar == 8 && _quickSearchString.Length > 1) // backspace
             {
                 RestartQuickSearchTimer();
 
@@ -436,7 +436,7 @@ namespace GitUI
             {
                 RestartQuickSearchTimer();
 
-                //The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
+                // The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
                 _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
 
                 FindNextMatch(curIndex, _quickSearchString, false);
@@ -823,8 +823,8 @@ namespace GitUI
             if (Revisions.SelectedRows.Count > 0)
             {
                 LatestSelectedRowIndex = Revisions.SelectedRows[0].Index;
-                //if there was selected a new revision while data is being loaded
-                //then don't change the new selection when restoring selected revisions after data is loaded
+                // if there was selected a new revision while data is being loaded
+                // then don't change the new selection when restoring selected revisions after data is loaded
                 if (_isRefreshingRevisions && !Revisions.UpdatingVisibleRows)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
@@ -1247,7 +1247,7 @@ namespace GitUI
             this.InvokeAsync(o =>
                                   {
                                       Error.Visible = true;
-                                      //Error.BringToFront();
+                                      ////Error.BringToFront();
                                       NoGit.Visible = false;
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
@@ -1258,8 +1258,7 @@ namespace GitUI
             this.InvokeAsync(() =>
                 {
                     throw new AggregateException(e.Exception);
-                }
-            );
+                });
             e.Handled = true;
         }
 
@@ -1293,7 +1292,7 @@ namespace GitUI
             if (_revisionGraphCommand != null)
             {
                 LatestRefs = _revisionGraphCommand.LatestRefs();
-                //Dispose command, it is not needed anymore
+                // Dispose command, it is not needed anymore
                 _revisionGraphCommand.Updated -= GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited -= GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error -= _revisionGraphCommand_Error;
@@ -1315,7 +1314,7 @@ namespace GitUI
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
-                                          //NoCommits.BringToFront();
+                                          ////NoCommits.BringToFront();
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                           _isRefreshingRevisions = false;
@@ -1343,7 +1342,7 @@ namespace GitUI
             string filtredCurrentCheckout = _filtredCurrentCheckout;
             string[] lastSelectedRows = LastSelectedRows ?? new string[0];
 
-            //filter out all unavailable commits from LastSelectedRows.
+            // filter out all unavailable commits from LastSelectedRows.
             lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
 
             if (lastSelectedRows.Any())
@@ -1736,7 +1735,7 @@ namespace GitUI
                 }
                 else if (columnIndex == idColIndex)
                 {
-                    if (!revision.IsArtificial) //do not show artificial GUID
+                    if (!revision.IsArtificial) // do not show artificial GUID
                     {
                         var text = revision.Guid;
                         var rect = RevisionGridUtils.GetCellRectangle(e);
@@ -1850,7 +1849,7 @@ namespace GitUI
             int dateColIndex = DateDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            if (columnIndex == graphColIndex && !revision.IsArtificial) //Do not show artificial guid
+            if (columnIndex == graphColIndex && !revision.IsArtificial) // Do not show artificial guid
             {
                 e.Value = revision.Guid;
             }
@@ -2028,7 +2027,7 @@ namespace GitUI
             var points = new[]
                                  {
                                      new PointF(x + horShift, y + verShift),
-                                     new PointF(x + horShift + width, y + verShift + height/2),
+                                     new PointF(x + horShift + width, y + verShift + height / 2),
                                      new PointF(x + horShift, y + verShift + height),
                                      new PointF(x + horShift, y + verShift)
                                  };
@@ -2320,7 +2319,7 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
-            //For now there is no action that could be done on currentBranch
+            // For now there is no action that could be done on currentBranch
             string currentBranchRef = GitRef.RefsHeadsPrefix + Module.GetSelectedBranch();
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
@@ -2342,13 +2341,13 @@ namespace GitUI
                 }
             }
 
-            //if there is no branch to rebase on, then allow user to rebase on selected commit
+            // if there is no branch to rebase on, then allow user to rebase on selected commit
             if (_rebaseOnTopOf == null && !currentBranchPointsToRevision)
             {
                 _rebaseOnTopOf = revision.Guid;
             }
 
-            //if there is no branch to merge, then let user to merge selected commit into current branch
+            // if there is no branch to merge, then let user to merge selected commit into current branch
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
@@ -2382,7 +2381,7 @@ namespace GitUI
             {
                 ToolStripItem toolStripItem;
 
-                //skip remote branches - they can not be deleted this way
+                // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
                     if (!head.CompleteName.Equals(currentBranchRef))
@@ -2390,13 +2389,13 @@ namespace GitUI
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Tag = head.Name;
                         toolStripItem.Click += ToolStripItemClickDeleteBranch;
-                        deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
+                        deleteBranchDropDown.Items.Add(toolStripItem); // Add to delete branch
                     }
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Tag = head.Name;
                     toolStripItem.Click += ToolStripItemClickRenameBranch;
-                    renameDropDown.Items.Add(toolStripItem); //Add to rename branch
+                    renameDropDown.Items.Add(toolStripItem); // Add to rename branch
                 }
 
                 if (!head.CompleteName.Equals(currentBranchRef))
@@ -2426,7 +2425,7 @@ namespace GitUI
 
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickDeleteRemoteBranch;
-                    deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
+                    deleteBranchDropDown.Items.Add(toolStripItem); // Add to delete branch
                 }
             }
 
@@ -2932,7 +2931,7 @@ namespace GitUI
             {
                 if (fileNameArray.Length > 10)
                 {
-                    //Some users need to be protected against themselves!
+                    // Some users need to be protected against themselves!
                     MessageBox.Show(this, _droppingFilesBlocked.Text);
                     return;
                 }
@@ -2943,7 +2942,7 @@ namespace GitUI
 
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        //Start apply patch dialog for each dropped patch file...
+                        // Start apply patch dialog for each dropped patch file...
                         UICommands.StartApplyPatchDialog(this, fileName);
                     }
                 }
@@ -2961,12 +2960,12 @@ namespace GitUI
 
                     if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        //Allow drop (copy, not move) patch files
+                        // Allow drop (copy, not move) patch files
                         e.Effect = DragDropEffects.Copy;
                     }
                     else
                     {
-                        //When a non-patch file is dragged, do not allow it
+                        // When a non-patch file is dragged, do not allow it
                         e.Effect = DragDropEffects.None;
                         return;
                     }
@@ -3102,7 +3101,7 @@ namespace GitUI
 
             IsCardLayout();
 
-            NormalFont = AppSettings.Font;// new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
+            NormalFont = AppSettings.Font; // new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
             SetAuthoredRevisionsBrush();
 
@@ -3158,8 +3157,8 @@ namespace GitUI
                 Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
             }
 
-            //Hide graph column when there it is disabled OR when a filter is active
-            //allowing for special case when history of a single file is being displayed
+            // Hide graph column when there it is disabled OR when a filter is active
+            // allowing for special case when history of a single file is being displayed
             if (!IsGraphLayout() || (ShouldHideGraph(false) && !AllowGraphWithFilter))
             {
                 Revisions.HideRevisionGraph();

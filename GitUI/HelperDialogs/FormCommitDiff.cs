@@ -20,16 +20,16 @@ namespace GitUI.HelperDialogs
 
         private FormCommitDiff()
             : this(null)
-        { 
-        
+        {
+
         }
 
         public FormCommitDiff(GitUICommands aCommands, string revision)
             : this(aCommands)
         {
-            //We cannot use the GitRevision from revision grid. When a filtered commit list
-            //is shown (file history/normal filter) the parent guids are not the 'real' parents,
-            //but the parents in the filtered list.
+            // We cannot use the GitRevision from revision grid. When a filtered commit list
+            // is shown (file history/normal filter) the parent guids are not the 'real' parents,
+            // but the parents in the filtered list.
             _revision = Module.GetRevision(revision);
 
             if (_revision != null)

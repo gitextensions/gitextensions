@@ -45,7 +45,7 @@ namespace GitUITests.CommandsDialogs
         public void LoadItemsInTreeView_should_not_add_nods_if_no_children()
         {
             var item = new GitItem("", "", System.Guid.NewGuid().ToString("N"), "folder");
-            _revisionInfoProvider.LoadChildren(item).Returns(x =>null);
+            _revisionInfoProvider.LoadChildren(item).Returns(x => null);
 
             _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
 

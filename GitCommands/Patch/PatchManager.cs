@@ -26,8 +26,8 @@ namespace PatchApply
 
             string body = selectedChunks.ToResetUnstagedLinesPatch();
 
-            //git apply has problem with dealing with autocrlf
-            //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
+            // git apply has problem with dealing with autocrlf
+            // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
                 body = body.Replace("\r", "");
 
@@ -44,7 +44,7 @@ namespace PatchApply
             if (selectedChunks == null)
                 return null;
 
-            //if file is new, --- /dev/null has to be replaced by --- a/fileName
+            // if file is new, --- /dev/null has to be replaced by --- a/fileName
             if (isNewFile)
                 header = CorrectHeaderForNewFile(header);
 
@@ -57,7 +57,7 @@ namespace PatchApply
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
                 if (line.StartsWith("+++"))
@@ -79,7 +79,7 @@ namespace PatchApply
         public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] FilePreabmle)
         {
             StringBuilder sb = new StringBuilder();
-            string fileMode = "100000";//given fake mode to satisfy patch format, git will override this
+            string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
             sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
             sb.Append("\n");
             if (!reset)
@@ -105,8 +105,8 @@ namespace PatchApply
                 return null;
 
             string body = selectedChunks.ToStagePatch(false, true);
-            //git apply has problem with dealing with autocrlf
-            //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
+            // git apply has problem with dealing with autocrlf
+            // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
                 body = body.Replace("\r", "");
 
@@ -145,7 +145,7 @@ namespace PatchApply
             return bs;
         }
 
-        //TODO encoding for each file in patch should be obtained separately from .gitattributes
+        // TODO encoding for each file in patch should be obtained separately from .gitattributes
         public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
@@ -276,7 +276,7 @@ namespace PatchApply
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
                 diff = diff.Combine("\n", line.Text);
-            //stage no new line at the end only if last +- line is selected
+            // stage no new line at the end only if last +- line is selected
             if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
             if (PostContext.Count > 0)
@@ -285,7 +285,7 @@ namespace PatchApply
             return diff;
         }
 
-        //patch base is changed file
+        // patch base is changed file
         public string ToResetUnstagedLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
         {
             string diff = null;
@@ -379,9 +379,9 @@ namespace PatchApply
 
         public void AddDiffLine(PatchLine line, bool removed)
         {
-            //if postContext is not empty @line comes from next SubChunk
+            // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
-                _CurrentSubChunk = null;//start new SubChunk
+                _CurrentSubChunk = null; // start new SubChunk
 
             if (removed)
                 CurrentSubChunk.RemovedLines.Add(line);
@@ -420,7 +420,7 @@ namespace PatchApply
                     {
                         Text = line
                     };
-                    //do not refactor, there are no break points condition in VS Experss
+                    // do not refactor, there are no break points condition in VS Experss
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
                         patchLine.Selected = true;
 
@@ -482,7 +482,7 @@ namespace PatchApply
                 {
                     Text = (reset ? "-" : "+") + preamble + line
                 };
-                //do not refactor, there are no breakpoints condition in VS Experss
+                // do not refactor, there are no breakpoints condition in VS Experss
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
                     patchLine.Selected = true;
 
@@ -494,8 +494,8 @@ namespace PatchApply
                         result.AddDiffLine(patchLine, reset);
                         if (reset && patchLine.Selected)
                         {
-                            //if the last line is selected to be reset and there is no new line at the end of file
-                            //then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
+                            // if the last line is selected to be reset and there is no new line at the end of file
+                            // then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
                             PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(aLine => !aLine.Selected);
                             if (lastNotSelectedLine != null)
                             {
@@ -546,7 +546,7 @@ namespace PatchApply
         public static ChunkList GetSelectedChunks(string text, int selectionPosition, int selectionLength, bool staged, out string header)
         {
             header = null;
-            //When there is no patch, return nothing
+            // When there is no patch, return nothing
             if (string.IsNullOrEmpty(text))
                 return null;
 
@@ -568,7 +568,7 @@ namespace PatchApply
             {
                 string chunkStr = chunks[i];
                 currentPos += 3;
-                //if selection intersects with chunsk
+                // if selection intersects with chunsk
                 if (currentPos + chunkStr.Length >= selectionPosition)
                 {
                     Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);

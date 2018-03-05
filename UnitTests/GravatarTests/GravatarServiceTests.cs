@@ -46,19 +46,19 @@ namespace GravatarTests
         [Ignore("Need to abstract WebClient or replace with HttpClient")]
         public void GetAvatarAsync_should_call_gravatar_if_absent_from_cache()
         {
-            //_service.ConfigureCache("", 1);
-            //var avatar = Resources.User;
-            //_cache.GetImageAsync(Arg.Any<string>(), null).Returns(_ => null, _ => avatar);
-
-            //var image = await _service.GetAvatarAsync(Email, 1, DefaultImageType.Identicon);
-
-            //image.Should().Be(avatar);
-            //Received.InOrder(async () =>
-            //{
-            //    await _cache.Received(1).GetImageAsync($"{Email}.png", null);
-            //    await _cache.Received(1).AddImageAsync($"{Email}.png", Arg.Any<Stream>());
-            //    await _cache.Received(1).GetImageAsync($"{Email}.png", null);
-            //});
+            ////_service.ConfigureCache("", 1);
+            ////var avatar = Resources.User;
+            ////_cache.GetImageAsync(Arg.Any<string>(), null).Returns(_ => null, _ => avatar);
+            ////
+            ////var image = await _service.GetAvatarAsync(Email, 1, DefaultImageType.Identicon);
+            ////
+            ////image.Should().Be(avatar);
+            ////Received.InOrder(async () =>
+            ////{
+            ////   await _cache.Received(1).GetImageAsync($"{Email}.png", null);
+            ////   await _cache.Received(1).AddImageAsync($"{Email}.png", Arg.Any<Stream>());
+            ////   await _cache.Received(1).GetImageAsync($"{Email}.png", null);
+            ////});
         }
 
         [Test]

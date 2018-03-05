@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         private void SetCurrentSettings(ConfigFileSettings settings)
-        {            
+        {
             if (CurrentSettings != null)
                 SaveSettings();
 

@@ -22,7 +22,7 @@ namespace GitStatistics.PieChart
         private float _initialAngle;
         private float _leftMargin;
         private PieChart3D _pieChart;
-        private float[] _relativeSliceDisplacements = new[] {0F};
+        private float[] _relativeSliceDisplacements = new[] { 0F };
         private float _rightMargin;
         private ShadowStyle _shadowStyle = ShadowStyle.GradualShadow;
         private float _sliceRelativeHeight;

@@ -17,9 +17,9 @@ namespace GitUI
         public static SynchronizationContext UISynchronizationContext;
 
 
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked=true)
+        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked = true)
         {
-            //Note: Order in revisions is that first clicked is last in array
+            // Note: Order in revisions is that first clicked is last in array
 
             string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind,
                 out var extraDiffArgs, out var firstRevision, out var secondRevision);
@@ -52,7 +52,7 @@ namespace GitUI
                 var fullPath = Path.Combine(diffViewer.Module.WorkingDir, file.Name);
                 if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    //git-status does not detect details for untracked and git-diff --no-index will not give info
+                    // git-status does not detect details for untracked and git-diff --no-index will not give info
                     return LocalizationHelpers.GetSubmoduleText(diffViewer.Module, file.Name.TrimEnd('/'), "");
                 }
             }
@@ -156,7 +156,7 @@ namespace GitUI
             {
                 yield return node;
 
-                foreach(TreeNode subNode in node.Nodes.AllNodes())
+                foreach (TreeNode subNode in node.Nodes.AllNodes())
                     yield return subNode;
             }
         }

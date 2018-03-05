@@ -66,7 +66,7 @@ namespace JenkinsIntegration
                                      ? new Uri(hostName, UriKind.Absolute)
                                      : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
-                _httpClient = new HttpClient(new HttpClientHandler(){ UseDefaultCredentials = true});
+                _httpClient = new HttpClient(new HttpClientHandler() { UseDefaultCredentials = true });
                 _httpClient.Timeout = TimeSpan.FromMinutes(2);
                 _httpClient.BaseAddress = baseAdress;
 
@@ -124,12 +124,12 @@ namespace JenkinsIntegration
                                 JObject jobDescription = JObject.Parse(t);
                                 if (jobDescription["builds"] != null)
                                 {
-                                    //Freestyle jobs
+                                    // Freestyle jobs
                                     s = jobDescription["builds"];
                                 }
                                 else if (jobDescription["jobs"] != null)
                                 {
-                                    //Multibranch pipeline
+                                    // Multibranch pipeline
                                     s = jobDescription["jobs"]
                                         .SelectMany(j => j["builds"]);
                                     foreach (var j in jobDescription["jobs"])
@@ -138,7 +138,7 @@ namespace JenkinsIntegration
                                         timestamp = Math.Max(timestamp, ts);
                                     }
                                 }
-                                //else: The server had no response (overloaded?) or a multibranch pipeline is not configured
+                                // else: The server had no response (overloaded?) or a multibranch pipeline is not configured
 
                                 if (jobDescription["lastBuild"] != null)
                                 {
@@ -159,9 +159,9 @@ namespace JenkinsIntegration
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
-            //GetBuilds() will return the same builds as for GetRunningBuilds().
-            //Multiple calls will fetch same info multiple times and make debugging very confusing
-            //Similar as for AppVeyor
+            // GetBuilds() will return the same builds as for GetRunningBuilds().
+            // Multiple calls will fetch same info multiple times and make debugging very confusing
+            // Similar as for AppVeyor
             return Observable.Empty<BuildInfo>();
         }
 
@@ -179,8 +179,8 @@ namespace JenkinsIntegration
 
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            //Note that 'running' is ignored (attempt to fetch data when updated) 
-            //Similar for 'sinceDate', not supported in Jenkins API
+            // Note that 'running' is ignored (attempt to fetch data when updated)
+            // Similar for 'sinceDate', not supported in Jenkins API
             try
             {
                 IList<Task<ResponseInfo>> allBuildInfos = new List<Task<ResponseInfo>>();
@@ -189,7 +189,7 @@ namespace JenkinsIntegration
                 {
                     if (LastBuildCache[projectUrl].Timestamp <= 0)
                     {
-                        //This job must be updated, no need to to check the latest builds
+                        // This job must be updated, no need to to check the latest builds
                         allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
                     }
                     else
@@ -198,17 +198,17 @@ namespace JenkinsIntegration
                     }
                 }
 
-                //Check the latest build on the server to the existing build cache
-                //The simple request will limit the load on the Jenkins server
-                //To fetch just new builds is possible too, but it will make the solution more complicated
-                //Similar, the build results could be cached so they are available when switching repos
+                // Check the latest build on the server to the existing build cache
+                // The simple request will limit the load on the Jenkins server
+                // To fetch just new builds is possible too, but it will make the solution more complicated
+                // Similar, the build results could be cached so they are available when switching repos
                 foreach (var info in latestBuildInfos)
                 {
                     if (!info.IsFaulted)
                     {
                         if (info.Result.Timestamp > LastBuildCache[info.Result.Url].Timestamp)
                         {
-                            //The cache has at least one newer job, query the status
+                            // The cache has at least one newer job, query the status
                             allBuildInfos.Add(GetBuildInfoTask(info.Result.Url, true, cancellationToken));
                         }
                     }
@@ -233,31 +233,31 @@ namespace JenkinsIntegration
 
                     if (build.IsCanceled || build.Result.Timestamp <= 0)
                     {
-                        //No valid information received for the build
+                        // No valid information received for the build
                         continue;
                     }
 
                     LastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
-                    //Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
-                    //(for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
+                    // Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
+                    // (for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
                     foreach (var buildDetails in build.Result.JobDescription.Reverse())
                     {
                         if (cancellationToken.IsCancellationRequested)
                         {
                             return;
                         }
-                        var buildInfo = CreateBuildInfo((JObject) buildDetails);
+                        var buildInfo = CreateBuildInfo((JObject)buildDetails);
                         observer.OnNext(buildInfo);
 
                         if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
                         {
-                            //Need to make a full requery next time
+                            // Need to make a full requery next time
                             LastBuildCache[build.Result.Url].Timestamp = 0;
                         }
                     }
                 }
 
-                //Complete the job, it will be run again with Observe.Retry() (every 10th sec)
+                // Complete the job, it will be run again with Observe.Retry() (every 10th sec)
                 observer.OnCompleted();
             }
             catch (OperationCanceledException)
@@ -266,7 +266,7 @@ namespace JenkinsIntegration
             }
             catch (Exception ex)
             {
-                //Cancelling a subtask is similar to cancelling this task
+                // Cancelling a subtask is similar to cancelling this task
                 if (ex.InnerException == null || !(ex.InnerException is OperationCanceledException))
                 {
                     observer.OnError(ex);
@@ -376,7 +376,7 @@ namespace JenkinsIntegration
 
             if (task.IsFaulted || task.IsCanceled)
             {
-                //No results for this task
+                // No results for this task
                 return null;
             }
 
@@ -396,7 +396,7 @@ namespace JenkinsIntegration
             }
             else if (task.Result.StatusCode == HttpStatusCode.NotFound)
             {
-                //The url does not exist, no jobs to retrieve
+                // The url does not exist, no jobs to retrieve
                 return null;
             }
             else if (task.Result.StatusCode == HttpStatusCode.Forbidden)
@@ -464,7 +464,7 @@ namespace JenkinsIntegration
                 string post = restServicePath.Substring(postIndex, endLen);
                 if (post == "?m")
                 {
-                    //Multi pipeline project
+                    // Multi pipeline project
                     buildTree = "jobs[" + buildTree;
                     if (buildsInfo)
                     {
@@ -475,7 +475,7 @@ namespace JenkinsIntegration
                 }
                 else
                 {
-                    //user defined format (will likely require changes in the code)
+                    // user defined format (will likely require changes in the code)
                     buildTree = post;
                 }
 
@@ -483,7 +483,7 @@ namespace JenkinsIntegration
             }
             else
             {
-                //Freestyle project
+                // Freestyle project
                 if (buildsInfo)
                 {
                     buildTree += ",builds[" + JenkinsTreeBuildInfo + "]";

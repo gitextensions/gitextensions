@@ -19,7 +19,7 @@ namespace CreateLocalBranches
         private void button1_Click(object sender, EventArgs e)
         {
             string[] references = m_gitUiCommands.GitModule.RunGitCmd("branch -a")
-                .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (references.Length == 0)
             {

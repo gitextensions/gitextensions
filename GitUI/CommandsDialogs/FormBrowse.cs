@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
         {
-            //Save value for commit info panel, may be changed
+            // Save value for commit info panel, may be changed
             _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
             InitializeComponent();
 
@@ -230,8 +230,8 @@ namespace GitUI.CommandsDialogs
                         _toolStripGitStatus.Text = string.Format(_commitButtonText + " ({0})", status.Count.ToString());
 
                     RevisionGrid.UpdateArtificialCommitCount(status);
-                    //The diff filelist is not updated, as the selected diff is unset
-                    //_revisionDiff.RefreshArtificial();
+                    // The diff filelist is not updated, as the selected diff is unset
+                    // _revisionDiff.RefreshArtificial();
                 };
 
                 _toolStripGitStatus.Click += StatusClick;
@@ -293,7 +293,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.DisplayAvatarOnRight();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-                //Move difftab to left
+                // Move difftab to left
                 CommitInfoTabControl.RemoveIfExists(DiffTabPage);
                 CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
                 CommitInfoTabControl.SelectedTab = DiffTabPage;
@@ -568,7 +568,7 @@ namespace GitUI.CommandsDialogs
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-            //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
+            // Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
@@ -719,18 +719,18 @@ namespace GitUI.CommandsDialogs
             foreach (ScriptInfo scriptInfo in scripts)
             {
                 ToolStripButton tempButton = new ToolStripButton();
-                //store scriptname
+                // store scriptname
                 tempButton.Text = scriptInfo.Name;
                 tempButton.Tag = "userscript";
-                //add handler
+                // add handler
                 tempButton.Click += UserMenu_Click;
                 tempButton.Enabled = true;
                 tempButton.Visible = true;
-                //tempButton.Image = GitUI.Properties.Resources.bug;
-                //scriptInfo.Icon = "Cow";
+                ////tempButton.Image = GitUI.Properties.Resources.bug;
+                ////scriptInfo.Icon = "Cow";
                 tempButton.Image = scriptInfo.GetIcon();
                 tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-                //add to toolstrip
+                // add to toolstrip
                 ToolStrip.Items.Add(tempButton);
             }
         }
@@ -757,7 +757,7 @@ namespace GitUI.CommandsDialogs
                         Directory.CreateDirectory(baseFolder);
                     }
 
-                    //Remove InvalidPathChars
+                    // Remove InvalidPathChars
                     StringBuilder sb = new StringBuilder(repositoryDescription);
                     foreach (char c in Path.GetInvalidFileNameChars())
                     {
@@ -771,7 +771,7 @@ namespace GitUI.CommandsDialogs
                     var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, Handle);
                     jumpList.ClearAllUserTasks();
 
-                    //to control which category Recent/Frequent is displayed
+                    // to control which category Recent/Frequent is displayed
                     jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
 
                     jumpList.Refresh();
@@ -803,7 +803,7 @@ namespace GitUI.CommandsDialogs
                     _toolbarButtonsCreated = true;
                     ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
 
-                    //Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
+                    // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
                     TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);
                 }
 
@@ -953,8 +953,8 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    //Only show status strip when there are status items on it.
-                    //There is always a close (x) button, do not count first item.
+                    // Only show status strip when there are status items on it.
+                    // There is always a close (x) button, do not count first item.
                     if (statusStrip.Items.Count > 1)
                         statusStrip.Show();
                     else
@@ -1055,7 +1055,7 @@ namespace GitUI.CommandsDialogs
             if (_buildReportTabPageExtension == null)
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl, _buildReportTabCaption.Text);
 
-            //Note: FillBuildReport will check if tab is visible and revision is OK
+            // Note: FillBuildReport will check if tab is visible and revision is OK
             _buildReportTabPageExtension.FillBuildReport(revision);
         }
 
@@ -1673,7 +1673,7 @@ namespace GitUI.CommandsDialogs
                 ChangeTerminalActiveFolder(Module.WorkingDir);
 
 #if DEBUG
-                //Current encodings
+                // Current encodings
                 Debug.WriteLine("Encodings for " + module.WorkingDir);
                 Debug.WriteLine("Files content encoding: " + module.FilesEncoding.EncodingName);
                 Debug.WriteLine("Commit encoding: " + module.CommitEncoding.EncodingName);
@@ -1739,8 +1739,8 @@ namespace GitUI.CommandsDialogs
             var fileNames = new StringBuilder();
             foreach (var item in diffFiles.SelectedItems)
             {
-                //Only use append line when multiple items are selected.
-                //This to make it easier to use the text from clipboard when 1 file is selected.
+                // Only use append line when multiple items are selected.
+                // This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
@@ -1977,7 +1977,7 @@ namespace GitUI.CommandsDialogs
             _splitterManager.AddSplitter(MainSplitContainer, "MainSplitContainer");
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
-            //hide status in order to restore splitters against the full height (the most common case)
+            // hide status in order to restore splitters against the full height (the most common case)
             statusStrip.Hide();
             _splitterManager.RestoreSplitters();
         }
@@ -2004,7 +2004,7 @@ namespace GitUI.CommandsDialogs
 
         private void CommandsToolStripMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            //Most options do not make sense for artificial commits or no revision selected at all
+            // Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
 
@@ -2096,8 +2096,7 @@ namespace GitUI.CommandsDialogs
                 {
                     Module.LastPullAction = AppSettings.PullAction.Merge;
                     PullToolStripMenuItemClick(sender, e);
-                }
-            );
+                });
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2106,8 +2105,7 @@ namespace GitUI.CommandsDialogs
             {
                 Module.LastPullAction = AppSettings.PullAction.Rebase;
                 PullToolStripMenuItemClick(sender, e);
-            }
-            );
+            });
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2116,8 +2114,7 @@ namespace GitUI.CommandsDialogs
             {
                 Module.LastPullAction = AppSettings.PullAction.Fetch;
                 PullToolStripMenuItemClick(sender, e);
-            }
-            );
+            });
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2126,7 +2123,7 @@ namespace GitUI.CommandsDialogs
                 Module.LastPullAction = AppSettings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
-            //restore AppSettings.FormPullAction value
+            // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
 
@@ -2174,7 +2171,7 @@ namespace GitUI.CommandsDialogs
 
             UICommands.StartPullDialog(this, true, out pullCompelted, true);
 
-            //restore AppSettings.FormPullAction value
+            // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
 
@@ -2601,8 +2598,7 @@ namespace GitUI.CommandsDialogs
                             Dock = DockStyle.Fill,
                             AutoStartInfo = null,
                             IsStatusbarVisible = false
-                        }
-                    );
+                        });
                 }
                 if (_terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
                     return;
@@ -2705,7 +2701,7 @@ namespace GitUI.CommandsDialogs
             if (_terminal == null || _terminal.RunningSession == null || string.IsNullOrWhiteSpace(command))
                 return;
 
-            //Clear terminal line by sending 'backspace' characters
+            // Clear terminal line by sending 'backspace' characters
             for (int i = 0; i < 10000; i++)
             {
                 _terminal.RunningSession.WriteInputText("\b");

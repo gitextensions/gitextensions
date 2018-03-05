@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
             set
             {
                 _diffSelectedRevision = value;
-                //commitSummaryUserControl2.Revision = _diffSelectedRevision;
+                ////commitSummaryUserControl2.Revision = _diffSelectedRevision;
                 if (_diffSelectedRevision == null)
                 {
                     const string defaultString = "...";
@@ -211,8 +211,8 @@ namespace GitUI.CommandsDialogs
         private void checkboxRevisionFilter_CheckedChanged(object sender, EventArgs e)
         {
             btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
-            //commitSummaryUserControl2.Enabled = checkboxRevisionFilter.Checked;
-            //lblChooseDiffRevision.Enabled = checkboxRevisionFilter.Checked;
+            ////commitSummaryUserControl2.Enabled = checkboxRevisionFilter.Checked;
+            ////lblChooseDiffRevision.Enabled = checkboxRevisionFilter.Checked;
             gbDiffRevision.Enabled = checkboxRevisionFilter.Checked;
             btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
             if (checkboxRevisionFilter.Checked)

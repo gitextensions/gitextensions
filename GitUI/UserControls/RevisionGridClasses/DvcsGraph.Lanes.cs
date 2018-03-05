@@ -137,14 +137,14 @@ namespace GitUI.RevisionGridClasses
                     {
                         currentRow.Node = lane.Current;
                         currentRow.NodeLane = curLane;
-                        //break;
+                        ////break;
                     }
                 }
                 if (currentRow.Node == null)
                 {
                     // DEBUG: The check above didn't find anything, but should have
                     if (Debugger.IsAttached) Debugger.Break();
-                    //Node[] topo = this.sourceGraph.TopoSortedNodes();
+                    ////Node[] topo = this.sourceGraph.TopoSortedNodes();
                     return false;
                 }
 
@@ -158,8 +158,8 @@ namespace GitUI.RevisionGridClasses
 
                 #endregion
 
-                // Check for multiple junctions with this node at the top. Remove the 
-                // node from that junction as well. This will happen when there is a branch 
+                // Check for multiple junctions with this node at the top. Remove the
+                // node from that junction as well. This will happen when there is a branch
 
                 #region Check for branches
 
@@ -180,7 +180,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Remove the item from the lane, since it is being drawn now.
-                    // We need to draw the graph line for this lane. If there are no items 
+                    // We need to draw the graph line for this lane. If there are no items
                     // left in the lane we don't draw it.
                     int intoLane = AdvanceLane(curLane);
                     if (intoLane < curLane)
@@ -234,34 +234,34 @@ namespace GitUI.RevisionGridClasses
                         }
                     }
 
-                //// Keep the merge lanes next to each other
-                //int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);
-                //if (mergeFromCount > 1)
-                //{
-                //    for (int i = 0; i < mergeFromCount; i++)
-                //    {
-                //        Graph.LaneInfo laneInfo = currentRow[currentRow.NodeLane, i];
-                //        // Check to see if the lane is currently next to us
-                //        if (laneInfo.ConnectLane - currentRow.NodeLane > mergeFromCount)
-                //        {
-                //            // Only move the lane if it isn't already being drawn.
-                //            if (currentRow.LaneInfoCount(laneInfo.ConnectLane) == 0)
-                //            {
-                //                // Remove the row laneInfo.ConnectLane and insert
-                //                // it at currentRow.NodeLane+1. 
-                //                // Then start over searching for others if i != mergeFromCount-1?
-                //                int adjacentLane = currentRow.NodeLane + 1;
-                //                if (adjacentLane >= laneNodes.Count) Debugger.Break();
-                //                currentRow.Expand(adjacentLane);
-                //                currentRow.Replace(laneInfo.ConnectLane + 1, adjacentLane);
-
-                //                LaneJunctionDetail temp = laneNodes[laneInfo.ConnectLane];
-                //                laneNodes.RemoveAt(laneInfo.ConnectLane);
-                //                laneNodes.Insert(adjacentLane, temp);
-                //            }
-                //        }
-                //    }
-                //}
+                // Keep the merge lanes next to each other
+                ////int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);
+                ////if (mergeFromCount > 1)
+                ////{
+                ////   for (int i = 0; i < mergeFromCount; i++)
+                ////   {
+                ////       Graph.LaneInfo laneInfo = currentRow[currentRow.NodeLane, i];
+                ////       // Check to see if the lane is currently next to us
+                ////       if (laneInfo.ConnectLane - currentRow.NodeLane > mergeFromCount)
+                ////       {
+                ////           // Only move the lane if it isn't already being drawn.
+                ////           if (currentRow.LaneInfoCount(laneInfo.ConnectLane) == 0)
+                ////           {
+                ////               // Remove the row laneInfo.ConnectLane and insert
+                ////               // it at currentRow.NodeLane+1.
+                ////               // Then start over searching for others if i != mergeFromCount-1?
+                ////               int adjacentLane = currentRow.NodeLane + 1;
+                ////               if (adjacentLane >= laneNodes.Count) Debugger.Break();
+                ////               currentRow.Expand(adjacentLane);
+                ////               currentRow.Replace(laneInfo.ConnectLane + 1, adjacentLane);
+                ////
+                ////               LaneJunctionDetail temp = laneNodes[laneInfo.ConnectLane];
+                ////               laneNodes.RemoveAt(laneInfo.ConnectLane);
+                ////               laneNodes.Insert(adjacentLane, temp);
+                ////           }
+                ////       }
+                ////   }
+                ////}
 
                 #endregion
 

@@ -86,7 +86,7 @@ namespace GitCommands.Config
             foreach (var section in ConfigSections)
             {
                 var keys = section.AsDictionary();
-                //Skip empty sections
+                // Skip empty sections
                 if (keys.Count == 0)
                 {
                     continue;
@@ -295,7 +295,7 @@ namespace GitCommands.Config
             private string _key = null;
             private string FileName => _configFile.FileName;
 
-            //parsed char
+            // parsed char
             private int pos;
             private StringBuilder token = new StringBuilder();
             private StringBuilder valueToken = new StringBuilder();
@@ -385,7 +385,7 @@ namespace GitCommands.Config
                 else
                 {
                     // closing square bracket not in quoted section lead to start new section
-                    if(c == ']' && !_quotedStringInSection)
+                    if (c == ']' && !_quotedStringInSection)
                     {
                         NewSection();
                         return ReadUnknown;
@@ -411,7 +411,7 @@ namespace GitCommands.Config
                 switch (c)
                 {
                     case '\n':
-                        //check for line continuation
+                        // check for line continuation
                         if (token.Length > 0 && token[token.Length - 1] == '\\')
                         {
                             token.Remove(token.Length - 1, 1);
@@ -465,7 +465,7 @@ namespace GitCommands.Config
                         case '\r':
                             return ReadValue;
                         case '\n':
-                            //line continuation
+                            // line continuation
                             break;
 
                         default:

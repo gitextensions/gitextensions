@@ -153,7 +153,7 @@ namespace GitCommands.Statistics
                     continue;
                 }
 
-                // Strip "--- " 
+                // Strip "--- "
                 line = line.Substring(4);
 
                 // Split date and author

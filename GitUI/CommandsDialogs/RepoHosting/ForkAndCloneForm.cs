@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex =>
                 {
                     _myReposLV.Items.Clear();
-                    _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) + 
+                    _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) +
                         "\r\n\r\nException: " + ex.Exception.Message + "\r\n\r\n" + _helpTextLbl.Text;
                 });
         }

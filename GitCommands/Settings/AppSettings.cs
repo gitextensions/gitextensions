@@ -25,7 +25,7 @@ namespace GitCommands
 
     public static class AppSettings
     {
-        //semi-constants
+        // semi-constants
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
         public static string ProductVersion => Application.ProductVersion;
@@ -52,11 +52,10 @@ namespace GitCommands
                 }
                 else
                 {
-                    //Make applicationdatapath version independent
+                    // Make applicationdatapath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
-            }
-            );
+            });
 
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
@@ -111,11 +110,10 @@ namespace GitCommands
                     finally
                     {
                         SettingsContainer = oldSC;
-                        //refresh settings if needed
+                        // refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }
-                }
-             );
+                });
         }
 
         public static string GetInstallDir()
@@ -148,7 +146,7 @@ namespace GitCommands
             return GetInstallDir();
         }
 
-        //for repair only
+        // for repair only
         public static void SetInstallDir(string dir)
         {
             WriteStringRegValue("InstallDir", dir);
@@ -205,8 +203,8 @@ namespace GitCommands
 
         public static bool ShowCurrentBranchInVisualStudio
         {
-            //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
-            //other changes in the Visual Studio plugin itself.
+            // This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
+            // other changes in the Visual Studio plugin itself.
             get => ReadBoolRegKey("ShowCurrentBranchInVS", true);
             set => WriteBoolRegKey("ShowCurrentBranchInVS", value);
         }
@@ -316,7 +314,7 @@ namespace GitCommands
             get => GetBool("showresetallchanges", true);
             set => SetBool("showresetallchanges", value);
         }
-        
+
         public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
         public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
         public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
@@ -412,23 +410,23 @@ namespace GitCommands
         private static readonly Dictionary<string, string> _languageCodes =
             new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
-                {"Czech", "cs"},
-                {"Dutch", "nl"},
-                {"English", "en"},
-                {"French", "fr"},
-                {"German", "de"},
-                {"Indonesian", "id"},
-                {"Italian", "it"},
-                {"Japanese", "ja"},
-                {"Korean", "ko"},
-                {"Polish", "pl"},
-                {"Portuguese (Brazil)", "pt-BR"},
-                {"Portuguese (Portugal)", "pt-PT"},
-                {"Romanian", "ro"},
-                {"Russian", "ru"},
-                {"Simplified Chinese", "zh-CN"},
-                {"Spanish", "es"},
-                {"Traditional Chinese", "zh-TW"}
+                { "Czech", "cs" },
+                { "Dutch", "nl" },
+                { "English", "en" },
+                { "French", "fr" },
+                { "German", "de" },
+                { "Indonesian", "id" },
+                { "Italian", "it" },
+                { "Japanese", "ja" },
+                { "Korean", "ko" },
+                { "Polish", "pl" },
+                { "Portuguese (Brazil)", "pt-BR" },
+                { "Portuguese (Portugal)", "pt-PT" },
+                { "Romanian", "ro" },
+                { "Russian", "ru" },
+                { "Simplified Chinese", "zh-CN" },
+                { "Spanish", "es" },
+                { "Traditional Chinese", "zh-TW" }
             };
 
         public static string CurrentLanguageCode
@@ -954,13 +952,13 @@ namespace GitCommands
                 var temp = value.EnsureTrailingPathSeparator();
                 SetString("gitbindir", temp);
 
-                //if (string.IsNullOrEmpty(_gitBinDir))
-                //    return;
-
-                //var path =
-                //    Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
-                //    _gitBinDir;
-                //Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                ////if (string.IsNullOrEmpty(_gitBinDir))
+                ////   return;
+                ////
+                ////var path =
+                ////   Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
+                ////   _gitBinDir;
+                ////Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
             }
         }
 
@@ -978,8 +976,8 @@ namespace GitCommands
 
         public static int DiffVerticalRulerPosition
         {
-            get => GetInt( "diffverticalrulerposition", 80 );
-            set => SetInt( "diffverticalrulerposition", value );
+            get => GetInt("diffverticalrulerposition", 80);
+            set => SetInt("diffverticalrulerposition", value);
         }
 
         public static string RecentWorkingDir
@@ -1601,13 +1599,13 @@ namespace GitCommands
                 }
                 catch
                 {
-                    //there are CultureInfos without a code page
+                    // there are CultureInfos without a code page
                 }
             }
             else
             {
                 var utf8 = new UTF8Encoding(false);
-                foreach(var encodingName in availableEncodings.Split(';'))
+                foreach (var encodingName in availableEncodings.Split(';'))
                 {
                     // create utf-8 without BOM
                     if (encodingName == utf8.HeaderName)

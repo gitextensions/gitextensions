@@ -25,7 +25,7 @@ namespace BackgroundFetch
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            // return all settings or introduce implementation based on reflection on GitPluginBase level
             yield return GitCommand;
             yield return FetchInterval;
             yield return AutoRefresh;
@@ -89,8 +89,7 @@ namespace BackgroundFetch
                                           else
                                               currentGitUiCommands.RepoChangedNotifier.Notify();
                                       }
-                                  }
-                                  );
+                                  });
             }
         }
 

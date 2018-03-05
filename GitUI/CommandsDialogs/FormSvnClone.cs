@@ -45,8 +45,8 @@ namespace GitUI.CommandsDialogs
             {
                 var dirTo = Path.Combine(_NO_TRANSLATE_destinationComboBox.Text, _NO_TRANSLATE_subdirectoryTextBox.Text);
 
-                //Repositories.RepositoryHistory.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
-                //Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
+                ////Repositories.RepositoryHistory.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
+                ////Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);

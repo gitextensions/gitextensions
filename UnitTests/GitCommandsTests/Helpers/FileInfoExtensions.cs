@@ -30,7 +30,7 @@ namespace GitCommandsTests.Helpers
                 byte[] currentFileBytes = File.ReadAllBytes(currentFile.FullName);
                 byte[] otherFileBytes = File.ReadAllBytes(otherFilePath);
 
-                bool areEqual = true; //we need this as Parallel.For does not allow return value
+                bool areEqual = true; // we need this as Parallel.For does not allow return value
 
                 if (currentFileBytes.Length != otherFileBytes.Length)
                     return false;

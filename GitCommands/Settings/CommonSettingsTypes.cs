@@ -11,7 +11,7 @@ namespace GitCommands.Settings
     }
 
     public enum SettingsKind
-    { 
+    {
         /// <summary>
         /// Global for all repositories
         /// </summary>

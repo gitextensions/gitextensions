@@ -91,24 +91,24 @@ namespace GitUI.Editor.RichTextBoxExtension
             SUBSCRIPT = CFE.SUBSCRIPT | CFE.SUPERSCRIPT,
             SUPERSCRIPT = SUBSCRIPT,
 
-            SMALLCAPS = 0x0040,			/* (*)	*/
-            ALLCAPS = 0x0080,			/* Displayed by 3.0	*/
-            HIDDEN = 0x0100,			/* Hidden by 3.0 */
-            OUTLINE = 0x0200,			/* (*)	*/
-            SHADOW = 0x0400,			/* (*)	*/
-            EMBOSS = 0x0800,			/* (*)	*/
-            IMPRINT = 0x1000,			/* (*)	*/
+            SMALLCAPS = 0x0040,         /* (*)  */
+            ALLCAPS = 0x0080,           /* Displayed by 3.0 */
+            HIDDEN = 0x0100,            /* Hidden by 3.0 */
+            OUTLINE = 0x0200,           /* (*)  */
+            SHADOW = 0x0400,            /* (*)  */
+            EMBOSS = 0x0800,            /* (*)  */
+            IMPRINT = 0x1000,           /* (*)  */
             DISABLED = 0x2000,
             REVISED = 0x4000,
 
             BACKCOLOR = 0x04000000,
             LCID = 0x02000000,
-            UNDERLINETYPE = 0x00800000,		/* Many displayed by 3.0 */
+            UNDERLINETYPE = 0x00800000,     /* Many displayed by 3.0 */
             WEIGHT = 0x00400000,
-            SPACING = 0x00200000,		/* Displayed by 3.0	*/
-            KERNING = 0x00100000,		/* (*)	*/
-            STYLE = 0x00080000,		/* (*)	*/
-            ANIMATION = 0x00040000,		/* (*)	*/
+            SPACING = 0x00200000,       /* Displayed by 3.0 */
+            KERNING = 0x00100000,       /* (*)  */
+            STYLE = 0x00080000,     /* (*)  */
+            ANIMATION = 0x00040000,     /* (*)  */
             REVAUTHOR = 0x00008000
         }
 
@@ -123,16 +123,16 @@ namespace GitUI.Editor.RichTextBoxExtension
             PROTECTED = 0x00000010,
             LINK = 0x00000020,
             AUTOCOLOR = 0x40000000,
-            SUBSCRIPT = 0x00010000,		/* Superscript and subscript are */
-            SUPERSCRIPT = 0x00020000,     /*  mutually exclusive			 */
+            SUBSCRIPT = 0x00010000,     /* Superscript and subscript are */
+            SUPERSCRIPT = 0x00020000,     /*  mutually exclusive             */
 
-            SMALLCAPS = 0x0040,			/* (*)	*/
-            ALLCAPS = 0x0080,			/* Displayed by 3.0	*/
-            HIDDEN = 0x0100,			/* Hidden by 3.0 */
-            OUTLINE = 0x0200,			/* (*)	*/
-            SHADOW = 0x0400,			/* (*)	*/
-            EMBOSS = 0x0800,			/* (*)	*/
-            IMPRINT = 0x1000,			/* (*)	*/
+            SMALLCAPS = 0x0040,         /* (*)  */
+            ALLCAPS = 0x0080,           /* Displayed by 3.0 */
+            HIDDEN = 0x0100,            /* Hidden by 3.0 */
+            OUTLINE = 0x0200,           /* (*)  */
+            SHADOW = 0x0400,            /* (*)  */
+            EMBOSS = 0x0800,            /* (*)  */
+            IMPRINT = 0x1000,           /* (*)  */
             DISABLED = 0x2000,
             REVISED = 0x4000,
 
@@ -145,15 +145,15 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             UNDERLINENONE = 0x00,
             UNDERLINE = 0x01,
-            UNDERLINEWORD = 0x02, /* (*) displayed as ordinary underline	*/
-            UNDERLINEDOUBLE = 0x03, /* (*) displayed as ordinary underline	*/
+            UNDERLINEWORD = 0x02, /* (*) displayed as ordinary underline    */
+            UNDERLINEDOUBLE = 0x03, /* (*) displayed as ordinary underline  */
             UNDERLINEDOTTED = 0x04,
             UNDERLINEDASH = 0x05,
             UNDERLINEDASHDOT = 0x06,
             UNDERLINEDASHDOTDOT = 0x07,
             UNDERLINEWAVE = 0x08,
             UNDERLINETHICK = 0x09,
-            UNDERLINEHAIRLINE = 0x0A /* (*) displayed as ordinary underline	*/
+            UNDERLINEHAIRLINE = 0x0A /* (*) displayed as ordinary underline */
         }
 
         // Font Weights
@@ -181,7 +181,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         [Flags]
         public enum PFM : uint
         {
-            // PARAFORMAT mask values 
+            // PARAFORMAT mask values
             STARTINDENT = 0x00000001,
             RIGHTINDENT = 0x00000002,
             OFFSET = 0x00000004,
@@ -190,34 +190,34 @@ namespace GitUI.Editor.RichTextBoxExtension
             NUMBERING = 0x00000020,
             OFFSETINDENT = 0x80000000,
 
-            // PARAFORMAT 2.0 masks and effects 
+            // PARAFORMAT 2.0 masks and effects
             SPACEBEFORE = 0x00000040,
             SPACEAFTER = 0x00000080,
             LINESPACING = 0x00000100,
             STYLE = 0x00000400,
-            BORDER = 0x00000800,	// (*)	
-            SHADING = 0x00001000,	// (*)	
-            NUMBERINGSTYLE = 0x00002000,	// RE 3.0	
-            NUMBERINGTAB = 0x00004000,	// RE 3.0	
-            NUMBERINGSTART = 0x00008000,	// RE 3.0	
+            BORDER = 0x00000800,    // (*)
+            SHADING = 0x00001000,   // (*)
+            NUMBERINGSTYLE = 0x00002000,    // RE 3.0
+            NUMBERINGTAB = 0x00004000,  // RE 3.0
+            NUMBERINGSTART = 0x00008000,    // RE 3.0
 
             RTLPARA = 0x00010000,
-            KEEP = 0x00020000,	// (*)	
-            KEEPNEXT = 0x00040000,	// (*)	
-            PAGEBREAKBEFORE = 0x00080000,	// (*)	
-            NOLINENUMBER = 0x00100000,	// (*)	
-            NOWIDOWCONTROL = 0x00200000,	// (*)	
-            DONOTHYPHEN = 0x00400000,	// (*)	
-            SIDEBYSIDE = 0x00800000,	// (*)	
-            TABLE = 0x40000000,	// RE 3.0 
-            TEXTWRAPPINGBREAK = 0x20000000,	// RE 3.0 
-            TABLEROWDELIMITER = 0x10000000,	// RE 4.0 
+            KEEP = 0x00020000,  // (*)
+            KEEPNEXT = 0x00040000,  // (*)
+            PAGEBREAKBEFORE = 0x00080000,   // (*)
+            NOLINENUMBER = 0x00100000,  // (*)
+            NOWIDOWCONTROL = 0x00200000,    // (*)
+            DONOTHYPHEN = 0x00400000,   // (*)
+            SIDEBYSIDE = 0x00800000,    // (*)
+            TABLE = 0x40000000, // RE 3.0
+            TEXTWRAPPINGBREAK = 0x20000000, // RE 3.0
+            TABLEROWDELIMITER = 0x10000000, // RE 4.0
 
             // The following three properties are read only
-            COLLAPSED = 0x01000000,	// RE 3.0 
-            OUTLINELEVEL = 0x02000000,	// RE 3.0 
-            BOX = 0x04000000,	// RE 3.0 
-            RESERVED2 = 0x08000000	// RE 4.0 
+            COLLAPSED = 0x01000000, // RE 3.0
+            OUTLINELEVEL = 0x02000000,  // RE 3.0
+            BOX = 0x04000000,   // RE 3.0
+            RESERVED2 = 0x08000000 // RE 4.0
         }
 
         // PARAFORMAT numbering options
@@ -707,7 +707,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             catch (Exception /*ex*/)
             {
-                //MessageBox.Show(ex.Message);
+                ////MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -784,7 +784,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                     fontSet = strFont != "";
 
-                    // font size should be translate to 
+                    // font size should be translate to
                     // html size (Approximately)
                     int fsize = yHeight / (20 * 5);
 
@@ -912,7 +912,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                         bnumbering = ctformatStates.nctNone;
                 }
 
-                // bold 
+                // bold
                 UpdateState((cf.dwEffects & CFE.BOLD) == CFE.BOLD, ref bold);
                 AddTag(pos, "b", colFormat, ref bold);
 
@@ -1037,7 +1037,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetPlaintText(this RichTextBox rtb)
         {
-            //rtb.HideSelection = true;
+            ////rtb.HideSelection = true;
             IntPtr oldMask = rtb.BeginUpdate();
 
             int nStart = rtb.SelectionStart;
@@ -1060,7 +1060,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             catch (Exception /*ex*/)
             {
-                //MessageBox.Show(ex.Message);
+                ////MessageBox.Show(ex.Message);
             }
             finally
             {

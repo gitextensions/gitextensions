@@ -80,9 +80,9 @@ namespace GitUI.CommandsDialogs
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
                 Stashes.Items.Add(stashedItem);
-            if (ManageStashes && Stashes.Items.Count > 1)// more than just the default ("Current working directory changes")
-                Stashes.SelectedIndex = 1;// -> auto-select first non-default
-            else if (Stashes.Items.Count > 0)// (no stashes) -> select default ("Current working directory changes")
+            if (ManageStashes && Stashes.Items.Count > 1) // more than just the default ("Current working directory changes")
+                Stashes.SelectedIndex = 1; // -> auto-select first non-default
+            else if (Stashes.Items.Count > 0) // (no stashes) -> select default ("Current working directory changes")
                 Stashes.SelectedIndex = 0;
         }
 
@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
             {
                 Stashed.GitItemStatuses = null;
             }
-            else if(gitStash == currentWorkingDirStashItem)
+            else if (gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
                 _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.WaitCursor;
 
             if (stashedItem != null &&
-                gitStash == currentWorkingDirStashItem) //current working directory
+                gitStash == currentWorkingDirStashItem) // current working directory
             {
                 View.ViewCurrentChanges(stashedItem);
             }
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                UICommands.StashDrop(this, stashName); 
+                UICommands.StashDrop(this, stashName);
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }

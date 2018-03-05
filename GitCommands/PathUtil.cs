@@ -110,7 +110,7 @@ namespace GitCommands
             return name;
         }
 
-                
+
         public static bool TryFindFullPath(string fileName, out string fullPath)
         {
             try
@@ -132,7 +132,7 @@ namespace GitCommands
             }
             catch
             {
-                // do nothing 
+                // do nothing
             }
             fullPath = null;
             return false;
@@ -159,7 +159,7 @@ namespace GitCommands
             }
             catch
             {
-                // do nothing 
+                // do nothing
             }
             shellPath = null;
             return false;

@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void ButtonOk_Click(object sender, EventArgs e)
         {
             AppSettings.AvailableEncodings.Clear();
-            foreach(Encoding encoding in ListIncludedEncodings.Items)
+            foreach (Encoding encoding in ListIncludedEncodings.Items)
             {
                 AppSettings.AvailableEncodings.Add(encoding.HeaderName, encoding);
             }
@@ -98,14 +98,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (encoding != null)
                 encodingType = encoding.GetType();
             // If selected encoding and encoding not default list
-            ToRight.Enabled = encoding != null && 
+            ToRight.Enabled = encoding != null &&
                 !(
                     encodingType == typeof(ASCIIEncoding) ||
                     encodingType == typeof(UnicodeEncoding) ||
                     encodingType == typeof(UTF8Encoding) ||
                     encodingType == typeof(UTF7Encoding) ||
-                    encoding == Encoding.Default
-                );
+                    encoding == Encoding.Default);
         }
 
         private void ListAvailableEncodings_SelectedValueChanged(object sender, EventArgs e)

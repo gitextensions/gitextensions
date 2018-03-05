@@ -92,7 +92,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Saves the user dictionary file
         /// </summary>
         /// <remarks>
-        ///		If the file does not exist, it will be created
+        ///     If the file does not exist, it will be created
         /// </remarks>
         private void SaveUserFile()
         {
@@ -162,7 +162,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     </para>
         /// </param>
         /// <remarks>
-        ///		This method is only affects the user word list
+        ///     This method is only affects the user word list
         /// </remarks>
         public void Add(string word)
         {
@@ -174,7 +174,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Clears the user list of words
         /// </summary>
         /// <remarks>
-        ///		This method is only affects the user word list
+        ///     This method is only affects the user word list
         /// </remarks>
         public void Clear()
         {
@@ -435,7 +435,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                         SuffixRules.Add(currentRule.Name, currentRule);
                                     }
                                 }
-                                    //if 4 parts, then entry for current rule
+                                    // if 4 parts, then entry for current rule
                                 else if (partMatches.Count == 4)
                                 {
                                     // part 1 = affix key
@@ -582,7 +582,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     </para>
         /// </param>
         /// <remarks>
-        ///		This method is only affects the user word list
+        ///     This method is only affects the user word list
         /// </remarks>
         public void Remove(string word)
         {
@@ -654,7 +654,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     a word is added.
         /// </summary>
         /// <remarks>
-        ///		This should be set to false in a web environment
+        ///     This should be set to false in a web environment
         /// </remarks>
         [DefaultValue(true)]
         [Category("Options")]
@@ -730,7 +730,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     doesn't find a word.
         /// </summary>
         /// <remarks>
-        ///		These are not actual words.
+        ///     These are not actual words.
         /// </remarks>
         internal List<string> PossibleBaseWords { get; } = new List<string>();
 

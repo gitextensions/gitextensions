@@ -178,7 +178,7 @@ namespace ResourceManagerTests.CommitDataRenders
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
-            data.ChildrenGuids = _childrenHashes; 
+            data.ChildrenGuids = _childrenHashes;
 
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");

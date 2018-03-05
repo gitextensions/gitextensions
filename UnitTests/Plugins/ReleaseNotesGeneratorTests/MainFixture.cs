@@ -22,7 +22,7 @@ namespace ReleaseNotesGeneratorTests
             dataObject.GetFormats().Length.Should().Be(2);
             dataObject.GetText().Should().Be("<p>Hallo</p>");
             ((string)dataObject.GetData("HTML Format")).Should().Be(
-                "Version:0.9\r\n"+
+                "Version:0.9\r\n" +
                 "StartHTML:00000097\r\n" +
                 "EndHTML:00000177\r\n" +
                 "StartFragment:00000131\r\n" +

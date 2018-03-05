@@ -67,8 +67,8 @@ namespace ResourceManager.Xliff
             if (itemObj == null)
                 yield break;
 
-            //Skip controls with a name started with "_NO_TRANSLATE_"
-            //this is a naming convention, these are not translated
+            // Skip controls with a name started with "_NO_TRANSLATE_"
+            // this is a naming convention, these are not translated
             string itemName = item.Item1;
             if (itemName.StartsWith("_NO_TRANSLATE_"))
                 yield break;
@@ -148,7 +148,7 @@ namespace ResourceManager.Xliff
                     string propertyName = property.Name;
                     if (propertyName == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
                     {
-                        var list = (IList) property.GetValue(itemObj, null);
+                        var list = (IList)property.GetValue(itemObj, null);
                         for (int index = 0; index < list.Count; index++)
                         {
                             propertyName = "Item" + index;
@@ -293,7 +293,7 @@ namespace ResourceManager.Xliff
                     continue;
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.IsClass && typeof (ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                    if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
                         var val = !assembly.IsPlugin() ? "" : ".Plugins";
                         if (!dictionary.TryGetValue(val, out var list))

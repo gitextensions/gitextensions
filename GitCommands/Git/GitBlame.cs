@@ -24,17 +24,17 @@ namespace GitCommands
 
     public class GitBlameLine
     {
-        //Line
+        // Line
         public string CommitGuid { get; set; }
-        public int    FinalLineNumber { get; set; }
-        public int    OriginLineNumber { get; set; }
+        public int FinalLineNumber { get; set; }
+        public int OriginLineNumber { get; set; }
 
         public string LineText { get; set; }
     }
 
     public class GitBlameHeader
     {
-        //Header
+        // Header
         public string CommitGuid { get; set; }
         public string AuthorMail { get; set; }
         public DateTime AuthorTime { get; set; }
@@ -52,7 +52,7 @@ namespace GitCommands
             int partLength = CommitGuid.Length / 3;
             return Color.FromArgb(GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength)) % 55 + 200);
 
-            //return Color.White;
+            // return Color.White;
         }
 
         private int GenerateIntFromString(string text)

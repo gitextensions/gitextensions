@@ -187,13 +187,13 @@ Inactive remote is completely invisible to git.");
         private void InitialiseTabRemotes(string preselectRemote = null)
         {
             // because the binding the same BindingList to multiple controls,
-            // and changes in one of the bound control automatically get reflected 
+            // and changes in one of the bound control automatically get reflected
             // in the other control, which causes rather frustrating UX.
             // to address that, re-create binding lists for each individual control
             var repos = Repositories.RemoteRepositoryHistory.Repositories.OrderBy(x => x.Path);
             try
             {
-                // to stop the flicker binding the lists and 
+                // to stop the flicker binding the lists and
                 // when the selected remote is getting reset and then selected again
                 Url.BeginUpdate();
                 comboBoxPushUrl.BeginUpdate();
@@ -354,7 +354,7 @@ Inactive remote is completely invisible to git.");
                     Repositories.SaveSettings();
                 }
 
-                // if the user has just created a fresh new remote 
+                // if the user has just created a fresh new remote
                 // there may be a need to configure it
                 if (result.ShouldUpdateRemote && !string.IsNullOrEmpty(remoteUrl) &&
                 DialogResult.Yes == MessageBox.Show(this,

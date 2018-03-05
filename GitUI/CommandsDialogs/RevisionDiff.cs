@@ -225,9 +225,9 @@ namespace GitUI.CommandsDialogs
                 Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
                 itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
             }
-            else //acts as parent
+            else // acts as parent
             {
-                //if file is new to the parent, it has to be removed
+                // if file is new to the parent, it has to be removed
                 var addedItems = selectedItems.Where(item => item.IsNew);
                 Module.RemoveFiles(addedItems.Select(item => item.Name), false);
                 itemsToCheckout = selectedItems.Where(item => !item.IsNew);
@@ -330,8 +330,8 @@ namespace GitUI.CommandsDialogs
         {
             var selectionInfo = GetSelectionInfo();
 
-            //Many options have no meaning for artificial commits or submodules
-            //Hide the obviously no action options when single selected, handle them in actions if multi select
+            // Many options have no meaning for artificial commits or submodules
+            // Hide the obviously no action options when single selected, handle them in actions if multi select
 
             openWithDifftoolToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo);
             saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs
             unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
 
             cherryPickSelectedDiffFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
-            //Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
+            // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
             diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
@@ -504,7 +504,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
-            //Should be blocked in the GUI but not an error to show to the user
+            // Should be blocked in the GUI but not an error to show to the user
             Debug.Assert(selectedRevisions.Count == 1 || selectedRevisions.Count == 2,
                 "Unexpectedly number of revisions for difftool" + selectedRevisions.Count);
             if (selectedRevisions.Count < 1 || selectedRevisions.Count > 2)
@@ -517,9 +517,9 @@ namespace GitUI.CommandsDialogs
             bool multipleRevisionsSelected = selectedRevisions.Count == 2;
 
             bool localExists = false;
-            bool bIsNormal = false; //B is assumed to be new or deleted (check from DiffFiles)
+            bool bIsNormal = false; // B is assumed to be new or deleted (check from DiffFiles)
 
-            //enable *<->Local items only when (any) local file exists
+            // enable *<->Local items only when (any) local file exists
             foreach (var item in DiffFiles.SelectedItems)
             {
                 bIsNormal = bIsNormal || !(item.IsNew || item.IsDeleted);

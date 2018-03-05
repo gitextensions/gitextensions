@@ -18,25 +18,25 @@ namespace GitCommands
         protected abstract IEnumerable<string> CollectArguments();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>name of git command eg. push, pull</returns>
         public abstract string GitComandName();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>if command accesses remote repository</returns>
         public abstract bool AccessesRemote();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>true if repo state changes after executing this command</returns>
         public abstract bool ChangesRepoState();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>git command arguments as single line</returns>
         public virtual string ToLine()
