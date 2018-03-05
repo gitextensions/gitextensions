@@ -213,8 +213,9 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator4,
             this.interactiveAddtoolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
-            //
             this.UnstagedFileContext.Size = new System.Drawing.Size(233, 414);
+            this.UnstagedFileContext.Opening += UnstagedFileContext_Opening;
+            //
             // resetChanges
             //
             this.resetChanges.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
@@ -500,8 +501,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator16,
             this.copyFolderNameMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedSubmoduleContext";
-            //
             this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(229, 242);
+            //
             // commitSubmoduleChanges
             //
             this.commitSubmoduleChanges.Image = global::GitUI.Properties.Resources.IconDirtySubmodules;
@@ -1538,7 +1539,6 @@ namespace GitUI.CommandsDialogs
             this.commitStatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
