@@ -70,6 +70,7 @@ namespace GitUI
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly ICommitDataManager _commitDataManager;
+        private readonly IGitRevisionTester _gitRevisionTester = new GitRevisionTester();
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
@@ -607,14 +608,14 @@ namespace GitUI
 
             for (index = startIndex; index < Revisions.RowCount; ++index)
             {
-                if (GetRevision(index).MatchesSearchString(searchString))
+                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
                     return index;
             }
 
             // We didn't find it so start searching from the top
             for (index = 0; index < startIndex; ++index)
             {
-                if (GetRevision(index).MatchesSearchString(searchString))
+                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
                     return index;
             }
 
@@ -630,17 +631,16 @@ namespace GitUI
 
             for (index = startIndex; index >= 0; --index)
             {
-                if (GetRevision(index).MatchesSearchString(searchString))
+                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
                     return index;
             }
 
             // We didn't find it so start searching from the bottom
             for (index = Revisions.RowCount - 1; index > startIndex; --index)
             {
-                if (GetRevision(index).MatchesSearchString(searchString))
+                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
                     return index;
             }
-
 
             return null;
         }
