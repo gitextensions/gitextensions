@@ -100,7 +100,6 @@ namespace GitCommandsTests.Git
         public void TestGetAllChangedFilesFromString()
         {
             GitModule module = new GitModule(null);
-
             {// git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
