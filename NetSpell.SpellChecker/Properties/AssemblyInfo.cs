@@ -138,4 +138,3 @@ namespace NetSpell.SpellChecker
         public string Version => _myType.Assembly.GetName().Version.ToString();
     }
 }
-

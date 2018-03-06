@@ -147,4 +147,3 @@ namespace GitUI.CommandsDialogs
         }
     }
 }
-

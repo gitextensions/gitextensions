@@ -99,4 +99,3 @@ namespace GitCommandsTests.Git
         }
     }
 }
-

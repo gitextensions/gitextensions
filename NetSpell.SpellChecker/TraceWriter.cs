@@ -80,4 +80,3 @@ internal static class TraceWriter
         return string.Format("{0}.{1}", className, functionName);
     }
 }
-
