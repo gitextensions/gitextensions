@@ -235,7 +235,8 @@ namespace GitUI.CommandsDialogs
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
-            using (var frm = new FormEdit(Module.ShowSha1(currenItem.Hash))) frm.ShowDialog(this);
+            using (var frm = new FormEdit(Module.ShowSha1(currenItem.Hash)))
+                frm.ShowDialog(this);
         }
 
         private int CreateLostFoundTags()

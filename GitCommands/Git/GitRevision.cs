@@ -48,7 +48,8 @@ namespace GitCommands
             get => _buildStatus;
             set
             {
-                if (Equals(value, _buildStatus)) return;
+                if (Equals(value, _buildStatus))
+                    return;
                 _buildStatus = value;
                 OnPropertyChanged(nameof(BuildStatus));
             }

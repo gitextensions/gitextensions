@@ -276,7 +276,8 @@ namespace GitUI.CommandsDialogs
         {
             var selectedRows = FileChanges.GetSelectedRevisions();
 
-            if (selectedRows.Count == 0) return;
+            if (selectedRows.Count == 0)
+                return;
 
             GitRevision revision = selectedRows[0];
             var children = FileChanges.GetRevisionChildren(revision.Guid);

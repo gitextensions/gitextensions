@@ -32,12 +32,14 @@ namespace GitUI.CommandsDialogs
 
         private void GridChangedFiles_SelectionChanged(object sender, EventArgs e)
         {
-            if (GridChangedFiles.SelectedRows.Count == 0) return;
+            if (GridChangedFiles.SelectedRows.Count == 0)
+                return;
 
             var patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
             CurrentPatch = patch;
 
-            if (patch == null) return;
+            if (patch == null)
+                return;
 
             ChangesList.ViewPatch(patch);
         }

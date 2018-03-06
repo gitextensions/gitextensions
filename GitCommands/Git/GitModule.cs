@@ -834,9 +834,12 @@ namespace GitCommands
                 }
             }
 
-            if (!File.Exists(fileNames[0])) fileNames[0] = null;
-            if (!File.Exists(fileNames[1])) fileNames[1] = null;
-            if (!File.Exists(fileNames[2])) fileNames[2] = null;
+            if (!File.Exists(fileNames[0]))
+                fileNames[0] = null;
+            if (!File.Exists(fileNames[1]))
+                fileNames[1] = null;
+            if (!File.Exists(fileNames[2]))
+                fileNames[2] = null;
 
             return fileNames;
         }
@@ -3331,8 +3334,14 @@ namespace GitCommands
 
         public override bool Equals(object obj)
         {
-            if (obj == null) { return false; }
-            if (obj == this) { return true; }
+            if (obj == null)
+            {
+                return false;
+            }
+            if (obj == this)
+            {
+                return true;
+            }
 
             GitModule other = obj as GitModule;
             return (other != null) && Equals(other);

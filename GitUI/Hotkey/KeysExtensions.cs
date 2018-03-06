@@ -29,7 +29,11 @@ namespace GitUI.Hotkey
             Keys modifier = key & Keys.Modifiers;
 
             List<Keys> modifierList = new List<Keys>();
-            Action<Keys> addIfContains = m => { if (m == (m & modifier)) modifierList.Add(m); };
+            Action<Keys> addIfContains = m =>
+            {
+                if (m == (m & modifier))
+                modifierList.Add(m);
+            };
 
             addIfContains(Keys.Control);
             addIfContains(Keys.Shift);

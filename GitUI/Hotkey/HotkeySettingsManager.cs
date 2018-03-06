@@ -114,7 +114,9 @@ namespace GitUI.Hotkey
                     AppSettings.SerializedHotkeys = strBuilder.ToString();
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
@@ -193,7 +195,9 @@ namespace GitUI.Hotkey
                     settings = Serializer.Deserialize(reader) as HotkeySettings[];
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             return settings;
         }

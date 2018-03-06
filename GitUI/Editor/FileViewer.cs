@@ -698,7 +698,8 @@ namespace GitUI.Editor
         {
             PictureBox.ImageLocation = "";
 
-            if (PictureBox.Image == null) return;
+            if (PictureBox.Image == null)
+                return;
             PictureBox.Image.Dispose();
             PictureBox.Image = null;
         }

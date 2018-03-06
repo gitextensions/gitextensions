@@ -1134,7 +1134,8 @@ namespace GitUI.CommandsDialogs
 
         void Staged_DoubleClick(object sender, EventArgs e)
         {
-            if (Module.IsBareRepository()) return;
+            if (Module.IsBareRepository())
+                return;
             _currentFilesList = Staged;
             Unstage();
         }
@@ -1224,7 +1225,8 @@ namespace GitUI.CommandsDialogs
 
         private void Unstage(bool canUseUnstageAll = true)
         {
-            if (Module.IsBareRepository()) return;
+            if (Module.IsBareRepository())
+                return;
             if (canUseUnstageAll &&
                 Staged.GitItemStatuses.Count() > 10 &&
                 Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
@@ -1356,7 +1358,10 @@ namespace GitUI.CommandsDialogs
                 bool isFile = false;
                 foreach (GitItemStatus item in Staged.SelectedItems)
                 {
-                    if (!item.IsSubmodule) { isFile = true; }
+                    if (!item.IsSubmodule)
+                    {
+                        isFile = true;
+                    }
                 }
                 stagedToolStripSeparator14.Visible = isFile;
                 stagedEditFileToolStripMenuItem11.Visible = isFile;
@@ -2531,8 +2536,12 @@ namespace GitUI.CommandsDialogs
                             else
                                 Directory.Delete(path, true);
                         }
-                        catch (System.IO.IOException) { }
-                        catch (System.UnauthorizedAccessException) { }
+                        catch (System.IO.IOException)
+                        {
+                        }
+                        catch (System.UnauthorizedAccessException)
+                        {
+                        }
                     }
                 }
             }
@@ -2572,7 +2581,8 @@ namespace GitUI.CommandsDialogs
         private void submoduleSummaryMenuItem_Click(object sender, EventArgs e)
         {
             string summary = Module.GetSubmoduleSummary(_currentItem.Name);
-            using (var frm = new FormEdit(summary)) frm.ShowDialog(this);
+            using (var frm = new FormEdit(summary))
+                frm.ShowDialog(this);
         }
 
         private void viewHistoryMenuItem_Click(object sender, EventArgs e)
@@ -2597,7 +2607,8 @@ namespace GitUI.CommandsDialogs
 
         private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormCommitTemplateSettings()) frm.ShowDialog(this);
+            using (var frm = new FormCommitTemplateSettings())
+                frm.ShowDialog(this);
             _shouldReloadCommitTemplates = true;
         }
 

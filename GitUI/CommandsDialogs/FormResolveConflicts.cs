@@ -309,9 +309,12 @@ namespace GitUI.CommandsDialogs
             }
 
             Initialize();
-            if (File.Exists(baseFileName)) File.Delete(baseFileName);
-            if (File.Exists(remoteFileName)) File.Delete(remoteFileName);
-            if (File.Exists(localFileName)) File.Delete(localFileName);
+            if (File.Exists(baseFileName))
+                File.Delete(baseFileName);
+            if (File.Exists(remoteFileName))
+                File.Delete(remoteFileName);
+            if (File.Exists(localFileName))
+                File.Delete(localFileName);
         }
 
         private void Use2WayMerge(ref string arguments)

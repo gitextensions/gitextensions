@@ -276,7 +276,8 @@ namespace GitUI.CommandsDialogs
                 await ShowSelectedFileDiff();
             }
             catch (OperationCanceledException)
-            { }
+            {
+            }
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -316,7 +317,8 @@ namespace GitUI.CommandsDialogs
                 await ShowSelectedFileDiff();
             }
             catch (OperationCanceledException)
-            { }
+            {
+            }
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -808,8 +810,12 @@ namespace GitUI.CommandsDialogs
                             else
                                 Directory.Delete(path, true);
                         }
-                        catch (IOException) { }
-                        catch (UnauthorizedAccessException) { }
+                        catch (IOException)
+                        {
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                        }
                     }
                 }
             }
@@ -845,7 +851,8 @@ namespace GitUI.CommandsDialogs
             {
                 summary += Module.GetSubmoduleSummary(name);
             }
-            using (var frm = new FormEdit(summary)) frm.ShowDialog(this);
+            using (var frm = new FormEdit(summary))
+                frm.ShowDialog(this);
         }
     }
 }

@@ -117,7 +117,8 @@ namespace GitUI.CommandsDialogs
 
         private void FormGitAttributesLoad(object sender, EventArgs e)
         {
-            if (!Module.IsBareRepository()) return;
+            if (!Module.IsBareRepository())
+                return;
             MessageBox.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }

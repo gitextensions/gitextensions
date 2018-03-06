@@ -997,19 +997,31 @@ namespace GitCommands
         public static string Plink
         {
             get => GetString("plink", Environment.GetEnvironmentVariable("GITEXT_PLINK") ?? ReadStringRegValue("plink", ""));
-            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK")) SetString("plink", value); }
+            set
+            {
+                if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK"))
+                SetString("plink", value);
+            }
         }
         public static string Puttygen
         {
             get => GetString("puttygen", Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN") ?? ReadStringRegValue("puttygen", ""));
-            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN")) SetString("puttygen", value); }
+            set
+            {
+                if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN"))
+                SetString("puttygen", value);
+            }
         }
 
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
             get => GetString("pageant", Environment.GetEnvironmentVariable("GITEXT_PAGEANT") ?? ReadStringRegValue("pageant", ""));
-            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT")) SetString("pageant", value); }
+            set
+            {
+                if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT"))
+                SetString("pageant", value);
+            }
         }
 
         public static bool AutoStartPageant
@@ -1249,7 +1261,8 @@ namespace GitCommands
                 });
             }
             catch
-            { }
+            {
+            }
         }
 
         public static void LoadSettings()
@@ -1261,7 +1274,8 @@ namespace GitCommands
                 GitCommandHelpers.SetSsh(SshPath);
             }
             catch
-            { }
+            {
+            }
         }
 
         public static bool DashboardShowCurrentBranch
@@ -1580,9 +1594,21 @@ namespace GitCommands
 
         private static void LoadEncodings()
         {
-            void AddEncoding(Encoding e) { AvailableEncodings[e.HeaderName] = e; }
+            void AddEncoding(Encoding e)
+            {
+                AvailableEncodings[e.HeaderName] = e;
+            }
 
-            void AddEncodingByName(string s) { try { AddEncoding(Encoding.GetEncoding(s)); } catch { } }
+            void AddEncodingByName(string s)
+            {
+                try
+                {
+                    AddEncoding(Encoding.GetEncoding(s));
+                }
+                catch
+                {
+                }
+            }
 
             string availableEncodings = GetString("AvailableEncodings", "");
             if (string.IsNullOrWhiteSpace(availableEncodings))

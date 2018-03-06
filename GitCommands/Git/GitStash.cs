@@ -51,8 +51,14 @@ namespace GitCommands.Git
 
         public override bool Equals(object obj)
         {
-            if (null == obj) { return false; }
-            if (this == obj) { return true; }
+            if (null == obj)
+            {
+                return false;
+            }
+            if (this == obj)
+            {
+                return true;
+            }
 
             GitStash other = obj as GitStash;
             return other != null && Equals(other);

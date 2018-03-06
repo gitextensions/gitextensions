@@ -338,7 +338,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
+            using (var frm = new FormDashboardEditor())
+                frm.ShowDialog(this);
             Refresh();
         }
 

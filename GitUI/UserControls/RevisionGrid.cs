@@ -2549,18 +2549,21 @@ namespace GitUI
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null) return;
+            if (_rebaseOnTopOf == null)
+                return;
             UICommands.StartRebase(this, _rebaseOnTopOf);
         }
         private void OnRebaseInteractivelyClicked(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null) return;
+            if (_rebaseOnTopOf == null)
+                return;
             UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
         }
 
         private void OnRebaseWithAdvOptionsClicked(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null) return;
+            if (_rebaseOnTopOf == null)
+                return;
             UICommands.StartRebaseDialogWithAdvOptions(this, _rebaseOnTopOf);
         }
 

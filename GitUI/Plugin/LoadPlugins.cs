@@ -49,7 +49,11 @@ namespace GitUI
                         else
                         {
                             Action<Exception> getEx = null;
-                            getEx = arg => { exInfo += arg.Message + "\r\n"; if (arg.InnerException != null) getEx(arg.InnerException); };
+                            getEx = arg =>
+                            {
+                                exInfo += arg.Message + "\r\n"; if (arg.InnerException != null)
+                                getEx(arg.InnerException);
+                            };
                             getEx(ex);
                         }
 

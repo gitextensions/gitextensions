@@ -780,7 +780,8 @@ namespace GitUI
             {
                 if (dir == null)
                     dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
-                using (var frm = new FormInit(dir, GitModuleChanged)) frm.ShowDialog(owner);
+                using (var frm = new FormInit(dir, GitModuleChanged))
+                    frm.ShowDialog(owner);
                 return true;
             };
 
@@ -1033,8 +1034,12 @@ namespace GitUI
                     else
                         Directory.Delete(path, true);
                 }
-                catch (System.IO.IOException) { }
-                catch (System.UnauthorizedAccessException) { }
+                catch (System.IO.IOException)
+                {
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                }
             }
 
             Cursor.Current = Cursors.Default;
@@ -1771,7 +1776,8 @@ namespace GitUI
         {
             WrapRepoHostingCall("View pull requests", gitHoster, gh =>
             {
-                using (var frm = new ForkAndCloneForm(gitHoster, GitModuleChanged)) frm.ShowDialog(owner);
+                using (var frm = new ForkAndCloneForm(gitHoster, GitModuleChanged))
+                    frm.ShowDialog(owner);
             });
         }
 

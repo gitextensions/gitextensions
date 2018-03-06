@@ -443,7 +443,8 @@ namespace TranslationApp
 
                 var translateItem = (TranslationItemWithCategory)translateGrid.SelectedRows[0].DataBoundItem;
 
-                if (translateItem == null) return;
+                if (translateItem == null)
+                    return;
 
                 neutralText.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;

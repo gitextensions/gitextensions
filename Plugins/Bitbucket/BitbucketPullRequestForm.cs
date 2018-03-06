@@ -213,7 +213,8 @@ namespace Bitbucket
 
         private void DdlBranchSourceSelectedValueChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ddlBranchSource.SelectedValue.ToString())) return;
+            if (string.IsNullOrEmpty(ddlBranchSource.SelectedValue.ToString()))
+                return;
             var commit = GetCommitInfo((Repository)ddlRepositorySource.SelectedValue,
                                                 ddlBranchSource.SelectedValue.ToString());
 
@@ -225,7 +226,8 @@ namespace Bitbucket
 
         private void DdlBranchTargetSelectedValueChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ddlBranchTarget.SelectedValue.ToString())) return;
+            if (string.IsNullOrEmpty(ddlBranchTarget.SelectedValue.ToString()))
+                return;
             var commit = GetCommitInfo((Repository)ddlRepositoryTarget.SelectedValue,
                                                 ddlBranchTarget.SelectedValue.ToString());
 
@@ -301,7 +303,8 @@ namespace Bitbucket
         private void BtnMergeClick(object sender, EventArgs e)
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null) return;
+            if (curItem == null)
+                return;
 
             var mergeInfo = new MergeRequestInfo
             {
@@ -326,7 +329,8 @@ namespace Bitbucket
         private void BtnApproveClick(object sender, EventArgs e)
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null) return;
+            if (curItem == null)
+                return;
 
             var mergeInfo = new MergeRequestInfo
             {

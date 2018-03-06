@@ -9,9 +9,12 @@ namespace GitCommands.Git
 
         public bool Equals(GitRevision x, GitRevision y)
         {
-            if (ReferenceEquals(x, y)) return true;
-            if (ReferenceEquals(x, null)) return false;
-            if (ReferenceEquals(y, null)) return false;
+            if (ReferenceEquals(x, y))
+                return true;
+            if (ReferenceEquals(x, null))
+                return false;
+            if (ReferenceEquals(y, null))
+                return false;
             return Equals(x.AuthorEmail, y.AuthorEmail);
         }
 

@@ -137,7 +137,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
         static IList<string> GetChildrenText(Control control)
         {
-            if (control.HasChildren == false) { return new string[0]; }
+            if (control.HasChildren == false)
+            {
+                return new string[0];
+            }
 
             List<string> texts = new List<string>();
             foreach (Control child in control.Controls)

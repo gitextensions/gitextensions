@@ -1161,7 +1161,8 @@ namespace GitUI.RevisionGridClasses
                 if (nodeColors.Count == 1)
                 {
                     nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
-                    if (nodeColors[0] == _nonRelativeColor) drawBorder = false;
+                    if (nodeColors[0] == _nonRelativeColor)
+                        drawBorder = false;
                 }
                 else
                 {

@@ -93,7 +93,8 @@ namespace GitPlugin
 
         private void GitPluginInit()
         {
-            if (_gitPlugin == null) return;
+            if (_gitPlugin == null)
+                return;
 
             try
             {
@@ -220,7 +221,8 @@ namespace GitPlugin
 
         private void GitPluginUISetup()
         {
-            if (_gitPlugin == null) return;
+            if (_gitPlugin == null)
+                return;
 
             // TODO: After Setup call: devenv.exe /ResetAddin GitPlugin.Connect or
             //       Delete RegistryKey: HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\[version]\PreloadAddinStateManager\[GitPlugin.Connect-Key]
@@ -253,7 +255,8 @@ namespace GitPlugin
 
         private void GitPluginUIUpdate()
         {
-            if (_gitPlugin == null) return;
+            if (_gitPlugin == null)
+                return;
 
             GitPluginInit();
             GitPluginUIUpdateMenu();

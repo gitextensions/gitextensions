@@ -78,9 +78,15 @@ namespace GitCommands
             {
                 fi = new FileInfo(aPath);
             }
-            catch (ArgumentException) { }
-            catch (PathTooLongException) { }
-            catch (NotSupportedException) { }
+            catch (ArgumentException)
+            {
+            }
+            catch (PathTooLongException)
+            {
+            }
+            catch (NotSupportedException)
+            {
+            }
 
             return fi != null;
         }

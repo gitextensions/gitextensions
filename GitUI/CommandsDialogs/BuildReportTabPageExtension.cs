@@ -29,9 +29,11 @@ namespace GitUI.CommandsDialogs
 
         public void FillBuildReport(GitRevision revision)
         {
-            if (_selectedGitRevision != null) _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
+            if (_selectedGitRevision != null)
+                _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
             _selectedGitRevision = revision;
-            if (_selectedGitRevision != null) _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
+            if (_selectedGitRevision != null)
+                _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
 
             var buildInfoIsAvailable =
                 !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));

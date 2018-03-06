@@ -1161,7 +1161,8 @@ namespace GitUI.CommandsDialogs
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new AboutBox()) frm.ShowDialog(this);
+            using (var frm = new AboutBox())
+                frm.ShowDialog(this);
         }
 
         private void PatchToolStripMenuItemClick(object sender, EventArgs e)
@@ -1288,7 +1289,8 @@ namespace GitUI.CommandsDialogs
 
         private void CommitcountPerUserToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormCommitCount(UICommands)) frm.ShowDialog(this);
+            using (var frm = new FormCommitCount(UICommands))
+                frm.ShowDialog(this);
         }
 
         private void KGitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1298,7 +1300,8 @@ namespace GitUI.CommandsDialogs
 
         private void DonateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormDonate()) frm.ShowDialog(this);
+            using (var frm = new FormDonate())
+                frm.ShowDialog(this);
         }
 
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
@@ -1414,7 +1417,8 @@ namespace GitUI.CommandsDialogs
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new FormChangeLog()) frm.ShowDialog(this);
+            using (var frm = new FormChangeLog())
+                frm.ShowDialog(this);
         }
 
         private void ToolStripButtonPushClick(object sender, EventArgs e)
@@ -1646,7 +1650,8 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
             toolStripItem.Click += (hs, he) =>
             {
-                using (var frm = new FormRecentReposSettings()) frm.ShowDialog(this);
+                using (var frm = new FormRecentReposSettings())
+                    frm.ShowDialog(this);
                 RefreshWorkingDirCombo();
             };
 
@@ -1772,7 +1777,8 @@ namespace GitUI.CommandsDialogs
 
         private void BisectClick(object sender, EventArgs e)
         {
-            using (var frm = new FormBisect(RevisionGrid)) frm.ShowDialog(this);
+            using (var frm = new FormBisect(RevisionGrid))
+                frm.ShowDialog(this);
             UICommands.RepoChangedNotifier.Notify();
         }
 

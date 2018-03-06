@@ -149,7 +149,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void editMenuItem_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
+            using (var frm = new FormDashboardEditor())
+                frm.ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 
@@ -293,7 +294,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
+            using (var frm = new FormDashboardEditor())
+                frm.ShowDialog(this);
             dashboardCategoryChanged(this, null);
         }
 

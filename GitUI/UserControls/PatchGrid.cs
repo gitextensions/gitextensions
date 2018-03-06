@@ -48,7 +48,8 @@ namespace GitUI
 
         private void Patches_DoubleClick(object sender, EventArgs e)
         {
-            if (Patches.SelectedRows.Count != 1) return;
+            if (Patches.SelectedRows.Count != 1)
+                return;
 
             var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 

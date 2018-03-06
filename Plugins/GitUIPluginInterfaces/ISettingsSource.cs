@@ -15,8 +15,10 @@ namespace GitUIPluginInterfaces
             return GetValue<bool?>(name, null, x =>
             {
                 var val = x.ToString().ToLower();
-                if (val == "true") return true;
-                if (val == "false") return false;
+                if (val == "true")
+                    return true;
+                if (val == "false")
+                    return false;
                 return null;
             });
         }

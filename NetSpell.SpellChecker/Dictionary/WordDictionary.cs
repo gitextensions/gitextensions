@@ -52,7 +52,8 @@ namespace NetSpell.SpellChecker.Dictionary
             UserWords.Clear();
 
             // quit if user file is disabled
-            if (!EnableUserFile) return;
+            if (!EnableUserFile)
+                return;
 
             string userPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "NetSpell");
             string filePath = Path.Combine(userPath, UserFile);
@@ -97,10 +98,12 @@ namespace NetSpell.SpellChecker.Dictionary
         private void SaveUserFile()
         {
             // quit if user file is disabled
-            if (!EnableUserFile) return;
+            if (!EnableUserFile)
+                return;
 
             string userPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "NetSpell");
-            if (!Directory.Exists(userPath)) Directory.CreateDirectory(userPath);
+            if (!Directory.Exists(userPath))
+                Directory.CreateDirectory(userPath);
 
             string filePath = Path.Combine(userPath, UserFile);
 
@@ -420,7 +423,8 @@ namespace NetSpell.SpellChecker.Dictionary
                                     // part 1 = affix key
                                     currentRule.Name = partMatches[0].Value;
                                     // part 2 = combine flag
-                                    if (partMatches[1].Value == "Y") currentRule.AllowCombine = true;
+                                    if (partMatches[1].Value == "Y")
+                                        currentRule.AllowCombine = true;
                                     // part 3 = entry count, not used
 
                                     if (currentSection == "[Prefix]")
@@ -472,9 +476,11 @@ namespace NetSpell.SpellChecker.Dictionary
                                 // part 1 = base word
                                 tempWord.Text = parts[0];
                                 // part 2 = affix keys
-                                if (parts.Length >= 2) tempWord.AffixKeys = parts[1];
+                                if (parts.Length >= 2)
+                                    tempWord.AffixKeys = parts[1];
                                 // part 3 = phonetic code
-                                if (parts.Length >= 3) tempWord.PhoneticCode = parts[2];
+                                if (parts.Length >= 3)
+                                    tempWord.PhoneticCode = parts[2];
 
                                 BaseWords.Add(tempWord.Text, tempWord);
                                 break;

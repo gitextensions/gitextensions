@@ -451,7 +451,10 @@ See the changes in the commit form.");
         private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            if (gitItem == null) { return; }
+            if (gitItem == null)
+            {
+                return;
+            }
             UICommands.StartArchiveDialog(this, _revision, null, gitItem.FileName);
         }
 

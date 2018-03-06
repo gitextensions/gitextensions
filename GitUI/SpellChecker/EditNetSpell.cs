@@ -268,7 +268,8 @@ namespace GitUI.SpellChecker
         private void LoadDictionary()
         {
             // Don`t load a dictionary in Design-time
-            if (Site != null && Site.DesignMode) return;
+            if (Site != null && Site.DesignMode)
+                return;
 
             string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
@@ -731,7 +732,8 @@ namespace GitUI.SpellChecker
 
         private void PasteMenuItemClick(object sender, EventArgs e)
         {
-            if (!Clipboard.ContainsText()) return;
+            if (!Clipboard.ContainsText())
+                return;
             PasteTextFromClipboard();
             CheckSpelling();
         }

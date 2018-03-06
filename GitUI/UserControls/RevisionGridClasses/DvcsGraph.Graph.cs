@@ -268,7 +268,8 @@ namespace GitUI.RevisionGridClasses
                         while (i > _processedNodes)
                         {
                             // This only happens if we weren't in topo order
-                            if (Debugger.IsAttached) Debugger.Break();
+                            if (Debugger.IsAttached)
+                                Debugger.Break();
 
                             Node temp = AddedNodes[i];
                             AddedNodes[i] = AddedNodes[i - 1];
@@ -345,8 +346,10 @@ namespace GitUI.RevisionGridClasses
                 {
                     foreach (Junction j in h.Ancestors)
                     {
-                        if (!S.Contains(j.Oldest)) S.Enqueue(j.Oldest);
-                        if (!S.Contains(j.Youngest)) S.Enqueue(j.Youngest);
+                        if (!S.Contains(j.Oldest))
+                            S.Enqueue(j.Oldest);
+                        if (!S.Contains(j.Youngest))
+                            S.Enqueue(j.Youngest);
                     }
                 }
 
@@ -359,7 +362,8 @@ namespace GitUI.RevisionGridClasses
                         P.Enqueue(n);
                         foreach (Junction e in n.Ancestors)
                         {
-                            if (localVisit != null) localVisit(e.Oldest);
+                            if (localVisit != null)
+                                localVisit(e.Oldest);
                         }
                         L.Enqueue(n);
                         return true;

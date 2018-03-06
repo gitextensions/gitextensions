@@ -76,9 +76,11 @@ namespace GitCommands
         // outside ASCII (7bit) range.
         public bool IsRegExStringCmdPassable(string s)
         {
-            if (s == null) return true;
+            if (s == null)
+                return true;
             foreach (char ch in s)
-                if ((uint)ch >= 0x80) return false;
+                if ((uint)ch >= 0x80)
+                    return false;
             return true;
         }
 
@@ -122,18 +124,24 @@ namespace GitCommands
 
         private static int Compare(GitVersion left, GitVersion right)
         {
-            if (left == null && right == null) return 0;
-            if (right == null) return 1;
-            if (left == null) return -1;
+            if (left == null && right == null)
+                return 0;
+            if (right == null)
+                return 1;
+            if (left == null)
+                return -1;
 
             int compareA = left._a.CompareTo(right._a);
-            if (compareA != 0) return compareA;
+            if (compareA != 0)
+                return compareA;
 
             int compareB = left._b.CompareTo(right._b);
-            if (compareB != 0) return compareB;
+            if (compareB != 0)
+                return compareB;
 
             int compareC = left._c.CompareTo(right._c);
-            if (compareC != 0) return compareC;
+            if (compareC != 0)
+                return compareC;
 
             return left._d.CompareTo(right._d);
         }

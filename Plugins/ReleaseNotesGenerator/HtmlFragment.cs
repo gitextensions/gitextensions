@@ -69,13 +69,15 @@ namespace ReleaseNotesGenerator
 
                     // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
                     case "starthtml":
-                        if (startHmtl != 0) throw new FormatException("StartHtml is already declared");
+                        if (startHmtl != 0)
+                            throw new FormatException("StartHtml is already declared");
                         startHmtl = int.Parse(val);
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the context, or -1 if no context.
                     case "endhtml":
-                        if (startHmtl == 0) throw new FormatException("StartHTML must be declared before endHTML");
+                        if (startHmtl == 0)
+                            throw new FormatException("StartHTML must be declared before endHTML");
                         int endHtml = int.Parse(val);
 
                         Context = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
@@ -83,13 +85,15 @@ namespace ReleaseNotesGenerator
 
                     // Byte count from the beginning of the clipboard to the start of the fragment.
                     case "startfragment":
-                        if (startFragment != 0) throw new FormatException("StartFragment is already declared");
+                        if (startFragment != 0)
+                            throw new FormatException("StartFragment is already declared");
                         startFragment = int.Parse(val);
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the fragment.
                     case "endfragment":
-                        if (startFragment == 0) throw new FormatException("StartFragment must be declared before EndFragment");
+                        if (startFragment == 0)
+                            throw new FormatException("StartFragment must be declared before EndFragment");
                         int endFragment = int.Parse(val);
                         Fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
                         break;

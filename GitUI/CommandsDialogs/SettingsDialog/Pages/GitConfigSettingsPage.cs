@@ -123,10 +123,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
-                if (globalAutoCrlfFalse.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
-                if (globalAutoCrlfInput.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
-                if (globalAutoCrlfTrue.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
-                if (globalAutoCrlfNotSet.Checked) CurrentSettings.core.autocrlf.Value = null;
+                if (globalAutoCrlfFalse.Checked)
+                    CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
+                if (globalAutoCrlfInput.Checked)
+                    CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
+                if (globalAutoCrlfTrue.Checked)
+                    CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
+                if (globalAutoCrlfNotSet.Checked)
+                    CurrentSettings.core.autocrlf.Value = null;
             }
         }
 

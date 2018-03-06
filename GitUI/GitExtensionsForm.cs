@@ -61,7 +61,9 @@ namespace GitUI
                 {
                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
                 }
-                catch (InvalidOperationException) { }
+                catch (InvalidOperationException)
+                {
+                }
             }
         }
 

@@ -146,7 +146,9 @@ namespace GitUI
 
                         TaskbarManager.Instance.SetProgressValue(100, 100);
                     }
-                    catch (InvalidOperationException) { }
+                    catch (InvalidOperationException)
+                    {
+                    }
                 }
 
                 if (isSuccess)
@@ -245,7 +247,9 @@ namespace GitUI
                 {
                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
                 }
-                catch (InvalidOperationException) { }
+                catch (InvalidOperationException)
+                {
+                }
             }
             Reset();
             ProcessCallback(this);
@@ -260,7 +264,9 @@ namespace GitUI
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         public string GetOutputString()
@@ -285,7 +291,9 @@ namespace GitUI
                 {
                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
                 }
-                catch (InvalidOperationException) { }
+                catch (InvalidOperationException)
+                {
+                }
             }
         }
     }

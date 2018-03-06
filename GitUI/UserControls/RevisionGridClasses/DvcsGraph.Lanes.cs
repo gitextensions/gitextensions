@@ -142,7 +142,8 @@ namespace GitUI.RevisionGridClasses
                 if (_currentRow.Node == null)
                 {
                     // DEBUG: The check above didn't find anything, but should have
-                    if (Debugger.IsAttached) Debugger.Break();
+                    if (Debugger.IsAttached)
+                        Debugger.Break();
                     ////Node[] topo = this.sourceGraph.TopoSortedNodes();
                     return false;
                 }
@@ -271,7 +272,8 @@ namespace GitUI.RevisionGridClasses
                     // This means there is a node that got put in the graph twice...
                     if (row.Node.InLane != int.MaxValue)
                     {
-                        if (Debugger.IsAttached) Debugger.Break();
+                        if (Debugger.IsAttached)
+                            Debugger.Break();
                     }
 
                     row.Node.InLane = _laneRows.Count;
@@ -370,7 +372,8 @@ namespace GitUI.RevisionGridClasses
                     // If any other lanes have this node on top, merge them together
                     for (int i = 0; i < _laneNodes.Count; i++)
                     {
-                        if (i == curLane || curLane >= _laneNodes.Count) continue;
+                        if (i == curLane || curLane >= _laneNodes.Count)
+                            continue;
                         if (_laneNodes[i].Current == _laneNodes[curLane].Current)
                         {
                             int left;
