@@ -196,7 +196,6 @@ namespace GitUI.Script
                 {
                     ShowContextMenuStrip();
                 }
-
                 else if (kevent.KeyCode.Equals(Keys.Space) && kevent.Modifiers == Keys.None)
                 {
                     State = PushButtonState.Pressed;

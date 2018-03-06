@@ -87,7 +87,6 @@ namespace GitUI.Editor.Diff
 
                     AddToResult(ret, meta);
                 }
-
                 else if (isHeaderLineLocated && IsMinusLine(line))
                 {
                     var meta = new DiffLineNum

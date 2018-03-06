@@ -301,7 +301,6 @@ namespace PatchApply
                     addPart = addPart.Combine("\n", addedLine.Text);
                     addedCount++;
                 }
-
                 else if (staged)
                 {
                     if (inPostPart)
