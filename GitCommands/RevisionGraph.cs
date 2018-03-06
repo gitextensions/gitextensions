@@ -363,8 +363,8 @@ namespace GitCommands
                     data = GitModule.ReEncodeString(data, GitModule.LosslessEncoding, _module.LogOutputEncoding);
 
                     string[] lines = data.Split(new char[] { '\n' });
-                    Debug.Assert(lines.Length == 11);
-                    Debug.Assert(lines[0] == CommitBegin);
+                    Debug.Assert(lines.Length == 11, "lines.Length == 11");
+                    Debug.Assert(lines[0] == CommitBegin, "lines[0] == CommitBegin");
 
                     _revision = new GitRevision(null);
 

@@ -1672,7 +1672,7 @@ namespace GitUI
             }
             else if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !Revisions.RowIsRelative(e.RowIndex))
             {
-                Debug.Assert(backColor != null);
+                Debug.Assert(backColor != null, "backColor != null");
                 foreColor = Color.Gray;
 
                 // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
@@ -1683,7 +1683,7 @@ namespace GitUI
             }
             else
             {
-                Debug.Assert(backColor != null);
+                Debug.Assert(backColor != null, "backColor != null");
                 foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
             }
 

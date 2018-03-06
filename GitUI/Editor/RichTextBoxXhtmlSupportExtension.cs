@@ -456,7 +456,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -491,7 +491,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -526,7 +526,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -567,7 +567,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,

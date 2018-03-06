@@ -136,7 +136,7 @@ namespace GitUI
                                     Resources.x_with_arrow_red,
                                     Resources.x_with_arrow_yellow
                                 };
-                Debug.Assert(icons.Length == 7);
+                Debug.Assert(icons.Length == 7, "icons.Length == 7");
                 appIcon = icons[colorIndex];
             }
             else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
@@ -151,7 +151,7 @@ namespace GitUI
                                     Resources.git_extensions_logo_final_red,
                                     Resources.git_extensions_logo_final_yellow
                                 };
-                Debug.Assert(icons.Length == 7);
+                Debug.Assert(icons.Length == 7, "icons.Length == 7");
                 appIcon = icons[colorIndex];
             }
             else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
@@ -166,7 +166,7 @@ namespace GitUI
                                     Resources.cow_head_red,
                                     Resources.cow_head_yellow
                                 };
-                Debug.Assert(icons.Length == 7);
+                Debug.Assert(icons.Length == 7, "icons.Length == 7");
                 appIcon = icons[colorIndex];
             }
             else
@@ -181,11 +181,11 @@ namespace GitUI
                                     Resources.git_extensions_logo_final_mixed_red,
                                     Resources.git_extensions_logo_final_mixed_yellow
                                 };
-                Debug.Assert(icons.Length == 7);
+                Debug.Assert(icons.Length == 7, "icons.Length == 7");
                 appIcon = icons[colorIndex];
             }
 
-            Debug.Assert(appIcon != null);
+            Debug.Assert(appIcon != null, "appIcon != null");
             return appIcon;
         }
 

@@ -568,7 +568,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Debug.Assert(_currentItem != null);
+            Debug.Assert(_currentItem != null, "_currentItem != null");
 
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
@@ -661,7 +661,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Debug.Assert(_currentItem != null);
+            Debug.Assert(_currentItem != null, "_currentItem != null");
 
             // Prepare git command
             string args = "apply --whitespace=nowarn";

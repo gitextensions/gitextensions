@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var matchedGroups = patternMatch.Groups;
-                Debug.Assert(matchedGroups[4].Success);
+                Debug.Assert(matchedGroups[4].Success, "matchedGroups[4].Success");
                 var hash = matchedGroups[4].Value;
 
                 var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, hash);

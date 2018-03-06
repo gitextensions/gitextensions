@@ -515,7 +515,7 @@ namespace GitUI
         /// <returns>Region of document that matches the search string</returns>
         public TextRange FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
         {
-            Debug.Assert(!string.IsNullOrEmpty(LookFor));
+            Debug.Assert(!string.IsNullOrEmpty(LookFor), "!string.IsNullOrEmpty(LookFor)");
             loopedAround = false;
 
             int startAt = BeginOffset, endAt = EndOffset;
@@ -563,7 +563,7 @@ namespace GitUI
 
         private TextRange FindNextIn(int offset1, int offset2, bool searchBackward)
         {
-            Debug.Assert(offset2 >= offset1);
+            Debug.Assert(offset2 >= offset1, "offset2 >= offset1");
             offset2 -= LookFor.Length;
 
             // Search
@@ -685,7 +685,7 @@ namespace GitUI
     {
         public static int InRange(int x, int lo, int hi)
         {
-            Debug.Assert(lo <= hi);
+            Debug.Assert(lo <= hi, "lo <= hi");
             return x < lo ? lo : (x > hi ? hi : x);
         }
 

@@ -15,7 +15,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public static Color GetRenderingColor(EdgeColorType edgeColorType, Color color)
         {
-            Debug.Assert(color != Color.Empty);
+            Debug.Assert(color != Color.Empty, "color != Color.Empty");
             if (edgeColorType == EdgeColorType.Contrast || edgeColorType == EdgeColorType.EnhancedContrast)
             {
                 edgeColorType = GetContrastColorType(color, edgeColorType);
@@ -51,7 +51,7 @@ namespace GitStatistics.PieChart
 
         private static EdgeColorType GetContrastColorType(Color color, EdgeColorType colorType)
         {
-            Debug.Assert(colorType == EdgeColorType.Contrast || colorType == EdgeColorType.EnhancedContrast);
+            Debug.Assert(colorType == EdgeColorType.Contrast || colorType == EdgeColorType.EnhancedContrast, "colorType == EdgeColorType.Contrast || colorType == EdgeColorType.EnhancedContrast");
             if (color.GetBrightness() > BrightnessThreshold)
             {
                 return colorType ==

@@ -376,7 +376,7 @@ namespace Gerrit
 
             index = content.LastIndexOf((char)0);
 
-            Debug.Assert(index == content.Length - 1);
+            Debug.Assert(index == content.Length - 1, "index == content.Length - 1");
 
             if (index != -1)
             {

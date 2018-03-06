@@ -232,7 +232,7 @@ namespace JenkinsIntegration
                 {
                     if (build.IsFaulted)
                     {
-                        Debug.Assert(build.Exception != null);
+                        Debug.Assert(build.Exception != null, "build.Exception != null");
 
                         observer.OnError(build.Exception);
                         continue;

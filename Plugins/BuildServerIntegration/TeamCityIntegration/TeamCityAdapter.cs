@@ -293,7 +293,7 @@ namespace TeamCityIntegration
 
             if (task.IsFaulted)
             {
-                Debug.Assert(task.Exception != null);
+                Debug.Assert(task.Exception != null, "task.Exception != null");
 
                 observer.OnError(task.Exception);
                 return true;

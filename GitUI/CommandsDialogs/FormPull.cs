@@ -538,7 +538,7 @@ namespace GitUI.CommandsDialogs
                 return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
             }
 
-            Debug.Assert(Merge.Checked || Rebase.Checked);
+            Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
             return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
             {

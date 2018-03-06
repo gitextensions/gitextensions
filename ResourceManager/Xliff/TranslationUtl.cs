@@ -387,7 +387,7 @@ namespace ResourceManager.Xliff
                 obj = parameterConstructor.Invoke(parameters.ToArray());
             }
 
-            Debug.Assert(obj != null);
+            Debug.Assert(obj != null, "obj != null");
             return obj;
         }
     }

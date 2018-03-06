@@ -34,7 +34,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         public static Color CreateColorWithCorrectedLightness(Color color, float correctionFactor)
         {
-            Debug.Assert(correctionFactor <= 1 && correctionFactor >= -1);
+            Debug.Assert(correctionFactor <= 1 && correctionFactor >= -1, "correctionFactor <= 1 && correctionFactor >= -1");
             if (correctionFactor == 0)
             {
                 return color;

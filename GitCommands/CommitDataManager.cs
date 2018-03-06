@@ -204,7 +204,7 @@ namespace GitCommands
             string message = ProccessDiffNotes(startIndex, lines);
 
             // commit message is not reencoded by git when format is given
-            Debug.Assert(commitData.Guid == guid);
+            Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
             commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
         }
 
