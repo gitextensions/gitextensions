@@ -35,7 +35,7 @@ namespace GitImpact
             base.OnClosed(e);
         }
 
-        void Impact_Invalidated(object sender, InvalidateEventArgs e)
+        private void Impact_Invalidated(object sender, InvalidateEventArgs e)
         {
             _syncContext.Send(o => UpdateAuthorInfo(Impact.GetSelectedAuthor()), this);
         }

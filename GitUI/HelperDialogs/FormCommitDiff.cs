@@ -54,7 +54,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ViewSelectedDiff();
         }

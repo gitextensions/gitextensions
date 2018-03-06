@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class NavigationHistory
+    internal class NavigationHistory
     {
         // history of selected items (browse history)
         // head == currently selected item

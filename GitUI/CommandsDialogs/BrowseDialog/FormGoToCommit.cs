@@ -14,11 +14,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// this will be used when Go() is called
         /// </summary>
-        string _selectedRevision;
+        private string _selectedRevision;
 
         // these two are used to prepare for _selectedRevision
-        IGitRef _selectedTag;
-        IGitRef _selectedBranch;
+        private IGitRef _selectedTag;
+        private IGitRef _selectedBranch;
 
         private readonly AsyncLoader _tagsLoader;
         private readonly AsyncLoader _branchesLoader;

@@ -2506,7 +2506,7 @@ namespace GitUI
             return (other != null) && Equals(other);
         }
 
-        bool Equals(GitUICommands other)
+        private bool Equals(GitUICommands other)
         {
             return Equals(Module, other.Module);
         }

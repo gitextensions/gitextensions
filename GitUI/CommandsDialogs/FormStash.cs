@@ -14,14 +14,14 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormStash : GitModuleForm
     {
-        readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current working directory changes");
-        readonly TranslationString _noStashes = new TranslationString("There are no stashes.");
-        readonly TranslationString _stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
-        readonly TranslationString _stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
-        readonly TranslationString _stashDropConfirmTitle = new TranslationString("Drop Stash Confirmation");
-        readonly TranslationString _cannotBeUndone = new TranslationString("This action cannot be undone.");
-        readonly TranslationString _areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
-        readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+        private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current working directory changes");
+        private readonly TranslationString _noStashes = new TranslationString("There are no stashes.");
+        private readonly TranslationString _stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
+        private readonly TranslationString _stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
+        private readonly TranslationString _stashDropConfirmTitle = new TranslationString("Drop Stash Confirmation");
+        private readonly TranslationString _cannotBeUndone = new TranslationString("This action cannot be undone.");
+        private readonly TranslationString _areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
+        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool ManageStashes { get; set; }
 
         private AsyncLoader _asyncLoader = new AsyncLoader();
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             ResizeStashesWidth();
         }
 
-        GitStash _currentWorkingDirStashItem;
+        private GitStash _currentWorkingDirStashItem;
 
         private void Initialize()
         {

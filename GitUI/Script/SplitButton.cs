@@ -33,21 +33,21 @@ namespace GitUI.Script
 {
     public class SplitButton : Button
     {
-        PushButtonState _state;
+        private PushButtonState _state;
 
-        const int SplitSectionWidth = 18;
+        private const int SplitSectionWidth = 18;
 
-        static int BorderSize = SystemInformation.Border3DSize.Width * 2;
-        bool _skipNextOpen;
-        Rectangle _dropDownRectangle;
-        bool _showSplit;
+        private static int BorderSize = SystemInformation.Border3DSize.Width * 2;
+        private bool _skipNextOpen;
+        private Rectangle _dropDownRectangle;
+        private bool _showSplit;
 
-        bool _isSplitMenuVisible;
+        private bool _isSplitMenuVisible;
 
-        ContextMenuStrip _splitMenuStrip;
-        ContextMenu _splitMenu;
+        private ContextMenuStrip _splitMenuStrip;
+        private ContextMenu _splitMenu;
 
-        TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
+        private TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
 
         public SplitButton()
         {
@@ -246,7 +246,7 @@ namespace GitUI.Script
             }
         }
 
-        bool _isMouseEntered;
+        private bool _isMouseEntered;
 
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -859,7 +859,7 @@ namespace GitUI.Script
             }
         }
 
-        void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
+        private void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             _isSplitMenuVisible = true;
         }

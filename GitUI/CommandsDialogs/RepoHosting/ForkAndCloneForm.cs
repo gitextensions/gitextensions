@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strCloneFolderCanNotBeEmpty = new TranslationString("Clone folder can not be empty");
         #endregion
 
-        readonly IRepositoryHostPlugin _gitHoster;
+        private readonly IRepositoryHostPlugin _gitHoster;
         private EventHandler<GitModuleEventArgs> _GitModuleChanged;
 
         public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)

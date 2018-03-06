@@ -1435,7 +1435,7 @@ namespace GitCommands
             return FindRenamesOpt() + findCopies;
         }
 
-        static class NativeMethods
+        private static class NativeMethods
         {
             [DllImport("kernel32.dll")]
             public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,

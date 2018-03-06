@@ -3773,7 +3773,7 @@ namespace GitCommands
             return (other != null) && Equals(other);
         }
 
-        bool Equals(GitModule other)
+        private bool Equals(GitModule other)
         {
             return
                 string.Equals(WorkingDir, other.WorkingDir) &&

@@ -1017,7 +1017,7 @@ namespace GitUI.CommandsDialogs
             BranchGrid.Enabled = true;
         }
 
-        static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        private static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
             if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
             {

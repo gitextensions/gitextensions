@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private Repository _repository;
 
-        void contextMenu_Opening(object sender, EventArgs e)
+        private void contextMenu_Opening(object sender, EventArgs e)
         {
             _repository = (Repository)(((ContextMenuStrip)sender).SourceControl.Tag);
         }

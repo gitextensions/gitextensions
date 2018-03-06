@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
-    static class RichTextBoxXhtmlSupportExtension
+    internal static class RichTextBoxXhtmlSupportExtension
     {
         /// <summary>
         /// Maintains performance while updating.
@@ -392,7 +392,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             return ((cf.dwEffects & CFE.LINK) == CFE.LINK);
         }
 
-        static void AddLink(this RichTextBox rtb, string text)
+        private static void AddLink(this RichTextBox rtb, string text)
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
@@ -408,7 +408,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.Select(position + length, 0);
         }
 
-        static void AddLink(this RichTextBox rtb, string text, string hyperlink)
+        private static void AddLink(this RichTextBox rtb, string text, string hyperlink)
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)

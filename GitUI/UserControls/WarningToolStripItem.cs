@@ -19,7 +19,7 @@ namespace GitUI
             _blinkTimer.Start();
         }
 
-        void _blinkTimer_Tick(object sender, EventArgs e)
+        private void _blinkTimer_Tick(object sender, EventArgs e)
         {
             if (BackColor == Color.Salmon && Parent != null)
             {

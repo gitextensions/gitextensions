@@ -318,7 +318,7 @@ namespace GitUI
         }
     }
 
-    class DispatcherFrameModalControler
+    internal class DispatcherFrameModalControler
     {
         private DispatcherFrame _DispatcherFrame = new DispatcherFrame();
         private FormStatus _FormStatus;

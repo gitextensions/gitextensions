@@ -8,7 +8,7 @@ using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
 
 namespace TranslationApp
 {
-    static class TranslationHelpers
+    internal static class TranslationHelpers
     {
         public static IDictionary<string, List<TranslationItemWithCategory>> LoadNeutralItems()
         {

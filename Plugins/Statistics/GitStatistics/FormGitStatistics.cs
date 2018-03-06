@@ -156,7 +156,7 @@ namespace GitStatistics
             }
         }
 
-        bool _initializeLinesOfCodeDone;
+        private bool _initializeLinesOfCodeDone;
         private void InitializeLinesOfCode()
         {
             if (_initializeLinesOfCodeDone)
@@ -200,7 +200,7 @@ namespace GitStatistics
             _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
         }
 
-        void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
+        private void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
         {
             LineCounter lineCounter = (LineCounter)sender;
 

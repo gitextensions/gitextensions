@@ -20,7 +20,7 @@ namespace GitUI
         internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
-        readonly bool _enablePositionRestore;
+        private readonly bool _enablePositionRestore;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
@@ -50,7 +50,7 @@ namespace GitUI
             Close();
         }
 
-        void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_enablePositionRestore)
             {
@@ -281,7 +281,7 @@ namespace GitUI
             }
         }
 
-        static Rectangle? FindWindowScreen(Point location)
+        private static Rectangle? FindWindowScreen(Point location)
         {
             SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
             foreach (var rect in (from screen in Screen.AllScreens

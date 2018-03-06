@@ -52,9 +52,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        List<IHostedRemote> _hostedRemotes;
-        List<IPullRequestInformation> _pullRequestsInfo;
-        IPullRequestInformation _currentPullRequestInfo;
+        private List<IHostedRemote> _hostedRemotes;
+        private List<IPullRequestInformation> _pullRequestsInfo;
+        private IPullRequestInformation _currentPullRequestInfo;
 
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
         {
@@ -257,7 +257,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _discussionWB.DocumentText = t;
         }
 
-        void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             if (_discussionWB.Document != null)
             {
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                     _strError.Text));
         }
 
-        Dictionary<string, string> _diffCache;
+        private Dictionary<string, string> _diffCache;
         private void SplitAndLoadDiff(string diffData)
         {
             _diffCache = new Dictionary<string, string>();
@@ -392,7 +392,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             Close();
         }
 
-        void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
+        private void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var gis = _fileStatusList.SelectedItem;
             if (gis == null)

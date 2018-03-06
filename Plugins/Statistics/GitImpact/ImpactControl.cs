@@ -85,7 +85,7 @@ namespace GitImpact
             _impactLoader?.Stop();
         }
 
-        void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
+        private void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
             _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
 
@@ -93,7 +93,7 @@ namespace GitImpact
             Invalidate();
         }
 
-        void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
+        private void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
         {
             var commit = e.Commit;
 

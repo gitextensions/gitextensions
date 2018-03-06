@@ -45,13 +45,13 @@ namespace GitCommands.Settings
             FileChanged();
         }
 
-        void _fileWatcher_Created(object sender, FileSystemEventArgs e)
+        private void _fileWatcher_Created(object sender, FileSystemEventArgs e)
         {
             _lastFileRead = null;
             FileChanged();
         }
 
-        void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
+        private void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
         {
             FileChanged();
         }

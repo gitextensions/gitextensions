@@ -365,7 +365,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        enum ItemType
+        private enum ItemType
         {
             File,
             Directory,

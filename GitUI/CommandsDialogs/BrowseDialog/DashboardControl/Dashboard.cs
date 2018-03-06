@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
+        private void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
             var repository = e.Repository;
             if (repository != null)
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             pictureBox1.BringToFront();
         }
 
-        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
+        private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
         {
             bool newValue = !GitCommands.AppSettings.DashboardShowCurrentBranch;
             GitCommands.AppSettings.DashboardShowCurrentBranch = newValue;

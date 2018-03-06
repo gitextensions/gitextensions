@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
             _diffTabPageTitleBase = DiffTabPage.Text;
         }
 
-        void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
+        private void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions);
         }
@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
+        private void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
         {
             bool indexChanged = e.IsIndexChanged;
             this.InvokeAsync(() =>
@@ -1959,7 +1959,7 @@ namespace GitUI.CommandsDialogs
             return branchNames;
         }
 
-        void BranchSelectToolStripItem_Click(object sender, EventArgs e)
+        private void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
             UICommands.StartCheckoutBranch(this, toolStripItem.Text, false);
@@ -2467,7 +2467,7 @@ namespace GitUI.CommandsDialogs
             return CreateSubmoduleMenuItem(info, "{0}");
         }
 
-        DateTime _previousUpdateTime;
+        private DateTime _previousUpdateTime;
 
         private void LoadSubmodulesIntoDropDownMenu()
         {

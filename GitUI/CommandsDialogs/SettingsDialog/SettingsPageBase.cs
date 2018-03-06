@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        IList<string> _childrenText;
+        private IList<string> _childrenText;
 
         /// <summary>
         /// override to provide search keywords
@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
-        static IList<string> GetChildrenText(Control control)
+        private static IList<string> GetChildrenText(Control control)
         {
             if (control.HasChildren == false)
             {

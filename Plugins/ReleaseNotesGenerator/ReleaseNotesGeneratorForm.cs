@@ -20,7 +20,7 @@ namespace ReleaseNotesGenerator
         private readonly TranslationString _toCommitNotSpecified = new TranslationString("'To' commit must be specified");
         private readonly TranslationString _caption = new TranslationString("Invalid input");
 
-        const string MostRecentHint = "most recent changes are listed on top";
+        private const string MostRecentHint = "most recent changes are listed on top";
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
         private readonly IGitLogLineParser _gitLogLineParser;

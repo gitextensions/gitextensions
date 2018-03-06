@@ -17,18 +17,18 @@ namespace GitFlow
         private readonly TranslationString _loading = new TranslationString("Loading...");
         private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
 
-        readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIBaseEventArgs _gitUiCommands;
 
-        Dictionary<string, List<string>> Branches { get; set; }
+        private Dictionary<string, List<string>> Branches { get; set; }
 
-        readonly AsyncLoader _task = new AsyncLoader();
+        private readonly AsyncLoader _task = new AsyncLoader();
 
         public bool IsRefreshNeeded { get; set; }
         private const string RefHeads = "refs/heads/";
 
         private string CurrentBranch { get; set; }
 
-        enum Branch
+        private enum Branch
         {
             feature,
             bugfix,

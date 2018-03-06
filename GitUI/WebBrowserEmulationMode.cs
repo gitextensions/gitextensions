@@ -29,7 +29,7 @@ namespace GitUI
             }
         }
 
-        static bool TryGetBrowserEmulationMode(out UInt32 emulationMode)
+        private static bool TryGetBrowserEmulationMode(out UInt32 emulationMode)
         {
             // https://msdn.microsoft.com/en-us/library/ee330730(v=vs.85).aspx#browser_emulation
             // http://stackoverflow.com/questions/28526826/web-browser-control-emulation-issue-feature-browser-emulation/28626667#28626667

@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        bool _loadedDefaultClone = false;
+        private bool _loadedDefaultClone = false;
         private void defaultCloneDropDown(object sender, EventArgs e)
         {
             if (!_loadedDefaultClone)
