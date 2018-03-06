@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs
                     RevisionGrid.UpdateArtificialCommitCount(status);
 
                     // The diff filelist is not updated, as the selected diff is unset
-                    // _revisionDiff.RefreshArtificial();
+                    ////_revisionDiff.RefreshArtificial();
                 };
 
                 _toolStripGitStatus.Click += StatusClick;
