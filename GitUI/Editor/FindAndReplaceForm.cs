@@ -460,8 +460,6 @@ namespace GitUI
         /// <summary>Finds next instance of LookFor, according to the search rules
         /// (MatchCase, MatchWholeWordOnly).</summary>
         /// <param name="beginAtOffset">Offset in Document at which to begin the search</param>
-        /// <param name="searchBackward"></param>
-        /// <param name="loopedAround"></param>
         /// <remarks>If there is a match at beginAtOffset precisely, it will be returned.</remarks>
         /// <returns>Region of document that matches the search string</returns>
         public TextRange FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)

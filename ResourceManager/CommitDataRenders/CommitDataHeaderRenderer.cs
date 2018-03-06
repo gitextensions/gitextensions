@@ -21,14 +21,11 @@ namespace ResourceManager.CommitDataRenders
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <returns></returns>
         string Render(CommitData commitData, bool showRevisionsAsLinks);
 
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <param name="commitData"></param>
-        /// <returns></returns>
         string RenderPlain(CommitData commitData);
     }
 
@@ -65,7 +62,6 @@ namespace ResourceManager.CommitDataRenders
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <returns></returns>
         public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
             if (commitData == null)
@@ -123,8 +119,6 @@ namespace ResourceManager.CommitDataRenders
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <param name="commitData"></param>
-        /// <returns></returns>
         public string RenderPlain(CommitData commitData)
         {
             if (commitData == null)

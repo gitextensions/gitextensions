@@ -85,7 +85,6 @@ namespace GitUIPluginInterfaces
         /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
         /// </summary>
         /// <param name="relativePath">A path relative to the .git directory</param>
-        /// <returns></returns>
         string ResolveGitInternalPath(string relativePath);
 
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
@@ -120,7 +119,6 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Retrieves registered remotes by running <c>git remote show</c> command.
         /// </summary>
-        /// <param name="allowEmpty"></param>
         /// <returns>Registered remotes.</returns>
         string[] GetRemotes(bool allowEmpty);
 

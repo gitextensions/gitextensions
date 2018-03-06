@@ -352,7 +352,6 @@ namespace GitCommands
         /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
         /// </summary>
         /// <param name="relativePath">A path relative to the .git directory</param>
-        /// <returns></returns>
         public string ResolveGitInternalPath(string relativePath)
         {
             string gitPath = RunGitCmd("rev-parse --git-path " + relativePath.Quote());
@@ -2104,7 +2103,6 @@ namespace GitCommands
         /// <summary>
         /// Retrieves registered remotes by running <c>git remote show</c> command.
         /// </summary>
-        /// <param name="allowEmpty"></param>
         /// <returns>Registered remotes.</returns>
         public string[] GetRemotes(bool allowEmpty)
         {
@@ -2613,11 +2611,7 @@ namespace GitCommands
             return GetTreeRefs(tree);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         /// <param name="option">Ordery by date is slower.</param>
-        /// <returns></returns>
         public IList<IGitRef> GetTagRefs(GetTagRefsSortOrder option)
         {
             var list = GetRefs(true, false);
@@ -2743,7 +2737,6 @@ namespace GitCommands
         /// <param name="sha1">The sha1.</param>
         /// <param name="getLocal">Pass true to include local branches</param>
         /// <param name="getRemote">Pass true to include remote branches</param>
-        /// <returns></returns>
         public IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote)
         {
             string args = "--contains " + sha1;
@@ -2778,7 +2771,6 @@ namespace GitCommands
         /// Gets all tags which contain the given commit.
         /// </summary>
         /// <param name="sha1">The sha1.</param>
-        /// <returns></returns>
         public IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
             string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
@@ -2818,7 +2810,6 @@ namespace GitCommands
         /// Returns list of filenames which would be ignored
         /// </summary>
         /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax)</param>
-        /// <returns></returns>
         public IList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
         {
             var notEmptyPatterns = ignorePatterns
@@ -3249,8 +3240,6 @@ namespace GitCommands
         /// <summary>
         /// reencodes string from GitCommandHelpers.LosslessEncoding to toEncoding
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static string ReEncodeStringFromLossless(string s, Encoding toEncoding)
         {
             if (toEncoding == null)
@@ -3299,8 +3288,6 @@ namespace GitCommands
         /// diff part is raw data in file's original encoding
         /// s should be encoded in LosslessEncoding
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public string ReEncodeShowString(string s)
         {
             if (s.IsNullOrEmpty())

@@ -23,8 +23,6 @@ namespace GitUI.UserControls
         /// Opens a a folder picker dialog with the path in "getter" preselected and
         /// if OK is returned uses "setter" to set the path
         /// </summary>
-        /// <param name="getter"></param>
-        /// <param name="setter"></param>
         public void ShowFolderBrowserDialogWithPreselectedPath(Func<string> getter, Action<string> setter)
         {
             string directoryInfoPath = null;

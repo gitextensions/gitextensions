@@ -498,10 +498,7 @@ namespace GitCommands
         /// <summary>
         /// Git Clone.
         /// </summary>
-        /// <param name="fromPath"></param>
-        /// <param name="toPath"></param>
         /// <param name="central">Makes a bare repo.</param>
-        /// <param name="initSubmodules"></param>
         /// <param name="branch">
         /// <para><c>NULL</c>: do not checkout working copy (--no-checkout).</para>
         /// <para><c>""</c> (empty string): checkout remote HEAD (branch param omitted, default behavior for clone).</para>
@@ -514,7 +511,6 @@ namespace GitCommands
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
         /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
-        /// <returns></returns>
         public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, bool? isSingleBranch, bool lfs)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;

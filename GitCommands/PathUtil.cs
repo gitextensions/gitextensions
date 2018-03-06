@@ -28,8 +28,6 @@ namespace GitCommands
         ///
         /// This method can be used to add (or keep) a trailing path separator character to a directory path.
         /// </summary>
-        /// <param name="dirPath"></param>
-        /// <returns></returns>
         public static string EnsureTrailingPathSeparator(this string dirPath)
         {
             if (!dirPath.IsNullOrEmpty() &&

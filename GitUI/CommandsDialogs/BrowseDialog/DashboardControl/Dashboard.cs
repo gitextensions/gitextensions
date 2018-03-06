@@ -121,10 +121,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <summary>
         /// code duplicated from GerritPlugin.cs
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="form"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         private T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
@@ -134,10 +130,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <summary>
         /// code duplicated from GerritPlugin.cs
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="controls"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
         private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {

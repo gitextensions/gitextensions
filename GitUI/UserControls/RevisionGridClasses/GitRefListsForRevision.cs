@@ -49,7 +49,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// Returns the collection of local branches and tags which can be deleted.
         /// </summary>
-        /// <returns></returns>
         public IGitRef[] GetDeletableLocalRefs(string currentBranch)
         {
             return _localBranches.Where(b => !b.Name.Equals(currentBranch)).Union(_tags).ToArray();
@@ -58,7 +57,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// Returns the collection of local branches which can be renamed.
         /// </summary>
-        /// <returns></returns>
         public IGitRef[] GetRenameableLocalBranches()
         {
             return _localBranches.ToArray();

@@ -18,13 +18,8 @@ namespace GitCommands.Utils
             _clearTimer.Start();
         }
 
-        /// <summary>
-        /// TODO add expiration time (MemoryCache) after change to .net 4 full profile
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="objectUniqueKey"></param>
-        /// <param name="provideObject"></param>
-        /// <returns></returns>
+        // TODO add expiration time (MemoryCache) after change to .net 4 full profile
+
         public T Get<T>(string objectUniqueKey, Lazy<T> provideObject)
         {
             object cached = null;

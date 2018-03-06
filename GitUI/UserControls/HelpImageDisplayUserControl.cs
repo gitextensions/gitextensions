@@ -25,8 +25,6 @@ namespace GitUI.Help
         /// <summary>
         /// NOTE: will also be called if designer code calls "this.helpImageDisplayUserControl1.ShowImage2OnHover = true;"
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void HelpImageDisplayUserControl_Load(object sender, EventArgs e)
         {
             IsExpanded = LoadIsExpandedValueFromSettings(IsExpanded);

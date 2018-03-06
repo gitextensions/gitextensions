@@ -185,8 +185,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// this is needed because _revsionGrid is null when TranslationApp is called
         /// </summary>
-        /// <param name="revGridCommands"></param>
-        /// <returns></returns>
         private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands revGridCommands)
         {
             return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();

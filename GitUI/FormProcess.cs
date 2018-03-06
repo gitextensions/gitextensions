@@ -8,9 +8,7 @@ using System.Collections.Generic;
 namespace GitUI
 {
     delegate void DataCallback(string text);
-    /// <summary>
-    ///
-    /// </summary>
+
     /// <param name="isError">if command finished with error</param>
     /// <param name="form">this form</param>
     /// <returns>if handled</returns>
@@ -184,9 +182,6 @@ namespace GitUI
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         /// <param name="isError">if command finished with error</param>
         /// <returns>if handled</returns>
         protected virtual bool HandleOnExit(ref bool isError)

@@ -269,9 +269,6 @@ namespace GitCommands
             return result;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         /// <returns>Refs loaded while the latest processing of git log</returns>
         public IEnumerable<IGitRef> LatestRefs()
         {

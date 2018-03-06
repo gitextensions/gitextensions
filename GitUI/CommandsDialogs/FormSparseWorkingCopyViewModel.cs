@@ -130,7 +130,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Checks if got anything to save. Can cancel without confirmation if not dirty.
         /// </summary>
-        /// <returns></returns>
         public bool IsWithUnsavedChanges()
         {
             if (IsSparseCheckoutEnabled != _isSparseCheckoutEnabledAsSaved)
@@ -184,7 +183,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// As view loads the text in its impl of the editor, tells the exact on-disk text when it gets known.
         /// </summary>
-        /// <param name="text"></param>
         public void SetRulesTextAsOnDisk([NotNull] string text)
         {
             if (text == null)

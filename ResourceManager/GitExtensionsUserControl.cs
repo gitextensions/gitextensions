@@ -140,7 +140,6 @@ namespace ResourceManager
         /// Override this method to handle form-specific Hotkey commands.
         /// <remarks>This base method does nothing and returns false.</remarks>
         /// </summary>
-        /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)
         {
             return false;

@@ -194,8 +194,6 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Handles <c>OnResize</c> event.
         /// </summary>
-        /// <param name = "args">
-        /// </param>
         protected override void OnResize(EventArgs args)
         {
             Refresh();

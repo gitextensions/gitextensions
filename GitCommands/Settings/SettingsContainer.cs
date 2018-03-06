@@ -44,10 +44,6 @@ namespace GitCommands.Settings
         /// <summary>
         /// sets given value at the possible lowest priority level
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <param name="encode"></param>
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             if (LowerPriority == null || SettingsCache.HasValue(name))

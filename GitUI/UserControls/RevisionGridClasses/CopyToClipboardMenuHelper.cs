@@ -11,10 +11,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// sets also the visibility of captionItem
         /// ...
         /// </summary>
-        /// <param name="targetMenu"></param>
-        /// <param name="captionItem"></param>
-        /// <param name="gitNameList"></param>
-        /// <param name="itemFlag"></param>
         public static void SetCopyToClipboardMenuItems(
             ToolStripMenuItem targetMenu,
             ToolStripMenuItem captionItem,
@@ -52,8 +48,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// adds or updates text in parentheses (...)
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="postfix"></param>
         public static void AddOrUpdateTextPostfix(ToolStripItem target, string postfix)
         {
             if (target.Text.EndsWith(")"))
@@ -81,9 +75,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// Substring but OK if shorter
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="characterCount"></param>
-        /// <returns></returns>
         public static string StrLimit(string str, int characterCount)
         {
             if (str.Length <= characterCount)

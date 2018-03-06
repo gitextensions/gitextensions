@@ -29,10 +29,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             SetFindPrompt(true);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="parentPageReference"></param>
         /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node)</param>
         public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, bool asRoot = false)
         {

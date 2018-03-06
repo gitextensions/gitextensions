@@ -151,7 +151,6 @@ namespace GitUI.SpellChecker
         /// <param name = "textBox">The text box control to check.</param>
         /// <param name = "point">The point to find the character for,
         ///   specified relative to the client area of the text box.</param>
-        /// <returns></returns>
         private static int CharFromPos(TextBoxBase textBox, Point point)
         {
             unchecked

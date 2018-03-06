@@ -14,15 +14,12 @@ namespace GitCommands.Remote
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <param name="remote"></param>
-        /// <param name="branch"></param>
         /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
         string GetDefaultPushRemote(GitRemote remote, string branch);
 
         /// <summary>
         /// Loads the list of remotes configured in .git/config file.
         /// </summary>
-        /// <param name="loadDisabled"></param>
         IEnumerable<GitRemote> LoadRemotes(bool loadDisabled);
 
         /// <summary>
@@ -53,7 +50,6 @@ namespace GitCommands.Remote
         ///  Marks the remote as enabled or disabled in .git/config file.
         /// </summary>
         /// <param name="remoteName">The name of the remote.</param>
-        /// <param name="disabled"></param>
         void ToggleRemoteState(string remoteName, bool disabled);
     }
 
@@ -101,8 +97,6 @@ namespace GitCommands.Remote
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <param name="remote"></param>
-        /// <param name="branch"></param>
         /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
         // TODO: moved verbatim from FormPush.cs, perhaps needs refactoring
         public string GetDefaultPushRemote(GitRemote remote, string branch)

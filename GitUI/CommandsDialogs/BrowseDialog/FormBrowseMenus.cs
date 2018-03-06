@@ -60,8 +60,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// each new command set will be automatically separated by a separator
         /// </summary>
-        /// <param name="mainMenuItem"></param>
-        /// <param name="menuCommands"></param>
         public void AddMenuCommandSet(MainMenuItem mainMenuItem, IEnumerable<MenuCommand> menuCommands)
         {
             IList<MenuCommand> selectedMenuCommands = null; // make that more clear

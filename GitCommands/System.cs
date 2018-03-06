@@ -92,8 +92,6 @@ namespace System
         /// <summary>
         /// Quotes this string if it is not null and not empty
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static string QuoteNE(this string s)
         {
             return s.IsNullOrEmpty() ? s : s.Quote("\"");
@@ -102,8 +100,6 @@ namespace System
         /// <summary>
         /// Adds parentheses if string is not null and not empty
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
         public static string AddParenthesesNE(this string s)
         {
             return s.IsNullOrEmpty() ? s : "(" + s + ")";
@@ -134,7 +130,6 @@ namespace System
         /// <summary>
         /// Determines whether the beginning of this instance matches any of the specified strings.
         /// </summary>
-        /// <param name="value"></param>
         /// <param name="starts">array of strings to compare</param>
         /// <returns>true if any starts element matches the beginning of this string; otherwise, false.</returns>
         public static bool StartsWithAny([CanBeNull] this string value, string[] starts)

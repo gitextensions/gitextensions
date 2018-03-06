@@ -33,8 +33,6 @@ namespace GitUI.Hotkey
         /// <summary>
         /// Returns whether the hotkey is already assigned.
         /// </summary>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
         public static bool IsUniqueKey(Keys keyData)
         {
             return UsedKeys.Contains(keyData);

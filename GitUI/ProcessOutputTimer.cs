@@ -11,9 +11,6 @@ namespace GitUI
         private readonly StringBuilder _textToAdd = new StringBuilder();
         private DoOutputCallback _doOutput;
 
-        /// <summary>
-        ///
-        /// </summary>
         /// <param name="doOutput">Will be called on the home thread.</param>
         public ProcessOutputTimer(DoOutputCallback doOutput)
         {

@@ -34,7 +34,6 @@ namespace GitCommands
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
@@ -178,7 +177,6 @@ namespace GitCommands
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {

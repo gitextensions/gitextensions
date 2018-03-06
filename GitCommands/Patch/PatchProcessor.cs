@@ -30,7 +30,6 @@ namespace PatchApply
         /// </summary>
         /// <param name="lines">patch lines</param>
         /// <param name="lineIndex">start index</param>
-        /// <returns></returns>
         public Patch CreatePatchFromString(string[] lines, ref int lineIndex)
         {
             if (lineIndex >= lines.Length)
@@ -153,8 +152,6 @@ namespace PatchApply
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
-        /// <param name="patchText"></param>
-        /// <returns></returns>
         public IEnumerable<Patch> CreatePatchesFromString(string patchText)
         {
             string[] lines = patchText.Split('\n');

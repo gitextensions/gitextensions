@@ -1899,13 +1899,7 @@ namespace GitUI
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="revision"></param>
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
-        /// <param name="colIndex"></param>
-        /// <param name="rowIndex"></param>
         private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule aModule)
         {
             // code taken from CommitInfo.cs

@@ -11,8 +11,6 @@ namespace GitUI.Hotkey
         /// <summary>
         /// Strips the modifier from KeyData
         /// </summary>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
         public static Keys GetKeyCode(this Keys keyData)
         {
             return keyData & Keys.KeyCode;

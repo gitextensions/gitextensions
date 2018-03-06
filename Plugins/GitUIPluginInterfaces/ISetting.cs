@@ -23,21 +23,16 @@ namespace GitUIPluginInterfaces
         /// Creates a control to be placed on FormSettings to edit this setting value
         /// Control should take care of scalability and resizability of its subcontrols
         /// </summary>
-        /// <returns></returns>
         Control GetControl();
 
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        /// <param name="settings"></param>
-        /// <param name="areSettingsEffective"></param>
         void LoadSetting(ISettingsSource settings, bool areSettingsEffective);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        /// <param name="settings"></param>
-        /// <param name="areSettingsEffective"></param>
         void SaveSetting(ISettingsSource settings, bool areSettingsEffective);
 
         /// <summary>
@@ -84,8 +79,6 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        /// <param name="settings"></param>
-        /// <param name="areSettingsEffective"></param>
         public void SaveSetting(ISettingsSource settings, bool areSettingsEffective)
         {
             SaveSetting(settings, areSettingsEffective, Control);
@@ -104,7 +97,6 @@ namespace GitUIPluginInterfaces
         /// Creates a control to be placed on FormSettings to edit this setting value
         /// Control should take care of scalability and resizability of its subcontrols
         /// </summary>
-        /// <returns></returns>
         public abstract T CreateControl();
 
         /// <summary>

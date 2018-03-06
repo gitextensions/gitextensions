@@ -165,7 +165,6 @@ namespace GitExtensions
         /// <summary>
         /// Used in the rare event that the configuration file for the application is corrupted
         /// </summary>
-        /// <param name="ce"></param>
         private static void HandleConfigurationException(System.Configuration.ConfigurationException ce)
         {
             bool exceptionHandled = false;

@@ -147,7 +147,6 @@ namespace GitStatistics.PieChart
         /// <param name = "values">
         ///   Array of values to initialize with.
         /// </param>
-        /// <param name = "sliceRelativeHeight"></param>
         public PieChart3D(RectangleF boundingRectangle, decimal[] values, float sliceRelativeHeight)
             : this(
                 boundingRectangle.X, boundingRectangle.Y, boundingRectangle.Width, boundingRectangle.Y, values,

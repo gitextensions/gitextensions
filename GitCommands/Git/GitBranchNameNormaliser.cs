@@ -105,8 +105,6 @@ namespace GitCommands.Git
         /// <summary>
         /// Indicates whether the given character can be used in a branch name.
         /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
         public static bool IsValidChar(char c)
         {
             return (c >= 32 && c < 127) &&
@@ -119,8 +117,6 @@ namespace GitCommands.Git
         /// Branch name can include slash '/' for hierarchical (directory) grouping,
         /// but no slash-separated component can begin with a dot '.' or end with the sequence '.lock'.
         /// </summary>
-        /// <param name="branchName"></param>
-        /// <param name="options"></param>
         /// <returns>Normalised branch name.</returns>
         internal string Rule01(string branchName, GitBranchNameOptions options)
         {

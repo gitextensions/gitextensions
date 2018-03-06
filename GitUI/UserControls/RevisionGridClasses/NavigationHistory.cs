@@ -15,7 +15,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// Sets curr as current visible item and resets forward history
         /// </summary>
-        /// <param name="curr"></param>
         public void Push(string curr)
         {
             if ((_prevItems.Count == 0) || !_prevItems.Peek().Equals(curr))

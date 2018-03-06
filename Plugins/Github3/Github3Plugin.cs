@@ -138,7 +138,6 @@ namespace Github3
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        /// <returns></returns>
         public List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule)
         {
             var repoInfos = new List<IHostedRemote>();

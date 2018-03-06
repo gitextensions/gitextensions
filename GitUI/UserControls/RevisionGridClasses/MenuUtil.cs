@@ -11,7 +11,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// set the menu item disabled and remove mouse hover effect
         /// </summary>
-        /// <param name="menuItem"></param>
         public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem, ToolStrip menu)
         {
             menu.Renderer = customMenuRenderer;

@@ -12,7 +12,6 @@ namespace GitCommands
         /// <summary>
         /// Loads children item for the given <paramref name="item"/>.
         /// </summary>
-        /// <param name="item"></param>
         /// <returns>The item's children.</returns>
         IEnumerable<IGitItem> LoadChildren(IGitItem item);
     }
@@ -29,7 +28,6 @@ namespace GitCommands
         /// <summary>
         /// Loads children item for the given <paramref name="item"/>.
         /// </summary>
-        /// <param name="item"></param>
         /// <returns>The item's children.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="item"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><see cref="IGitItem.Guid"/> is not supplied.</exception>

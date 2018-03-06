@@ -433,9 +433,6 @@ namespace GitUI
                 form.ShowDialog();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
         /// <param name="owner">Owner window</param>
         /// <param name="changesRepo">if successfully done action changes repo state</param>
@@ -799,7 +796,6 @@ namespace GitUI
         /// Starts pull dialog
         /// </summary>
         /// <param name="owner">An implementation of IWin32Window that will own the modal dialog box.</param>
-        /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, string remoteBranch, string remote, out bool pullCompleted, bool fetchAll)
@@ -1280,11 +1276,9 @@ namespace GitUI
         /// <summary>
         /// Open the archive dialog
         /// </summary>
-        /// <param name="owner"></param>
         /// <param name="revision">Revision to create an archive from</param>
         /// <param name="revision2">Revision for differencial archive </param>
         /// <param name="path">Files path for archive</param>
-        /// <returns></returns>
         public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, GitRevision revision2 = null, string path = null)
         {
             return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
@@ -1343,12 +1337,7 @@ namespace GitUI
             return StartVerifyDatabaseDialog(null);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="owner"></param>
         /// <param name="preselectRemote">makes the FormRemotes initialially select the given remote</param>
-        /// <returns></returns>
         public bool StartRemotesDialog(IWin32Window owner, string preselectRemote)
         {
             Func<bool> action = () =>

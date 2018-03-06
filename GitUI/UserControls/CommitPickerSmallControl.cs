@@ -24,7 +24,6 @@ namespace GitUI.UserControls
         /// <summary>
         /// shows a message box if commitHash is invalid
         /// </summary>
-        /// <param name="commitHash"></param>
         public void SetSelectedCommitHash(string commitHash)
         {
             string oldCommitHash = SelectedCommitHash;

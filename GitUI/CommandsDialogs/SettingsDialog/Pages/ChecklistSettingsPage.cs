@@ -13,8 +13,6 @@ using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    /// <summary>
-    /// </summary>
     public partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
         #region Translations

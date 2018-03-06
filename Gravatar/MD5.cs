@@ -8,7 +8,6 @@ namespace Gravatar
         /// <summary>
         ///   Small MD5 Function
         /// </summary>
-        /// <param name = "email"></param>
         /// <returns>Hash of the email address passed.</returns>
         public static string CalcMD5(string email)
         {

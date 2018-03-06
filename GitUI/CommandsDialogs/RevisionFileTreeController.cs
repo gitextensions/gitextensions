@@ -16,8 +16,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Locates the node by the label.
         /// </summary>
-        /// <param name="nodes"></param>
-        /// <param name="label"></param>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
         TreeNode Find(TreeNodeCollection nodes, string label);
 
@@ -25,9 +23,6 @@ namespace GitUI.CommandsDialogs
         /// Loads children items for the provided item in to the specified nodes.
         /// For file type items it also loads icons associated with these types at the OS level.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="nodes"></param>
-        /// <param name="imageCollection"></param>
         void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection);
 
         /// <summary>
@@ -61,8 +56,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Locates the node by the label.
         /// </summary>
-        /// <param name="nodes"></param>
-        /// <param name="label"></param>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
         public TreeNode Find(TreeNodeCollection nodes, string label)
         {
@@ -81,9 +74,6 @@ namespace GitUI.CommandsDialogs
         /// Loaded children are cached until <see cref="ResetCache"/> method is called.
         /// For file type items it also loads icons associated with these types at the OS level.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="nodes"></param>
-        /// <param name="imageCollection"></param>
         /// <remarks>The method DOES NOT check any input parameters for performance reasons.</remarks>
         public void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
