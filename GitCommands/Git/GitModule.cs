@@ -2240,9 +2240,9 @@ namespace GitCommands
                         }
 
                         if (string.IsNullOrEmpty(line) ||
-                            !string.IsNullOrEmpty(patchFile.Author) &&
+                            (!string.IsNullOrEmpty(patchFile.Author) &&
                             !string.IsNullOrEmpty(patchFile.Date) &&
-                            !string.IsNullOrEmpty(patchFile.Subject))
+                            !string.IsNullOrEmpty(patchFile.Subject)))
                         {
                             break;
                         }

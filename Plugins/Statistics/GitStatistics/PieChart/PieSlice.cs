@@ -532,17 +532,17 @@ namespace GitStatistics.PieChart
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Right);
             }
 
-            if ((StartAngle <= 90) && (StartAngle + SweepAngle >= 90) || (StartAngle + SweepAngle >= 450))
+            if (((StartAngle <= 90) && (StartAngle + SweepAngle >= 90)) || (StartAngle + SweepAngle >= 450))
             {
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Bottom + SliceHeight);
             }
 
-            if ((StartAngle <= 180) && (StartAngle + SweepAngle >= 180) || (StartAngle + SweepAngle >= 540))
+            if (((StartAngle <= 180) && (StartAngle + SweepAngle >= 180)) || (StartAngle + SweepAngle >= 540))
             {
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Left);
             }
 
-            if ((StartAngle <= 270) && (StartAngle + SweepAngle >= 270) || (StartAngle + SweepAngle >= 630))
+            if (((StartAngle <= 270) && (StartAngle + SweepAngle >= 270)) || (StartAngle + SweepAngle >= 630))
             {
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Top);
             }
@@ -1130,7 +1130,7 @@ namespace GitStatistics.PieChart
 
             // point is inside the pie slice only if between start and end angle
             if ((angleDegrees >= startAngle && angleDegrees <= (startAngle + sweepAngle)) ||
-                (startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle)))
+                ((startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle))))
             {
                 // distance of the point from the ellipse centre
                 var r = Math.Sqrt((y * y) + (x * x));

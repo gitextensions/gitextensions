@@ -1096,7 +1096,7 @@ namespace GitUI
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
                        (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
-                        _ShaFilter != null && CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
+                        (_ShaFilter != null && CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid)));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -1204,8 +1204,8 @@ namespace GitUI
                     NoGit.Visible = true;
                     string dir = Module.WorkingDir;
                     if (String.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
-                        Directory.GetDirectories(dir).Length == 0 &&
-                        Directory.GetFiles(dir).Length == 0)
+                        (Directory.GetDirectories(dir).Length == 0 &&
+                        Directory.GetFiles(dir).Length == 0))
                     {
                         CloneRepository.Show();
                     }

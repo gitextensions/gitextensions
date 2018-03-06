@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var versions = availableVersions.Where(version =>
                     version.ReleaseType == ReleaseType.Major ||
                     version.ReleaseType == ReleaseType.HotFix ||
-                    checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate);
+                    (checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate));
 
             return versions.Where(version => version.Version.CompareTo(currentVersion) > 0);
         }

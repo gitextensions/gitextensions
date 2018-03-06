@@ -35,7 +35,7 @@ namespace GitUI
                 firstRevision = null;
                 secondRevision = null;
             }
-            else if (revisions[0] == null || revisions.Count > 1 && revisions[1] == null)
+            else if (revisions[0] == null || (revisions.Count > 1 && revisions[1] == null))
             {
                 error = "Unexpected single null argument to difftool";
                 firstRevision = null;

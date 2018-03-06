@@ -321,7 +321,7 @@ namespace GitUI.CommandsDialogs
 
         private void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _stageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches() || _currentItem != null && _currentItem.IsNew;
+            _stageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches() || (_currentItem != null && _currentItem.IsNew);
             _resetSelectedLinesToolStripMenuItem.Enabled = _stageSelectedLinesToolStripMenuItem.Enabled;
         }
 
@@ -1683,10 +1683,10 @@ namespace GitUI.CommandsDialogs
                     unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
                     unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
                         (item.SubmoduleStatus.Result == null ||
-                        !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item)));
+                        (!item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item))));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
                         (item.SubmoduleStatus.Result == null ||
-                        item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty)))
+                        (item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty))))
                     {
                         item.SubmoduleStatus.Result.Status = SubmoduleStatus.Unknown;
                     }
@@ -2449,17 +2449,17 @@ namespace GitUI.CommandsDialogs
                 e.Handled = true;
             }
 
-            if (e.Control && e.KeyCode == Keys.P
-                || e.Alt && e.KeyCode == Keys.Up
-                || e.Alt && e.KeyCode == Keys.Left)
+            if ((e.Control && e.KeyCode == Keys.P)
+                || (e.Alt && e.KeyCode == Keys.Up)
+                || (e.Alt && e.KeyCode == Keys.Left))
             {
                 SelectPreviousFile();
                 e.Handled = true;
             }
 
-            if (e.Control && e.KeyCode == Keys.N
-                || e.Alt && e.KeyCode == Keys.Down
-                || e.Alt && e.KeyCode == Keys.Right)
+            if ((e.Control && e.KeyCode == Keys.N)
+                || (e.Alt && e.KeyCode == Keys.Down)
+                || (e.Alt && e.KeyCode == Keys.Right))
             {
                 SelectNextFile();
                 e.Handled = true;

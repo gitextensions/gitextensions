@@ -41,7 +41,7 @@ namespace GitUI
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace();
+            var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace());
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
                     diffArgs, encoding, true, isTracked);
         }

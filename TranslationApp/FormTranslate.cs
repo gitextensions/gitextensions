@@ -536,8 +536,8 @@ namespace TranslationApp
                 e.Handled = true;
                 previousButton_Click(sender, e);
             }
-            else if (e.Alt && e.KeyCode == Keys.Down ||
-                e.Control && e.KeyCode == Keys.Enter)
+            else if ((e.Alt && e.KeyCode == Keys.Down) ||
+                (e.Control && e.KeyCode == Keys.Enter))
             {
                 e.Handled = true;
                 nextButton_Click(sender, e);

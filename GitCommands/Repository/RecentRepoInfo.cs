@@ -90,7 +90,7 @@ namespace GitCommands.Repository
             // rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
             {
-                bool mostRecent = mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None ||
+                bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
                 RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
                 if (ri.MostRecent)

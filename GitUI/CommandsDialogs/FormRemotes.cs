@@ -330,7 +330,7 @@ Inactive remote is completely invisible to git.");
                 // disable the control while saving
                 tabControl1.Enabled = false;
 
-                if (string.IsNullOrEmpty(remotePushUrl) && checkBoxSepPushUrl.Checked ||
+                if ((string.IsNullOrEmpty(remotePushUrl) && checkBoxSepPushUrl.Checked) ||
                     remotePushUrl.Equals(remoteUrl, StringComparison.OrdinalIgnoreCase))
                 {
                     checkBoxSepPushUrl.Checked = false;

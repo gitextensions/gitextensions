@@ -262,7 +262,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     // after these actions. Moreover, calling git status while other git command is performed
                     // can cause repository crash
                     UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
-                    GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess())
+                    (GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
                 {
                     _statusIsUpToDate = false; // tell that computed status isn't up to date
                     return;
