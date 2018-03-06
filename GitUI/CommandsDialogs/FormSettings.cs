@@ -87,9 +87,9 @@ namespace GitUI.CommandsDialogs
             var buildServerIntegrationSettingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this);
             settingsTreeView.AddSettingsPage(buildServerIntegrationSettingsPage, gitExtPageRef);
 
-            var _sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
-            checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
+            var sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef);
+            checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this), gitExtPageRef);
 

@@ -95,9 +95,9 @@ namespace TfsInterop
         public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
             var result = new List<IBuild>();
-            foreach (var _buildDefinition in _buildDefinitions)
+            foreach (var buildDefinition in _buildDefinitions)
             {
-                var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
+                var buildSpec = _buildServer.CreateBuildDetailSpec(buildDefinition);
                 buildSpec.InformationTypes = null;
                 if (sinceDate.HasValue)
                 {
@@ -298,7 +298,7 @@ namespace TfsInterop
             {
                 return result;
             }
-            ////foreach (var _buildDefinition in _buildDefinitions)
+            ////foreach (var buildDefinition in _buildDefinitions)
             ////{
             Microsoft.TeamFoundation.Build.WebApi.BuildStatus statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.All;
             if (running.HasValue && running.Value)
@@ -306,7 +306,7 @@ namespace TfsInterop
                 statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress;
             }
 
-            ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { _buildDefinition.Id },
+            ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { buildDefinition.Id },
             ////                                       minFinishTime: sinceDate,
             ////                                       statusFilter: statusFilter));
             var task = _buildClient.GetBuildsAsync(project: _projectName,
