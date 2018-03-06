@@ -233,14 +233,16 @@ namespace GitCommands
                     line = process.StandardOutput.ReadLine();
                     if (line != null)
                         yield return line;
-                } while (line != null);
+                }
+                while (line != null);
 
                 do
                 {
                     line = process.StandardError.ReadLine();
                     if (line != null)
                         yield return line;
-                } while (line != null);
+                }
+                while (line != null);
 
                 process.WaitForExit();
             }

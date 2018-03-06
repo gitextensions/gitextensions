@@ -210,7 +210,8 @@ namespace Gource
 
                     // Increment total bytes processed
                     bytesProcessed += bytesRead;
-                } while (bytesRead > 0);
+                }
+                while (bytesRead > 0);
             }
             catch (Exception e)
             {

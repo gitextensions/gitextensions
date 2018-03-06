@@ -331,7 +331,8 @@ namespace AppVeyorIntegration
                         UpdateDisplay(observer, build);
                     }
                     inProgressBuilds = inProgressBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
-                } while (inProgressBuilds.Any());
+                }
+                while (inProgressBuilds.Any());
 
                 observer.OnCompleted();
             }

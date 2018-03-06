@@ -223,7 +223,8 @@ namespace GitUI.CommandsDialogs
                         listOfFileNames.Append(line);
                         listOfFileNames.Append('\"');
                     }
-                } while (line != null);
+                }
+                while (line != null);
                 // here we need --name-only to get the previous filenames in the revision graph
                 res.PathFilter = listOfFileNames.ToString();
                 res.RevisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();

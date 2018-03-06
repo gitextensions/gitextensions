@@ -119,7 +119,8 @@ namespace GitUI
             Icon appIcon;
             if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
             {
-                Icon[] icons = {
+                Icon[] icons =
+                {
                                     Resources.x_with_arrow,
                                     Resources.x_with_arrow_blue,
                                     Resources.x_with_arrow_green,
@@ -133,7 +134,8 @@ namespace GitUI
             }
             else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
             {
-                Icon[] icons = {
+                Icon[] icons =
+                {
                                     Resources.git_extensions_logo_final,
                                     Resources.git_extensions_logo_final_blue,
                                     Resources.git_extensions_logo_final_green,
@@ -147,7 +149,8 @@ namespace GitUI
             }
             else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
             {
-                Icon[] icons = {
+                Icon[] icons =
+                {
                                     Resources.cow_head,
                                     Resources.cow_head_blue,
                                     Resources.cow_head_green,
@@ -161,7 +164,8 @@ namespace GitUI
             }
             else
             {
-                Icon[] icons = {
+                Icon[] icons =
+                {
                                     Resources.git_extensions_logo_final_mixed,
                                     Resources.git_extensions_logo_final_mixed_blue,
                                     Resources.git_extensions_logo_final_mixed_green,

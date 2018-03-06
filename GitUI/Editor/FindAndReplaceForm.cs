@@ -188,7 +188,8 @@ namespace GitUI
                         break;
                     }
                 }
-            } while (range == null && startIdx != currentIdx && currentIdx != -1);
+            }
+            while (range == null && startIdx != currentIdx && currentIdx != -1);
             if (range == null && messageIfNotFound != null)
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return range;

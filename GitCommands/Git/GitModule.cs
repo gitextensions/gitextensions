@@ -180,7 +180,8 @@ namespace GitCommands
                 if (module.SuperprojectModule == null)
                     return module;
                 module = module.SuperprojectModule;
-            } while (module != null);
+            }
+            while (module != null);
             return module;
         }
 
@@ -2986,7 +2987,8 @@ namespace GitCommands
             {
                 read = input.Read(buffer, 0, buffer.Length);
                 output.Write(buffer, 0, read);
-            } while (read > 0);
+            }
+            while (read > 0);
         }
 
         public Stream GetFileStream(string blob)

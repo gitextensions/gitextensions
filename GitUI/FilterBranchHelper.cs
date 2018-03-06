@@ -51,10 +51,12 @@ namespace GitUI
             _NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
             _NO_TRANSLATE_RevisionGrid = revisionGrid;
 
-            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
+            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
+            {
                 _localToolStripMenuItem,
                 _tagsToolStripMenuItem,
-                _remoteToolStripMenuItem });
+                _remoteToolStripMenuItem
+            });
 
             _NO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
             _NO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;

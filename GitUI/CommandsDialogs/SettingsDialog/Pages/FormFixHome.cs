@@ -46,7 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 if (File.Exists(Path.Combine(home, ".gitconfig")))
                     return false;
 
-                string[] candidates = {
+                string[] candidates =
+                {
                             Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
                             Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
                             Environment.GetEnvironmentVariable("USERPROFILE"),

@@ -73,11 +73,13 @@ namespace GitUI
             _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
             _NO_TRANSLATE_form = form;
 
-            _NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[] {
+            _NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
+            {
                 _commitToolStripMenuItem,
                 _committerToolStripMenuItem,
                 _authorToolStripMenuItem,
-                _diffContainsToolStripMenuItem });
+                _diffContainsToolStripMenuItem
+            });
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 

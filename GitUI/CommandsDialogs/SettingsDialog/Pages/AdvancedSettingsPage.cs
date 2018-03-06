@@ -10,7 +10,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Advanced";
             Translate();
 
-            var autoNormaliseSymbols = new[] {
+            var autoNormaliseSymbols = new[]
+            {
                 new { Key = "_", Value = "_" },
                 new { Key = "-", Value = "-" },
                 new { Key = "(none)", Value = "" },
