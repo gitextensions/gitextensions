@@ -65,7 +65,6 @@ namespace GitCommands.ExternalLinks
                         return null;
                     }
                 });
-
             }
         }
 

@@ -82,7 +82,6 @@ namespace GitCommands
 
                     Save();
                 });
-
         }
 
         protected void EnsureSettingsAreUpToDate()

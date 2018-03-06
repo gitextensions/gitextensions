@@ -87,6 +87,5 @@ namespace GitUIPluginInterfaces
         {
             return this[settings] ?? DefaultValue;
         }
-
     }
 }

@@ -470,7 +470,6 @@ namespace GitCommands
                 try
                 {
                     return CultureInfo.GetCultureInfo(CurrentLanguageCode);
-
                 }
                 catch (System.Globalization.CultureNotFoundException)
                 {
@@ -1497,7 +1496,6 @@ namespace GitCommands
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;
-
         }
 
         private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
@@ -1694,7 +1692,6 @@ namespace GitCommands
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
         }
-
     }
 
     public class AppSettingsPath : SettingsPath
@@ -1712,7 +1709,5 @@ namespace GitCommands
         {
             AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
         }
-
     }
-
 }

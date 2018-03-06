@@ -111,7 +111,6 @@ namespace GitCommands
 
             return commitTemplateItem;
         }
-
     }
 
     public sealed class MoveNamespaceDeserializationBinder : SerializationBinder

@@ -204,7 +204,6 @@ namespace GitPlugin
                 _gitPlugin.AddToolbarCommand(commandBar, "Push", "Push", "Push changes to remote repository", 8, 4);
                 _gitPlugin.AddToolbarCommand(commandBar, "Stash", "Stash", "Stash changes", 3, 5);
                 _gitPlugin.AddToolbarCommand(commandBar, "Settings", "Settings", "Settings", 2, 6);
-
             }
             catch (Exception ex)
             {
@@ -257,7 +256,6 @@ namespace GitPlugin
                 ////{
                 ////    _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
                 ////}
-
             }
             catch (Exception ex)
             {
