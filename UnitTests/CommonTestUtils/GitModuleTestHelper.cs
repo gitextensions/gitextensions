@@ -11,7 +11,6 @@ namespace CommonTestUtils
         /// <summary>
         /// Creates a throw-away new repository in a temporary location.
         /// </summary>
-        /// <returns></returns>
         public GitModuleTestHelper(string repositoryName = "repo1")
         {
             TemporaryPath = GetTemporaryPath();
