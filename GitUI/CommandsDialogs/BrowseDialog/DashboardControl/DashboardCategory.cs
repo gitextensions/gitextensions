@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             new TranslationString("New category");
         #endregion
 
-        private RepositoryCategory _m_repositoryCategory;
+        private RepositoryCategory _repositoryCategory;
 
         public DashboardCategory()
         {
@@ -49,10 +49,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public RepositoryCategory RepositoryCategory
         {
-            get { return _m_repositoryCategory; }
+            get { return _repositoryCategory; }
             set
             {
-                _m_repositoryCategory = value;
+                _repositoryCategory = value;
                 InitRepositoryCategory();
             }
         }
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void InitRepositoryCategory()
         {
-            if (_m_repositoryCategory == null)
+            if (_repositoryCategory == null)
                 return;
 
             var contextMenu = new ContextMenuStrip();
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             SuspendLayout();
             flowLayoutPanel.SuspendLayout();
 
-            foreach (Repository repository in _m_repositoryCategory.Repositories)
+            foreach (Repository repository in _repositoryCategory.Repositories)
             {
                 var dashboardItem = new DashboardItem(repository);
                 dashboardItem.Click += dashboardItem_Click;

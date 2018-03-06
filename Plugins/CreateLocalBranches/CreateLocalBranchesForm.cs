@@ -6,19 +6,19 @@ namespace CreateLocalBranches
 {
     public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsFormBase
     {
-        private GitUIBaseEventArgs _m_gitUiCommands;
+        private GitUIBaseEventArgs _gitUiCommands;
 
         public CreateLocalBranchesForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();
 
-            _m_gitUiCommands = gitUiCommands;
+            _gitUiCommands = gitUiCommands;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string[] references = _m_gitUiCommands.GitModule.RunGitCmd("branch -a")
+            string[] references = _gitUiCommands.GitModule.RunGitCmd("branch -a")
                 .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (references.Length == 0)
@@ -35,7 +35,7 @@ namespace CreateLocalBranches
                     string branchName = reference.Trim('*', ' ', '\n', '\r');
 
                     if (branchName.StartsWith("remotes/" + _NO_TRANSLATE_Remote.Text + "/"))
-                        _m_gitUiCommands.GitModule.RunGitCmd(string.Concat("branch --track ", branchName.Replace("remotes/" + _NO_TRANSLATE_Remote.Text + "/", ""), " ", branchName));
+                        _gitUiCommands.GitModule.RunGitCmd(string.Concat("branch --track ", branchName.Replace("remotes/" + _NO_TRANSLATE_Remote.Text + "/", ""), " ", branchName));
                 }
                 catch
                 {

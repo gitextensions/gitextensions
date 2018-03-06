@@ -48,8 +48,8 @@ namespace GitUI.Script
         bool _isSplitMenuVisible;
 
 
-        ContextMenuStrip _m_SplitMenuStrip;
-        ContextMenu _m_SplitMenu;
+        ContextMenuStrip _splitMenuStrip;
+        ContextMenu _splitMenu;
 
         TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
 
@@ -76,13 +76,13 @@ namespace GitUI.Script
         [DefaultValue(null)]
         public ContextMenu SplitMenu
         {
-            get { return _m_SplitMenu; }
+            get { return _splitMenu; }
             set
             {
                 // remove the event handlers for the old SplitMenu
-                if (_m_SplitMenu != null)
+                if (_splitMenu != null)
                 {
-                    _m_SplitMenu.Popup -= SplitMenu_Popup;
+                    _splitMenu.Popup -= SplitMenu_Popup;
                 }
 
                 // add the event handlers for the new SplitMenu
@@ -94,7 +94,7 @@ namespace GitUI.Script
                 else
                     ShowSplit = false;
 
-                _m_SplitMenu = value;
+                _splitMenu = value;
             }
         }
 
@@ -103,15 +103,15 @@ namespace GitUI.Script
         {
             get
             {
-                return _m_SplitMenuStrip;
+                return _splitMenuStrip;
             }
             set
             {
                 // remove the event handlers for the old SplitMenuStrip
-                if (_m_SplitMenuStrip != null)
+                if (_splitMenuStrip != null)
                 {
-                    _m_SplitMenuStrip.Closing -= SplitMenuStrip_Closing;
-                    _m_SplitMenuStrip.Opening -= SplitMenuStrip_Opening;
+                    _splitMenuStrip.Closing -= SplitMenuStrip_Closing;
+                    _splitMenuStrip.Opening -= SplitMenuStrip_Opening;
                 }
 
                 // add the event handlers for the new SplitMenuStrip
@@ -125,7 +125,7 @@ namespace GitUI.Script
                     ShowSplit = false;
 
 
-                _m_SplitMenuStrip = value;
+                _splitMenuStrip = value;
             }
         }
 
@@ -289,7 +289,7 @@ namespace GitUI.Script
             }
 
             // handle ContextMenu re-clicking the drop-down region to close the menu
-            if (_m_SplitMenu != null && e.Button == MouseButtons.Left && !_isMouseEntered)
+            if (_splitMenu != null && e.Button == MouseButtons.Left && !_isMouseEntered)
                 _skipNextOpen = true;
 
             if ((_dropDownRectangle.Contains(e.Location) || WholeButtonDropdown) &&
@@ -316,7 +316,7 @@ namespace GitUI.Script
             {
                 ShowContextMenuStrip();
             }
-            else if (_m_SplitMenuStrip == null && _m_SplitMenu == null || !_isSplitMenuVisible)
+            else if (_splitMenuStrip == null && _splitMenu == null || !_isSplitMenuVisible)
             {
                 SetButtonDrawState();
 
@@ -784,13 +784,13 @@ namespace GitUI.Script
 
             State = PushButtonState.Pressed;
 
-            if (_m_SplitMenu != null)
+            if (_splitMenu != null)
             {
-                _m_SplitMenu.Show(this, new Point(0, Height));
+                _splitMenu.Show(this, new Point(0, Height));
             }
             else
             {
-                _m_SplitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
+                _splitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
             }
         }
 
