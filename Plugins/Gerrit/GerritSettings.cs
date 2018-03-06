@@ -41,14 +41,21 @@ namespace Gerrit
         private void Validate()
         {
             if (string.IsNullOrEmpty(Host))
+            {
                 throw new GerritSettingsException(_settingsErrorHostNotEntered.Text);
+            }
+
             if (string.IsNullOrEmpty(Project))
+            {
                 throw new GerritSettingsException(_settingsErrorProjectNotEntered.Text);
+            }
 
             var remotes = _Module.GetRemotes(true);
 
             if (!remotes.Contains(DefaultRemote))
+            {
                 throw new GerritSettingsException(String.Format(_settingsErrorDefaultRemoteNotPresent.Text, DefaultRemote));
+            }
         }
 
         public static GerritSettings Load([NotNull] IGitModule aModule)
@@ -59,7 +66,9 @@ namespace Gerrit
         public static GerritSettings Load([CanBeNull] IWin32Window owner, [NotNull] IGitModule aModule)
         {
             if (aModule == null)
+            {
                 throw new ArgumentNullException(nameof(aModule));
+            }
 
             string path = aModule.WorkingDir + ".gitreview";
 
@@ -68,7 +77,9 @@ namespace Gerrit
             try
             {
                 if (!File.Exists(path))
+                {
                     throw new GerritSettingsException(result._settingsErrorFileNotFound.Text);
+                }
 
                 bool inHeader = false;
 
@@ -79,7 +90,9 @@ namespace Gerrit
                     // Skip empty lines and comments.
 
                     if (trimmed.Length == 0 || trimmed[0] == '#')
+                    {
                         continue;
+                    }
 
                     // Look for the section header.
 
@@ -96,7 +109,9 @@ namespace Gerrit
                         // Ignore invalid lines.
 
                         if (parts.Length != 2 || parts[1].Length == 0)
+                        {
                             continue;
+                        }
 
                         // Get the parts of the config file.
 
@@ -110,7 +125,10 @@ namespace Gerrit
 
                             case "port":
                                 if (!int.TryParse(parts[1], out var value))
+                                {
                                     throw new GerritSettingsException(result._settingsErrorPortNotNumeric.Text);
+                                }
+
                                 result.Port = value;
                                 break;
                         }

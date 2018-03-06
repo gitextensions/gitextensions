@@ -97,7 +97,10 @@ namespace GitStatistics
                 _syncContext.Post(o =>
                 {
                     if (IsDisposed)
+                    {
                         return;
+                    }
+
                     var totalCommits = allCommitsByUser.Item2;
                     var commitsPerUser = allCommitsByUser.Item1;
 
@@ -156,7 +159,9 @@ namespace GitStatistics
         private void InitializeLinesOfCode()
         {
             if (_initializeLinesOfCodeDone)
+            {
                 return;
+            }
 
             _initializeLinesOfCodeDone = true;
 

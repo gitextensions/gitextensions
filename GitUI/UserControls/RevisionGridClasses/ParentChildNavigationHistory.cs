@@ -51,9 +51,14 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             _direction = direction;
             if (direction == NavigationDirection.Child)
+            {
                 _parentHistory.Push(current);
+            }
             else
+            {
                 _childHistory.Push(current);
+            }
+
             _setSelectedRevision(to);
             _direction = null;
         }
@@ -67,7 +72,9 @@ namespace GitUI.UserControls.RevisionGridClasses
         public void RevisionsSelectionChanged()
         {
             if (_direction == null)
+            {
                 Clear();
+            }
         }
     }
 }

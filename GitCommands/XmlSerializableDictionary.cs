@@ -37,9 +37,15 @@ namespace GitCommands
 
             reader.Read();
             if (reader.NodeType == System.Xml.XmlNodeType.XmlDeclaration)
+            {
                 reader.Read();
+            }
+
             if (wasEmpty || reader.IsEmptyElement)
+            {
                 return;
+            }
+
             if (reader.ReadToDescendant("item"))
             {
                 while (reader.NodeType != System.Xml.XmlNodeType.EndElement)

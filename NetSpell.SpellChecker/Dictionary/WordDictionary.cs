@@ -53,7 +53,9 @@ namespace NetSpell.SpellChecker.Dictionary
 
             // quit if user file is disabled
             if (!EnableUserFile)
+            {
                 return;
+            }
 
             string userPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "NetSpell");
             string filePath = Path.Combine(userPath, UserFile);
@@ -99,11 +101,15 @@ namespace NetSpell.SpellChecker.Dictionary
         {
             // quit if user file is disabled
             if (!EnableUserFile)
+            {
                 return;
+            }
 
             string userPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "NetSpell");
             if (!Directory.Exists(userPath))
+            {
                 Directory.CreateDirectory(userPath);
+            }
 
             string filePath = Path.Combine(userPath, UserFile);
 
@@ -388,7 +394,9 @@ namespace NetSpell.SpellChecker.Dictionary
                     {
                         string tempLine = sr.ReadLine().Trim();
                         if (tempLine.Length <= 0)
+                        {
                             continue;
+                        }
                         // check for section flag
                         if (tempLine.StartsWith("[") && tempLine.EndsWith("]"))
                         {
@@ -424,7 +432,9 @@ namespace NetSpell.SpellChecker.Dictionary
                                     currentRule.Name = partMatches[0].Value;
                                     // part 2 = combine flag
                                     if (partMatches[1].Value == "Y")
+                                    {
                                         currentRule.AllowCombine = true;
+                                    }
                                     // part 3 = entry count, not used
 
                                     if (currentSection == "[Prefix]")
@@ -448,7 +458,9 @@ namespace NetSpell.SpellChecker.Dictionary
 
                                         // part 2 = strip char
                                         if (partMatches[1].Value != "0")
+                                        {
                                             entry.StripCharacters = partMatches[1].Value;
+                                        }
                                         // part 3 = add chars
                                         entry.AddCharacters = partMatches[2].Value;
                                         // part 4 = conditions
@@ -477,10 +489,14 @@ namespace NetSpell.SpellChecker.Dictionary
                                 tempWord.Text = parts[0];
                                 // part 2 = affix keys
                                 if (parts.Length >= 2)
+                                {
                                     tempWord.AffixKeys = parts[1];
+                                }
                                 // part 3 = phonetic code
                                 if (parts.Length >= 3)
+                                {
                                     tempWord.PhoneticCode = parts[2];
+                                }
 
                                 BaseWords.Add(tempWord.Text, tempWord);
                                 break;

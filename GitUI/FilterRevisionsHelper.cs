@@ -128,7 +128,10 @@ namespace GitUI
                 (_NO_TRANSLATE_revisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
                 (_NO_TRANSLATE_revisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
                 (_NO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase))
+            {
                 return;
+            }
+
             _NO_TRANSLATE_revisionGrid.QuickRevisionFilter = revListArgs;
             _NO_TRANSLATE_revisionGrid.InMemMessageFilter = inMemMessageFilter;
             _NO_TRANSLATE_revisionGrid.InMemCommitterFilter = inMemCommitterFilter;
@@ -146,7 +149,9 @@ namespace GitUI
         private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
+            {
                 ToolStripLabelClick(null, null);
+            }
         }
 
         private void ToolStripLabelClick(object sender, EventArgs e)
@@ -174,7 +179,9 @@ namespace GitUI
                 _hashToolStripMenuItem.Checked = false;
             }
             else
+            {
                 _commitToolStripMenuItem.Checked = true;
+            }
         }
 
         public void SetLimit(int limit)

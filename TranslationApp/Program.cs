@@ -39,7 +39,9 @@ namespace TranslationApp
             GitUI.PluginLoader.Load();
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length == 1)
+            {
                 Application.Run(new FormTranslate());
+            }
             else if (args.Length == 2 && args[1] == "update")
             {
                 UpdateAllTranslations();

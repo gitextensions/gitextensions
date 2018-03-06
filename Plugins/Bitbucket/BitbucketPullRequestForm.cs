@@ -58,7 +58,9 @@ namespace Bitbucket
         private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
         {
             if (_settings == null)
+            {
                 return;
+            }
 
             ThreadPool.QueueUserWorkItem(state =>
             {
@@ -82,7 +84,9 @@ namespace Bitbucket
         private void BitbucketViewPullRequestFormLoad(object sender, EventArgs e)
         {
             if (_settings == null)
+            {
                 return;
+            }
 
             ThreadPool.QueueUserWorkItem(state =>
             {
@@ -108,7 +112,9 @@ namespace Bitbucket
             var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
             var defaultRepo = getDefaultRepo.Send();
             if (defaultRepo.Success)
+            {
                 list.Add(defaultRepo.Result);
+            }
 
             return list;
         }
@@ -153,8 +159,10 @@ namespace Bitbucket
                 BitbucketViewPullRequestFormLoad(null, null);
             }
             else
+            {
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         Dictionary<Repository, IEnumerable<string>> _Branches = new Dictionary<Repository, IEnumerable<string>>();
@@ -214,7 +222,10 @@ namespace Bitbucket
         private void DdlBranchSourceSelectedValueChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(ddlBranchSource.SelectedValue.ToString()))
+            {
                 return;
+            }
+
             var commit = GetCommitInfo((Repository)ddlRepositorySource.SelectedValue,
                                                 ddlBranchSource.SelectedValue.ToString());
 
@@ -227,7 +238,10 @@ namespace Bitbucket
         private void DdlBranchTargetSelectedValueChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(ddlBranchTarget.SelectedValue.ToString()))
+            {
                 return;
+            }
+
             var commit = GetCommitInfo((Repository)ddlRepositoryTarget.SelectedValue,
                                                 ddlBranchTarget.SelectedValue.ToString());
 
@@ -239,7 +253,10 @@ namespace Bitbucket
         private Commit GetCommitInfo(Repository repo, string branch)
         {
             if (repo == null || string.IsNullOrWhiteSpace(branch))
+            {
                 return null;
+            }
+
             var getCommit = new GetHeadCommitRequest(repo, branch, _settings);
             var result = getCommit.Send();
             return result.Success ? result.Result : null;
@@ -248,10 +265,14 @@ namespace Bitbucket
         private void UpdateCommitInfo(Label label, Commit commit)
         {
             if (commit == null)
+            {
                 label.Text = string.Empty;
+            }
             else
+            {
                 label.Text = string.Format(_commited.Text,
                     commit.AuthorName, commit.Message);
+            }
         }
 
         private void UpdatePullRequestDescription()
@@ -260,7 +281,9 @@ namespace Bitbucket
                 || ddlRepositoryTarget.SelectedValue == null
                 || ddlBranchSource.Tag == null
                 || ddlBranchTarget.Tag == null)
+            {
                 return;
+            }
 
             var getCommitsInBetween = new GetInBetweenCommitsRequest(
                 (Repository)ddlRepositorySource.SelectedValue,
@@ -277,7 +300,9 @@ namespace Bitbucket
                 foreach (var commit in result.Result)
                 {
                     if (!commit.IsMerge)
+                    {
                         sb.Append("* ").AppendLine(commit.Message);
+                    }
                 }
                 txtDescription.Text = sb.ToString();
             }
@@ -304,7 +329,9 @@ namespace Bitbucket
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;
             if (curItem == null)
+            {
                 return;
+            }
 
             var mergeInfo = new MergeRequestInfo
             {
@@ -323,14 +350,18 @@ namespace Bitbucket
                 BitbucketViewPullRequestFormLoad(null, null);
             }
             else
+            {
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void BtnApproveClick(object sender, EventArgs e)
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;
             if (curItem == null)
+            {
                 return;
+            }
 
             var mergeInfo = new MergeRequestInfo
             {
@@ -349,8 +380,10 @@ namespace Bitbucket
                 BitbucketViewPullRequestFormLoad(null, null);
             }
             else
+            {
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void textLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -47,7 +47,9 @@ namespace GitUI.CommandsDialogs
         {
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
+            {
                 logoPictureBox.Image = image;
+            }
 
             thanksTimer_Tick(null, null);
             thanksTimer.Enabled = true;

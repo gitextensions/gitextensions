@@ -41,10 +41,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 string home = Environment.GetEnvironmentVariable("HOME");
                 if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
+                {
                     return true;
+                }
 
                 if (File.Exists(Path.Combine(home, ".gitconfig")))
+                {
                     return false;
+                }
 
                 string[] candidates =
                 {
@@ -60,7 +64,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     {
                         if (!string.IsNullOrEmpty(candidate) &&
                             File.Exists(Path.Combine(candidate, ".gitconfig")))
+                        {
                             return true;
+                        }
                     }
                     catch
                     {
@@ -82,7 +88,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
                      _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
                 ShowDialog();
+            }
         }
 
         public static void CheckHomePath()
@@ -92,7 +100,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (IsFixHome())
             {
                 using (var frm = new FormFixHome())
+                {
                     frm.ShowIfUserWant();
+                }
             }
         }
 
@@ -203,7 +213,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 AppSettings.CustomHomeDir = otherHomeDir.Text;
             }
             else
+            {
                 AppSettings.CustomHomeDir = "";
+            }
 
             AppSettings.UserProfileHomeDir = userprofileHome.Checked;
 

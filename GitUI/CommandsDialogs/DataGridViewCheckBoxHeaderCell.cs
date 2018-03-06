@@ -21,7 +21,9 @@ namespace GitUI.CommandsDialogs
         public void AttachTo(DataGridViewCheckBoxColumn owningColumn)
         {
             if (_wasAttached)
+            {
                 throw new InvalidOperationException("This cell has already been attached to a column.");
+            }
 
             if (DataGridView != null)
             {
@@ -52,7 +54,10 @@ namespace GitUI.CommandsDialogs
         private void OnCurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (DataGridView.CurrentCell.ColumnIndex != OwningColumn.Index || _selfChanging)
+            {
                 return;
+            }
+
             DataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
             UpdateCheckedState();
         }
@@ -87,7 +92,10 @@ namespace GitUI.CommandsDialogs
             set
             {
                 if (value == _checkedState)
+                {
                     return;
+                }
+
                 _checkedState = value;
                 DataGridView.InvalidateCell(this);
             }

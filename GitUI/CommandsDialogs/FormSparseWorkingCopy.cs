@@ -24,7 +24,10 @@ namespace GitUI.CommandsDialogs
             : base(aCommands)
         {
             if (aCommands == null)
+            {
                 return;
+            }
+
             var sparse = new FormSparseWorkingCopyViewModel(aCommands);
             BindToViewModelGlobal(sparse);
             CreateView(sparse);
@@ -34,7 +37,10 @@ namespace GitUI.CommandsDialogs
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
             if (sparse == null)
+            {
                 throw new ArgumentNullException(nameof(sparse));
+            }
+
             Closing += (sender, args) =>
             {
                 try
@@ -74,12 +80,16 @@ namespace GitUI.CommandsDialogs
         private void BindToViewModelGlobal([NotNull] FormSparseWorkingCopyViewModel sparse)
         {
             if (sparse == null)
+            {
                 throw new ArgumentNullException(nameof(sparse));
+            }
+
             sparse.ComfirmAdjustingRulesOnDeactRequested += (sender, args) =>
             {
                 if (!args.Cancel)
-
+                {
                     args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, (args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text)), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
+                }
             };
         }
 
@@ -200,7 +210,9 @@ namespace GitUI.CommandsDialogs
             {
                 FileInfo sparsefile = sparse.GetPathToSparseCheckoutFile();
                 if (sparsefile.Exists)
+                {
                     editor.ViewFile(sparsefile.FullName);
+                }
             }
             catch (Exception ex)
             {
@@ -226,7 +238,9 @@ namespace GitUI.CommandsDialogs
         {
             base.Dispose(disposing);
             if (disposing)
+            {
                 _disposable1?.Dispose();
+            }
         }
 
         private class Globalized : Translate

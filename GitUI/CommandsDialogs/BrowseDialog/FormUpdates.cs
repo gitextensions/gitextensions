@@ -50,7 +50,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             OwnerWindow = aOwnerWindow;
             new Thread(SearchForUpdates).Start();
             if (alwaysShow)
+            {
                 ShowDialog(aOwnerWindow);
+            }
         }
 
         private void SearchForUpdates()
@@ -64,12 +66,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 var tree = configData?.GetTree();
                 if (tree == null)
+                {
                     return;
+                }
 
                 var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
                 if (releases?.Blob.Value != null)
+                {
                     CheckForNewerVersion(releases.Blob.Value.GetContent());
+                }
             }
             catch (InvalidAsynchronousStateException)
             {
@@ -122,7 +128,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     linkChangeLog.Visible = true;
 
                     if (!Visible)
+                    {
                         ShowDialog(OwnerWindow);
+                    }
                 }
                 else
                 {

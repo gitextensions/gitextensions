@@ -24,9 +24,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             if ((xGitItem.ObjectType == GitObjectType.Tree || xGitItem.ObjectType == GitObjectType.Commit) && yGitItem.ObjectType == GitObjectType.Blob)
+            {
                 return -1;
+            }
+
             if (xGitItem.ObjectType == GitObjectType.Blob && (yGitItem.ObjectType == GitObjectType.Tree || yGitItem.ObjectType == GitObjectType.Commit))
+            {
                 return 1;
+            }
+
             return xGitItem.Name.CompareTo(yGitItem.Name);
         }
     }

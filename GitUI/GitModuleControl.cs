@@ -30,15 +30,23 @@ namespace GitUI
             get
             {
                 if (_uiCommandsSource == null)
+                {
                     SearchForUICommandsSource();
+                }
+
                 return _uiCommandsSource;
             }
             set
             {
                 if (value == null)
+                {
                     throw new ArgumentException("Can not assign null value to UICommandsSource");
+                }
+
                 if (_uiCommandsSource != null)
+                {
                     throw new ArgumentException("UICommandsSource is already set");
+                }
 
                 _uiCommandsSource = value;
                 OnUICommandsSourceChanged(this, _uiCommandsSource);
@@ -76,7 +84,9 @@ namespace GitUI
         protected override void Dispose(bool disposing)
         {
             if (_uiCommandsSource != null)
+            {
                 DisposeUICommandsSource();
+            }
 
             DisposeCustomResources();
 
@@ -97,25 +107,36 @@ namespace GitUI
         void SearchForUICommandsSource()
         {
             if (!UICommandsSourceParentSearch)
+            {
                 return;
+            }
 
             lock (_lock)
             {
                 if (_uiCommandsSource != null)
+                {
                     return;
+                }
 
                 IGitUICommandsSource cmdsSrc = null;
                 Control parent = Parent;
                 while (parent != null && cmdsSrc == null)
                 {
                     if (parent is IGitUICommandsSource)
+                    {
                         cmdsSrc = parent as IGitUICommandsSource;
+                    }
                     else
+                    {
                         parent = parent.Parent;
+                    }
                 }
 
                 if (cmdsSrc == null)
+                {
                     throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
+                }
+
                 UICommandsSource = cmdsSrc;
             }
         }

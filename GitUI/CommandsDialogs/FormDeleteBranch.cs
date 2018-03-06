@@ -36,13 +36,19 @@ namespace GitUI.CommandsDialogs
             foreach (var branch in Module.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))
+                {
                     _mergedBranches.Add(branch.Trim());
+                }
                 else if (!branch.StartsWith("* ") || (branch.StartsWith("* ") && !GitModule.IsDetachedHead(branch.Substring(2))))
+                {
                     _currentBranch = branch.Trim('*', ' ');
+                }
             }
 
             if (_defaultBranch != null)
+            {
                 Branches.SetSelectedText(_defaultBranch);
+            }
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -76,7 +82,9 @@ namespace GitUI.CommandsDialogs
                 // (actually we could check if there are another branches pointing to that commit)
                 if (hasUnmergedBranches
                     && MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                {
                     return;
+                }
 
                 var cmd = new GitDeleteBranchCmd(selectedBranches, ForceDelete.Checked);
                 UICommands.StartCommandLineProcessDialog(cmd, this);

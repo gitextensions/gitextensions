@@ -24,7 +24,9 @@ namespace GitCommands.Logging
             lock (_logQueue)
             {
                 if (_logQueue.Count >= LogLimit)
+                {
                     _logQueue.Dequeue();
+                }
 
                 var commandLogEntry = new CommandLogEntry(command, executionStartTimestamp, executionEndTimestamp);
                 _logQueue.Enqueue(commandLogEntry);

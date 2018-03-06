@@ -98,7 +98,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             PageHost.SaveAll();
             using (var frm = new FormFixHome())
+            {
                 frm.ShowDialog(this);
+            }
+
             PageHost.LoadAll();
             // TODO?: rescan
 

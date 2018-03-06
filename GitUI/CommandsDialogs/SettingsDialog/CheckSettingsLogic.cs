@@ -23,7 +23,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public bool AutoSolveAllSettings()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return SolveGitCommand();
+            }
 
             bool valid = SolveGitCommand();
             valid = SolveLinuxToolsDir() && valid;
@@ -103,7 +105,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
             if (!String.IsNullOrEmpty(envVariable))
+            {
                 yield return envVariable;
+            }
+
             yield return
                 CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
@@ -111,12 +116,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string programFilesX86 = null;
             if (8 == IntPtr.Size
                 || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+            {
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            }
+
             if (programFilesX86 != null)
+            {
                 yield return programFilesX86 + @"\Git\";
+            }
+
             yield return programFiles + @"\Git\";
             if (programFilesX86 != null)
+            {
                 yield return programFilesX86 + @"\msysgit\";
+            }
+
             yield return programFiles + @"\msysgit\";
             yield return @"C:\msysgit\";
             // cygwin has old git version on windows and bash has a lot of bugs
@@ -128,13 +142,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private IEnumerable<string> GetWindowsCommandLocations(string possibleNewPath = null)
         {
             if (!string.IsNullOrEmpty(possibleNewPath) && File.Exists(possibleNewPath))
+            {
                 yield return possibleNewPath;
+            }
+
             if (!string.IsNullOrEmpty(AppSettings.GitCommandValue) && File.Exists(AppSettings.GitCommandValue))
+            {
                 yield return AppSettings.GitCommandValue;
+            }
+
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"bin\"))
+                {
                     yield return path + @"bin\git.exe";
+                }
             }
             foreach (var path in GetGitLocations())
             {
@@ -197,7 +219,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
                 return SolveMergeToolPathForKDiff();
+            }
 
             return true;
         }
@@ -212,7 +236,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
                 return SolveDiffToolPathForKDiff();
+            }
 
             return true;
         }
@@ -231,7 +257,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string kdiff3path = MergeToolsHelper.FindPathForKDiff(GlobalConfigFileSettings.GetValue("difftool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
+            {
                 return false;
+            }
 
             GlobalConfigFileSettings.SetPathValue("difftool.kdiff3.path", kdiff3path);
             return true;
@@ -241,7 +269,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string kdiff3path = MergeToolsHelper.FindPathForKDiff(GlobalConfigFileSettings.GetValue("mergetool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
+            {
                 return false;
+            }
 
             GlobalConfigFileSettings.SetPathValue("mergetool.kdiff3.path", kdiff3path);
             return true;

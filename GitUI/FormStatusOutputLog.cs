@@ -13,9 +13,14 @@ namespace GitUI
         public void Append([NotNull] string text)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
+
             lock (_outputString)
+            {
                 _outputString.Append(text);
+            }
         }
 
         public void AppendLine([NotNull] string text)
@@ -26,14 +31,18 @@ namespace GitUI
         public void Clear()
         {
             lock (_outputString)
+            {
                 _outputString.Clear();
+            }
         }
 
         [NotNull]
         public string GetString()
         {
             lock (_outputString)
+            {
                 return _outputString.ToString();
+            }
         }
     }
 }

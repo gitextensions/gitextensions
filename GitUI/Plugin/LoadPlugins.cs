@@ -14,7 +14,9 @@ namespace GitUI
             lock (Plugin.LoadedPlugins.Plugins)
             {
                 if (Plugin.LoadedPlugins.Plugins.Count > 0)
+                {
                     return;
+                }
 
                 var file = new FileInfo(Application.ExecutablePath);
 
@@ -44,7 +46,9 @@ namespace GitUI
                         if (rtle != null)
                         {
                             foreach (var el in rtle.LoaderExceptions)
+                            {
                                 exInfo += el.Message + "\r\n";
+                            }
                         }
                         else
                         {
@@ -52,7 +56,9 @@ namespace GitUI
                             getEx = arg =>
                             {
                                 exInfo += arg.Message + "\r\n"; if (arg.InnerException != null)
-                                getEx(arg.InnerException);
+                                {
+                                    getEx(arg.InnerException);
+                                }
                             };
                             getEx(ex);
                         }

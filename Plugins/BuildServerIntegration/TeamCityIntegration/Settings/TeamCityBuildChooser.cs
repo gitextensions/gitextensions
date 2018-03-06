@@ -34,7 +34,9 @@ namespace TeamCityIntegration.Settings
         private void ReselectPreviouslySelectedBuild()
         {
             if (_previouslySelectedProject == null)
+            {
                 return;
+            }
 
             _previouslySelectedProject.Expand();
             treeViewTeamCityProjects.SelectedNode = _previouslySelectedProject.Nodes.Find(TeamCityBuildIdFilter, false).FirstOrDefault()
@@ -112,7 +114,10 @@ namespace TeamCityIntegration.Settings
         {
             var build = treeViewTeamCityProjects.SelectedNode?.Tag as Build;
             if (build == null)
+            {
                 return;
+            }
+
             TeamCityProjectName = build.ParentProject;
             TeamCityBuildIdFilter = build.Id;
 

@@ -100,7 +100,10 @@ namespace GitUI.CommandsDialogs
 
             IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
             if (items.Count() == 1)
+            {
                 items.Add(DiffFiles.SelectedItemParent);
+            }
+
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
@@ -119,18 +122,28 @@ namespace GitUI.CommandsDialogs
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (DiffFiles.SelectedItem == null)
+            {
                 return;
+            }
 
             GitUI.RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffALocal;
+            }
             else if (sender == bLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+            }
             else if (sender == parentOfALocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+            }
             else if (sender == parentOfBLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+            }
             else
             {
                 Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);

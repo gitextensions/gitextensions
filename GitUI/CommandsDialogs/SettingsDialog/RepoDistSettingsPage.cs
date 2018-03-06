@@ -25,31 +25,41 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void SetEffectiveSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.EffectiveSettings);
+            }
         }
 
         public void SetLocalSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.LocalSettings);
+            }
         }
 
         public override void SetGlobalSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.GlobalSettings);
+            }
         }
 
         public void SetRepoDistSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.RepoDistSettings);
+            }
         }
 
         private void SetCurrentSettings(RepoDistSettings settings)
         {
             if (CurrentSettings != null)
+            {
                 SaveSettings();
+            }
 
             CurrentSettings = settings;
 

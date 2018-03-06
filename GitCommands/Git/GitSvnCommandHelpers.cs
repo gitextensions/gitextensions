@@ -83,10 +83,15 @@ namespace GitCommands
         public static bool ValidSvnWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
+            {
                 return false;
+            }
+
             string gitDirectory = GitModule.GetGitDirectory(dir);
             if (string.IsNullOrEmpty(gitDirectory))
+            {
                 return false;
+            }
 
             string path = Path.Combine(gitDirectory, "svn");
             return Directory.Exists(path) || File.Exists(path);

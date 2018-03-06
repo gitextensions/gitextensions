@@ -52,7 +52,9 @@ namespace Github3
         public void checkAuth(string url)
         {
             if (_gotToken)
+            {
                 return;
+            }
 
             if (url.Contains("?code="))
             {
@@ -64,7 +66,10 @@ namespace Github3
                     Close();
                     string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
                     if (token == null)
+                    {
                         return;
+                    }
+
                     _gotToken = true;
 
                     GithubLoginInfo.OAuthToken = token;

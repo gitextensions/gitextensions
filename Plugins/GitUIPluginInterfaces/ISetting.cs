@@ -60,7 +60,9 @@ namespace GitUIPluginInterfaces
             get
             {
                 if (_control == null)
+                {
                     _control = CreateControl();
+                }
 
                 return _control;
             }

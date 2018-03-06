@@ -53,9 +53,15 @@ namespace JiraCommitHintPlugin
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (_enabledSettings.ValueOrDefault(Settings))
+            {
                 return false;
+            }
+
             if (_jira == null)
+            {
                 return false;
+            }
+
             GetMessageToCommit(_jira, _query, _stringTemplate).ContinueWith(t =>
             {
                 MessageBox.Show(string.Join(Environment.NewLine, t.Result.Select(jt => jt.Text).ToArray()));
@@ -146,20 +152,27 @@ namespace JiraCommitHintPlugin
         private void UpdateJiraSettings()
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
+            {
                 return;
+            }
 
             var url = _urlSettings.ValueOrDefault(Settings);
             var userName = _userSettings.ValueOrDefault(Settings);
             var password = _passwordSettings.ValueOrDefault(Settings);
 
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(userName))
+            {
                 return;
+            }
 
             _jira = Jira.CreateRestClient(url, userName, password);
             _query = _jqlQuerySettings.ValueOrDefault(Settings);
             _stringTemplate = _stringTemplateSetting.ValueOrDefault(Settings);
             if (_btnPreview == null)
+            {
                 return;
+            }
+
             _btnPreview.Click -= btnPreviewClick;
             _btnPreview = null;
         }
@@ -181,9 +194,14 @@ namespace JiraCommitHintPlugin
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
+            {
                 return;
+            }
+
             if (_jira?.Issues == null)
+            {
                 return;
+            }
 
             GetMessageToCommit(_jira, _query, _stringTemplate).ContinueWith(t =>
             {
@@ -198,9 +216,15 @@ namespace JiraCommitHintPlugin
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
+            {
                 return;
+            }
+
             if (_currentMessages == null)
+            {
                 return;
+            }
+
             foreach (var message in _currentMessages)
             {
                 e.GitUICommands.RemoveCommitTemplate(message.Title);

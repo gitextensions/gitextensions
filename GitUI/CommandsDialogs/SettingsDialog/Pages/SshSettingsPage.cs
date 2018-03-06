@@ -40,9 +40,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var sshPath = _sshPathLocator.Find(AppSettings.GitBinDir);
             if (string.IsNullOrEmpty(sshPath))
+            {
                 OpenSSH.Checked = true;
+            }
             else if (GitCommandHelpers.Plink())
+            {
                 Putty.Checked = true;
+            }
             else
             {
                 OtherSsh.Text = sshPath;
@@ -60,13 +64,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AutoStartPageant = AutostartPageant.Checked;
 
             if (OpenSSH.Checked)
+            {
                 GitCommandHelpers.UnsetSsh();
+            }
 
             if (Putty.Checked)
+            {
                 GitCommandHelpers.SetSsh(PlinkPath.Text);
+            }
 
             if (Other.Checked)
+            {
                 GitCommandHelpers.SetSsh(OtherSsh.Text);
+            }
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)
@@ -88,22 +98,37 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
             if (!String.IsNullOrEmpty(envVariable))
+            {
                 yield return envVariable;
+            }
+
             yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
             if (8 == IntPtr.Size
                 || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+            {
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            }
+
             yield return programFiles + @"\TortoiseGit\bin\";
             if (programFilesX86 != null)
+            {
                 yield return programFilesX86 + @"\TortoiseGit\bin\";
+            }
+
             yield return programFiles + @"\TortoiseSvn\bin\";
             if (programFilesX86 != null)
+            {
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
+            }
+
             yield return programFiles + @"\PuTTY\";
             if (programFilesX86 != null)
+            {
                 yield return programFilesX86 + @"\PuTTY\";
+            }
+
             yield return CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
@@ -112,12 +137,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public bool AutoFindPuttyPaths()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return false;
+            }
 
             foreach (var path in GetPuttyLocations())
             {
                 if (AutoFindPuttyPathsInDir(path))
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -125,33 +154,47 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool AutoFindPuttyPathsInDir(string installdir)
         {
             if (!installdir.EndsWith("\\"))
+            {
                 installdir += "\\";
+            }
 
             if (!File.Exists(PlinkPath.Text))
             {
                 if (File.Exists(installdir + "plink.exe"))
+                {
                     PlinkPath.Text = installdir + "plink.exe";
+                }
+
                 if (!File.Exists(PlinkPath.Text))
                 {
                     if (File.Exists(installdir + "TortoisePlink.exe"))
+                    {
                         PlinkPath.Text = installdir + "TortoisePlink.exe";
+                    }
                 }
             }
 
             if (!File.Exists(PuttygenPath.Text))
             {
                 if (File.Exists(installdir + "puttygen.exe"))
+                {
                     PuttygenPath.Text = installdir + "puttygen.exe";
+                }
             }
 
             if (!File.Exists(PageantPath.Text))
             {
                 if (File.Exists(installdir + "pageant.exe"))
+                {
                     PageantPath.Text = installdir + "pageant.exe";
+                }
             }
 
             if (File.Exists(PlinkPath.Text) && File.Exists(PuttygenPath.Text) && File.Exists(PageantPath.Text))
+            {
                 return true;
+            }
+
             return false;
         }
 

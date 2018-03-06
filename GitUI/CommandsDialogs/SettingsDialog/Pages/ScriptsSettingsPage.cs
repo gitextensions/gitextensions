@@ -130,7 +130,9 @@ Current Branch:
         private void RefreshScriptDetails()
         {
             if (ScriptList.SelectedRows.Count == 0)
+            {
                 return;
+            }
 
             ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
 
@@ -232,7 +234,9 @@ Current Branch:
             })
             {
                 if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
                     commandTextBox.Text = ofd.FileName;
+                }
             }
         }
 
@@ -245,9 +249,14 @@ Current Branch:
                 removeScriptButton.Enabled = true;
                 moveDownButton.Enabled = moveUpButton.Enabled = false;
                 if (ScriptList.SelectedRows[0].Index > 0)
+                {
                     moveUpButton.Enabled = true;
+                }
+
                 if (ScriptList.SelectedRows[0].Index < ScriptList.RowCount - 1)
+                {
                     moveDownButton.Enabled = true;
+                }
             }
             else
             {
@@ -276,7 +285,9 @@ Current Branch:
             // reset bold item to regular
             var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().FirstOrDefault(s => s.Font.Bold);
             if (item != null)
+            {
                 item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+            }
 
             // make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
@@ -303,7 +314,10 @@ Current Branch:
             }
             Bitmap result = new Bitmap(nWidth, nHeight);
             using (Graphics g = Graphics.FromImage((Image)result))
+            {
                 g.DrawImage(b, 0, 0, nWidth, nHeight);
+            }
+
             return result;
         }
 

@@ -30,7 +30,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // We don't want only a modifier key pressed
             // TODO Further restrict the allowed keys
             if (!keyData.GetKeyCode().IsModifierKey())
+            {
                 KeyData = keyData;
+            }
 
             // Swallow all keys
             return true;

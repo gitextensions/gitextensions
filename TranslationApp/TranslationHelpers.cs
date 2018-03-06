@@ -30,7 +30,9 @@ namespace TranslationApp
                             {
                                 obj.AddTranslationItems(translation);
                                 if (obj is IDisposable disposable)
+                                {
                                     disposable.Dispose();
+                                }
                             }
                         }
                     }
@@ -106,7 +108,9 @@ namespace TranslationApp
 
                     string source = curItem.NeutralValue ?? item.NeutralValue;
                     if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
+                    {
                         dict.Add(source, curItem.TranslatedValue);
+                    }
 
                     // Source text changed
                     if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue))

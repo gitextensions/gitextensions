@@ -193,7 +193,9 @@ namespace GitUI.CommandsDialogs
         {
             textBoxPaths.Enabled = checkBoxPathFilter.Checked;
             if (checkBoxPathFilter.Checked)
+            {
                 checkboxRevisionFilter.Checked = false;
+            }
         }
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
@@ -215,7 +217,9 @@ namespace GitUI.CommandsDialogs
             gbDiffRevision.Enabled = checkboxRevisionFilter.Checked;
             btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
             if (checkboxRevisionFilter.Checked)
+            {
                 checkBoxPathFilter.Checked = false;
+            }
         }
     }
 }

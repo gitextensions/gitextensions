@@ -29,10 +29,13 @@ namespace GitCommands.Repository
             }
 
             if (Repo.Title != null)
+            {
                 ShortName = Repo.Title;
+            }
             else if (DirInfo != null)
+            {
                 ShortName = DirInfo.Name;
-
+            }
 
             DirInfo = DirInfo?.Parent;
 
@@ -89,13 +92,22 @@ namespace GitCommands.Repository
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
                 RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
                 if (ri.MostRecent)
+                {
                     mostRecentRepos.Add(ri);
+                }
                 else
+                {
                     lessRecentRepos.Add(ri);
+                }
+
                 if (middleDot)
+                {
                     AddToOrderedMiddleDots(orderedRepos, ri);
+                }
                 else
+                {
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
+                }
             }
             int r = mostRecentRepos.Count - 1;
             // remove not anchored repos if there is more than maxRecentRepositories repos
@@ -103,7 +115,9 @@ namespace GitCommands.Repository
             {
                 var repo = mostRecentRepos[r];
                 if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
+                {
                     r--;
+                }
                 else
                 {
                     repo.MostRecent = false;
@@ -117,26 +131,40 @@ namespace GitCommands.Repository
                 {
                     List<RecentRepoInfo> list = orderedRepos[caption];
                     foreach (RecentRepoInfo repo in list)
+                    {
                         if (repo.MostRecent == mostRecent)
+                        {
                             addToList.Add(repo);
+                        }
+                    }
                 }
             }
 
             void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
                 foreach (RecentRepoInfo repo in list)
+                {
                     addToList.Add(repo);
+                }
             }
 
             if (SortMostRecentRepos)
+            {
                 AddSortedRepos(true, mostRecentRepoList);
+            }
             else
+            {
                 AddNotSortedRepos(mostRecentRepos, mostRecentRepoList);
+            }
 
             if (SortLessRecentRepos)
+            {
                 AddSortedRepos(false, lessRecentRepoList);
+            }
             else
+            {
                 AddNotSortedRepos(lessRecentRepos, lessRecentRepoList);
+            }
         }
 
         private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
@@ -146,15 +174,22 @@ namespace GitCommands.Repository
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
                 if (!s.IsNullOrEmpty())
+                {
                     s = s.Trim(Path.DirectorySeparatorChar);
+                }
                 // candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())
+                {
                     repoInfo.Caption += " (" + s + ")";
+                }
+
                 repoInfo.DirInfo = repoInfo.DirInfo.Parent;
             }
             else
+            {
                 repoInfo.Caption = repoInfo.Repo.Path;
+            }
 
             var existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out var list);
             if (!existsShortName)
@@ -165,6 +200,7 @@ namespace GitCommands.Repository
 
             List<RecentRepoInfo> tmpList = new List<RecentRepoInfo>();
             if (existsShortName)
+            {
                 for (int i = list.Count - 1; i >= 0; i--)
                 {
                     RecentRepoInfo r = list[i];
@@ -174,21 +210,31 @@ namespace GitCommands.Repository
                         list.RemoveAt(i);
                     }
                 }
+            }
 
             if (repoInfo.FullPath || !existsShortName)
+            {
                 list.Add(repoInfo);
+            }
             else
+            {
                 tmpList.Add(repoInfo);
+            }
 
             // find unique caption for repos with no title
             foreach (RecentRepoInfo r in tmpList)
+            {
                 AddToOrderedSignDir(orderedRepos, r, shortenPath);
+            }
         }
 
         private string MakePath(string l, string r)
         {
             if (l == null)
+            {
                 return r;
+            }
+
             return Path.Combine(l, r);
         }
 
@@ -239,7 +285,9 @@ namespace GitCommands.Repository
                     }
                     company = dirInfo.Name;
                     if (dirInfo.Parent != null)
+                    {
                         root = dirInfo.Parent.Name;
+                    }
                 }
 
                 bool ShortenPathWithCompany(int skipCount)
@@ -261,7 +309,9 @@ namespace GitCommands.Repository
 
                     repoInfo.Caption = MakePath(root, c);
                     if (addDots)
+                    {
                         repoInfo.Caption = MakePath(repoInfo.Caption, "..");
+                    }
 
                     repoInfo.Caption = MakePath(repoInfo.Caption, r);
                     repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
@@ -282,9 +332,14 @@ namespace GitCommands.Repository
                         int rightStart = middle + skipCount / 2 + skipCount % 2;
 
                         if (leftEnd == rightStart)
+                        {
                             repoInfo.Caption = path;
+                        }
                         else
+                        {
                             repoInfo.Caption = path.Substring(0, leftEnd) + ".." + path.Substring(rightStart, path.Length - rightStart);
+                        }
+
                         return true;
                     }
 

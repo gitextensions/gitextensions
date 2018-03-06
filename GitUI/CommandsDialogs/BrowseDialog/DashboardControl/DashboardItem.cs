@@ -26,7 +26,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             : this()
         {
             if (repository == null)
+            {
                 return;
+            }
 
             Bitmap icon = GetRepositoryIcon(repository);
 
@@ -67,7 +69,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Path = path;
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_Title.Text))
+            {
                 _NO_TRANSLATE_Title.Text = Path;
+            }
 
             bool hasDescription = !string.IsNullOrEmpty(text);
             if (!hasDescription)
@@ -78,7 +82,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _NO_TRANSLATE_Description.Text = text;
 
             if (icon != null)
+            {
                 Icon.Image = icon;
+            }
 
             _toolTip = new ToolTip
             {
@@ -116,7 +122,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         void Title_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
+            {
                 ContextMenuStrip?.Show((Control)sender, e.Location);
+            }
         }
 
         public string Path { get; private set; }
@@ -136,7 +144,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             if ((sender == Icon || sender == _NO_TRANSLATE_Title) &&
                 ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+            {
                 return;
+            }
 
             BackColor = SystemColors.Control;
         }
@@ -167,7 +177,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+            {
                 OnClick(e);
+            }
         }
 
         /// <summary>

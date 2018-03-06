@@ -209,7 +209,9 @@ namespace GitUI
         private bool RequiredValidGitSvnWorikingDir(object owner)
         {
             if (!RequiresValidWorkingDir(owner))
+            {
                 return false;
+            }
 
             if (!GitSvnCommandHelpers.ValidSvnWorkingDir(Module))
             {
@@ -256,12 +258,18 @@ namespace GitUI
             bool executed;
 
             if (cmd.AccessesRemote())
+            {
                 executed = FormRemoteProcess.ShowDialog(parentForm, Module, cmd.ToLine());
+            }
             else
+            {
                 executed = FormProcess.ShowDialog(parentForm, Module, cmd.ToLine());
+            }
 
             if (executed && cmd.ChangesRepoState())
+            {
                 RepoChangedNotifier.Notify();
+            }
 
             return executed;
         }
@@ -298,7 +306,10 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
                 {
                     using (var form = new FormDeleteBranch(this, branch))
+                    {
                         form.ShowDialog(owner);
+                    }
+
                     return true;
                 });
         }
@@ -410,10 +421,14 @@ namespace GitUI
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<Form> provideForm)
         {
             if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
+            {
                 return;
+            }
 
             if (!InvokeEvent(owner, preEvent))
+            {
                 return;
+            }
 
             Form form = provideForm();
 
@@ -429,9 +444,13 @@ namespace GitUI
             form.ShowInTaskbar = true;
 
             if (Application.OpenForms.Count > 0)
+            {
                 form.Show();
+            }
             else
+            {
                 form.ShowDialog();
+            }
         }
 
         /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
@@ -449,10 +468,15 @@ namespace GitUI
             try
             {
                 if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
+                {
                     return false;
+                }
 
                 if (!InvokeEvent(owner, preEvent))
+                {
                     return false;
+                }
+
                 try
                 {
                     actionDone = action();
@@ -492,7 +516,9 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
                 using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
+                {
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
+                }
             });
         }
 
@@ -551,7 +577,9 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, PreAddFiles, PostAddFiles, () =>
             {
                 using (var form = new FormAddFiles(this, addFiles))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             });
@@ -595,7 +623,10 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormClone(this, url, openedFromProtocolHandler, GitModuleChanged))
+                {
                     form.ShowDialog(owner);
+                }
+
                 return true;
             };
 
@@ -632,7 +663,10 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormSvnClone(this, GitModuleChanged))
+                {
                     form.ShowDialog(owner);
+                }
+
                 return true;
             };
 
@@ -688,9 +722,13 @@ namespace GitUI
                 using (var form = new FormCommit(this))
                 {
                     if (showOnlyWhenChanges)
+                    {
                         form.ShowDialogWhenChanges(owner);
+                    }
                     else
+                    {
                         form.ShowDialog(owner);
+                    }
                 }
                 return true;
             };
@@ -716,7 +754,10 @@ namespace GitUI
         public bool StartSvnDcommitDialog(IWin32Window owner)
         {
             if (!RequiredValidGitSvnWorikingDir(owner))
+            {
                 return false;
+            }
+
             Func<bool> action = () =>
             {
                 return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
@@ -733,7 +774,10 @@ namespace GitUI
         public bool StartSvnRebaseDialog(IWin32Window owner)
         {
             if (!RequiredValidGitSvnWorikingDir(owner))
+            {
                 return false;
+            }
+
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
@@ -751,7 +795,10 @@ namespace GitUI
         public bool StartSvnFetchDialog(IWin32Window owner)
         {
             if (!RequiredValidGitSvnWorikingDir(owner))
+            {
                 return false;
+            }
+
             Func<bool> action = () =>
             {
                 return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.FetchCmd());
@@ -780,9 +827,15 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 if (dir == null)
+                {
                     dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
+                }
+
                 using (var frm = new FormInit(dir, GitModuleChanged))
+                {
                     frm.ShowDialog(owner);
+                }
+
                 return true;
             };
 
@@ -809,13 +862,19 @@ namespace GitUI
                 using (FormPull formPull = new FormPull(this, remoteBranch, remote))
                 {
                     if (fetchAll)
+                    {
                         formPull.SetForFetchAll();
+                    }
 
                     DialogResult dlgResult;
                     if (pullOnShow)
+                    {
                         dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
+                    }
                     else
+                    {
                         dlgResult = formPull.ShowDialog(owner);
+                    }
 
                     if (dlgResult == DialogResult.OK)
                     {
@@ -888,7 +947,10 @@ namespace GitUI
                 using (var viewPatch = new FormViewPatch(this))
                 {
                     if (!String.IsNullOrEmpty(patchFile))
+                    {
                         viewPatch.LoadPatch(patchFile);
+                    }
+
                     viewPatch.ShowDialog(owner);
                 }
                 return true;
@@ -922,7 +984,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormSparseWorkingCopy(this))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -945,7 +1009,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormFormatPatch(this))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -963,7 +1029,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormStash(this) { ManageStashes = manageStashes })
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -995,13 +1063,19 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 if (onlyUnstaged)
+                {
                     Module.RunGitCmd("checkout -- .");
+                }
                 else
+                {
                     // Reset all changes.
                     Module.ResetHard("");
+                }
 
                 if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+                {
                     Module.RunGitCmd("clean -df");
+                }
 
                 return true;
             };
@@ -1031,9 +1105,13 @@ namespace GitUI
                 {
                     string path = _fullPathResolver.Resolve(fileName);
                     if (File.Exists(path))
+                    {
                         File.Delete(path);
+                    }
                     else
+                    {
                         Directory.Delete(path, true);
+                    }
                 }
                 catch (System.IO.IOException)
                 {
@@ -1076,7 +1154,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormResolveConflicts(this, offerCommit))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1116,7 +1196,10 @@ namespace GitUI
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
             if (revisions == null)
+            {
                 throw new ArgumentNullException(nameof(revisions));
+            }
+
             Func<bool> action = () =>
             {
                 FormCherryPick prevForm = null;
@@ -1135,9 +1218,13 @@ namespace GitUI
                         }
                         prevForm = frm;
                         if (frm.ShowDialog(owner) == DialogResult.OK)
+                        {
                             repoChanged = true;
+                        }
                         else
+                        {
                             return repoChanged;
+                        }
                     }
 
                     return repoChanged;
@@ -1169,7 +1256,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormMergeBranch(this, branch))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1230,7 +1319,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormGitIgnore(this, localExcludes))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1248,7 +1339,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var frm = new FormAddToGitIgnore(this, localExclude, filePattern))
+                {
                     frm.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1311,7 +1404,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormMailMap(this))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1329,7 +1424,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormVerify(this))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1444,7 +1541,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormSubmodules(this))
+                {
                     form.ShowDialog(owner);
+                }
 
                 return true;
             };
@@ -1490,12 +1589,16 @@ namespace GitUI
         public void UpdateSubmodules(IWin32Window win)
         {
             if (!Module.HasSubmodules())
+            {
                 return;
+            }
 
             var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(win);
 
             if (updateSubmodules)
+            {
                 StartUpdateSubmodulesDialog(win);
+            }
         }
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
@@ -1516,7 +1619,10 @@ namespace GitUI
         public bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
         {
             if (!InvokeEvent(owner, PreBrowse))
+            {
                 return false;
+            }
+
             var form = new FormBrowse(this, filter, selectedCommit);
 
             if (Application.MessageLoop)
@@ -1549,9 +1655,13 @@ namespace GitUI
                     var form = new FormFileHistory(this, fileName, revision, filterByRevision);
 
                     if (showBlame)
+                    {
                         form.SelectBlameTab();
+                    }
                     else
+                    {
                         form.SelectDiffTab();
+                    }
 
                     return form;
                 };
@@ -1608,12 +1718,18 @@ namespace GitUI
                     }
                     DialogResult dlgResult;
                     if (pushOnShow)
+                    {
                         dlgResult = form.PushAndShowDialogWhenFailed(owner);
+                    }
                     else
+                    {
                         dlgResult = form.ShowDialog(owner);
+                    }
 
                     if (dlgResult == DialogResult.OK)
+                    {
                         pushed = !form.ErrorOccurred;
+                    }
 
                     return dlgResult == DialogResult.OK;
                 }
@@ -1644,9 +1760,13 @@ namespace GitUI
                     using (var form = new FormApplyPatch(this))
                     {
                         if (Directory.Exists(patchFile))
+                        {
                             form.SetPatchDir(patchFile);
+                        }
                         else
+                        {
                             form.SetPatchFile(patchFile);
+                        }
 
                         form.ShowDialog(owner);
 
@@ -1733,7 +1853,9 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreBlame, PostBlame, () =>
                 {
                     using (var frm = new FormBlame(this, fileName, revision, initialLine))
+                    {
                         frm.ShowDialog(owner);
+                    }
 
                     return true;
                 });
@@ -1778,7 +1900,9 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster, gh =>
             {
                 using (var frm = new ForkAndCloneForm(gitHoster, GitModuleChanged))
+                {
                     frm.ShowDialog(owner);
+                }
             });
         }
 
@@ -1802,11 +1926,17 @@ namespace GitUI
             List<IRepositoryHostPlugin> relevantHosts =
                 (from gh in RepoHosts.GitHosters where gh.GitModuleIsRelevantToMe(Module) select gh).ToList();
             if (relevantHosts.Count == 0)
+            {
                 MessageBox.Show(owner, "Could not find any repo hosts for current working directory");
+            }
             else if (relevantHosts.Count == 1)
+            {
                 StartCreatePullRequest(owner, relevantHosts.First());
+            }
             else
+            {
                 MessageBox.Show("StartCreatePullRequest:Selection not implemented!");
+            }
         }
 
         public void StartCreatePullRequest()
@@ -1845,7 +1975,9 @@ namespace GitUI
             var arguments = InitializeArguments(args);
 
             if (args.Length <= 1)
+            {
                 return;
+            }
 
             var command = args[1];
             if (command.Equals("blame") && args.Length <= 2)
@@ -1930,12 +2062,18 @@ namespace GitUI
                     return;
                 case "filehistory": // filename
                     if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
+                    {
                         Module = Module.SuperprojectModule;
+                    }
+
                     RunFileHistoryCommand(args);
                     return;
                 case "fileeditor":  // filename
                     if (!StartFileEditorDialog(args[2]))
+                    {
                         System.Environment.ExitCode = -1;
+                    }
+
                     return;
                 case "formatpatch":
                     StartFormatPatchDialog();
@@ -2041,7 +2179,10 @@ namespace GitUI
         {
             string branch = null;
             if (arguments.ContainsKey("branch"))
+            {
                 branch = arguments["branch"];
+            }
+
             StartMergeBranchDialog(branch);
         }
 
@@ -2050,9 +2191,11 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
+            {
                 // We need to return the file that has been found, the visual studio plugin uses the return value
                 // to open the selected file.
                 Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+            }
         }
 
         private void RunBrowseCommand(string[] args)
@@ -2103,14 +2246,19 @@ namespace GitUI
         {
             string branch = null;
             if (arguments.ContainsKey("branch"))
+            {
                 branch = arguments["branch"];
+            }
+
             StartRebaseDialog(owner: null, onto: branch);
         }
 
         public bool StartFileEditorDialog(string filename, bool showWarning = false)
         {
             using (var formEditor = new FormEditor(this, filename, showWarning))
+            {
                 return formEditor.ShowDialog() != DialogResult.Cancel;
+            }
         }
 
         private void RunFileHistoryCommand(string[] args)
@@ -2126,17 +2274,25 @@ namespace GitUI
         private void RunCloneCommand(string[] args)
         {
             if (args.Length > 2)
+            {
                 StartCloneDialog(args[2]);
+            }
             else
+            {
                 StartCloneDialog();
+            }
         }
 
         private void RunInitCommand(string[] args)
         {
             if (args.Length > 2)
+            {
                 StartInitializeDialog(args[2]);
+            }
             else
+            {
                 StartInitializeDialog();
+            }
         }
 
         private void RunBlameCommand(string[] args)
@@ -2149,7 +2305,9 @@ namespace GitUI
             if (args.Length >= 4)
             {
                 if (int.TryParse(args[3], out var temp))
+                {
                     initialLine = temp;
+                }
             }
 
             StartBlameDialog(filenameFromBlame, initialLine);
@@ -2158,7 +2316,9 @@ namespace GitUI
         private void RunMergeToolOrConflictCommand(Dictionary<string, string> arguments)
         {
             if (!arguments.ContainsKey("quiet") || Module.InTheMiddleOfConflictedMerge())
+            {
                 StartResolveConflictsDialog();
+            }
         }
 
         private static Dictionary<string, string> InitializeArguments(string[] args)
@@ -2168,9 +2328,13 @@ namespace GitUI
             for (int i = 2; i < args.Length; i++)
             {
                 if (args[i].StartsWith("--") && i + 1 < args.Length && !args[i + 1].StartsWith("--"))
+                {
                     arguments.Add(args[i].TrimStart('-'), args[++i]);
+                }
                 else if (args[i].StartsWith("--"))
+                {
                     arguments.Add(args[i].TrimStart('-'), null);
+                }
             }
             return arguments;
         }
@@ -2200,7 +2364,9 @@ namespace GitUI
 
             string remoteBranch = null;
             if (arguments.ContainsKey("remotebranch"))
+            {
                 remoteBranch = arguments["remotebranch"];
+            }
 
             StartPullDialog(arguments.ContainsKey("quiet"), remoteBranch);
         }
@@ -2208,13 +2374,24 @@ namespace GitUI
         private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
         {
             if (arguments.ContainsKey("merge"))
+            {
                 AppSettings.FormPullAction = AppSettings.PullAction.Merge;
+            }
+
             if (arguments.ContainsKey("rebase"))
+            {
                 AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
+            }
+
             if (arguments.ContainsKey("fetch"))
+            {
                 AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
+            }
+
             if (arguments.ContainsKey("autostash"))
+            {
                 AppSettings.AutoStash = true;
+            }
         }
 
         internal void RaisePreBrowseInitialize(IWin32Window owner)
@@ -2268,14 +2445,21 @@ namespace GitUI
             public void Execute()
             {
                 if (CommandText == null)
+                {
                     throw new InvalidOperationException("CommandText is required");
+                }
 
                 using (var form = new FormRemoteProcess(Module, CommandText))
                 {
                     if (Title != null)
+                    {
                         form.Text = Title;
+                    }
+
                     if (Remote != null)
+                    {
                         form.Remote = Remote;
+                    }
 
                     form.HandleOnExitCallback = HandleOnExit;
 

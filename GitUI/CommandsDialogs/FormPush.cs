@@ -123,7 +123,9 @@ namespace GitUI.CommandsDialogs
                 RecursiveSubmodules.Enabled = true;
                 RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
                 if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
+                {
                     RecursiveSubmodules.Items.RemoveAt(2);
+                }
             }
             else
             {
@@ -151,7 +153,10 @@ namespace GitUI.CommandsDialogs
         public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner)
         {
             if (!PushChanges(owner))
+            {
                 return ShowDialog(owner);
+            }
+
             return DialogResult.OK;
         }
 
@@ -242,7 +247,9 @@ namespace GitUI.CommandsDialogs
         {
             var remoteRefs = GetRemoteBranches(remote).Where(r => r.LocalName == branch);
             if (remoteRefs.Any())
+            {
                 return true;
+            }
 
             var localRefs = _gitRefs.Where(r => r.IsHead && r.Name == branch && r.TrackingRemote == remote);
             return localRefs.Any();
@@ -389,9 +396,13 @@ namespace GitUI.CommandsDialogs
                     var delete = Convert.ToBoolean(row["Delete"]);
 
                     if (push || force)
+                    {
                         pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
+                    }
                     else if (delete)
+                    {
                         pushActions.Add(GitPushAction.DeleteRemoteBranch(row["Remote"].ToString()));
+                    }
                 }
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
@@ -417,7 +428,10 @@ namespace GitUI.CommandsDialogs
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                     if (_createPullRequestCB.Checked)
+                    {
                         UICommands.StartCreatePullRequest(owner);
+                    }
+
                     return true;
                 }
             }
@@ -543,7 +557,9 @@ namespace GitUI.CommandsDialogs
                             break;
                     }
                     if (cancel)
+                    {
                         return false;
+                    }
                 }
 
                 if (forcePush)
@@ -621,11 +637,15 @@ namespace GitUI.CommandsDialogs
             {
                 curBranch = _currentBranchName;
                 if (curBranch.IndexOfAny("() ".ToCharArray()) != -1)
+                {
                     curBranch = HeadText;
+                }
             }
 
             foreach (var head in GetLocalBranches())
+            {
                 _NO_TRANSLATE_Branch.Items.Add(head);
+            }
 
             _NO_TRANSLATE_Branch.Text = curBranch;
 
@@ -652,21 +672,31 @@ namespace GitUI.CommandsDialogs
             RemoteBranch.Items.Clear();
 
             if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
+            {
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
+            }
 
             if (_selectedRemote != null)
             {
                 foreach (var head in GetRemoteBranches(_selectedRemote.Name))
+                {
                     if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                    {
                         RemoteBranch.Items.Add(head.LocalName);
+                    }
+                }
 
                 var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
                 var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
 
 
                 foreach (var head in onlyLocalBranches)
+                {
                     if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                    {
                         RemoteBranch.Items.Add(head.LocalName);
+                    }
+                }
             }
 
             ComboBoxHelper.ResizeComboBoxDropDownWidth(RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
@@ -702,7 +732,9 @@ namespace GitUI.CommandsDialogs
                             {
                                 RemoteBranch.Text = branch.MergeWith;
                                 if (!string.IsNullOrEmpty(RemoteBranch.Text))
+                                {
                                     return;
+                                }
                             }
                         }
                     }
@@ -740,7 +772,9 @@ namespace GitUI.CommandsDialogs
                 BranchSelectedValueChanged(null, null);
             }
             else
+            {
                 RemotesUpdated(sender, e);
+            }
         }
 
         private void RemotesUpdated(object sender, EventArgs e)
@@ -882,7 +916,9 @@ namespace GitUI.CommandsDialogs
                         var cmdOutput = TakeCommandOutput(processOutput);
                         remoteHeads = Module.GetTreeRefs(cmdOutput);
                         if (remoteHeads == null)
+                        {
                             return;
+                        }
                     }
                 }
                 else
@@ -925,9 +961,13 @@ namespace GitUI.CommandsDialogs
 
                 string remoteName;
                 if (head.Remote == remote)
+                {
                     remoteName = head.MergeWith ?? head.Name;
+                }
                 else
+                {
                     remoteName = head.Name;
+                }
 
                 row["Remote"] = remoteName;
                 bool knownAtRemote = remoteBranches.Contains(remoteName);
@@ -979,9 +1019,13 @@ namespace GitUI.CommandsDialogs
         private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
         {
             if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
+            {
                 UpdateMultiBranchView();
+            }
             else if (TabControlTagBranch.SelectedTab == TagTab)
+            {
                 FillTagDropDown();
+            }
             else
             {
                 UpdateBranchDropDown();
@@ -1011,7 +1055,9 @@ namespace GitUI.CommandsDialogs
         private void SetFormSizeToFitAllItems()
         {
             if (Height < MinimumSize.Height + 50)
+            {
                 Height = MinimumSize.Height + 50;
+            }
         }
 
         private void _NO_TRANSLATE_Branch_SelectedIndexChanged(object sender, EventArgs e)

@@ -58,7 +58,9 @@ namespace GitCommands
             string serializedString = AppSettings.CommitTemplates;
             var templates = DeserializeCommitTemplates(serializedString, out var shouldBeUpdated);
             if (shouldBeUpdated)
+            {
                 SaveToSettings(templates);
+            }
 
             return templates;
         }
@@ -73,7 +75,9 @@ namespace GitCommands
         {
             shouldBeUpdated = false;
             if (string.IsNullOrEmpty(serializedString))
+            {
                 return null;
+            }
 
             CommitTemplateItem[] commitTemplateItem = null;
             try

@@ -486,7 +486,9 @@ namespace GitUI.UserControls.RevisionGridClasses
             using (FormGoToCommit formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
             {
                 if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
+                {
                     return;
+                }
 
                 string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
                 if (!string.IsNullOrEmpty(revisionGuid))

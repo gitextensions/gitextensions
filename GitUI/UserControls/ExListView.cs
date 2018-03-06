@@ -216,10 +216,15 @@ namespace GitUI.UserControls
                     {
                         // NM_CUSTOMDRAW
                         if (_isInWmPaintMsg)
+                        {
                             base.WndProc(ref m);
+                        }
                     }
                     else
+                    {
                         base.WndProc(ref m);
+                    }
+
                     break;
                 case NativeMethods.WM_LBUTTONUP:
                 case NativeMethods.WM_LBUTTONDOWN:
@@ -230,8 +235,13 @@ namespace GitUI.UserControls
                     // if the click is on the group header, exit, otherwise send message
                     var handleRef = new HandleRef(this, Handle);
                     if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != new IntPtr(-1))
+                    {
                         if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
+                        {
                             return;
+                        }
+                    }
+
                     base.WndProc(ref m);
                     break;
                 default:
@@ -260,7 +270,9 @@ namespace GitUI.UserControls
         private void setGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
         {
             if (lstvwgrp == null)
+            {
                 return;
+            }
 
             int? GrpId = GetGroupID(lstvwgrp);
             int gIndex = Groups.IndexOf(lstvwgrp);
@@ -280,10 +292,15 @@ namespace GitUI.UserControls
         public void SetGroupState(ListViewGroupState state)
         {
             if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward
+            {
                 // allows collapse of ListViewGroups
                 return;
+            }
+
             foreach (ListViewGroup lvg in Groups)
+            {
                 setGrpState(lvg, state);
+            }
         }
     }
 }

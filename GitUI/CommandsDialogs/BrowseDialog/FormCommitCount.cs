@@ -45,12 +45,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         foreach (var keyValuePair in submoduleItems)
                         {
                             if (!dict.ContainsKey(keyValuePair.Key))
+                            {
                                 dict.Add(keyValuePair.Key, new HashSet<string>());
+                            }
+
                             dict[keyValuePair.Key].Add(submodule.SubmoduleName);
                             if (items.ContainsKey(keyValuePair.Key))
+                            {
                                 items[keyValuePair.Key] += keyValuePair.Value;
+                            }
                             else
+                            {
                                 items.Add(keyValuePair.Key, keyValuePair.Value);
+                            }
                         }
                     }
                 }
@@ -69,10 +76,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     if (sub.Count == 1)
                     {
                         foreach (var item in dict[keyValuePair.Key])
+                        {
                             submodulesList = " [" + item + "]";
+                        }
                     }
                     else
+                    {
                         submodulesList = " [" + sub.Count.ToString() + " submodules]";
+                    }
                 }
                 CommitCount.Text += string.Format("{0,6} - {1}{2}\r\n", keyValuePair.Value, keyValuePair.Key, submodulesList);
             }

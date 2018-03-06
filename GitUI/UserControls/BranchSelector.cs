@@ -62,9 +62,13 @@ namespace GitUI.UserControls
             }
 
             if (_containRevisons != null && Branches.Items.Count == 1)
+            {
                 Branches.SelectedIndex = 0;
+            }
             else
+            {
                 Branches.Text = null;
+            }
         }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
@@ -88,7 +92,9 @@ namespace GitUI.UserControls
         public IList<string> GetLocalBranches()
         {
             if (_localBranches == null)
+            {
                 _localBranches = Module.GetRefs(false).Select(b => b.Name).ToList();
+            }
 
             return _localBranches;
         }
@@ -96,7 +102,9 @@ namespace GitUI.UserControls
         private IList<string> GetRemoteBranches()
         {
             if (_remoteBranches == null)
+            {
                 _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
+            }
 
             return _remoteBranches;
         }

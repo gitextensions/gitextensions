@@ -23,10 +23,14 @@ namespace GitUI
         public PathFormatter(Graphics graphics, Font font)
         {
             if (graphics == null)
+            {
                 throw new ArgumentNullException(nameof(graphics));
+            }
 
             if (font == null)
+            {
                 throw new ArgumentNullException(nameof(font));
+            }
 
             _graphics = graphics;
             _font = font;
@@ -35,10 +39,14 @@ namespace GitUI
         private static string TruncatePath(string path, int length)
         {
             if (path.Length == length)
+            {
                 return path;
+            }
 
             if (length <= 0)
+            {
                 return string.Empty;
+            }
 
             string truncatePathMethod = AppSettings.TruncatePathMethod;
             if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
@@ -67,7 +75,9 @@ namespace GitUI
 
             if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&
                 !truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
+            {
                 return FormatString(name, oldName, 0, false);
+            }
 
             int step = 0;
             bool isNameBeingTruncated = true;
@@ -79,7 +89,9 @@ namespace GitUI
                 result = FormatString(name, oldName, step, isNameBeingTruncated);
 
                 if (_graphics.MeasureString(result, _font).Width <= width)
+                {
                     break;
+                }
 
                 step++;
                 isNameBeingTruncated = !isNameBeingTruncated;
@@ -95,7 +107,9 @@ namespace GitUI
             var oldFileName = Path.GetFileName(oldName);
 
             if (fileName.Equals(oldFileName))
+            {
                 oldFileName = null;
+            }
 
             return fileName.Combine(" ", oldFileName.AddParenthesesNE());
         }

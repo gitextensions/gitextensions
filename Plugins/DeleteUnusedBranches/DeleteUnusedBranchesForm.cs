@@ -86,9 +86,13 @@ namespace DeleteUnusedBranches
         {
             RegexOptions options;
             if (context.RegexIgnoreCase)
+            {
                 options = RegexOptions.Compiled | RegexOptions.IgnoreCase;
+            }
             else
+            {
                 options = RegexOptions.Compiled;
+            }
 
             var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
             bool regexMustMatch = !context.RegexDoesNotMatch;
@@ -115,7 +119,9 @@ namespace DeleteUnusedBranches
             }
 
             if (MessageBox.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+            {
                 return;
+            }
 
             var remoteName = _NO_TRANSLATE_Remote.Text;
             var remoteBranchPrefix = remoteName + "/";
@@ -128,7 +134,9 @@ namespace DeleteUnusedBranches
             {
                 var message = string.Format(_dangerousAction.Text, remoteName);
                 if (MessageBox.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                {
                     return;
+                }
             }
 
             var localBranches = selectedBranches.Except(remoteBranches).ToList();
@@ -155,7 +163,9 @@ namespace DeleteUnusedBranches
             .ContinueWith(_ =>
             {
                 if (IsDisposed)
+                {
                     return;
+                }
 
                 tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = true;
                 RefreshObsoleteBranches();
@@ -174,7 +184,9 @@ namespace DeleteUnusedBranches
             ClearResults(sender, e);
 
             if (includeUnmergedBranches.Checked)
+            {
                 MessageBox.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK);
+            }
         }
 
         private void ClearResults(object sender, EventArgs e)
@@ -194,7 +206,9 @@ namespace DeleteUnusedBranches
         {
             // track only “Deleted” column
             if (e.ColumnIndex != 0)
+            {
                 return;
+            }
 
             BranchesGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
             lblStatus.Text = GetDefaultStatusText();
@@ -226,7 +240,9 @@ namespace DeleteUnusedBranches
                 .ContinueWith(task =>
                 {
                     if (IsDisposed || context.CancellationToken.IsCancellationRequested)
+                    {
                         return;
+                    }
 
                     if (task.IsCompleted)
                     {
@@ -245,7 +261,9 @@ namespace DeleteUnusedBranches
             set
             {
                 if (value == IsRefreshing)
+                {
                     return;
+                }
 
                 _refreshCancellation = value ? new CancellationTokenSource() : null;
                 RefreshBtn.Text = value ? _cancel.Text : _searchBranches.Text;

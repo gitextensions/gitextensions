@@ -94,7 +94,9 @@ namespace GitCommands.Statistics
             Task.Factory.ContinueWhenAll(tasks, task =>
                 {
                     if (!token.IsCancellationRequested)
+                    {
                         Exited?.Invoke(this, EventArgs.Empty);
+                    }
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.None,
@@ -124,7 +126,9 @@ namespace GitCommands.Statistics
                 {
                     IGitModule submodule = _Module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
+                    {
                         tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
+                    }
                 }
             }
             return tasks.ToArray();
@@ -144,7 +148,9 @@ namespace GitCommands.Statistics
 
                 // Reached the end ?
                 if (line == null)
+                {
                     break;
+                }
 
                 // Look for commit delimiters
                 if (!line.StartsWith("--- "))
@@ -159,7 +165,9 @@ namespace GitCommands.Statistics
                 // Split date and author
                 string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 if (header.Length != 2)
+                {
                     continue;
+                }
 
                 // Save author in variable
                 commit.author = header[1];
@@ -179,20 +187,29 @@ namespace GitCommands.Statistics
                 {
                     // Skip empty line
                     if (string.IsNullOrEmpty(line))
+                    {
                         continue;
+                    }
 
                     string[] fileLine = line.Split('\t');
                     if (fileLine.Length >= 2)
                     {
                         if (fileLine[0] != "-")
+                        {
                             commit.data.AddedLines += int.Parse(fileLine[0]);
+                        }
+
                         if (fileLine[1] != "-")
+                        {
                             commit.data.DeletedLines += int.Parse(fileLine[1]);
+                        }
                     }
                 }
 
                 if (Updated != null && !token.IsCancellationRequested)
+                {
                     Updated(this, new CommitEventArgs(commit));
+                }
             }
         }
 
@@ -219,13 +236,19 @@ namespace GitCommands.Statistics
                     }
                 }
                 if (!startFound)
+                {
                     continue;
+                }
 
                 // Add 0 commits weeks in between
                 foreach (var week in impact)
+                {
                     if (!week.Value.ContainsKey(author) &&
                         week.Key > start && week.Key < end)
+                    {
                         week.Value.Add(author, new DataPoint(0, 0, 0));
+                    }
+                }
             }
         }
     }

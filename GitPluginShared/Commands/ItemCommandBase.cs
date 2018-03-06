@@ -21,10 +21,14 @@ namespace GitPluginShared.Commands
                 {
                     // no active document - try solution target
                     if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))
+                    {
                         OnExecute(null, application.Solution.FullName, pane);
+                    }
                     // solution (or not supported) - try empty target
                     else if (IsTargetSupported(CommandTarget.Empty))
+                    {
                         OnExecute(null, null, pane);
+                    }
 
                     return;
                 }
@@ -43,11 +47,15 @@ namespace GitPluginShared.Commands
             {
                 // nothing is selected, so if we have current solution and command supports that target, execute command on whole solution
                 if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))
+                {
                     OnExecute(null, application.Solution.FullName, pane);
+                }
 
                 // there is no opened solution, so try execute command for empty target
                 if (IsTargetSupported(CommandTarget.Empty))
+                {
                     OnExecute(null, null, pane);
+                }
 
                 return;
             }
@@ -109,11 +117,20 @@ namespace GitPluginShared.Commands
         private static CommandTarget GetSelectedItemTarget(SelectedItem selectedItem, DTE2 application)
         {
             if (selectedItem.ProjectItem != null)
+            {
                 return GetProjectItemTarget(selectedItem.ProjectItem);
+            }
+
             if (selectedItem.Project != null)
+            {
                 return CommandTarget.Project;
+            }
+
             if (application.Solution.IsOpen)
+            {
                 return CommandTarget.Solution;
+            }
+
             return CommandTarget.Empty;
         }
 

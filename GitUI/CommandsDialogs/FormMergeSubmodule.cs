@@ -45,7 +45,9 @@ namespace GitUI.CommandsDialogs
                     form.Done(string.IsNullOrEmpty(output));
                 });
             using (var process = new FormStatus(processStart, null) { Text = string.Format(_stageFilename.Text, _filename) })
+            {
                 process.ShowDialogOnError(this);
+            }
         }
 
         private void btStageCurrent_Click(object sender, EventArgs e)
@@ -69,7 +71,10 @@ namespace GitUI.CommandsDialogs
             string[] revisions = { tbLocal.Text, tbRemote.Text };
             var submoduleCommands = new GitUICommands(Module.GetSubmoduleFullPath(_filename));
             if (!submoduleCommands.StartCheckoutBranch(this, revisions))
+            {
                 return;
+            }
+
             StageSubmodule();
             DialogResult = DialogResult.OK;
             Close();

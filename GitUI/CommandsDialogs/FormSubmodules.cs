@@ -30,7 +30,10 @@ namespace GitUI.CommandsDialogs
         private void AddSubmoduleClick(object sender, EventArgs e)
         {
             using (var formAddSubmodule = new FormAddSubmodule(UICommands))
+            {
                 formAddSubmodule.ShowDialog(this);
+            }
+
             Initialize();
         }
 
@@ -58,7 +61,10 @@ namespace GitUI.CommandsDialogs
             lock (_modules)
             {
                 lock (_modules)
+                {
                     _modules.Add(e.UserState as GitSubmoduleInfo);
+                }
+
                 if (_oldSubmoduleInfo != null)
                 {
                     DataGridViewRow row = Submodules.Rows
@@ -66,7 +72,9 @@ namespace GitUI.CommandsDialogs
                         .FirstOrDefault(r => r.DataBoundItem as GitSubmoduleInfo == _oldSubmoduleInfo);
 
                     if (row != null)
+                    {
                         row.Selected = true;
+                    }
                 }
             }
         }
@@ -84,9 +92,15 @@ namespace GitUI.CommandsDialogs
             UseWaitCursor = true;
             _oldSubmoduleInfo = null;
             if (Submodules.SelectedRows.Count == 1)
+            {
                 _oldSubmoduleInfo = Submodules.SelectedRows[0].DataBoundItem as GitSubmoduleInfo;
+            }
+
             lock (_modules)
+            {
                 _modules.Clear();
+            }
+
             _bw = new BackgroundWorker();
             _bw.DoWork += bw_DoWork;
             _bw.ProgressChanged += bw_ProgressChanged;
@@ -118,7 +132,9 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
                                 MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
+            {
                 return;
+            }
 
             UseWaitCursor = true;
             Module.UnstageFile(SubModuleLocalPath.Text);
@@ -131,7 +147,9 @@ namespace GitUI.CommandsDialogs
                 Module.StageFile(".gitmodules");
             }
             else
+            {
                 Module.UnstageFile(".gitmodules");
+            }
 
             var configFile = Module.LocalConfigFile;
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
@@ -145,7 +163,10 @@ namespace GitUI.CommandsDialogs
         {
             var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
             if (submodule == null)
+            {
                 return;
+            }
+
             GitUICommands uiCommands = new GitUICommands(submodule);
             uiCommands.StartPullDialog(this);
             UseWaitCursor = true;

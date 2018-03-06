@@ -27,7 +27,9 @@ namespace GitCommands.Utils
             lock (_weakMap)
             {
                 if (_weakMap.TryGetValue(objectUniqueKey, out var wref))
+                {
                     cached = wref.Target;
+                }
 
                 if (cached == null)
                 {
@@ -52,7 +54,9 @@ namespace GitCommands.Utils
             {
                 var toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
                 foreach (var key in toRemove)
+                {
                     _weakMap.Remove(key);
+                }
             }
         }
 
@@ -65,7 +69,9 @@ namespace GitCommands.Utils
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _clearTimer.Dispose();
+            }
         }
     }
 }

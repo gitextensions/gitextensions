@@ -65,7 +65,9 @@ namespace GitUI.CommandsDialogs
             GitModule module = new GitModule(Directory.Text);
 
             if (!System.IO.Directory.Exists(module.WorkingDir))
+            {
                 System.IO.Directory.CreateDirectory(module.WorkingDir);
+            }
 
             MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 

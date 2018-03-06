@@ -24,9 +24,13 @@ namespace GitUI
                 {
                     instance._active = value;
                     if (instance._active)
+                    {
                         Application.AddMessageFilter(instance);
+                    }
                     else
+                    {
                         Application.RemoveMessageFilter(instance);
+                    }
                 }
             }
         }
@@ -49,7 +53,10 @@ namespace GitUI
                     {
                         Control control = Control.FromHandle(hWnd);
                         while (control != null && !(control is GitExtensionsControl))
+                        {
                             control = control.Parent;
+                        }
+
                         _previousHWnd = hWnd;
                         _GEControl = control != null;
                     }

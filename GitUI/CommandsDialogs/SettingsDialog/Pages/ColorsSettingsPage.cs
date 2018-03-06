@@ -143,26 +143,49 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private string GetSelectedApplicationIconColor()
         {
             if (BlueIcon.Checked)
+            {
                 return "blue";
+            }
+
             if (LightblueIcon.Checked)
+            {
                 return "lightblue";
+            }
+
             if (GreenIcon.Checked)
+            {
                 return "green";
+            }
+
             if (PurpleIcon.Checked)
+            {
                 return "purple";
+            }
+
             if (RedIcon.Checked)
+            {
                 return "red";
+            }
+
             if (YellowIcon.Checked)
+            {
                 return "yellow";
+            }
+
             if (RandomIcon.Checked)
+            {
                 return "random";
+            }
+
             return "default";
         }
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (IsLoadingSettings)
+            {
                 return;
+            }
 
             ShowIconPreview();
         }
@@ -170,7 +193,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void IconColor_CheckedChanged(object sender, EventArgs e)
         {
             if (IsLoadingSettings)
+            {
                 return;
+            }
 
             ShowIconPreview();
         }

@@ -87,9 +87,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
             if (AppSettings.Dictionary.Equals("none", StringComparison.InvariantCultureIgnoreCase))
+            {
                 Dictionary.SelectedIndex = 0;
+            }
             else
+            {
                 Dictionary.Text = AppSettings.Dictionary;
+            }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
 

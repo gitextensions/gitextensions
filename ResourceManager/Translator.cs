@@ -61,9 +61,15 @@ namespace ResourceManager
                 {
                     var name = Path.GetFileNameWithoutExtension(fileName);
                     if (name.IndexOf(".") > 0)
+                    {
                         continue;
+                    }
+
                     if (String.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                    {
                         continue;
+                    }
+
                     translations.Add(name);
                 }
             }
@@ -77,7 +83,10 @@ namespace ResourceManager
         {
             var translation = GetTranslation(translationName);
             if (translation.Count == 0)
+            {
                 return;
+            }
+
             foreach (var pair in translation)
             {
                 obj.TranslateItems(pair.Value);

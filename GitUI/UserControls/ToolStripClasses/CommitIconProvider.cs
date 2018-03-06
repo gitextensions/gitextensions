@@ -38,12 +38,16 @@ namespace GitUI.UserControls.ToolStripClasses
             int notTrackedCount)
         {
             if (stagedCount == 0 && unstagedCount == 0)
+            {
                 return IconClean;
+            }
 
             if (stagedCount == 0)
             {
                 if (notTrackedCount == unstagedCount)
+                {
                     return IconUntrackedOnly;
+                }
 
                 return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
             }

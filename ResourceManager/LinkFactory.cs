@@ -43,14 +43,20 @@ namespace ResourceManager
         public string CreateTagLink(string tag)
         {
             if (tag != "…")
+            {
                 return AddLink(tag, "gitext://gototag/" + tag);
+            }
+
             return WebUtility.HtmlEncode(tag);
         }
 
         public string CreateBranchLink(string noPrefixBranch)
         {
             if (noPrefixBranch != "…")
+            {
                 return AddLink(noPrefixBranch, "gitext://gotobranch/" + noPrefixBranch);
+            }
+
             return WebUtility.HtmlEncode(noPrefixBranch);
         }
 
@@ -59,9 +65,13 @@ namespace ResourceManager
             if (linkText == null)
             {
                 if (GitRevision.UnstagedGuid == guid)
+                {
                     linkText = Strings.GetCurrentUnstagedChanges();
+                }
                 else if (GitRevision.IndexGuid == guid)
+                {
                     linkText = Strings.GetCurrentIndex();
+                }
                 else
                 {
                     if (preserveGuidInLinkText)
@@ -80,13 +90,18 @@ namespace ResourceManager
         public string ParseLink(string aLinkText)
         {
             if (_linksMap.TryGetValue(aLinkText, out var linkUri))
+            {
                 return linkUri;
+            }
 
             string uriCandidate = aLinkText;
             while (uriCandidate != null)
             {
                 if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
+                {
                     return uri.AbsoluteUri;
+                }
+
                 uriCandidate = uriCandidate.SkipStr("#");
             }
 

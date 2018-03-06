@@ -47,10 +47,14 @@ namespace GitCommands
             int newCount = Interlocked.Decrement(ref _lockCount);
 
             if (newCount < 0)
+            {
                 throw new InvalidOperationException("There was no counterpart call to Lock");
+            }
 
             if (requestNotify)
+            {
                 _notifyRequested = true;
+            }
 
             CheckNotify(newCount);
         }
@@ -68,7 +72,10 @@ namespace GitCommands
         public ActionNotifier(Action aNotifyAction)
         {
             if (aNotifyAction == null)
+            {
                 throw new ArgumentNullException(nameof(aNotifyAction));
+            }
+
             _NotifyAction = aNotifyAction;
         }
 

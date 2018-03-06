@@ -35,9 +35,13 @@ namespace GitUI
             IList<PatchFile> patchFiles;
 
             if (Module.InTheMiddleOfInteractiveRebase())
+            {
                 Patches.DataSource = patchFiles = Module.GetInteractiveRebasePatchFiles();
+            }
             else
+            {
                 Patches.DataSource = patchFiles = Module.GetRebasePatchFiles();
+            }
 
             if (patchFiles.Any())
             {
@@ -49,7 +53,9 @@ namespace GitUI
         private void Patches_DoubleClick(object sender, EventArgs e)
         {
             if (Patches.SelectedRows.Count != 1)
+            {
                 return;
+            }
 
             var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 

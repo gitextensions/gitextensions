@@ -94,7 +94,10 @@ namespace ResourceManager
                 sb.Append(body);
             }
             else
+            {
                 sb.AppendLine("Commit hash:\t" + hash);
+            }
+
             return sb.ToString();
         }
 
@@ -103,16 +106,25 @@ namespace ResourceManager
             string text = patch?.Text;
             var status = GitCommandHelpers.GetSubmoduleStatus(text, module, fileName);
             if (status == null)
+            {
                 return "";
+            }
+
             return ProcessSubmoduleStatus(module, status);
         }
 
         public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
             if (module == null)
+            {
                 throw new ArgumentNullException(nameof(module));
+            }
+
             if (status == null)
+            {
                 throw new ArgumentNullException(nameof(status));
+            }
+
             GitModule gitModule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
@@ -137,7 +149,9 @@ namespace ResourceManager
                     var delim = new char[] { '\n', '\r' };
                     var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
+                    {
                         sb.AppendLine("\t\t" + curline);
+                    }
                 }
             }
             else
@@ -163,7 +177,9 @@ namespace ResourceManager
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
+                    {
                         sb.AppendLine("\t\t" + curline);
+                    }
                 }
             }
             else
@@ -209,11 +225,15 @@ namespace ResourceManager
                     sb.Append(status.RemovedCommits + " removed");
 
                     if (status.AddedCommits > 0)
+                    {
                         sb.Append(", ");
+                    }
                 }
 
                 if (status.AddedCommits > 0)
+                {
                     sb.Append(status.AddedCommits + " added");
+                }
 
                 sb.AppendLine();
             }

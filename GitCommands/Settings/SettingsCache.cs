@@ -76,7 +76,9 @@ namespace GitCommands
                     foreach (var pair in keyValuePairs)
                     {
                         if (pair.Item2 != null)
+                        {
                             SetValueImpl(pair.Item1, pair.Item2);
+                        }
                     }
 
                     Save();
@@ -104,7 +106,9 @@ namespace GitCommands
                 string inMemValue = GetValue(name);
 
                 if (string.Equals(inMemValue, value))
+                {
                     return;
+                }
 
                 SetValueImpl(name, value);
 
@@ -131,9 +135,13 @@ namespace GitCommands
             string s;
 
             if (value == null)
+            {
                 s = null;
+            }
             else
+            {
                 s = encode(value);
+            }
 
             return LockedAction<bool>(() =>
             {
@@ -147,9 +155,13 @@ namespace GitCommands
             string s;
 
             if (value == null)
+            {
                 s = null;
+            }
             else
+            {
                 s = encode(value);
+            }
 
             LockedAction(() =>
             {
@@ -194,7 +206,9 @@ namespace GitCommands
                 else
                 {
                     if (decode == null)
+                    {
                         throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
+                    }
 
                     string s = GetValue(name);
 

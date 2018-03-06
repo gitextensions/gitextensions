@@ -51,7 +51,9 @@ namespace ResourceManager.Xliff
         public void AddTranslationCategory(TranslationCategory translationCategory)
         {
             if (string.IsNullOrEmpty(translationCategory.Name))
+            {
                 throw new InvalidOperationException("Cannot add translationCategory without name");
+            }
 
             TranslationCategories.Add(translationCategory);
         }
@@ -65,7 +67,9 @@ namespace ResourceManager.Xliff
         {
             TranslationCategories.Sort();
             foreach (TranslationCategory tc in TranslationCategories)
+            {
                 tc.Body.TranslationItems.Sort();
+            }
         }
 
         public void AddTranslationItem(string category, string item, string property, string neutralValue)
@@ -91,7 +95,9 @@ namespace ResourceManager.Xliff
             }
 
             if (string.IsNullOrEmpty(ti.Value))
+            {
                 return ti.Source;
+            }
 
             return ti.Value;
         }

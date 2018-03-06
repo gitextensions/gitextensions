@@ -21,7 +21,9 @@ namespace GitUI.UserControls
         public SelectionChangeAction ProcessRevisionSelectionChange(GitModule currentModule, ICollection<GitRevision> selectedRevisions)
         {
             if (selectedRevisions.Count > 1)
+            {
                 return SelectionChangeAction.NoAction;
+            }
 
             var newSelectedRevision = selectedRevisions.FirstOrDefault();
             bool differentRevisionAuthorSelected =

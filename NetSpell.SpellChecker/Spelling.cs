@@ -197,7 +197,10 @@ namespace NetSpell.SpellChecker
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _components?.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 
@@ -265,10 +268,14 @@ namespace NetSpell.SpellChecker
         private void Initialize()
         {
             if (_dictionary == null)
+            {
                 _dictionary = new WordDictionary();
+            }
 
             if (!_dictionary.Initialized)
+            {
                 _dictionary.Initialize();
+            }
         }
 
         /// <summary>
@@ -323,7 +330,9 @@ namespace NetSpell.SpellChecker
                     tempWord += CurrentWord.Substring(pos + key.Length);
 
                     if (FindWord(ref tempWord))
+                    {
                         SuggestWord(tempWord, tempSuggestion);
+                    }
 
                     pos = CurrentWord.IndexOf(key, pos + 1, StringComparison.InvariantCulture);
                 }
@@ -346,7 +355,9 @@ namespace NetSpell.SpellChecker
                     tempWord[i] = tryme[x];
                     string word = tempWord.ToString();
                     if (FindWord(ref word))
+                    {
                         SuggestWord(word, tempSuggestion);
+                    }
                 }
             }
         }
@@ -365,7 +376,9 @@ namespace NetSpell.SpellChecker
 
                     string word = tempWord.ToString();
                     if (FindWord(ref word))
+                    {
                         SuggestWord(word, tempSuggestion);
+                    }
                 }
             }
         }
@@ -386,7 +399,9 @@ namespace NetSpell.SpellChecker
 
                     string word = tempWord.ToString();
                     if (FindWord(ref word))
+                    {
                         SuggestWord(word, tempSuggestion);
+                    }
                 }
             }
         }
@@ -406,7 +421,9 @@ namespace NetSpell.SpellChecker
 
                 string word = tempWord.ToString();
                 if (FindWord(ref word))
+                {
                     SuggestWord(word, tempSuggestion);
+                }
             }
         }
 
@@ -542,7 +559,9 @@ namespace NetSpell.SpellChecker
                     int diag = matrix[i - 1, j - 1];
 
                     if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
+                    {
                         diag++;
+                    }
 
                     int deletion = matrix[i - 1, j];
                     int insertion = matrix[i, j - 1];
@@ -557,9 +576,14 @@ namespace NetSpell.SpellChecker
             if (positionPriority)
             {
                 if (char.ToLowerInvariant(source[0]) != char.ToLowerInvariant(target[0]))
+                {
                     dist++;
+                }
+
                 if (char.ToLowerInvariant(source[source.Length - 1]) != char.ToLowerInvariant(target[target.Length - 1]))
+                {
                     dist++;
+                }
             }
             return dist;
         }
@@ -610,7 +634,9 @@ namespace NetSpell.SpellChecker
             }
 
             if (_words.Count == 1)
+            {
                 return 0;
+            }
 
             int low = 0;
             int high = _words.Count - 1;
@@ -624,14 +650,22 @@ namespace NetSpell.SpellChecker
 
                 // add white space to end of word by finding the start of the next word
                 if ((mid + 1) < _words.Count)
+                {
                     wordEndIndex = _words[mid + 1].Index - 1;
+                }
 
                 if (textIndex < wordStartIndex)
+                {
                     high = mid - 1;
+                }
                 else if (textIndex > wordEndIndex)
+                {
                     low = mid + 1;
+                }
                 else if (wordStartIndex <= textIndex && textIndex <= wordEndIndex)
+                {
                     return mid;
+                }
             }
 
             // return last word if not found
@@ -949,7 +983,9 @@ namespace NetSpell.SpellChecker
         {
             Text = word;
             if (!TestWord(word))
+            {
                 Suggest();
+            }
         }
 
         /// <summary>
@@ -1001,7 +1037,9 @@ namespace NetSpell.SpellChecker
                             List<string> words = _dictionary.ExpandWord(word);
                             // add expanded words
                             foreach (string expandedWord in words)
+                            {
                                 SuggestWord(expandedWord, tempSuggestion);
+                            }
                         }
                     }
                 }
@@ -1084,10 +1122,16 @@ namespace NetSpell.SpellChecker
             TraceWriter.TraceVerbose("Testing Word: {0}", word);
 
             if (Dictionary.Contains(word))
+            {
                 return true;
+            }
+
             var lowerWord = word.ToLower();
             if (word != lowerWord)
+            {
                 return Dictionary.Contains(lowerWord);
+            }
+
             return false;
         }
 
@@ -1109,7 +1153,10 @@ namespace NetSpell.SpellChecker
             TraceWriter.TraceVerbose("Find Word: {0}", word);
 
             if (Dictionary.Contains(word))
+            {
                 return true;
+            }
+
             string wordLower = word.ToLowerInvariant();
             if (word != wordLower && Dictionary.Contains(wordLower))
             {
@@ -1184,14 +1231,18 @@ namespace NetSpell.SpellChecker
             get
             {
                 if (!DesignMode && _dictionary == null)
+                {
                     _dictionary = new WordDictionary();
+                }
 
                 return _dictionary;
             }
             set
             {
                 if (value != null)
+                {
                     _dictionary = value;
+                }
             }
         }
 
@@ -1315,7 +1366,9 @@ namespace NetSpell.SpellChecker
             get
             {
                 if (_words == null || _words.Count == 0)
+                {
                     return 0;
+                }
 
                 return GetWordIndex();
             }
@@ -1331,7 +1384,9 @@ namespace NetSpell.SpellChecker
             get
             {
                 if (_words == null)
+                {
                     return 0;
+                }
 
                 return _words.Count;
             }
@@ -1347,7 +1402,9 @@ namespace NetSpell.SpellChecker
             get
             {
                 if (_words == null)
+                {
                     return 0;
+                }
 
                 // make sure word index can't be higher then word count
                 return Math.Max(0, Math.Min(_wordIndex, (WordCount - 1)));
@@ -1357,9 +1414,13 @@ namespace NetSpell.SpellChecker
                 _wordIndex = value;
 
                 if (_words == null || _words.Count == 0)
+                {
                     CurrentWord = string.Empty;
+                }
                 else
+                {
                     CurrentWord = _words[WordIndex].Value;
+                }
             }
         }
 
@@ -1380,7 +1441,9 @@ namespace NetSpell.SpellChecker
         public void AddAutoCompleteWords(IEnumerable<string> words)
         {
             foreach (var word in words)
+            {
                 _autoCompleteWords.Add(word);
+            }
         }
     }
 }

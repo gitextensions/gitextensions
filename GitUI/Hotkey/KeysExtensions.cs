@@ -32,7 +32,9 @@ namespace GitUI.Hotkey
             Action<Keys> addIfContains = m =>
             {
                 if (m == (m & modifier))
-                modifierList.Add(m);
+                {
+                    modifierList.Add(m);
+                }
             };
 
             addIfContains(Keys.Control);
@@ -58,7 +60,9 @@ namespace GitUI.Hotkey
 
             // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
             if (str != null && str.Length == 2 && str[0] == 'D')
+            {
                 str = str[1].ToString();
+            }
 
             return str;
         }

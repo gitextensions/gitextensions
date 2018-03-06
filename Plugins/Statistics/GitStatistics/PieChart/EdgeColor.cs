@@ -17,7 +17,10 @@ namespace GitStatistics.PieChart
         {
             Debug.Assert(color != Color.Empty);
             if (edgeColorType == EdgeColorType.Contrast || edgeColorType == EdgeColorType.EnhancedContrast)
+            {
                 edgeColorType = GetContrastColorType(color, edgeColorType);
+            }
+
             float correctionFactor = 0;
             switch (edgeColorType)
             {

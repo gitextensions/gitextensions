@@ -65,11 +65,18 @@ namespace GitUI.UserControls.RevisionGridClasses
         public static string StrLimitWithElipses(string str, int characterCount)
         {
             if (characterCount < 5)
+            {
                 return StrLimit(str, characterCount); // Can’t do much with such a short limit
+            }
+
             if (str.Length <= characterCount - 3)
+            {
                 return str;
+            }
             else
+            {
                 return str.Substring(0, characterCount - 3) + "...";
+            }
         }
 
         /// <summary>
@@ -78,9 +85,13 @@ namespace GitUI.UserControls.RevisionGridClasses
         public static string StrLimit(string str, int characterCount)
         {
             if (str.Length <= characterCount)
+            {
                 return str;
+            }
             else
+            {
                 return str.Substring(0, characterCount).TrimEnd(' ');
+            }
         }
     }
 }

@@ -78,7 +78,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void InitRepositoryCategory()
         {
             if (_repositoryCategory == null)
+            {
                 return;
+            }
 
             var contextMenu = new ContextMenuStrip();
 
@@ -127,7 +129,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void MoveItem(bool moveUp)
         {
             if (_repository == null)
+            {
                 return;
+            }
 
             int index = RepositoryCategory.Repositories.IndexOf(_repository);
             RepositoryCategory.Repositories.Remove(_repository);
@@ -150,7 +154,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void editMenuItem_Click(object sender, EventArgs e)
         {
             using (var frm = new FormDashboardEditor())
+            {
                 frm.ShowDialog(this);
+            }
+
             dashboardCategoryChanged(this, null);
         }
 
@@ -164,7 +171,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void removeMenuItem_Click(object sender, EventArgs e)
         {
             if (_repository == null)
+            {
                 return;
+            }
 
             RepositoryCategory.RemoveRepository(_repository);
             repositoryRemoved(_repository);
@@ -184,7 +193,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             if (moveToMenuItem.DropDownItems.Count > 0)
+            {
                 moveToMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            }
 
             var newCategoryMenuItem = new ToolStripMenuItem(_newCategory.Text);
             newCategoryMenuItem.Click += newCategoryMenuItem_Click;
@@ -194,7 +205,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void newCategoryMenuItem_Click(object sender, EventArgs e)
         {
             if (_repository == null)
+            {
                 return;
+            }
 
             RepositoryCategory newRepositoryCategory;
 
@@ -203,7 +216,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 formDashboardCategoryTitle.ShowDialog(this);
 
                 if (string.IsNullOrEmpty(formDashboardCategoryTitle.GetTitle()))
+                {
                     return;
+                }
 
                 newRepositoryCategory = new RepositoryCategory(formDashboardCategoryTitle.GetTitle());
             }
@@ -274,10 +289,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var toolStripItem = sender as ToolStripItem;
 
             if (toolStripItem == null)
+            {
                 return;
+            }
 
             if (_repository == null)
+            {
                 return;
+            }
 
             foreach (RepositoryCategory newRepositoryCategory in Repositories.RepositoryCategories)
             {
@@ -295,7 +314,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var frm = new FormDashboardEditor())
+            {
                 frm.ShowDialog(this);
+            }
+
             dashboardCategoryChanged(this, null);
         }
 

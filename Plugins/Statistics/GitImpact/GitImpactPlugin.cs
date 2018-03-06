@@ -16,10 +16,15 @@ namespace GitImpact
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
+            {
                 return false;
+            }
 
             using (var form = new FormImpact(gitUIEventArgs.GitModule))
+            {
                 form.ShowDialog(gitUIEventArgs.OwnerForm);
+            }
+
             return false;
         }
 

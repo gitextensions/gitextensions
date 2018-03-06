@@ -47,18 +47,26 @@ namespace GitCommands.Settings
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             if (LowerPriority == null || SettingsCache.HasValue(name))
+            {
                 SettingsCache.SetValue(name, value, encode);
+            }
             else
+            {
                 LowerPriority.SetValue(name, value, encode);
+            }
         }
 
         public virtual bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
             if (SettingsCache.TryGetValue<T>(name, defaultValue, decode, out value))
+            {
                 return true;
+            }
 
             if (LowerPriority != null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
+            {
                 return true;
+            }
 
             return false;
         }

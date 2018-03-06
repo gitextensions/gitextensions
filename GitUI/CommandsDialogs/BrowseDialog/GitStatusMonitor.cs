@@ -242,7 +242,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void Update()
         {
             if (CurrentStatus != GitStatusMonitorState.Running)
+            {
                 return;
+            }
 
             if (Environment.TickCount >= _nextUpdateTime ||
                 (Environment.TickCount < 0 && _nextUpdateTime > 0))
@@ -291,7 +293,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _commandIsRunning = false;
 
             if (CurrentStatus != GitStatusMonitorState.Running)
+            {
                 return;
+            }
 
             var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
             OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
@@ -358,15 +362,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             // git directory changed
             if (e.FullPath.Length == _gitPath.Length)
+            {
                 return;
+            }
 
             if (e.FullPath.EndsWith("\\index.lock"))
+            {
                 return;
+            }
 
             // submodules directory's subdir changed
             // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
             if (e.FullPath.StartsWith(_submodulesPath) && (Directory.Exists(e.FullPath)))
+            {
                 return;
+            }
 
             CalculateNextUpdateTime(UpdateDelay);
         }
@@ -407,11 +417,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             // Update already scheduled?
             if (_nextUpdateTime < Environment.TickCount + UpdateDelay)
+            {
                 return;
+            }
 
             var fileName = e.FullPath.Substring(_workTreeWatcher.Path.Length).ToPosixPath();
             if (_ignoredFiles.Contains(fileName))
+            {
                 return;
+            }
 
             if (e.FullPath.StartsWith(_gitPath))
             {
@@ -421,11 +435,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             // new submodule .git file
             if (e.FullPath.EndsWith("\\.git"))
+            {
                 return;
+            }
 
             // old submodule .git\index.lock file
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
+            {
                 return;
+            }
 
             CalculateNextUpdateTime(UpdateDelay);
         }

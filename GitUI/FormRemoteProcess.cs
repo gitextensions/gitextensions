@@ -107,7 +107,9 @@ namespace GitUI
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(Remote) &&
                             String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
+                        {
                             Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
+                        }
 
                         // Retry the command.
                         Retry();
@@ -122,10 +124,14 @@ namespace GitUI
                     {
                         remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
+                        {
                             remoteUrl = Remote;
+                        }
                     }
                     else
+                    {
                         remoteUrl = _UrlTryingToConnect;
+                    }
 
                     if (AskForCacheHostkey(this, Module, remoteUrl))
                     {
@@ -169,7 +175,10 @@ namespace GitUI
                             remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
                         }
                         else
+                        {
                             remoteUrl = _UrlTryingToConnect;
+                        }
+
                         remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
 
                         Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, remoteUrl));

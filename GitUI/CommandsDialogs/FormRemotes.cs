@@ -604,9 +604,13 @@ Inactive remote is completely invisible to git.");
             folderBrowserButtonPushUrl.Visible = visible;
 
             if (!visible)
+            {
                 label2.Text = _labelUrlAsFetchPush.Text;
+            }
             else
+            {
                 label2.Text = _labelUrlAsFetch.Text;
+            }
         }
     }
 }

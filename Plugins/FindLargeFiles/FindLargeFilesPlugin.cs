@@ -23,7 +23,10 @@ namespace FindLargeFiles
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             using (var frm = new FindLargeFilesForm(_SizeLargeFile.ValueOrDefault(Settings), gitUiCommands))
+            {
                 frm.ShowDialog(gitUiCommands.OwnerForm);
+            }
+
             return true;
         }
     }

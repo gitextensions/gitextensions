@@ -78,7 +78,9 @@ namespace GitUI
                     branches =>
                     {
                         foreach (var branch in branches)
+                        {
                             _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+                        }
 
                         var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
                         if (!autoCompleteList.SequenceEqual(branches))
@@ -122,7 +124,10 @@ namespace GitUI
         {
             var list = GetBranchHeads(local, remote);
             if (tag)
+            {
                 list.AddRange(GetTagsRefs());
+            }
+
             return list;
         }
 

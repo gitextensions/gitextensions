@@ -63,7 +63,9 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
+            {
                 throw new ArgumentNullException(nameof(sha1));
+            }
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -99,7 +101,9 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
+            {
                 throw new ArgumentNullException(nameof(sha1));
+            }
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -139,7 +143,10 @@ namespace GitCommands
         public CommitData CreateFromFormatedData(string data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException(nameof(data));
+            }
+
             var module = GetModule();
 
             var lines = data.Split('\n');
@@ -181,7 +188,10 @@ namespace GitCommands
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException(nameof(data));
+            }
+
             var module = GetModule();
 
             var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -206,7 +216,9 @@ namespace GitCommands
         public CommitData CreateFromRevision(GitRevision revision)
         {
             if (revision == null)
+            {
                 throw new ArgumentNullException(nameof(revision));
+            }
 
             CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
                 String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
@@ -230,7 +242,9 @@ namespace GitCommands
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
+            {
                 endIndex--;
+            }
 
             var message = new StringBuilder();
             bool bNotesStart = false;
@@ -238,10 +252,15 @@ namespace GitCommands
             {
                 string line = lines[i];
                 if (bNotesStart)
+                {
                     line = "    " + line;
+                }
+
                 message.AppendLine(line);
                 if (lines[i] == "Notes:")
+                {
                     bNotesStart = true;
+                }
             }
 
             return message.ToString();

@@ -55,7 +55,9 @@ namespace AutoCompileSubmodules
         {
             // Only build when plugin is enabled
             if (string.IsNullOrEmpty(e.GitModule.WorkingDir))
+            {
                 return false;
+            }
 
             var msbuildpath = _MsBuildPath.ValueOrDefault(Settings);
 
@@ -75,15 +77,23 @@ namespace AutoCompileSubmodules
                         MessageBoxButtons.YesNoCancel);
 
                 if (result == DialogResult.Cancel)
+                {
                     return false;
+                }
 
                 if (result != DialogResult.Yes)
+                {
                     continue;
+                }
 
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
+                {
                     MessageBox.Show(e.OwnerForm, _enterCorrectMsBuildPath.Text);
+                }
                 else
+                {
                     e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + _MsBuildArguments.ValueOrDefault(Settings));
+                }
             }
             return false;
         }
@@ -96,7 +106,9 @@ namespace AutoCompileSubmodules
         private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {
             if (e.ActionDone && _MsBuildEnabled.ValueOrDefault(Settings))
+            {
                 Execute(e);
+            }
         }
 
         private static string SolutionFilesToString(IList<FileInfo> solutionFiles)

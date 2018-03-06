@@ -67,7 +67,9 @@ namespace Gerrit
             try
             {
                 if (File.Exists(Module.WorkingDir + ".gitreview"))
+                {
                     _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.WorkingDir + ".gitreview");
+                }
             }
             catch (Exception ex)
             {
@@ -84,7 +86,10 @@ namespace Gerrit
         private bool SaveGitReview()
         {
             if (!HasUnsavedChanges())
+            {
                 return false;
+            }
+
             try
             {
                 FileInfoExtensions
@@ -94,7 +99,10 @@ namespace Gerrit
                         {
                             var fileContent = _NO_TRANSLATE_GitReviewEdit.GetText();
                             if (!fileContent.EndsWith(Environment.NewLine))
+                            {
                                 fileContent += Environment.NewLine;
+                            }
+
                             File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                             _originalGitReviewFileContent = fileContent;
                         });
@@ -132,7 +140,10 @@ namespace Gerrit
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository())
+            {
                 return;
+            }
+
             MessageBox.Show(this, _gitreviewOnlyInWorkingDirSupported.Text, _gitreviewOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }

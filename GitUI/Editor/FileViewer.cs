@@ -102,7 +102,10 @@ namespace GitUI.Editor
             HotkeysEnabled = true;
 
             if (RunTime() && ContextMenuStrip == null)
+            {
                 ContextMenuStrip = contextMenu;
+            }
+
             contextMenu.Opening += ContextMenu_Opening;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
@@ -168,7 +171,9 @@ namespace GitUI.Editor
             get
             {
                 if (_Encoding == null)
+                {
                     _Encoding = Module.FilesEncoding;
+                }
 
                 return _Encoding;
             }
@@ -193,11 +198,15 @@ namespace GitUI.Editor
         private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             if (e?.OldCommands != null)
+            {
                 e.OldCommands.PostSettings -= UICommands_PostSettings;
+            }
 
             var commandSource = sender as IGitUICommandsSource;
             if (commandSource?.UICommands != null)
+            {
                 commandSource.UICommands.PostSettings += UICommands_PostSettings;
+            }
 
             Encoding = null;
         }
@@ -285,7 +294,9 @@ namespace GitUI.Editor
         void TextEditor_TextChanged(object sender, EventArgs e)
         {
             if (_patchHighlighting)
+            {
                 _internalFileViewer.AddPatchHighlighting();
+            }
 
             TextChanged?.Invoke(sender, e);
         }
@@ -293,7 +304,9 @@ namespace GitUI.Editor
         private void UpdateEncodingCombo()
         {
             if (Encoding != null)
+            {
                 encodingToolStripComboBox.Text = Encoding.EncodingName;
+            }
         }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
@@ -331,16 +344,24 @@ namespace GitUI.Editor
             else
             {
                 if (IgnoreWhitespaceChanges)
+                {
                     diffArguments.Append(" --ignore-space-change");
+                }
             }
 
             if (ShowEntireFile)
+            {
                 diffArguments.AppendFormat(" --inter-hunk-context=9000 --unified=9000");
+            }
             else
+            {
                 diffArguments.AppendFormat(" --unified={0}", NumberOfVisibleLines);
+            }
 
             if (TreatAllFilesAsText)
+            {
                 diffArguments.Append(" --text");
+            }
 
             return diffArguments.ToString();
         }
@@ -359,7 +380,9 @@ namespace GitUI.Editor
         {
             if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar &&
                 fileviewerToolbar != null)
+            {
                 fileviewerToolbar.Visible = false;
+            }
         }
 
         public void SaveCurrentScrollPos()
@@ -375,7 +398,10 @@ namespace GitUI.Editor
         private void RestoreCurrentScrollPos()
         {
             if (_currentScrollPos < 0)
+            {
                 return;
+            }
+
             ScrollPos = _currentScrollPos;
             ResetCurrentScrollPos();
         }
@@ -405,18 +431,27 @@ namespace GitUI.Editor
             bool isSubmodule, Task<GitSubmoduleStatus> status)
         {
             if (!isSubmodule)
+            {
                 _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
+            }
             else if (status != null)
+            {
                 _async.Load(() =>
                     {
                         if (status.Result == null)
+                        {
                             return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
+                        }
+
                         return LocalizationHelpers.ProcessSubmoduleStatus(Module, status.Result);
                     }, ViewPatch);
+            }
             else
+            {
                 _async.Load(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
+            }
         }
 
         public void ViewStagingPatch(Patch patch)
@@ -618,9 +653,13 @@ namespace GitUI.Editor
             string path;
 
             if (File.Exists(fileName))
+            {
                 path = fileName;
+            }
             else
+            {
                 path = _fullPathResolver.Resolve(fileName);
+            }
 
             if (File.Exists(path))
             {
@@ -659,9 +698,13 @@ namespace GitUI.Editor
             Reset(false, true);
 
             if (fileName == null)
+            {
                 _internalFileViewer.SetHighlighting("Default");
+            }
             else
+            {
                 _internalFileViewer.SetHighlightingForFile(fileName);
+            }
 
             if (!string.IsNullOrEmpty(fileName) &&
                 (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
@@ -699,7 +742,10 @@ namespace GitUI.Editor
             PictureBox.ImageLocation = "";
 
             if (PictureBox.Image == null)
+            {
                 return;
+            }
+
             PictureBox.Image.Dispose();
             PictureBox.Image = null;
         }
@@ -723,9 +769,14 @@ namespace GitUI.Editor
         private void DescreaseNumberOfLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (NumberOfVisibleLines > 0)
+            {
                 NumberOfVisibleLines--;
+            }
             else
+            {
                 NumberOfVisibleLines = 0;
+            }
+
             AppSettings.NumberOfContextLines = NumberOfVisibleLines;
             OnExtraDiffArgumentsChanged();
         }
@@ -751,7 +802,9 @@ namespace GitUI.Editor
             string code = _internalFileViewer.GetSelectedText();
 
             if (string.IsNullOrEmpty(code))
+            {
                 return;
+            }
 
             if (_currentViewIsPatch)
             {
@@ -763,8 +816,12 @@ namespace GitUI.Editor
                 if (hpos <= pos)
                 {
                     if (pos > 0)
+                    {
                         if (fileText[pos - 1] != '\n')
+                        {
                             code = " " + code;
+                        }
+                    }
 
                     string[] lines = code.Split('\n');
                     lines.Transform(RemovePrefix);
@@ -805,7 +862,9 @@ namespace GitUI.Editor
             var text = _internalFileViewer.GetText();
 
             if (!text.IsNullOrEmpty())
+            {
                 Clipboard.SetText(text);
+            }
         }
 
         public int GetSelectionPosition()
@@ -895,7 +954,9 @@ namespace GitUI.Editor
             // go to the top of change block
             while (firstVisibleLine > 0 &&
                 _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new string[] { "+", "-" }))
+            {
                 firstVisibleLine--;
+            }
 
             for (var line = firstVisibleLine; line > 0; line--)
             {
@@ -1026,13 +1087,20 @@ namespace GitUI.Editor
             Encoding encod = null;
 
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
+            {
                 encod = Module.FilesEncoding;
+            }
             else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
+            {
                 encod = Encoding.Default;
+            }
             else
+            {
                 encod = AppSettings.AvailableEncodings.Values
                       .Where(en => en.EncodingName == encodingToolStripComboBox.Text)
                       .FirstOrDefault() ?? Module.FilesEncoding;
+            }
+
             if (!encod.Equals(Encoding))
             {
                 Encoding = encod;
@@ -1043,7 +1111,9 @@ namespace GitUI.Editor
         private void fileviewerToolbar_VisibleChanged(object sender, EventArgs e)
         {
             if (fileviewerToolbar.Visible)
+            {
                 UpdateEncodingCombo();
+            }
         }
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1056,7 +1126,9 @@ namespace GitUI.Editor
             {
                 formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
                 if (formGoToLine.ShowDialog(this) == DialogResult.OK)
+                {
                     GoToLine(formGoToLine.GetLineNumber() - 1);
+                }
             }
         }
 
@@ -1078,8 +1150,12 @@ namespace GitUI.Editor
                 string fileText = _internalFileViewer.GetText();
 
                 if (pos > 0)
+                {
                     if (fileText[pos - 1] != '\n')
+                    {
                         code = " " + code;
+                    }
+                }
 
                 IEnumerable<string> lines = code.Split('\n');
                 lines = lines.Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
@@ -1143,7 +1219,9 @@ namespace GitUI.Editor
                 if (!string.IsNullOrEmpty(output))
                 {
                     if (!MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
+                    {
                         MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch));
+                    }
                 }
             }
         }

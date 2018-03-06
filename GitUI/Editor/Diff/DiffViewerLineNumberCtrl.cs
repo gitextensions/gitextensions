@@ -129,7 +129,9 @@ namespace GitUI.Editor.Diff
         public string GetLineDesc(int lineNumInDiffFile)
         {
             if (!DiffLines.TryGetValue(lineNumInDiffFile, out var line))
+            {
                 return null;
+            }
 
             if (line.LeftLineNum != DiffLineNum.NotApplicableLineNum)
             {

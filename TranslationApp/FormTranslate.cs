@@ -49,7 +49,10 @@ namespace TranslationApp
             UpdateCategoriesList();
             translations.SelectedItem = GitCommands.AppSettings.Translation; // should be called after FillNeutralTranslation()
             if (_translation == null)
+            {
                 LoadTranslation();
+            }
+
             translateCategories.SelectedItem = _allCategories;
             FillTranslateGrid(_allCategories);
 
@@ -107,12 +110,16 @@ namespace TranslationApp
         private void FillTranslateGrid(TranslationCategory filter)
         {
             if (_translationItems == null)
+            {
                 return;
+            }
 
             translateItemBindingSource.DataSource = null;
 
             if (filter == _allCategories)
+            {
                 filter = null;
+            }
 
             translateItemBindingSource.DataSource = GetCategoryItems(filter).ToList();
 
@@ -141,14 +148,19 @@ namespace TranslationApp
             translateCategories.Items.Add(_allCategories);
 
             if (!hideTranslatedItems.Checked)
+            {
                 translateCategories.Items.AddRange(GetCategories(_neutralTranslation).ToArray());
+            }
             else
             {
                 var categories = GetCategories(_neutralTranslation).Where(cat => GetCategoryItems(cat).Any());
                 translateCategories.Items.AddRange(categories.ToArray());
             }
             if (hideTranslatedItems.Checked && !GetCategoryItems(tc).Any())
+            {
                 tc = _allCategories;
+            }
+
             translateCategories.SelectedItem = tc;
         }
 
@@ -172,12 +184,16 @@ namespace TranslationApp
                         foreach (Type type in types.Value)
                         {
                             if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
+                            {
                                 obj.AddTranslationItems(translation);
+                            }
 
                             progressBar.Value = index;
                             index++;
                             if (index % 10 == 0)
+                            {
                                 Update();
+                            }
                         }
                     }
                     finally
@@ -205,8 +221,12 @@ namespace TranslationApp
         private void saveAs_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
+            {
                 if (MessageBox.Show(this, _noLanguageCodeSelected.Text, _noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
                     return;
+                }
+            }
 
             toolStrip1.Select();
 
@@ -311,7 +331,9 @@ namespace TranslationApp
         private string GetSelectedLanguageCode()
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text) || _NO_TRANSLATE_languageCode.Text.Length < 2)
+            {
                 return null;
+            }
 
             return _NO_TRANSLATE_languageCode.Text.Substring(0, 2);
         }
@@ -444,7 +466,9 @@ namespace TranslationApp
                 var translateItem = (TranslationItemWithCategory)translateGrid.SelectedRows[0].DataBoundItem;
 
                 if (translateItem == null)
+                {
                     return;
+                }
 
                 neutralText.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
@@ -474,7 +498,9 @@ namespace TranslationApp
             if (translateGrid.SelectedRows.Count == 1)
             {
                 if (translateGrid.CurrentCell.RowIndex < translateGrid.Rows.Count - 1)
+                {
                     translateItemBindingSource.MoveNext();
+                }
             }
             else if (translateGrid.Rows.Count > 0)
             {
@@ -487,7 +513,9 @@ namespace TranslationApp
             if (translateGrid.SelectedRows.Count == 1)
             {
                 if (translateGrid.CurrentCell.RowIndex > 0)
+                {
                     translateItemBindingSource.MovePrevious();
+                }
             }
             else if (translateGrid.Rows.Count > 0)
             {

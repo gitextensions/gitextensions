@@ -89,7 +89,9 @@ namespace GitUI.SpellChecker
                 // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
                 _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
                 && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
+            {
                 DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
+            }
 
             // Mark misspelled words
             DrawLines(Lines, DrawType.Wave);
@@ -113,7 +115,9 @@ namespace GitUI.SpellChecker
                 end.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.End);
 
                 if (start.X == -1 || end.X == -1)
+                {
                     continue;
+                }
 
                 // Draw the wavy underline/mark
                 if (start.Y < end.Y)
@@ -131,6 +135,7 @@ namespace GitUI.SpellChecker
                     }
                 }
                 else
+                {
                     switch (type)
                     {
                         case DrawType.Wave:
@@ -140,6 +145,7 @@ namespace GitUI.SpellChecker
                             DrawMark(start, end);
                             break;
                     }
+                }
             }
         }
 
@@ -178,7 +184,9 @@ namespace GitUI.SpellChecker
         private int LineHeight()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return 12;
+            }
 
             if (_lineHeight == 0 && !EnvUtils.RunningOnWindows())
             {
@@ -210,14 +218,25 @@ namespace GitUI.SpellChecker
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
+            {
                 return;
+            }
+
             ReleaseHandle();
             if (_bitmap != null)
+            {
                 _bitmap.Dispose();
+            }
+
             if (_bufferGraphics != null)
+            {
                 _bufferGraphics.Dispose();
+            }
+
             if (_textBoxGraphics != null)
+            {
                 _textBoxGraphics.Dispose();
+            }
         }
     }
 }

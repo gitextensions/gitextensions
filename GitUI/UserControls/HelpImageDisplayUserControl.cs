@@ -96,7 +96,9 @@ namespace GitUI.Help
                 _image1 = value;
                 UpdateImageDisplay();
                 if (IsExpanded)
+                {
                     UpdateControlSize();
+                }
             }
         }
 
@@ -108,7 +110,9 @@ namespace GitUI.Help
                 _image2 = value;
                 UpdateImageDisplay();
                 if (IsExpanded)
+                {
                     UpdateControlSize();
+                }
             }
         }
 
@@ -176,7 +180,9 @@ namespace GitUI.Help
                     size = new Size(w, h);
                 }
                 else
+                {
                     size = new Size(40, 40); // default size
+                }
 
                 // add vertical space of other controls
                 size.Height +=

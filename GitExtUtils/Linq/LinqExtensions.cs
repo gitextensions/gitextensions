@@ -35,7 +35,9 @@ namespace System.Linq
         public static Dictionary<TKey, List<TSource>> ToDictionaryOfList<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
+            {
                 throw new ArgumentNullException(nameof(keySelector));
+            }
 
             Dictionary<TKey, List<TSource>> result = new Dictionary<TKey, List<TSource>>();
 
@@ -64,7 +66,9 @@ namespace System.Linq
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
+            {
                 throw new ArgumentNullException(nameof(keySelector));
+            }
 
             HashSet<TKey> result = new HashSet<TKey>();
 
@@ -165,13 +169,19 @@ namespace System.Linq
         public static void Select<TSource>(this TSource[] source, Func<TSource, int, TSource> transformer)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException(nameof(source));
+            }
 
             if (transformer == null)
+            {
                 throw new ArgumentNullException(nameof(transformer));
+            }
 
             for (int i = 0; i < source.Length; i++)
+            {
                 source[i] = transformer(source[i], i);
+            }
         }
 
         //
@@ -195,25 +205,35 @@ namespace System.Linq
         public static void Transform<TSource>(this TSource[] source, Func<TSource, TSource> transformer)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException(nameof(source));
+            }
 
             if (transformer == null)
+            {
                 throw new ArgumentNullException(nameof(transformer));
+            }
 
             for (int i = 0; i < source.Length; i++)
+            {
                 source[i] = transformer(source[i]);
+            }
         }
 
         public static void AddAll<T>(this IList<T> list, IEnumerable<T> elementsToAdd)
         {
             foreach (T t in elementsToAdd)
+            {
                 list.Add(t);
+            }
         }
 
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
             foreach (T t in enumerable)
+            {
                 action(t);
+            }
         }
     }
 }

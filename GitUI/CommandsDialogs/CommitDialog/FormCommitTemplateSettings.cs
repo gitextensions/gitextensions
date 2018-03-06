@@ -39,7 +39,9 @@ namespace GitUI.CommandsDialogs.CommitDialog
             {
                 _commitTemplates = new CommitTemplateItem[_maxCommitTemplates];
                 for (int i = 0; i < _commitTemplates.Length; i++)
+                {
                     _commitTemplates[i] = new CommitTemplateItem();
+                }
             }
 
             _NO_TRANSLATE_comboBoxCommitTemplates.Items.Clear();
@@ -105,7 +107,9 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 comboBoxText += _commitTemplates[line].Name.Length > _maxShownCharsForName ? "..." : "";
             }
             else
+            {
                 comboBoxText = "<" + _emptyTemplate.Text + ">";
+            }
 
             _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", (line + 1), comboBoxText);
         }

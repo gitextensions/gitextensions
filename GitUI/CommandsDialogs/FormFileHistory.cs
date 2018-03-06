@@ -77,7 +77,10 @@ namespace GitUI.CommandsDialogs
 
             bool isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
             if (isSubmodule)
+            {
                 tabControl1.RemoveIfExists(BlameTab);
+            }
+
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
@@ -99,7 +102,9 @@ namespace GitUI.CommandsDialogs
             }
 
             if (filterByRevision && revision != null && revision.Guid != null)
+            {
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
+            }
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName)
@@ -114,9 +119,13 @@ namespace GitUI.CommandsDialogs
             bool autoLoad = (tabControl1.SelectedTab == BlameTab && AppSettings.LoadBlameOnShow) || AppSettings.LoadFileHistoryOnShow;
 
             if (autoLoad)
+            {
                 LoadFileHistory();
+            }
             else
+            {
                 FileChanges.Visible = false;
+            }
         }
 
         private string FileName { get; set; }
@@ -138,7 +147,10 @@ namespace GitUI.CommandsDialogs
             _asyncLoader.Load(() => BuildFilter(FileName), (filter) =>
             {
                 if (filter == null)
+                {
                     return;
+                }
+
                 FileChanges.FixedRevisionFilter = filter.RevisionFilter;
                 FileChanges.FixedPathFilter = filter.PathFilter;
                 FileChanges.FiltredFileName = FileName;
@@ -156,7 +168,9 @@ namespace GitUI.CommandsDialogs
         private FixedFilterTuple BuildFilter(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
+            {
                 return null;
+            }
 
             // Replace windows path separator to Linux path separator.
             // This is needed to keep the file history working when started from file tree in
@@ -184,7 +198,9 @@ namespace GitUI.CommandsDialogs
             }
 
             if (fileName.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+            {
                 fileName = fileName.Substring(Module.WorkingDir.Length);
+            }
 
             FileName = fileName;
 
@@ -268,7 +284,9 @@ namespace GitUI.CommandsDialogs
         {
             Text = string.Format("File History - {0}", FileName);
             if (!fileName.IsNullOrEmpty() && !fileName.Equals(FileName))
+            {
                 Text = Text + string.Format(" ({0})", fileName);
+            }
 
             Text += " - " + Module.WorkingDir;
         }
@@ -278,7 +296,9 @@ namespace GitUI.CommandsDialogs
             var selectedRows = FileChanges.GetSelectedRevisions();
 
             if (selectedRows.Count == 0)
+            {
                 return;
+            }
 
             GitRevision revision = selectedRows[0];
             var children = FileChanges.GetRevisionChildren(revision.Guid);
@@ -286,12 +306,16 @@ namespace GitUI.CommandsDialogs
             var fileName = revision.Name;
 
             if (string.IsNullOrEmpty(fileName))
+            {
                 fileName = FileName;
+            }
 
             SetTitle(fileName);
 
             if (tabControl1.SelectedTab == BlameTab)
+            {
                 Blame.LoadBlame(revision, children, fileName, FileChanges, BlameTab, Diff.Encoding, force: force);
+            }
             else if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
@@ -310,7 +334,9 @@ namespace GitUI.CommandsDialogs
             }
 
             if (_buildReportTabPageExtension == null)
+            {
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1, _buildReportTabCaption.Text);
+            }
 
             _buildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
         }
@@ -348,7 +374,9 @@ namespace GitUI.CommandsDialogs
                 string orgFileName = selectedRows[0].Name;
 
                 if (string.IsNullOrEmpty(orgFileName))
+                {
                     orgFileName = FileName;
+                }
 
                 string fullName = _fullPathResolver.Resolve(orgFileName.ToNativePath());
 
@@ -493,7 +521,9 @@ namespace GitUI.CommandsDialogs
                 string error = "";
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
                 if (commit != null)
+                {
                     FileChanges.SetSelectedRevision(new GitRevision(commit.Guid));
+                }
             }
             else if (e.Command == "navigatebackward")
             {

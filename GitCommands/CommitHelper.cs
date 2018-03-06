@@ -28,9 +28,13 @@ namespace GitCommands
         public void Execute(GitModule module)
         {
             if (Dto.Amend)
+            {
                 Dto.Result = module.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
+            }
             else
+            {
                 Dto.Result = module.RunGitCmd("commit -m \"" + Dto.Message + "\"");
+            }
         }
 
         public static void SetCommitMessage(GitModule module, string commitMessageText, bool amendCommit)
@@ -47,9 +51,13 @@ namespace GitCommands
                 textWriter.Write(commitMessageText);
             }
             if (AppSettings.RememberAmendCommitState && amendCommit)
+            {
                 File.WriteAllText(GetAmendPath(module), true.ToString());
+            }
             else if (File.Exists(GetAmendPath(module)))
+            {
                 File.Delete(GetAmendPath(module));
+            }
         }
 
         public static string GetCommitMessage(GitModule module)

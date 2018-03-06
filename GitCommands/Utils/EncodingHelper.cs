@@ -60,7 +60,9 @@ namespace GitCommands
                         encoding = reader.CurrentEncoding;
                         outputString = reader.ReadToEnd();
                         if (error == null || error.Length == 0)
+                        {
                             return outputString;
+                        }
                     }
                 }
                 finally
@@ -85,7 +87,9 @@ namespace GitCommands
                         encoding = reader.CurrentEncoding;
                         errorString = reader.ReadToEnd();
                         if (output == null || output.Length == 0)
+                        {
                             return errorString;
+                        }
                     }
                 }
                 finally

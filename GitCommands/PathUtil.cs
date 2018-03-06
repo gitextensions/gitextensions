@@ -55,7 +55,10 @@ namespace GitCommands
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
+            {
                 fileName = fileName.Substring(pos + 1);
+            }
+
             return fileName;
         }
 
@@ -75,7 +78,10 @@ namespace GitCommands
                 }
             }
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
+            {
                 return "";
+            }
+
             return fileName;
         }
 
@@ -84,7 +90,10 @@ namespace GitCommands
             posixPath = null;
             var directoryInfo = new DirectoryInfo(path);
             if (!directoryInfo.Exists)
+            {
                 return false;
+            }
+
             posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
             return true;
         }
@@ -99,10 +108,14 @@ namespace GitCommands
                 string path = repositoryUrl.TrimEnd(new[] { '\\', '/' });
 
                 if (path.EndsWith(standardRepositorySuffix))
+                {
                     path = path.Substring(0, path.Length - standardRepositorySuffix.Length);
+                }
 
                 if (path.Contains("\\") || path.Contains("/"))
+                {
                     name = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+                }
             }
 
             return name;

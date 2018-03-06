@@ -26,7 +26,10 @@ namespace GitCommandsTests.Config
             get
             {
                 if (_Module == null)
+                {
                     _Module = new GitModule(GetTempFolder());
+                }
+
                 return _Module;
             }
         }

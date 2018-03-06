@@ -18,7 +18,9 @@ namespace GitUIPluginInterfaces
             DefaultValue = aDefaultValue;
             Values = values;
             if (DefaultValue == null && values.Any())
+            {
                 DefaultValue = values.First();
+            }
         }
 
         public string Name { get; private set; }

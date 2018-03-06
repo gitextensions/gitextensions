@@ -33,7 +33,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     AddLine(html, "<span class='created'>{0}</span>\r\n", entry.Created);
                     AddLine(html, "<span class='author'>{0}</span>\r\n", entry.Author);
                     if (cde != null)
+                    {
                         AddLine(html, "<span class='commit'>Commit:  {0}</span>\r\n", cde.Sha);
+                    }
+
                     AddLine(html, "</div>");
                     AddLine(html, "<div class='commentBody'>{0}</div>\r\n", entry.Body);
 
@@ -59,7 +62,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     _cssData = _cssDataRaw;
                     foreach (var elem in SystemInfoReplacement)
+                    {
                         _cssData = _cssData.Replace(elem.Key, elem.Value);
+                    }
                 }
 
                 return _cssData;

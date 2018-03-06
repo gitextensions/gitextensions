@@ -82,9 +82,15 @@ namespace GitUI
         {
             string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
             if (_editor != null && _editor.FileName != null)
+            {
                 text += " - " + Path.GetFileName(_editor.FileName);
+            }
+
             if (_search.HasScanRegion)
+            {
                 text += " (" + _selectionOnlyString.Text + ")";
+            }
+
             Text = text;
         }
 
@@ -98,9 +104,13 @@ namespace GitUI
             {
                 ISelection sel = sm.SelectionCollection[0];
                 if (sel.StartPosition.Line == sel.EndPosition.Line)
+                {
                     txtLookFor.Text = sm.SelectedText;
+                }
                 else
+                {
                     _search.SetScanRegion(sel);
+                }
             }
             else
             {
@@ -160,7 +170,10 @@ namespace GitUI
 
                 int startFrom = caret.Offset - (searchBackward ? 1 : 0);
                 if (startFrom == -1)
+                {
                     startFrom = _search.EndOffset;
+                }
+
                 range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
                 if (range != null && (!_lastSearchLoopedAround || _fileLoader == null))
                 {
@@ -170,7 +183,10 @@ namespace GitUI
                 {
                     range = null;
                     if (currentIdx != -1 && startIdx == -1)
+                    {
                         startIdx = currentIdx;
+                    }
+
                     if (_fileLoader(searchBackward, true, out var fileIndex, out var loadFileContent))
                     {
                         currentIdx = fileIndex;
@@ -191,7 +207,10 @@ namespace GitUI
             }
             while (range == null && startIdx != currentIdx && currentIdx != -1);
             if (range == null && messageIfNotFound != null)
+            {
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
             return range;
         }
 
@@ -209,12 +228,17 @@ namespace GitUI
         private void btnHighlightAll_Click(object sender, EventArgs e)
         {
             if (!_highlightGroups.ContainsKey(_editor))
+            {
                 _highlightGroups[_editor] = new HighlightGroup(_editor);
+            }
+
             HighlightGroup group = _highlightGroups[_editor];
 
             if (string.IsNullOrEmpty(LookFor))
+            {
                 // Clear highlights
                 group.ClearMarkers();
+            }
             else
             {
                 group.ClearMarkers();
@@ -227,7 +251,10 @@ namespace GitUI
                 {
                     TextRange range = _search.FindNext(offset, false, out var looped);
                     if (range == null || looped)
+                    {
                         break;
+                    }
+
                     offset = range.Offset + range.Length;
                     count++;
 
@@ -236,10 +263,14 @@ namespace GitUI
                     group.AddMarker(m);
                 }
                 if (count == 0)
+                {
                     MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
+                }
                 else
+                {
                     Close();
+                }
             }
         }
 
@@ -268,7 +299,10 @@ namespace GitUI
         {
             SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
             if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
+            {
                 InsertText(txtReplaceWith.Text);
+            }
+
             await FindNext(false, _lastSearchWasBackward, _textNotFoundString.Text);
         }
 
@@ -288,7 +322,9 @@ namespace GitUI
                 while (FindNext(false, false, null) != null)
                 {
                     if (_lastSearchLoopedAround)
+                    {
                         break;
+                    }
 
                     // Replace
                     count++;
@@ -300,7 +336,9 @@ namespace GitUI
                 _editor.Document.UndoStack.EndUndoGroup();
             }
             if (count == 0)
+            {
                 MessageBox.Show(this, _noOccurrencesFoundString.Text);
+            }
             else
             {
                 MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count));
@@ -399,7 +437,10 @@ namespace GitUI
             get
             {
                 if (_region != null)
+                {
                     return _region.Offset;
+                }
+
                 return 0;
             }
         }
@@ -410,7 +451,10 @@ namespace GitUI
             get
             {
                 if (_region != null)
+                {
                     return _region.EndOffset;
+                }
+
                 return _document.TextLength;
             }
         }
@@ -498,10 +542,14 @@ namespace GitUI
         private static bool MatchFirstCh(char a, char b, bool matchCase)
         {
             if (a == b)
+            {
                 return true;
+            }
 
             if (!matchCase && a == Char.ToUpperInvariant(b))
+            {
                 return true;
+            }
 
             return false;
         }
@@ -522,7 +570,9 @@ namespace GitUI
                         &&
                         ((IsWholeWordMatch(offset)) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
+                    {
                         return new TextRange(_document, offset, LookFor.Length);
+                    }
                 }
             }
             else
@@ -533,7 +583,9 @@ namespace GitUI
                         &&
                         ((IsWholeWordMatch(offset)) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
+                    {
                         return new TextRange(_document, offset, LookFor.Length);
+                    }
                 }
             }
             return null;
@@ -542,7 +594,10 @@ namespace GitUI
         private bool IsWholeWordMatch(int offset)
         {
             if (IsWordBoundary(offset) && IsWordBoundary(offset + LookFor.Length))
+            {
                 return IsPartWordMatch(offset);
+            }
+
             return false;
         }
 
@@ -562,7 +617,10 @@ namespace GitUI
         {
             string substr = _document.GetText(offset, LookFor.Length);
             if (!MatchCase)
+            {
                 substr = substr.ToUpperInvariant();
+            }
+
             return substr == _lookFor2;
         }
     }
@@ -602,7 +660,10 @@ namespace GitUI
         public void ClearMarkers()
         {
             foreach (TextMarker m in _markers)
+            {
                 _document.MarkerStrategy.RemoveMarker(m);
+            }
+
             _markers.Clear();
             _editor.Refresh();
         }

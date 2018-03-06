@@ -19,7 +19,10 @@ namespace Bitbucket
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             using (var frm = new BitbucketPullRequestForm(this, base.Settings, gitUiCommands))
+            {
                 frm.ShowDialog(gitUiCommands.OwnerForm);
+            }
+
             return true;
         }
 

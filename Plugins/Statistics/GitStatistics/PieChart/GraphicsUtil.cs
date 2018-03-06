@@ -42,7 +42,9 @@ namespace GitStatistics.PieChart
                 rect.X = xToInclude;
             }
             else if (xToInclude > rect.Right)
+            {
                 rect.Width = xToInclude - rect.X;
+            }
         }
 
         /// <summary>
@@ -64,7 +66,9 @@ namespace GitStatistics.PieChart
                 rect.Y = yToInclude;
             }
             else if (yToInclude > rect.Bottom)
+            {
                 rect.Height = yToInclude - rect.Y;
+            }
         }
     }
 }

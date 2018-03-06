@@ -83,7 +83,9 @@ namespace Gravatar
         public DefaultImageType GetDefaultImageType(string imageType)
         {
             if (!Enum.TryParse(imageType, true, out DefaultImageType defaultImageType))
+            {
                 defaultImageType = DefaultImageType.None;
+            }
 
             return defaultImageType;
         }
@@ -171,7 +173,9 @@ namespace Gravatar
             }
 
             if (string.IsNullOrEmpty(imageUrl))
+            {
                 return null;
+            }
 
             return await DownloadImage(new Uri(imageUrl), imageFileName);
         }

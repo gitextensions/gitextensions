@@ -43,9 +43,15 @@ namespace GitUI.UserControls
         public override void KillProcess()
         {
             if (InvokeRequired)
+            {
                 throw new InvalidOperationException("This operation is to be executed on the home thread.");
+            }
+
             if (_process == null)
+            {
                 return;
+            }
+
             try
             {
                 _process.TerminateTree();
@@ -77,7 +83,9 @@ namespace GitUI.UserControls
 
                 string quotedCmd = command;
                 if (quotedCmd.IndexOf(' ') != -1)
+                {
                     quotedCmd = quotedCmd.Quote();
+                }
 
                 DateTime executionStartTimestamp = DateTime.Now;
 
@@ -99,7 +107,9 @@ namespace GitUI.UserControls
                     this.InvokeAsync(new Action(() =>
                     {
                         if (_process == null)
+                        {
                             return;
+                        }
                         // From GitCommandsInstance:
                         // The process is exited already, but this command waits also until all output is received.
                         // Only WaitForExit when someone is connected to the exited event. For some reason a
@@ -142,9 +152,14 @@ namespace GitUI.UserControls
         private void AppendMessage([NotNull] string text)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
+
             if (InvokeRequired)
+            {
                 throw new InvalidOperationException("This operation must be called on the GUI thread.");
+            }
             // if not disposed
             if (!IsDisposed)
             {

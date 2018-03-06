@@ -189,7 +189,9 @@ namespace GitCommands.Settings
             _lastModificationDate = DateTime.UtcNow;
 
             if (_autoSave)
+            {
                 StartSaveTimer();
+            }
         }
 
         // Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called

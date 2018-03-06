@@ -29,7 +29,9 @@ namespace GitCommands.Settings
         protected override string GetValueImpl(string key)
         {
             if (_stringSettings.TryGetValue(key, out var value))
+            {
                 return value;
+            }
 
             return null;
         }

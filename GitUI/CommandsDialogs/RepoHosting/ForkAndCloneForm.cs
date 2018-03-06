@@ -108,7 +108,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var search = _searchTB.Text;
             if (search == null || search.Trim().Length == 0)
+            {
                 return;
+            }
 
             PrepareSearch(sender, e);
 
@@ -126,7 +128,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var search = _searchTB.Text;
             if (search == null || search.Trim().Length == 0)
+            {
                 return;
+            }
+
             PrepareSearch(sender, e);
 
             AsyncLoader.DoAsync(
@@ -135,10 +140,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex =>
                 {
                     if (ex.Exception.Message.Contains("404"))
+                    {
                         MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
+                    }
                     else
+                    {
                         MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
                             ex.Exception.Message, _strError.Text);
+                    }
+
                     _searchBtn.Enabled = true;
                 });
         }
@@ -234,12 +244,19 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _openGitupPageBtn_Click(object sender, EventArgs e)
         {
             if (CurrentySelectedGitRepo == null)
+            {
                 return;
+            }
+
             string hp = CurrentySelectedGitRepo.Homepage;
             if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
+            {
                 MessageBox.Show(this, _strNoHomepageDefined.Text, _strError.Text);
+            }
             else
+            {
                 Process.Start(CurrentySelectedGitRepo.Homepage);
+            }
         }
 
         private void _closeBtn_Click(object sender, EventArgs e)
@@ -251,7 +268,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             UpdateCloneInfo();
             if (_tabControl.SelectedTab == _searchReposPage)
+            {
                 _searchTB.Focus();
+            }
         }
 
         private void _myReposLV_SelectedIndexChanged(object sender, EventArgs e)
@@ -279,7 +298,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             string targetDir = GetTargetDir();
             if (targetDir == null)
+            {
                 return;
+            }
 
             string repoSrc = repo.CloneReadWriteUrl;
 
@@ -290,7 +311,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             formRemoteProcess.ShowDialog();
 
             if (formRemoteProcess.ErrorOccurred())
+            {
                 return;
+            }
 
             GitModule module = new GitModule(targetDir);
 
@@ -298,7 +321,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 var error = module.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
+                {
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
+                }
             }
 
             _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
@@ -313,12 +338,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 if (_tabControl.SelectedTab == _searchReposPage)
                 {
                     if (_searchResultsLV.SelectedItems.Count != 1)
+                    {
                         return null;
+                    }
 
                     return (IHostedRepository)_searchResultsLV.SelectedItems[0].Tag;
                 }
                 if (_myReposLV.SelectedItems.Count != 1)
+                {
                     return null;
+                }
 
                 return (IHostedRepository)_myReposLV.SelectedItems[0].Tag;
             }
@@ -346,9 +375,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var moreInfo = !string.IsNullOrEmpty(_addRemoteAsTB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, _addRemoteAsTB.Text.Trim()) : "";
 
                 if (_tabControl.SelectedTab == _searchReposPage)
+                {
                     _cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
+                }
                 else if (_tabControl.SelectedTab == _myReposPage)
+                {
                     _cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
+                }
             }
             else
             {
@@ -374,13 +407,17 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (_destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
                 e.Cancel = true;
+            }
         }
 
         private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (_createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
                 e.Cancel = true;
+            }
         }
     }
 }

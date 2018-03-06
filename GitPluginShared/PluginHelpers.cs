@@ -17,7 +17,9 @@ namespace GitPluginShared
         public static bool ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
         {
             if (!AllowCaptionUpdate)
+            {
                 return false;
+            }
 
             try
             {
@@ -53,11 +55,15 @@ namespace GitPluginShared
             try
             {
                 if ("" == name)
+                {
                     return null;
+                }
 
                 OutputWindowPane result = FindOutputPane(app, name);
                 if (null != result)
+                {
                     return result;
+                }
 
                 var outputWindow = (OutputWindow)app.Windows.Item(Constants.vsWindowKindOutput).Object;
                 OutputWindowPanes panes = outputWindow.OutputWindowPanes;
@@ -75,7 +81,9 @@ namespace GitPluginShared
             try
             {
                 if ("" == name)
+                {
                     return null;
+                }
 
                 var outputWindow = (OutputWindow)app.Windows.Item(Constants.vsWindowKindOutput).Object;
                 OutputWindowPanes panes = outputWindow.OutputWindowPanes;
@@ -83,7 +91,9 @@ namespace GitPluginShared
                 foreach (OutputWindowPane pane in panes)
                 {
                     if (name != pane.Name)
+                    {
                         continue;
+                    }
 
                     return pane;
                 }

@@ -60,9 +60,13 @@ namespace GitUI.RevisionGridClasses
                 if (_nodeIndices.TryGetValue(aParent, out var childIndex))
                 {
                     if (childIndex > 0)
+                    {
                         return _nodes[childIndex - 1];
+                    }
                     else
+                    {
                         throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
+                    }
                 }
 
                 throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + aParent.ToString());
@@ -90,7 +94,9 @@ namespace GitUI.RevisionGridClasses
                 // The 'top' (Child->node) of the junction is retained by this.
                 // The 'bottom' (node->Parent) of the junction is returned.
                 if (!_nodeIndices.TryGetValue(aNode, out var index))
+                {
                     return null;
+                }
 
                 var bottom = new Junction(this, aNode);
                 // Add 1, since aNode was at the index

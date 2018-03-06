@@ -127,7 +127,9 @@ namespace GitUI.RevisionGridClasses
                     foreach (Junction junction in startNode.Ancestors)
                     {
                         if (junction.HighLight)
+                        {
                             continue;
+                        }
 
                         junction.HighLight = true;
 
@@ -269,7 +271,9 @@ namespace GitUI.RevisionGridClasses
                         {
                             // This only happens if we weren't in topo order
                             if (Debugger.IsAttached)
+                            {
                                 Debugger.Break();
+                            }
 
                             Node temp = AddedNodes[i];
                             AddedNodes[i] = AddedNodes[i - 1];
@@ -280,7 +284,9 @@ namespace GitUI.RevisionGridClasses
 
                         // Signal that these rows have changed
                         if (isChanged)
+                        {
                             Updated?.Invoke(this);
+                        }
 
                         _processedNodes++;
                         break;
@@ -347,9 +353,14 @@ namespace GitUI.RevisionGridClasses
                     foreach (Junction j in h.Ancestors)
                     {
                         if (!S.Contains(j.Oldest))
+                        {
                             S.Enqueue(j.Oldest);
+                        }
+
                         if (!S.Contains(j.Youngest))
+                        {
                             S.Enqueue(j.Youngest);
+                        }
                     }
                 }
 
@@ -363,7 +374,9 @@ namespace GitUI.RevisionGridClasses
                         foreach (Junction e in n.Ancestors)
                         {
                             if (localVisit != null)
+                            {
                                 localVisit(e.Oldest);
+                            }
                         }
                         L.Enqueue(n);
                         return true;

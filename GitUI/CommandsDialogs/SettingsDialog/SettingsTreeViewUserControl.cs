@@ -48,7 +48,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 else
                 {
                     if (!_Pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
+                    {
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
+                    }
 
                     node = parentNode.Nodes.Add(page.GetTitle());
                 }
@@ -203,9 +205,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             TreeNode node;
             if (settingsPageReference == null)
+            {
                 node = treeView1.Nodes.Count > 0 ? treeView1.Nodes[0] : null;
+            }
             else
+            {
                 _Pages2NodeMap.TryGetValue(settingsPageReference, out node);
+            }
 
             if (node != null)
             {

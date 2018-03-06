@@ -77,20 +77,32 @@ namespace GitCommands
         public bool IsRegExStringCmdPassable(string s)
         {
             if (s == null)
+            {
                 return true;
+            }
+
             foreach (char ch in s)
+            {
                 if ((uint)ch >= 0x80)
+                {
                     return false;
+                }
+            }
+
             return true;
         }
 
         private static string Fix(string version)
         {
             if (version == null)
+            {
                 return String.Empty;
+            }
 
             if (version.StartsWith(Prefix))
+            {
                 return version.Substring(Prefix.Length).Trim();
+            }
 
             return version.Trim();
         }
@@ -113,7 +125,9 @@ namespace GitCommands
             foreach (var number in numbers)
             {
                 if (Int32.TryParse(number, out var value))
+                {
                     yield return value;
+                }
             }
         }
 
@@ -125,23 +139,37 @@ namespace GitCommands
         private static int Compare(GitVersion left, GitVersion right)
         {
             if (left == null && right == null)
+            {
                 return 0;
+            }
+
             if (right == null)
+            {
                 return 1;
+            }
+
             if (left == null)
+            {
                 return -1;
+            }
 
             int compareA = left._a.CompareTo(right._a);
             if (compareA != 0)
+            {
                 return compareA;
+            }
 
             int compareB = left._b.CompareTo(right._b);
             if (compareB != 0)
+            {
                 return compareB;
+            }
 
             int compareC = left._c.CompareTo(right._c);
             if (compareC != 0)
+            {
                 return compareC;
+            }
 
             return left._d.CompareTo(right._d);
         }

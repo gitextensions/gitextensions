@@ -107,7 +107,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
                 if (currentDirectory.Parent == null)
+                {
                     return;
+                }
+
                 string parentPath = currentDirectory.Parent.FullName.TrimEnd('\\');
                 _NO_TRANSLATE_Directory.Text = parentPath;
                 _NO_TRANSLATE_Directory.Focus();

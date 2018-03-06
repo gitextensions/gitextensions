@@ -36,9 +36,13 @@ namespace TeamCityIntegration
             get
             {
                 if (EnvUtils.IsNet4FullOrHigher())
+                {
                     return null;
+                }
                 else
+                {
                     return ".Net 4 full framework required";
+                }
             }
         }
     }
@@ -99,7 +103,9 @@ namespace TeamCityIntegration
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
+            {
                 throw new InvalidOperationException("Already initialized");
+            }
 
             _buildServerWatcher = buildServerWatcher;
 

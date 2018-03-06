@@ -54,7 +54,10 @@ namespace GitUI.CommandsDialogs
             ParentsList.Items.Clear();
 
             if (Revision != null)
+            {
                 _isMerge = Module.IsMerge(Revision.Guid);
+            }
+
             panelParentsList.Visible = _isMerge;
 
             if (_isMerge)

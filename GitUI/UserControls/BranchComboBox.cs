@@ -38,7 +38,9 @@ namespace GitUI
         private void LoadBranches()
         {
             if (_branchesToSelect != null)
+            {
                 branches.Items.AddRange(_branchesToSelect.ToArray());
+            }
         }
 
         public IEnumerable<IGitRef> GetSelectedBranches()
@@ -47,9 +49,13 @@ namespace GitUI
             {
                 var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead == null)
+                {
                     MessageBox.Show(string.Format(_branchCheckoutError.Text, branch));
+                }
                 else
+                {
                     yield return gitHead;
+                }
             }
         }
 
@@ -61,7 +67,9 @@ namespace GitUI
         public void SetSelectedText(string text)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
 
             branches.Text = text;
         }
@@ -71,13 +79,19 @@ namespace GitUI
             using (FormSelectMultipleBranches formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
             {
                 foreach (var branch in GetSelectedBranches())
+                {
                     formSelectMultipleBranches.SelectBranch(branch.Name);
+                }
+
                 formSelectMultipleBranches.ShowDialog(this);
                 string branchesText = string.Empty;
                 foreach (GitRef branch in formSelectMultipleBranches.GetSelectedBranches())
                 {
                     if (!string.IsNullOrEmpty(branchesText))
+                    {
                         branchesText += " ";
+                    }
+
                     branchesText += branch.Name;
                 }
 

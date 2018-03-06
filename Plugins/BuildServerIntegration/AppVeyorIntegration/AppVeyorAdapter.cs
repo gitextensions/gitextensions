@@ -30,7 +30,10 @@ namespace AppVeyorIntegration
             get
             {
                 if (EnvUtils.IsNet4FullOrHigher())
+                {
                     return null;
+                }
+
                 return ".Net 4 full framework required";
             }
         }
@@ -64,14 +67,18 @@ namespace AppVeyorIntegration
             Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
+            {
                 throw new InvalidOperationException("Already initialized");
+            }
 
             _IsCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
             var projectNamesSetting = config.GetString("AppVeyorProjectName", null);
             if (accountName.IsNullOrWhiteSpace() && projectNamesSetting.IsNullOrWhiteSpace())
+            {
                 return;
+            }
 
             _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
             _gitHubToken = config.GetString("AppVeyorGitHubToken", null);
@@ -89,7 +96,10 @@ namespace AppVeyorIntegration
             var useAllProjets = string.IsNullOrWhiteSpace(projectNamesSetting);
             string[] projectNames = null;
             if (!useAllProjets)
+            {
                 projectNames = projectNamesSetting.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
             if (Projects.Count == 0 ||
                 (!useAllProjets && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {
@@ -109,7 +119,9 @@ namespace AppVeyorIntegration
                             task =>
                             {
                                 if (task.Result.IsNullOrWhiteSpace())
+                                {
                                     return;
+                                }
 
                                 var projects = JArray.Parse(task.Result);
                                 foreach (var project in projects)
@@ -206,7 +218,10 @@ namespace AppVeyorIntegration
                                 if (isGitHubRepository && pullRequestId != null)
                                 {
                                     if (!_shouldDisplayGitHubPullRequestBuilds)
+                                    {
                                         return null;
+                                    }
+
                                     try
                                     {
                                         var githubCommitUrl = string.Format(GitHubUrl, repoName, b["commitId"]);
@@ -215,7 +230,10 @@ namespace AppVeyorIntegration
                                             {
                                                 var content = task2.Result;
                                                 if (string.IsNullOrWhiteSpace(content))
+                                                {
                                                     return;
+                                                }
+
                                                 var commitResult = JObject.Parse(content);
                                                 commitSha1 = commitResult["parents"][1]["sha"].ToObject<string>();
                                             });
@@ -239,7 +257,9 @@ namespace AppVeyorIntegration
                                 var status = ParseBuildStatus(b["status"].ToObject<string>());
                                 long? duration = null;
                                 if (status == BuildInfo.BuildStatus.Success || status == BuildInfo.BuildStatus.Failure)
+                                {
                                     duration = GetBuildDuration(b);
+                                }
 
                                 return new BuildDetails
                                 {
@@ -300,7 +320,9 @@ namespace AppVeyorIntegration
             try
             {
                 if (_allBuilds == null)
+                {
                     return;
+                }
 
                 // Display all builds found
                 foreach (var build in _allBuilds)
@@ -370,7 +392,10 @@ namespace AppVeyorIntegration
         {
             var buildDetailsParsed = FetchBuildDetailsManagingVersionUpdate(buildDetails, cancellationToken);
             if (buildDetailsParsed == null)
+            {
                 return;
+            }
+
             var buildData = buildDetailsParsed["build"];
             var buildDescription = buildData["jobs"].Last();
 
@@ -391,7 +416,10 @@ namespace AppVeyorIntegration
                 int nbSkippedTests = nbTests - buildDescription["passedTestsCount"].ToObject<int>();
                 testResults = " : " + nbTests + " tests";
                 if (nbFailedTests != 0 || nbSkippedTests != 0)
+                {
                     testResults += string.Format(" ( {0} failed, {1} skipped )", nbFailedTests, nbSkippedTests);
+                }
+
                 buildDetails.TestsResultText = " " + testResults;
             }
         }
@@ -459,10 +487,14 @@ namespace AppVeyorIntegration
             var retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
 
             if (retry)
+            {
                 return GetStreamAsync(httpClient, restServicePath, cancellationToken);
+            }
 
             if (task.Status == TaskStatus.RanToCompletion && task.Result.IsSuccessStatusCode)
+            {
                 return task.Result.Content.ReadAsStreamAsync();
+            }
 
             return null;
         }
@@ -476,7 +508,10 @@ namespace AppVeyorIntegration
                 task =>
                 {
                     if (task.Status != TaskStatus.RanToCompletion)
+                    {
                         return string.Empty;
+                    }
+
                     using (var responseStream = task.Result)
                     {
                         return new StreamReader(responseStream).ReadToEnd();

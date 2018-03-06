@@ -35,7 +35,9 @@ namespace GitUI
         {
             _timer.Stop();
             if (flush)
+            {
                 _timer_Elapsed(null, null);
+            }
         }
 
         /// <summary>
@@ -54,7 +56,10 @@ namespace GitUI
             lock (_textToAdd)
             {
                 if (_textToAdd.Length > 0)
+                {
                     _doOutput?.Invoke(_textToAdd.ToString());
+                }
+
                 Clear();
             }
         }

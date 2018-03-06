@@ -139,7 +139,10 @@ namespace GitUI
             BeforeProcessStart();
             string QuotedProcessString = ProcessString;
             if (QuotedProcessString.IndexOf(' ') != -1)
+            {
                 QuotedProcessString = QuotedProcessString.Quote();
+            }
+
             AddMessageLine(QuotedProcessString + " " + ProcessArguments);
 
             try
@@ -200,7 +203,9 @@ namespace GitUI
                     isError = exitcode != 0;
 
                     if (HandleOnExit(ref isError))
+                    {
                         return;
+                    }
                 }
                 catch
                 {
@@ -218,16 +223,22 @@ namespace GitUI
         private void DataReceivedCore(object sender, TextEventArgs e)
         {
             if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+            {
                 SetProgress(e.Text);
+            }
             else
             {
                 const string ansiSuffix = "\u001B[K";
                 string line = e.Text.Replace(ansiSuffix, "");
 
                 if (ConsoleOutput.IsDisplayingFullProcessOutput)
+                {
                     OutputLog.Append(line); // To the log only, display control displays it by itself
+                }
                 else
+                {
                     AppendOutput(line); // Both to log and display control
+                }
             }
 
             DataReceived(sender, e);

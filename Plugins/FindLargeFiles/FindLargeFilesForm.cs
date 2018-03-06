@@ -49,7 +49,9 @@ namespace FindLargeFiles
                         revData.Add(commit, date);
                     }
                     else
+                    {
                         date = revData[commit];
+                    }
 
                     if (!_list.TryGetValue(d.SHA, out var curGitObject))
                     {
@@ -60,7 +62,10 @@ namespace FindLargeFiles
                     else if (!curGitObject.Commit.Contains(commit))
                     {
                         if (curGitObject.LastCommitDate < date)
+                        {
                             curGitObject.LastCommitDate = date;
+                        }
+
                         BranchesGrid.Invoke((Action)(() => { _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject)); }));
                         curGitObject.Commit.Add(commit);
                     }
@@ -122,7 +127,9 @@ namespace FindLargeFiles
                     {
                         Int32.TryParse(data[3], out var size);
                         if (size >= thresholdSize)
+                        {
                             yield return new GitObject(data[2], dataPack[1], size, rev);
+                        }
                     }
                 }
             }

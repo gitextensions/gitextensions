@@ -56,7 +56,9 @@ namespace GitUI.CommandsDialogs
             public static LostObject TryParse(GitModule aModule, string raw)
             {
                 if (string.IsNullOrEmpty(raw))
+                {
                     throw new ArgumentException("Raw source must be non-empty string", raw);
+                }
 
                 var patternMatch = RawDataRegex.Match(raw);
 
@@ -68,7 +70,9 @@ namespace GitUI.CommandsDialogs
 
                 // skip unsupported raw data format (for end users)
                 if (!patternMatch.Success)
+                {
                     return null;
+                }
 
                 var matchedGroups = patternMatch.Groups;
                 Debug.Assert(matchedGroups[4].Success);
@@ -95,7 +99,9 @@ namespace GitUI.CommandsDialogs
             private static string GetLostCommitLog(GitModule aModule, string hash)
             {
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
+                {
                     throw new ArgumentOutOfRangeException(nameof(hash), hash, "Hash must be a valid SHA-1 hash.");
+                }
 
                 return aModule.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
             }
@@ -103,7 +109,9 @@ namespace GitUI.CommandsDialogs
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)
             {
                 if (!matchedGroup[3].Success)
+                {
                     return LostObjectType.Other;
+                }
 
                 switch (matchedGroup[3].Value)
                 {

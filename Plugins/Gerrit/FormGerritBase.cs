@@ -24,7 +24,9 @@ namespace Gerrit
         protected override void OnLoad(EventArgs e)
         {
             if (DesignMode)
+            {
                 return;
+            }
 
             Settings = GerritSettings.Load(Module);
 

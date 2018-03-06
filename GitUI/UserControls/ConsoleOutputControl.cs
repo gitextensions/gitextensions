@@ -30,7 +30,10 @@ namespace GitUI.UserControls
         public static ConsoleOutputControl CreateInstance()
         {
             if ((ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment) && (AppSettings.UseConsoleEmulatorForCommands))
+            {
                 return new ConsoleEmulatorOutputControl();
+            }
+
             return new EditboxBasedConsoleOutputControl();
         }
 
@@ -45,7 +48,10 @@ namespace GitUI.UserControls
         protected void FireDataReceived([NotNull] TextEventArgs args)
         {
             if (args == null)
+            {
                 throw new ArgumentNullException(nameof(args));
+            }
+
             DataReceived?.Invoke(this, args);
         }
 

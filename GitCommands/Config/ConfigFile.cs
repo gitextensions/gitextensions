@@ -46,7 +46,9 @@ namespace GitCommands.Config
         private void Load()
         {
             if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
+            {
                 return;
+            }
 
             ConfigFileParser parser = new ConfigFileParser(this);
             parser.Parse();
@@ -69,7 +71,9 @@ namespace GitCommands.Config
             value = value.Replace("\t", "\\t");
 
             if (value.IndexOfAny(CommentChars) != -1 || !value.Trim().Equals(value))
+            {
                 value = value.Quote();
+            }
 
             return value;
         }
@@ -154,7 +158,9 @@ namespace GitCommands.Config
             var keyIndex = FindKeyIndex(setting);
 
             if (keyIndex < 0 || keyIndex == setting.Length)
+            {
                 throw new Exception("Invalid setting name: " + setting);
+            }
 
             return keyIndex;
         }
@@ -183,7 +189,9 @@ namespace GitCommands.Config
         public string GetValue(string setting, string defaultValue)
         {
             if (String.IsNullOrEmpty(setting))
+            {
                 throw new ArgumentNullException();
+            }
 
             var keyIndex = FindAndCheckKeyIndex(setting);
 
@@ -193,7 +201,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
+            {
                 return defaultValue;
+            }
 
             return configSection.GetValue(keyName, defaultValue);
         }
@@ -213,7 +223,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
+            {
                 return new List<string>();
+            }
 
             return configSection.GetValues(keyName);
         }
@@ -245,7 +257,9 @@ namespace GitCommands.Config
         public void AddConfigSection(IConfigSection configSection)
         {
             if (FindConfigSection(configSection) != null)
+            {
                 throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
+            }
 
             ConfigSections.Add(configSection);
         }
@@ -255,7 +269,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
+            {
                 return;
+            }
 
             ConfigSections.Remove(configSection);
         }
@@ -278,7 +294,9 @@ namespace GitCommands.Config
             foreach (var configSection in ConfigSections)
             {
                 if (configSectionToFind.Equals(configSection))
+                {
                     return configSection;
+                }
             }
             return null;
         }
@@ -340,8 +358,10 @@ namespace GitCommands.Config
                 _token.Clear();
 
                 if (_section == null)
+                {
                     throw new Exception(
                         string.Format("Key {0} in configfile {1} is not in a section.", _key, FileName));
+                }
             }
 
             private void NewValue()
@@ -352,8 +372,10 @@ namespace GitCommands.Config
                 string value = _token.ToString();
 
                 if (_key.IsNullOrEmpty())
+                {
                     throw new Exception(
                         string.Format("Value {0} for empty key in configfile {1}.", value, FileName));
+                }
 
                 _section.AddValue(_key, value);
 
@@ -392,7 +414,9 @@ namespace GitCommands.Config
                     }
 
                     if (c == '"')
+                    {
                         _quotedStringInSection = !_quotedStringInSection;
+                    }
 
                     switch (c)
                     {
@@ -418,7 +442,10 @@ namespace GitCommands.Config
                             return ReadComment;
                         }
                         else
+                        {
                             return ReadUnknown;
+                        }
+
                     default:
                         _token.Append(c);
                         return ReadComment;

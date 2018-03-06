@@ -113,7 +113,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void Remove_Click(object sender, EventArgs e)
         {
             if (SelectedLinkDefinition == null)
+            {
                 return;
+            }
 
             int idx = _NO_TRANSLATE_Categories.SelectedIndex;
 

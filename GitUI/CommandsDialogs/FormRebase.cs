@@ -41,7 +41,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             if (AppSettings.AlwaysShowAdvOpt)
+            {
                 ShowOptions_LinkClicked(null, null);
+            }
         }
 
         public FormRebase(GitUICommands aCommands, string defaultBranch)
@@ -70,7 +72,9 @@ namespace GitUI.CommandsDialogs
             Branches.DisplayMember = "Name";
 
             if (_defaultBranch != null)
+            {
                 Branches.Text = _defaultBranch;
+            }
 
             Branches.Select();
 
@@ -103,7 +107,9 @@ namespace GitUI.CommandsDialogs
             if (Module.InTheMiddleOfRebase())
             {
                 if (Height < 200)
+                {
                     Height = 500;
+                }
 
                 Branches.Enabled = false;
                 Ok.Enabled = false;
@@ -172,7 +178,9 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
+            {
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -185,7 +193,9 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
+            {
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -198,7 +208,9 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
+            {
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -232,11 +244,15 @@ namespace GitUI.CommandsDialogs
 
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
             if (dialogResult.Trim() == "Current branch a is up to date.")
+            {
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
+            }
 
             if (!Module.InTheMiddleOfAction() &&
                 !Module.InTheMiddleOfPatch())
+            {
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();

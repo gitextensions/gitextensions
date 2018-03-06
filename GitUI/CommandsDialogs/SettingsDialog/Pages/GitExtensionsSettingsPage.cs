@@ -59,7 +59,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
             AppSettings.SmtpServer = SmtpServer.Text;
             if (int.TryParse(SmtpServerPort.Text, out var port))
+            {
                 AppSettings.SmtpPort = port;
+            }
+
             AppSettings.SmtpUseSsl = chkUseSSL.Checked;
             AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
@@ -77,12 +80,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (!chkUseSSL.Checked)
             {
                 if (SmtpServerPort.Text == "587")
+                {
                     SmtpServerPort.Text = "465";
+                }
             }
             else
             {
                 if (SmtpServerPort.Text == "465")
+                {
                     SmtpServerPort.Text = "587";
+                }
             }
         }
 

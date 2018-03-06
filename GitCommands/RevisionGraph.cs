@@ -145,7 +145,9 @@ namespace GitCommands
             arguments.Append(AppSettings.OrderRevisionByDate ? " --date-order" : " --topo-order");
 
             if (AppSettings.ShowReflogReferences)
+            {
                 arguments.Append(" --reflog");
+            }
 
             if (RefsOptions.HasFlag(RefsFiltringOptions.All))
             {
@@ -156,31 +158,54 @@ namespace GitCommands
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Branches))
                 {
                     if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1)
+                    {
                         arguments.Append(" --branches=" + BranchFilter);
+                    }
                 }
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
+                {
                     arguments.Append(" --remotes");
+                }
+
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Tags))
+                {
                     arguments.Append(" --tags");
+                }
             }
 
             if (RefsOptions.HasFlag(RefsFiltringOptions.Boundary))
+            {
                 arguments.Append(" --boundary");
+            }
+
             if (RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes))
+            {
                 arguments.Append(" --not --glob=notes --not");
+            }
+
             if (RefsOptions.HasFlag(RefsFiltringOptions.NoMerges))
+            {
                 arguments.Append(" --no-merges");
+            }
+
             if (RefsOptions.HasFlag(RefsFiltringOptions.FirstParent))
+            {
                 arguments.Append(" --first-parent");
+            }
+
             if (RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration))
+            {
                 arguments.Append(" --simplify-by-decoration");
+            }
 
             arguments.AppendFormat(" {0} -- {1}", RevisionFilter, PathFilter);
 
             Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
 
             if (taskState.IsCancellationRequested)
+            {
                 return;
+            }
 
             _previousFileName = null;
             BeginUpdate?.Invoke(this, EventArgs.Empty);
@@ -189,7 +214,9 @@ namespace GitCommands
             foreach (string data in ReadDataBlocks(p.StandardOutput))
             {
                 if (taskState.IsCancellationRequested)
+                {
                     break;
+                }
 
                 DataReceived(data);
             }
@@ -205,7 +232,9 @@ namespace GitCommands
             {
                 int bytesRead = reader.ReadBlock(buffer, 0, bufferSize);
                 if (bytesRead == 0)
+                {
                     break;
+                }
 
                 string bufferString = new string(buffer, 0, bytesRead);
                 string[] dataBlocks = bufferString.Split(new char[] { '\0' });
@@ -263,7 +292,9 @@ namespace GitCommands
                                         && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
 
                 if (selectedHeadMergeSource != null)
+                {
                     selectedHeadMergeSource.SelectedHeadMergeSource = true;
+                }
             }
 
             return result;
@@ -287,13 +318,20 @@ namespace GitCommands
         void FinishRevision()
         {
             if (_revision != null && _revision.Guid == null)
+            {
                 _revision = null;
+            }
+
             if (_revision != null)
             {
                 if (_revision.Name == null)
+                {
                     _revision.Name = _previousFileName;
+                }
                 else
+                {
                     _previousFileName = _revision.Name;
+                }
 
                 if (_revision.Guid.Trim(_hexChars).Length == 0 &&
                     (InMemFilter == null || InMemFilter.PassThru(_revision)))
@@ -331,7 +369,9 @@ namespace GitCommands
                     _revision.Guid = lines[1];
                     {
                         if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
+                        {
                             _revision.Refs.AddRange(gitRefs);
+                        }
                     }
 
                     // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
@@ -342,14 +382,18 @@ namespace GitCommands
                     _revision.AuthorEmail = lines[5];
                     {
                         if (DateTimeUtils.TryParseUnixTime(lines[6], out var dateTime))
+                        {
                             _revision.AuthorDate = dateTime;
+                        }
                     }
 
                     _revision.Committer = lines[7];
                     _revision.CommitterEmail = lines[8];
                     {
                         if (DateTimeUtils.TryParseUnixTime(lines[9], out var dateTime))
+                        {
                             _revision.CommitDate = dateTime;
+                        }
                     }
 
                     _revision.MessageEncoding = lines[10];

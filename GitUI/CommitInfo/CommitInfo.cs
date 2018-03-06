@@ -186,7 +186,9 @@ namespace GitUI.CommitInfo
             ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
 
             if (_sortedRefs == null)
+            {
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
+            }
 
             data.ChildrenGuids = _children;
             var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
@@ -201,16 +203,24 @@ namespace GitUI.CommitInfo
 
             // No branch/tag data for artificial commands
             if (_revision.IsArtificial)
+            {
                 return;
+            }
 
             if (AppSettings.CommitInfoShowContainedInBranches)
+            {
                 ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
+            }
 
             if (AppSettings.ShowAnnotatedTagsMessages)
+            {
                 ThreadPool.QueueUserWorkItem(_ => loadAnnotatedTagInfo(_revision));
+            }
 
             if (AppSettings.CommitInfoShowContainedInTags)
+            {
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
+            }
         }
 
         private int GetRevisionHeaderHeight()
@@ -233,7 +243,9 @@ namespace GitUI.CommitInfo
         private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
         {
             if (revision == null)
+            {
                 return null;
+            }
 
             IDictionary<string, string> result = new Dictionary<string, string>();
 
@@ -269,7 +281,9 @@ namespace GitUI.CommitInfo
                     string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
 
                     if (content != null)
+                    {
                         result.Add(gitRef.LocalName, content);
+                    }
                 }
             }
 
@@ -298,7 +312,9 @@ namespace GitUI.CommitInfo
         private void loadLinksForRevision(GitRevision revision)
         {
             if (revision == null)
+            {
                 return;
+            }
 
             _linksInfo = GetLinksForRevision(revision);
             this.InvokeAsync(UpdateRevisionInfo);
@@ -318,13 +334,23 @@ namespace GitUI.CommitInfo
             public int Compare(string a, string b)
             {
                 if (a.StartsWith("remotes/"))
+                {
                     a = "refs/" + a;
+                }
                 else
+                {
                     a = _prefix + a;
+                }
+
                 if (b.StartsWith("remotes/"))
+                {
                     b = "refs/" + b;
+                }
                 else
+                {
                     b = _prefix + b;
+                }
+
                 int i = _otherList.IndexOf(a);
                 int j = _otherList.IndexOf(b);
                 return i - j;
@@ -440,11 +466,15 @@ namespace GitUI.CommitInfo
             foreach (string tag in tagNames)
             {
                 if (annotatedTagsMessages.TryGetValue(tag, out var annotatedContents))
+                {
                     result += "<u>" + tag + "</u>: " + annotatedContents + Environment.NewLine;
+                }
             }
 
             if (result.IsNullOrEmpty())
+            {
                 return string.Empty;
+            }
 
             return Environment.NewLine + result;
         }
@@ -473,7 +503,9 @@ namespace GitUI.CommitInfo
             var matches = Regex.Matches(author, @"<([\w\-\.]+@[\w\-\.]+)>");
 
             if (matches.Count == 0)
+            {
                 return;
+            }
 
             if (AppSettings.ShowAuthorGravatar)
             {
@@ -506,7 +538,9 @@ namespace GitUI.CommitInfo
                     // This shouldn't be a big problem if we're only displaying information.
                     branchIsLocal = !branch.StartsWith(remotesPrefix);
                     if (!branchIsLocal)
+                    {
                         noPrefixBranch = branch.Substring(remotesPrefix.Length);
+                    }
                 }
                 else
                 {
@@ -517,17 +551,27 @@ namespace GitUI.CommitInfo
                 {
                     string branchText;
                     if (showBranchesAsLinks)
+                    {
                         branchText = _linkFactory.CreateBranchLink(noPrefixBranch);
+                    }
                     else
+                    {
                         branchText = WebUtility.HtmlEncode(noPrefixBranch);
+                    }
+
                     links.Add(branchText);
                 }
 
                 if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
+                {
                     allowRemote = false;
+                }
             }
             if (links.Any())
+            {
                 return Environment.NewLine + WebUtility.HtmlEncode(_containedInBranches.Text) + " " + links.Join(", ");
+            }
+
             return Environment.NewLine + WebUtility.HtmlEncode(_containedInNoBranch.Text);
         }
 
@@ -537,7 +581,10 @@ namespace GitUI.CommitInfo
                 .Select(s => showBranchesAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
             if (!String.IsNullOrEmpty(tagString))
+            {
                 return Environment.NewLine + WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
+            }
+
             return Environment.NewLine + WebUtility.HtmlEncode(_containedInNoTag.Text);
         }
 
@@ -552,9 +599,13 @@ namespace GitUI.CommitInfo
             }
 
             if (linksString.IsNullOrEmpty())
+            {
                 return string.Empty;
+            }
             else
+            {
                 return Environment.NewLine + WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text) + " " + linksString;
+            }
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

@@ -71,12 +71,18 @@ namespace GitUI.Editor
         private async void BlameFileKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+            {
                 Find();
+            }
 
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
+            {
                 await _findAndReplaceForm.FindNext(true, true, "Text not found");
+            }
             else if (e.KeyCode == Keys.F3)
+            {
                 await _findAndReplaceForm.FindNext(true, false, "Text not found");
+            }
 
             VScrollBar_ValueChanged(this, e);
         }
@@ -168,9 +174,14 @@ namespace GitUI.Editor
         {
             IHighlightingStrategy highlightingStrategy = HighlightingManager.Manager.FindHighlighterForFile(filename);
             if (highlightingStrategy != null)
+            {
                 TextEditor.Document.HighlightingStrategy = highlightingStrategy;
+            }
             else
+            {
                 TextEditor.SetHighlighting("XML");
+            }
+
             TextEditor.Refresh();
         }
 
@@ -182,7 +193,9 @@ namespace GitUI.Editor
         public int GetSelectionPosition()
         {
             if (TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection.Count > 0)
+            {
                 return TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0].Offset;
+            }
 
             return TextEditor.ActiveTextAreaControl.Caret.Offset;
         }
@@ -190,7 +203,9 @@ namespace GitUI.Editor
         public int GetSelectionLength()
         {
             if (TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection.Count > 0)
+            {
                 return TextEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0].Length;
+            }
 
             return 0;
         }
@@ -292,7 +307,9 @@ namespace GitUI.Editor
         public string GetLineText(int line)
         {
             if (line >= TextEditor.Document.TotalNumberOfLines)
+            {
                 return string.Empty;
+            }
 
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
         }

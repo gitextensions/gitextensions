@@ -13,40 +13,56 @@ namespace System
         public static string SkipStr(this string str, string toSkip)
         {
             if (str == null)
+            {
                 return null;
+            }
 
             int idx;
             idx = str.IndexOf(toSkip);
             if (idx != -1)
+            {
                 return str.Substring(idx + toSkip.Length);
+            }
             else
+            {
                 return null;
+            }
         }
 
         public static String TakeUntilStr(this string str, String untilStr)
         {
             if (str == null)
+            {
                 return null;
+            }
 
             int idx;
             idx = str.IndexOf(untilStr);
             if (idx != -1)
+            {
                 return str.Substring(0, idx);
+            }
             else
+            {
                 return str;
+            }
         }
 
         public static string CommonPrefix(this string s, string other)
         {
             if (s.IsNullOrEmpty() || other.IsNullOrEmpty())
+            {
                 return string.Empty;
+            }
 
             int prefixLength = 0;
 
             foreach (char c in other)
             {
                 if (s.Length <= prefixLength || s[prefixLength] != c)
+                {
                     return s.Substring(0, prefixLength);
+                }
 
                 prefixLength++;
             }
@@ -63,11 +79,17 @@ namespace System
         public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())
+            {
                 return right;
+            }
             else if (right.IsNullOrEmpty())
+            {
                 return left;
+            }
             else
+            {
                 return left + sep + right;
+            }
         }
 
         /// <summary>
@@ -84,7 +106,9 @@ namespace System
         public static string Quote(this string s, string quotationMark)
         {
             if (s == null)
+            {
                 return string.Empty;
+            }
 
             return quotationMark + s + quotationMark;
         }
@@ -140,17 +164,25 @@ namespace System
         public static string RemoveLines(this string value, Func<string, bool> shouldRemoveLine)
         {
             if (value.IsNullOrEmpty())
+            {
                 return value;
+            }
 
             if (value[value.Length - 1] == '\n')
+            {
                 value = value.Substring(0, value.Length - 1);
+            }
 
             StringBuilder sb = new StringBuilder();
             string[] lines = value.Split('\n');
 
             foreach (string line in lines)
+            {
                 if (!shouldRemoveLine(line))
+                {
                     sb.Append(line + '\n');
+                }
+            }
 
             return sb.ToString();
         }
@@ -206,12 +238,18 @@ namespace System
         public static string ShortenTo(this string str, int maxLength)
         {
             if (str.IsNullOrEmpty())
+            {
                 return string.Empty;
+            }
 
             if (str.Length <= maxLength)
+            {
                 return str;
+            }
             else
+            {
                 return str.Substring(0, maxLength - 3) + "...";
+            }
         }
     }
 

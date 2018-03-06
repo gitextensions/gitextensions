@@ -62,7 +62,9 @@ namespace BackgroundFetch
                               {
                                   // if git not runing - start fetch immediately
                                   if (!gitModule.IsRunningGitProcess())
+                                  {
                                       return Observable.Return(i);
+                                  }
 
                                   // in other case - every 5 seconds check if git still runnnig
                                   return Observable
@@ -76,7 +78,9 @@ namespace BackgroundFetch
                               .Subscribe(i =>
                                   {
                                       if (_FetchAllSubmodules.ValueOrDefault(Settings))
+                                      {
                                           _currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
+                                      }
 
                                       var gitCmd = _GitCommand.ValueOrDefault(Settings).Trim();
                                       var msg = _currentGitUiCommands.GitCommand(gitCmd);
@@ -85,10 +89,14 @@ namespace BackgroundFetch
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {
                                               if (msg.Contains("From"))
+                                              {
                                                   _currentGitUiCommands.RepoChangedNotifier.Notify();
+                                              }
                                           }
                                           else
+                                          {
                                               _currentGitUiCommands.RepoChangedNotifier.Notify();
+                                          }
                                       }
                                   });
             }

@@ -17,7 +17,9 @@ namespace GitUI
             get
             {
                 if (_uiCommands == null)
+                {
                     throw new InvalidOperationException("UICommands is null");
+                }
 
                 return _uiCommands;
             }
@@ -57,7 +59,10 @@ namespace GitUI
         protected override bool ExecuteCommand(int command)
         {
             if (ExecuteScriptCommand(command))
+            {
                 return true;
+            }
+
             return base.ExecuteCommand(command);
         }
 

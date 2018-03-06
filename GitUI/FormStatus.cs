@@ -40,9 +40,13 @@ namespace GitUI
             InitializeComponent();
             Translate();
             if (_UseDialogSettings)
+            {
                 KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
+            }
             else
+            {
                 KeepDialogOpen.Hide();
+            }
         }
 
         public FormStatus(ProcessStart process, ProcessAbort abort)
@@ -89,7 +93,10 @@ namespace GitUI
                     if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                     {
                         if (ProgressBar.Style != ProgressBarStyle.Blocks)
+                        {
                             ProgressBar.Style = ProgressBarStyle.Blocks;
+                        }
+
                         ProgressBar.Value = Math.Min(100, progressValue);
 
                         if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
@@ -106,7 +113,9 @@ namespace GitUI
                     }
                     // Show last progress message in the title, unless it's showin in the control body already
                     if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    {
                         Text = text;
+                    }
                 };
             BeginInvoke(method, this);
         }
@@ -153,9 +162,13 @@ namespace GitUI
                 }
 
                 if (isSuccess)
+                {
                     picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
+                }
                 else
+                {
                     picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+                }
 
                 _errorOccurred = !isSuccess;
 
@@ -213,7 +226,9 @@ namespace GitUI
         private void FormStatus_Load(object sender, EventArgs e)
         {
             if (DesignMode)
+            {
                 return;
+            }
 
             if (_ModalControler != null)
             {
@@ -281,7 +296,9 @@ namespace GitUI
 
             // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
             if ((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!_errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
+            {
                 Close();
+            }
         }
 
         internal void AfterClosed()

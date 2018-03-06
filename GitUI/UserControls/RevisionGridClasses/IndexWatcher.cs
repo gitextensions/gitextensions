@@ -79,10 +79,14 @@ namespace GitUI.UserControls.RevisionGridClasses
             get
             {
                 if (!_enabled)
+                {
                     return true;
+                }
 
                 if (_gitDirPath != Module.WorkingDirGitDir)
+                {
                     return true;
+                }
 
                 return _indexChanged;
             }
@@ -120,7 +124,9 @@ namespace GitUI.UserControls.RevisionGridClasses
         private void RefreshWatcher()
         {
             if (_gitDirPath != Module.WorkingDirGitDir || _enabled != AppSettings.UseFastChecks)
+            {
                 SetFileSystemWatcher();
+            }
         }
 
         public void Dispose()

@@ -60,7 +60,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             var repository = e.Repository;
             if (repository != null)
+            {
                 Repositories.RepositoryHistory.RemoveRepository(repository);
+            }
         }
 
         private void Dashboard_Load(object sender, EventArgs e)
@@ -138,12 +140,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 var result = control as T;
 
                 if (result != null && predicate(result))
+                {
                     return result;
+                }
 
                 result = FindControl(control.Controls, predicate);
 
                 if (result != null)
+                {
                     return result;
+                }
             }
 
             return null;
@@ -270,7 +276,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             var label = sender as DashboardItem;
             if (label == null || string.IsNullOrEmpty(label.Path))
+            {
                 return;
+            }
 
             // Open urls in browser, but open directories in GitExtensions
             if (Regex.IsMatch(label.Path,
@@ -313,7 +321,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
             if (module != null)
+            {
                 OnModuleChanged(this, new GitModuleEventArgs(module));
+            }
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
@@ -339,7 +349,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             using (var frm = new FormDashboardEditor())
+            {
                 frm.ShowDialog(this);
+            }
+
             Refresh();
         }
 
@@ -349,7 +362,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (fileNameArray != null)
             {
                 if (fileNameArray.Length != 1)
+                {
                     return;
+                }
 
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
@@ -362,7 +377,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                         if (dialogResult == DialogResult.No)
+                        {
                             return;
+                        }
                     }
 
                     Repositories.AddMostRecentRepository(module.WorkingDir);
@@ -375,7 +392,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             {
                 var lines = text.Split('\n');
                 if (lines.Length != 1)
+                {
                     return;
+                }
+
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {
@@ -390,7 +410,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (fileNameArray != null)
             {
                 if (fileNameArray.Length != 1)
+                {
                     return;
+                }
+
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
                 {
@@ -404,7 +427,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             {
                 var lines = text.Split('\n');
                 if (lines.Length != 1)
+                {
                     return;
+                }
+
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {

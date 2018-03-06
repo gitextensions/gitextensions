@@ -87,13 +87,25 @@ namespace GitUIPluginInterfaces
 
             var type = typeof(T);
             if (type == typeof(int))
+            {
                 return int.Parse(value);
+            }
+
             if (type == typeof(float))
+            {
                 return float.Parse(value);
+            }
+
             if (type == typeof(double))
+            {
                 return double.Parse(value);
+            }
+
             if (type == typeof(long))
+            {
                 return long.Parse(value);
+            }
+
             return null;
         }
 

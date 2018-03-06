@@ -74,7 +74,9 @@ namespace GitUI.CommandsDialogs
                 _removeDanglingObjectsQuestion.Text,
                 _removeDanglingObjectsCaption.Text,
                 MessageBoxButtons.YesNo) != DialogResult.Yes)
+            {
                 return;
+            }
 
             FormProcess.ShowDialog(this, "prune");
             UpdateLostObjects();
@@ -91,7 +93,9 @@ namespace GitUI.CommandsDialogs
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
+                {
                     UpdateLostObjects();
+                }
             }
         }
 
@@ -101,7 +105,9 @@ namespace GitUI.CommandsDialogs
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
+                {
                     UpdateLostObjects();
+                }
             }
         }
 
@@ -117,7 +123,9 @@ namespace GitUI.CommandsDialogs
             var restoredObjectsCount = CreateLostFoundTags();
 
             if (restoredObjectsCount == 0)
+            {
                 return;
+            }
 
             MessageBox.Show(this, string.Format(_xTagsCreated.Text, restoredObjectsCount), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -165,10 +173,14 @@ namespace GitUI.CommandsDialogs
         {
             // ignore double click by header, user just wants to change sorting order
             if (e.RowIndex == -1)
+            {
                 return;
+            }
             // ignore double click by checkbox, user probably wanted to change checked state
             if (e.ColumnIndex == 0)
+            {
                 return;
+            }
 
             ViewCurrentItem();
         }
@@ -211,7 +223,10 @@ namespace GitUI.CommandsDialogs
         private bool IsMatchToFilter(LostObject lostObject)
         {
             if (ShowOnlyCommits.Checked)
+            {
                 return lostObject.ObjectType == LostObjectType.Commit;
+            }
+
             return true;
         }
 
@@ -220,13 +235,20 @@ namespace GitUI.CommandsDialogs
             var options = string.Empty;
 
             if (Unreachable.Checked)
+            {
                 options += " --unreachable";
+            }
 
             if (FullCheck.Checked)
+            {
                 options += " --full";
+            }
 
             if (NoReflogs.Checked)
+            {
                 options += " --no-reflogs";
+            }
+
             return options;
         }
 
@@ -234,9 +256,14 @@ namespace GitUI.CommandsDialogs
         {
             var currenItem = CurrentItem;
             if (currenItem == null)
+            {
                 return;
+            }
+
             using (var frm = new FormEdit(Module.ShowSha1(currenItem.Hash)))
+            {
                 frm.ShowDialog(this);
+            }
         }
 
         private int CreateLostFoundTags()
@@ -269,7 +296,9 @@ namespace GitUI.CommandsDialogs
             foreach (var head in Module.GetRefs(true, false))
             {
                 if (head.Name.StartsWith(RestoredObjectsTagPrefix))
+                {
                     Module.DeleteTag(head.Name);
+                }
             }
         }
 
@@ -277,7 +306,9 @@ namespace GitUI.CommandsDialogs
         {
             var currentItem = CurrentItem;
             if (currentItem == null)
+            {
                 throw new InvalidOperationException("There are no current selected item.");
+            }
 
             return new GitRevision(currentItem.Hash);
         }

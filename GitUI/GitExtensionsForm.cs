@@ -53,7 +53,9 @@ namespace GitUI
         void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_enablePositionRestore)
+            {
                 SavePosition(GetType().Name);
+            }
 
             if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
@@ -116,7 +118,9 @@ namespace GitUI
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
             if (colorIndex == (int)ColorIndex.Unknown)
+            {
                 colorIndex = 0;
+            }
 
             Icon appIcon;
             if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
@@ -193,13 +197,17 @@ namespace GitUI
         protected override void OnLoad(EventArgs e)
         {
             if (_enablePositionRestore)
+            {
                 RestorePosition(GetType().Name);
+            }
 
             // Should be called after restoring position
             base.OnLoad(e);
 
             if (!CheckComponent(this))
+            {
                 OnRuntimeLoad(e);
+            }
         }
 
         /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
@@ -220,14 +228,18 @@ namespace GitUI
         {
             if (!Visible ||
                 WindowState == FormWindowState.Minimized)
+            {
                 return;
+            }
 
             _windowCentred = (StartPosition == FormStartPosition.CenterParent);
 
             var position = LookupWindowPosition(name);
 
             if (position == null)
+            {
                 return;
+            }
 
             int deviceDpi = GetCurrentDeviceDpi();
             float scale = 1.0f * deviceDpi / position.DeviceDpi;
@@ -248,7 +260,10 @@ namespace GitUI
                 location.Y = (int)(location.Y * scale);
                 Rectangle? rect = FindWindowScreen(location);
                 if (rect != null)
+                {
                     location.Y = rect.Value.Y;
+                }
+
                 DesktopLocation = location;
             }
             else
@@ -258,7 +273,9 @@ namespace GitUI
                     Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
             if (WindowState != position.State)
+            {
                 WindowState = position.State;
+            }
         }
 
         static Rectangle? FindWindowScreen(Point location)
@@ -268,7 +285,9 @@ namespace GitUI
                                   select screen.WorkingArea))
             {
                 if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                {
                     return null; // title in screen
+                }
 
                 int midPointX = (rect.X + rect.Width / 2);
                 int midPointY = (rect.Y + rect.Height / 2);
@@ -323,13 +342,18 @@ namespace GitUI
 
                 // Write to the user settings:
                 if (_windowPositionList == null)
+                {
                     _windowPositionList = WindowPositionList.Load();
+                }
+
                 WindowPosition windowPosition = _windowPositionList.Get(name);
                 // Don't save location when we center modal form
                 if (windowPosition != null && Owner != null && _windowCentred)
                 {
                     if (rectangle.Width <= windowPosition.Rect.Width && rectangle.Height <= windowPosition.Rect.Height)
+                    {
                         rectangle.Location = windowPosition.Rect.Location;
+                    }
                 }
 
                 int deviceDpi = GetCurrentDeviceDpi();
@@ -357,11 +381,15 @@ namespace GitUI
             try
             {
                 if (_windowPositionList == null)
+                {
                     _windowPositionList = WindowPositionList.Load();
+                }
 
                 var position = _windowPositionList?.Get(name);
                 if (position == null || position.Rect.IsEmpty)
+                {
                     return null;
+                }
 
                 if (Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
                 {

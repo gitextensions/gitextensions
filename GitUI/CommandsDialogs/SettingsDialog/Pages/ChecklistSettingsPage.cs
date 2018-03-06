@@ -600,7 +600,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGitExtensionRegistrySettings()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return true;
+            }
 
             ShellExtensionsRegistered.Visible = true;
 
@@ -633,7 +635,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGitExtensionsInstall()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return true;
+            }
 
             GitExtensionsInstall.Visible = true;
             if (string.IsNullOrEmpty(AppSettings.GetInstallDir()))

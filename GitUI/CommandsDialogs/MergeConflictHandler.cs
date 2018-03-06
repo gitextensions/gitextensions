@@ -17,7 +17,10 @@ namespace GitUI.CommandsDialogs
             }
 
             if (offerUpdateSubmodules)
+            {
                 aCommands.UpdateSubmodules(owner);
+            }
+
             return false;
         }
 

@@ -55,7 +55,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private IEnumerable<ISetting> GetSettings()
         {
             if (_gitPlugin == null)
+            {
                 throw new ApplicationException();
+            }
 
             return _gitPlugin.GetSettings();
         }

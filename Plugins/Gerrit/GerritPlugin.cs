@@ -67,7 +67,9 @@ namespace Gerrit
         private void UpdateGerritMenuItems(GitUIBaseEventArgs e)
         {
             if (!_initialized)
+            {
                 Initialize((Form)e.OwnerForm);
+            }
 
             // Correct enabled/visibility of our menu/tool strip items.
 
@@ -95,12 +97,16 @@ namespace Gerrit
         private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force)
         {
             if (gitModule == null)
+            {
                 throw new ArgumentNullException("gitDirectory");
+            }
 
             string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
 
             if (!File.Exists(path))
+            {
                 return false;
+            }
 
             // We don't want to read the contents of the commit-msg every time
             // we call this method, so we cache the result if we aren't
@@ -109,7 +115,9 @@ namespace Gerrit
             lock (_syncRoot)
             {
                 if (!force && _validatedHooks.TryGetValue(path, out var isValid))
+                {
                     return isValid;
+                }
 
                 try
                 {
@@ -148,19 +156,28 @@ namespace Gerrit
             var toolStrip = FindControl<ToolStrip>(form, p => p.Name == "ToolStrip");
 
             if (menuStrip == null)
+            {
                 throw new Exception("Cannot find main menu");
+            }
+
             if (toolStrip == null)
+            {
                 throw new Exception("Cannot find main tool strip");
+            }
 
             // Create the Edit .gitreview button.
 
             var repositoryMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "repositoryToolStripMenuItem");
             if (repositoryMenu == null)
+            {
                 throw new Exception("Cannot find Repository menu");
+            }
 
             var mailMapMenuItem = repositoryMenu.DropDownItems.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "editmailmapToolStripMenuItem");
             if (mailMapMenuItem == null)
+            {
                 throw new Exception("Cannot find mailmap menu item");
+            }
 
             _gitReviewMenuItem = new ToolStripMenuItem
             {
@@ -177,7 +194,9 @@ namespace Gerrit
 
             var pushMenuItem = toolStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "toolStripButtonPush");
             if (pushMenuItem == null)
+            {
                 throw new Exception("Cannot find push menu item");
+            }
 
             int nextIndex = toolStrip.Items.IndexOf(pushMenuItem) + 1;
 
@@ -263,7 +282,9 @@ namespace Gerrit
                 MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
+            {
                 InstallCommitMsgHook();
+            }
 
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
@@ -273,7 +294,9 @@ namespace Gerrit
             var settings = GerritSettings.Load(_mainForm, _gitUiCommands.GitModule);
 
             if (settings == null)
+            {
                 return;
+            }
 
             string path = Path.Combine(
                 _gitUiCommands.GitModule.ResolveGitInternalPath("hooks"),
@@ -326,17 +349,23 @@ namespace Gerrit
             // in a format like "C0755 4248 commit-msg".
 
             if (String.IsNullOrEmpty(content))
+            {
                 return null;
+            }
 
             int index = content.IndexOf('\n');
 
             if (index == -1)
+            {
                 return null;
+            }
 
             string header = content.Substring(0, index);
 
             if (!header.EndsWith(" commit-msg"))
+            {
                 return null;
+            }
 
             // This looks like a valid scp response; return the rest of the
             // response.
@@ -350,7 +379,9 @@ namespace Gerrit
             Debug.Assert(index == content.Length - 1);
 
             if (index != -1)
+            {
                 content = content.Substring(0, index);
+            }
 
             return content;
         }
@@ -379,12 +410,16 @@ namespace Gerrit
                 var result = control as T;
 
                 if (result != null && predicate(result))
+                {
                     return result;
+                }
 
                 result = FindControl(control.Controls, predicate);
 
                 if (result != null)
+                {
                     return result;
+                }
             }
 
             return null;

@@ -81,8 +81,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             cmbSettings.Items.Clear();
             if (settings != null)
+            {
                 foreach (var setting in settings)
+                {
                     cmbSettings.Items.Add(setting);
+                }
+            }
         }
 
         private void UpdateListViewItems(HotkeySettings setting)
@@ -112,7 +116,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void ControlHotkeys_Load(object sender, EventArgs e)
         {
             if (DesignMode)
+            {
                 return;
+            }
+
             ReloadSettings();
         }
 

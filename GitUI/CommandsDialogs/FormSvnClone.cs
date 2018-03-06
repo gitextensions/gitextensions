@@ -50,7 +50,9 @@ namespace GitUI.CommandsDialogs
                 ////Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);
 
                 if (!Directory.Exists(dirTo))
+                {
                     Directory.CreateDirectory(dirTo);
+                }
 
                 var authorsfile = _NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetauthorsfile = false;
@@ -64,7 +66,9 @@ namespace GitUI.CommandsDialogs
                 }
 
                 if (!int.TryParse(tbFrom.Text, out var from))
+                {
                     from = 0;
+                }
 
                 var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand,
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_SvnFrom.Text, dirTo,
@@ -74,9 +78,14 @@ namespace GitUI.CommandsDialogs
                     cbBranches.Checked ? _NO_TRANSLATE_tbBranches.Text : null));
 
                 if (errorOccurred || Module.InTheMiddleOfPatch())
+                {
                     return;
+                }
+
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
+                {
                     _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                }
 
                 Close();
             }
@@ -115,7 +124,9 @@ namespace GitUI.CommandsDialogs
             using (var dialog = new OpenFileDialog { InitialDirectory = _NO_TRANSLATE_destinationComboBox.Text })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
                     _NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+                }
             }
         }
 
@@ -126,7 +137,9 @@ namespace GitUI.CommandsDialogs
             {
                 _NO_TRANSLATE_destinationComboBox.Items.Clear();
                 foreach (Repository repo in repos)
+                {
                     _NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
+                }
             }
         }
 
@@ -160,7 +173,9 @@ namespace GitUI.CommandsDialogs
             path = path.TrimEnd(new[] { '\\', '/' });
 
             if (path.Contains("\\") || path.Contains("/"))
+            {
                 _NO_TRANSLATE_subdirectoryTextBox.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+            }
         }
     }
 }

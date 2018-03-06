@@ -70,7 +70,9 @@ namespace GitUI.RevisionGridClasses
                 _currentRow.Clear();
 
                 foreach (Node aNode in _sourceGraph.GetRefs())
+                {
                     Update(aNode);
+                }
             }
 
             public bool CacheTo(int row)
@@ -87,7 +89,9 @@ namespace GitUI.RevisionGridClasses
             public void Update(Node aNode)
             {
                 if (aNode.Descendants.Count != 0)
+                {
                     return;
+                }
 
                 // This node is a head, create a new lane for it
                 Node h = aNode;
@@ -143,7 +147,9 @@ namespace GitUI.RevisionGridClasses
                 {
                     // DEBUG: The check above didn't find anything, but should have
                     if (Debugger.IsAttached)
+                    {
                         Debugger.Break();
+                    }
                     ////Node[] topo = this.sourceGraph.TopoSortedNodes();
                     return false;
                 }
@@ -205,6 +211,7 @@ namespace GitUI.RevisionGridClasses
                 // Look for crossing lanes
                 //   but only when there are not too many lanes taking up too much performance
                 if (_currentRow.Count < 10)
+                {
                     for (int lane = 0; lane < _currentRow.Count; lane++)
                     {
                         for (int item = 0; item < _currentRow.LaneInfoCount(lane); item++)
@@ -233,6 +240,7 @@ namespace GitUI.RevisionGridClasses
                             }
                         }
                     }
+                }
 
                 // Keep the merge lanes next to each other
                 ////int mergeFromCount = currentRow.LaneInfoCount(currentRow.NodeLane);
@@ -273,7 +281,9 @@ namespace GitUI.RevisionGridClasses
                     if (row.Node.InLane != int.MaxValue)
                     {
                         if (Debugger.IsAttached)
+                        {
                             Debugger.Break();
+                        }
                     }
 
                     row.Node.InLane = _laneRows.Count;
@@ -373,7 +383,10 @@ namespace GitUI.RevisionGridClasses
                     for (int i = 0; i < _laneNodes.Count; i++)
                     {
                         if (i == curLane || curLane >= _laneNodes.Count)
+                        {
                             continue;
+                        }
+
                         if (_laneNodes[i].Current == _laneNodes[curLane].Current)
                         {
                             int left;
@@ -532,10 +545,16 @@ namespace GitUI.RevisionGridClasses
                     for (int i = 0; i < Count; i++)
                     {
                         if (i == NodeLane)
+                        {
                             s += "*";
+                        }
+
                         s += "{";
                         for (int j = 0; j < LaneInfoCount(i); j++)
+                        {
                             s += " " + this[i, j];
+                        }
+
                         s += " }, ";
                     }
                     s += Node;
@@ -790,7 +809,10 @@ namespace GitUI.RevisionGridClasses
                     get
                     {
                         if (_node != null)
+                        {
                             return 1 - _index;
+                        }
+
                         return Junction?.NodesCount - _index ?? 0;
                     }
                 }
@@ -813,7 +835,9 @@ namespace GitUI.RevisionGridClasses
                     _index++;
 
                     if (Junction != null && _index >= Junction.NodesCount)
+                    {
                         Junction.CurrentState = Junction.State.Processed;
+                    }
                 }
 
                 public override string ToString()
@@ -915,10 +939,16 @@ namespace GitUI.RevisionGridClasses
                     for (int i = 0; i < Count; i++)
                     {
                         if (i == NodeLane)
+                        {
                             s += "*";
+                        }
+
                         s += "{";
                         for (int j = 0; j < LaneInfoCount(i); j++)
+                        {
                             s += " " + this[i, j];
+                        }
+
                         s += " }, ";
                     }
                     s += Node;

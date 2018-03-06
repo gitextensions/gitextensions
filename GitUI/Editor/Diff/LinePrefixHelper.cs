@@ -36,9 +36,13 @@ namespace GitUI.Editor.Diff
                 else
                 {
                     if (found)
+                    {
                         break;
+                    }
                     else
+                    {
                         beginIndex++;
+                    }
                 }
             }
 
@@ -49,7 +53,9 @@ namespace GitUI.Editor.Diff
         {
             Debug.Assert(prefixStr.Length <= 2 && prefixStr.Length >= 1);
             if (prefixStr.Length == 1)
+            {
                 return document.GetCharAt(lineOffset) == prefixStr[0];
+            }
 
             if (document.TextLength <= lineOffset + 1)
             {

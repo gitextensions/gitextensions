@@ -77,7 +77,9 @@ namespace GitUI.UserControls
         {
             base.Dispose(disposing);
             if (disposing)
+            {
                 _terminal?.Dispose();
+            }
         }
 
         public override void StartProcess(string command, string arguments, string workdir, Dictionary<string, string> envVariables)

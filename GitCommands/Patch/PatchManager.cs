@@ -22,19 +22,27 @@ namespace PatchApply
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
+            {
                 return null;
+            }
 
             string body = selectedChunks.ToResetUnstagedLinesPatch();
 
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            {
                 body = body.Replace("\r", "");
+            }
 
             if (header == null || body == null)
+            {
                 return null;
+            }
             else
+            {
                 return GetPatchBytes(header, body, fileContentEncoding);
+            }
         }
 
         public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
@@ -42,16 +50,23 @@ namespace PatchApply
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
 
             if (selectedChunks == null)
+            {
                 return null;
+            }
 
             // if file is new, --- /dev/null has to be replaced by --- a/fileName
             if (isNewFile)
+            {
                 header = CorrectHeaderForNewFile(header);
+            }
 
             string body = selectedChunks.ToStagePatch(staged, false);
 
             if (header == null || body == null)
+            {
                 return null;
+            }
+
             return GetPatchBytes(header, body, fileContentEncoding);
         }
 
@@ -60,17 +75,25 @@ namespace PatchApply
             string[] headerLines = header.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
+            {
                 if (line.StartsWith("+++"))
+                {
                     pppLine = "---" + line.Substring(3);
+                }
+            }
 
             StringBuilder sb = new StringBuilder();
 
             foreach (string line in headerLines)
             {
                 if (line.StartsWith("---"))
+                {
                     sb.Append(pppLine + "\n");
+                }
                 else if (!line.StartsWith("new file mode"))
+                {
                     sb.Append(line + "\n");
+                }
             }
 
             return sb.ToString();
@@ -90,9 +113,14 @@ namespace PatchApply
             sb.Append("index 0000000..0000000");
             sb.Append("\n");
             if (reset)
+            {
                 sb.Append("--- a/" + newFileName);
+            }
             else
+            {
                 sb.Append("--- /dev/null");
+            }
+
             sb.Append("\n");
             sb.Append("+++ b/" + newFileName);
             sb.Append("\n");
@@ -102,18 +130,26 @@ namespace PatchApply
             ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
 
             if (selectedChunks == null)
+            {
                 return null;
+            }
 
             string body = selectedChunks.ToStagePatch(false, true);
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            {
                 body = body.Replace("\r", "");
+            }
 
             if (header == null || body == null)
+            {
                 return null;
+            }
             else
+            {
                 return GetPatchBytes(header, body, fileContentEncoding);
+            }
         }
 
         public static byte[] GetPatchBytes(string header, string body, Encoding fileContentEncoding)
@@ -153,12 +189,16 @@ namespace PatchApply
             Patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
+            {
                 return;
+            }
 
             foreach (Patch patchApply in Patches)
             {
                 if (patchApply.Apply)
+                {
                     patchApply.ApplyPatch(filesContentEncoding);
+                }
             }
         }
 
@@ -218,7 +258,9 @@ namespace PatchApply
             removedCount += PreContext.Count + PostContext.Count;
 
             foreach (PatchLine line in PreContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
 
             for (int i = 0; i < RemovedLines.Count; i++)
             {
@@ -234,9 +276,14 @@ namespace PatchApply
                 else if (!staged)
                 {
                     if (inPostPart)
+                    {
                         removePart = removePart.Combine("\n", " " + removedLine.Text.Substring(1));
+                    }
                     else
+                    {
                         prePart = prePart.Combine("\n", " " + removedLine.Text.Substring(1));
+                    }
+
                     addedCount++;
                     removedCount++;
                 }
@@ -259,9 +306,14 @@ namespace PatchApply
                 else if (staged)
                 {
                     if (inPostPart)
+                    {
                         postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
                     else
+                    {
                         prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
+
                     addedCount++;
                     removedCount++;
                 }
@@ -270,16 +322,26 @@ namespace PatchApply
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
             if (PostContext.Count == 0 && (!staged || selectedLastRemovedLine))
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
+
             diff = diff.Combine("\n", addPart);
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
             // stage no new line at the end only if last +- line is selected
             if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
+            {
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
+            }
+
             if (PostContext.Count > 0)
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
 
             return diff;
         }
@@ -297,7 +359,9 @@ namespace PatchApply
             removedCount += PreContext.Count + PostContext.Count;
 
             foreach (PatchLine line in PreContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
 
             foreach (PatchLine removedLine in RemovedLines)
             {
@@ -322,9 +386,14 @@ namespace PatchApply
                 else
                 {
                     if (inPostPart)
+                    {
                         postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
                     else
+                    {
                         prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    }
+
                     addedCount++;
                     removedCount++;
                 }
@@ -333,15 +402,25 @@ namespace PatchApply
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
             if (PostContext.Count == 0)
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
+
             diff = diff.Combine("\n", addPart);
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
+            {
                 diff = diff.Combine("\n", line.Text);
+            }
+
             if (PostContext.Count == 0)
+            {
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
+            }
             else
+            {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            }
 
             return diff;
         }
@@ -371,21 +450,31 @@ namespace PatchApply
         public void AddContextLine(PatchLine line, bool preContext)
         {
             if (preContext)
+            {
                 CurrentSubChunk.PreContext.Add(line);
+            }
             else
+            {
                 CurrentSubChunk.PostContext.Add(line);
+            }
         }
 
         public void AddDiffLine(PatchLine line, bool removed)
         {
             // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
+            {
                 _CurrentSubChunk = null; // start new SubChunk
+            }
 
             if (removed)
+            {
                 CurrentSubChunk.RemovedLines.Add(line);
+            }
             else
+            {
                 CurrentSubChunk.AddedLines.Add(line);
+            }
         }
 
         public bool ParseHeader(string header)
@@ -400,7 +489,9 @@ namespace PatchApply
         {
             string[] lines = chunkStr.Split('\n');
             if (lines.Length < 2)
+            {
                 return null;
+            }
 
             bool inPatch = true;
             bool inPreContext = true;
@@ -421,10 +512,14 @@ namespace PatchApply
                     };
                     // do not refactor, there are no break points condition in VS Experss
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
+                    {
                         patchLine.Selected = true;
+                    }
 
                     if (line.StartsWith(" "))
+                    {
                         result.AddContextLine(patchLine, inPreContext);
+                    }
                     else if (line.StartsWith("-"))
                     {
                         inPreContext = false;
@@ -438,12 +533,18 @@ namespace PatchApply
                     else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
                     {
                         if (result.CurrentSubChunk.AddedLines.Count > 0 && result.CurrentSubChunk.PostContext.Count == 0)
+                        {
                             result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
+                        }
                         else
+                        {
                             result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
+                        }
                     }
                     else
+                    {
                         inPatch = false;
+                    }
                 }
 
                 currentPos += line.Length + 1;
@@ -461,11 +562,17 @@ namespace PatchApply
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
             if ("crlf".Equals(gitEol))
+            {
                 eol = "\r\n";
+            }
             else if ("native".Equals(gitEol))
+            {
                 eol = Environment.NewLine;
+            }
             else
+            {
                 eol = "\n";
+            }
 
             int eolLength = eol.Length;
 
@@ -482,7 +589,9 @@ namespace PatchApply
                 };
                 // do not refactor, there are no breakpoints condition in VS Experss
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
+                {
                     patchLine.Selected = true;
+                }
 
                 if (i == lines.Length - 1)
                 {
@@ -507,7 +616,9 @@ namespace PatchApply
                     }
                 }
                 else
+                {
                     result.AddDiffLine(patchLine, reset);
+                }
 
                 currentPos += line.Length + eolLength;
                 i++;
@@ -530,7 +641,9 @@ namespace PatchApply
             }
 
             if (!wereSelectedLines)
+            {
                 return null;
+            }
 
             diff = "@@ -" + _StartLine + "," + removedCount + " +" + _StartLine + "," + addedCount + " @@".Combine("\n", diff);
 
@@ -545,13 +658,17 @@ namespace PatchApply
             header = null;
             // When there is no patch, return nothing
             if (string.IsNullOrEmpty(text))
+            {
                 return null;
+            }
 
             // TODO: handling submodules
             // Divide diff into header and patch
             int patchPos = text.IndexOf("@@");
             if (patchPos < 1)
+            {
                 return null;
+            }
 
             header = text.Substring(0, patchPos);
             string diff = text.Substring(patchPos - 1);
@@ -570,7 +687,9 @@ namespace PatchApply
                 {
                     Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
                     if (chunk != null)
+                    {
                         selectedChunks.Add(chunk);
+                    }
                 }
                 currentPos += chunkStr.Length;
                 i++;
@@ -612,8 +731,9 @@ namespace PatchApply
             string result = null;
 
             foreach (Chunk chunk in this)
+            {
                 result = result.Combine("\n", chunk.ToPatch(subChunkToPatch));
-
+            }
 
             if (result != null)
             {

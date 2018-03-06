@@ -48,7 +48,9 @@ namespace GitUI.CommandsDialogs
 
             // if form is created for translation purpose
             if (aCommands == null)
+            {
                 return;
+            }
 
 #if DEBUG
             buttonDiscard.Visible = true;
@@ -95,7 +97,9 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this), gitExtPageRef);
 
             if (EnvUtils.RunningOnWindows())
+            {
                 settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ShellExtensionSettingsPage>(this), gitExtPageRef);
+            }
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AdvancedSettingsPage>(this), gitExtPageRef);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
@@ -139,7 +143,9 @@ namespace GitUI.CommandsDialogs
         private void FormSettings_Load(object sender, EventArgs e)
         {
             if (DesignMode)
+            {
                 return;
+            }
 
             WindowState = FormWindowState.Normal;
         }
@@ -241,7 +247,9 @@ namespace GitUI.CommandsDialogs
             _commonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
 
             if (EnvUtils.RunningOnWindows())
+            {
                 FormFixHome.CheckHomePath();
+            }
 
             // TODO: to which settings page does this belong?
             GitCommandHelpers.SetEnvironmentVariable(true);

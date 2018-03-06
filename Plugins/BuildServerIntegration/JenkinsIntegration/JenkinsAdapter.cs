@@ -33,7 +33,10 @@ namespace JenkinsIntegration
             get
             {
                 if (EnvUtils.IsNet4FullOrHigher())
+                {
                     return null;
+                }
+
                 return ".Net 4 full framework required";
             }
         }
@@ -55,7 +58,9 @@ namespace JenkinsIntegration
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
+            {
                 throw new InvalidOperationException("Already initialized");
+            }
 
             _buildServerWatcher = buildServerWatcher;
 
@@ -290,7 +295,10 @@ namespace JenkinsIntegration
             foreach (var element in action)
             {
                 if (element["lastBuiltRevision"] != null)
+                {
                     commitHashList.Add(element["lastBuiltRevision"]["SHA1"].ToObject<string>());
+                }
+
                 if (element["totalCount"] != null)
                 {
                     int nbTests = element["totalCount"].ToObject<int>();
@@ -439,7 +447,10 @@ namespace JenkinsIntegration
                 task =>
                 {
                     if (task.Status != TaskStatus.RanToCompletion)
+                    {
                         return string.Empty;
+                    }
+
                     using (var responseStream = task.Result)
                     {
                         return new StreamReader(responseStream).ReadToEnd();
@@ -493,7 +504,10 @@ namespace JenkinsIntegration
             }
 
             if (!restServicePath.EndsWith("/"))
+            {
                 restServicePath += "/";
+            }
+
             restServicePath += "api/json?depth=" + depth + "&tree=" + buildTree;
             return restServicePath;
         }

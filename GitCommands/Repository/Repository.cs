@@ -45,7 +45,10 @@ namespace GitCommands.Repository
         public void Assign(Repository source)
         {
             if (source == null)
+            {
                 return;
+            }
+
             Path = source.Path;
             Title = source.Title;
             Description = source.Description;

@@ -126,7 +126,9 @@ namespace GitCommands.ExternalLinks
         private IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
             if (definition.SearchPattern.IsNullOrEmpty() || definition.SearchPatternRegex.Value == null || part == null)
+            {
                 yield break;
+            }
 
             IList<Match> allMatches = new List<Match>();
 

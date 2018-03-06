@@ -34,9 +34,11 @@ namespace Github3
                 {
                     HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(_pullrequest.DiffUrl);
                     using (var response = wr.GetResponse())
-                    using (var respStream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        using (var respStream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
                     {
                         _diffData = respStream.ReadToEnd();
+                    }
                     }
                 }
                 return _diffData;
@@ -49,7 +51,9 @@ namespace Github3
             get
             {
                 if (_BaseRepo == null)
+                {
                     _BaseRepo = new GithubRepo(_pullrequest.Base.Repo);
+                }
 
                 return _BaseRepo;
             }
@@ -61,7 +65,9 @@ namespace Github3
             get
             {
                 if (_HeadRepo == null)
+                {
                     _HeadRepo = new GithubRepo(_pullrequest.Head.Repo);
+                }
 
                 return _HeadRepo;
             }
@@ -90,7 +96,9 @@ namespace Github3
             get
             {
                 if (_Discussion == null)
+                {
                     _Discussion = new GithubPullRequestDiscussion(_pullrequest);
+                }
 
                 return _Discussion;
             }

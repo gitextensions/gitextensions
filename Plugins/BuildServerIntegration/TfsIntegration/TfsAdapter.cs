@@ -28,7 +28,10 @@ namespace TfsIntegration
             get
             {
                 if (EnvUtils.IsNet4FullOrHigher())
+                {
                     return null;
+                }
+
                 return ".Net 4 full framework required";
             }
         }
@@ -49,7 +52,9 @@ namespace TfsIntegration
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
+            {
                 throw new InvalidOperationException("Already initialized");
+            }
 
             _buildServerWatcher = buildServerWatcher;
 
@@ -120,7 +125,9 @@ namespace TfsIntegration
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
             if (_tfsHelper == null)
+            {
                 return Observable.Empty<BuildInfo>();
+            }
 
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(

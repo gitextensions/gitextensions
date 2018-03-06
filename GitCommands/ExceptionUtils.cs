@@ -31,7 +31,9 @@ namespace GitCommands
         public static void ShowException(IWin32Window owner, Exception e, string info, bool canIgnore)
         {
             if (!(canIgnore && IsIgnorable(e)))
+            {
                 MessageBox.Show(owner, string.Join(Environment.NewLine + Environment.NewLine, info, e.ToStringWithData()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public static bool IsIgnorable(Exception e)
@@ -45,7 +47,10 @@ namespace GitCommands
             sb.AppendLine(e.ToString());
             sb.AppendLine();
             foreach (DictionaryEntry entry in e.Data)
+            {
                 sb.AppendLine(entry.Key + " = " + entry.Value);
+            }
+
             return sb.ToString();
         }
     }

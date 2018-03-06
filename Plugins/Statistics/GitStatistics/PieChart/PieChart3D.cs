@@ -288,7 +288,9 @@ namespace GitStatistics.PieChart
                 for (var i = 0; i < SliceRelativeDisplacements.Length && i < Values.Length; ++i)
                 {
                     if (SliceRelativeDisplacements[i] > value)
+                    {
                         value = SliceRelativeDisplacements[i];
+                    }
                 }
                 return value;
             }
@@ -335,7 +337,9 @@ namespace GitStatistics.PieChart
         public virtual void Dispose()
         {
             foreach (var slice in PieSlices)
+            {
                 slice.Dispose();
+            }
         }
 
         #endregion
@@ -403,7 +407,9 @@ namespace GitStatistics.PieChart
         {
             InitialAngle = value % 360;
             if (InitialAngle < 0)
+            {
                 InitialAngle += 360;
+            }
         }
 
         /// <summary>
@@ -446,7 +452,9 @@ namespace GitStatistics.PieChart
             {
                 var slice = PieSlices[i];
                 if (slice.PieSliceContainsPoint(point))
+                {
                     return (int)PieSlicesMapping[i];
+                }
             }
             // split the backmost (at 270 degrees) pie slice
             var pieSlicesList = new ArrayList(PieSlices);
@@ -471,13 +479,19 @@ namespace GitStatistics.PieChart
                 if (angle2 < angle1)
                 {
                     if (sliceRight.PeripheryContainsPoint(point))
+                    {
                         indexFound = incrementIndex;
+                    }
+
                     ++incrementIndex;
                 }
                 else
                 {
                     if (sliceLeft.PeripheryContainsPoint(point))
+                    {
                         indexFound = decrementIndex;
+                    }
+
                     --decrementIndex;
                 }
             }
@@ -522,7 +536,9 @@ namespace GitStatistics.PieChart
                 {
                     var slice = PieSlices[i];
                     if (slice.BottomSurfaceSectionContainsPoint(point))
+                    {
                         return (int)PieSlicesMapping[i];
+                    }
                 }
             }
             if (indexFound > -1)
@@ -611,7 +627,9 @@ namespace GitStatistics.PieChart
             // for individual pies
             double sum = 0;
             foreach (var itemValue in Values)
+            {
                 sum += (double)itemValue;
+            }
             // some values and indices that will be used in the loop
             var topEllipeSize = TopEllipseSize;
             var largestDisplacementEllipseSize = LargestDisplacementEllipseSize;
@@ -641,6 +659,7 @@ namespace GitStatistics.PieChart
                 }
                 PieSlice slice;
                 if (i == HighlightedIndex)
+                {
                     slice =
                         CreatePieSliceHighlighted(
                             X + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
@@ -648,12 +667,15 @@ namespace GitStatistics.PieChart
                             topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
                             (float)(sweepAngle), SliceColors[colorIndex], ShadowStyle, EdgeColorType,
                             EdgeLineWidth);
+                }
                 else
+                {
                     slice = CreatePieSlice(X + largestDisplacementEllipseSize.Width / 2 + xDisplacement,
                                            Y + largestDisplacementEllipseSize.Height / 2 + yDisplacement,
                                            topEllipeSize.Width, topEllipeSize.Height, PieHeight,
                                            (float)(startAngle % 360), (float)(sweepAngle), SliceColors[colorIndex],
                                            ShadowStyle, EdgeColorType, EdgeLineWidth);
+                }
                 // the backmost pie is inserted to the front of the list for correct drawing
                 if (backPieIndex > -1 || ((startAngle <= 270) && (startAngle + sweepAngle > 270)) ||
                     ((startAngle >= 270) && (startAngle + sweepAngle > 630)))
@@ -669,15 +691,22 @@ namespace GitStatistics.PieChart
                 }
                 // increment displacementIndex only if there are more displacements available
                 if (displacementIndex < maxDisplacementIndex)
+                {
                     ++displacementIndex;
+                }
+
                 ++colorIndex;
                 // if all colors have been exhausted, reset color index
                 if (colorIndex >= SliceColors.Length)
+                {
                     colorIndex = 0;
+                }
                 // prepare for the next pie slice
                 startAngle += sweepAngle;
                 if (startAngle > 360)
+                {
                     startAngle -= 360;
+                }
             }
             PieSlices = (PieSlice[])listPieSlices.ToArray(typeof(PieSlice));
         }
@@ -806,7 +835,10 @@ namespace GitStatistics.PieChart
         {
             Debug.Assert(displacementFactor > 0F && displacementFactor <= 1F);
             if (displacementFactor == 0F)
+            {
                 return SizeF.Empty;
+            }
+
             var xDisplacement = (float)(TopEllipseSize.Width * displacementFactor / 2 * Math.Cos(angle * Math.PI / 180));
             var yDisplacement = (float)(TopEllipseSize.Height * displacementFactor / 2 * Math.Sin(angle * Math.PI / 180));
             return new SizeF(xDisplacement, yDisplacement);
@@ -827,13 +859,18 @@ namespace GitStatistics.PieChart
             var splitSlices = PieSlices[0].Split(270F);
             pieSlices[0] = splitSlices[0];
             if (splitSlices[1].SweepAngle > 0F)
+            {
                 pieSlices.Add(splitSlices[1]);
+            }
             // finds the leftmost slice that is crossing 180 degrees boundary
             var decrementIndex = pieSlices.Count - 1;
             for (var i = decrementIndex; i > 0; --i)
             {
                 if (((PieSlice)pieSlices[i]).StartAngle >= 180)
+                {
                     continue;
+                }
+
                 decrementIndex = i;
                 break;
             }
@@ -843,7 +880,10 @@ namespace GitStatistics.PieChart
             {
                 var slice = (PieSlice)pieSlices[i];
                 if ((slice.StartAngle + slice.SweepAngle <= 360) && (slice.EndAngle >= 180 || slice.EndAngle <= 0))
+                {
                     continue;
+                }
+
                 incrementIndex = i;
                 break;
             }
@@ -917,7 +957,9 @@ namespace GitStatistics.PieChart
             foreach (var value in displacements)
             {
                 if (!IsDisplacementValid(value))
+                {
                     return false;
+                }
             }
             return true;
         }

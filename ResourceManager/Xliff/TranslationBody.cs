@@ -18,7 +18,9 @@ namespace ResourceManager.Xliff
         public void AddTranslationItem(TranslationItem translationItem)
         {
             if (string.IsNullOrEmpty(translationItem.Name))
+            {
                 throw new InvalidOperationException("Cannot add translationitem without name");
+            }
 
             TranslationItems.Add(translationItem);
         }
@@ -26,7 +28,9 @@ namespace ResourceManager.Xliff
         public void AddTranslationItemIfNotExist(TranslationItem translationItem)
         {
             if (string.IsNullOrEmpty(translationItem.Name))
+            {
                 throw new InvalidOperationException("Cannot add translationitem without name");
+            }
 
             TranslationItem ti = GetTranslationItem(translationItem.Name, translationItem.Property);
             if (ti == null)
@@ -35,13 +39,19 @@ namespace ResourceManager.Xliff
                 {
                     ti = GetTranslationItem(translationItem.Name, "Text");
                     if (ti == null || translationItem.Value != ti.Value)
+                    {
                         TranslationItems.Add(translationItem);
+                    }
                 }
                 else
+                {
                     TranslationItems.Add(translationItem);
+                }
             }
             else
+            {
                 Debug.Assert(ti.Value == translationItem.Value);
+            }
         }
 
         public TranslationItem GetTranslationItem(string name, string property)

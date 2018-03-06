@@ -115,7 +115,9 @@ namespace GitExtensionsVSIX
         {
             OleMenuCommand guiCommand = (OleMenuCommand)sender;
             if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+            {
                 command.BeforeQueryStatus(_application, guiCommand);
+            }
         }
 
         /// <summary>
@@ -150,7 +152,9 @@ namespace GitExtensionsVSIX
         {
             var guiCommand = (MenuCommand)sender;
             if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
+            {
                 command.BaseCommand.OnCommand(_application, OutputPane);
+            }
         }
     }
 }

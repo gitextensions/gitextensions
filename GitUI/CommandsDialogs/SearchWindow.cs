@@ -55,7 +55,9 @@ namespace GitUI.CommandsDialogs
         private void AutoFit()
         {
             if (listBox1.Items.Count == 0)
+            {
                 listBox1.Visible = false;
+            }
 
             listBox1.Visible = true;
 
@@ -123,7 +125,9 @@ namespace GitUI.CommandsDialogs
                 {
                     var newSelectedIndex = listBox1.SelectedIndex - 1;
                     if (newSelectedIndex < 0)
+                    {
                         newSelectedIndex = listBox1.Items.Count - 1;
+                    }
 
                     listBox1.SelectedIndex = newSelectedIndex;
                     e.SuppressKeyPress = true;
@@ -131,7 +135,9 @@ namespace GitUI.CommandsDialogs
             }
 
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
+            {
                 e.SuppressKeyPress = true;
+            }
         }
 
         private void listBox1_KeyUp(object sender, KeyEventArgs e)

@@ -92,7 +92,9 @@ namespace GitUI.Script
                     value.Popup += SplitMenu_Popup;
                 }
                 else
+                {
                     ShowSplit = false;
+                }
 
                 _splitMenu = value;
             }
@@ -122,8 +124,9 @@ namespace GitUI.Script
                     value.Opening += SplitMenuStrip_Opening;
                 }
                 else
+                {
                     ShowSplit = false;
-
+                }
 
                 _splitMenuStrip = value;
             }
@@ -168,7 +171,9 @@ namespace GitUI.Script
         protected override bool IsInputKey(Keys keyData)
         {
             if (keyData.Equals(Keys.Down) && _showSplit)
+            {
                 return true;
+            }
 
             return base.IsInputKey(keyData);
         }
@@ -290,7 +295,9 @@ namespace GitUI.Script
 
             // handle ContextMenu re-clicking the drop-down region to close the menu
             if (_splitMenu != null && e.Button == MouseButtons.Left && !_isMouseEntered)
+            {
                 _skipNextOpen = true;
+            }
 
             if ((_dropDownRectangle.Contains(e.Location) || WholeButtonDropdown) &&
                 !_isSplitMenuVisible && e.Button == MouseButtons.Left)
@@ -332,7 +339,9 @@ namespace GitUI.Script
             base.OnPaint(pevent);
 
             if (!_showSplit)
+            {
                 return;
+            }
 
             Graphics g = pevent.Graphics;
             Rectangle bounds = ClientRectangle;
@@ -410,24 +419,36 @@ namespace GitUI.Script
             if (Image != null)
             {
                 if (Enabled)
+                {
                     g.DrawImage(Image, image_rectangle.X, image_rectangle.Y, Image.Width, Image.Height);
+                }
                 else
+                {
                     ControlPaint.DrawImageDisabled(g, Image, image_rectangle.X, image_rectangle.Y, BackColor);
+                }
             }
 
             // If we dont' use mnemonic, set formatFlag to NoPrefix as this will show ampersand.
             if (!UseMnemonic)
+            {
                 _textFormatFlags = _textFormatFlags | TextFormatFlags.NoPrefix;
+            }
             else if (!ShowKeyboardCues)
+            {
                 _textFormatFlags = _textFormatFlags | TextFormatFlags.HidePrefix;
+            }
 
             // draw the text
             if (!string.IsNullOrEmpty(Text))
             {
                 if (Enabled)
+                {
                     TextRenderer.DrawText(g, Text, Font, text_rectangle, ForeColor, _textFormatFlags);
+                }
                 else
+                {
                     ControlPaint.DrawStringDisabled(g, Text, Font, BackColor, text_rectangle, _textFormatFlags);
+                }
             }
         }
 
@@ -441,9 +462,13 @@ namespace GitUI.Script
             Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
             if (Enabled)
+            {
                 g.FillPolygon(SystemBrushes.ControlText, arrow);
+            }
             else
+            {
                 g.FillPolygon(SystemBrushes.ButtonShadow, arrow);
+            }
         }
 
         public override Size GetPreferredSize(Size proposedSize)
@@ -454,10 +479,14 @@ namespace GitUI.Script
             if (_showSplit)
             {
                 if (AutoSize)
+                {
                     return CalculateButtonAutoSize();
+                }
 
                 if (!string.IsNullOrEmpty(Text) && TextRenderer.MeasureText(Text, Font).Width + SplitSectionWidth > preferredSize.Width)
+                {
                     return preferredSize + new Size(SplitSectionWidth + BorderSize * 2, 0);
+                }
             }
 
             return preferredSize;
@@ -500,7 +529,9 @@ namespace GitUI.Script
 
             // pad the splitButton arrow region
             if (_showSplit)
+            {
                 ret_size.Width += SplitSectionWidth;
+            }
 
             return ret_size;
         }
@@ -527,11 +558,15 @@ namespace GitUI.Script
 
                     // Offset on Windows 98 style when button is pressed
                     if (_state == PushButtonState.Pressed && !Application.RenderWithVisualStyles)
+                    {
                         textRectangle.Offset(1, 1);
+                    }
 
                     // Image is dependent on ImageAlign
                     if (Image != null)
+                    {
                         imageRectangle = OverlayObjectRect(ref content_rect, ref image_size, ImageAlign);
+                    }
 
                     break;
                 case TextImageRelation.ImageAboveText:
@@ -610,7 +645,9 @@ namespace GitUI.Script
             int total_width = textSize.Width + element_spacing + imageSize.Width;
 
             if (!textFirst)
+            {
                 element_spacing += 2;
+            }
 
             // If the text is too big, chop it down to the size we have available to it
             if (total_width > totalArea.Width)
@@ -629,13 +666,21 @@ namespace GitUI.Script
             HorizontalAlignment h_image = GetHorizontalAlignment(ImageAlign);
 
             if (h_image == HorizontalAlignment.Left)
+            {
                 offset = 0;
+            }
             else if (h_image == HorizontalAlignment.Right && h_text == HorizontalAlignment.Right)
+            {
                 offset = excess_width;
+            }
             else if (h_image == HorizontalAlignment.Center && (h_text == HorizontalAlignment.Left || h_text == HorizontalAlignment.Center))
+            {
                 offset += excess_width / 3;
+            }
             else
+            {
                 offset += 2 * (excess_width / 3);
+            }
 
             if (textFirst)
             {
@@ -658,10 +703,14 @@ namespace GitUI.Script
             int total_height = textSize.Height + element_spacing + imageSize.Height;
 
             if (textFirst)
+            {
                 element_spacing += 2;
+            }
 
             if (textSize.Width > totalArea.Width)
+            {
                 textSize.Width = totalArea.Width;
+            }
 
             // If the there isn't enough room and we're text first, cut out the image
             if (total_height > totalArea.Height && textFirst)
@@ -680,13 +729,21 @@ namespace GitUI.Script
             VerticalAlignment v_image = GetVerticalAlignment(ImageAlign);
 
             if (v_image == VerticalAlignment.Top)
+            {
                 offset = 0;
+            }
             else if (v_image == VerticalAlignment.Bottom && v_text == VerticalAlignment.Bottom)
+            {
                 offset = excess_height;
+            }
             else if (v_image == VerticalAlignment.Center && (v_text == VerticalAlignment.Top || v_text == VerticalAlignment.Center))
+            {
                 offset += excess_height / 3;
+            }
             else
+            {
                 offset += 2 * (excess_height / 3);
+            }
 
             if (textFirst)
             {
@@ -699,7 +756,9 @@ namespace GitUI.Script
                 final_text_rect = new Rectangle(AlignInRectangle(totalArea, textSize, TextAlign).Left, final_image_rect.Bottom + element_spacing, textSize.Width, textSize.Height);
 
                 if (final_text_rect.Bottom > totalArea.Bottom)
+                {
                     final_text_rect.Y = totalArea.Top;
+                }
             }
 
             textRect = final_text_rect;
@@ -754,17 +813,30 @@ namespace GitUI.Script
             int y = 0;
 
             if (align == System.Drawing.ContentAlignment.BottomLeft || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.TopLeft)
+            {
                 x = outer.X;
+            }
             else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.TopCenter)
+            {
                 x = Math.Max(outer.X + ((outer.Width - inner.Width) / 2), outer.Left);
+            }
             else if (align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.MiddleRight || align == System.Drawing.ContentAlignment.TopRight)
+            {
                 x = outer.Right - inner.Width;
+            }
+
             if (align == System.Drawing.ContentAlignment.TopCenter || align == System.Drawing.ContentAlignment.TopLeft || align == System.Drawing.ContentAlignment.TopRight)
+            {
                 y = outer.Y;
+            }
             else if (align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.MiddleRight)
+            {
                 y = outer.Y + (outer.Height - inner.Height) / 2;
+            }
             else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.BottomLeft)
+            {
                 y = outer.Bottom - inner.Height;
+            }
 
             return new Rectangle(x, y, Math.Min(inner.Width, outer.Width), Math.Min(inner.Height, outer.Height));
         }

@@ -29,12 +29,16 @@ namespace Github3
             get
             {
                 if (!_repo.Fork)
+                {
                     return null;
+                }
 
                 if (!_repo.Detailed)
                 {
                     if (_repo.Organization != null)
+                    {
                         return null;
+                    }
 
                     _repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
@@ -47,12 +51,16 @@ namespace Github3
             get
             {
                 if (!_repo.Fork)
+                {
                     return null;
+                }
 
                 if (!_repo.Detailed)
                 {
                     if (_repo.Organization != null)
+                    {
                         return null;
+                    }
 
                     _repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
@@ -91,7 +99,9 @@ namespace Github3
         {
             var pullrequest = _repo.CreatePullRequest(GithubLoginInfo.username + ":" + myBranch, remoteBranch, title, body);
             if (pullrequest == null || pullrequest.Number == 0)
+            {
                 throw new Exception("Failed to create pull request.");
+            }
 
             return pullrequest.Number;
         }

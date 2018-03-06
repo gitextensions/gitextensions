@@ -80,11 +80,18 @@ namespace GitUI.CommandsDialogs
             Stashes.ComboBox.DisplayMember = "Message";
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
+            {
                 Stashes.Items.Add(stashedItem);
+            }
+
             if (ManageStashes && Stashes.Items.Count > 1) // more than just the default ("Current working directory changes")
+            {
                 Stashes.SelectedIndex = 1; // -> auto-select first non-default
+            }
             else if (Stashes.Items.Count > 0) // (no stashes) -> select default ("Current working directory changes")
+            {
                 Stashes.SelectedIndex = 0;
+            }
         }
 
         private void InitializeSoft()
@@ -144,10 +151,14 @@ namespace GitUI.CommandsDialogs
                 if (stashedItem.IsNew)
                 {
                     if (!stashedItem.IsSubmodule)
+                    {
                         View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                    }
                     else
+                    {
                         View.ViewText(stashedItem.Name,
                             LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                    }
                 }
                 else
                 {
@@ -157,15 +168,24 @@ namespace GitUI.CommandsDialogs
                     {
                         Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
                         if (patch == null)
+                        {
                             return String.Empty;
+                        }
+
                         if (stashedItem.IsSubmodule)
+                        {
                             return LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch);
+                        }
+
                         return patch.Text;
                     });
                 }
             }
             else
+            {
                 View.ViewText(string.Empty, string.Empty);
+            }
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -174,7 +194,9 @@ namespace GitUI.CommandsDialogs
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
                 if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                {
                     return;
+                }
             }
 
             Cursor.Current = Cursors.WaitCursor;
@@ -190,7 +212,9 @@ namespace GitUI.CommandsDialogs
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
                 if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                {
                     return;
+                }
             }
 
             Cursor.Current = Cursors.WaitCursor;
@@ -258,10 +282,14 @@ namespace GitUI.CommandsDialogs
             InitializeSoft();
 
             if (Stashes.SelectedItem != null)
+            {
                 StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
+            }
 
             if (Stashes.Items.Count == 1)
+            {
                 StashMessage.Text = _noStashes.Text;
+            }
 
             Cursor.Current = Cursors.Default;
         }
@@ -324,11 +352,16 @@ namespace GitUI.CommandsDialogs
         private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
+            {
                 return;
+            }
+
             if (toolStripButton_customMessage.Enabled)
             {
                 if (!toolStripButton_customMessage.Checked)
+                {
                     toolStripButton_customMessage.PerformClick();
+                }
             }
         }
 

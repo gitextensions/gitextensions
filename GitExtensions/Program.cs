@@ -104,7 +104,9 @@ namespace GitExtensions
             }
 
             if (EnvUtils.RunningOnWindows())
+            {
                 MouseWheelRedirector.Active = true;
+            }
 
             GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
 
@@ -130,7 +132,9 @@ namespace GitExtensions
                 // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
                 if (Directory.Exists(dirArg))
+                {
                     workingDir = GitModule.FindGitWorkingDir(dirArg);
+                }
                 else
                 {
                     workingDir = Path.GetDirectoryName(dirArg);
@@ -138,7 +142,9 @@ namespace GitExtensions
                 }
 
                 if (Directory.Exists(workingDir))
+                {
                     workingDir = Path.GetFullPath(workingDir);
+                }
 
                 // Do not add this working directory to the recent repositories. It is a nice feature, but it
                 // also increases the startup time
@@ -149,14 +155,18 @@ namespace GitExtensions
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && AppSettings.StartWithRecentWorkingDir)
             {
                 if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
+                {
                     workingDir = AppSettings.RecentWorkingDir;
+                }
             }
 
             if (string.IsNullOrEmpty(workingDir))
             {
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
                 if (GitModule.IsValidGitWorkingDir(findWorkingDir))
+                {
                     workingDir = findWorkingDir;
+                }
             }
 
             return workingDir;

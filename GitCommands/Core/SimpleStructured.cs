@@ -18,7 +18,9 @@ namespace GitCommands.Core
         {
             SimpleStructured other = obj as SimpleStructured;
             if (other == null)
+            {
                 return false;
+            }
 
             return InlinedStructure().SequenceEqual(other.InlinedStructure(), new SimpleEqualityComparer());
         }
@@ -39,7 +41,9 @@ namespace GitCommands.Core
         public new bool Equals(object x, object y)
         {
             if (x == null)
+            {
                 return y == null;
+            }
             else
             {
                 if (!(x is string))
@@ -47,7 +51,9 @@ namespace GitCommands.Core
                     IEnumerable ex = x as IEnumerable;
                     IEnumerable ey = y as IEnumerable;
                     if (ex != null && ey != null)
+                    {
                         return ex.Cast<object>().SequenceEqual(ey.Cast<object>(), this);
+                    }
                 }
                 return x.Equals(y);
             }
@@ -66,18 +72,24 @@ namespace GitCommands.Core
         private string ToString(object obj, string indent)
         {
             if (obj == null)
+            {
                 return indent + "[null]";
+            }
             else
             {
                 if (!(obj is string))
                 {
                     IEnumerable eo = obj as IEnumerable;
                     if (eo != null)
+                    {
                         return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
+                    }
                 }
                 SimpleStructured ss = obj as SimpleStructured;
                 if (ss != null)
+                {
                     return ToString(ss.InlinedStructure(), indent);
+                }
 
                 return indent + obj.ToString();
             }

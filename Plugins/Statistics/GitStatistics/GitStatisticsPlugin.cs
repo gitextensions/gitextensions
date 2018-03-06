@@ -29,7 +29,10 @@ namespace GitStatistics
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
+            {
                 return false;
+            }
+
             bool countSubmodule = !_IgnoreSubmodules.ValueOrDefault(Settings);
             using (var formGitStatistics =
                 new FormGitStatistics(gitUIEventArgs.GitModule, _CodeFiles.ValueOrDefault(Settings), countSubmodule)

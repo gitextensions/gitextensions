@@ -57,7 +57,10 @@ namespace GitStatistics.PieChart
         {
             var pointTypes = (byte[])QuadrilateralPointTypes.Clone();
             if (toClose)
+            {
                 pointTypes[3] |= (byte)PathPointType.CloseSubpath;
+            }
+
             _path = new GraphicsPath(new[] { point1, point2, point3, point4 }, pointTypes);
         }
 
@@ -92,7 +95,10 @@ namespace GitStatistics.PieChart
         public bool Contains(PointF point)
         {
             if (_path.PointCount == 0 || _path.PathPoints.Length == 0)
+            {
                 return false;
+            }
+
             return Contains(point, _path.PathPoints);
         }
 
@@ -116,10 +122,15 @@ namespace GitStatistics.PieChart
             for (var i = 1; i < cornerPoints.Length; ++i)
             {
                 if (DoesIntersects(point, cornerPoints[i], cornerPoints[i - 1]))
+                {
                     ++intersections;
+                }
             }
             if (DoesIntersects(point, cornerPoints[cornerPoints.Length - 1], cornerPoints[0]))
+            {
                 ++intersections;
+            }
+
             return (intersections % 2 != 0);
         }
 

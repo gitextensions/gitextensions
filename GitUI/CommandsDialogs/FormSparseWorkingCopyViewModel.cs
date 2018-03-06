@@ -43,7 +43,10 @@ namespace GitUI.CommandsDialogs
         {
             _gitcommands = gitcommands;
             if (gitcommands == null)
+            {
                 throw new ArgumentNullException(nameof(gitcommands));
+            }
+
             _isSparseCheckoutEnabled = _isSparseCheckoutEnabledAsSaved = GetCurrentSparseEnabledState();
         }
 
@@ -80,7 +83,10 @@ namespace GitUI.CommandsDialogs
             set
             {
                 if (value == _isSparseCheckoutEnabled)
+                {
                     return;
+                }
+
                 _isSparseCheckoutEnabled = value;
                 FirePropertyChanged();
             }
@@ -99,7 +105,10 @@ namespace GitUI.CommandsDialogs
             set
             {
                 if (_sRulesText == value)
+                {
                     return;
+                }
+
                 _sRulesText = value;
                 FirePropertyChanged();
             }
@@ -133,9 +142,15 @@ namespace GitUI.CommandsDialogs
         public bool IsWithUnsavedChanges()
         {
             if (IsSparseCheckoutEnabled != _isSparseCheckoutEnabledAsSaved)
+            {
                 return true;
+            }
+
             if (IsRulesTextChanged)
+            {
                 return true;
+            }
+
             return false;
         }
 
@@ -147,7 +162,9 @@ namespace GitUI.CommandsDialogs
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
             using (var fromProcess = new FormRemoteProcess(_gitcommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
+            {
                 fromProcess.ShowDialog(Form.ActiveForm);
+            }
         }
 
         /// <summary>
@@ -177,7 +194,9 @@ namespace GitUI.CommandsDialogs
 
             // Refresh WC (if chose to Save, run this regardless of the modifications)
             if (IsRefreshWorkingCopyOnSave)
+            {
                 RefreshWorkingCopy();
+            }
         }
 
         /// <summary>
@@ -186,7 +205,10 @@ namespace GitUI.CommandsDialogs
         public void SetRulesTextAsOnDisk([NotNull] string text)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
+            }
+
             _sRulesTextAsOnDisk = text;
         }
 
@@ -206,18 +228,24 @@ namespace GitUI.CommandsDialogs
         private void SaveChangesTurningOffSparseSpecialCase()
         {
             if ((IsSparseCheckoutEnabled) || (IsSparseCheckoutEnabled == _isSparseCheckoutEnabledAsSaved))
+            {
                 return; // Not turning off
+            }
 
             // Now check the rules, the well-known recommendation is to have the single "/*" rule active
             List<string> rulelines = RulesText.SplitLines().Select(l => l.Trim()).Where(l => (!l.IsNullOrEmpty()) && (l[0] != '#')).ToList(); // All nonempty and non-comment lines
             if (rulelines.All(l => l == "/*"))
+            {
                 return; // Rules OK for turning off
+            }
 
             // Confirm
             var args = new ComfirmAdjustingRulesOnDeactEventArgs(!rulelines.Any());
             ComfirmAdjustingRulesOnDeactRequested(this, args);
             if (args.Cancel)
+            {
                 return;
+            }
 
             // Adjust the rules
             // Comment out all existing nonempty lines, add the single “/*” line to make a total pass filter

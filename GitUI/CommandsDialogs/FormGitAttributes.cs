@@ -75,7 +75,10 @@ namespace GitUI.CommandsDialogs
                         {
                             GitAttributesFile = _NO_TRANSLATE_GitAttributesText.GetText();
                             if (!GitAttributesFile.EndsWith(Environment.NewLine))
+                            {
                                 GitAttributesFile += Environment.NewLine;
+                            }
+
                             File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(GitAttributesFile));
                         });
 
@@ -99,7 +102,10 @@ namespace GitUI.CommandsDialogs
                 {
                     case DialogResult.Yes:
                         if (SaveFile())
+                        {
                             needToClose = true;
+                        }
+
                         break;
                     case DialogResult.No:
                         needToClose = true;
@@ -109,16 +115,23 @@ namespace GitUI.CommandsDialogs
                 }
             }
             else
+            {
                 needToClose = true;
+            }
 
             if (!needToClose)
+            {
                 e.Cancel = true;
+            }
         }
 
         private void FormGitAttributesLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository())
+            {
                 return;
+            }
+
             MessageBox.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text);
             Close();
         }

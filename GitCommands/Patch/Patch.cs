@@ -69,7 +69,9 @@ namespace PatchApply
             }
 
             if (Text == null)
+            {
                 return;
+            }
 
             if (Type == PatchType.NewFile)
             {
@@ -103,7 +105,9 @@ namespace PatchApply
                     }
 
                     if (retval.Length > 0 && retval[retval.Length - 1] == '\n')
+                    {
                         retval = retval.Remove(retval.Length - 1, 1);
+                    }
 
                     return retval;
                 }
@@ -143,12 +147,16 @@ namespace PatchApply
                     if (line.Length > 0)
                     {
                         if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
+                        {
                             Rate -= 20;
+                        }
                     }
                     else
                     {
                         if (fileLines.Count > lineNumber && fileLines[lineNumber] != "")
+                        {
                             Rate -= 20;
+                        }
                     }
 
                     lineNumber++;
@@ -158,26 +166,36 @@ namespace PatchApply
                     if (line.Length > 0)
                     {
                         if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(line.Substring(1)) != 0)
+                        {
                             Rate -= 20;
+                        }
                     }
                     else
                     {
                         if (fileLines.Count > lineNumber && fileLines[lineNumber] != "")
+                        {
                             Rate -= 20;
+                        }
                     }
 
                     Bookmarks.Add(lineNumber);
 
                     if (fileLines.Count > lineNumber)
+                    {
                         fileLines.RemoveAt(lineNumber);
+                    }
                     else
+                    {
                         Rate -= 20;
+                    }
                 }
                 if (line.StartsWith("+"))
                 {
                     string insertLine = "";
                     if (line.Length > 1)
+                    {
                         insertLine = line.Substring(1);
+                    }
 
                     // Is the patch allready applied?
                     if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(insertLine) == 0)
@@ -196,10 +214,14 @@ namespace PatchApply
                 FileTextB += patchedLine + "\n";
             }
             if (FileTextB.Length > 0 && FileTextB[FileTextB.Length - 1] == '\n')
+            {
                 FileTextB = FileTextB.Remove(FileTextB.Length - 1, 1);
+            }
 
             if (Rate != 100)
+            {
                 Apply = false;
+            }
         }
 
         private void HandleNewFilePatchType()
@@ -209,15 +231,22 @@ namespace PatchApply
                 if (line.Length > 0 && line.StartsWith("+"))
                 {
                     if (line.Length > 4 && line.StartsWith("+ï»¿"))
+                    {
                         AppendText(line.Substring(4));
+                    }
                     else if (line.Length > 1)
+                    {
                         FileTextB += line.Substring(1);
+                    }
 
                     FileTextB += "\n";
                 }
             }
             if (FileTextB.Length > 0 && FileTextB[FileTextB.Length - 1] == '\n')
+            {
                 FileTextB = FileTextB.Remove(FileTextB.Length - 1, 1);
+            }
+
             Rate = 100;
 
             if (System.IO.File.Exists(DirToPatch + FileNameB))

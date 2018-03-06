@@ -119,11 +119,16 @@ namespace GitCommands
         public static string GetInstallDir()
         {
             if (IsPortable())
+            {
                 return GetGitExtensionsDirectory();
+            }
 
             string dir = ReadStringRegValue("InstallDir", string.Empty);
             if (String.IsNullOrEmpty(dir))
+            {
                 return GetGitExtensionsDirectory();
+            }
+
             return dir;
         }
 
@@ -156,9 +161,15 @@ namespace GitCommands
         {
             object obj = VersionIndependentRegKey.GetValue(key);
             if (!(obj is string))
+            {
                 obj = null;
+            }
+
             if (obj == null)
+            {
                 return defaultValue;
+            }
+
             return ((string)obj).Equals("true", StringComparison.CurrentCultureIgnoreCase);
         }
 
@@ -214,16 +225,24 @@ namespace GitCommands
             get
             {
                 if (IsPortable())
+                {
                     return GetString("gitcommand", "");
+                }
                 else
+                {
                     return ReadStringRegValue("gitcommand", "");
+                }
             }
             set
             {
                 if (IsPortable())
+                {
                     SetString("gitcommand", value);
+                }
                 else
+                {
                     WriteStringRegValue("gitcommand", value);
+                }
             }
         }
 
@@ -232,7 +251,10 @@ namespace GitCommands
             get
             {
                 if (String.IsNullOrEmpty(GitCommandValue))
+                {
                     return "git";
+                }
+
                 return GitCommandValue;
             }
         }
@@ -434,7 +456,10 @@ namespace GitCommands
             get
             {
                 if (_languageCodes.TryGetValue(CurrentTranslation, out var code))
+                {
                     return code;
+                }
+
                 return "en";
             }
         }
@@ -1000,7 +1025,9 @@ namespace GitCommands
             set
             {
                 if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK"))
-                SetString("plink", value);
+                {
+                    SetString("plink", value);
+                }
             }
         }
         public static string Puttygen
@@ -1009,7 +1036,9 @@ namespace GitCommands
             set
             {
                 if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN"))
-                SetString("puttygen", value);
+                {
+                    SetString("puttygen", value);
+                }
             }
         }
 
@@ -1020,7 +1049,9 @@ namespace GitCommands
             set
             {
                 if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT"))
-                SetString("pageant", value);
+                {
+                    SetString("pageant", value);
+                }
             }
         }
 
@@ -1457,7 +1488,10 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
+                {
                     _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                }
+
                 return _VersionIndependentRegKey;
             }
         }
@@ -1472,13 +1506,17 @@ namespace GitCommands
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
             if (oldSettings == null)
+            {
                 yield break;
+            }
 
             foreach (String name in oldSettings.GetValueNames())
             {
                 object value = oldSettings.GetValue(name, null);
                 if (value != null)
+                {
                     yield return new Tuple<string, string>(name, value.ToString());
+                }
             }
         }
 
@@ -1635,13 +1673,19 @@ namespace GitCommands
                 {
                     // create utf-8 without BOM
                     if (encodingName == utf8.HeaderName)
+                    {
                         AddEncoding(utf8);
+                    }
                     // default encoding
                     else if (encodingName == "Default")
+                    {
                         AddEncoding(Encoding.Default);
+                    }
                     // add encoding by name
                     else
+                    {
                         AddEncodingByName(encodingName);
+                    }
                 }
             }
         }

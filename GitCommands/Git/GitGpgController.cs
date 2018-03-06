@@ -240,7 +240,9 @@ namespace GitCommands.Gpg
         {
             string tagName = tagRef.LocalName;
             if (string.IsNullOrWhiteSpace(tagName))
+            {
                 return null;
+            }
 
             string rawFlag = raw == true ? "--raw" : "";
 

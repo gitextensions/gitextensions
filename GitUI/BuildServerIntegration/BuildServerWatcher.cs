@@ -61,7 +61,9 @@ namespace GitUI.BuildServerIntegration
                 UpdateUI();
 
                 if (_buildServerAdapter == null)
+                {
                     return;
+                }
 
                 var scheduler = NewThreadScheduler.Default;
                 var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
@@ -249,7 +251,9 @@ namespace GitUI.BuildServerIntegration
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
         {
             if (_buildStatusCancellationToken == null)
+            {
                 return;
+            }
 
             foreach (var commitHash in buildInfo.CommitHashList)
             {
@@ -265,10 +269,15 @@ namespace GitUI.BuildServerIntegration
                         {
                             if (BuildStatusImageColumnIndex != -1 &&
                                 _revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                            {
                                 _revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
+                            }
+
                             if (BuildStatusMessageColumnIndex != -1 &&
                                 _revisions.Rows[index.Value].Cells[BuildStatusMessageColumnIndex].Displayed)
+                            {
                                 _revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
+                            }
                         }
                     }
                 }
@@ -280,10 +289,16 @@ namespace GitUI.BuildServerIntegration
             return Task<IBuildServerAdapter>.Factory.StartNew(() =>
             {
                 if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
+                {
                     return null;
+                }
+
                 var buildServerType = Module.EffectiveSettings.BuildServer.Type.ValueOrDefault;
                 if (string.IsNullOrEmpty(buildServerType))
+                {
                     return null;
+                }
+
                 var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
                 var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
@@ -322,10 +337,14 @@ namespace GitUI.BuildServerIntegration
             }
 
             if (BuildStatusImageColumnIndex != -1)
+            {
                 _revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
+            }
 
             if (BuildStatusMessageColumnIndex != -1)
+            {
                 _revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
+            }
         }
 
         public void Dispose()

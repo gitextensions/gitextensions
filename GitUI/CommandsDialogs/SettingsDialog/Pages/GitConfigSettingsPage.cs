@@ -124,29 +124,46 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
                 if (globalAutoCrlfFalse.Checked)
+                {
                     CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
+                }
+
                 if (globalAutoCrlfInput.Checked)
+                {
                     CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
+                }
+
                 if (globalAutoCrlfTrue.Checked)
+                {
                     CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
+                }
+
                 if (globalAutoCrlfNotSet.Checked)
+                {
                     CurrentSettings.core.autocrlf.Value = null;
+                }
             }
         }
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
         {
             if (IsLoadingSettings)
+            {
                 return;
+            }
 
             MergetoolPath.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()));
             MergeToolCmd.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.cmd", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()));
 
             if (_NO_TRANSLATE_GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
+            {
                 MergeToolCmd.Enabled = false;
+            }
             else
+            {
                 MergeToolCmd.Enabled = true;
+            }
 
             MergeToolCmdSuggest_Click(null, null);
         }
@@ -154,7 +171,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return;
+            }
 
             CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
@@ -165,7 +184,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exeName = Path.GetFileName(exeFile);
             }
             else
+            {
                 exeFile = MergeToolsHelper.FindMergeToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalMergeTool.Text, out exeName);
+            }
+
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
@@ -173,8 +195,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
+                {
                     MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
                         _mergeToolSuggestCaption.Text);
+                }
+
                 return;
             }
             MergetoolPath.SelectAll(); // allow Undo action
@@ -187,11 +212,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             string kdiff3Path = MergeToolsHelper.FindPathForKDiff(CurrentSettings.GetValue("difftool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3Path))
+            {
                 return;
+            }
 
             kdiff3Path = MergeToolsHelper.FindFileInFolders("kdiff3.exe", MergetoolPath.Text);
             if (string.IsNullOrEmpty(kdiff3Path))
+            {
                 return;
+            }
 
             DifftoolPath.Text = kdiff3Path;
         }
@@ -199,7 +228,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return;
+            }
 
             CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), DifftoolPath.Text.Trim());
             string exeName;
@@ -210,7 +241,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exeName = Path.GetFileName(exeFile);
             }
             else
+            {
                 exeFile = MergeToolsHelper.FindDiffToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalDiffTool.Text, out exeName);
+            }
+
             if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
@@ -218,8 +252,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
+                {
                     MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
                         _diffToolSuggestCaption.Text);
+                }
+
                 return;
             }
             DifftoolPath.SelectAll(); // allow Undo action
@@ -234,22 +271,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string exeFile = MergeToolsHelper.GetMergeToolExeFile(mergeTool);
 
             if (exeFile != null)
+            {
                 MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
+            }
             else
+            {
                 MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalMergeTool.Text), MergetoolPath.Text);
+            }
         }
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
         {
             if (IsLoadingSettings)
+            {
                 return;
+            }
 
             string diffTool = _NO_TRANSLATE_GlobalDiffTool.Text.Trim();
             DifftoolPath.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.path", diffTool));
             DifftoolCmd.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.cmd", diffTool));
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
                 ResolveDiffToolPath();
+            }
 
             DiffToolCmdSuggest_Click(null, null);
         }
@@ -260,9 +305,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string exeFile = MergeToolsHelper.GetDiffToolExeFile(diffTool);
 
             if (exeFile != null)
+            {
                 DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
+            }
             else
+            {
                 DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolPath.Text);
+            }
         }
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)

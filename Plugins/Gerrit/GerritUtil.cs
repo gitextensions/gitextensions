@@ -33,15 +33,29 @@ namespace Gerrit
         public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string command, [NotNull] Uri fetchUrl, [NotNull] string remote, byte[] stdIn)
         {
             if (owner == null)
+            {
                 throw new ArgumentNullException(nameof(owner));
+            }
+
             if (aModule == null)
+            {
                 throw new ArgumentNullException(nameof(aModule));
+            }
+
             if (command == null)
+            {
                 throw new ArgumentNullException(nameof(command));
+            }
+
             if (fetchUrl == null)
+            {
                 throw new ArgumentNullException(nameof(fetchUrl));
+            }
+
             if (remote == null)
+            {
                 throw new ArgumentNullException(nameof(remote));
+            }
 
             StartAgent(owner, aModule, remote);
 
@@ -61,7 +75,9 @@ namespace Gerrit
             int port = fetchUrl.Port;
 
             if (port == -1 && fetchUrl.Scheme == "ssh")
+            {
                 port = 22;
+            }
 
             var sb = new StringBuilder();
 
@@ -92,18 +108,30 @@ namespace Gerrit
         public static void StartAgent([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string remote)
         {
             if (owner == null)
+            {
                 throw new ArgumentNullException(nameof(owner));
+            }
+
             if (aModule == null)
+            {
                 throw new ArgumentNullException(nameof(aModule));
+            }
+
             if (remote == null)
+            {
                 throw new ArgumentNullException(nameof(remote));
+            }
 
             if (GitCommandHelpers.Plink())
             {
                 if (!File.Exists(AppSettings.Pageant))
+                {
                     MessageBoxes.PAgentNotFound(owner);
+                }
                 else
+                {
                     aModule.StartPageantForRemote(remote);
+                }
             }
         }
     }

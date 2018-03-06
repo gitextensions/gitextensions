@@ -98,8 +98,13 @@ namespace GitCommands
                         if (task.IsFaulted)
                         {
                             foreach (var e in task.Exception.InnerExceptions)
+                            {
                                 if (!OnLoadingError(e))
+                                {
                                     throw e;
+                                }
+                            }
+
                             return;
                         }
                         try
@@ -112,7 +117,9 @@ namespace GitCommands
                         catch (Exception exception)
                         {
                             if (!OnLoadingError(exception))
+                            {
                                 throw;
+                            }
                         }
                     }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
         }
@@ -145,8 +152,13 @@ namespace GitCommands
                 if (task.IsFaulted)
                 {
                     foreach (var e in task.Exception.InnerExceptions)
+                    {
                         if (!OnLoadingError(e))
+                        {
                             throw e;
+                        }
+                    }
+
                     return default;
                 }
                 try
@@ -160,7 +172,10 @@ namespace GitCommands
                 catch (Exception exception)
                 {
                     if (!OnLoadingError(exception))
+                    {
                         throw;
+                    }
+
                     return default;
                 }
             }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
@@ -181,7 +196,9 @@ namespace GitCommands
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _cancelledTokenSource?.Dispose();
+            }
         }
 
         public void Dispose()

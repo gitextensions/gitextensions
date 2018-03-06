@@ -80,13 +80,17 @@ namespace GitCommands
             set
             {
                 if (String.IsNullOrEmpty(value))
+                {
                     Module.UnsetSetting(_remoteSettingName);
+                }
                 else
                 {
                     Module.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
+                    {
                         MergeWith = Name;
+                    }
                 }
             }
         }
@@ -113,9 +117,13 @@ namespace GitCommands
             set
             {
                 if (String.IsNullOrEmpty(value))
+                {
                     Module.UnsetSetting(_mergeSettingName);
+                }
                 else
+                {
                     Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
+                }
             }
         }
 

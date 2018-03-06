@@ -32,6 +32,7 @@ namespace ResourceManager
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (HotkeysEnabled && Hotkeys != null)
+            {
                 foreach (var hotkey in Hotkeys)
                 {
                     if (hotkey != null && hotkey.KeyData == keyData)
@@ -39,6 +40,7 @@ namespace ResourceManager
                         return ExecuteCommand(hotkey.CommandCode);
                     }
                 }
+            }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -93,8 +95,10 @@ namespace ResourceManager
             var isComponentInDesignMode = CheckComponent(this);
 
             if (!_translated && !isComponentInDesignMode)
+            {
                 throw new Exception("The control " + GetType().Name +
                                     " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
+            }
         }
 
         /// <summary>Translates the <see cref="Form"/>'s fields and properties, including child controls.</summary>
@@ -118,7 +122,10 @@ namespace ResourceManager
         {
             var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
             if (translation.Count == 0)
+            {
                 return;
+            }
+
             foreach (var pair in translation)
             {
                 IEnumerable<Tuple<string, object>> itemsToTranslate = new[] { new Tuple<string, object>(itemName, item) };

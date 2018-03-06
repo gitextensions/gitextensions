@@ -13,7 +13,9 @@ namespace GitCommands
         public GitDeleteBranchCmd(IEnumerable<IGitRef> branches, bool force)
         {
             if (branches == null)
+            {
                 throw new ArgumentNullException(nameof(branches));
+            }
 
             _branches = branches.ToArray();
             _force = force;
@@ -31,10 +33,14 @@ namespace GitCommands
             var hasRemoteBranch = _branches.Any(branch => branch.IsRemote);
             var hasNonRemoteBranch = _branches.Any(branch => !branch.IsRemote);
             if (hasRemoteBranch)
+            {
                 yield return hasNonRemoteBranch ? "-a" : "-r";
+            }
 
             foreach (var branch in _branches)
+            {
                 yield return "\"" + branch.Name + "\"";
+            }
         }
 
         public override bool AccessesRemote()

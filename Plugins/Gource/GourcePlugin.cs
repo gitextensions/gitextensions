@@ -137,13 +137,18 @@ namespace Gource
                         Directory.CreateDirectory(directoryName);
                     }
                     if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
+                    {
                         continue;
+                    }
 
                     var fullPath = Path.Combine(directoryName, theEntry.Name);
                     fullPath = fullPath.Replace("\\ ", "\\");
                     var fullDirPath = Path.GetDirectoryName(fullPath);
                     if (fullDirPath != null && !Directory.Exists(fullDirPath))
+                    {
                         Directory.CreateDirectory(fullDirPath);
+                    }
+
                     var streamWriter = File.Create(fullPath);
                     var data = new byte[2048];
                     while (true)
@@ -162,7 +167,9 @@ namespace Gource
                 }
                 s.Close();
                 if (deleteZipFile)
+                {
                     File.Delete(zipPathAndFile);
+                }
             }
             catch (Exception e)
             {

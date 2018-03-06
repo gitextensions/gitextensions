@@ -25,11 +25,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             foreach (string location in locations)
             {
                 if (string.IsNullOrEmpty(location))
+                {
                     continue;
+                }
+
                 if (Path.IsPathRooted(location))
                 {
                     if (File.Exists(location))
+                    {
                         return location;
+                    }
+
                     continue;
                 }
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
@@ -43,7 +49,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     {
                         string fullName = Path.Combine(path, fileName);
                         if (File.Exists(fullName))
+                        {
                             return fullName;
+                        }
                     }
                 }
 
@@ -59,7 +67,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         {
                             string fullName = Path.Combine(path, fileName);
                             if (File.Exists(fullName))
+                            {
                                 return fullName;
+                            }
                         }
                     }
                 }
@@ -71,11 +81,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private static string UnquoteString(string str)
         {
             if (String.IsNullOrEmpty(str))
+            {
                 return str;
+            }
 
             int length = str.Length;
             if (length > 1 && str[0] == '\"' && str[length - 1] == '\"')
+            {
                 str = str.Substring(1, length - 2);
+            }
 
             return str;
         }
@@ -90,17 +104,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     // Maybe command -v is better, but didn't work
                     kdiff3path = GitCommandHelpers.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
                     if (string.IsNullOrEmpty(kdiff3path))
+                    {
                         return null;
+                    }
                 }
                 else if (EnvUtils.RunningOnWindows())
                 {
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
+                    {
                         regkdiff3path += "\\kdiff3.exe";
+                    }
 
                     kdiff3path = FindFileInFolders("kdiff3.exe", @"KDiff3\", regkdiff3path);
                     if (string.IsNullOrEmpty(kdiff3path))
+                    {
                         return null;
+                    }
                 }
                 return kdiff3path;
             }
@@ -233,7 +253,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string mergeTool = mergeToolText.ToLowerInvariant();
             var exeName = GetDiffToolExeFile(mergeTool);
             if (exeName != null)
+            {
                 return exeName;
+            }
 
             switch (mergeTool)
             {
@@ -268,7 +290,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "kdiff3":
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
+                    {
                         regkdiff3path += "\\" + exeName;
+                    }
+
                     return FindDiffToolFullPath(settings, exeName, "mergetool.kdiff3.path", @"KDiff3\", regkdiff3path);
                 case "meld":
                     return FindDiffToolFullPath(settings, exeName, "mergetool.meld.path", @"Meld\", @"Meld (x86)\");
@@ -331,7 +356,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "tortoisemerge":
                     string command = "\"{0}\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                     if (exeFile.ToLower().Contains("tortoisegit"))
+                    {
                         command = command.Replace("/", "-");
+                    }
 
                     return String.Format(command, exeFile);
                 case "vscode":
@@ -380,7 +407,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     var path = localMachineKey?.GetValue("InstallDir") as string;
                     if (!string.IsNullOrEmpty(path))
+                    {
                         return Path.Combine(path, exeName);
+                    }
                 }
             }
             return exeName;

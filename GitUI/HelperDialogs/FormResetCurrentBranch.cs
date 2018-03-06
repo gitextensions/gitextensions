@@ -44,7 +44,9 @@ namespace GitUI.HelperDialogs
         private void FormResetCurrentBranch_Load(object sender, EventArgs e)
         {
             if (Revision == null)
+            {
                 throw new Exception("No revision");
+            }
 
             _NO_TRANSLATE_BranchInfo.Text = string.Format(_branchInfo.Text, Module.GetSelectedBranch());
             commitSummaryUserControl1.Revision = Revision;

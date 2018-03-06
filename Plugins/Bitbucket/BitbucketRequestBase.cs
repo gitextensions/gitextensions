@@ -43,20 +43,26 @@ namespace Bitbucket
             if (RequestBody != null)
             {
                 if (RequestBody is string)
+                {
                     request.AddParameter("application/json", RequestBody, ParameterType.RequestBody);
+                }
                 else
+                {
                     request.AddBody(RequestBody);
+                }
             }
             // XSRF check fails when approving/creating
             request.AddHeader("X-Atlassian-Token", "no-check");
 
             var response = client.Execute(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
+            {
                 return new BitbucketResponse<T>
                 {
                     Success = false,
                     Messages = new[] { response.ErrorMessage }
                 };
+            }
 
             if ((int)response.StatusCode >= 300)
             {

@@ -76,19 +76,40 @@ namespace GitUI.RevisionGridClasses
         {
             var filter = "";
             if (AuthorCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
+            {
                 filter += string.Format(" --author=\"{0}\"", Author.Text);
+            }
+
             if (CommitterCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
+            {
                 filter += string.Format(" --committer=\"{0}\"", Committer.Text);
+            }
+
             if (MessageCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
+            {
                 filter += string.Format(" --grep=\"{0}\"", Message.Text);
+            }
+
             if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
+            {
                 filter += " --regexp-ignore-case";
+            }
+
             if (SinceCheck.Checked)
+            {
                 filter += string.Format(" --since=\"{0}\"", Since.Value.ToString("yyyy-MM-dd hh:mm:ss"));
+            }
+
             if (CheckUntil.Checked)
+            {
                 filter += string.Format(" --until=\"{0}\"", Until.Value.ToString("yyyy-MM-dd hh:mm:ss"));
+            }
+
             if (LimitCheck.Checked && _NO_TRANSLATE_Limit.Value > 0)
+            {
                 filter += string.Format(" --max-count=\"{0}\"", (int)_NO_TRANSLATE_Limit.Value);
+            }
+
             return filter;
         }
 
@@ -96,7 +117,10 @@ namespace GitUI.RevisionGridClasses
         {
             var filter = "";
             if (FileFilterCheck.Checked)
+            {
                 filter += string.Format(" \"{0}\"", FileFilter.Text.ToPosixPath());
+            }
+
             return filter;
         }
 
@@ -109,21 +133,30 @@ namespace GitUI.RevisionGridClasses
         public string GetInMemAuthorFilter()
         {
             if (AuthorCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
+            {
                 return Author.Text;
+            }
+
             return string.Empty;
         }
 
         public string GetInMemCommitterFilter()
         {
             if (CommitterCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
+            {
                 return Committer.Text;
+            }
+
             return string.Empty;
         }
 
         public string GetInMemMessageFilter()
         {
             if (MessageCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
+            {
                 return Message.Text;
+            }
+
             return string.Empty;
         }
 
@@ -135,7 +168,9 @@ namespace GitUI.RevisionGridClasses
         public string GetBranchFilter()
         {
             if (!AppSettings.BranchFilterEnabled || AppSettings.ShowCurrentBranchOnly)
+            {
                 return String.Empty;
+            }
 
             return BranchFilter.Text;
         }

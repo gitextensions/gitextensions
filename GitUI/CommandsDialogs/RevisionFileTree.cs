@@ -166,14 +166,18 @@ See the changes in the commit form.");
                         foreach (TreeNode node in currenNodes)
                         {
                             if (node.Text != next && next.Length != 40)
+                            {
                                 continue;
+                            }
 
                             node.Expand();
                             matchedNode = node;
                             break;
                         }
                         if (matchedNode == null)
+                        {
                             currenNodes = null;
+                        }
                         else
                         {
                             lastMatchedNode = matchedNode;
@@ -182,7 +186,10 @@ See the changes in the commit form.");
                     }
                     // if there is no exact match, don't restore scroll position
                     if (lastMatchedNode != matchedNode)
+                    {
                         FileText.ResetCurrentScrollPos();
+                    }
+
                     tvGitTree.SelectedNode = lastMatchedNode;
                 }
                 if (tvGitTree.SelectedNode == null)
@@ -234,7 +241,9 @@ See the changes in the commit form.");
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             if (gitItem == null)
+            {
                 return;
+            }
 
             switch (gitItem.ObjectType)
             {
@@ -261,9 +270,14 @@ See the changes in the commit form.");
 
             var fileName = gitItem.FileName;
             if (fileName.Contains("\\") && fileName.LastIndexOf("\\", StringComparison.Ordinal) < fileName.Length)
+            {
                 fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+            }
+
             if (fileName.Contains("/") && fileName.LastIndexOf("/", StringComparison.Ordinal) < fileName.Length)
+            {
                 fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
+            }
 
             fileName = (Path.GetTempPath() + fileName).ToNativePath();
             Module.SaveBlobAs(fileName, gitItem.Guid);
@@ -364,7 +378,9 @@ See the changes in the commit form.");
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
 
             if (gitItem == null)
+            {
                 return;
+            }
 
             UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, true, true);
         }
@@ -378,7 +394,9 @@ See the changes in the commit form.");
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             if (gitItem == null)
+            {
                 return;
+            }
 
             var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             Clipboard.SetText(fileName.ToNativePath());
@@ -388,7 +406,9 @@ See the changes in the commit form.");
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             if (gitItem == null)
+            {
                 return;
+            }
 
             UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, false, false);
         }
@@ -432,7 +452,9 @@ See the changes in the commit form.");
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             if (gitItem == null || gitItem.ObjectType != GitObjectType.Blob)
+            {
                 return;
+            }
 
             var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             UICommands.StartFileEditorDialog(fileName);
@@ -538,7 +560,9 @@ See the changes in the commit form.");
         {
             var fileName = SaveSelectedItemToTempFile();
             if (fileName != null)
+            {
                 OsShellUtil.OpenAs(fileName);
+            }
         }
 
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -547,7 +571,9 @@ See the changes in the commit form.");
             {
                 var fileName = SaveSelectedItemToTempFile();
                 if (fileName != null)
+                {
                     Process.Start(fileName);
+                }
             }
             catch (Exception ex)
             {
@@ -568,7 +594,9 @@ See the changes in the commit form.");
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
             if (gitItem == null || gitItem.ObjectType != GitObjectType.Blob)
+            {
                 return;
+            }
 
             var fileName = _fullPathResolver.Resolve(gitItem.FileName);
             OsShellUtil.OpenAs(fileName.ToNativePath());
@@ -622,7 +650,9 @@ See the changes in the commit form.");
             var item = tvGitTree.SelectedNode?.Tag as GitItem;
 
             if (item == null || item.ObjectType == GitObjectType.Tree)
+            {
                 return null;
+            }
 
             var filename = _fullPathResolver.Resolve(item.FileName);
             if (!File.Exists(filename))
@@ -639,11 +669,16 @@ See the changes in the commit form.");
             var itemStatus = new GitItemStatus();
             itemStatus.Name = GetSelectedFile();
             if (itemStatus.Name == null)
+            {
                 return;
+            }
+
             var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (answer == DialogResult.No)
+            {
                 return;
+            }
 
             Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out wereErrors);
 
@@ -661,12 +696,16 @@ See the changes in the commit form.");
         {
             var filename = GetSelectedFile();
             if (filename == null)
+            {
                 return;
+            }
 
             var answer = MessageBox.Show(string.Format(_stopTrackingMessage.Text, filename), _stopTrackingCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (answer == DialogResult.No)
+            {
                 return;
+            }
 
             if (Module.StopTrackingFile(filename))
             {
