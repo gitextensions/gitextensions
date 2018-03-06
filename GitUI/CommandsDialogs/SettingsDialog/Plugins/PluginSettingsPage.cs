@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public override SettingsPageReference PageReference => new SettingsPageReferenceByType(_gitPlugin.GetType());
 
-        protected override SettingsLayout CreateSettingsLayout()
+        protected override ISettingsLayout CreateSettingsLayout()
         {
             labelNoSettings.Visible = !GetSettings().Any();
 
