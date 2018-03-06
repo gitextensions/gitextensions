@@ -4,8 +4,8 @@ using EnvDTE80;
 
 namespace GitPluginShared.Commands
 {
-    public class ToolbarCommand<ItemCommandT> : CommandBase
-        where ItemCommandT : ItemCommandBase, new()
+    public class ToolbarCommand<TCommand> : CommandBase
+        where TCommand : ItemCommandBase, new()
     {
         public ToolbarCommand(bool runForSelection = false)
         {
@@ -14,13 +14,13 @@ namespace GitPluginShared.Commands
 
         public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
-            var command = new ItemCommandT { RunForSelection = RunForSelection };
+            var command = new TCommand { RunForSelection = RunForSelection };
             command.OnCommand(application, pane);
         }
 
         public override bool IsEnabled(DTE2 application)
         {
-            return new ItemCommandT().IsEnabled(application);
+            return new TCommand().IsEnabled(application);
         }
     }
 }
