@@ -88,6 +88,7 @@ namespace GitCommands
                     {
                         token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
+
                     if (!token.IsCancellationRequested)
                     {
                         loadContent(token);
@@ -107,6 +108,7 @@ namespace GitCommands
 
                             return;
                         }
+
                         try
                         {
                             if (!token.IsCancellationRequested)
@@ -141,10 +143,12 @@ namespace GitCommands
                     {
                         token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
+
                     if (token.IsCancellationRequested)
                     {
                         return default;
                     }
+
                     return loadContent(token);
                 }, token)
                 .ContinueWith((task) =>
@@ -161,12 +165,14 @@ namespace GitCommands
 
                     return default;
                 }
+
                 try
                 {
                     if (!token.IsCancellationRequested)
                     {
                         onLoaded(task.Result);
                     }
+
                     return task.Result;
                 }
                 catch (Exception exception)

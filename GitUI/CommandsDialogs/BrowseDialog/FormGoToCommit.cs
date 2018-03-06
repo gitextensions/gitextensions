@@ -255,6 +255,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

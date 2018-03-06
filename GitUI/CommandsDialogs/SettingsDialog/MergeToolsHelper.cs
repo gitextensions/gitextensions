@@ -38,6 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                     continue;
                 }
+
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
 
                 string path;
@@ -122,8 +123,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         return null;
                     }
                 }
+
                 return kdiff3path;
             }
+
             return null;
         }
 
@@ -157,6 +160,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "vscode":
                     return "code.exe";
             }
+
             return null;
         }
 
@@ -196,6 +200,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         exeName = "TortoiseMerge.exe";
                         difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
                     }
+
                     return difftoolPath;
                 case "winmerge":
                     return FindDiffToolFullPath(settings, exeName, "difftool.winmerge.path", @"WinMerge\");
@@ -204,6 +209,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "vscode":
                     return FindDiffToolFullPath(settings, exeName, "difftool.vscode.path", @"Microsoft VS Code");
             }
+
             exeName = difftoolText + ".exe";
             return GetFullPath(exeName);
         }
@@ -245,6 +251,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "vscode":
                     return "\"" + exeFile + "\" --wait --diff \"$LOCAL\" \"$REMOTE\"";
             }
+
             return "";
         }
 
@@ -262,6 +269,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "tortoisemerge":
                     return "TortoiseMerge.exe";
             }
+
             return null;
         }
 
@@ -311,6 +319,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         exeName = "TortoiseMerge.exe";
                         path = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
                     }
+
                     return path;
                 case "winmerge":
                     return FindDiffToolFullPath(settings, exeName, "mergetool.winmerge.path", @"WinMerge\");
@@ -319,6 +328,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "vscode":
                     return FindDiffToolFullPath(settings, exeName, "mergetool.vscode.path", @"Microsoft VS Code");
             }
+
             exeName = mergeToolText + ".exe";
             return GetFullPath(exeName);
         }
@@ -333,6 +343,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "winmerge":
                     return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
             }
+
             return AutoConfigMergeToolCmd(mergeToolText, exeFile);
         }
 
@@ -366,6 +377,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "vsdiffmerge":
                     return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
             }
+
             // other commands supported natively by git for windows
             return "";
         }
@@ -387,6 +399,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             catch (UnauthorizedAccessException)
             {
             }
+
             return value ?? string.Empty;
         }
 
@@ -412,6 +425,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
             }
+
             return exeName;
         }
     }

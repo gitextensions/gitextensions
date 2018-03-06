@@ -312,6 +312,7 @@ namespace GitUI.BuildServerIntegration
                             System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
                             return null;
                         }
+
                         var buildServerAdapter = export.Value;
                         buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
                         return buildServerAdapter;

@@ -71,6 +71,7 @@ namespace GitUI
                 _images.Images.Add(Resources.IconSubmoduleRevisionSemiDownDirty); // 13
                 _images.Images.Add(Resources.IconFileStatusUnknown); // 14
             }
+
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
 
@@ -178,6 +179,7 @@ namespace GitUI
                     {
                         return loop ? GetLastIndex() : curIdx;
                     }
+
                     return nextItem.Index;
                 }
                 else
@@ -187,6 +189,7 @@ namespace GitUI
                     {
                         return loop ? 0 : curIdx;
                     }
+
                     return nextItem.Index;
                 }
             }
@@ -206,6 +209,7 @@ namespace GitUI
                 {
                     foundCurrentGroup = true;
                 }
+
                 if (foundCurrentGroup)
                 {
                     searchInGroups.Add(FileStatusListView.Groups[i]);
@@ -221,6 +225,7 @@ namespace GitUI
                         return FileStatusListView.Items[i];
                     }
                 }
+
                 curIdx = FileStatusListView.Items.Count;
             }
 
@@ -237,6 +242,7 @@ namespace GitUI
                 {
                     foundCurrentGroup = true;
                 }
+
                 if (foundCurrentGroup)
                 {
                     searchInGroups.Add(FileStatusListView.Groups[i]);
@@ -252,6 +258,7 @@ namespace GitUI
                         return FileStatusListView.Items[i];
                     }
                 }
+
                 curIdx = -1;
             }
 
@@ -329,6 +336,7 @@ namespace GitUI
             {
                 text += item.SubmoduleStatus.Result.AddedAndRemovedString();
             }
+
             return text;
         }
 
@@ -518,6 +526,7 @@ namespace GitUI
                 {
                     item.Selected = true;
                 }
+
                 var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
                 first?.EnsureVisible();
                 StoreNextIndexToSelect();
@@ -556,6 +565,7 @@ namespace GitUI
                         }
                     }
                 }
+
                 if (newSelected != null)
                 {
                     newSelected.Selected = true;
@@ -775,6 +785,7 @@ namespace GitUI
 
                 return !status.IsDirty ? 2 : 5;
             }
+
             if (gitItemStatus.IsRenamed)
             {
                 return 3;
@@ -823,6 +834,7 @@ namespace GitUI
                 {
                     result.Add(listViewItem.Tag as GitItemStatus);
                 }
+
                 return result;
             }
         }
@@ -854,6 +866,7 @@ namespace GitUI
                 EnsureSelectedIndexChangeSubscription();
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             }
+
             FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             var previouslySelectedItems = new List<GitItemStatus>();
@@ -895,6 +908,7 @@ namespace GitUI
                     group.Tag = pair.Key;
                     FileStatusListView.Groups.Add(group);
                 }
+
                 foreach (var item in pair.Value)
                 {
                     if (_filter.IsMatch(item.Name))
@@ -923,15 +937,18 @@ namespace GitUI
                                                               TaskContinuationOptions.OnlyOnRanToCompletion,
                                                               TaskScheduler.FromCurrentSynchronizationContext());
                         }
+
                         if (previouslySelectedItems.Contains(item))
                         {
                             listItem.Selected = true;
                         }
+
                         listItem.Tag = item;
                         list.Add(listItem);
                     }
                 }
             }
+
             FileStatusListView.Items.AddRange(list.ToArray());
 
             if (updateCausedByFilter == false)
@@ -943,6 +960,7 @@ namespace GitUI
                     SelectFirstVisibleItem();
                 }
             }
+
             FileStatusListView_SizeChanged(null, null);
             FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.EndUpdate();
@@ -1029,8 +1047,10 @@ namespace GitUI
                         {
                             FileStatusListView.EndUpdate();
                         }
+
                         break;
                     }
+
                 default:
                     KeyDown?.Invoke(sender, e);
                     break;
@@ -1098,6 +1118,7 @@ namespace GitUI
             {
                 parentRev = new GitRevision("");
             }
+
             IGitItemsWithParents dictionary = items == null ? null :
                 dictionary = new GitItemsWithParents { { parentRev, items } };
 
@@ -1132,7 +1153,8 @@ namespace GitUI
                     {
                         // Note: RevisionGrid could in some forms be used to get the parent guids
                         list.Add(new GitRevision(item));
-                    };
+                    }
+;
                     parentRevs = list.ToArray();
                 }
                 else
@@ -1174,6 +1196,7 @@ namespace GitUI
                     }
                 }
             }
+
             GitItemStatusesWithParents = dictionary;
         }
 
@@ -1233,6 +1256,7 @@ namespace GitUI
                         {
                             _ToolTipText = ae.Message;
                         }
+
                         if (fileCount > 0)
                         {
                             AddToSelectionFilter(FilterComboBox.Text);
@@ -1241,6 +1265,7 @@ namespace GitUI
                         timer.Stop();
                         _lastUserInputTime = 0;
                     }
+
                     timerLastChanged = _lastUserInputTime;
                 };
 
@@ -1264,6 +1289,7 @@ namespace GitUI
                 {
                     FilterComboBox.Items.RemoveAt(SelectionFilterMaxLength - 1);
                 }
+
                 FilterComboBox.Items.Insert(0, filter);
             }
         }

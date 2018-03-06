@@ -110,6 +110,7 @@ namespace JiraCommitHintPlugin
                 MessageBox.Show(null, InvalidUrlMessage, InvalidUrlCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             try
             {
                 Process.Start(_urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
@@ -229,6 +230,7 @@ namespace JiraCommitHintPlugin
             {
                 e.GitUICommands.RemoveCommitTemplate(message.Title);
             }
+
             _currentMessages = null;
         }
 

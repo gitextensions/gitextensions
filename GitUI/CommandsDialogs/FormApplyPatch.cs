@@ -149,6 +149,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noFileSelectedText.Text);
                 return;
             }
+
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
             {

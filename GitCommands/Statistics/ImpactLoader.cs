@@ -131,6 +131,7 @@ namespace GitCommands.Statistics
                     }
                 }
             }
+
             return tasks.ToArray();
         }
 
@@ -232,9 +233,11 @@ namespace GitCommands.Statistics
                             start = week.Key;
                             startFound = true;
                         }
+
                         end = week.Key;
                     }
                 }
+
                 if (!startFound)
                 {
                     continue;

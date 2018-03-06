@@ -118,6 +118,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         _remoteBranchesCB.Items.Add(branches[i].Name);
                     }
+
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
                     {
@@ -159,6 +160,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         _yourBranchesCB.Items.Add(branches[i].Name);
                     }
+
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
                     {

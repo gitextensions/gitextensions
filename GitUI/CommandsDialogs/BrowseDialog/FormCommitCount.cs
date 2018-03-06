@@ -85,6 +85,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         submodulesList = " [" + sub.Count.ToString() + " submodules]";
                     }
                 }
+
                 CommitCount.Text += string.Format("{0,6} - {1}{2}\r\n", keyValuePair.Value, keyValuePair.Key, submodulesList);
             }
 

@@ -41,6 +41,7 @@ namespace GitCommands.ExternalLinks
                 {
                     _definitions.Add(definition);
                 }
+
                 // TODO: else notify the user?
             }
             else

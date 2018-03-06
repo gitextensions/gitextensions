@@ -52,6 +52,7 @@ namespace GitUI.CommandsDialogs
                     e.Cancel = true;
                     break;
                 }
+
                 bw.ReportProgress(0, oldSubmodule);
             }
         }

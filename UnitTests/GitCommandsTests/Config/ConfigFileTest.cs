@@ -87,6 +87,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\", false);
 
             Assert.IsNotNull(configFile);
@@ -315,6 +316,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasValue("section1.key1"));
             Assert.IsFalse(file.HasValue("section10.key1"));
@@ -327,6 +329,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasConfigSection("section1"));
             Assert.IsFalse(file.HasConfigSection("inexistent.section"));
@@ -340,6 +343,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
             CheckValueIsEqual(configFile, "section1.key1", "value1");
             CheckValueIsEqual(configFile, "section2.subsection.key2", "value2");
@@ -417,6 +421,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(configFile.ConfigSections.Count == 3);
             configFile.RemoveConfigSection("section1");
@@ -710,6 +715,7 @@ namespace GitCommandsTests.Config
                 AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
                 AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
             }
+
             // verify
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);

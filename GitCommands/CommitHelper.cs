@@ -50,6 +50,7 @@ namespace GitCommands
             {
                 textWriter.Write(commitMessageText);
             }
+
             if (AppSettings.RememberAmendCommitState && amendCommit)
             {
                 File.WriteAllText(GetAmendPath(module), true.ToString());

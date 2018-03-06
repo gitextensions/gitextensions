@@ -110,6 +110,7 @@ namespace PatchApply
                 sb.Append("new file mode " + fileMode);
                 sb.Append("\n");
             }
+
             sb.Append("index 0000000..0000000");
             sb.Append("\n");
             if (reset)
@@ -170,6 +171,7 @@ namespace PatchApply
             {
                 s.Append(b.ToString("x2").ToLower());
             }
+
             return s.ToString();
         }
 
@@ -330,6 +332,7 @@ namespace PatchApply
             {
                 diff = diff.Combine("\n", line.Text);
             }
+
             // stage no new line at the end only if last +- line is selected
             if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
             {
@@ -441,6 +444,7 @@ namespace PatchApply
                     _CurrentSubChunk = new SubChunk();
                     _SubChunks.Add(_CurrentSubChunk);
                 }
+
                 return _CurrentSubChunk;
             }
         }
@@ -609,6 +613,7 @@ namespace PatchApply
                                 clonedLine.SetOperation("+");
                                 result.CurrentSubChunk.AddedLines.Add(clonedLine);
                             }
+
                             result.CurrentSubChunk.WasNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         }
                     }
@@ -621,6 +626,7 @@ namespace PatchApply
                 currentPos += line.Length + eolLength;
                 i++;
             }
+
             return result;
         }
 
@@ -688,6 +694,7 @@ namespace PatchApply
                         selectedChunks.Add(chunk);
                     }
                 }
+
                 currentPos += chunkStr.Length;
                 i++;
             }
@@ -737,6 +744,7 @@ namespace PatchApply
                 result = result.Combine("\n", "--");
                 result = result.Combine("\n", Application.ProductName + " " + AppSettings.ProductVersion);
             }
+
             return result;
         }
     }

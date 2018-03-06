@@ -45,6 +45,7 @@ namespace GitStatistics.PieChart
                 case EdgeColorType.NoEdge:
                     return Color.Transparent;
             }
+
             return ColorUtil.CreateColorWithCorrectedLightness(color, correctionFactor);
         }
 
@@ -58,6 +59,7 @@ namespace GitStatistics.PieChart
                            ? EdgeColorType.DarkerThanSurface
                            : EdgeColorType.DarkerDarkerThanSurface;
             }
+
             return colorType ==
                    EdgeColorType.Contrast
                        ? EdgeColorType.LighterThanSurface

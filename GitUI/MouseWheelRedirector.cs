@@ -60,6 +60,7 @@ namespace GitUI
                         _previousHWnd = hWnd;
                         _GEControl = control != null;
                     }
+
                     if (_GEControl)
                     {
                         NativeMethods.SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
@@ -67,6 +68,7 @@ namespace GitUI
                     }
                 }
             }
+
             return false;
         }
 

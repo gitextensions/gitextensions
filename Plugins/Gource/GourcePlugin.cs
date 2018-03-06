@@ -86,6 +86,7 @@ namespace Gource
                         MessageBox.Show(ownerForm, _cannotFindGource.Text);
                         return false;
                     }
+
                     var downloadDir = Path.GetTempPath();
                     var fileName = Path.Combine(downloadDir, "gource.zip");
                     var downloadSize = DownloadFile(gourceUrl, fileName);
@@ -115,6 +116,7 @@ namespace Gource
                 Settings.SetValue<string>(_GourceArguments.Name, gourceStart.GourceArguments, s => s);
                 Settings.SetValue<string>(_GourcePath.Name, gourceStart.PathToGource, s => s);
             }
+
             return true;
         }
 
@@ -136,6 +138,7 @@ namespace Gource
                     {
                         Directory.CreateDirectory(directoryName);
                     }
+
                     if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
                     {
                         continue;
@@ -163,8 +166,10 @@ namespace Gource
                             break;
                         }
                     }
+
                     streamWriter.Close();
                 }
+
                 s.Close();
                 if (deleteZipFile)
                 {

@@ -29,11 +29,13 @@ namespace GitCommands
                             {
                                 sb.Append(currentSurroundingText.ToString());
                             }
+
                             currentSurroundingText = new StringBuilder();
                             hasSeenAtLeastOneWord = true;
                             readingWord = true;
                             wordQuestionMarkCount = 0;
                         }
+
                         break;
                     case '?':
                         if (readingWord)
@@ -51,8 +53,10 @@ namespace GitCommands
                                 continue;
                             }
                         }
+
                         break;
                 }
+
                 if (readingWord)
                 {
                     currentWord.Append(('_' == currentChar) ? ' ' : currentChar);
@@ -64,9 +68,11 @@ namespace GitCommands
                     i++;
                 }
             }
+
             sb.Append(currentSurroundingText.ToString());
             return sb.ToString();
         }
+
         private static string ParseEncodedWord(string input)
         {
             var sb = new StringBuilder();
@@ -79,6 +85,7 @@ namespace GitCommands
             {
                 return input;
             }
+
             // Get the name of the encoding but skip the leading =?
             string encodingName = input.Substring(2, input.IndexOf("?", 2, StringComparison.Ordinal) - 2);
             Encoding enc = Encoding.ASCII;
@@ -86,6 +93,7 @@ namespace GitCommands
             {
                 enc = Encoding.GetEncoding(encodingName);
             }
+
             // Get the type of the encoding
             char type = input[encodingName.Length + 3];
             // Start after the name of the encoding and the other required parts
@@ -102,6 +110,7 @@ namespace GitCommands
                     sb.Append(intermediate);
                     break;
             }
+
             return sb.ToString();
         }
 
@@ -130,6 +139,7 @@ namespace GitCommands
                             ++i;
                             break;
                         }
+
                         int skipNewLineCount = 0;
                         for (int j = 0; j < 2; ++j)
                         {
@@ -139,6 +149,7 @@ namespace GitCommands
                                 ++skipNewLineCount;
                             }
                         }
+
                         if (skipNewLineCount > 0)
                         {
                             // If we have a lone equals followed by newline chars, then this is an artificial
@@ -162,6 +173,7 @@ namespace GitCommands
                                 i += 1;
                             }
                         }
+
                         break;
                     case (byte)'?':
                         if (skipQuestionEquals && workingBytes[i + 1] == (byte)'=')
@@ -174,6 +186,7 @@ namespace GitCommands
                             ++outputPos;
                             ++i;
                         }
+
                         break;
                     default:
                         workingBytes[outputPos] = workingBytes[i];
@@ -182,12 +195,14 @@ namespace GitCommands
                         break;
                 }
             }
+
             string output = string.Empty;
             int numBytes = outputPos - startPos;
             if (numBytes > 0)
             {
                 output = enc.GetString(workingBytes, startPos, numBytes);
             }
+
             return output;
         }
     }

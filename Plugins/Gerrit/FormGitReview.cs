@@ -129,6 +129,7 @@ namespace Gerrit
                             e.Cancel = true;
                             return;
                         }
+
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;

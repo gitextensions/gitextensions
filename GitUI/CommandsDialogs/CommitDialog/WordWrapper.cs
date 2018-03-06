@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
             {
                 newLines.AddRange(InternalWrapSingleLine(line, lineLimit));
             }
+
             return String.Join(Environment.NewLine, newLines);
         }
 
@@ -26,8 +27,10 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 {
                     yield return wrapper.GetLineAndReset();
                 }
+
                 wrapper.AddWord(word);
             }
+
             if (wrapper.HasWords)
             {
                 yield return wrapper.GetLineAndReset();

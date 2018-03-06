@@ -51,6 +51,7 @@ namespace ReleaseNotesGenerator
                 textBoxRevFrom.Focus();
                 return;
             }
+
             if (string.IsNullOrWhiteSpace(textBoxRevTo.Text))
             {
                 MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text);
@@ -76,6 +77,7 @@ namespace ReleaseNotesGenerator
             {
                 labelRevCount.Text = "n/a";
             }
+
             textBoxResult_TextChanged(null, null);
         }
 
@@ -139,6 +141,7 @@ namespace ReleaseNotesGenerator
                 string message = string.Join("<br/>", logLine.MessageLines.Select(a => WebUtility.HtmlEncode(a)));
                 stringBuilder.AppendFormat("<tr>\r\n  <td>{0}</td>\r\n  <td>{1}</td>\r\n</tr>\r\n", logLine.Commit, message);
             }
+
             stringBuilder.Append("</table>");
             return stringBuilder.ToString();
         }

@@ -74,6 +74,7 @@ namespace GitUI.CommandsDialogs
                     });
                 }
             }
+
             return refLog;
         }
 
@@ -106,6 +107,7 @@ namespace GitUI.CommandsDialogs
             {
                 return gridReflog.SelectedRows[0];
             }
+
             return gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
         }
 

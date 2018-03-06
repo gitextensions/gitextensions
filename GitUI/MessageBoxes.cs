@@ -47,6 +47,7 @@ namespace GitUI
                 {
                     instance = new MessageBoxes();
                 }
+
                 return instance;
             }
         }

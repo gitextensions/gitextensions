@@ -53,6 +53,7 @@ namespace GitCommands
                 {
                     continue;
                 }
+
                 yield return dir;
             }
         }

@@ -149,6 +149,7 @@ namespace GitUI
                                 MessageBoxIcon.Information);
                 return null;
             }
+
             _lastSearchWasBackward = searchBackward;
             _search.LookFor = txtLookFor.Text;
             _search.MatchCase = chkMatchCase.Checked;
@@ -262,6 +263,7 @@ namespace GitUI
                                            TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
                     group.AddMarker(m);
                 }
+
                 if (count == 0)
                 {
                     MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
@@ -335,6 +337,7 @@ namespace GitUI
             {
                 _editor.Document.UndoStack.EndUndoGroup();
             }
+
             if (count == 0)
             {
                 MessageBox.Show(this, _noOccurrencesFoundString.Text);
@@ -357,6 +360,7 @@ namespace GitUI
                     textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
                     textArea.SelectionManager.RemoveSelectedText();
                 }
+
                 textArea.InsertString(text);
             }
             finally
@@ -381,6 +385,7 @@ namespace GitUI
                 _search.Dispose();
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }
@@ -535,6 +540,7 @@ namespace GitUI
                     result = FindNextIn(startAt, curOffs, false);
                 }
             }
+
             return result;
         }
 
@@ -586,6 +592,7 @@ namespace GitUI
                     }
                 }
             }
+
             return null;
         }
 

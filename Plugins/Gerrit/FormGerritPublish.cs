@@ -64,6 +64,7 @@ namespace Gerrit
                 MessageBox.Show(owner, _selectRemote.Text);
                 return false;
             }
+
             if (string.IsNullOrEmpty(branch))
             {
                 MessageBox.Show(owner, _selectBranch.Text);

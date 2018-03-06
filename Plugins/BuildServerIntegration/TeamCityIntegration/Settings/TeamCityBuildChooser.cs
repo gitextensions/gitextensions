@@ -69,6 +69,7 @@ namespace TeamCityIntegration.Settings
             {
                 _previouslySelectedProject = projectNode;
             }
+
             return projectNode;
         }
 

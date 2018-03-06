@@ -206,6 +206,7 @@ namespace ReleaseNotesGenerator
             {
                 sb.AppendFormat("SourceURL:{0}", sourceUri);
             }
+
             int startHtml = sb.Length;
 
             const string pre =

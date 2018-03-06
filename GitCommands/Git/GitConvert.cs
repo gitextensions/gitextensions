@@ -114,6 +114,7 @@ namespace GitCommands
                             bufStatistic.cntCrlf++;
                         }
                     }
+
                     continue;
                 }
 

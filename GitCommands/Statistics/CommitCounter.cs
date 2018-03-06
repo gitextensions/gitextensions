@@ -61,6 +61,7 @@ namespace GitCommands.Statistics
                     commitsPerContributor[contributor] = oldCount + count;
                 }
             }
+
             return Tuple.Create(commitsPerContributor, totalCommits);
         }
 

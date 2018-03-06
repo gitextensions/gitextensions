@@ -75,6 +75,7 @@ namespace GitUITests.UserControls
             {
                 filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk)));
             }
+
             filter.Flush();
 
             List<string> expectedData = new List<string>();
@@ -112,6 +113,7 @@ namespace GitUITests.UserControls
             {
                 filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk)));
             }
+
             filter.Flush();
 
             List<string> expectedData = new List<string>();

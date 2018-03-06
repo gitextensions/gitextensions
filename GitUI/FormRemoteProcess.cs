@@ -112,6 +112,7 @@ namespace GitUI
                         return true;
                     }
                 }
+
                 if (GetOutputString().ToLower().Contains("the server's host key is not cached in the registry"))
                 {
                     string remoteUrl;
@@ -188,6 +189,7 @@ namespace GitUI
                     }
                 }
             }
+
             base.DataReceived(sender, e);
         }
     }

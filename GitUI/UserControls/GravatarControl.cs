@@ -98,6 +98,7 @@ namespace GitUI
             {
                 return;
             }
+
             AppSettings.GravatarDefaultImageType = ((DefaultImageType)tag).ToString();
             await _avatarCache.ClearAsync();
             UpdateGravatar();
@@ -121,6 +122,7 @@ namespace GitUI
                 AppSettings.GravatarDefaultImageType = DefaultImageType.None.ToString();
                 selectedItem = noneToolStripMenuItem;
             }
+
             selectedItem.Checked = true;
         }
     }

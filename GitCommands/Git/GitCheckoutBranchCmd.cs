@@ -31,6 +31,7 @@ namespace GitCommands.Git
                 }
             }
         }
+
         public NewBranch NewBranchAction { get; set; }
 
         public GitCheckoutBranchCmd(string branchName, bool remote)

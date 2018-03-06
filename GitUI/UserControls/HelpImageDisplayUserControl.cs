@@ -209,6 +209,7 @@ namespace GitUI.Help
                     form.MinimumSize = new System.Drawing.Size();
                 }
             }
+
             Size = size;
             MinimumSize = size;
             if (form != null)

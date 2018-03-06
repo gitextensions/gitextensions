@@ -98,6 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
             }
+
             return false;
         }
 
@@ -158,6 +159,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     yield return path + @"bin\git.exe";
                 }
             }
+
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"cmd\"))
@@ -166,6 +168,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     yield return path + @"cmd\git.cmd";
                 }
             }
+
             yield return "git";
             yield return "git.cmd";
         }
@@ -197,8 +200,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     AppSettings.GitCommandValue = command;
                     return true;
                 }
+
                 return false;
             }
+
             AppSettings.GitCommandValue = "git";
             return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }

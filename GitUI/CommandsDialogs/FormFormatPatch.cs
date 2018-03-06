@@ -225,6 +225,7 @@ namespace GitUI.CommandsDialogs
                             smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
                         }
                     }
+
                     ServicePointManager.ServerCertificateValidationCallback =
                         (sender, certificate, chain, errors) => true;
                     smtpClient.Send(mail);
@@ -235,6 +236,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, ex.Message);
                 return false;
             }
+
             return true;
         }
 

@@ -37,6 +37,7 @@ namespace GitUI.Script
                 {
                     si.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
                 }
+
                 ids.Add(si.HotkeyCommandIdentifier);
             }
         }

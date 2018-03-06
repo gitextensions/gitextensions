@@ -218,6 +218,7 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(ActiveForm, Globalized.Strings.CannotLoadTheTextOfTheSparseFile.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.LoadFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
             editor.TextChanged += (sender, args) => sparse.RulesText = editor.GetText() ?? "";
             tooltip.SetToolTip(editor, Globalized.Strings.EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text);
             Control separator = CreateViewSeparator(DockStyle.Top);

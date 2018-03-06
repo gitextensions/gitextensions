@@ -150,6 +150,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 label.Anchor = AnchorStyles.Left;
                 tableLayout.Controls.Add(label, 0, _currentRow);
             }
+
             var control = controlBinding.GetControl();
             control.Dock = DockStyle.Fill;
             tableLayout.Controls.Add(control, 1, _currentRow);

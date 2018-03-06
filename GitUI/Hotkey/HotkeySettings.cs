@@ -20,6 +20,7 @@ namespace GitUI.Hotkey
         public HotkeySettings()
         {
         }
+
         public HotkeySettings(string name, params HotkeyCommand[] commands)
         {
             Name = name;

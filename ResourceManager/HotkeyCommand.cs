@@ -27,6 +27,7 @@ namespace ResourceManager
         public HotkeyCommand()
         {
         }
+
         public HotkeyCommand(int commandCode, string name)
         {
             CommandCode = commandCode;

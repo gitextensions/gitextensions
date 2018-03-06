@@ -123,6 +123,7 @@ namespace PatchApply
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
+
                 ValidateHeader(ref input, patch);
                 if (i < lines.Length - 1)
                 {
@@ -153,6 +154,7 @@ namespace PatchApply
                     // warnings, messages ...
                     input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
                 }
+
                 if (i < lines.Length - 1)
                 {
                     input += "\n";
@@ -183,6 +185,7 @@ namespace PatchApply
                     break;
                 }
             }
+
             for (; i < lines.Length; i++)
             {
                 Patch patch = CreatePatchFromString(lines, ref i);
@@ -215,6 +218,7 @@ namespace PatchApply
                     throw new FormatException("Change not parsed correct: " + input);
                 }
             }
+
             // line starts with --- means, old file name
             else if (input.StartsWith("--- "))
             {
@@ -237,6 +241,7 @@ namespace PatchApply
                     throw new FormatException("Change not parsed correct: " + input);
                 }
             }
+
             // line starts with +++ means, new file name
             // we expect a new file now!
             else if (input.StartsWith("+++ "))

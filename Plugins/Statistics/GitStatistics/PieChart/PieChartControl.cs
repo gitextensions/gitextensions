@@ -251,6 +251,7 @@ namespace GitStatistics.PieChart
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -294,6 +295,7 @@ namespace GitStatistics.PieChart
             {
                 _toolTip.RemoveAll();
             }
+
             _highlightedIndex = index;
             Refresh();
         }
@@ -321,9 +323,11 @@ namespace GitStatistics.PieChart
                 {
                     _toolTip.RemoveAll();
                 }
+
                 _highlightedIndex = index;
                 Refresh();
             }
+
             base.OnMouseDown(e);
         }
 

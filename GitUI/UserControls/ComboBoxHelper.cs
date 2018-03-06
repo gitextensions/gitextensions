@@ -26,6 +26,7 @@ namespace GitUI.UserControls
                     calculatedWidth = Math.Max((int)area.Width, calculatedWidth);
                 }
             }
+
             comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
         }
     }

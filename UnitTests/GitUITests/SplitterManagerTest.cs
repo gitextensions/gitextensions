@@ -37,6 +37,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -65,6 +66,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -94,6 +96,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -124,6 +127,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -137,6 +141,7 @@ namespace GitUITests
                 {
                     splitter.Panel1MinSize = 110;
                 }
+
                 splitManager.RestoreSplitters();
                 // assert
                 if (applyMinSize)
@@ -166,6 +171,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -178,6 +184,7 @@ namespace GitUITests
                 {
                     splitter.Panel2MinSize = 110;
                 }
+
                 splitter.SplitterDistance = 60;
                 splitManager.RestoreSplitters();
                 // assert
@@ -208,6 +215,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -241,6 +249,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -274,6 +283,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);

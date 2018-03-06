@@ -152,6 +152,7 @@ namespace GitUI.Editor.Diff
                 {
                     endLine = document.GetLineSegment(line);
                 }
+
                 line--;
                 line--;
                 endLine = document.GetLineSegment(line);

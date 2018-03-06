@@ -91,6 +91,7 @@ namespace TeamCityIntegration
             {
                 request.Credentials = CredentialCache.DefaultCredentials;
             }
+
             request.PreAuthenticate = true;
             request.GetResponse();
 
@@ -116,6 +117,7 @@ namespace TeamCityIntegration
             {
                 return;
             }
+
             BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
             HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;

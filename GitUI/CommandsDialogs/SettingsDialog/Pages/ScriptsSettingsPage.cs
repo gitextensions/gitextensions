@@ -312,6 +312,7 @@ Current Branch:
             {
                 return null;
             }
+
             Bitmap result = new Bitmap(nWidth, nHeight);
             using (Graphics g = Graphics.FromImage((Image)result))
             {

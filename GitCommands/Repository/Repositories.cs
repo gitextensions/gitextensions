@@ -56,6 +56,7 @@ namespace GitCommands.Repository
                         _remoteRepositoryHistory.AddRepository(repo);
                     }
                 }
+
                 foreach (Repository repo in _remoteRepositoryHistory.Repositories)
                 {
                     repositoryHistory.RemoveRepository(repo);
@@ -131,6 +132,7 @@ namespace GitCommands.Repository
                     return repo;
                 }
             }
+
             return null;
         }
 
@@ -196,6 +198,7 @@ namespace GitCommands.Repository
             {
                 stringReader?.Dispose();
             }
+
             return repositories;
         }
 
@@ -249,6 +252,7 @@ namespace GitCommands.Repository
             {
                 Trace.WriteLine(ex.Message);
             }
+
             return history;
         }
 

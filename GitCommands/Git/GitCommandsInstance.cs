@@ -59,6 +59,7 @@ namespace GitCommands
                 {
                     _myProcess = process;
                 }
+
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
 

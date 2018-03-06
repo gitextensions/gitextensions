@@ -57,6 +57,7 @@ namespace GitUI.Editor.Diff
                 {
                     continue;
                 }
+
                 g.FillRectangle(fillBrush, backgroundRectangle);
                 var curLine = textArea.Document.GetFirstLogicalLine(textArea.Document.GetVisibleLine(textArea.TextView.FirstVisibleLine) + y);
 
@@ -64,10 +65,12 @@ namespace GitUI.Editor.Diff
                 {
                     continue;
                 }
+
                 if (!DiffLines.ContainsKey(curLine + 1))
                 {
                     continue;
                 }
+
                 var diffLine = DiffLines[curLine + 1];
                 if (diffLine.Style != DiffLineNum.DiffLineStyle.Context)
                 {
@@ -90,6 +93,7 @@ namespace GitUI.Editor.Diff
 
                     g.FillRectangle(brush, new Rectangle(leftWidth, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
                 }
+
                 if (diffLine.LeftLineNum != DiffLineNum.NotApplicableLineNum)
                 {
                     g.DrawString(diffLine.LeftLineNum.ToString(),
@@ -123,6 +127,7 @@ namespace GitUI.Editor.Diff
             {
                 _lastSize = new Size(0, 0);
             }
+
             DiffLines.Clear();
         }
 
@@ -137,10 +142,12 @@ namespace GitUI.Editor.Diff
             {
                 return "L" + line.LeftLineNum;
             }
+
             if (line.RightLineNum != DiffLineNum.NotApplicableLineNum)
             {
                 return "R" + line.RightLineNum;
             }
+
             return null;
         }
 

@@ -75,6 +75,7 @@ namespace GitUI.CommandsDialogs
                     {
                         _navigateMenuCommands.Add(MenuCommand.CreateSeparator());
                     }
+
                     selectedMenuCommands = _navigateMenuCommands;
                     break;
 
@@ -87,6 +88,7 @@ namespace GitUI.CommandsDialogs
                     {
                         _viewMenuCommands.Add(MenuCommand.CreateSeparator());
                     }
+
                     selectedMenuCommands = _viewMenuCommands;
                     break;
             }

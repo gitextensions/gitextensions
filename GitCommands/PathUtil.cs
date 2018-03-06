@@ -46,6 +46,7 @@ namespace GitCommands
             {
                 return false;
             }
+
             return true;
         }
 
@@ -76,6 +77,7 @@ namespace GitCommands
                     fileName = fileName.Substring(0, pos);
                 }
             }
+
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
             {
                 return "";
@@ -143,6 +145,7 @@ namespace GitCommands
             {
                 // do nothing
             }
+
             fullPath = null;
             return false;
         }
@@ -156,11 +159,13 @@ namespace GitCommands
                 {
                     return true;
                 }
+
                 shellPath = Path.Combine(AppSettings.GitBinDir, shell);
                 if (File.Exists(shellPath))
                 {
                     return true;
                 }
+
                 if (TryFindFullPath(shell, out shellPath))
                 {
                     return true;
@@ -170,6 +175,7 @@ namespace GitCommands
             {
                 // do nothing
             }
+
             shellPath = null;
             return false;
         }

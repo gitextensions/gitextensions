@@ -28,6 +28,7 @@ namespace GitUI.Script
                     anyScriptExecuted = true;
                 }
             }
+
             return anyScriptExecuted;
         }
 
@@ -238,6 +239,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         if (selectedRemotes.Count == 1)
                         {
                             remote = selectedRemotes[0];
@@ -255,6 +257,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         if (selectedRemotes.Count == 1)
                         {
                             remote = selectedRemotes[0];
@@ -273,6 +276,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         if (selectedRemotes.Count == 1)
                         {
                             remote = selectedRemotes[0];
@@ -392,6 +396,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         argument = argument.Replace(option, currentRemote);
                         break;
                     case "{cDefaultRemoteUrl}":
@@ -400,6 +405,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, url);
                         break;
@@ -409,6 +415,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
@@ -418,12 +425,14 @@ namespace GitUI.Script
                             Prompt.ShowDialog();
                             argument = argument.Replace(option, Prompt.UserInput);
                         }
+
                         break;
                     case "{WorkingDir}":
                         argument = argument.Replace(option, aModule.WorkingDir);
                         break;
                 }
             }
+
             command = ExpandCommandVariables(command, aModule);
 
             if (scriptInfo.IsPowerShell)
@@ -499,6 +508,7 @@ namespace GitUI.Script
                     }
                 }
             }
+
             return selectedRevision;
         }
 
@@ -541,6 +551,7 @@ namespace GitUI.Script
                     }
                 }
             }
+
             return currentRevision;
         }
 

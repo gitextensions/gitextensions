@@ -135,10 +135,12 @@ namespace ResourceManager.CommitDataRenders
             {
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitterText(), padding) + commitData.Committer);
             }
+
             if (!datesEqual)
             {
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate));
             }
+
             header.Append(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + commitData.Guid);
 
             return header.ToString();
@@ -150,11 +152,13 @@ namespace ResourceManager.CommitDataRenders
             {
                 return "";
             }
+
             var ind = author.IndexOf("<", StringComparison.Ordinal);
             if (ind == -1)
             {
                 return "";
             }
+
             ++ind;
             return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
         }
@@ -170,6 +174,7 @@ namespace ResourceManager.CommitDataRenders
             {
                 commitsString = hashes.Select(guid => GitRevision.ToShortSha(guid)).Join(" ");
             }
+
             return commitsString;
         }
     }

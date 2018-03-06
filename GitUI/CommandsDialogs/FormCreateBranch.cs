@@ -100,6 +100,7 @@ namespace GitUI.CommandsDialogs
                 DialogResult = DialogResult.None;
                 return;
             }
+
             if (!Module.CheckBranchFormat(branchName))
             {
                 MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);

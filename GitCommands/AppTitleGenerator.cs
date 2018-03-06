@@ -42,6 +42,7 @@ namespace GitCommands
             {
                 return DefaultTitle;
             }
+
             string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
             var title = string.Format(RepositoryTitleFormat, repositoryDescription, (branchName ?? "no branch").Trim('(', ')'));
 #if DEBUG

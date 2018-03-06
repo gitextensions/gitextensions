@@ -56,6 +56,7 @@ namespace GitStatistics.PieChart
                 green = (255 - green) * correctionFactor + green;
                 blue = (255 - blue) * correctionFactor + blue;
             }
+
             return Color.FromArgb((int)red, (int)green, (int)blue);
         }
     }

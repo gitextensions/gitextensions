@@ -81,6 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // this manually.
                 return true;
             }
+
             return false;
         }
 
@@ -149,6 +150,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // Could be a security issue. Just ignore and let the user choose
                 // manually.
             }
+
             try
             {
                 var path = Environment.GetEnvironmentVariable("HOMEDRIVE") +
@@ -166,6 +168,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // Could be a security issue. Just ignore and let the user choose
                 // manually.
             }
+
             try
             {
                 var path = Environment.GetEnvironmentVariable("USERPROFILE");
@@ -182,6 +185,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // Could be a security issue. Just ignore and let the user choose
                 // manually.
             }
+
             try
             {
                 var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -210,6 +214,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     MessageBox.Show(this, _noHomeDirectorySpecified.Text);
                     return;
                 }
+
                 AppSettings.CustomHomeDir = otherHomeDir.Text;
             }
             else

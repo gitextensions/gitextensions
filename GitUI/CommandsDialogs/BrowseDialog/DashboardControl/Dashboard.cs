@@ -305,6 +305,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     return;
                 }
+
                 if (dialogResult == DialogResult.Yes)
                 {
                     Repositories.RepositoryHistory.RemoveRecentRepository(path);
@@ -385,8 +386,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     Repositories.AddMostRecentRepository(module.WorkingDir);
                     OnModuleChanged(this, new GitModuleEventArgs(module));
                 }
+
                 return;
             }
+
             var text = e.Data.GetData(DataFormats.UnicodeText) as string;
             if (!string.IsNullOrEmpty(text))
             {
@@ -420,8 +423,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     // Allow drop (copy, not move) folders
                     e.Effect = DragDropEffects.Copy;
                 }
+
                 return;
             }
+
             var text = e.Data.GetData(DataFormats.UnicodeText) as string;
             if (!string.IsNullOrEmpty(text))
             {

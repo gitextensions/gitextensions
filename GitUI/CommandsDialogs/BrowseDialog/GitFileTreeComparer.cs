@@ -14,10 +14,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 return 0;
             }
+
             if (xGitItem == null)
             {
                 return 1;
             }
+
             if (yGitItem == null)
             {
                 return -1;

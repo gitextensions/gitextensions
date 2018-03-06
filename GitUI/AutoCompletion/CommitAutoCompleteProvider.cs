@@ -86,6 +86,7 @@ namespace GitUI.AutoCompletion
             {
                 throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }
+
             using (var sr = new StreamReader(s))
             {
                 return sr.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);

@@ -192,6 +192,7 @@ namespace GitUI
             {
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
             }
+
             compareToBaseToolStripMenuItem.Enabled = false;
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -208,6 +209,7 @@ namespace GitUI
                 {
                     menuCommand.RegisterMenuItem(toolStripMenuItem);
                 }
+
                 targetMenuItem.DropDownItems.Add(toolStripItem);
             }
         }
@@ -493,6 +495,7 @@ namespace GitUI
                                           gitRef => UICommands.StartRenameDialog(this, gitRef.Name),
                                           FormQuickGitRefSelector.Action.Rename);
                     }
+
                     break;
 
                 case Keys.Delete:
@@ -512,6 +515,7 @@ namespace GitUI
                                           },
                                           FormQuickGitRefSelector.Action.Delete);
                     }
+
                     break;
             }
         }
@@ -538,6 +542,7 @@ namespace GitUI
                 {
                     return;
                 }
+
                 action(dlg.SelectedRef);
             }
         }
@@ -758,6 +763,7 @@ namespace GitUI
                 AppSettings.ShowCurrentBranchOnly = false;
                 _revisionFilter.SetBranchFilter(filter);
             }
+
             SetShowBranches();
             return true;
         }
@@ -858,6 +864,7 @@ namespace GitUI
             {
                 _navigationHistory.Push(revision);
             }
+
             return found;
         }
 
@@ -1002,6 +1009,7 @@ namespace GitUI
                     revision.Refs.Add(gitRef);
                 }
             }
+
             return revision;
         }
 
@@ -1635,6 +1643,7 @@ namespace GitUI
             {
                 cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
             }
+
             // Draw cell background
             e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
             Color? backColor = null;
@@ -1671,6 +1680,7 @@ namespace GitUI
                 Debug.Assert(backColor != null);
                 foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
             }
+
             /*
             if (!AppSettings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
@@ -1845,6 +1855,7 @@ namespace GitUI
                             // kick off download operation, will likely display the avatar during the next round of repaint
                             _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
                         }
+
                         e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
                         e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
 
@@ -2079,6 +2090,7 @@ namespace GitUI
                 {
                     return;
                 }
+
                 Revisions.InvalidateCell(colIndex, rowIndex);
             });
         }
@@ -2688,6 +2700,7 @@ namespace GitUI
                 {
                     _AmbiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
                 }
+
                 return _AmbiguousRefs;
             }
 
@@ -2789,6 +2802,7 @@ namespace GitUI
 
             UICommands.StartRebase(this, _rebaseOnTopOf);
         }
+
         private void OnRebaseInteractivelyClicked(object sender, EventArgs e)
         {
             if (_rebaseOnTopOf == null)
@@ -2969,9 +2983,11 @@ namespace GitUI
                     {
                         _currentCheckoutParents = GetAllParents(CurrentCheckout);
                     }
+
                     _filtredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
                 }
             }
+
             string filtredCurrentCheckout = _filtredCurrentCheckout;
 
             if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
@@ -3007,10 +3023,12 @@ namespace GitUI
             {
                 unstagedRev.SubjectCount = "(" + unstaged + ") ";
             }
+
             if (stagedRev != null)
             {
                 stagedRev.SubjectCount = "(" + staged + ") ";
             }
+
             if (unstagedRev == null || stagedRev == null)
             {
                 _artificialStatus = status;
@@ -3019,6 +3037,7 @@ namespace GitUI
             {
                 _artificialStatus = null;
             }
+
             Revisions.Invalidate();
         }
 
@@ -3196,6 +3215,7 @@ namespace GitUI
                 new FormSettings(UICommands).LoadSettings();
                 _settingsLoaded = true;
             }
+
             if (ScriptRunner.RunScript(this, Module, sender.ToString(), this))
             {
                 RefreshRevisions();
@@ -3273,6 +3293,7 @@ namespace GitUI
                 ToggleRevisionGraph();
                 SetRevisionsLayout();
             }
+
             ForceRefreshRevisions();
         }
 
@@ -3424,6 +3445,7 @@ namespace GitUI
                         Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
                         Color.LightBlue, 90, false);
                 }
+
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
@@ -3450,6 +3472,7 @@ namespace GitUI
                             Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
                             Color.LightBlue, 90, false);
                     }
+
                     _selectedItemBrush = _filledItemBrush;
                 }
 

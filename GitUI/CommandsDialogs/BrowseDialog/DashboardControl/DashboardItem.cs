@@ -41,6 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     {
                         return GitModule.GetSelectedBranchFast(repository.Path);
                     }
+
                     return string.Empty;
                 },
                 UpdateBranchName);
@@ -78,6 +79,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _NO_TRANSLATE_Description.AutoSize = false;
                 _NO_TRANSLATE_Description.Size = Size.Empty;
             }
+
             _NO_TRANSLATE_Description.Text = text;
 
             if (icon != null)
@@ -193,6 +195,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _branchNameLoader?.Dispose();
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

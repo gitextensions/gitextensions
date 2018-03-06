@@ -94,6 +94,7 @@ namespace GitCommands.Config
                 {
                     continue;
                 }
+
                 configFileContent.Append(section);
                 configFileContent.Append(Environment.NewLine);
 
@@ -297,6 +298,7 @@ namespace GitCommands.Config
                     return configSection;
                 }
             }
+
             return null;
         }
 
@@ -400,6 +402,7 @@ namespace GitCommands.Config
                         default:
                             throw new Exception("Invalid escape character: " + Regex.Escape(c.ToString()));
                     }
+
                     _escapedSection = false;
                     return ReadSection;
                 }
@@ -497,6 +500,7 @@ namespace GitCommands.Config
                         default:
                             throw new Exception("Invalid escape character: " + Regex.Escape(c.ToString()));
                     }
+
                     _escapedValue = false;
                     return ReadValue;
                 }
@@ -516,6 +520,7 @@ namespace GitCommands.Config
                             {
                                 _token.Append(_valueToken.ToString().Trim());
                             }
+
                             _valueToken.Clear();
                             _quotedValue = !_quotedValue;
                             return ReadValue;
@@ -526,6 +531,7 @@ namespace GitCommands.Config
                                 _valueToken.Append(c);
                                 return ReadValue;
                             }
+
                             NewValue();
                             return ReadComment;
                         case '\r':

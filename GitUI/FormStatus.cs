@@ -111,6 +111,7 @@ namespace GitUI
                             }
                         }
                     }
+
                     // Show last progress message in the title, unless it's showin in the control body already
                     if (!ConsoleOutput.IsDisplayingFullProcessOutput)
                     {
@@ -267,6 +268,7 @@ namespace GitUI
                 {
                 }
             }
+
             Reset();
             ProcessCallback(this);
         }
@@ -344,6 +346,7 @@ namespace GitUI
             {
                 _FormStatus.AfterClosed();
             }
+
             _DispatcherFrame.Continue = false;
         }
     }

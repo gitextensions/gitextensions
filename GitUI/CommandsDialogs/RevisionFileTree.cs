@@ -81,6 +81,7 @@ See the changes in the commit form.");
                         // TODO: what about case(in)sensitive handling?
                         return treeGitItem.Name == diffPathPart;
                     }
+
                     return false;
                 });
 
@@ -172,6 +173,7 @@ See the changes in the commit form.");
                             matchedNode = node;
                             break;
                         }
+
                         if (matchedNode == null)
                         {
                             currenNodes = null;
@@ -182,6 +184,7 @@ See the changes in the commit form.");
                             currenNodes = matchedNode.Nodes;
                         }
                     }
+
                     // if there is no exact match, don't restore scroll position
                     if (lastMatchedNode != matchedNode)
                     {
@@ -190,6 +193,7 @@ See the changes in the commit form.");
 
                     tvGitTree.SelectedNode = lastMatchedNode;
                 }
+
                 if (tvGitTree.SelectedNode == null)
                 {
                     FileText.ViewText("", "");
@@ -248,6 +252,7 @@ See the changes in the commit form.");
                         UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision);
                         break;
                     }
+
                 case GitObjectType.Commit:
                     {
                         SpawnCommitBrowser(gitItem);
@@ -304,11 +309,13 @@ See the changes in the commit form.");
                         FileText.ViewGitItem(gitItem.FileName, gitItem.Guid);
                         break;
                     }
+
                 case GitObjectType.Commit:
                     {
                         FileText.ViewText(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
                         break;
                     }
+
                 default:
                     {
                         FileText.ViewText("", "");
@@ -323,6 +330,7 @@ See the changes in the commit form.");
             {
                 return;
             }
+
             var gitItem = e.Node?.Tag as GitItem;
             if (gitItem == null)
             {
@@ -363,6 +371,7 @@ See the changes in the commit form.");
             {
                 return;
             }
+
             OnItemActivated();
             e.Handled = true;
         }
@@ -415,6 +424,7 @@ See the changes in the commit form.");
                 searchWindow.ShowDialog(this);
                 selectedItem = searchWindow.SelectedItem;
             }
+
             if (string.IsNullOrEmpty(selectedItem))
             {
                 return;
@@ -471,6 +481,7 @@ See the changes in the commit form.");
             {
                 return;
             }
+
             UICommands.StartArchiveDialog(this, _revision, null, gitItem.FileName);
         }
 
@@ -487,6 +498,7 @@ See the changes in the commit form.");
                 // No item selected is handled as the repo source
                 filePath = Module.WorkingDir;
             }
+
             UICommands.StartCleanupRepositoryDialog(this, filePath);
         }
 

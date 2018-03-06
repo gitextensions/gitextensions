@@ -95,6 +95,7 @@ namespace AutoCompileSubmodules
                     e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + _MsBuildArguments.ValueOrDefault(Settings));
                 }
             }
+
             return false;
         }
 
@@ -120,6 +121,7 @@ namespace AutoCompileSubmodules
                 solutionString.Append(solutionFile.Name);
                 solutionString.Append("\n");
             }
+
             return solutionString.ToString();
         }
     }

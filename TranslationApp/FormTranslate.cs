@@ -101,6 +101,7 @@ namespace TranslationApp
                                select new TranslationItemWithCategory(item.Name, translationItem.Clone());
                     neutralItems.Add(pair.Key, list.ToList());
                 }
+
                 _translationItems = neutralItems;
             }
 
@@ -155,6 +156,7 @@ namespace TranslationApp
                 var categories = GetCategories(_neutralTranslation).Where(cat => GetCategoryItems(cat).Any());
                 translateCategories.Items.AddRange(categories.ToArray());
             }
+
             if (hideTranslatedItems.Checked && !GetCategoryItems(tc).Any())
             {
                 tc = _allCategories;

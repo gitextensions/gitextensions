@@ -103,6 +103,7 @@ namespace GitFlow
                     return true;
                 }
             }
+
             branchType = null;
             branchName = null;
             return false;
@@ -273,6 +274,7 @@ namespace GitFlow
                 ShowToolTip(pbResultCommand, "error: " + resultText);
                 txtResult.Text = resultText;
             }
+
             return result.ExitCode == 0;
         }
         #endregion

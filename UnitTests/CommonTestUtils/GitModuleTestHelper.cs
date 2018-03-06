@@ -20,6 +20,7 @@ namespace CommonTestUtils
             {
                 throw new ArgumentException($"Repository '{path}' already exists", nameof(repositoryName));
             }
+
             Directory.CreateDirectory(path);
 
             var module = new GitModule(path);

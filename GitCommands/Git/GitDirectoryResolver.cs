@@ -84,6 +84,7 @@ namespace GitCommands.Git
                     {
                         return path.EnsureTrailingPathSeparator();
                     }
+
                     return Path.GetFullPath(Path.Combine(repositoryPath, path)).EnsureTrailingPathSeparator();
                 }
             }

@@ -6,5 +6,6 @@ namespace GitCommands.Git.Tag
         Annotate,
         SignWithDefaultKey,
         SignWithSpecificKey
-    };
+    }
+;
 }

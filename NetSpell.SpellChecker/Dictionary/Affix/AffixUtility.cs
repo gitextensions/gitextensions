@@ -41,6 +41,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                             break;
                         }
                     }
+
                     if (passCount == entry.ConditionCount)
                     {
                         string tempWord = word.Substring(entry.StripCharacters.Length);
@@ -49,6 +50,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                     }
                 }
             }
+
             return word;
         }
 
@@ -88,6 +90,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                             break;
                         }
                     }
+
                     if (passCount == entry.ConditionCount)
                     {
                         int tempLen = word.Length - entry.StripCharacters.Length;
@@ -97,6 +100,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                     }
                 }
             }
+
             return word;
         }
 
@@ -174,6 +178,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                             {
                                 entry.Condition[j] = entry.Condition[j] | (1 << num);
                             }
+
                             // turn off chars in member group
                             for (int j = 0; j < numMember; j++)
                             {
@@ -190,6 +195,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                                 entry.Condition[charCode] = entry.Condition[charCode] | (1 << num);
                             }
                         }
+
                         group = false;
                         neg = false;
                         numMember = 0;
@@ -261,13 +267,16 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                         passCount++;
                     }
                 }
+
                 if (passCount == entry.ConditionCount)
                 {
                     return tempWord;
                 }
             }
+
             return word;
         }
+
         /// <summary>
         ///     Removes the affix suffix rule entry for the word if valid
         /// </summary>
@@ -308,11 +317,13 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                         passCount++;
                     }
                 }
+
                 if (passCount == entry.ConditionCount)
                 {
                     return tempWord;
                 }
             }
+
             return word;
         }
     }

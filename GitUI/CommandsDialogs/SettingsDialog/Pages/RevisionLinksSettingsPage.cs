@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 _NO_TRANSLATE_Categories.SelectedIndex = 0;
             }
+
             CategoryChanged();
         }
 

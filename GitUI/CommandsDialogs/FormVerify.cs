@@ -176,6 +176,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
+
             // ignore double click by checkbox, user probably wanted to change checked state
             if (e.ColumnIndex == 0)
             {
@@ -280,6 +281,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _selectLostObjectsToRestoreMessage.Text, _selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return 0;
             }
+
             var currentTag = 0;
             foreach (var lostObject in selectedLostObjects)
             {
@@ -326,6 +328,7 @@ namespace GitUI.CommandsDialogs
 
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

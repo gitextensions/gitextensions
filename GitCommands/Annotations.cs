@@ -105,6 +105,7 @@ namespace JetBrains.Annotations
         public NotifyPropertyChangedInvocatorAttribute()
         {
         }
+
         public NotifyPropertyChangedInvocatorAttribute(string parameterName)
         {
             ParameterName = parameterName;
@@ -357,6 +358,7 @@ namespace JetBrains.Annotations
         public PublicAPIAttribute()
         {
         }
+
         public PublicAPIAttribute(string comment)
         {
         }

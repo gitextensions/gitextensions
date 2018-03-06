@@ -118,6 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     return x.Path;
                 }
+
                 return dir.Parent.FullName;
             };
         }

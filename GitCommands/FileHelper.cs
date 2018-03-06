@@ -89,6 +89,7 @@ namespace GitCommands
                     return false;
                 }
             }
+
             if (attributes.TryGetValue("text", out var text))
             {
                 if (text != "unset" && text != "unspecified")
@@ -96,6 +97,7 @@ namespace GitCommands
                     return false;
                 }
             }
+
             if (attributes.TryGetValue("crlf", out var crlf))
             {
                 if (crlf != "unset" && crlf != "unspecified")
@@ -103,6 +105,7 @@ namespace GitCommands
                     return false;
                 }
             }
+
             if (attributes.TryGetValue("eol", out var eol))
             {
                 if (eol != "unset" && eol != "unspecified")
@@ -110,6 +113,7 @@ namespace GitCommands
                     return false;
                 }
             }
+
             return null;
         }
 

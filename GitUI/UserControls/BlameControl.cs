@@ -135,11 +135,13 @@ namespace GitUI.Blame
                         }
                     }
                 }
+
                 if (startLine != -1)
                 {
                     BlameCommitter.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
                     BlameFile.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
                 }
+
                 BlameCommitter.Refresh();
                 BlameFile.Refresh();
                 _lastBlameHeader = blameHeader;
@@ -175,6 +177,7 @@ namespace GitUI.Blame
                 SyncBlameFileView();
                 _bChangeScrollPosition = false;
             }
+
             Rectangle rect = BlameCommitter.ClientRectangle;
             rect = BlameCommitter.RectangleToScreen(rect);
             if (rect.Contains(MousePosition))
@@ -254,6 +257,7 @@ namespace GitUI.Blame
                         (blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName +
                          new string(' ', 100)).Trim(new[] { '\r', '\n' }));
                 }
+
                 if (blameLine.LineText == null)
                 {
                     blameFile.AppendLine("");
@@ -410,6 +414,7 @@ namespace GitUI.Blame
 
                 _blameLoader.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

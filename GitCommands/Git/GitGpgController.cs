@@ -13,7 +13,8 @@ namespace GitCommands.Gpg
         GoodSignature = 1,
         SignatureError = 2,
         MissingPublicKey = 3,
-    };
+    }
+;
 
     public enum TagStatus
     {
@@ -23,7 +24,8 @@ namespace GitCommands.Gpg
         Many = 3,
         NoPubKey = 4,
         TagNotSigned = 5
-    };
+    }
+;
 
     public interface IGitGpgController
     {
@@ -267,6 +269,7 @@ namespace GitCommands.Gpg
                 /* String printed in dialog box */
                 tagVerifyMessage = $"{tagVerifyMessage}{tagRef.LocalName}\r\n{GetTagVerificationMessage(tagRef, false)}\r\n\r\n";
             }
+
             return tagVerifyMessage;
         }
 
@@ -277,6 +280,7 @@ namespace GitCommands.Gpg
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
     }

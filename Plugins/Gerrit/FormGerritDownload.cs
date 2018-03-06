@@ -60,6 +60,7 @@ namespace Gerrit
                 MessageBox.Show(owner, _selectRemote.Text);
                 return false;
             }
+
             if (string.IsNullOrEmpty(change))
             {
                 MessageBox.Show(owner, _selectChange.Text);

@@ -35,6 +35,7 @@ namespace ResourceManager.Xliff
                     Trace.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, fieldInfo.Name, fieldInfo.GetValue(obj)), "Translation");
                     continue;
                 }
+
                 yield return new Tuple<string, object>(fieldInfo.Name, fieldInfo.GetValue(obj));
             }
         }
@@ -53,6 +54,7 @@ namespace ResourceManager.Xliff
             {
                 return;
             }
+
             var value = propertyInfo.GetValue(obj, null) as string;
             if (value != null && AllowTranslateProperty(value))
             {
@@ -132,6 +134,7 @@ namespace ResourceManager.Xliff
                         {
                             translation.AddTranslationItem(category, itemName, property.Name, valueStr);
                         }
+
                         continue;
                     }
 
@@ -267,6 +270,7 @@ namespace ResourceManager.Xliff
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -348,10 +352,12 @@ namespace ResourceManager.Xliff
                             list = new List<Type>();
                             dictionary.Add(val, list);
                         }
+
                         list.Add(type);
                     }
                 }
             }
+
             return dictionary;
         }
 
@@ -367,6 +373,7 @@ namespace ResourceManager.Xliff
                     obj = Activator.CreateInstance(type, true);
                 }
             }
+
             if (obj == null && type.GetConstructors().Length > 0)
             {
                 ConstructorInfo parameterConstructor = type.GetConstructors(flags)[0];

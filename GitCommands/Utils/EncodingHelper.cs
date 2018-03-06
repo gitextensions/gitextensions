@@ -22,14 +22,17 @@ namespace GitCommands
             {
                 sb.Append(encoding.GetString(output));
             }
+
             if (error != null && error.Length > 0 && output != null && output.Length > 0)
             {
                 sb.AppendLine();
             }
+
             if (error != null && error.Length > 0)
             {
                 sb.Append(encoding.GetString(error));
             }
+
             return sb.ToString();
         }
 
@@ -69,6 +72,7 @@ namespace GitCommands
                 {
                     ms?.Dispose();
                 }
+
                 outputString = outputString + Environment.NewLine;
             }
 

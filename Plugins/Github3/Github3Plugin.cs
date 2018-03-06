@@ -114,6 +114,7 @@ namespace Github3
             {
                 MessageBox.Show(gitUiCommands.OwnerForm, "You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
             }
+
             return false;
         }
 

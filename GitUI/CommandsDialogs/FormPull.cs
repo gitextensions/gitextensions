@@ -260,6 +260,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
+
             Branches.DisplayMember = "LocalName";
 
             ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
@@ -301,6 +302,7 @@ namespace GitUI.CommandsDialogs
                 {
                     UICommands.StartUpdateSubmodulesDialog(this);
                 }
+
                 return true;
             }
 
@@ -347,6 +349,7 @@ namespace GitUI.CommandsDialogs
                     AppSettings.AutoPopStashAfterPull = messageBoxResult;
                 }
             }
+
             if ((bool)messageBoxResult)
             {
                 UICommands.StashPop(owner);
@@ -449,6 +452,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _selectSourceDirectory.Text);
                 return false;
             }
+
             if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
             {
                 MessageBox.Show(this, _selectRemoteRepository.Text);
@@ -460,6 +464,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text);
                 return false;
             }
+
             return true;
         }
 
@@ -506,6 +511,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
                 return true;
             }
+
             return false;
         }
 
@@ -521,6 +527,7 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -704,6 +711,7 @@ namespace GitUI.CommandsDialogs
             {
                 return Branches.Text;
             }
+
             string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", _branch));
             if (!remoteBranchName.IsNullOrEmpty())
             {

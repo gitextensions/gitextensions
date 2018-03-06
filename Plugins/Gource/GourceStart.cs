@@ -107,6 +107,7 @@ namespace Gource
                     }
                 }
             }
+
             return gourceAvatarsDir;
         }
 

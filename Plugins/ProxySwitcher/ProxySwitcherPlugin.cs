@@ -30,6 +30,7 @@ namespace ProxySwitcher
             {
                 form.ShowDialog(gitUiCommands.OwnerForm);
             }
+
             return false;
         }
     }

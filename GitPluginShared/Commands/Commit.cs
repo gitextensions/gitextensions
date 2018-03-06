@@ -96,6 +96,7 @@ namespace GitPluginShared.Commands
                     return sel.Project.FullName;
                 }
             }
+
             if (application.Solution.IsOpen)
             {
                 return application.Solution.FullName;

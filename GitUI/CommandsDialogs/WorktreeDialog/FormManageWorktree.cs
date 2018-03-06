@@ -72,6 +72,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     }
                 }
             }
+
             Worktrees.DataSource = _worktrees;
             for (var i = 0; i < Worktrees.Rows.Count; i++)
             {
@@ -89,6 +90,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
                 }
             }
+
             buttonPruneWorktrees.Enabled = _worktrees.Skip(1).Any(w => w.IsDeleted);
         }
 
@@ -190,6 +192,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                         Close();
                     }
                 }
+
                 return;
             }
 
@@ -207,6 +210,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     {
                         Directory.Delete(workTree.Path, true);
                     }
+
                     PruneWorktrees();
                 }
             }

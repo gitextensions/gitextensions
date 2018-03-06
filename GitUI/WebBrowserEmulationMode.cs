@@ -51,6 +51,7 @@ namespace GitUI
                             return false;
                         }
                     }
+
                     int.TryParse(version.ToString().Split('.')[0], out browserVersion);
                 }
 

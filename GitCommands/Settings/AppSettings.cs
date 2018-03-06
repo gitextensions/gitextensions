@@ -87,6 +87,7 @@ namespace GitCommands
                 {
                     value = "+";
                 }
+
                 SetString("AutoNormaliseSymbol", value);
             }
         }
@@ -1027,6 +1028,7 @@ namespace GitCommands
                 }
             }
         }
+
         public static string Puttygen
         {
             get => GetString("puttygen", Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN") ?? ReadStringRegValue("puttygen", ""));
@@ -1672,11 +1674,13 @@ namespace GitCommands
                     {
                         AddEncoding(utf8);
                     }
+
                     // default encoding
                     else if (encodingName == "Default")
                     {
                         AddEncoding(Encoding.Default);
                     }
+
                     // add encoding by name
                     else
                     {

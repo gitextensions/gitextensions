@@ -85,6 +85,7 @@ namespace GitUI.CommandsDialogs
                                 return;
                             }
                         }
+
                         DialogResult = DialogResult.OK;
                         break;
                     case DialogResult.Cancel:

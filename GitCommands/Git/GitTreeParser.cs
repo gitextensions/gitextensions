@@ -20,6 +20,7 @@ namespace GitCommands.Git
             {
                 return Enumerable.Empty<IGitItem>();
             }
+
             var items = tree.Split('\0', '\n');
             return items.Select(ParseSingle).Where(item => item != null);
         }

@@ -91,6 +91,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 AutoFindPuttyPaths();
             }
+
             EnableSshOptions();
         }
 
@@ -148,6 +149,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     return true;
                 }
             }
+
             return false;
         }
 

@@ -89,6 +89,7 @@ namespace GitUI.CommandsDialogs
         {
             ShowSelectedFileDiff();
         }
+
         private void ShowSelectedFileDiff()
         {
             if (DiffFiles.SelectedItem == null)
@@ -96,6 +97,7 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch("");
                 return;
             }
+
             var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
 
             IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
@@ -205,6 +207,7 @@ namespace GitUI.CommandsDialogs
                 searchWindow.ShowDialog(this);
                 selectedItem = searchWindow.SelectedItem;
             }
+
             if (selectedItem != null)
             {
                 DiffFiles.SelectedItem = selectedItem;
@@ -220,6 +223,7 @@ namespace GitUI.CommandsDialogs
         {
             PickAnotherBranch(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
         }
+
         private void btnAnotherCommit_Click(object sender, EventArgs e)
         {
             PickAnotherCommit(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);

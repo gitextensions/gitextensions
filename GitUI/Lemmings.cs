@@ -26,6 +26,7 @@ namespace GitUI
                         return Resources.Cow;
                     }
             }
+
             return null;
         }
     }

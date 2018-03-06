@@ -251,6 +251,7 @@ namespace GitUI.SpellChecker
                     TaskContinuationOptions.NotOnCanceled,
                     TaskScheduler.FromCurrentSynchronizationContext());
             }
+
             //
             // spelling
             //
@@ -317,6 +318,7 @@ namespace GitUI.SpellChecker
                 {
                     Trace.WriteLine(ex);
                 }
+
                 MarkLines();
             }
 
@@ -350,6 +352,7 @@ namespace GitUI.SpellChecker
                 {
                     _customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
                 }
+
                 chars += curLength + 1;
             }
         }
@@ -658,6 +661,7 @@ namespace GitUI.SpellChecker
             {
                 TextBox.Undo();
             }
+
             TextBox.Undo();
             _skipSelectionUndo = false;
             IsUndoInProgress = false;
@@ -811,6 +815,7 @@ namespace GitUI.SpellChecker
             {
                 TextBox.SelectionColor = oldColor;
             }
+
             // undoes all recent selections while ctrl-z pressed
             _skipSelectionUndo = true;
         }
@@ -1032,6 +1037,7 @@ namespace GitUI.SpellChecker
                     // and reduce height if moving up wasn't enough
                     height = Math.Min(TextBox.Height - top, height);
                 }
+
                 width += SystemInformation.VerticalScrollBarWidth;
             }
 
@@ -1094,6 +1100,7 @@ namespace GitUI.SpellChecker
                     _autoCompleteListTask.Dispose();
                 }
             }
+
             base.Dispose(disposing);
         }
     }

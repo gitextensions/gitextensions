@@ -69,6 +69,7 @@ namespace GitUI.CommitInfo
             {
                 _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
             }
+
             _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
@@ -378,6 +379,7 @@ namespace GitUI.CommitInfo
                 gravatarSpan = 2;
                 revInfoSpan = 1;
             }
+
             tableLayout.SetColumn(gravatar1, gravatarIndex);
             tableLayout.SetColumn(_RevisionHeader, revInfoIndex);
             tableLayout.SetColumn(RevisionInfo, revInfoIndex);
@@ -417,6 +419,7 @@ namespace GitUI.CommitInfo
                     thisRevisionTagNames.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
                     _annotatedTagsInfo = GetAnnotatedTagsInfo(Revision, thisRevisionTagNames, _annotatedTagsMessages);
                 }
+
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
@@ -426,8 +429,10 @@ namespace GitUI.CommitInfo
                         _tags[MaximumDisplayedRefs - 1] = _tags[_tags.Count - 1];
                         _tags.RemoveRange(MaximumDisplayedRefs, _tags.Count - MaximumDisplayedRefs);
                     }
+
                     _tagInfo = GetTagsWhichContainsThisCommit(_tags, ShowBranchesAsLinks);
                 }
+
                 if (_branches != null && string.IsNullOrEmpty(_branchInfo))
                 {
                     _branches.Sort(new ItemTpComparer(_sortedRefs, "refs/heads/"));
@@ -437,6 +442,7 @@ namespace GitUI.CommitInfo
                         _branches[MaximumDisplayedRefs - 1] = _branches[_branches.Count - 1];
                         _branches.RemoveRange(MaximumDisplayedRefs, _branches.Count - MaximumDisplayedRefs);
                     }
+
                     _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
                 }
             }
@@ -565,6 +571,7 @@ namespace GitUI.CommitInfo
                     allowRemote = false;
                 }
             }
+
             if (links.Any())
             {
                 return Environment.NewLine + WebUtility.HtmlEncode(_containedInBranches.Text) + " " + links.Join(", ");

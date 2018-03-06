@@ -41,6 +41,7 @@ namespace GitCommands.Settings
                 _canEnableFileWatcher = true;
                 _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
             }
+
             FileChanged();
         }
 
@@ -113,6 +114,7 @@ namespace GitCommands.Settings
             {
                 // no-op
             }
+
             return DateTime.MaxValue;
         }
 
@@ -137,6 +139,7 @@ namespace GitCommands.Settings
                     var backupName = SettingsFilePath + ".backup";
                     File.Copy(SettingsFilePath, backupName, true);
                 }
+
                 File.Copy(tmpFile, SettingsFilePath, true);
                 File.Delete(tmpFile);
 

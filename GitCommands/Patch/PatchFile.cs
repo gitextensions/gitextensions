@@ -28,14 +28,17 @@ namespace PatchApply
                 {
                     return "Next to apply";
                 }
+
                 if (IsSkipped)
                 {
                     return "Skipped";
                 }
+
                 if (!string.IsNullOrEmpty(FullName) && !File.Exists(FullName))
                 {
                     return "Applied";
                 }
+
                 return "";
             }
         }

@@ -49,6 +49,7 @@ namespace GitCommands.Config
                 SubSection = name.Substring(subSectionIndex + 1).Trim();
                 SubSectionCaseSensitive = false;
             }
+
             if (forceCaseSensitive)
             {
                 SubSectionCaseSensitive = true;
@@ -144,6 +145,7 @@ namespace GitCommands.Config
 
                 result = result + " \"" + escSubSection + "\"";
             }
+
             result = result + "]";
             return result;
         }

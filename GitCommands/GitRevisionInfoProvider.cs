@@ -37,10 +37,12 @@ namespace GitCommands
             {
                 throw new ArgumentNullException(nameof(item));
             }
+
             if (string.IsNullOrWhiteSpace(item.Guid))
             {
                 throw new ArgumentException("Item must have a valid identifier", nameof(item.Guid));
             }
+
             var module = _getModule();
             if (module == null)
             {
@@ -52,6 +54,7 @@ namespace GitCommands
             {
                 subItem.FileName = Path.Combine((item as GitItem)?.FileName ?? string.Empty, subItem.FileName ?? string.Empty);
             }
+
             return subItems;
         }
     }

@@ -36,6 +36,7 @@ namespace Github3
         {
             checkAuth(e.Url.ToString());
         }
+
         public void web_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             checkAuth(e.Url.ToString());

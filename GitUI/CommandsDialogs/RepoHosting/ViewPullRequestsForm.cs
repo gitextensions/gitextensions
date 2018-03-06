@@ -201,6 +201,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 lvi.SubItems.Add(info.Created.ToString());
                 _pullRequestsList.Items.Add(lvi);
             }
+
             if (_pullRequestsList.Items.Count > 0)
             {
                 _pullRequestsList.Items[0].Selected = true;
@@ -363,6 +364,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
                         return;
                     }
+
                     UICommands.RepoChangedNotifier.Notify();
                 }
 
@@ -386,6 +388,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 UICommands.RepoChangedNotifier.UnLock(false);
             }
+
             Close();
         }
 

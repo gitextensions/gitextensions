@@ -104,6 +104,7 @@ namespace GitCommands
             {
                 return;
             }
+
             RegisteredTemplatesDic.TryAdd(templateName, templateText);
         }
 

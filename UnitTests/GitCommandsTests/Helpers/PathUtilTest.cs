@@ -108,6 +108,7 @@ namespace GitCommandsTests.Helpers
                 Assert.AreEqual(PathUtil.GetDirectoryName("C:"), "");
                 Assert.AreEqual(PathUtil.GetDirectoryName(""), "");
             }
+
             Assert.AreEqual(PathUtil.GetDirectoryName("//my-pc/Work/GitExtensions/"), "//my-pc/Work/GitExtensions");
             Assert.AreEqual(PathUtil.GetDirectoryName("/Work/GitExtensions/"), "/Work/GitExtensions");
             Assert.AreEqual(PathUtil.GetDirectoryName("/Work/GitExtensions"), "/Work");

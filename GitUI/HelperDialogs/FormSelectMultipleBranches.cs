@@ -40,6 +40,7 @@ namespace GitUI.HelperDialogs
                     Branches.SetItemChecked(index, true);
                     return;
                 }
+
                 index++;
             }
         }

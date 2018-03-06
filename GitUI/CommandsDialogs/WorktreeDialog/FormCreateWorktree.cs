@@ -63,6 +63,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 {
                     radioButtonCheckoutExistingBranch.Checked = true;
                 }
+
                 ValidateWorktreeOptions();
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -111,6 +112,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -142,6 +144,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             {
                 return false;
             }
+
             try
             {
                 var directoryInfo = new DirectoryInfo(newWorktreeDirectory.Text);

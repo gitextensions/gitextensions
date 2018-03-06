@@ -81,6 +81,7 @@ namespace GitUI.CommandsDialogs
                 {
                     // We tried.
                 }
+
                 // if the From field is empty, then fill it with the current repository remote URL in hope
                 // that the cloned repository is hosted on the same server
                 if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
@@ -466,6 +467,7 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
                 }
             }
+
             base.Dispose(disposing);
         }
     }

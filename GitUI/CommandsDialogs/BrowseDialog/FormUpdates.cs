@@ -110,6 +110,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 Done();
                 return;
             }
+
             UpdateUrl = "";
             UpdateFound = false;
             Done();

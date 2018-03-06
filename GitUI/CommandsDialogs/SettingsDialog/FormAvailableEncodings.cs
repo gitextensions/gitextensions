@@ -99,6 +99,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 encodingType = encoding.GetType();
             }
+
             // If selected encoding and encoding not default list
             ToRight.Enabled = encoding != null &&
                 !(

@@ -95,6 +95,7 @@ namespace GitUIPluginInterfaces
         {
             return Setting;
         }
+
         /// <summary>
         /// Creates a control to be placed on FormSettings to edit this setting value
         /// Control should take care of scalability and resizability of its subcontrols

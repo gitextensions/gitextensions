@@ -209,6 +209,7 @@ namespace GitExtensions
                                         args[0] = "";
                                         p.StartInfo.Arguments = String.Join(" ", args);
                                     }
+
                                     p.Start();
                                 }
                             }
@@ -218,12 +219,14 @@ namespace GitExtensions
                             }
                         }
                     }
+
                     // assuming that there is no localSettingsPath directory in existence we probably have a portable installation.
                     else
                     {
                         string messageContent = String.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
                         MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+
                     exceptionHandled = true;
                 }
             }
@@ -233,6 +236,7 @@ namespace GitExtensions
                 {
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
                 System.Environment.Exit(1);
             }
         }

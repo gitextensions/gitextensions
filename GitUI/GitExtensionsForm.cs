@@ -111,6 +111,7 @@ namespace GitUI
                 case "random":
                     return (ColorIndex)new Random(DateTime.Now.Millisecond).Next(7);
             }
+
             return ColorIndex.Unknown;
         }
 
@@ -183,6 +184,7 @@ namespace GitUI
                 Debug.Assert(icons.Length == 7);
                 appIcon = icons[colorIndex];
             }
+
             Debug.Assert(appIcon != null);
             return appIcon;
         }
@@ -252,6 +254,7 @@ namespace GitUI
                 formSize.Height = (int)(formSize.Height * scale);
                 Size = formSize;
             }
+
             if (Owner == null || !_windowCentred)
             {
                 Point location = position.Rect.Location;
@@ -271,6 +274,7 @@ namespace GitUI
                 Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2,
                     Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
+
             if (WindowState != position.State)
             {
                 WindowState = position.State;
@@ -294,6 +298,7 @@ namespace GitUI
                     (location.Y - midPointY) * (location.Y - midPointY));
                 distance.Add(d, rect);
             }
+
             if (distance.Count > 0)
             {
                 return distance.First().Value;

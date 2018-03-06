@@ -184,6 +184,7 @@ namespace GitUI.RevisionGridClasses
         {
             _NO_TRANSLATE_Limit.Value = limit;
         }
+
         private void OkClick(object sender, EventArgs e)
         {
             Close();

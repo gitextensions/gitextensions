@@ -83,6 +83,7 @@ namespace TfsInterop
                         ? buildDefs
                         : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
                 }
+
                 ConnectToTfsServer2015(hostname, teamCollection, projectName, buildDefinitionNameFilter);
             }
             catch (Exception ex)
@@ -141,6 +142,7 @@ namespace TfsInterop
                     };
                 }).Cast<IBuild>().ToList());
             }
+
             result = QueryBuilds2015(result, sinceDate, running);
             return result;
         }
@@ -192,6 +194,7 @@ namespace TfsInterop
 
                 return "Partially Succeeded";
             }
+
             return "-";
         }
 
@@ -276,6 +279,7 @@ namespace TfsInterop
                         buildDefs.Add(def);
                     }
                 }
+
                 _buildDefinitions2015 = buildDefs.ToArray();
                 _buildClient = buildClient;
                 _connection = connection;
@@ -356,6 +360,7 @@ namespace TfsInterop
                     result.Add(ibuild);
                 }
             }
+
             return result;
         }
 
@@ -365,6 +370,7 @@ namespace TfsInterop
             {
                 return sourceVersion.Substring(sourceVersion.LastIndexOf(':') + 1);
             }
+
             return sourceVersion;
         }
 
@@ -401,15 +407,18 @@ namespace TfsInterop
                 {
                     return "KO";
                 }
+
                 if (build.Result.Value == BuildResult.PartiallySucceeded)
                 {
                     return "Partially Succeeded";
                 }
+
                 if (build.Result.Value == BuildResult.Succeeded)
                 {
                     return "OK";
                 }
             }
+
             return "-";
         }
 
@@ -451,6 +460,7 @@ namespace TfsInterop
                     return BuildStatus.Unstable;
                 }
             }
+
             return BuildStatus.Unknown;
         }
 

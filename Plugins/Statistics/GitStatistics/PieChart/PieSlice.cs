@@ -357,6 +357,7 @@ namespace GitStatistics.PieChart
                 Pen.Dispose();
                 Pen = null;
             }
+
             DisposeBrushes();
         }
 
@@ -596,6 +597,7 @@ namespace GitStatistics.PieChart
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -706,16 +708,19 @@ namespace GitStatistics.PieChart
                 BrushSurface.Dispose();
                 BrushSurface = null;
             }
+
             if (BrushStartSide != null)
             {
                 BrushStartSide.Dispose();
                 BrushStartSide = null;
             }
+
             if (BrushEndSide != null)
             {
                 BrushEndSide.Dispose();
                 BrushEndSide = null;
             }
+
             if (BrushPeripherySurface != null)
             {
                 BrushPeripherySurface.Dispose();
@@ -909,6 +914,7 @@ namespace GitStatistics.PieChart
             {
                 SweepAngle += 360;
             }
+
             // recreates brushes
             CreateSurfaceBrushes(_surfaceColor, _shadowStyle);
             // calculates center and end points on periphery
@@ -979,8 +985,10 @@ namespace GitStatistics.PieChart
                         x2.X = BoundingRectangle.X;
                         x2.Y = Center.Y;
                     }
+
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
                 }
+
                 // if lateral surface is visible from the right edge
                 if (StartAngle + SweepAngle > 360)
                 {
@@ -994,9 +1002,11 @@ namespace GitStatistics.PieChart
                         x2.X = BoundingRectangle.Left;
                         x2.Y = Center.Y;
                     }
+
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
                 }
             }
+
             return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
@@ -1061,6 +1071,7 @@ namespace GitStatistics.PieChart
                                       point2
                                   });
             }
+
             return false;
         }
 
@@ -1125,6 +1136,7 @@ namespace GitStatistics.PieChart
                 var ellipseRadius = (b * a) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
                 return ellipseRadius > r;
             }
+
             return false;
         }
 

@@ -60,6 +60,7 @@ namespace GitUI.CommandsDialogs
                 {
                     return;
                 }
+
                 if (resetauthorsfile)
                 {
                     authorsfile = null;

@@ -67,6 +67,7 @@ namespace GitCommands.ExternalLinks
                         remoteUrls.Add(remote.Url.ToLower());
                     }
                 }
+
                 if (definition.RemoteSearchInParts.Contains(ExternalLinkDefinition.RemotePart.PushURL))
                 {
                     if (remote.PushUrl.IsNotNullOrWhitespace())

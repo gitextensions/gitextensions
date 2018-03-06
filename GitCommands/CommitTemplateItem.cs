@@ -101,6 +101,7 @@ namespace GitCommands
                         BinaryFormatter sf = new BinaryFormatter() { Binder = new MoveNamespaceDeserializationBinder() };
                         commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
+
                     shouldBeUpdated = true;
                 }
                 catch (Exception /*e*/)

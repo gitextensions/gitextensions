@@ -57,6 +57,7 @@ namespace GitUI.CommandsDialogs
                 _oldRevision = null;
                 _oldDiffItem = null;
             }
+
             RefreshArtificial();
         }
 
@@ -124,6 +125,7 @@ namespace GitUI.CommandsDialogs
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     return _diffTwoSelected.Text;
             }
+
             return _diffNotSupported.Text;
         }
 
@@ -199,6 +201,7 @@ namespace GitUI.CommandsDialogs
             {
                 DiffFiles.SetSelectedIndex(fileIndex, notify: false);
             }
+
             loadFileContent = ShowSelectedFileDiff();
             return true;
         }
@@ -269,6 +272,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
             }
+
             await DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
@@ -402,6 +406,7 @@ namespace GitUI.CommandsDialogs
             {
                 files.Add(item);
             }
+
             bool err;
             Module.StageFiles(files, out err);
             RefreshArtificial();
@@ -463,6 +468,7 @@ namespace GitUI.CommandsDialogs
                 searchWindow.ShowDialog(this);
                 selectedItem = searchWindow.SelectedItem;
             }
+
             if (selectedItem != null)
             {
                 DiffFiles.SelectedItem = selectedItem;
@@ -640,6 +646,7 @@ namespace GitUI.CommandsDialogs
                     TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
                     resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0], 50) + ")";
                 }
+
                 if (revisions[0].HasParent)
                 {
                     resetFileToParentToolStripMenuItem.Visible = true;
@@ -763,14 +770,17 @@ namespace GitUI.CommandsDialogs
                             files.Add(item);
                         }
                     }
+
                     Module.UnstageFiles(files);
                 }
+
                 DiffFiles.StoreNextIndexToSelect();
                 var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
                 foreach (var item in items)
                 {
                     File.Delete(_fullPathResolver.Resolve(item.Name));
                 }
+
                 RefreshArtificial();
             }
             catch (Exception ex)
@@ -778,6 +788,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
                 return false;
             }
+
             return true;
         }
 
@@ -804,6 +815,7 @@ namespace GitUI.CommandsDialogs
                 GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 submodulCommands.StartCommitDialog(this, false);
             }
+
             RefreshArtificial();
         }
 
@@ -852,6 +864,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
+
             RefreshArtificial();
         }
 
@@ -872,6 +885,7 @@ namespace GitUI.CommandsDialogs
                 GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
+
             RefreshArtificial();
         }
 
@@ -884,6 +898,7 @@ namespace GitUI.CommandsDialogs
             {
                 summary += Module.GetSubmoduleSummary(name);
             }
+
             using (var frm = new FormEdit(summary))
             {
                 frm.ShowDialog(this);

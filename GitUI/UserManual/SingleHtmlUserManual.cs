@@ -17,9 +17,11 @@ namespace GitUI.UserManual
                     var uri = new System.Uri(path);
                     _Location = uri.AbsolutePath;
                 }
+
                 return _Location;
             }
         }
+
         private readonly string _anchorName;
 
         public SingleHtmlUserManual(string anchorName)

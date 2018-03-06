@@ -133,6 +133,7 @@ namespace TfsInterop
                         };
                 }).Cast<IBuild>().ToList());
             }
+
             return result;
         }
 
@@ -183,6 +184,7 @@ namespace TfsInterop
 
                 return "Partially Succeeded";
             }
+
             return "-";
         }
 

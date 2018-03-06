@@ -145,10 +145,13 @@ namespace GitUI.CommandsDialogs
                         // workaround for updating current cell
                         DataGridView.CurrentCell = null;
                     }
+
                     cell.Value = newStateIsChecked;
                 }
+
                 _selfChanging = false;
             }
+
             base.OnMouseClick(e);
         }
     }

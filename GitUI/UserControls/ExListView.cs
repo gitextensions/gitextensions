@@ -264,6 +264,7 @@ namespace GitUI.UserControls
                     rtnval = tmprtnval as int?;
                 }
             }
+
             return rtnval;
         }
 

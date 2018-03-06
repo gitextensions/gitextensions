@@ -42,6 +42,7 @@ namespace Bitbucket
                 Close();
                 return;
             }
+
             Load += BitbucketViewPullRequestFormLoad;
             Load += BitbucketPullRequestFormLoad;
 
@@ -127,6 +128,7 @@ namespace Bitbucket
             {
                 list.AddRange(result.Result);
             }
+
             return list;
         }
 
@@ -171,6 +173,7 @@ namespace Bitbucket
             {
                 return _Branches[selectedRepo];
             }
+
             var list = new List<string>();
             var getBranches = new GetBranchesRequest(selectedRepo, _settings);
             var result = getBranches.Send();
@@ -181,6 +184,7 @@ namespace Bitbucket
                     list.Add(value["displayId"].ToString());
                 }
             }
+
             _Branches.Add(selectedRepo, list);
             return list;
         }
@@ -214,6 +218,7 @@ namespace Bitbucket
             {
                 branchNames.Sort();
             }
+
             branchNames.Insert(0, "");
             branchComboBox.DataSource = branchNames;
         }
@@ -303,9 +308,11 @@ namespace Bitbucket
                         sb.Append("* ").AppendLine(commit.Message);
                     }
                 }
+
                 txtDescription.Text = sb.ToString();
             }
         }
+
         private void PullRequestChanged(object sender, EventArgs e)
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;
@@ -354,6 +361,7 @@ namespace Bitbucket
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void BtnApproveClick(object sender, EventArgs e)
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;

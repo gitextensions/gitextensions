@@ -201,6 +201,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 return;
             }
+
             MergetoolPath.SelectAll(); // allow Undo action
             MergetoolPath.SelectedText = exeFile;
             MergeToolCmd.SelectAll();
@@ -258,6 +259,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 return;
             }
+
             DifftoolPath.SelectAll(); // allow Undo action
             DifftoolPath.SelectedText = exeFile;
             DifftoolCmd.SelectAll();

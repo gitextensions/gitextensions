@@ -243,6 +243,7 @@ namespace GitUI
                 writer.WriteLine("@prompt $G");
                 writer.Write(batchFile);
             }
+
             FormProcess.ShowDialog(owner as IWin32Window, Module, "cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return true;
@@ -322,6 +323,7 @@ namespace GitUI
                     {
                         form.ShowDialog(owner);
                     }
+
                     return true;
                 });
         }
@@ -694,6 +696,7 @@ namespace GitUI
                 {
                     form.ShowDialog(owner);
                 }
+
                 return true;
             };
 
@@ -708,6 +711,7 @@ namespace GitUI
                 {
                     form.ShowDialog(owner);
                 }
+
                 return true;
             };
 
@@ -729,6 +733,7 @@ namespace GitUI
                         form.ShowDialog(owner);
                     }
                 }
+
                 return true;
             };
 
@@ -952,6 +957,7 @@ namespace GitUI
 
                     viewPatch.ShowDialog(owner);
                 }
+
                 return true;
             };
 
@@ -1215,6 +1221,7 @@ namespace GitUI
                             frm.CopyOptions(prevForm);
                             prevForm.Dispose();
                         }
+
                         prevForm = frm;
                         if (frm.ShowDialog(owner) == DialogResult.OK)
                         {
@@ -1715,6 +1722,7 @@ namespace GitUI
                     {
                         form.CheckForceWithLease();
                     }
+
                     DialogResult dlgResult;
                     if (pushOnShow)
                     {
@@ -1797,6 +1805,7 @@ namespace GitUI
                 {
                     form.ShowDialog(owner);
                 }
+
                 return true;
             };
 
@@ -1839,6 +1848,7 @@ namespace GitUI
             {
                 MessageBox.Show(ex.Message, "Exception");
             }
+
             return true;
         }
 
@@ -1984,21 +1994,25 @@ namespace GitUI
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
                 return;
             }
+
             if (command.Equals("difftool") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool");
                 return;
             }
+
             if (command.Equals("filehistory") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
                 return;
             }
+
             if (command.Equals("fileeditor") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                 return;
             }
+
             if (command.Equals("revert") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open revert, there is no file selected.", "Revert");
@@ -2141,16 +2155,19 @@ namespace GitUI
                         StartCloneDialog(null, args[1], true, null);
                         return;
                     }
+
                     if (args[1].StartsWith("github-windows://openRepo/"))
                     {
                         StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true, null);
                         return;
                     }
+
                     if (args[1].StartsWith("github-mac://openRepo/"))
                     {
                         StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true, null);
                         return;
                     }
+
                     break;
             }
             #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
@@ -2334,6 +2351,7 @@ namespace GitUI
                     arguments.Add(args[i].TrimStart('-'), null);
                 }
             }
+
             return arguments;
         }
 

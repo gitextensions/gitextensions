@@ -59,6 +59,7 @@ namespace Bitbucket
 
             return request;
         }
+
         public string Id { get; set; }
         public string Version { get; set; }
         public string DestProjectKey { get; set; }
@@ -113,6 +114,7 @@ namespace Bitbucket
             {
                 result.Add(PullRequest.Parse(val));
             }
+
             return result;
         }
     }

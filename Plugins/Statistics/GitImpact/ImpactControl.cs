@@ -475,6 +475,7 @@ namespace GitImpact
                     }
                 }
             }
+
             return "";
         }
 
@@ -531,6 +532,7 @@ namespace GitImpact
                     return _brushes[author].Color;
                 }
             }
+
             return Color.Transparent;
         }
 

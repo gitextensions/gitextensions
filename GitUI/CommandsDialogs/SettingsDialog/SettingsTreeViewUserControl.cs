@@ -83,6 +83,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         return;
                     }
                 }
+
                 SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = page, IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
             }
         }

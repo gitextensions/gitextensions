@@ -24,6 +24,7 @@ namespace GitPluginShared.Commands
                     {
                         OnExecute(null, application.Solution.FullName, pane);
                     }
+
                     // solution (or not supported) - try empty target
                     else if (IsTargetSupported(CommandTarget.Empty))
                     {

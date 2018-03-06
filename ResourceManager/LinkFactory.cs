@@ -83,6 +83,7 @@ namespace ResourceManager
                     }
                 }
             }
+
             return AddLink(linkText, "gitext://gotocommit/" + guid);
         }
 

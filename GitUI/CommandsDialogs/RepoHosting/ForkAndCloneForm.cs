@@ -124,6 +124,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     _searchBtn.Enabled = true;
                 });
         }
+
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
             var search = _searchTB.Text;
@@ -172,6 +173,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
                 _searchResultsLV.Items.Add(lvi);
             }
+
             _searchBtn.Enabled = true;
         }
 
@@ -342,6 +344,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                     return (IHostedRepository)_searchResultsLV.SelectedItems[0].Tag;
                 }
+
                 if (_myReposLV.SelectedItems.Count != 1)
                 {
                     return null;

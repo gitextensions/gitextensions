@@ -50,6 +50,7 @@ namespace GitUI
                 {
                     firstRevision = revisions[1].Guid;
                 }
+
                 secondRevision = revisions[0].Guid;
             }
             else
@@ -100,6 +101,7 @@ namespace GitUI
                     }
                 }
             }
+
             return error;
         }
     }

@@ -143,6 +143,7 @@ namespace GitUI.RevisionGridClasses
                         ////break;
                     }
                 }
+
                 if (_currentRow.Node == null)
                 {
                     // DEBUG: The check above didn't find anything, but should have
@@ -221,6 +222,7 @@ namespace GitUI.RevisionGridClasses
                             {
                                 continue;
                             }
+
                             // Lane is moving to the right, check to see if it intersects
                             // with any lanes moving to the left.
                             for (int otherLane = lane + 1; otherLane <= laneInfo.ConnectLane; otherLane++)
@@ -229,6 +231,7 @@ namespace GitUI.RevisionGridClasses
                                 {
                                     continue;
                                 }
+
                                 Graph.LaneInfo otherLaneInfo = _currentRow[otherLane, 0];
                                 if (otherLaneInfo.ConnectLane < otherLane)
                                 {
@@ -403,6 +406,7 @@ namespace GitUI.RevisionGridClasses
                                 right = curLane;
                                 curLane = i;
                             }
+
                             _currentRow.Replace(right, left);
                             _currentRow.Collapse(right);
                             _laneNodes[right].Clear();
@@ -531,9 +535,11 @@ namespace GitUI.RevisionGridClasses
                                 Graph.LaneInfo edgeInfo = _edges.Next(i, j);
                                 info.UnionWith(edgeInfo);
                             }
+
                             newEdges.Add(i, info);
                         }
                     }
+
                     _edges = newEdges;
 
                     return newLaneRow;
@@ -557,6 +563,7 @@ namespace GitUI.RevisionGridClasses
 
                         s += " }, ";
                     }
+
                     s += Node;
                     return s;
                 }
@@ -585,9 +592,11 @@ namespace GitUI.RevisionGridClasses
                                 {
                                     return e.Data;
                                 }
+
                                 found++;
                             }
                         }
+
                         return _emptyItem;
                     }
 
@@ -602,9 +611,11 @@ namespace GitUI.RevisionGridClasses
                                 {
                                     return e.Data;
                                 }
+
                                 found++;
                             }
                         }
+
                         return _emptyItem;
                     }
 
@@ -625,6 +636,7 @@ namespace GitUI.RevisionGridClasses
                                     EdgeList.RemoveAt(i);
                                     return data;
                                 }
+
                                 found++;
                             }
                         }
@@ -643,11 +655,13 @@ namespace GitUI.RevisionGridClasses
                         {
                             _countStart.Add(0);
                         }
+
                         _countStart[e.Start]++;
                         while (_countEnd.Count <= e.End)
                         {
                             _countEnd.Add(0);
                         }
+
                         _countEnd[e.End]++;
                     }
 
@@ -706,6 +720,7 @@ namespace GitUI.RevisionGridClasses
                         {
                             return false;
                         }
+
                         return (_countEnd[lane] > 0);
                     }
 
@@ -849,8 +864,10 @@ namespace GitUI.RevisionGridClasses
                         {
                             nodeName = Junction[_index].ToString();
                         }
+
                         return _index + "/" + Junction.NodesCount + "~" + nodeName + "~" + Junction;
                     }
+
                     return _node != null
                         ? _index + "/n~" + _node + "~(null)"
                         : "X/X~(null)~(null)";
@@ -898,9 +915,11 @@ namespace GitUI.RevisionGridClasses
                                 {
                                     return edge.Data;
                                 }
+
                                 count++;
                             }
                         }
+
                         throw new Exception("Bad lane");
                     }
                 }
@@ -922,6 +941,7 @@ namespace GitUI.RevisionGridClasses
                                 count = edge.Start;
                             }
                         }
+
                         return count + 1;
                     }
                 }
@@ -951,6 +971,7 @@ namespace GitUI.RevisionGridClasses
 
                         s += " }, ";
                     }
+
                     s += Node;
                     return s;
                 }

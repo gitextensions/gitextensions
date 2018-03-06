@@ -44,6 +44,7 @@ namespace GitStatistics
 
                 formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm);
             }
+
             return false;
         }
 

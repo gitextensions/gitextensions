@@ -20,6 +20,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             {
                 disabledFont = new Font(menuItem.Font, FontStyle.Italic);
             }
+
             menuItem.Font = disabledFont;
         }
     }

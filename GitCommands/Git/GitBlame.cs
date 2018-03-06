@@ -13,6 +13,7 @@ namespace GitCommands
             Headers = new List<GitBlameHeader>();
             Lines = new List<GitBlameLine>();
         }
+
         public IList<GitBlameHeader> Headers { get; private set; }
         public IList<GitBlameLine> Lines { get; private set; }
 
@@ -62,6 +63,7 @@ namespace GitCommands
             {
                 number += (int)c;
             }
+
             return number;
         }
 

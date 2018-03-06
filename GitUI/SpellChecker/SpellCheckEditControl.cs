@@ -160,6 +160,7 @@ namespace GitUI.SpellChecker
                     pl.Add(new Point(i, start.Y));
                     pl.Add(new Point(i + 2, start.Y + 2));
                 }
+
                 var p = (Point[])pl.ToArray(typeof(Point));
                 _bufferGraphics.DrawLines(pen, p);
             }
@@ -205,7 +206,8 @@ namespace GitUI.SpellChecker
         {
             Wave,
             Mark
-        };
+        }
+;
 
         #endregion
 

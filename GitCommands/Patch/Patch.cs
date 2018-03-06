@@ -161,6 +161,7 @@ namespace PatchApply
 
                     lineNumber++;
                 }
+
                 if (line.StartsWith("-"))
                 {
                     if (line.Length > 0)
@@ -189,6 +190,7 @@ namespace PatchApply
                         Rate -= 20;
                     }
                 }
+
                 if (line.StartsWith("+"))
                 {
                     string insertLine = "";
@@ -209,10 +211,12 @@ namespace PatchApply
                     lineNumber++;
                 }
             }
+
             foreach (string patchedLine in fileLines)
             {
                 FileTextB += patchedLine + "\n";
             }
+
             if (FileTextB.Length > 0 && FileTextB[FileTextB.Length - 1] == '\n')
             {
                 FileTextB = FileTextB.Remove(FileTextB.Length - 1, 1);
@@ -242,6 +246,7 @@ namespace PatchApply
                     FileTextB += "\n";
                 }
             }
+
             if (FileTextB.Length > 0 && FileTextB[FileTextB.Length - 1] == '\n')
             {
                 FileTextB = FileTextB.Remove(FileTextB.Length - 1, 1);

@@ -56,6 +56,7 @@ namespace GitCommands
             Hash = hash;
             Filename = filename;
         }
+
         public string Hash;
         public string Filename;
     }
@@ -70,6 +71,7 @@ namespace GitCommands
             Local = _local;
             Remote = _remote;
         }
+
         public ConflictedFileData Base;
         public ConflictedFileData Local;
         public ConflictedFileData Remote;
@@ -386,6 +388,7 @@ namespace GitCommands
             {
                 systemPath = Path.Combine(GetGitDirectory(), systemPath.Substring(".git\\".Length));
             }
+
             return systemPath;
         }
 
@@ -476,6 +479,7 @@ namespace GitCommands
                     i += subsubmodules.Count;
                 }
             }
+
             return submodules;
         }
 
@@ -712,6 +716,7 @@ namespace GitCommands
                 writer.WriteLine("@prompt $G");
                 writer.Write(batchFile);
             }
+
             string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return result;
@@ -791,6 +796,7 @@ namespace GitCommands
                 {
                     File.Delete(saveAsFileName);
                 }
+
                 File.Move(temporaryFileName, saveAsFileName);
                 retValue = true;
             }
@@ -885,6 +891,7 @@ namespace GitCommands
                         fileNames[i] = newFileName + index;
                         index++;
                     }
+
                     File.Move(tempFile, fileNames[i]);
                 }
                 catch (Exception ex)
@@ -946,10 +953,12 @@ namespace GitCommands
                         list.Add(new ConflictData(item[0], item[1], item[2]));
                         item = new ConflictedFileData[3];
                     }
+
                     item[stage - 1] = new ConflictedFileData(hash, itemName);
                     prevItemName = itemName;
                 }
             }
+
             if (prevItemName != null)
             {
                 list.Add(new ConflictData(item[0], item[1], item[2]));
@@ -1116,6 +1125,7 @@ namespace GitCommands
                 {
                     args = "--login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
                 }
+
                 args = "/c \"\"{0}\" " + args;
 
                 if (PathUtil.TryFindShellPath("bash.exe", out shellPath))
@@ -1344,6 +1354,7 @@ namespace GitCommands
                 Debug.Assert(true, "No path for submodule - incorrectly parsed status?");
                 return "";
             }
+
             string dir = Path.Combine(WorkingDir, localPath.EnsureTrailingPathSeparator());
             return Path.GetFullPath(dir); // fix slashes
         }
@@ -1434,6 +1445,7 @@ namespace GitCommands
                         superprojectPath = path.EnsureTrailingPathSeparator();
                         break;
                     }
+
                     // Check upper directory
                     path = Path.GetDirectoryName(path);
                 }
@@ -1659,6 +1671,7 @@ namespace GitCommands
                 Process pageantProcess = RunExternalCmdDetached(AppSettings.Pageant, "", "");
                 pageantProcess.WaitForInputIdle();
             }
+
             GitCommandHelpers.RunCmd(AppSettings.Pageant, "\"" + sshKeyFile + "\"");
         }
 
@@ -1897,6 +1910,7 @@ namespace GitCommands
                         fs.CopyTo(process.StandardInput.BaseStream);
                     }
                 }
+
                 process.StandardInput.Close();
                 process.WaitForExit();
 
@@ -1916,6 +1930,7 @@ namespace GitCommands
             {
                 UpdateIndex(processReader, file.Name);
             }
+
             if (processReader.IsValueCreated)
             {
                 processReader.Value.Process.StandardInput.Close();
@@ -1938,6 +1953,7 @@ namespace GitCommands
             {
                 UpdateIndex(processReader, file.Name);
             }
+
             if (processReader.IsValueCreated)
             {
                 processReader.Value.Process.StandardInput.Close();
@@ -1961,6 +1977,7 @@ namespace GitCommands
             {
                 UpdateIndex(processReader, file.Name);
             }
+
             if (processReader.IsValueCreated)
             {
                 processReader.Value.Process.StandardInput.Close();
@@ -1976,6 +1993,7 @@ namespace GitCommands
             {
                 UpdateIndex(processReader, file.Name);
             }
+
             if (processReader.IsValueCreated)
             {
                 processReader.Value.Process.StandardInput.Close();
@@ -1998,6 +2016,7 @@ namespace GitCommands
             {
                 processReader.Value.Process.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + file.Name.ToPosixPath() + "\"");
             }
+
             if (processReader.IsValueCreated)
             {
                 processReader.Value.Process.StandardInput.Close();
@@ -2012,6 +2031,7 @@ namespace GitCommands
             {
                 UpdateIndex(processReader, file.Name);
             }
+
             if (processReader.IsValueCreated)
             {
                 processReader.Value.Process.StandardInput.Close();
@@ -2205,6 +2225,7 @@ namespace GitCommands
                                     break;
                             }
                         }
+
                         if (m.Success)
                         {
                             key = m.Groups[1].Value;
@@ -2385,6 +2406,7 @@ namespace GitCommands
             {
                 fileName = fileName.ToPosixPath();
             }
+
             if (!string.IsNullOrEmpty(oldFileName))
             {
                 oldFileName = oldFileName.ToPosixPath();
@@ -2484,6 +2506,7 @@ namespace GitCommands
                     resultCollection.AddRange(files);
                 }
             }
+
             return resultCollection;
         }
 
@@ -2579,6 +2602,7 @@ namespace GitCommands
                             var submodule = submoduleStatus.GetSubmodule(this);
                             submoduleStatus.CheckSubmoduleStatus(submodule);
                         }
+
                         return submoduleStatus;
                     });
                 }
@@ -2601,6 +2625,7 @@ namespace GitCommands
                             var submodule = submoduleStatus.GetSubmodule(this);
                             submoduleStatus.CheckSubmoduleStatus(submodule);
                         }
+
                         return submoduleStatus;
                     });
                 }
@@ -3061,6 +3086,7 @@ namespace GitCommands
                 {
                     item = item.Substring(0, idx);
                 }
+
                 result[i] = item;
             }
 
@@ -3266,6 +3292,7 @@ namespace GitCommands
                             blameLine.OriginLineNumber = int.Parse(headerParams[1]);
                             blameLine.FinalLineNumber = int.Parse(headerParams[2]);
                         }
+
                         blame.Lines.Add(blameLine);
                     }
                 }
@@ -3292,6 +3319,7 @@ namespace GitCommands
                 Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
+
             if (revision == GitRevision.IndexGuid) // index
             {
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
@@ -3310,6 +3338,7 @@ namespace GitCommands
                     return s[2];
                 }
             }
+
             return string.Empty;
         }
 
@@ -3587,11 +3616,13 @@ namespace GitCommands
                     i++;
                 }
             }
+
             if (blist.Count > 0)
             {
                 sb.Append(SystemEncoding.GetString(blist.ToArray()));
                 blist.Clear();
             }
+
             return sb.ToString();
         }
 
@@ -3671,6 +3702,7 @@ namespace GitCommands
             {
                 return s + "\n\n! Unsupported commit message encoding: " + toEncodingName + " !";
             }
+
             return ReEncodeStringFromLossless(s, encoding);
         }
 
@@ -3726,6 +3758,7 @@ namespace GitCommands
             {
                 return false;
             }
+
             if (obj == this)
             {
                 return true;
@@ -3766,6 +3799,7 @@ namespace GitCommands
                     }
                 }
             }
+
             return branchName;
         }
 

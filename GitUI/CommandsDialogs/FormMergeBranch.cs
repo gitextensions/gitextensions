@@ -70,6 +70,7 @@ namespace GitUI.CommandsDialogs
                 allowUnrelatedHistories.Visible = false;
                 allowUnrelatedHistories.Checked = false;
             }
+
             Branches.Select();
         }
 

@@ -32,16 +32,19 @@ namespace TranslationApp
             get => _item.Name;
             set => _item.Name = value;
         }
+
         public string Property
         {
             get => _item.Property;
             set => _item.Property = value;
         }
+
         public string NeutralValue
         {
             get => _item.Source;
             set => _item.Source = value;
         }
+
         public string TranslatedValue
         {
             get => _item.Value;

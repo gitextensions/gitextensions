@@ -271,6 +271,7 @@ namespace GitUI.CommandsDialogs
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
+
                     if (!Module.CheckBranchFormat(cmd.NewBranchName))
                     {
                         MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
@@ -300,6 +301,7 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
+
                     cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
                     cmd.NewBranchName = _localBranchName;
                 }
@@ -371,6 +373,7 @@ namespace GitUI.CommandsDialogs
                             AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
                         }
                     }
+
                     if (messageBoxResult ?? false)
                     {
                         UICommands.StashPop(this);
@@ -460,6 +463,7 @@ namespace GitUI.CommandsDialogs
                     i++;
                 }
             }
+
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
             rbResetBranch.Text = existsLocalBranch ? _rbResetBranchDefaultText : _createBranch.Text;
@@ -508,6 +512,7 @@ namespace GitUI.CommandsDialogs
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
             }
+
             for (int index = 1; index < _containRevisons.Length; index++)
             {
                 var containRevison = _containRevisons[index];
@@ -518,6 +523,7 @@ namespace GitUI.CommandsDialogs
                                     !a.EndsWith("/HEAD"));
                 result.IntersectWith(branches);
             }
+
             return result.ToList();
         }
 

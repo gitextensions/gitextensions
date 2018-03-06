@@ -221,6 +221,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 repo = lb.SelectedItems[0].Tag as RecentRepoInfo;
             }
+
             return repo != null;
         }
 

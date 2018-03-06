@@ -104,6 +104,7 @@ namespace TfsIntegration
             {
                 Trace.WriteLine(ex.Message);
             }
+
             return null;
         }
 

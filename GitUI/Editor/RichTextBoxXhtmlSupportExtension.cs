@@ -428,6 +428,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 string tail = rtfText.Substring(idx);
                 rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
             }
+
             rtb.SelectedRtf = ("{\rtf1\ansi " + text + "\v #") + hyperlink + "\v0}";
             rtb.Select(position, text.Length + hyperlink.Length + 1);
             rtb.SetLink(true);
@@ -670,6 +671,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 text = "";
                 return;
             }
+
             text = v[0];
             if (v.Length == 1)
             {
@@ -1025,6 +1027,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
+
             return sbT.ToString();
         }
 
@@ -1134,6 +1137,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
+
             return result.ToString();
         }
 
@@ -1192,6 +1196,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 Debug.WriteLine(ex.Message);
             }
+
             // apply links style
             CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
             ncf.cbSize = Marshal.SizeOf(ncf);
@@ -1200,6 +1205,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 rtb.Select(pair.Key, pair.Value);
                 SetCharFormat(handleRef, ncf);
             }
+
             SetHideSelectionInternal(handleRef, false);
             // reposition to first
             rtb.Select(0, 0);
@@ -1254,6 +1260,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             cs.paraFormatChanged = true;
                         }
                     }
+
                     break;
                 case XmlNodeType.Whitespace:
                 case XmlNodeType.SignificantWhitespace:
@@ -1315,6 +1322,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             cs.hyperlink = reader.Value;
                         }
                     }
+
                     reader.MoveToElement();
                     break;
                 case "p":
@@ -1343,6 +1351,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             }
                         }
                     }
+
                     reader.MoveToElement();
                     break;
                 case "li":
@@ -1353,6 +1362,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                         cs.pf.wNumbering = PFN.BULLET;
                         cs.paraFormatChanged = true;
                     }
+
                     break;
                 case "font":
                     cs.scf.Push(cs.cf);
@@ -1388,9 +1398,11 @@ namespace GitUI.Editor.RichTextBoxExtension
                                     Color color = Color.FromName(text);
                                     crFont = GetCOLORREF(color);
                                 }
+
                                 break;
                         }
                     }
+
                     reader.MoveToElement();
 
                     cs.cf.szFaceName = strFont;
@@ -1450,9 +1462,11 @@ namespace GitUI.Editor.RichTextBoxExtension
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }
                         }
+
                         // reposition to final
                         rtb.Select(rtb.TextLength + 1, 0);
                     }
+
                     cs.links.Add(new KeyValuePair<int, int>(cs.hyperlinkStart, length));
 
                     cs.hyperlinkStart = -1;
@@ -1513,6 +1527,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 Debug.WriteLine(ex.Message);
             }
+
             rtb.HideSelection = false;
             // reposition to final
             rtb.Select(rtb.TextLength + 1, 0);

@@ -39,6 +39,7 @@ namespace GitCommands
 
             remove => _backgroundLoader.LoadingError -= value;
         }
+
         public event EventHandler Updated;
         public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
@@ -162,6 +163,7 @@ namespace GitCommands
                         arguments.Append(" --branches=" + BranchFilter);
                     }
                 }
+
                 if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
                 {
                     arguments.Append(" --remotes");
@@ -415,6 +417,7 @@ namespace GitCommands
                         data = GitModule.ReEncodeFileNameFromLossless(data);
                         _revision.Name = data.TrimStart(new char[] { '\n' });
                     }
+
                     break;
             }
 

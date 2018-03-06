@@ -32,6 +32,7 @@ namespace GitPluginShared
                     btn.Style = MsoButtonStyle.msoButtonIconAndCaption;
                     return true;
                 }
+
                 return false;
             }
             catch (Exception)
@@ -102,6 +103,7 @@ namespace GitPluginShared
             {
                 // ignore!!
             }
+
             return null;
         }
     }

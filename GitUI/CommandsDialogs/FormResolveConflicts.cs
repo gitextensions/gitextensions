@@ -231,6 +231,7 @@ namespace GitUI.CommandsDialogs
         {
             return (from DataGridViewRow selectedRow in ConflictedFiles.SelectedRows select (ConflictData)selectedRow.DataBoundItem).ToArray();
         }
+
         private string GetFileName()
         {
             return GetConflict().Filename;
@@ -287,6 +288,7 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(this, "Merge using script failed.\n" + ex);
             }
+
             return false;
         }
 
@@ -381,6 +383,7 @@ namespace GitUI.CommandsDialogs
 
                 return ItemType.Directory;
             }
+
             return ItemType.File;
         }
 
@@ -572,6 +575,7 @@ namespace GitUI.CommandsDialogs
                 {
                     _mergetoolPath = "kdiff3";
                 }
+
                 _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
             }
             else
@@ -594,6 +598,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
+
             Cursor.Current = Cursors.Default;
             return true;
         }
@@ -610,6 +615,7 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -621,6 +627,7 @@ namespace GitUI.CommandsDialogs
                 Module.ResetHard("");
                 Close();
             }
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -629,6 +636,7 @@ namespace GitUI.CommandsDialogs
             bool inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
             return inTheMiddleOfRebase ? _ours.Text : _theirs.Text;
         }
+
         private string GetLocalSideString()
         {
             bool inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
@@ -747,8 +755,10 @@ namespace GitUI.CommandsDialogs
                 {
                     ChooseBaseOnConflict(conflictItem.Base.Filename);
                 }
+
                 IncrementProgressBarValue();
             }
+
             StopAndHideProgressBar();
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -773,8 +783,10 @@ namespace GitUI.CommandsDialogs
                 {
                     ChooseLocalOnConflict(conflictItem.Filename);
                 }
+
                 IncrementProgressBarValue();
             }
+
             StopAndHideProgressBar();
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -800,8 +812,10 @@ namespace GitUI.CommandsDialogs
                 {
                     ChooseRemoteOnConflict(conflictItem.Filename);
                 }
+
                 IncrementProgressBarValue();
             }
+
             StopAndHideProgressBar();
             Initialize();
 
@@ -879,6 +893,7 @@ namespace GitUI.CommandsDialogs
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
+
             return false;
         }
 
@@ -915,6 +930,7 @@ namespace GitUI.CommandsDialogs
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
+
             return false;
         }
 
@@ -951,6 +967,7 @@ namespace GitUI.CommandsDialogs
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
             }
+
             return false;
         }
 
@@ -1043,6 +1060,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -1076,6 +1094,7 @@ namespace GitUI.CommandsDialogs
                 e.Cancel = true;
                 return;
             }
+
             string fileName = GetFileName();
             ConflictedFilesContextMenu.Enabled = !string.IsNullOrEmpty(fileName);
 
@@ -1101,11 +1120,13 @@ namespace GitUI.CommandsDialogs
                 ContextSaveLocalAs.Enabled = false;
                 ContextOpenLocalWith.Enabled = false;
             }
+
             if (conflictedFileNames.Remote.Filename.IsNullOrEmpty())
             {
                 ContextSaveRemoteAs.Enabled = false;
                 ContextOpenRemoteWith.Enabled = false;
             }
+
             if (conflictedFileNames.Base.Filename.IsNullOrEmpty())
             {
                 ContextSaveBaseAs.Enabled = false;

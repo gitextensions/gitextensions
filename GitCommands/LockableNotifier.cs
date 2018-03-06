@@ -19,6 +19,7 @@ namespace GitCommands
                 InternalNotify();
             }
         }
+
         /// <summary>
         /// notifies if is unlocked
         /// </summary>

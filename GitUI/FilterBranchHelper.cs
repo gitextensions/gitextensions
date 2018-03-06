@@ -112,6 +112,7 @@ namespace GitUI
                 var branches = Module.GetRefs(true, true);
                 list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
+
             return list;
         }
 
@@ -155,6 +156,7 @@ namespace GitUI
             {
                 return;
             }
+
             _applyingFilter = true;
             try
             {

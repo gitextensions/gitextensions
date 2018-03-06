@@ -41,6 +41,7 @@ namespace GitUI.Editor.Diff
                 {
                     break;
                 }
+
                 lineNumInDiff++;
                 if (line.StartsWith("@"))
                 {
@@ -138,6 +139,7 @@ namespace GitUI.Editor.Diff
                     rightLineNum++;
                 }
             }
+
             return ret;
         }
 

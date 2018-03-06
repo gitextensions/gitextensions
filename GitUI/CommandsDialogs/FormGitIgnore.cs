@@ -100,6 +100,7 @@ namespace GitUI.CommandsDialogs
                 Close();
                 return true;
             }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -170,6 +171,7 @@ namespace GitUI.CommandsDialogs
                             e.Cancel = true;
                             return;
                         }
+
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;
@@ -201,6 +203,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
+
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;

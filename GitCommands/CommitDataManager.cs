@@ -83,6 +83,7 @@ namespace GitCommands
                 error = "Cannot find commit " + sha1;
                 return;
             }
+
             if (index >= info.Length)
             {
                 error = info;
@@ -121,6 +122,7 @@ namespace GitCommands
                 error = "Cannot find commit " + sha1;
                 return null;
             }
+
             if (index >= info.Length)
             {
                 error = info;
@@ -232,6 +234,7 @@ namespace GitCommands
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
 

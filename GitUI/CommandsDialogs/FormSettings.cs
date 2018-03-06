@@ -223,6 +223,7 @@ namespace GitUI.CommandsDialogs
             {
                 Close();
             }
+
             Cursor.Current = Cursors.Default;
         }
 

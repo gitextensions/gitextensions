@@ -17,6 +17,7 @@ namespace ResourceManager.CommitDataRenders
             {
                 return new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
             }
+
             return AppSettings.Font;
         }
 

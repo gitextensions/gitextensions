@@ -216,6 +216,7 @@ namespace GitUI.RevisionGridClasses
                                 _backgroundScrollTo = 0;
                                 _graphDataCount = 0;
                             }
+
                             lock (_graphData)
                             {
                                 _filterMode = value;
@@ -237,11 +238,13 @@ namespace GitUI.RevisionGridClasses
                 {
                     return null;
                 }
+
                 var data = new object[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
                     data[i] = _graphData[i].Node.Data;
                 }
+
                 return data;
             }
         }
@@ -257,6 +260,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     return null;
                 }
+
                 var data = new string[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
@@ -265,6 +269,7 @@ namespace GitUI.RevisionGridClasses
                         data[SelectedRows.Count - 1 - i] = _graphData[SelectedRows[i].Index].Node.Id;
                     }
                 }
+
                 return data;
             }
             set
@@ -321,11 +326,13 @@ namespace GitUI.RevisionGridClasses
                     _whiteBorderPen.Dispose();
                     _whiteBorderPen = null;
                 }
+
                 if (_blackBorderPen != null)
                 {
                     _blackBorderPen.Dispose();
                     _blackBorderPen = null;
                 }
+
                 if (_graphBitmap != null)
                 {
                     _graphBitmap.Dispose();
@@ -337,6 +344,7 @@ namespace GitUI.RevisionGridClasses
                     _backgroundEvent.Dispose();
                 }
             }
+
             base.Dispose(disposing);
         }
 
@@ -379,6 +387,7 @@ namespace GitUI.RevisionGridClasses
             {
                 _backgroundScrollTo = 0;
             }
+
             lock (_graphData)
             {
                 SetRowCount(0);
@@ -387,6 +396,7 @@ namespace GitUI.RevisionGridClasses
                 _graphDataCount = 0;
                 RebuildGraph();
             }
+
             _filterMode = FilterType.None;
         }
 
@@ -398,6 +408,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     n.IsFiltered = false;
                 }
+
                 _graphData.IsFilter = false;
             }
         }
@@ -633,6 +644,7 @@ namespace GitUI.RevisionGridClasses
                         {
                             _backgroundScrollTo = curCount;
                         }
+
                         break;
                     }
 
@@ -752,6 +764,7 @@ namespace GitUI.RevisionGridClasses
                         AppSettings.BranchFilterEnabled) ? 1 : MaxLanes;
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
+
                 if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
                 {
                     GraphColumn.Width = _laneWidth * laneCount;
@@ -867,6 +880,7 @@ namespace GitUI.RevisionGridClasses
                         break;
                     }
                 }
+
                 if (i == preferedColors.Length)
                 {
                     var r = new Random();
@@ -913,6 +927,7 @@ namespace GitUI.RevisionGridClasses
                     _graphBitmap.Dispose();
                     _graphBitmap = null;
                 }
+
                 if (width > 0 && height > 0)
                 {
                     _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
@@ -939,6 +954,7 @@ namespace GitUI.RevisionGridClasses
                     neededHeadAdjustment = 0;
                 }
             }
+
             int newRows = 0;
             if (_cacheCount < _cacheCountMax)
             {
@@ -1040,6 +1056,7 @@ namespace GitUI.RevisionGridClasses
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -1274,6 +1291,7 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
             }
+
             return true;
         }
 
@@ -1335,6 +1353,7 @@ namespace GitUI.RevisionGridClasses
                     Rows[0].Selected = true;
                     CurrentCell = Rows[0].Cells[1];
                 }
+
                 return;
             }
             else if (e.KeyData == Keys.End)
@@ -1345,8 +1364,10 @@ namespace GitUI.RevisionGridClasses
                     Rows[RowCount - 1].Selected = true;
                     CurrentCell = Rows[RowCount - 1].Cells[1];
                 }
+
                 return;
             }
+
             base.OnKeyDown(e);
         }
 
@@ -1396,8 +1417,10 @@ namespace GitUI.RevisionGridClasses
                     {
                         name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);
                     }
+
                     return string.Format("{0} ({1})", name, Index);
                 }
+
                 return Data.ToString();
             }
         }

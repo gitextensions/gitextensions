@@ -256,6 +256,7 @@ namespace NetSpell.SpellChecker.Dictionary
                     }
                 }
             }
+
             // saving possible base words for use in generating suggestions
             PossibleBaseWords.AddRange(suffixWords);
 
@@ -284,6 +285,7 @@ namespace NetSpell.SpellChecker.Dictionary
                     } // suffix word
                 } // prefix rule entry
             } // prefix rule
+
             // word not found
             TraceWriter.TraceVerbose("Possible Base Words: {0}", PossibleBaseWords.Count);
             return false;
@@ -395,6 +397,7 @@ namespace NetSpell.SpellChecker.Dictionary
                         {
                             continue;
                         }
+
                         // check for section flag
                         if (tempLine.StartsWith("[") && tempLine.EndsWith("]"))
                         {
@@ -433,8 +436,8 @@ namespace NetSpell.SpellChecker.Dictionary
                                     {
                                         currentRule.AllowCombine = true;
                                     }
-                                    // part 3 = entry count, not used
 
+                                    // part 3 = entry count, not used
                                     if (currentSection == "[Prefix]")
                                     {
                                         // add to prefix collection
@@ -446,6 +449,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                         SuffixRules.Add(currentRule.Name, currentRule);
                                     }
                                 }
+
                                 // if 4 parts, then entry for current rule
                                 else if (partMatches.Count == 4)
                                 {
@@ -459,6 +463,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                         {
                                             entry.StripCharacters = partMatches[1].Value;
                                         }
+
                                         // part 3 = add chars
                                         entry.AddCharacters = partMatches[2].Value;
                                         // part 4 = conditions
@@ -467,6 +472,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                         currentRule.AffixEntries.Add(entry);
                                     }
                                 }
+
                                 break;
                             case "[Phonetic]": // ASpell phonetic rules
                                 // split line by white space
@@ -478,6 +484,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                     rule.ReplaceString = partMatches[1].Value;
                                     PhoneticRules.Add(rule);
                                 }
+
                                 break;
                             case "[Words]": // dictionary word list
                                 // splits word into its parts
@@ -490,6 +497,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 {
                                     tempWord.AffixKeys = parts[1];
                                 }
+
                                 // part 3 = phonetic code
                                 if (parts.Length >= 3)
                                 {
@@ -500,6 +508,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 break;
                         } // currentSection switch
                     } // read line
+
                     // close files
                 }
             }
@@ -560,6 +569,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 break; // rule fails if one condition fails
                             }
                         }
+
                         // if all conditions passed
                         if (passCount == rule.ConditionCount)
                         {
@@ -573,8 +583,10 @@ namespace NetSpell.SpellChecker.Dictionary
                                 {
                                     code.Append(rule.ReplaceString);
                                 }
+
                                 tempWord = tempWord.Substring(rule.ConditionCount - rule.ConsumeCount);
                             }
+
                             break;
                         }
                     }
@@ -616,6 +628,7 @@ namespace NetSpell.SpellChecker.Dictionary
             {
                 _components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

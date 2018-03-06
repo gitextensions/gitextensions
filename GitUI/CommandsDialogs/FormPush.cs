@@ -171,8 +171,10 @@ namespace GitUI.CommandsDialogs
                     OpenRemotesDialogAndRefreshList(null);
                     return UserGitRemotes.Count > 0;
                 }
+
                 return false;
             }
+
             return true;
         }
 
@@ -187,6 +189,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
+
             _remoteManager.LoadRemotes(false);
             BindRemotesDropDown(selectedRemoteName);
         }
@@ -259,6 +262,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
                 return false;
             }
+
             if (/* PushToRemote.Checked */!CheckIfRemoteExist())
             {
                 return false;
@@ -296,6 +300,7 @@ namespace GitUI.CommandsDialogs
             {
                 Repositories.AddMostRecentRepository(PushDestination.Text);
             }
+
             AppSettings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
 
             var remote = "";
@@ -326,6 +331,7 @@ namespace GitUI.CommandsDialogs
                     {
                         track = false;
                     }
+
                     if (track && !AppSettings.DontConfirmAddTrackingRef)
                     {
                         var result = MessageBox.Show(this,
@@ -336,6 +342,7 @@ namespace GitUI.CommandsDialogs
                         {
                             return false;
                         }
+
                         track = result == DialogResult.Yes;
                     }
                 }
@@ -379,6 +386,7 @@ namespace GitUI.CommandsDialogs
                     tag = "";
                     pushAllTags = true;
                 }
+
                 pushCmd = GitCommandHelpers.PushTagCmd(destination, tag, pushAllTags, GetForcePushOption());
             }
             else
@@ -400,6 +408,7 @@ namespace GitUI.CommandsDialogs
                         pushActions.Add(GitPushAction.DeleteRemoteBranch(row["Remote"].ToString()));
                     }
                 }
+
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
@@ -441,10 +450,12 @@ namespace GitUI.CommandsDialogs
             {
                 return ForcePushOptions.Force;
             }
+
             if (ckForceWithLease.Checked)
             {
                 return ForcePushOptions.ForceWithLease;
             }
+
             return ForcePushOptions.DoNotForce;
         }
 
@@ -458,6 +469,7 @@ namespace GitUI.CommandsDialogs
                 string remoteBranchName = _selectedRemote + "/" + _selectedRemoteBranchName;
                 return Module.ExistsMergeCommit(remoteBranchName, _selectedBranch);
             }
+
             return false;
         }
 
@@ -507,6 +519,7 @@ namespace GitUI.CommandsDialogs
                             buttons = string.Format(buttons, _pullActionNone.Text);
                             break;
                     }
+
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
                                     String.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
@@ -526,6 +539,7 @@ namespace GitUI.CommandsDialogs
                             {
                                 AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.Default;
                             }
+
                             break;
                         case 1:
                             AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
@@ -533,6 +547,7 @@ namespace GitUI.CommandsDialogs
                             {
                                 AppSettings.AutoPullOnPushRejectedAction = AppSettings.FormPullAction;
                             }
+
                             break;
                         case 2:
                             AppSettings.FormPullAction = AppSettings.PullAction.Merge;
@@ -540,6 +555,7 @@ namespace GitUI.CommandsDialogs
                             {
                                 AppSettings.AutoPullOnPushRejectedAction = AppSettings.FormPullAction;
                             }
+
                             break;
                         case 3:
                             forcePush = true;
@@ -550,8 +566,10 @@ namespace GitUI.CommandsDialogs
                             {
                                 AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.None;
                             }
+
                             break;
                     }
+
                     if (cancel)
                     {
                         return false;
@@ -567,6 +585,7 @@ namespace GitUI.CommandsDialogs
                         string forceArg = GitCommandHelpers.VersionInUse.SupportPushForceWithLease ? " --force-with-lease" : " -f";
                         form.ProcessArguments = form.ProcessArguments.Insert("push".Length, forceArg);
                     }
+
                     form.Retry();
                     return true;
                 }
@@ -793,6 +812,7 @@ namespace GitUI.CommandsDialogs
             {
                 pushUrl = _selectedRemote.Url;
             }
+
             PushDestination.Text = pushUrl;
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
@@ -907,6 +927,7 @@ namespace GitUI.CommandsDialogs
                         {
                             return;
                         }
+
                         var processOutput = formProcess.GetOutputString();
                         var cmdOutput = TakeCommandOutput(processOutput);
                         remoteHeads = Module.GetTreeRefs(cmdOutput);
@@ -921,6 +942,7 @@ namespace GitUI.CommandsDialogs
                     // use remote branches from the git's local database if there were problems with receiving branches from the remote server
                     remoteHeads = Module.GetRemoteBranches().Where(r => r.Remote == remote).ToList();
                 }
+
                 ProcessHeads(remote, remoteHeads);
             }
             finally
@@ -938,6 +960,7 @@ namespace GitUI.CommandsDialogs
             {
                 return string.Empty;
             }
+
             var cmdOutput = aProcessOutput.Substring(firstTabIdx - 40);
             return cmdOutput;
         }
@@ -999,11 +1022,13 @@ namespace GitUI.CommandsDialogs
                 e.Row["Force"] = false;
                 e.Row["Delete"] = false;
             }
+
             if (e.Column.ColumnName == "Force" && (bool)e.ProposedValue)
             {
                 e.Row["Push"] = false;
                 e.Row["Delete"] = false;
             }
+
             if (e.Column.ColumnName == "Delete" && (bool)e.ProposedValue)
             {
                 e.Row["Push"] = false;
@@ -1070,6 +1095,7 @@ namespace GitUI.CommandsDialogs
             {
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

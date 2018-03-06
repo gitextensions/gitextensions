@@ -67,6 +67,7 @@ namespace TranslationApp
                 filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
                 TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
             }
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -85,6 +86,7 @@ namespace TranslationApp
                     .Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
                 list.Add(new KeyValuePair<string, int>(name, translatedCount));
             }
+
             using (var stream = File.CreateText("statistic.csv"))
             {
                 stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
@@ -94,6 +96,7 @@ namespace TranslationApp
                         neutralItems.Count);
                 }
             }
+
             Cursor.Current = Cursors.Default;
         }
     }

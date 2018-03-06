@@ -64,6 +64,7 @@ namespace GitUI.CommandsDialogs
                     return nodes[i];
                 }
             }
+
             return null;
         }
 
@@ -102,12 +103,14 @@ namespace GitUI.CommandsDialogs
                             subNode.Nodes.Add(new TreeNode());
                             break;
                         }
+
                     case GitObjectType.Commit:
                         {
                             subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Submodule;
                             subNode.Text = $@"{childItem.Name} (Submodule)";
                             break;
                         }
+
                     case GitObjectType.Blob:
                         {
                             var extension = Path.GetExtension(gitItem.FileName);
@@ -115,6 +118,7 @@ namespace GitUI.CommandsDialogs
                             {
                                 continue;
                             }
+
                             if (!imageCollection.ContainsKey(extension))
                             {
                                 // a little optimisation - initialise the first time it is required
@@ -125,8 +129,10 @@ namespace GitUI.CommandsDialogs
                                 {
                                     continue;
                                 }
+
                                 imageCollection.Add(extension, fileIcon);
                             }
+
                             subNode.ImageKey = subNode.SelectedImageKey = extension;
                             break;
                         }

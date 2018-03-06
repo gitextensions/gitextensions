@@ -60,6 +60,7 @@ namespace GitUI.UserControls
             {
                 Trace.WriteLine(ex);
             }
+
             _process = null;
             FireProcessExited();
         }
@@ -97,6 +98,7 @@ namespace GitUI.UserControls
                 {
                     startInfo.EnvironmentVariables.Add(envVariable.Key, envVariable.Value);
                 }
+
                 process.StartInfo = startInfo;
 
                 process.EnableRaisingEvents = true;
@@ -110,6 +112,7 @@ namespace GitUI.UserControls
                         {
                             return;
                         }
+
                         // From GitCommandsInstance:
                         // The process is exited already, but this command waits also until all output is received.
                         // Only WaitForExit when someone is connected to the exited event. For some reason a
@@ -123,6 +126,7 @@ namespace GitUI.UserControls
                         {
                             // NOP
                         }
+
                         _exitcode = _process.ExitCode;
                         _process = null;
                         _timer.Stop(true);
@@ -160,6 +164,7 @@ namespace GitUI.UserControls
             {
                 throw new InvalidOperationException("This operation must be called on the GUI thread.");
             }
+
             // if not disposed
             if (!IsDisposed)
             {
@@ -178,6 +183,7 @@ namespace GitUI.UserControls
                 _timer.Dispose();
                 _timer = null;
             }
+
             base.Dispose(disposing);
         }
     }

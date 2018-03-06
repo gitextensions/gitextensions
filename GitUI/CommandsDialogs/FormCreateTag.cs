@@ -148,6 +148,7 @@ namespace GitUI.CommandsDialogs
                 default:
                     throw new NotSupportedException("Invalid dropdownSelection");
             }
+
             return returnValue;
         }
     }

@@ -42,6 +42,7 @@ namespace Github3
 
                     _repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
+
                 return _repo.Parent?.GitUrl;
             }
         }

@@ -435,6 +435,7 @@ namespace GitPlugin
                 {
                     resourceName = String.Concat(cultureInfo.TwoLetterISOLanguageName, "Tools");
                 }
+
                 toolsMenuName = resourceManager.GetString(resourceName);
             }
             catch (Exception)

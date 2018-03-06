@@ -361,6 +361,7 @@ namespace GitUI.CommandsDialogs
             {
                 orgFileName = selectedRows[0].Name;
             }
+
             FileChanges.OpenWithDifftool(FileName, orgFileName, RevisionDiffKind.DiffAB);
         }
 
@@ -557,6 +558,7 @@ namespace GitUI.CommandsDialogs
 
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

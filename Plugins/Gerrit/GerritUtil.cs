@@ -64,6 +64,7 @@ namespace Gerrit
             {
                 sshCmd = AppSettings.Plink;
             }
+
             if (string.IsNullOrEmpty(sshCmd))
             {
                 sshCmd = "ssh.exe";

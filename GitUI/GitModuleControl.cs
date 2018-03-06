@@ -71,6 +71,7 @@ namespace GitUI
                 }
             }
         }
+
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
         public GitModule Module => UICommands.Module;

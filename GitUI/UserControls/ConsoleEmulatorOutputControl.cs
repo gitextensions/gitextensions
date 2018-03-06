@@ -90,6 +90,7 @@ namespace GitUI.UserControls
                 cmdl.Append(command.Quote() /* do the escaping for it */);
                 cmdl.Append(" ");
             }
+
             cmdl.Append(arguments /* expecting to be already escaped */);
 
             var startinfo = new ConEmuStartInfo();
@@ -98,11 +99,13 @@ namespace GitUI.UserControls
             {
                 startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
             }
+
             startinfo.StartupDirectory = workdir;
             foreach (var envVariable in envVariables)
             {
                 startinfo.SetEnv(envVariable.Key, envVariable.Value);
             }
+
             startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
             var outputProcessor = new ConsoleCommandLineOutputProcessor(startinfo.ConsoleProcessCommandLine.Length, FireDataReceived);
             startinfo.AnsiStreamChunkReceivedEventSink = outputProcessor.AnsiStreamChunkReceived;
@@ -150,6 +153,7 @@ namespace GitUI.UserControls
                     _commandLineCharsInOutput -= outputChunk.Length;
                     return null;
                 }
+
                 string rest = outputChunk.Substring(_commandLineCharsInOutput);
                 _commandLineCharsInOutput = 0;
                 return rest;
@@ -175,12 +179,14 @@ namespace GitUI.UserControls
                 output = _lineChunk + output;
                 _lineChunk = null;
             }
+
             string[] outputLines = Regex.Split(output, @"(?<=[\n\r])");
             int lineCount = outputLines.Length;
             if (outputLines[lineCount - 1].IsNullOrEmpty())
             {
                 lineCount--;
             }
+
             for (int i = 0; i < lineCount; i++)
             {
                 string outputLine = outputLines[i];
@@ -196,6 +202,7 @@ namespace GitUI.UserControls
                         break;
                     }
                 }
+
                 _FireDataReceived(new TextEventArgs(outputLine));
             }
         }

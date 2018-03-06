@@ -49,6 +49,7 @@ namespace GitCommandsTests.Patch
             {
                 testPatch.Patch.PatchHeader = "diff --git a/thisisatesta.txt b/thisisatestb.txt";
             }
+
             testPatch.Patch.PatchIndex = "index 5e4dce2..5eb1e6f 100644";
             testPatch.Patch.FileNameA = "thisisatesta.txt";
             testPatch.Patch.FileNameB = "thisisatestb.txt";
@@ -64,6 +65,7 @@ namespace GitCommandsTests.Patch
                 testPatch.AppendHeaderLine("--- a/" + testPatch.Patch.FileNameA);
                 testPatch.AppendHeaderLine("+++ b/" + testPatch.Patch.FileNameB);
             }
+
             testPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
             testPatch.AppendDiffLine(" iiiiii", fileEncoding);
             testPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);

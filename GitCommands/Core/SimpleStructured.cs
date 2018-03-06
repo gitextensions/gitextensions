@@ -55,6 +55,7 @@ namespace GitCommands.Core
                         return ex.Cast<object>().SequenceEqual(ey.Cast<object>(), this);
                     }
                 }
+
                 return x.Equals(y);
             }
         }
@@ -85,6 +86,7 @@ namespace GitCommands.Core
                         return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
                     }
                 }
+
                 SimpleStructured ss = obj as SimpleStructured;
                 if (ss != null)
                 {

@@ -33,6 +33,7 @@ namespace GitCommands.Repository
             get => _path ?? string.Empty;
             set => _path = value;
         }
+
         public string Description { get; set; }
         public RepositoryAnchor Anchor { get; set; }
 

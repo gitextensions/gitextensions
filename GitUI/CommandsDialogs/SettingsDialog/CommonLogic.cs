@@ -88,6 +88,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 MessageBox.Show(_cantReadRegistry.Text);
             }
+
             return value ?? string.Empty;
         }
 

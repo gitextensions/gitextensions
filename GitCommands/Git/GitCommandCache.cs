@@ -92,6 +92,7 @@ namespace GitCommands
                     commandCache.Remove(queue.Dequeue());
                 }
             }
+
             CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }
 

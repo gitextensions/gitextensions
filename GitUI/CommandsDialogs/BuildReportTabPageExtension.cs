@@ -165,6 +165,7 @@ namespace GitUI.CommandsDialogs
                         },
                     TaskScheduler.FromCurrentSynchronizationContext());
             }
+
             if (_url != null)
             {
                 _buildReportWebBrowser.Document.Write("<HTML><a href=\"" + _url + "\" target=\"_blank\">Open report</a></HTML>");
@@ -182,6 +183,7 @@ namespace GitUI.CommandsDialogs
             {
                 return null;
             }
+
             var href = favIconLink.GetAttribute("href");
 
             if (htmlDocument.Url.PathAndQuery == "/")

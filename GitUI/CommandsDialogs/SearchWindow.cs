@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs
             {
                 throw new InvalidOperationException("getCandidates cannot be null");
             }
+
             _getCandidates = getCandidates;
             AutoFit();
 
@@ -47,6 +48,7 @@ namespace GitUI.CommandsDialogs
             {
                 listBox1.SelectedIndex = 0;
             }
+
             textBox1.SelectionStart = selectionStart;
             textBox1.SelectionLength = selectionLength;
             AutoFit();

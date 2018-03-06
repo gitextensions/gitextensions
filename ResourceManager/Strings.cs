@@ -22,6 +22,7 @@ namespace ResourceManager
                 {
                     _instance = new Strings();
                 }
+
                 return _instance;
             }
         }

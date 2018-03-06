@@ -13,6 +13,7 @@ namespace GitUI.CommandsDialogs
                 {
                     SolveMergeConflicts(aCommands, owner, offerCommit);
                 }
+
                 return true;
             }
 

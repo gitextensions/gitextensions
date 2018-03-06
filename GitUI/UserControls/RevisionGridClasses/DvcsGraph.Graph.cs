@@ -45,6 +45,7 @@ namespace GitUI.RevisionGridClasses
                     {
                         n.InLane = int.MaxValue;
                     }
+
                     foreach (Junction j in _junctions)
                     {
                         j.CurrentState = Junction.State.Unprocessed;
@@ -148,6 +149,7 @@ namespace GitUI.RevisionGridClasses
                     var newJunction = new Junction(node, node);
                     _junctions.Add(newJunction);
                 }
+
                 _nodeCount++;
                 node.Data = aData;
                 node.DataType = aType;
@@ -262,6 +264,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     return;
                 }
+
                 for (int i = _processedNodes; i < AddedNodes.Count; i++)
                 {
                     if (AddedNodes[i] == aNode)
@@ -319,6 +322,7 @@ namespace GitUI.RevisionGridClasses
                         nodes.Add(j.Youngest);
                     }
                 }
+
                 return nodes;
             }
 
@@ -378,9 +382,11 @@ namespace GitUI.RevisionGridClasses
                                 localVisit(e.Oldest);
                             }
                         }
+
                         L.Enqueue(n);
                         return true;
                     }
+
                     return false;
                 };
                 foreach (Node n in S)
@@ -399,11 +405,13 @@ namespace GitUI.RevisionGridClasses
                         {
                             Debugger.Break();
                         }
+
                         if (!J.Contains(e))
                         {
                             J.Enqueue(e);
                         }
                     }
+
                     X.Enqueue(n);
                 }
 
@@ -432,6 +440,7 @@ namespace GitUI.RevisionGridClasses
                     Nodes.Add(aId, aNode);
                     return false;
                 }
+
                 return true;
             }
 
@@ -466,6 +475,7 @@ namespace GitUI.RevisionGridClasses
                             _junctions.Add(other);
                         }
                     }
+
                     _junctions.TrimExcess();
                 }
 

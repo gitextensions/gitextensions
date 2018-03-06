@@ -31,6 +31,7 @@ namespace GitPluginShared.Git
             {
                 MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
             }
+
             return "";
         }
 
@@ -190,6 +191,7 @@ namespace GitPluginShared.Git
                     return dir + "\\";
                 }
             }
+
             return startDir;
         }
 

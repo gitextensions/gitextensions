@@ -23,6 +23,7 @@ namespace GitCommands.Git
             {
                 throw new ArgumentException("stash");
             }
+
             _stash = stash;
         }
 
@@ -55,6 +56,7 @@ namespace GitCommands.Git
             {
                 return false;
             }
+
             if (this == obj)
             {
                 return true;

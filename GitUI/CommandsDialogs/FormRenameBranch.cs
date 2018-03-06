@@ -66,6 +66,7 @@ namespace GitUI.CommandsDialogs
             {
                 Trace.WriteLine(ex.Message);
             }
+
             DialogResult = DialogResult.OK;
         }
     }

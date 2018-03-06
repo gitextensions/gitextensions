@@ -122,6 +122,7 @@ namespace GitStatistics
                         commitCountLabels[n] = string.Format(_commitsBy.Text, commits, user);
                         n++;
                     }
+
                     CommitCountPie.SetValues(commitCountValues);
                     CommitCountPie.ToolTips = commitCountLabels;
 

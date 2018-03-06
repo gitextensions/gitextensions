@@ -70,6 +70,7 @@ namespace FindLargeFiles
                         curGitObject.Commit.Add(commit);
                     }
                 }
+
                 string objectsPackDirectory = _gitCommands.ResolveGitInternalPath("objects/pack/");
                 if (Directory.Exists(objectsPackDirectory))
                 {
@@ -92,6 +93,7 @@ namespace FindLargeFiles
                         }
                     }
                 }
+
                 pbRevisions.Invoke((Action)(() => pbRevisions.Hide()));
                 BranchesGrid.Invoke((Action)(() => BranchesGrid.ReadOnly = false));
             }
@@ -145,6 +147,7 @@ namespace FindLargeFiles
                     sb.AppendLine(String.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",
                         _gitCommands.GitCommand, gitObject.Path));
                 }
+
                 sb.AppendLine(String.Format("for /f %%a IN ('\"{0}\" for-each-ref --format=%%^(refname^) refs/original/') DO \"{0}\" update-ref -d %%a",
                         _gitCommands.GitCommand));
                 sb.AppendLine(String.Format("\"{0}\" reflog expire --expire=now --all",
@@ -153,6 +156,7 @@ namespace FindLargeFiles
                     _gitCommands.GitCommand));
                 _gitUiCommands.GitUICommands.StartBatchFileProcessDialog(sb.ToString());
             }
+
             Close();
         }
     }

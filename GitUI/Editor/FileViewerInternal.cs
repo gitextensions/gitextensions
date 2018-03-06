@@ -161,6 +161,7 @@ namespace GitUI.Editor
             {
                 _lineNumbersControl.DisplayLineNumFor(text);
             }
+
             TextEditor.Refresh();
         }
 
@@ -232,6 +233,7 @@ namespace GitUI.Editor
                 {
                     return;
                 }
+
                 int max = scrollBar.Maximum - scrollBar.LargeChange;
                 max = Math.Max(max, scrollBar.Minimum);
                 scrollBar.Value = max > value ? value : max;

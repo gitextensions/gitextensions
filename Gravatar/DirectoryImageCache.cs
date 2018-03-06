@@ -87,6 +87,7 @@ namespace Gravatar
             {
                 return;
             }
+
             if (!_fileSystem.Directory.Exists(_cachePath))
             {
                 _fileSystem.Directory.CreateDirectory(_cachePath);
@@ -104,6 +105,7 @@ namespace Gravatar
             {
                 // do nothing
             }
+
             OnInvalidated(EventArgs.Empty);
         }
 
@@ -116,6 +118,7 @@ namespace Gravatar
             {
                 return;
             }
+
             await Task.Run(() =>
             {
                 foreach (var file in _fileSystem.Directory.GetFiles(_cachePath))
@@ -149,6 +152,7 @@ namespace Gravatar
             {
                 return;
             }
+
             try
             {
                 await Task.Run(() => _fileSystem.File.Delete(file));
@@ -157,6 +161,7 @@ namespace Gravatar
             {
                 // do nothing
             }
+
             OnInvalidated(EventArgs.Empty);
         }
 
@@ -180,6 +185,7 @@ namespace Gravatar
                 {
                     return null;
                 }
+
                 using (Stream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
                     return Image.FromStream(fileStream);
@@ -209,6 +215,7 @@ namespace Gravatar
             {
                 return true;
             }
+
             return file.LastWriteTime < DateTime.Now.AddDays(-_cacheDays);
         }
 

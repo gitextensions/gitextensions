@@ -65,6 +65,7 @@ namespace GitCommands
                     reader.MoveToContent();
                 }
             }
+
             reader.ReadEndElement();
         }
 

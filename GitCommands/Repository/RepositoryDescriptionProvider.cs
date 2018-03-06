@@ -51,6 +51,7 @@ namespace GitCommands.Repository
                                         .Select(repo => repo.Title)
                                         .FirstOrDefault();
             }
+
             return desc ?? dirInfo.Name;
         }
 

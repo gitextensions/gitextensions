@@ -222,8 +222,10 @@ namespace System
             {// "origin/master/" OR "master" -> return original
                 return value;
             }
+
             return value.Substring(1 + value.LastIndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
         }
+
         public static string SubstringAfterFirst(this string value, string separator)
         {
             return value.Substring(1 + value.IndexOf(separator, StringComparison.InvariantCultureIgnoreCase));

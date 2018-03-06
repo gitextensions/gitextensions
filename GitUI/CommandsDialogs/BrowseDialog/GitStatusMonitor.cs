@@ -109,6 +109,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _gitDirWatcher.EnableRaisingEvents = false;
                             _globalIgnoreWatcher.EnableRaisingEvents = false;
                         }
+
                         break;
 
                     case GitStatusMonitorState.Paused:
@@ -118,6 +119,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _gitDirWatcher.EnableRaisingEvents = false;
                             _globalIgnoreWatcher.EnableRaisingEvents = false;
                         }
+
                         break;
 
                     case GitStatusMonitorState.Running:
@@ -128,11 +130,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _globalIgnoreWatcher.EnableRaisingEvents = !string.IsNullOrWhiteSpace(_globalIgnoreWatcher.Path);
                             CalculateNextUpdateTime(UpdateDelay);
                         }
+
                         break;
 
                     default:
                         throw new NotSupportedException();
                 }
+
                 OnGitStatusMonitorStateChanged(new GitStatusMonitorStateEventArgs(_currentStatus));
             }
         }
@@ -147,6 +151,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 throw new ArgumentNullException(nameof(commandsSource));
             }
+
             UICommandsSource = commandsSource;
             UICommandsSource.GitUICommandsChanged += commandsSource_GitUICommandsChanged;
             commandsSource_activate(commandsSource);
@@ -215,6 +220,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     {
                         _globalIgnoreWatcher.Path = globalIgnoreDirectory;
                     }
+
                     _gitPath = Path.GetDirectoryName(gitDirPath);
                     _submodulesPath = Path.Combine(_gitPath, "modules");
                     _currentUpdateInterval = MinUpdateInterval;
@@ -305,6 +311,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     _ignoredFilesAreStale = false;
                 }
             }
+
             if (!_statusIsUpToDate)
             {
                 // Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
@@ -320,6 +327,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 // A time is already set, use closest
                 next = Math.Min(_nextUpdateTime, next);
             }
+
             // Enforce a minimal time between updates, to not update too frequently
             _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
         }

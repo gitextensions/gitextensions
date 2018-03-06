@@ -34,11 +34,13 @@ namespace GitUI.UserControls.RevisionGridClasses
                     {
                         btnAction.Text = _actionDelete.Text;
                     }
+
                     break;
                 case Action.Rename:
                     {
                         btnAction.Text = _actionRename.Text;
                     }
+
                     break;
             }
 
@@ -105,6 +107,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 Close();
                 return true;
             }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 

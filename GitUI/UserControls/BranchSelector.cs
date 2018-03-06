@@ -120,6 +120,7 @@ namespace GitUI.UserControls
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
             }
+
             for (int index = 1; index < _containRevisons.Length; index++)
             {
                 var containRevison = _containRevisons[index];
@@ -130,6 +131,7 @@ namespace GitUI.UserControls
                                     !a.EndsWith("/HEAD"));
                 result.IntersectWith(branches);
             }
+
             return result.ToList();
         }
 
@@ -165,6 +167,7 @@ namespace GitUI.UserControls
             {
                 Initialize(IsRemoteBranchChecked, null);
             }
+
             FireSelectionChangedEvent(sender, e);
         }
 

@@ -54,6 +54,7 @@ namespace GitUI
                 Directory.CreateDirectory(AppDataDir);
             }
         }
+
         protected WindowPositionList()
         {
             WindowPositions = new List<WindowPosition>();
@@ -76,6 +77,7 @@ namespace GitUI
             {
                 return new WindowPositionList();
             }
+
             try
             {
                 using (

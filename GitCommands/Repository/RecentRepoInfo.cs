@@ -109,6 +109,7 @@ namespace GitCommands.Repository
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
                 }
             }
+
             int r = mostRecentRepos.Count - 1;
             // remove not anchored repos if there is more than maxRecentRepositories repos
             while (mostRecentRepos.Count > n && r >= 0)
@@ -177,6 +178,7 @@ namespace GitCommands.Repository
                 {
                     s = s.Trim(Path.DirectorySeparatorChar);
                 }
+
                 // candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())
@@ -273,6 +275,7 @@ namespace GitCommands.Repository
                     repository = dirInfo.Name;
                     dirInfo = dirInfo.Parent;
                 }
+
                 bool addDots = false;
 
                 if (dirInfo != null)
@@ -282,6 +285,7 @@ namespace GitCommands.Repository
                         dirInfo = dirInfo.Parent;
                         addDots = true;
                     }
+
                     company = dirInfo.Name;
                     if (dirInfo.Parent != null)
                     {
@@ -351,6 +355,7 @@ namespace GitCommands.Repository
                 {
                     ShortenPathWithCompany(0);
                 }
+
                 // else skip symbols beginning from the middle to both sides,
                 // so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
                 else

@@ -62,6 +62,7 @@ namespace TranslationApp
                            select new TranslationItemWithCategory(item.Name, translationItem);
                 items.Add(pair.Key, list.ToList());
             }
+
             return items;
         }
 
@@ -72,6 +73,7 @@ namespace TranslationApp
                 list = new List<T>();
                 dictionary.Add(key, list);
             }
+
             return list;
         }
 
@@ -117,6 +119,7 @@ namespace TranslationApp
                     {
                         curItem.TranslatedValue = "";
                     }
+
                     curItem.NeutralValue = item.NeutralValue;
                     transItems.Add(curItem);
                 }
@@ -142,6 +145,7 @@ namespace TranslationApp
                     untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
                 }
             }
+
             return translateItems;
         }
 
@@ -161,6 +165,7 @@ namespace TranslationApp
                     foreignTranslation.FindOrAddTranslationCategory(translateItem.Category)
                         .Body.AddTranslationItem(ti);
                 }
+
                 var newfilename = Path.ChangeExtension(filename, pair.Key + ext);
                 TranslationSerializer.Serialize(foreignTranslation, newfilename);
             }

@@ -116,6 +116,7 @@ namespace GitCommands
             {
                 return WindowsDefaultHomeDir;
             }
+
             return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
@@ -129,6 +130,7 @@ namespace GitCommands
                     homePath += Environment.GetEnvironmentVariable("HOMEPATH");
                     return homePath;
                 }
+
                 return Environment.GetEnvironmentVariable("USERPROFILE");
             }
         }
@@ -324,6 +326,7 @@ namespace GitCommands
                 {
                     output += Environment.NewLine + error;
                 }
+
                 return output;
             }
             catch (Win32Exception)
@@ -603,6 +606,7 @@ namespace GitCommands
                     args = " --force";
                     break;
             }
+
             return string.Format("checkout{0} \"{1}\"", args, branchOrRevisionName);
         }
 
@@ -641,6 +645,7 @@ namespace GitCommands
             {
                 cmd = string.Format("branch \"{0}\"", branchName.Trim());
             }
+
             if (revision.IsNullOrWhiteSpace())
             {
                 return cmd;
@@ -760,6 +765,7 @@ namespace GitCommands
             {
                 cmd += " -- " + string.Join(" ", selectedFiles);
             }
+
             return cmd;
         }
 
@@ -980,6 +986,7 @@ namespace GitCommands
                     stringBuilder.Append(" --untracked-files=all");
                     break;
             }
+
             switch (ignoreSubmodules)
             {
                 case IgnoreSubmodulesMode.Default:
@@ -998,6 +1005,7 @@ namespace GitCommands
                     stringBuilder.Append(" --ignore-submodules=all");
                     break;
             }
+
             if (!excludeIgnoredFiles)
             {
                 stringBuilder.Append(" --ignored");
@@ -1078,6 +1086,7 @@ namespace GitCommands
                         status.Commit = hash;
                         status.IsDirty = bdirty;
                     }
+
                     // TODO: Support combined merge
                 }
             }
@@ -1267,6 +1276,7 @@ namespace GitCommands
                 gitItemStatus.Name = fileName.Trim();
                 gitItemStatus.OldName = nextfile.Trim();
             }
+
             gitItemStatus.IsNew = false;
             gitItemStatus.IsChanged = false;
             gitItemStatus.IsDeleted = false;
@@ -1332,6 +1342,7 @@ namespace GitCommands
                 command.Append(" --strategy=");
                 command.Append(strategy);
             }
+
             if (squash)
             {
                 command.Append(" --squash");
@@ -1399,6 +1410,7 @@ namespace GitCommands
             {
                 result += "=\"100%\"";
             }
+
             return result;
         }
 
@@ -1410,6 +1422,7 @@ namespace GitCommands
             {
                 findCopies += "=\"100%\"";
             }
+
             return FindRenamesOpt() + findCopies;
         }
 
@@ -1441,6 +1454,7 @@ namespace GitCommands
                     System.Threading.Thread.Sleep(500);
                 }
             }
+
             if (!process.HasExited)
             {
                 process.Kill();

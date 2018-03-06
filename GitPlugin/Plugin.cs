@@ -116,6 +116,7 @@ namespace GitPlugin
                     return command;
                 }
             }
+
             return null;
         }
 
@@ -225,6 +226,7 @@ namespace GitPlugin
                 {
                     return true;
                 }
+
                 control =
                     GetMenuBar()
                         .Controls.Cast<CommandBarControl>()
@@ -233,6 +235,7 @@ namespace GitPlugin
                 {
                     return true;
                 }
+
                 CommandBar cb =
                     CommandBars.Cast<CommandBar>()
                         .FirstOrDefault(c => c.Name == OldGitMainMenuName);
@@ -244,6 +247,7 @@ namespace GitPlugin
             catch (Exception)
             {
             }
+
             return false;
         }
 
@@ -270,6 +274,7 @@ namespace GitPlugin
             catch (Exception)
             {
             }
+
             return false;
         }
 
@@ -436,6 +441,7 @@ namespace GitPlugin
             {
                 _visualStudioCommands[commandName] = command;
             }
+
             return command;
         }
     }

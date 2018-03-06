@@ -322,6 +322,7 @@ namespace GitCommands.Remote
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
 

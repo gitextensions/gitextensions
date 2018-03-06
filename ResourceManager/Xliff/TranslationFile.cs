@@ -45,6 +45,7 @@ namespace ResourceManager.Xliff
                 tc = new TranslationCategory(translationCategory, SourceLanguage, TargetLanguage);
                 AddTranslationCategory(tc);
             }
+
             return tc;
         }
 

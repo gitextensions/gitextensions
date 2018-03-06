@@ -114,6 +114,7 @@ namespace AppVeyorIntegration
                     {
                         return;
                     }
+
                     GetResponseAsync(_httpClientAppVeyor, ApiBaseUrl, CancellationToken.None)
                         .ContinueWith(
                             task =>
@@ -144,6 +145,7 @@ namespace AppVeyorIntegration
                             }).Wait();
                 }
             }
+
             var builds = Projects.Where(p => useAllProjets || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
             _allBuilds =
                 FilterBuilds(builds.SelectMany(project => QueryBuildsResults(project)));
@@ -174,6 +176,7 @@ namespace AppVeyorIntegration
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
             }
+
             return httpClient;
         }
 
@@ -248,6 +251,7 @@ namespace AppVeyorIntegration
                                 {
                                     commitSha1 = b["commitId"].ToObject<string>();
                                 }
+
                                 if (commitSha1 == null || !_IsCommitInRevisionGrid(commitSha1))
                                 {
                                     return null;
@@ -352,6 +356,7 @@ namespace AppVeyorIntegration
                         UpdateDescription(build, cancellationToken);
                         UpdateDisplay(observer, build);
                     }
+
                     inProgressBuilds = inProgressBuilds.Where(b => b.Status == BuildInfo.BuildStatus.InProgress).ToList();
                 }
                 while (inProgressBuilds.Any());
@@ -385,6 +390,7 @@ namespace AppVeyorIntegration
                     _fetchBuilds.Add(build.CommitId);
                 }
             }
+
             return filteredBuilds;
         }
 
@@ -564,6 +570,7 @@ namespace AppVeyorIntegration
                 {
                     return Status.ToString("G");
                 }
+
                 return Status.ToString("G") + new string('.', _buildProgressCount) + new string(' ', 3 - _buildProgressCount);
             }
         }

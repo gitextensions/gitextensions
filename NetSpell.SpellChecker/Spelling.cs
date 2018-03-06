@@ -231,18 +231,22 @@ namespace NetSpell.SpellChecker
             {
                 return false;
             }
+
             if (IgnoreAllCapsWords && !_upperRegex.IsMatch(characters))
             {
                 return false;
             }
+
             if (IgnoreWordsWithDigits && _digitRegex.IsMatch(characters))
             {
                 return false;
             }
+
             if (!_letterRegex.IsMatch(characters))
             {
                 return false;
             }
+
             if (IgnoreHtml)
             {
                 int startIndex = GetWordIndex();
@@ -255,6 +259,7 @@ namespace NetSpell.SpellChecker
                     }
                 }
             }
+
             return true;
         }
 
@@ -462,6 +467,7 @@ namespace NetSpell.SpellChecker
                 TraceWriter.TraceWarning("No Words to Delete");
                 return;
             }
+
             int replacedIndex = WordIndex;
 
             int index = _words[replacedIndex].Index;
@@ -474,6 +480,7 @@ namespace NetSpell.SpellChecker
             {
                 length++; // removing trailing space
             }
+
             // adjust length to remove double white space
             else if (index > 0
                 && index + length < _text.Length
@@ -482,6 +489,7 @@ namespace NetSpell.SpellChecker
             {
                 length++; // removing trailing space
             }
+
             // adjust index to remove extra white space before punctuation
             else if (index > 0
                 && index + length < _text.Length
@@ -491,6 +499,7 @@ namespace NetSpell.SpellChecker
                 index--;
                 length++;
             }
+
             // adjust index to remove extra white space before last word
             else if (index > 0
                 && index + length == _text.Length
@@ -583,6 +592,7 @@ namespace NetSpell.SpellChecker
                     dist++;
                 }
             }
+
             return dist;
         }
 
@@ -760,6 +770,7 @@ namespace NetSpell.SpellChecker
                 DeleteWord();
                 return;
             }
+
             string replacedWord = CurrentWord;
             int replacedIndex = WordIndex;
 
@@ -773,6 +784,7 @@ namespace NetSpell.SpellChecker
                 _replacementWord = _replacementWord.Substring(0, 1).ToUpper(CultureInfo.CurrentUICulture)
                     + _replacementWord.Substring(1);
             }
+
             _text.Insert(index, _replacementWord);
 
             CalculateWords();
@@ -1040,6 +1052,7 @@ namespace NetSpell.SpellChecker
                         }
                     }
                 }
+
                 TraceWriter.TraceVerbose("Suggestiongs Found with Phonetic Stratagy: {0}", tempSuggestion.Count);
             }
 
@@ -1160,6 +1173,7 @@ namespace NetSpell.SpellChecker
                 word = wordLower;
                 return true;
             }
+
             return false;
         }
 

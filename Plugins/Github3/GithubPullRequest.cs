@@ -40,6 +40,7 @@ namespace Github3
                     }
                     }
                 }
+
                 return _diffData;
             }
         }

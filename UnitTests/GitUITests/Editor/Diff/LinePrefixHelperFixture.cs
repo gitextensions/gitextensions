@@ -123,8 +123,10 @@ namespace GitUITests.Editor.Diff
                     var lastSeg = lineSegments.Last();
                     seg.Offset = lastSeg.Offset + lastSeg.Length + 1;
                 }
+
                 lineSegments.Add(seg);
             }
+
             return lineSegments;
         }
     }

@@ -90,6 +90,7 @@ namespace GitUI.Editor
                     break;
                 }
             }
+
             encodingToolStripComboBox.Items.AddRange(encodingList.ToArray());
 
             _internalFileViewer.MouseMove += TextAreaMouseMove;
@@ -154,6 +155,7 @@ namespace GitUI.Editor
             get { return _internalFileViewer.IsReadOnly; }
             set { _internalFileViewer.IsReadOnly = value; }
         }
+
         [DefaultValue(true)]
         [Description("If true line numbers are shown in the textarea")]
         [Category("Appearance")]
@@ -571,9 +573,11 @@ namespace GitUI.Editor
                                         PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
                                     }
                                 }
+
                                 PictureBox.Image = image;
                             });
             }
+
             // Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
@@ -842,10 +846,12 @@ namespace GitUI.Editor
             {
                 return line;
             }
+
             foreach (var special in specials.Where(line.StartsWith))
             {
                 return line.Substring(special.Length);
             }
+
             return line;
         }
 
@@ -1122,6 +1128,7 @@ namespace GitUI.Editor
             {
                 return;
             }
+
             using (FormGoToLine formGoToLine = new FormGoToLine())
             {
                 formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
@@ -1212,6 +1219,7 @@ namespace GitUI.Editor
                 selectionStart, selectionLength,
                 false, Encoding, false);
             }
+
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, null, patch);
@@ -1255,6 +1263,7 @@ namespace GitUI.Editor
                     UICommands.PostSettings -= UICommands_PostSettings;
                 }
             }
+
             base.Dispose(disposing);
         }
 

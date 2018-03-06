@@ -145,6 +145,7 @@ namespace JenkinsIntegration
                                         timestamp = Math.Max(timestamp, ts);
                                     }
                                 }
+
                                 // else: The server had no response (overloaded?) or a multibranch pipeline is not configured
 
                                 if (jobDescription["lastBuild"] != null)
@@ -252,6 +253,7 @@ namespace JenkinsIntegration
                         {
                             return;
                         }
+
                         var buildInfo = CreateBuildInfo((JObject)buildDetails);
                         observer.OnNext(buildInfo);
 
@@ -483,6 +485,7 @@ namespace JenkinsIntegration
                         depth = 2;
                         buildTree += ",builds[" + _JenkinsTreeBuildInfo + "]";
                     }
+
                     buildTree += "]";
                 }
                 else

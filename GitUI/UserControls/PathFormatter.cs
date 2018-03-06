@@ -56,6 +56,7 @@ namespace GitUI
                 NativeMethods.PathCompactPathEx(result, path, length, 0);
                 return result.ToString();
             }
+
             if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
             {
                 return "..." + path.Substring(path.Length - length);

@@ -126,6 +126,7 @@ namespace GitStatistics.PieChart
                     ++intersections;
                 }
             }
+
             if (DoesIntersects(point, cornerPoints[cornerPoints.Length - 1], cornerPoints[0]))
             {
                 ++intersections;
@@ -161,6 +162,7 @@ namespace GitStatistics.PieChart
                 var y = (y2 - y1) / (x2 - x1) * (point.X - x1) + y1;
                 return y > point.Y;
             }
+
             return false;
         }
     }

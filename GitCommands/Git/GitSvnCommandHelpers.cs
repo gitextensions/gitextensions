@@ -25,26 +25,32 @@ namespace GitCommands
             {
                 sb.AppendFormat(" --username=\"{0}\"", username);
             }
+
             if (!string.IsNullOrEmpty(authorsFile))
             {
                 sb.AppendFormat(" --authors-file=\"{0}\"", authorsFile);
             }
+
             if (fromRevision != 0)
             {
                 sb.AppendFormat(" -r \"{0}\"", fromRevision);
             }
+
             if (!string.IsNullOrEmpty(trunk))
             {
                 sb.AppendFormat(" --trunk=\"{0}\"", trunk);
             }
+
             if (!string.IsNullOrEmpty(tags))
             {
                 sb.AppendFormat(" --tags=\"{0}\"", tags);
             }
+
             if (!string.IsNullOrEmpty(branches))
             {
                 sb.AppendFormat(" --branches=\"{0}\"", branches);
             }
+
             sb.Append(" --prefix=origin/");
             return sb.ToString();
         }

@@ -158,8 +158,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     // TODO(optional): convert numeric dropdown values to text
                     texts.Add(child.Text.Trim().ToLowerInvariant());
                 }
+
                 texts.AddRange(GetChildrenText(child)); // recurse
             }
+
             return texts;
         }
 

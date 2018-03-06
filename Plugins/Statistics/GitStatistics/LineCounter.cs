@@ -32,6 +32,7 @@ namespace GitStatistics
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -50,6 +51,7 @@ namespace GitStatistics
                     {
                         continue;
                     }
+
                     yield return fileInfo;
                 }
             }

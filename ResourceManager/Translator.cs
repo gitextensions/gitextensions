@@ -37,6 +37,7 @@ namespace ResourceManager
                     }
                 }
             }
+
             _name = translationName;
             return _translation;
         }
@@ -76,6 +77,7 @@ namespace ResourceManager
             catch
             {
             }
+
             return translations.ToArray();
         }
 
