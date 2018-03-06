@@ -7,5 +7,4 @@ namespace GitCommands.Git.Tag
         SignWithDefaultKey,
         SignWithSpecificKey
     }
-;
 }

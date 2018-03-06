@@ -14,7 +14,6 @@ namespace GitCommands.Gpg
         SignatureError = 2,
         MissingPublicKey = 3,
     }
-;
 
     public enum TagStatus
     {
@@ -25,7 +24,6 @@ namespace GitCommands.Gpg
         NoPubKey = 4,
         TagNotSigned = 5
     }
-;
 
     public interface IGitGpgController
     {

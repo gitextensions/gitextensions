@@ -207,7 +207,6 @@ namespace GitUI.SpellChecker
             Wave,
             Mark
         }
-;
 
         #endregion
 

@@ -1154,7 +1154,7 @@ namespace GitUI
                         // Note: RevisionGrid could in some forms be used to get the parent guids
                         list.Add(new GitRevision(item));
                     }
-;
+
                     parentRevs = list.ToArray();
                 }
                 else
