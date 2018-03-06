@@ -69,7 +69,9 @@ namespace GitUI
         internal static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
         #endregion
 
-        private NativeMethods() { }
+        private NativeMethods()
+        {
+        }
     }
 
     internal sealed class NativeConstants

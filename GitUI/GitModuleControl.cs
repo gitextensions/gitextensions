@@ -83,7 +83,9 @@ namespace GitUI
             base.Dispose(disposing);
         }
 
-        protected virtual void DisposeCustomResources() { }
+        protected virtual void DisposeCustomResources()
+        {
+        }
 
         /// <summary>Occurs when the <see cref="UICommandsSource"/> is disposed.</summary>
         protected virtual void DisposeUICommandsSource()

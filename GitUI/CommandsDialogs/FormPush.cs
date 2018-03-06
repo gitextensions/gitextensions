@@ -76,7 +76,8 @@ namespace GitUI.CommandsDialogs
 
         private FormPush()
             : this(null)
-        { }
+        {
+        }
 
         public FormPush(GitUICommands aCommands)
             : base(aCommands)

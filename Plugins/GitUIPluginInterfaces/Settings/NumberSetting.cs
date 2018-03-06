@@ -30,7 +30,8 @@ namespace GitUIPluginInterfaces
         {
             public TextBoxBinding(NumberSetting<T> aSetting, TextBox aCustomControl)
                 : base(aSetting, aCustomControl)
-            { }
+            {
+            }
 
             public override TextBox CreateControl()
             {

@@ -12,7 +12,8 @@ namespace Gerrit
 
         private FormGerritBase()
             : this(null)
-        { }
+        {
+        }
 
         protected FormGerritBase(IGitUICommands agitUiCommands)
             : base(true)

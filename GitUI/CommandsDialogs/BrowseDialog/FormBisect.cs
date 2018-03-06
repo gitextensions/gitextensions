@@ -18,7 +18,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private FormBisect()
             : this((GitUICommands)null)
-        { }
+        {
+        }
 
         private FormBisect(GitUICommands aCommands)
             : base(aCommands)

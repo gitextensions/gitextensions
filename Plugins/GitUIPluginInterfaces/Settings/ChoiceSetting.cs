@@ -36,7 +36,8 @@ namespace GitUIPluginInterfaces
         {
             public ComboBoxBinding(ChoiceSetting aSetting, ComboBox aCustomControl)
                 : base(aSetting, aCustomControl)
-            { }
+            {
+            }
 
             public override ComboBox CreateControl()
             {

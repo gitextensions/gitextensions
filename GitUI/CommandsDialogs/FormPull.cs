@@ -105,7 +105,8 @@ namespace GitUI.CommandsDialogs
 
         private FormPull()
             : this(null, null, null)
-        { }
+        {
+        }
 
         public FormPull(GitUICommands aCommands, string defaultRemoteBranch, string defaultRemote)
             : base(aCommands)

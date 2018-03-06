@@ -217,13 +217,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         public BoolNullableISettingAdapter(string aCaption, BoolNullableSetting setting)
             : base(setting.FullPath, aCaption, setting.DefaultValue.Value)
-        { }
+        {
+        }
     }
 
     public class StringISettingAdapter : GitUIPluginInterfaces.StringSetting
     {
         public StringISettingAdapter(string aCaption, GitCommands.Settings.StringSetting setting)
             : base(setting.FullPath, aCaption, setting.DefaultValue)
-        { }
+        {
+        }
     }
 }

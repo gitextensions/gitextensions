@@ -28,7 +28,8 @@ namespace GitUI
         // only for translation
         protected FormRemoteProcess()
             : base()
-        { }
+        {
+        }
 
         public FormRemoteProcess(GitModule module, string process, string arguments)
             : base(process, arguments, module.WorkingDir, null, true)

@@ -11,7 +11,8 @@ namespace GitUI.HelperDialogs
     {
         private FormChooseCommit()
             : this(null)
-        { }
+        {
+        }
 
         private FormChooseCommit(GitUICommands aCommands)
             : base(aCommands)

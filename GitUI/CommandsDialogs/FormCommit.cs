@@ -159,7 +159,8 @@ namespace GitUI.CommandsDialogs
 
         public FormCommit(GitUICommands aCommands)
             : this(aCommands, CommitKind.Normal, null)
-        { }
+        {
+        }
 
         public FormCommit(GitUICommands aCommands, CommitKind commitKind, GitRevision editedCommit)
             : base(true, aCommands)

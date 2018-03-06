@@ -27,7 +27,8 @@ namespace GitUI.CommandsDialogs
 
         private FormFileHistory()
             : this(null)
-        { }
+        {
+        }
 
         internal FormFileHistory(GitUICommands aCommands)
             : base(aCommands)

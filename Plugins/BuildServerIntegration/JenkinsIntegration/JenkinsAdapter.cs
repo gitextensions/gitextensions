@@ -25,7 +25,8 @@ namespace JenkinsIntegration
     {
         public JenkinsIntegrationMetadata(string buildServerType)
             : base(buildServerType)
-        { }
+        {
+        }
 
         public override string CanBeLoaded
         {

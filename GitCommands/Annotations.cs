@@ -92,7 +92,9 @@ namespace JetBrains.Annotations
     /// For example, <see cref="ArgumentNullException"/> has such parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public sealed class InvokerParameterNameAttribute : Attribute { }
+    public sealed class InvokerParameterNameAttribute : Attribute
+    {
+    }
 
     /// <summary>
     /// Indicates that the function is used to notify class type property value is changed.
@@ -100,7 +102,9 @@ namespace JetBrains.Annotations
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
     {
-        public NotifyPropertyChangedInvocatorAttribute() { }
+        public NotifyPropertyChangedInvocatorAttribute()
+        {
+        }
         public NotifyPropertyChangedInvocatorAttribute(string parameterName)
         {
             ParameterName = parameterName;
@@ -114,13 +118,17 @@ namespace JetBrains.Annotations
     /// Indicates that the value of marked element could be <c>null</c> sometimes, so the check for <c>null</c> is necessary before its usage
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class CanBeNullAttribute : Attribute { }
+    public sealed class CanBeNullAttribute : Attribute
+    {
+    }
 
     /// <summary>
     /// Indicates that the value of marked element could never be <c>null</c>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Delegate | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class NotNullAttribute : Attribute { }
+    public sealed class NotNullAttribute : Attribute
+    {
+    }
 
     /// <summary>
     /// Describes dependency between method input and output
@@ -171,7 +179,9 @@ namespace JetBrains.Annotations
     /// There is only exception to compare with <c>null</c>, it is permitted
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = true)]
-    public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
+    public sealed class CannotApplyEqualityOperatorAttribute : Attribute
+    {
+    }
 
     /// <summary>
     /// When applied to target attribute, specifies a requirement for any type which is marked with
@@ -217,7 +227,8 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public UsedImplicitlyAttribute()
             : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-        { }
+        {
+        }
 
         [UsedImplicitly]
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
@@ -229,12 +240,14 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
             : this(useKindFlags, ImplicitUseTargetFlags.Default)
-        { }
+        {
+        }
 
         [UsedImplicitly]
         public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
             : this(ImplicitUseKindFlags.Default, targetFlags)
-        { }
+        {
+        }
 
         [UsedImplicitly]
         public ImplicitUseKindFlags UseKindFlags { get; private set; }
@@ -255,7 +268,8 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public MeansImplicitUseAttribute()
             : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-        { }
+        {
+        }
 
         [UsedImplicitly]
         public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
@@ -273,7 +287,8 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
             : this(ImplicitUseKindFlags.Default, targetFlags)
-        { }
+        {
+        }
 
         [UsedImplicitly]
         public ImplicitUseKindFlags UseKindFlags { get; private set; }
@@ -339,8 +354,12 @@ namespace JetBrains.Annotations
     [MeansImplicitUse]
     public sealed class PublicAPIAttribute : Attribute
     {
-        public PublicAPIAttribute() { }
-        public PublicAPIAttribute(string comment) { }
+        public PublicAPIAttribute()
+        {
+        }
+        public PublicAPIAttribute(string comment)
+        {
+        }
     }
 
     /// <summary>
@@ -349,19 +368,25 @@ namespace JetBrains.Annotations
     /// If the parameter is enumerable, indicates that it is enumerated while the method is executed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, Inherited = true)]
-    public sealed class InstantHandleAttribute : Attribute { }
+    public sealed class InstantHandleAttribute : Attribute
+    {
+    }
 
     /// <summary>
     /// Indicates that method doesn't contain observable side effects.
     /// The same as <see cref="System.Diagnostics.Contracts.PureAttribute"/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = true)]
-    public sealed class PureAttribute : Attribute { }
+    public sealed class PureAttribute : Attribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter)]
     public class PathReferenceAttribute : Attribute
     {
-        public PathReferenceAttribute() { }
+        public PathReferenceAttribute()
+        {
+        }
 
         [UsedImplicitly]
         public PathReferenceAttribute([PathReference] string basePath)
@@ -381,7 +406,9 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public string AnonymousProperty { get; private set; }
 
-        public AspMvcActionAttribute() { }
+        public AspMvcActionAttribute()
+        {
+        }
 
         public AspMvcActionAttribute(string anonymousProperty)
         {
@@ -396,7 +423,9 @@ namespace JetBrains.Annotations
         public string AnonymousProperty { get; private set; }
 
         [UsedImplicitly]
-        public AspMvcAreaAttribute() { }
+        public AspMvcAreaAttribute()
+        {
+        }
 
         public AspMvcAreaAttribute(string anonymousProperty)
         {
@@ -410,7 +439,9 @@ namespace JetBrains.Annotations
         [UsedImplicitly]
         public string AnonymousProperty { get; private set; }
 
-        public AspMvcControllerAttribute() { }
+        public AspMvcControllerAttribute()
+        {
+        }
 
         public AspMvcControllerAttribute(string anonymousProperty)
         {
@@ -419,31 +450,49 @@ namespace JetBrains.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcMasterAttribute : Attribute { }
+    public sealed class AspMvcMasterAttribute : Attribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcModelTypeAttribute : Attribute { }
+    public sealed class AspMvcModelTypeAttribute : Attribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute { }
+    public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class AspMvcSupressViewErrorAttribute : Attribute { }
+    public sealed class AspMvcSupressViewErrorAttribute : Attribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcDisplayTemplateAttribute : Attribute { }
+    public sealed class AspMvcDisplayTemplateAttribute : Attribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AspMvcEditorTemplateAttribute : Attribute { }
+    public sealed class AspMvcEditorTemplateAttribute : Attribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-    public sealed class AspMvcViewAttribute : PathReferenceAttribute { }
+    public sealed class AspMvcViewAttribute : PathReferenceAttribute
+    {
+    }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
-    public sealed class AspMvcActionSelectorAttribute : Attribute { }
+    public sealed class AspMvcActionSelectorAttribute : Attribute
+    {
+    }
 
     // Razor attributes
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method, Inherited = true)]
-    public sealed class RazorSectionAttribute : Attribute { }
+    public sealed class RazorSectionAttribute : Attribute
+    {
+    }
 }

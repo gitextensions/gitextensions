@@ -31,7 +31,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         // only for translation
         private ViewPullRequestsForm()
             : this(null)
-        { }
+        {
+        }
 
         private ViewPullRequestsForm(GitUICommands aCommands)
             : base(aCommands)

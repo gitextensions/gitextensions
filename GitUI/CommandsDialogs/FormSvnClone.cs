@@ -24,7 +24,8 @@ namespace GitUI.CommandsDialogs
 
         private FormSvnClone()
             : this(null, null)
-        { }
+        {
+        }
 
         public FormSvnClone(GitUICommands aCommands, EventHandler<GitModuleEventArgs> GitModuleChanged)
             : base(aCommands)

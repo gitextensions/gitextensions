@@ -39,7 +39,8 @@ namespace GitUI
 
         public GitUICommands(string workingDir)
             : this(new GitModule(workingDir))
-        { }
+        {
+        }
 
         #region IGitUICommands Members
 

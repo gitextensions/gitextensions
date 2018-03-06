@@ -95,7 +95,8 @@ namespace GitUI.CommandsDialogs
 
         public FormResolveConflicts(GitUICommands aCommands)
             : this(aCommands, true)
-        { }
+        {
+        }
 
         public FormResolveConflicts(GitUICommands aCommands, bool offerCommit)
             : base(aCommands)

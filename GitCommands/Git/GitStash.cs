@@ -47,7 +47,10 @@ namespace GitCommands.Git
         }
 
 
-        public override string ToString() { return Message; }
+        public override string ToString()
+        {
+            return Message;
+        }
 
         public override bool Equals(object obj)
         {

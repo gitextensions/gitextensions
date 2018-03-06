@@ -34,7 +34,8 @@ namespace GitUI.CommandsDialogs
 
         private FormSettings()
             : this(null)
-        { }
+        {
+        }
 
         public FormSettings(GitUICommands aCommands, SettingsPageReference initalPage = null)
             : base(aCommands)

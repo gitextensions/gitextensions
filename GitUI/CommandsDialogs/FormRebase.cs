@@ -30,7 +30,8 @@ namespace GitUI.CommandsDialogs
 
         private FormRebase()
             : this(null)
-        { }
+        {
+        }
 
         private FormRebase(GitUICommands aCommands)
             : base(aCommands)

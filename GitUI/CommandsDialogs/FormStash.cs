@@ -29,7 +29,8 @@ namespace GitUI.CommandsDialogs
 
         private FormStash()
             : this(null)
-        { }
+        {
+        }
 
         public FormStash(GitUICommands aCommands)
             : base(aCommands)

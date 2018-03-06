@@ -21,7 +21,8 @@ namespace GitUI
         private DispatcherFrameModalControler _ModalControler;
 
         public FormStatus() : this(true)
-        { }
+        {
+        }
 
         public FormStatus(bool useDialogSettings)
             : this(null, useDialogSettings)

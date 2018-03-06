@@ -26,7 +26,8 @@ namespace GitUI
 
         protected FormProcess()
             : base(true)
-        { }
+        {
+        }
 
         public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
