@@ -864,7 +864,7 @@ namespace GitUI.Script
             _isSplitMenuVisible = true;
         }
 
-        void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        private void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             _isSplitMenuVisible = false;
 
@@ -876,7 +876,7 @@ namespace GitUI.Script
             }
         }
 
-        void SplitMenu_Popup(object sender, EventArgs e)
+        private void SplitMenu_Popup(object sender, EventArgs e)
         {
             _isSplitMenuVisible = true;
         }
