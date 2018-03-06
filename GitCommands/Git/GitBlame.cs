@@ -51,7 +51,7 @@ namespace GitCommands
         public Color GetColor()
         {
             int partLength = CommitGuid.Length / 3;
-            return Color.FromArgb(GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength)) % 55 + 200);
+            return Color.FromArgb((GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength)) % 55) + 200);
 
             // return Color.White;
         }

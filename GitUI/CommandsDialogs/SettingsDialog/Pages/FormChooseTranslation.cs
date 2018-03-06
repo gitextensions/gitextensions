@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             Height = 34 + y + imageHeight + labelHeight + SystemInformation.CaptionHeight + 37;
-            Width = (imageWidth + 6) * 4 + 24;
+            Width = ((imageWidth + 6) * 4) + 24;
             label2.Top = Height - SystemInformation.CaptionHeight - 25;
         }
 

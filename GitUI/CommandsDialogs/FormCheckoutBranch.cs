@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel2.AutoSize = true;
             flowLayoutPanel2.Dock = DockStyle.Fill;
             localChangesGB.AutoSize = true;
-            localChangesGB.Height = flowLayoutPanel2.Height * 2 + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
+            localChangesGB.Height = (flowLayoutPanel2.Height * 2) + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
             localChangesPanel.ColumnStyles[1].Width = Ok.Width + 10;
             var height = localChangesGB.Height + localChangesGB.Margin.Top + localChangesGB.Margin.Bottom;
             localChangesPanel.RowStyles[0].Height = height;

@@ -46,7 +46,7 @@ namespace GitUI
             if (patchFiles.Any())
             {
                 int rowsInView = Patches.DisplayedRowCount(false);
-                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, patchFiles.TakeWhile(pf => !pf.IsNext).Count() - rowsInView / 2);
+                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, patchFiles.TakeWhile(pf => !pf.IsNext).Count() - (rowsInView / 2));
             }
         }
 

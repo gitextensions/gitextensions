@@ -448,7 +448,7 @@ namespace GitUI.Script
 
         private void PaintArrow(Graphics g, Rectangle dropDownRect)
         {
-            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + dropDownRect.Width / 2), Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));
+            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
 
             // if the width is odd - favor pushing it over one pixel right.
             middle.X += (dropDownRect.Width % 2);
@@ -479,7 +479,7 @@ namespace GitUI.Script
 
                 if (!string.IsNullOrEmpty(Text) && TextRenderer.MeasureText(Text, Font).Width + SplitSectionWidth > preferredSize.Width)
                 {
-                    return preferredSize + new Size(SplitSectionWidth + BorderSize * 2, 0);
+                    return preferredSize + new Size(SplitSectionWidth + (BorderSize * 2), 0);
                 }
             }
 
@@ -825,7 +825,7 @@ namespace GitUI.Script
             }
             else if (align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.MiddleRight)
             {
-                y = outer.Y + (outer.Height - inner.Height) / 2;
+                y = outer.Y + ((outer.Height - inner.Height) / 2);
             }
             else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.BottomLeft)
             {

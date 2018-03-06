@@ -555,7 +555,7 @@ namespace AppVeyorIntegration
 
         public void ChangeProgressCounter()
         {
-            _buildProgressCount = _buildProgressCount % 3 + 1;
+            _buildProgressCount = (_buildProgressCount % 3) + 1;
         }
 
         public void UpdateDescription()

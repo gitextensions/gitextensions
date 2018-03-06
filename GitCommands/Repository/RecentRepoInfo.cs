@@ -332,9 +332,9 @@ namespace GitCommands.Repository
                     string lastDir = workingDir;
                     if (fistDir != null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
                     {
-                        int middle = (path.Length - lastDir.Length) / 2 + (path.Length - lastDir.Length) % 2;
-                        int leftEnd = middle - skipCount / 2;
-                        int rightStart = middle + skipCount / 2 + skipCount % 2;
+                        int middle = ((path.Length - lastDir.Length) / 2) + ((path.Length - lastDir.Length) % 2);
+                        int leftEnd = middle - (skipCount / 2);
+                        int rightStart = middle + (skipCount / 2) + (skipCount % 2);
 
                         if (leftEnd == rightStart)
                         {

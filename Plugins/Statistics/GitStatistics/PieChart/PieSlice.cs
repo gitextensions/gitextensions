@@ -745,7 +745,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         protected virtual Brush CreateBrushForSide(Color color, double angle)
         {
-            var d = 1 - 0.8 * Math.Cos(angle * Math.PI / 180);
+            var d = 1 - (0.8 * Math.Cos(angle * Math.PI / 180));
             return
                 new SolidBrush(
                     ColorUtil.CreateColorWithCorrectedLightness(
@@ -922,8 +922,8 @@ namespace GitStatistics.PieChart
             CreateSurfaceBrushes(_surfaceColor, _shadowStyle);
 
             // calculates center and end points on periphery
-            var xCenter = xBoundingRect + widthBoundingRect / 2;
-            var yCenter = yBoundingRect + heightBoundingRect / 2;
+            var xCenter = xBoundingRect + (widthBoundingRect / 2);
+            var yCenter = yBoundingRect + (heightBoundingRect / 2);
             Center = new PointF(xCenter, yCenter);
             CenterBelow = new PointF(xCenter, yCenter + sliceHeight);
             PointStart = PeripheralPoint(xCenter, yCenter, widthBoundingRect / 2, heightBoundingRect / 2,
@@ -1133,14 +1133,14 @@ namespace GitStatistics.PieChart
                 (startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle)))
             {
                 // distance of the point from the ellipse centre
-                var r = Math.Sqrt(y * y + x * x);
+                var r = Math.Sqrt((y * y) + (x * x));
                 var a2 = a * a;
                 var b2 = b * b;
                 var cosFi = Math.Cos(angle);
                 var sinFi = Math.Sin(angle);
 
                 // distance of the ellipse perimeter point
-                var ellipseRadius = (b * a) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
+                var ellipseRadius = (b * a) / Math.Sqrt((b2 * cosFi * cosFi) + (a2 * sinFi * sinFi));
                 return ellipseRadius > r;
             }
 

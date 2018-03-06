@@ -206,7 +206,7 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                return Math.Max(0, _impact.Count * (BlockWidth + TransitionWidth) - TransitionWidth);
+                return Math.Max(0, (_impact.Count * (BlockWidth + TransitionWidth)) - TransitionWidth);
             }
         }
 
@@ -286,7 +286,7 @@ namespace GitImpact
                     foreach (var label in _lineLabels[author])
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString(), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y - sz.Height / 2);
+                        PointF pt = new PointF(label.Item1.X - (sz.Width / 2), label.Item1.Y - (sz.Height / 2));
                         g.DrawString(label.Item2.ToString(), font, brush, pt);
                     }
                 }
@@ -304,7 +304,7 @@ namespace GitImpact
                     foreach (var label in _weekLabels)
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM yy"), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y + sz.Height / 2);
+                        PointF pt = new PointF(label.Item1.X - (sz.Width / 2), label.Item1.Y + (sz.Height / 2));
                         g.DrawString(label.Item2.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
@@ -366,7 +366,7 @@ namespace GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add(Tuple.Create(new PointF(x + BlockWidth / 2, y), week.Key));
+                    _weekLabels.Add(Tuple.Create(new PointF(x + (BlockWidth / 2), y), week.Key));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;
@@ -409,8 +409,8 @@ namespace GitImpact
 
                         if (author_points.Value[i].Item1.Height > LinesFontSize * 1.5)
                         {
-                            _lineLabels[author].Add(Tuple.Create(new PointF(author_points.Value[i].Item1.Left + BlockWidth / 2,
-                                author_points.Value[i].Item1.Top + author_points.Value[i].Item1.Height / 2),
+                            _lineLabels[author].Add(Tuple.Create(new PointF(author_points.Value[i].Item1.Left + (BlockWidth / 2),
+                                author_points.Value[i].Item1.Top + (author_points.Value[i].Item1.Height / 2)),
                                 author_points.Value[i].Item2));
                         }
                     }
@@ -430,8 +430,8 @@ namespace GitImpact
                         if (i < author_points.Value.Count - 1)
                         {
                             _paths[author].AddBezier(author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Top,
-                                                    author_points.Value[i].Item1.Right + TransitionWidth / 2, author_points.Value[i].Item1.Top,
-                                                    author_points.Value[i].Item1.Right + TransitionWidth / 2, author_points.Value[i + 1].Item1.Top,
+                                                    author_points.Value[i].Item1.Right + (TransitionWidth / 2), author_points.Value[i].Item1.Top,
+                                                    author_points.Value[i].Item1.Right + (TransitionWidth / 2), author_points.Value[i + 1].Item1.Top,
                                                     author_points.Value[i + 1].Item1.Left, author_points.Value[i + 1].Item1.Top);
                         }
                     }
@@ -451,8 +451,8 @@ namespace GitImpact
                         if (i > 0)
                         {
                             _paths[author].AddBezier(author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Bottom,
-                                                    author_points.Value[i].Item1.Left - TransitionWidth / 2, author_points.Value[i].Item1.Bottom,
-                                                    author_points.Value[i].Item1.Left - TransitionWidth / 2, author_points.Value[i - 1].Item1.Bottom,
+                                                    author_points.Value[i].Item1.Left - (TransitionWidth / 2), author_points.Value[i].Item1.Bottom,
+                                                    author_points.Value[i].Item1.Left - (TransitionWidth / 2), author_points.Value[i - 1].Item1.Bottom,
                                                     author_points.Value[i - 1].Item1.Right, author_points.Value[i - 1].Item1.Bottom);
                         }
                     }

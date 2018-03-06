@@ -2214,13 +2214,13 @@ namespace GitUI
         {
             const float horShift = 4;
             const float verShift = 3;
-            float height = rowHeight - verShift * 2;
+            float height = rowHeight - (verShift * 2);
             float width = height / 2;
 
             var points = new[]
                                  {
                                      new PointF(x + horShift, y + verShift),
-                                     new PointF(x + horShift + width, y + verShift + height / 2),
+                                     new PointF(x + horShift + width, y + verShift + (height / 2)),
                                      new PointF(x + horShift, y + verShift + height),
                                      new PointF(x + horShift, y + verShift)
                                  };

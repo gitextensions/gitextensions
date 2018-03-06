@@ -1066,7 +1066,7 @@ namespace GitUI.RevisionGridClasses
             return new Rectangle
                 (
                 0,
-                (_cacheHeadRow + aNeededRow - _cacheHead) % _cacheCountMax * RowTemplate.Height,
+                ((_cacheHeadRow + aNeededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
                 width,
                 _rowHeight);
         }
@@ -1084,7 +1084,7 @@ namespace GitUI.RevisionGridClasses
             // Clip to the area we're drawing in, but draw 1 pixel past so
             // that the top/bottom of the line segment's anti-aliasing isn't
             // visible in the final rendering.
-            int top = wa.RenderingOrigin.Y + _rowHeight / 2;
+            int top = wa.RenderingOrigin.Y + (_rowHeight / 2);
             var laneRect = new Rectangle(0, top, Width, _rowHeight);
             Region oldClip = wa.Clip;
             var newClip = new Region(laneRect);
@@ -1152,7 +1152,7 @@ namespace GitUI.RevisionGridClasses
                         bool singleLane = laneInfo.ConnectLane == lane;
                         int x0 = mid;
                         int y0 = top - 1;
-                        int x1 = singleLane ? x0 : mid + (laneInfo.ConnectLane - lane) * _laneWidth;
+                        int x1 = singleLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
                         int y1 = top + _rowHeight;
 
                         Point p0 = new Point(x0, y0);
@@ -1168,8 +1168,8 @@ namespace GitUI.RevisionGridClasses
                         {
                             // Controls the curvature of cross-lane lines (0 = straight line, 1 = 90 degree turns)
                             const float severity = 0.5f;
-                            c0 = new Point(x0, (int)(y0 * (1.0f - severity) + y1 * severity));
-                            c1 = new Point(x1, (int)(y1 * (1.0f - severity) + y0 * severity));
+                            c0 = new Point(x0, (int)((y0 * (1.0f - severity)) + (y1 * severity)));
+                            c1 = new Point(x1, (int)((y1 * (1.0f - severity)) + (y0 * severity)));
                         }
 
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
@@ -1217,8 +1217,8 @@ namespace GitUI.RevisionGridClasses
                 // Draw node
                 var nodeRect = new Rectangle
                     (
-                    wa.RenderingOrigin.X + (_laneWidth - _nodeDimension) / 2 + row.NodeLane * _laneWidth,
-                    wa.RenderingOrigin.Y + (_rowHeight - _nodeDimension) / 2,
+                    wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
+                    wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
                     _nodeDimension,
                     _nodeDimension);
 
@@ -1340,7 +1340,7 @@ namespace GitUI.RevisionGridClasses
             _rowHeight = RowTemplate.Height;
 
             // Keep an extra page in the cache
-            _cacheCountMax = Height * 2 / _rowHeight + 1;
+            _cacheCountMax = (Height * 2 / _rowHeight) + 1;
             ClearDrawCache();
             dataGrid_Scroll(null, null);
         }
