@@ -15,6 +15,7 @@ namespace ReleaseNotesGenerator
     internal class HtmlFragment
     {
         #region Read and decode from clipboard
+
         /// <summary>
         /// Get a HTML fragment from the clipboard.
         /// </summary>

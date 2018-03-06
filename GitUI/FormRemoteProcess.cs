@@ -58,6 +58,7 @@ namespace GitUI
         }
 
         private string _UrlTryingToConnect = string.Empty;
+
         /// <summary>
         /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
         /// This is fixed by trying to connect from the command line, and choose yes when asked for storing

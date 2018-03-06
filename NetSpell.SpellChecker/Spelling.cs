@@ -168,6 +168,7 @@ namespace NetSpell.SpellChecker
         #endregion
 
         #region Constructors
+
         /// <summary>
         ///     Initializes a new instance of the SpellCheck class
         /// </summary>
@@ -1196,6 +1197,7 @@ namespace NetSpell.SpellChecker
             ///     Combines the phonetic and near miss strategies
             /// </summary>
             PhoneticNearMiss,
+
             /// <summary>
             ///     The phonetic strategy generates suggestions by word sound
             /// </summary>
@@ -1203,6 +1205,7 @@ namespace NetSpell.SpellChecker
             ///     This technique was developed by the open source project ASpell.net
             /// </remarks>
             Phonetic,
+
             /// <summary>
             ///     The near miss strategy generates suggestion by replacing,
             ///     removing, adding chars to make words
@@ -1434,6 +1437,7 @@ namespace NetSpell.SpellChecker
         #endregion
 
         #region Component Designer generated code
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.

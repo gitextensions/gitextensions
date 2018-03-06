@@ -11,6 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         #region Key
         private Keys _KeyData;
+
         /// <summary>Gets or sets the KeyData</summary>
         public Keys KeyData
         {

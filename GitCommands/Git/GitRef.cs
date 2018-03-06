@@ -13,12 +13,16 @@ namespace GitCommands
 
         /// <summary>"refs/tags/"</summary>
         public static readonly string RefsTagsPrefix = "refs/tags/";
+
         /// <summary>"refs/heads/"</summary>
         public static readonly string RefsHeadsPrefix = "refs/heads/";
+
         /// <summary>"refs/remotes/"</summary>
         public static readonly string RefsRemotesPrefix = "refs/remotes/";
+
         /// <summary>"refs/bisect/"</summary>
         public static readonly string RefsBisectPrefix = "refs/bisect/";
+
         /// <summary>"^{}"</summary>
         public static readonly string TagDereferenceSuffix = "^{}";
 

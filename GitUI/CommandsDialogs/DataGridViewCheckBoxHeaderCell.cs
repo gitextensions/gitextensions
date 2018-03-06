@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         private bool _wasAttached;
         private bool _selfChanging;
+
         /// <summary>
         /// Relative check box location (from cellbounds).
         /// </summary>

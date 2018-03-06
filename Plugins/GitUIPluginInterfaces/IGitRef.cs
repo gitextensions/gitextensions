@@ -4,6 +4,7 @@
     {
         string CompleteName { get; }
         bool IsBisect { get; }
+
         /// <summary>
         /// True when Guid is a checksum of an object (e.g. commit) to which another object
         /// with Name (e.g. annotated tag) is applied.

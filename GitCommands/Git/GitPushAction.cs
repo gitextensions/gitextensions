@@ -11,8 +11,10 @@ namespace GitCommands
     {
         /// <summary>Gets the name or URL of the remote repo to push to.</summary>
         public string Remote { get; private set; }
+
         /// <summary>Gets the set of LocalBranch:RemoteBranch actions.</summary>
         public IEnumerable<GitPushAction> PushActions { get; private set; }
+
         /// <summary>Indicates whether to report progress during the push operation.</summary>
         public bool ReportProgress { get; set; }
 

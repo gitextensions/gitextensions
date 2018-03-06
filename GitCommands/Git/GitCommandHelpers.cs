@@ -19,10 +19,13 @@ namespace GitCommands
     {
         /// <summary>Default is <see cref="All"/>; when <see cref="UntrackedFilesMode"/> is NOT used, 'git status' uses <see cref="Normal"/>.</summary>
         Default = 1,
+
         /// <summary>Show no untracked files.</summary>
         No = 2,
+
         /// <summary>Shows untracked files and directories.</summary>
         Normal = 3,
+
         /// <summary>Shows untracked files and directories, and individual files in untracked directories.</summary>
         All = 4
     }
@@ -32,16 +35,20 @@ namespace GitCommands
     {
         /// <summary>Default is <see cref="All"/> (hides all changes to submodules).</summary>
         Default = 1,
+
         /// <summary>Consider a submodule modified when it either:
         ///  contains untracked or modified files,
         ///  or its HEAD differs from the commit recorded in the superproject.</summary>
         None = 2,
+
         /// <summary>Submodules NOT considered dirty when they only contain <i>untracked</i> content
         ///  (but they are still scanned for modified content).</summary>
         Untracked = 3,
+
         /// <summary>Ignores all changes to the work tree of submodules,
         ///  only changes to the <i>commits</i> stored in the superproject are shown.</summary>
         Dirty = 4,
+
         /// <summary>Hides all changes to submodules
         ///  (and suppresses the output of submodule summaries when the config option status.submodulesummary is set).</summary>
         All = 5

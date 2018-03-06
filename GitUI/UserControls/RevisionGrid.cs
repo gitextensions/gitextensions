@@ -101,6 +101,7 @@ namespace GitUI
         private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
 
         private string _rebaseOnTopOf;
+
         /// <summary>
         /// Refs loaded while the latest processing of git log
         /// </summary>

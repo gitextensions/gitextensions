@@ -16,6 +16,7 @@ namespace GitUI.Hotkey
     {
         #region Serializer
         private static XmlSerializer _Serializer;
+
         /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
         private static XmlSerializer Serializer
         {

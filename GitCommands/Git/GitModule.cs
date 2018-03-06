@@ -393,6 +393,7 @@ namespace GitCommands
         }
 
         private string _GitCommonDirectory;
+
         /// <summary>
         /// Returns git common directory
         /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir

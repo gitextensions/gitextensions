@@ -324,6 +324,7 @@ namespace GitUI
         }
 
         private static WindowPositionList _windowPositionList;
+
         /// <summary>
         ///   Save the position of a form to the user settings. Hides the window
         ///   as a side-effect.

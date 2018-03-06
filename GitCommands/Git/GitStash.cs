@@ -11,8 +11,10 @@ namespace GitCommands.Git
 
         /// <summary>Name of the stash. <remarks>Usually, "stash@{n}"</remarks></summary>
         public string Name { get; set; }
+
         /// <summary>Short description of the commit the stash was based on.</summary>
         public string Message { get; set; }
+
         /// <summary>Gets the index of the stash in the list.</summary>
         public int Index { get; set; }
 
