@@ -35,7 +35,6 @@ namespace GitUI.CommandsDialogs
 
         public string FileName { get; set; }
 
-
         private void FormBlameLoad(object sender, EventArgs e)
         {
             Text = string.Format("Blame ({0})", FileName);

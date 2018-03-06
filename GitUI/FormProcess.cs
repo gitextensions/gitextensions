@@ -80,7 +80,6 @@ namespace GitUI
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
         }
 
-
         public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
             using (var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings))
@@ -99,7 +98,6 @@ namespace GitUI
                 return !formProcess.ErrorOccurred();
             }
         }
-
 
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {

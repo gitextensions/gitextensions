@@ -20,7 +20,6 @@ namespace GitCommands.Config
     {
         private readonly IDictionary<string, IList<string>> _configKeys;
 
-
         internal ConfigSection(string name, bool forceCaseSensitive)
         {
             _configKeys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);

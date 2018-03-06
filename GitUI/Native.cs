@@ -40,8 +40,6 @@ namespace GitUI
         [DllImport("user32")]
         internal static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wp, ref FORMATRANGE lp);
 
-
-
         [DllImport("user32", CharSet = CharSet.Auto, EntryPoint = "SendMessage")]
         internal extern static IntPtr SendMessageInt(
             IntPtr handle,

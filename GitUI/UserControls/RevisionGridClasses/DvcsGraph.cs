@@ -777,7 +777,6 @@ namespace GitUI.RevisionGridClasses
             return colors;
         }
 
-
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
         [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
         [Browsable(false)]
@@ -1119,7 +1118,6 @@ namespace GitUI.RevisionGridClasses
                         else
                         {
                             Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
-
 
                             if (lastRealColor.IsEmpty)
                             {

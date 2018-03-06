@@ -464,7 +464,6 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-
         private bool ToggleSelectionFilter()
         {
             var visible = !selectionFilterToolStripMenuItem.Checked;
@@ -532,7 +531,6 @@ namespace GitUI.CommandsDialogs
                 onComputed(getAllChangedFilesWithSubmodulesStatus());
             }
         }
-
 
         public void ShowDialogWhenChanges(IWin32Window owner)
         {

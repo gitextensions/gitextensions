@@ -68,7 +68,6 @@ namespace GitUI.CommandsDialogs.CommitDialog
             AppSettings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
         }
 
-
         private void buttonOk_Click(object sender, EventArgs e)
         {
             SaveSettings();

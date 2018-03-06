@@ -12,12 +12,10 @@ namespace GitCommands.Git
     {
         private readonly Func<IGitModule> _getModule;
 
-
         public LongShaProvider(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
-
 
         public string Get(string sha1)
         {

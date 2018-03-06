@@ -49,12 +49,10 @@ namespace GitCommands
         private const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
 
-
         public CommitDataManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
-
 
         /// <summary>
         /// Gets the commit info for submodule.
@@ -226,7 +224,6 @@ namespace GitCommands
                 revision.Body ?? revision.Subject);
             return data;
         }
-
 
         private IGitModule GetModule()
         {

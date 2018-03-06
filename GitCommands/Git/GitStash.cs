@@ -9,14 +9,12 @@ namespace GitCommands.Git
         private const string NameFormat = "stash@{{{0}}}";
         private readonly string _stash;
 
-
         /// <summary>Name of the stash. <remarks>Usually, "stash@{n}"</remarks></summary>
         public string Name { get; set; }
         /// <summary>Short description of the commit the stash was based on.</summary>
         public string Message { get; set; }
         /// <summary>Gets the index of the stash in the list.</summary>
         public int Index { get; set; }
-
 
         /// <summary>Initializes a new <see cref="GitStash"/> with all properties null.</summary>
         public GitStash(string stash)
@@ -45,7 +43,6 @@ namespace GitCommands.Git
                 Message = stash.Substring(msgStart).Trim();
             }
         }
-
 
         public override string ToString()
         {

@@ -23,12 +23,10 @@ namespace GitCommands.Repository
         private const string DefaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
 
-
         public RepositoryDescriptionProvider(IGitDirectoryResolver gitDirectoryResolver)
         {
             _gitDirectoryResolver = gitDirectoryResolver;
         }
-
 
         /// <summary>
         /// Returns a short name for repository.

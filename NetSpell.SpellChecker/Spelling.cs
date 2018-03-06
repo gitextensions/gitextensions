@@ -75,7 +75,6 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         public event ReplacedWordEventHandler ReplacedWord;
 
-
         /// <summary>
         ///     This represents the delegate method prototype that
         ///     event receivers must implement
@@ -176,7 +175,6 @@ namespace NetSpell.SpellChecker
         {
             InitializeComponent();
         }
-
 
         /// <summary>
         ///     Required for Windows.Forms Class Composition Designer support
@@ -746,7 +744,6 @@ namespace NetSpell.SpellChecker
             ReplaceAllWord();
         }
 
-
         /// <summary>
         ///     Replaces the instances of the CurrentWord in the Text Property
         /// </summary>
@@ -1176,7 +1173,6 @@ namespace NetSpell.SpellChecker
         private StringBuilder _text = new StringBuilder();
         private int _wordIndex;
 
-
         /// <summary>
         ///     The suggestion strategy to use when generating suggestions
         /// </summary>
@@ -1202,7 +1198,6 @@ namespace NetSpell.SpellChecker
             /// </remarks>
             NearMiss
         }
-
 
         /// <summary>
         ///     Display the 'Spell Check Complete' alert.
@@ -1245,7 +1240,6 @@ namespace NetSpell.SpellChecker
                 }
             }
         }
-
 
         /// <summary>
         ///     Ignore words with all capital letters when spell checking
@@ -1320,7 +1314,6 @@ namespace NetSpell.SpellChecker
         [Category("Options")]
         [Description("Determines if the spell checker should use its internal dialogs")]
         public bool ShowDialog { get; set; } = true;
-
 
         /// <summary>
         ///     The suggestion strategy to use when generating suggestions

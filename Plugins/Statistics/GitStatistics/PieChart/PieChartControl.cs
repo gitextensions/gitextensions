@@ -119,7 +119,6 @@ namespace GitStatistics.PieChart
             Invalidate();
         }
 
-
         public void SetTags(object[] value)
         {
             _tags = value;

@@ -263,7 +263,6 @@ namespace GitUI.CommandsDialogs
                 res.RevisionFilter = string.Concat(" --full-history --simplify-merges ", res.RevisionFilter);
             }
 
-
             return res;
         }
 

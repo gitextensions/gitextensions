@@ -16,7 +16,6 @@ namespace GitCommands.Repository
         {
         }
 
-
         private int _maxCount;
 
         [XmlIgnore]

@@ -15,19 +15,16 @@ namespace GitCommands.ExternalLinks
     {
         private readonly IGitRemoteManager _gitRemoteManager;
 
-
         public ExternalLinkRevisionParser(IGitRemoteManager gitRemoteManager)
         {
             _gitRemoteManager = gitRemoteManager;
         }
-
 
         public IEnumerable<ExternalLink> Parse(GitRevision revision, ExternalLinkDefinition definition)
         {
             var remoteMatches = ParseRemotes(definition);
             return remoteMatches.SelectMany(remoteMatch => ParseRevision(revision, definition, remoteMatch));
         }
-
 
         private static IEnumerable<GitRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<GitRemote> remotes)
         {

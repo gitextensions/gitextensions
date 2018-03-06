@@ -18,7 +18,6 @@ namespace GitCommandsTests.ExternalLinks
         private RepoDistSettings _repoLocal;
         private ExternalLinksLoader _loader;
 
-
         [SetUp]
         public void Setup()
         {
@@ -48,7 +47,6 @@ namespace GitCommandsTests.ExternalLinks
             _testHelper.Dispose();
             _testHelper = null;
         }
-
 
         [Test]
         public void Add_should_add_new_definition_to_the_lowest_level_level2()

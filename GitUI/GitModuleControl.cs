@@ -21,7 +21,6 @@ namespace GitUI
 
         private IGitUICommandsSource _uiCommandsSource;
 
-
         /// <summary>Gets the <see cref="IGitUICommandsSource"/>.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]

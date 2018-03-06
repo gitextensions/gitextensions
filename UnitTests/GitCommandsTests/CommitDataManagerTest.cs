@@ -26,7 +26,6 @@ namespace GitCommandsTests
             _commitDataManager = new CommitDataManager(_getModule);
         }
 
-
         [Test]
         public void CreateFromFormatedData()
         {

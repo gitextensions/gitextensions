@@ -101,7 +101,6 @@ namespace ReleaseNotesGenerator
             Clipboard.SetText(result);
         }
 
-
         private void buttonCopyAsHtml_Click(object sender, EventArgs e)
         {
             string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}' ({2}):</p>", textBoxRevFrom.Text, textBoxRevTo.Text, MostRecentHint);

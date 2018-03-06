@@ -98,7 +98,6 @@ namespace GitUI
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
 
-
         private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
 
         private string _rebaseOnTopOf;
@@ -357,7 +356,6 @@ namespace GitUI
                 return _indexWatcher;
             }
         }
-
 
         public void SetInitialRevision(string initialSelectedRevision)
         {
@@ -966,7 +964,6 @@ namespace GitUI
                 .SelectedRows
                 .Cast<DataGridViewRow>()
                 .Where(row => Revisions.RowCount > row.Index);
-
 
             if (direction.HasValue)
             {
@@ -2163,7 +2160,6 @@ namespace GitUI
                         graphics.FillPath(Brushes.White, forePath);
                     }
 
-
                     // frame
                     using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
                     {
@@ -2507,7 +2503,6 @@ namespace GitUI
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSeparator.Visible = inTheMiddleOfBisect;
             compareWithCurrentBranchToolStripMenuItem.Visible = Module.GetSelectedBranch().IsNotNullOrWhitespace();
-
 
             var deleteTagDropDown = new ContextMenuStrip();
             var deleteBranchDropDown = new ContextMenuStrip();

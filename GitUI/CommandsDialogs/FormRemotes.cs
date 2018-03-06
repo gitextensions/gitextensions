@@ -80,7 +80,6 @@ Inactive remote is completely invisible to git.");
             new TranslationString("Inactive");
         #endregion
 
-
         public FormRemotes(GitUICommands aCommands)
             : base(aCommands)
         {
@@ -110,7 +109,6 @@ Inactive remote is completely invisible to git.");
         /// Gets the list of remotes configured in .git/config file.
         /// </summary>
         private List<GitRemote> UserGitRemotes { get; set; }
-
 
         private void BindRemotes(string preselectRemote)
         {
@@ -270,7 +268,6 @@ Inactive remote is completely invisible to git.");
                 remotes.Add(new Repository(newRemoteUrl, null, null));
             }
         }
-
 
         private void application_Idle(object sender, EventArgs e)
         {

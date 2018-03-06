@@ -39,7 +39,6 @@ namespace ResourceManager.CommitDataRenders
         private readonly IHeaderRenderStyleProvider _headerRendererStyleProvider;
         private readonly ILinkFactory _linkFactory;
 
-
         public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory linkFactory)
         {
             _labelFormatter = labelFormatter;
@@ -47,7 +46,6 @@ namespace ResourceManager.CommitDataRenders
             _headerRendererStyleProvider = headerRendererStyleProvider;
             _linkFactory = linkFactory;
         }
-
 
         public Font GetFont(Graphics g)
         {
@@ -145,8 +143,6 @@ namespace ResourceManager.CommitDataRenders
 
             return header.ToString();
         }
-
-
 
         private static string GetEmail(string author)
         {

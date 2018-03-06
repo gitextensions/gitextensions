@@ -13,7 +13,6 @@ namespace GitCommandsTests.Git.Tag
         private const string KeyId = "A9876F";
         private const string TagMessageFile = "c:/.git/TAGMESSAGE";
 
-
         [TestCase(null)]
         [TestCase("")]
         [TestCase("  ")]
@@ -55,7 +54,6 @@ namespace GitCommandsTests.Git.Tag
 
             Assert.Throws<NotSupportedException>(() => cmd.ToLine());
         }
-
 
         [TestCase(true, "tag -f -s -F \"c:/.git/TAGMESSAGE\" \"bla\" -- \"0123456789\"")]
         [TestCase(false, "tag -s -F \"c:/.git/TAGMESSAGE\" \"bla\" -- \"0123456789\"")]

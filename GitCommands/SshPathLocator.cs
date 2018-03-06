@@ -25,7 +25,6 @@ namespace GitCommands
         {
         }
 
-
         /// <summary>
         /// Gets the git SSH command;
         /// If the environment variable is not set, will try to find ssh.exe in git installation directory;

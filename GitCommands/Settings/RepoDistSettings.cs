@@ -109,7 +109,6 @@ namespace GitCommands.Settings
         }
     }
 
-
     public class BuildServer : SettingsPath
     {
         public readonly StringSetting Type;

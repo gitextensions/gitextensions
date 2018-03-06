@@ -85,7 +85,6 @@ namespace GitUI.CommandsDialogs
 
         private string ExcludeFile => _dialogModel.ExcludeFile;
 
-
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
@@ -103,7 +102,6 @@ namespace GitUI.CommandsDialogs
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
 
         private void LoadGitIgnore()
         {

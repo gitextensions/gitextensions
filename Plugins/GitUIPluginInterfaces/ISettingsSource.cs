@@ -184,7 +184,6 @@ namespace GitUIPluginInterfaces
         }
     }
 
-
     public static class FontParser
     {
         private static readonly string InvariantCultureId = "_IC_";

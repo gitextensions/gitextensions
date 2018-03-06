@@ -266,7 +266,6 @@ namespace GitCommands.Repository
                 string repository = null;
                 string workingDir = null;
 
-
                 workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
                 if (dirInfo != null)
@@ -318,7 +317,6 @@ namespace GitCommands.Repository
 
                     return result && addDots;
                 }
-
 
                 bool ShortenPath(int skipCount)
                 {

@@ -833,10 +833,8 @@ namespace GitCommands
             sb.Append(branch);
             sb.Append('"');
 
-
             return sb.ToString();
         }
-
 
         public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
         {
@@ -862,18 +860,15 @@ namespace GitCommands
               .Append(from)
               .Append("\" ");
 
-
             sb.Append('"')
               .Append(branch)
               .Append("\"");
-
 
             sb.Append(" --onto ")
               .Append(onto);
 
             return sb.ToString();
         }
-
 
         public static string AbortRebaseCmd()
         {

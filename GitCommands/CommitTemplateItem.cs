@@ -65,7 +65,6 @@ namespace GitCommands
             return templates;
         }
 
-
         private static string SerializeCommitTemplates(CommitTemplateItem[] items)
         {
             return JsonSerializer.Serialize(items);

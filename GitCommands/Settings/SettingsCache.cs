@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable

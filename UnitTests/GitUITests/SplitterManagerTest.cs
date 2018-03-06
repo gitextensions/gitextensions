@@ -150,7 +150,6 @@ namespace GitUITests
             }
         }
 
-
         [TestCase(true)]
         [TestCase(false)]
         public void DistanceDoesNotChangeWhenGoesBelowPanel2MinSize(bool applyMinSize)

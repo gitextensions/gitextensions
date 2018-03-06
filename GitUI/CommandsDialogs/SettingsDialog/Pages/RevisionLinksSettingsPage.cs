@@ -7,7 +7,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private ExternalLinksManager _externalLinksManager;
 
-
         public RevisionLinksSettingsPage()
         {
             InitializeComponent();

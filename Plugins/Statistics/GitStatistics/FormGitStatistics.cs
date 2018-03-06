@@ -250,7 +250,6 @@ namespace GitStatistics
             TestCodeText.Text = string.Format(_linesOfTestCodeP.Text, lineCounter.NumberTestCodeLines, percent_t) + Environment.NewLine +
                 string.Format(_linesOfProductionCodeP.Text, (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines), percent_p);
 
-
             string percentBlank = ((double)lineCounter.NumberBlankLines / lineCounter.NumberLines).ToString("P1");
             string percentComments = ((double)lineCounter.NumberCommentsLines / lineCounter.NumberLines).ToString("P1");
             string percentCode = ((double)lineCounter.NumberCodeLines / lineCounter.NumberLines).ToString("P1");
@@ -292,11 +291,9 @@ namespace GitStatistics
             Tabs.Visible = true;
             LoadingLabel.Visible = false;
 
-
             FormGitStatisticsSizeChanged(null, null);
             SizeChanged += FormGitStatisticsSizeChanged;
         }
-
 
         private void TabsSelectedIndexChanged(object sender, EventArgs e)
         {

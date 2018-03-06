@@ -10,7 +10,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitNotSigned = new TranslationString("Commit is not signed");
         private readonly TranslationString _tagNotSigned = new TranslationString("Tag is not signed");
 
-
         public RevisionGpgInfo()
         {
             InitializeComponent();
@@ -18,7 +17,6 @@ namespace GitUI.CommandsDialogs
 
             DisplayGpgInfo(null);
         }
-
 
         public void DisplayGpgInfo(GpgInfo info)
         {
@@ -47,7 +45,6 @@ namespace GitUI.CommandsDialogs
 
             ApplyLayout();
         }
-
 
         private void ApplyLayout()
         {

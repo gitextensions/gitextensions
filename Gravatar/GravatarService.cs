@@ -44,7 +44,6 @@ namespace Gravatar
         {
         }
 
-
         /// <summary>
         /// Loads avatar either from the local cache or from the remote service.
         /// </summary>
@@ -89,7 +88,6 @@ namespace Gravatar
 
             return defaultImageType;
         }
-
 
         /// <summary>
         /// Builds a <see cref="Uri"/> corresponding to a given email address.

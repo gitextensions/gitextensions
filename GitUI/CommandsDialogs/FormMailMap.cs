@@ -24,7 +24,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
 
-
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
-
 /* Get the latest version of SplitButton at: http://wyday.com/splitbutton/
  *
  * Copyright (c) 2010, wyDay
@@ -30,13 +29,11 @@ using System.Windows.Forms.VisualStyles;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 namespace GitUI.Script
 {
     public class SplitButton : Button
     {
         PushButtonState _state;
-
 
         const int SplitSectionWidth = 18;
 
@@ -46,7 +43,6 @@ namespace GitUI.Script
         bool _showSplit;
 
         bool _isSplitMenuVisible;
-
 
         ContextMenuStrip _splitMenuStrip;
         ContextMenu _splitMenu;
@@ -372,7 +368,6 @@ namespace GitUI.Script
                               bounds.Height - (internalBorder * 2) + 2);
 
             bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles);
-
 
             if (RightToLeft == RightToLeft.Yes)
             {
@@ -843,7 +838,6 @@ namespace GitUI.Script
 
         #endregion Button Layout Calculations
 
-
         private void ShowContextMenuStrip()
         {
             if (_skipNextOpen)
@@ -882,7 +876,6 @@ namespace GitUI.Script
                 _skipNextOpen = (_dropDownRectangle.Contains(PointToClient(Cursor.Position))) && MouseButtons == MouseButtons.Left;
             }
         }
-
 
         void SplitMenu_Popup(object sender, EventArgs e)
         {

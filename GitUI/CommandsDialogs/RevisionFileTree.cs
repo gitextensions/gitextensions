@@ -48,7 +48,6 @@ See the changes in the commit form.");
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private GitRevision _revision;
 
-
         public RevisionFileTree()
         {
             InitializeComponent();
@@ -56,7 +55,6 @@ See the changes in the commit form.");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
         }
-
 
         public void ExpandToFile(string filePath)
         {
@@ -208,7 +206,6 @@ See the changes in the commit form.");
             FileText.ReloadHotkeys();
         }
 
-
         protected override void OnRuntimeLoad(EventArgs e)
         {
             _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
@@ -227,7 +224,6 @@ See the changes in the commit form.");
 
             base.OnRuntimeLoad(e);
         }
-
 
         private IList<string> FindFileMatches(string name)
         {
@@ -292,7 +288,6 @@ See the changes in the commit form.");
             process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator());
             process.Start();
         }
-
 
         private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -371,7 +366,6 @@ See the changes in the commit form.");
             OnItemActivated();
             e.Handled = true;
         }
-
 
         private void blameMenuItem_Click(object sender, EventArgs e)
         {

@@ -150,7 +150,6 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-
         private void Init(string defaultRemote)
         {
             _branch = Module.GetSelectedBranch();

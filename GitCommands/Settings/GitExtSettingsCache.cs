@@ -2,7 +2,6 @@
 using System.Text;
 using System.Xml;
 
-
 namespace GitCommands.Settings
 {
     public class GitExtSettingsCache : FileSettingsCache

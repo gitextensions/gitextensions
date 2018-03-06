@@ -15,19 +15,16 @@ namespace GitUI.UserControls.RevisionGridClasses
         private const short MaxVisibleItemsWithoutScroll = 8;
         private const short MaxRefLength = 100;
 
-
         public FormQuickGitRefSelector()
         {
             InitializeComponent();
             Translate();
         }
 
-
         /// <summary>
         /// Gets the ref selected by the user.
         /// </summary>
         public IGitRef SelectedRef => (lbxRefs.SelectedItem as DisplyGitRef)?.Item;
-
 
         public void Init(Action action, IGitRef[] refs)
         {
@@ -111,12 +108,10 @@ namespace GitUI.UserControls.RevisionGridClasses
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-
         private void lbxRefs_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             AcceptButton.PerformClick();
         }
-
 
         public enum Action
         {

@@ -85,7 +85,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private CheckState CheckedState
         {
             get { return _checkedState; }

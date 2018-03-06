@@ -6,7 +6,6 @@ using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-
 namespace ReleaseNotesGenerator
 {
     /// <summary>
@@ -123,7 +122,6 @@ namespace ReleaseNotesGenerator
             }
         }
 
-
         // Data. See properties for descriptions.
 
         /// <summary>
@@ -131,19 +129,16 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public string Version { get; }
 
-
         /// <summary>
         /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is enclosed in.
         /// May be null if context is not specified.
         /// </summary>
         public string Context { get; }
 
-
         /// <summary>
         /// Get just the fragment of HTML text.
         /// </summary>
         public string Fragment { get; }
-
 
         /// <summary>
         /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
@@ -171,7 +166,6 @@ namespace ReleaseNotesGenerator
         {
             CopyToClipboard(htmlFragment, null, null);
         }
-
 
         /// <summary>
         /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.

@@ -308,7 +308,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             _puttySshKey = BrowseForPrivateKey.BrowseAndLoad(this);
@@ -321,7 +320,6 @@ namespace GitUI.CommandsDialogs
                 LoadSSHKey.Visible = false;
             }
         }
-
 
         private void FromSelectedIndexChanged(object sender, EventArgs e)
         {

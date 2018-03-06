@@ -428,7 +428,6 @@ namespace GitCommands
             set => _currentTranslation = value;
         }
 
-
         private static readonly Dictionary<string, string> _languageCodes =
             new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             {
@@ -606,7 +605,6 @@ namespace GitCommands
             get => GetBool("IgnoreWhitespaceOnBlame", true);
             set => SetBool("IgnoreWhitespaceOnBlame", value);
         }
-
 
         public static bool OpenSubmoduleDiffInSeparateWindow
         {

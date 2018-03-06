@@ -52,7 +52,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(AdvancedSettingsPage));
         }
 
-
         private void chkAutoNormaliseBranchName_CheckedChanged(object sender, System.EventArgs e)
         {
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;

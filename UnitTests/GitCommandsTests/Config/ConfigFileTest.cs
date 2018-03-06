@@ -460,7 +460,6 @@ namespace GitCommandsTests.Config
             }
         }
 
-
         [TestMethod]
         public void RandomTestCase1()
         {
@@ -536,8 +535,6 @@ namespace GitCommandsTests.Config
                 content.AppendLine("	fetch = +refs/heads/*:refs/remotes/test/*");
                 content.AppendLine("	puttykeyfile = C:/Users/sergiy.pustovit/spustovit_sintez_key_1.ppk");
 
-
-
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
             }
@@ -612,7 +609,6 @@ namespace GitCommandsTests.Config
                 CheckValueIsEqual(configFile, "bugtraq.logregex", "data\\newline");
             }
         }
-
 
         [TestMethod]
         public void CommentsTest()

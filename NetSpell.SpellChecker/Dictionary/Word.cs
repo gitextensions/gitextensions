@@ -130,12 +130,10 @@ namespace NetSpell.SpellChecker.Dictionary
             return result; // * -1; // sorts desc order
         }
 
-
         /// <summary>
         ///     The affix keys that can be applied to this base word
         /// </summary>
         public string AffixKeys { get; set; } = "";
-
 
         /// <summary>
         ///     The index position of where this word appears
@@ -151,7 +149,6 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     The string for the base word
         /// </summary>
         public string Text { get; set; } = "";
-
 
         /// <summary>
         ///     Used for sorting suggestions by its edit distance for

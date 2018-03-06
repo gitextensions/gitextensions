@@ -9,7 +9,6 @@ namespace GitCommands
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
 
-
         /// <summary>Replaces native path separator with posix path separator.</summary>
         public static string ToPosixPath(this string path)
         {
@@ -120,7 +119,6 @@ namespace GitCommands
 
             return name;
         }
-
 
         public static bool TryFindFullPath(string fileName, out string fullPath)
         {

@@ -693,7 +693,6 @@ namespace GitUI.CommandsDialogs
         {
             SetAvailableCommands(true);
 
-
             var item = GetConflict();
 
             bool baseFileExists = !string.IsNullOrEmpty(item.Base.Filename);
@@ -1113,7 +1112,6 @@ namespace GitUI.CommandsDialogs
                 ContextOpenBaseWith.Enabled = false;
             }
         }
-
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {

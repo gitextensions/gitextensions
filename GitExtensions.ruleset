@@ -85,7 +85,6 @@
     <Rule Id="SA1411" Action="None" />
     <Rule Id="SA1413" Action="None" />
     <Rule Id="SA1504" Action="None" />
-    <Rule Id="SA1507" Action="None" />
     <Rule Id="SA1508" Action="None" />
     <Rule Id="SA1509" Action="None" />
     <Rule Id="SA1510" Action="None" />

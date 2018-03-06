@@ -252,7 +252,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             _filterRevisionsHelper.SetFilter(filter);
 
-
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             GitUICommandsChanged += (a, e) =>
@@ -420,7 +419,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
 
             Cursor.Current = Cursors.Default;
-
 
             try
             {
@@ -742,7 +740,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private void LoadUserMenu()
         {
             var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
@@ -1030,7 +1027,6 @@ namespace GitUI.CommandsDialogs
                 UICommands.StartApplyPatchDialog(this);
             }
         }
-
 
         private void ShowRevisions()
         {

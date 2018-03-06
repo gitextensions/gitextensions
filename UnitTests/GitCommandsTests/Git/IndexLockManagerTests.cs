@@ -48,7 +48,6 @@ namespace GitCommandsTests.Git
             _manager = new IndexLockManager(_module, _gitDirectoryResolver, _fileSystem);
         }
 
-
         [TestCase(false)]
         [TestCase(true)]
         public void IsIndexLocked(bool fileExists)

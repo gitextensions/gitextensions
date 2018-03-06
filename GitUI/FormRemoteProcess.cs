@@ -68,15 +68,12 @@ namespace GitUI
             _UrlTryingToConnect = url;
         }
 
-
-
         protected override void BeforeProcessStart()
         {
             _restart = false;
             Plink = GitCommandHelpers.Plink();
             base.BeforeProcessStart();
         }
-
 
         protected override bool HandleOnExit(ref bool isError)
         {
@@ -85,7 +82,6 @@ namespace GitUI
                 Retry();
                 return true;
             }
-
 
             // An error occurred!
             if (isError && Plink)

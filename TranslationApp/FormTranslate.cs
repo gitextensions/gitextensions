@@ -140,7 +140,6 @@ namespace TranslationApp
             return translation.SelectMany(pair => pair.Value.TranslationCategories);
         }
 
-
         public void UpdateCategoriesList()
         {
             var tc = translateCategories.SelectedItem as TranslationCategory;
@@ -210,7 +209,6 @@ namespace TranslationApp
                 progressBar.Visible = false;
             }
         }
-
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
         {

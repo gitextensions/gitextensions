@@ -117,7 +117,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             return new DirectoryInfo(UICommands.GitModule.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
         }
 
-
         /// <summary>
         /// Here are the 3 types of lines return by the `worktree list --porcelain` that should be handled:
         ///

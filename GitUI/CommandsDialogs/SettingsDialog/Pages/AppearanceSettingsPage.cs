@@ -21,7 +21,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private Font _commitFont;
         private readonly IImageCache _avatarCache;
 
-
         public AppearanceSettingsPage()
         {
             InitializeComponent();

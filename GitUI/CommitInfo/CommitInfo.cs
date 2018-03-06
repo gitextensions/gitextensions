@@ -40,7 +40,6 @@ namespace GitUI.CommitInfo
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
         private readonly IGitRemoteManager _gitRemoteManager;
 
-
         public CommitInfo()
         {
             InitializeComponent();
@@ -295,7 +294,6 @@ namespace GitUI.CommitInfo
             _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
             this.InvokeAsync(UpdateRevisionInfo);
         }
-
 
         private void loadBranchInfo(string revision)
         {

@@ -28,7 +28,6 @@ namespace GitCommands
             _getWorkingDir = getWorkingDir;
         }
 
-
         /// <inheritdoc />
         /// <summary>
         /// Resolves the provided path (folder or file) against the current working directory.

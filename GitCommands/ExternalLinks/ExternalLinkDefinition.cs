@@ -30,7 +30,6 @@ namespace GitCommands.ExternalLinks
         private string _remoteSearchPattern;
         private string _useRemotesPattern;
 
-
         /// <summary>
         /// Non-local link def can be locally disabled
         /// </summary>
@@ -66,7 +65,6 @@ namespace GitCommands.ExternalLinks
                         return null;
                     }
                 });
-
 
             }
         }
@@ -153,7 +151,6 @@ namespace GitCommands.ExternalLinks
         /// <summary>Indicates if only the first among the matching remotes should be used</summary>
         public bool UseOnlyFirstRemote { get; set; }
 
-
         /// <summary>Compiled SearchPattern</summary>
         [XmlIgnore]
         public Lazy<Regex> SearchPatternRegex { get; private set; }
@@ -169,8 +166,6 @@ namespace GitCommands.ExternalLinks
         /// <summary>Compiled UseRemotesPattern</summary>
         [XmlIgnore]
         public Lazy<Regex> UseRemotesRegex { get; private set; }
-
-
 
         public override int GetHashCode()
         {

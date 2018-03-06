@@ -75,7 +75,6 @@ namespace System
             return string.IsNullOrEmpty(s);
         }
 
-
         public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())

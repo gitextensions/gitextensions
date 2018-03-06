@@ -210,7 +210,6 @@ namespace GitUI.Editor
             return 0;
         }
 
-
         public void EnableScrollBars(bool enable)
         {
             TextEditor.ActiveTextAreaControl.VScrollBar.Width = 0;

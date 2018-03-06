@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
 
-
 /// <summary>
 /// Summary description for TraceWriter.
 /// </summary>

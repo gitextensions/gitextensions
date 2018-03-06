@@ -414,7 +414,6 @@ namespace GitPlugin
 
         #endregion
 
-
         private string GetToolsMenuName()
         {
             string toolsMenuName;

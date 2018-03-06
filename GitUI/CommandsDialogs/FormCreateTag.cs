@@ -27,7 +27,6 @@ namespace GitUI.CommandsDialogs
         private static readonly string[] DropwdownTagOperation = { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
         private readonly IGitTagController _gitTagController;
 
-
         public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {

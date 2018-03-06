@@ -175,7 +175,6 @@ namespace GitUI.CommandsDialogs
                     result += _sendMailResultFailed.Text;
                 }
 
-
                 // Clean up
                 if (Directory.Exists(savePatchesToDir))
                 {

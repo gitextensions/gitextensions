@@ -52,7 +52,6 @@ namespace GitCommands.Gpg
         string GetTagVerifyMessage(GitRevision revision);
     }
 
-
     public class GitGpgController : IGitGpgController
     {
         private readonly Func<IGitModule> _getModule;
@@ -66,7 +65,6 @@ namespace GitCommands.Gpg
         private const string RevokedKey = "R";
         private const string MissingPubKey = "E";
         private const string NoSign = "N";
-
 
         /* Tag GPG status */
         private const string GoodSignature = "GOODSIG";
@@ -87,7 +85,6 @@ namespace GitCommands.Gpg
         {
             _getModule = getModule;
         }
-
 
         /// <summary>
         /// Obtain the commit signature status on current revision.
@@ -234,7 +231,6 @@ namespace GitCommands.Gpg
             var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
-
 
         private string GetTagVerificationMessage(IGitRef tagRef, bool raw = true)
         {

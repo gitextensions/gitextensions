@@ -17,7 +17,6 @@ namespace GitUI.CommandsDialogs
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
-
         public FormCreateBranch(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
@@ -50,7 +49,6 @@ namespace GitUI.CommandsDialogs
                            .Where(c => c.GetType() == typeof(T))
                            .Cast<T>();
         }
-
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {

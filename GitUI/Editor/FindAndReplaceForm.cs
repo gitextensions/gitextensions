@@ -365,7 +365,6 @@ namespace GitUI
             }
         }
 
-
         internal void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _fileLoader = fileLoader;
@@ -558,7 +557,6 @@ namespace GitUI
         {
             Debug.Assert(offset2 >= offset1);
             offset2 -= LookFor.Length;
-
 
             // Search
             char lookForCh = _lookFor2[0];

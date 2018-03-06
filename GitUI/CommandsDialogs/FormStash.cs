@@ -24,7 +24,6 @@ namespace GitUI.CommandsDialogs
         readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool ManageStashes { get; set; }
 
-
         private AsyncLoader _asyncLoader = new AsyncLoader();
 
         private FormStash()

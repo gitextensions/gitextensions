@@ -27,7 +27,6 @@ namespace CommonTestUtils
             Module = module;
         }
 
-
         /// <summary>
         /// Gets the module.
         /// </summary>
@@ -37,7 +36,6 @@ namespace CommonTestUtils
         /// Gets the temporary path where test repositories will be created for integration tests.
         /// </summary>
         public string TemporaryPath { get; }
-
 
         /// <summary>
         /// Creates a new file, writes the specified string to the file, and then closes the file.
@@ -107,7 +105,6 @@ namespace CommonTestUtils
                 // do nothing
             }
         }
-
 
         private void EnsureCreatedInTempFolder(string path)
         {

@@ -90,7 +90,6 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
-
         [TestMethod]
         public void TestCorrectlyLoadReversePatch()
         {
@@ -108,7 +107,6 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(expectedPatch.Patch.Type, createdPatch.Type);
             Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
-
 
         [TestMethod]
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()

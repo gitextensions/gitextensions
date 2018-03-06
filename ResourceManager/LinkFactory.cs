@@ -19,7 +19,6 @@ namespace ResourceManager
     {
         private readonly ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
 
-
         public void Clear()
         {
             _linksMap.Clear();

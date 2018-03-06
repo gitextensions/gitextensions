@@ -1189,7 +1189,6 @@ namespace GitUI
 
         #region Filtering
 
-
         private long _lastUserInputTime;
         private string _ToolTipText = "";
 

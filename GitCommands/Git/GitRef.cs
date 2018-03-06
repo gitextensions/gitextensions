@@ -138,7 +138,6 @@ namespace GitCommands
             return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
         }
 
-
         public static GitRef NoHead(GitModule module)
         {
             return new GitRef(module, null, "");

@@ -49,7 +49,6 @@ namespace GitUI.SpellChecker
 
             var formatRange = GetFormatRange(charRange, canvasHdc, rect, rectPage);
 
-
             NativeMethods.SendMessage(
                 richTextBox.Handle,
                 NativeMethods.EM_FORMATRANGE,
@@ -78,7 +77,6 @@ namespace GitUI.SpellChecker
                 NativeMethods.SendMessageInt(rtb.Handle, NativeMethods.EM_LINELENGTH, new IntPtr(lineNumber),
                                              IntPtr.Zero).ToInt32();
 
-
             NativeMethods.CHARRANGE charRange;
             charRange.cpMin = lineIndex;
             charRange.cpMax = lineIndex + lineLength;
@@ -88,7 +86,6 @@ namespace GitUI.SpellChecker
             rect.Bottom = (int)AnInch;
             rect.Left = 0;
             rect.Right = 10000000; ////(int)(rtb.Width * anInch + 20);
-
 
             NativeMethods.RECT rectPage;
             rectPage.Top = 0;

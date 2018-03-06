@@ -24,7 +24,6 @@ namespace Github3
 
         public DateTime Created => _pullrequest.CreatedAt;
 
-
         private string _diffData;
         public string DiffData
         {

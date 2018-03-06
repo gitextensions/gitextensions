@@ -385,7 +385,6 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
-
         public bool StashDrop(IWin32Window owner, string stashName)
         {
             Func<bool> action = () =>
@@ -2008,7 +2007,6 @@ namespace GitUI
 
             RunCommandBasedOnArgument(args, arguments);
         }
-
 
         // Please update FormCommandlineHelp if you add or change commands
         private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)

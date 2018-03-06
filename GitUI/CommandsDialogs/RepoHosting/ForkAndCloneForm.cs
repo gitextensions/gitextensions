@@ -153,7 +153,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 });
         }
 
-
         private void PrepareSearch(object sender, EventArgs e)
         {
             _searchResultsLV.Items.Clear();
@@ -175,7 +174,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             _searchBtn.Enabled = true;
         }
-
 
         private void _forkBtn_Click(object sender, EventArgs e)
         {

@@ -59,12 +59,10 @@ namespace GitCommands.Remote
         internal static readonly string SectionRemote = "remote";
         private readonly Func<IGitModule> _getModule;
 
-
         public GitRemoteManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
-
 
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
         [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
@@ -288,7 +286,6 @@ namespace GitCommands.Remote
             module.LocalConfigFile.Save();
         }
 
-
         // pass the list in to minimise allocations
         private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
@@ -302,7 +299,6 @@ namespace GitCommands.Remote
             {
                 func = GetDisabledRemotes;
             }
-
 
             var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())

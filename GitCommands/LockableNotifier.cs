@@ -2,7 +2,6 @@
 using System.Threading;
 using GitUIPluginInterfaces;
 
-
 namespace GitCommands
 {
     public abstract class LockableNotifier : ILockableNotifier

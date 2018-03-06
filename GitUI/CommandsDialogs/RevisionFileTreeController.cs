@@ -44,14 +44,12 @@ namespace GitUI.CommandsDialogs
         private readonly IGitRevisionInfoProvider _revisionInfoProvider;
         private readonly ConcurrentDictionary<string, IEnumerable<IGitItem>> _cachedItems = new ConcurrentDictionary<string, IEnumerable<IGitItem>>();
 
-
         public RevisionFileTreeController(Func<string> getWorkingDir, IGitRevisionInfoProvider revisionInfoProvider, IFileAssociatedIconProvider iconProvider)
         {
             _getWorkingDir = getWorkingDir;
             _revisionInfoProvider = revisionInfoProvider;
             _iconProvider = iconProvider;
         }
-
 
         /// <summary>
         /// Locates the node by the label.

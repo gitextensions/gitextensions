@@ -145,7 +145,6 @@ namespace GitUI.CommandsDialogs
             DiffText.ReloadHotkeys();
         }
 
-
         protected override void OnRuntimeLoad(EventArgs e)
         {
             _revisionDiffController = new RevisionDiffController();
@@ -160,7 +159,6 @@ namespace GitUI.CommandsDialogs
 
             base.OnRuntimeLoad(e);
         }
-
 
         private string DescribeRevision(string sha1)
         {
@@ -273,7 +271,6 @@ namespace GitUI.CommandsDialogs
             }
             await DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
-
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {

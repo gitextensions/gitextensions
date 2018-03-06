@@ -25,12 +25,10 @@ namespace GitCommands
     {
         private readonly IEnvironmentAbstraction _environment;
 
-
         public EnvironmentPathsProvider(IEnvironmentAbstraction environment)
         {
             _environment = environment;
         }
-
 
         /// <summary>
         /// Gets the list of paths defined under %PATH% environment variable.
@@ -68,7 +66,6 @@ namespace GitCommands
             var envPaths = GetEnvironmentPaths();
             return envPaths.Where(IsValidPath);
         }
-
 
         // TODO: optimise?
         internal static bool IsValidPath(string aPath)

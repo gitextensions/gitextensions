@@ -17,7 +17,6 @@ namespace ResourceManager.CommitDataRenders
             return FillToLength(label + ":", desiredLength);
         }
 
-
         private static string FillToLength(string input, int length)
         {
             // length

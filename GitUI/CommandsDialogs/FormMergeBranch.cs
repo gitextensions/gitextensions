@@ -45,7 +45,6 @@ namespace GitUI.CommandsDialogs
             advanced_CheckedChanged(null, null);
         }
 
-
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
             var selectedHead = Module.GetSelectedBranch();

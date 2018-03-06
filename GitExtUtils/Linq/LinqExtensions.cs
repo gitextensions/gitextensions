@@ -93,7 +93,6 @@ namespace System.Linq
             return string.Join(separator, source.ToArray());
         }
 
-
         //
         // Summary:
         //     Sorts the elements of a sequence in ascending order by using a specified
@@ -144,7 +143,6 @@ namespace System.Linq
                 return _comparer(x, y);
             }
         }
-
 
         //
         // Summary:

@@ -245,7 +245,6 @@ namespace GitUI.Hotkey
 
             HotkeyCommand[] scriptsHotkeys = LoadScriptHotkeys();
 
-
             return new[]
               {
                 // FormCommit

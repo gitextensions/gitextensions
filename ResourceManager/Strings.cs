@@ -115,7 +115,6 @@ namespace ResourceManager
         private readonly TranslationString _loadingData    = new TranslationString("Loading data...");
         private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
 
-
         public static string GetNSecondsAgoText(int value)
         {
             return Smart.Format(AppSettings.CurrentCultureInfo, Instance._secondsAgo.Text, value, Math.Abs(value));

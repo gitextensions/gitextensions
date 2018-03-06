@@ -20,7 +20,6 @@ namespace GitCommandsTests
         private IFullPathResolver _fullPathResolver;
         private CommitTemplateManager _manager;
 
-
         [SetUp]
         public void Setup()
         {
@@ -33,7 +32,6 @@ namespace GitCommandsTests
             _fileSystem.File.Returns(_file);
             _manager = new CommitTemplateManager(_module, _fullPathResolver, _fileSystem);
         }
-
 
         [TestCase(null)]
         [TestCase("")]

@@ -13,7 +13,6 @@ namespace Gravatar
         /// </summary>
         event EventHandler Invalidated;
 
-
         /// <summary>
         /// Adds the image to the cache from the supplied stream.
         /// </summary>
@@ -56,7 +55,6 @@ namespace Gravatar
         private readonly int _cacheDays;
         private readonly IFileSystem _fileSystem;
 
-
         public DirectoryImageCache(string cachePath, int cacheDays, IFileSystem fileSystem)
         {
             _cachePath = cachePath;
@@ -73,12 +71,10 @@ namespace Gravatar
         {
         }
 
-
         /// <summary>
         /// Occurs whenever the cache is invalidated.
         /// </summary>
         public event EventHandler Invalidated;
-
 
         /// <summary>
         /// Adds the image to the cache from the supplied stream.
@@ -205,7 +201,6 @@ namespace Gravatar
         {
             return await Task.Run(() => GetImage(imageFileName, defaultBitmap));
         }
-
 
         private bool HasExpired(string fileName)
         {

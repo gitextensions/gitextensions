@@ -21,7 +21,6 @@ namespace GitUITests.CommandsDialogs
         private TreeNode _rootNode;
         private ImageList _imageList;
 
-
         [SetUp]
         public void Setup()
         {
@@ -39,7 +38,6 @@ namespace GitUITests.CommandsDialogs
             _imageList?.Dispose();
             _imageList = null;
         }
-
 
         [Test]
         public void LoadItemsInTreeView_should_not_add_nods_if_no_children()
@@ -194,7 +192,6 @@ namespace GitUITests.CommandsDialogs
             }
             _imageList.Images.Count.Should().Be(1);
         }
-
 
         private IGitItem CreateGitItem(string name, bool isTree, bool isCommit, bool isBlol)
         {

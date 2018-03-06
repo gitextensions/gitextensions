@@ -244,7 +244,6 @@ namespace PatchApply
         public string WasNoNewLineAtTheEnd = null;
         public string IsNoNewLineAtTheEnd = null;
 
-
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
             string diff = null;
@@ -625,7 +624,6 @@ namespace PatchApply
             }
             return result;
         }
-
 
         public string ToPatch(SubChunkToPatchFnc subChunkToPatch)
         {

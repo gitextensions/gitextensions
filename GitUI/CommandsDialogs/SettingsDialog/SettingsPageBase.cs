@@ -32,7 +32,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         protected CheckSettingsLogic CheckSettingsLogic => PageHost.CheckSettingsLogic;
         protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
-
         protected GitModule Module => CommonLogic.Module;
 
         protected virtual void Init(ISettingsPageHost aPageHost)

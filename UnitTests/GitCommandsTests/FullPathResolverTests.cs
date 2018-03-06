@@ -12,13 +12,11 @@ namespace GitCommandsTests
         private string _workingDir = @"c:\dev\repo";
         private FullPathResolver _resolver;
 
-
         [SetUp]
         public void Setup()
         {
             _resolver = new FullPathResolver(() => _workingDir);
         }
-
 
         [TestCase(null)]
         [TestCase("")]

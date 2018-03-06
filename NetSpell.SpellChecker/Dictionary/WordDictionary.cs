@@ -308,7 +308,6 @@ namespace NetSpell.SpellChecker.Dictionary
             suffixWords.Add(word.Text);
             string prefixKeys = "";
 
-
             // check suffix keys first
             foreach (char key in word.AffixKeys)
             {
@@ -368,7 +367,6 @@ namespace NetSpell.SpellChecker.Dictionary
             SuffixRules.Clear();
             PhoneticRules.Clear();
             TryCharacters = "";
-
 
             // the following is used to split a line by white space
             Regex _spaceRegx = new Regex(@"[^\s]+", RegexOptions.Compiled);
@@ -518,7 +516,6 @@ namespace NetSpell.SpellChecker.Dictionary
             Initialized = true;
         }
 
-
         /// <summary>
         ///     Generates a phonetic code of how the word sounds
         /// </summary>
@@ -656,7 +653,6 @@ namespace NetSpell.SpellChecker.Dictionary
             }
         }
 
-
         /// <summary>
         ///     Folder containing the dictionaries
         /// </summary>
@@ -682,7 +678,6 @@ namespace NetSpell.SpellChecker.Dictionary
         [NotifyParentProperty(true)]
         public bool EnableUserFile { get; set; } = true;
 
-
         /// <summary>
         ///     True if the dictionary has been initialized
         /// </summary>
@@ -690,14 +685,12 @@ namespace NetSpell.SpellChecker.Dictionary
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool Initialized { get; private set; }
 
-
         /// <summary>
         ///     Collection of phonetic rules for this dictionary
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public PhoneticRuleCollection PhoneticRules { get; } = new PhoneticRuleCollection();
-
 
         /// <summary>
         ///     Collection of affix prefixes for the base words in this dictionary
@@ -712,7 +705,6 @@ namespace NetSpell.SpellChecker.Dictionary
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<string> ReplaceCharacters { get; } = new List<string>();
-
 
         /// <summary>
         ///     Collection of affix suffixes for the base words in this dictionary
@@ -753,7 +745,6 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     These are not actual words.
         /// </remarks>
         internal List<string> PossibleBaseWords { get; } = new List<string>();
-
 
         #region Component Designer generated code
         /// <summary>

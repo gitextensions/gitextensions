@@ -68,7 +68,6 @@ namespace GitCommands.Settings
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
         }
 
-
         public readonly CorePath core;
         public readonly MergeToolPath mergetool;
 

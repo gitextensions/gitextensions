@@ -9,13 +9,11 @@ namespace GravatarTests
     {
         private AvatarImageNameProvider _provider;
 
-
         [SetUp]
         public void Setup()
         {
             _provider = new AvatarImageNameProvider();
         }
-
 
         [TestCase(null)]
         [TestCase("")]

@@ -46,7 +46,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 };
         }
 
-
         public ViewPullRequestsForm(GitUICommands aCommands, IRepositoryHostPlugin gitHoster)
             : this(aCommands)
         {

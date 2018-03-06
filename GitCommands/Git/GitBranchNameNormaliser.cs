@@ -101,7 +101,6 @@ namespace GitCommands.Git
             return branchName;
         }
 
-
         /// <summary>
         /// Indicates whether the given character can be used in a branch name.
         /// </summary>
@@ -111,7 +110,6 @@ namespace GitCommands.Git
                     c != ' ' && c != '~' && c != '^' && c != ':' &&
                     Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
         }
-
 
         /// <summary>
         /// Branch name can include slash '/' for hierarchical (directory) grouping,

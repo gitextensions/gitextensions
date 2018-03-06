@@ -12,13 +12,11 @@ namespace GitCommandsTests.Git
     {
         private IGitRevisionTester _tester;
 
-
         [SetUp]
         public void Setup()
         {
             _tester = new GitRevisionTester();
         }
-
 
         [Test]
         public void Matches_should_not_throw_if_revsion_null()

@@ -17,7 +17,6 @@ namespace GitCommandsTests.Git
             _gitBranchNameOptions = new GitBranchNameOptions("_");
         }
 
-
         [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and foo:bar\\can...", "_", "_BUG-1234]_some_long_description_located__/test/_/dir_/_lock]{3,}_and_foo_bar_can_")]
         [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and foo:bar\\can...", "-", "-BUG-1234]-some-long-description-located--/test/-/dir-/-lock]{3,}-and-foo-bar-can-")]
         [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and foo:bar\\can...", "", "BUG-1234]somelongdescriptionlocated/test/dir/lock]{3,}andfoobarcan")]

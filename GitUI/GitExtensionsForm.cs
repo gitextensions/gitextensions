@@ -189,7 +189,6 @@ namespace GitUI
 
         #endregion icon
 
-
         /// <summary>Sets <see cref="AutoScaleMode"/>,
         /// restores position, raises the <see cref="Form.Load"/> event,
         /// and .

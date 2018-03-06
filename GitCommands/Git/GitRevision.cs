@@ -98,8 +98,6 @@ namespace GitCommands
             return sha;
         }
 
-
-
         /// <summary>
         /// Indicates whether the commit is an artificial commit.
         /// </summary>

@@ -33,8 +33,6 @@ namespace GitCommands
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
             bool wasEmpty = reader.IsEmptyElement;
 
-
-
             reader.Read();
             if (reader.NodeType == System.Xml.XmlNodeType.XmlDeclaration)
             {
@@ -56,13 +54,9 @@ namespace GitCommands
                     TKey key = (TKey)keySerializer.Deserialize(reader);
                     reader.ReadEndElement();
 
-
                     reader.ReadStartElement("value");
                     TValue value = (TValue)valueSerializer.Deserialize(reader);
                     reader.ReadEndElement();
-
-
-
 
                     this[key] = value;
 
@@ -79,26 +73,18 @@ namespace GitCommands
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
-
-
             foreach (TKey key in from k in Keys orderby k select k)
             {
                 writer.WriteStartElement("item");
-
-
 
                 writer.WriteStartElement("key");
                 keySerializer.Serialize(writer, key);
                 writer.WriteEndElement();
 
-
-
                 writer.WriteStartElement("value");
                 TValue value = this[key];
                 valueSerializer.Serialize(writer, value);
                 writer.WriteEndElement();
-
-
 
                 writer.WriteEndElement();
             }

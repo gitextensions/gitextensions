@@ -69,7 +69,6 @@ namespace GitUI.SpellChecker
             _wordAtCursorExtractor = new WordAtCursorExtractor();
         }
 
-
         public override string Text
         {
             get
@@ -213,7 +212,6 @@ namespace GitUI.SpellChecker
         protected RepoDistSettings Settings => IsUICommandsInitialized ?
             Module.EffectiveSettings :
             AppSettings.SettingsContainer;
-
 
         public void SelectAll()
         {

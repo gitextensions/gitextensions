@@ -227,7 +227,6 @@ namespace JenkinsIntegration
                     return;
                 }
 
-
                 foreach (var build in allBuildInfos)
                 {
                     if (build.IsFaulted)

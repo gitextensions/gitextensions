@@ -454,7 +454,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return bValid;
         }
 
-
         private static bool IsCheckAtStartupChecked(bool bValid)
         {
             var retValue = AppSettings.CheckSettings;

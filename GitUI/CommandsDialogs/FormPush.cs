@@ -98,7 +98,6 @@ namespace GitUI.CommandsDialogs
                 toolTip1.SetToolTip(ckForceWithLease, _forceWithLeaseTooltips.Text);
             }
 
-
             // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             // they are reset to false
             if (aCommands != null)
@@ -108,12 +107,10 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
         /// </summary>
         private List<GitRemote> UserGitRemotes { get; set; }
-
 
         private void Init()
         {
@@ -164,7 +161,6 @@ namespace GitUI.CommandsDialogs
         {
             return PushAndShowDialogWhenFailed(null);
         }
-
 
         private bool CheckIfRemoteExist()
         {
@@ -688,7 +684,6 @@ namespace GitUI.CommandsDialogs
 
                 var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
                 var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
-
 
                 foreach (var head in onlyLocalBranches)
                 {

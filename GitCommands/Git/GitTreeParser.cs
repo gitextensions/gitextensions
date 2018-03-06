@@ -14,7 +14,6 @@ namespace GitCommands.Git
     {
         internal static readonly int MinimumStringLength = 53;
 
-
         public IEnumerable<IGitItem> Parse(string tree)
         {
             if (string.IsNullOrWhiteSpace(tree))

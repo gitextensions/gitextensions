@@ -32,7 +32,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GlobalEditor.Items.AddRange(EditorHelper.GetEditors());
         }
 
-
         protected override string GetCommaSeparatedKeywordList()
         {
             return "path,user,name,email,merge,tool,diff,line ending,encoding,commit template";

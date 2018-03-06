@@ -62,7 +62,6 @@ namespace GitCommands.Config
             parser.Parse(str);
         }
 
-
         public static string EscapeValue(string value)
         {
             value = value.Replace("\\", "\\\\");

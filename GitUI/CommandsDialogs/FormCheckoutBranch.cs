@@ -50,7 +50,6 @@ namespace GitUI.CommandsDialogs
         private IEnumerable<IGitRef> _localBranches;
         private IEnumerable<IGitRef> _remoteBranches;
 
-
         private FormCheckoutBranch()
             : this(null)
         {
@@ -125,7 +124,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private LocalChangesAction ChangesMode
         {
             get
@@ -158,7 +156,6 @@ namespace GitUI.CommandsDialogs
 
         private bool HasUncommittedChanges => _isDirtyDir ?? true;
 
-
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
             bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
@@ -170,7 +167,6 @@ namespace GitUI.CommandsDialogs
 
             return ShowDialog(owner);
         }
-
 
         private void ApplyLayout()
         {
@@ -524,7 +520,6 @@ namespace GitUI.CommandsDialogs
             }
             return result.ToList();
         }
-
 
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)
         {

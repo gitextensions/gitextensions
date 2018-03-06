@@ -22,7 +22,6 @@ namespace GitCommandsTests
             StringAssert.AreEqualIgnoringCase(expected, actual);
         }
 
-
         [TestCase(false, false, @"", false, false, false, @"", @"commit")]
         [TestCase(true, false, @"", false, false, false, @"", @"commit --amend")]
         [TestCase(false, true, @"", false, false, false, @"", @"commit --signoff")]

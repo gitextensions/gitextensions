@@ -43,7 +43,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private GitStatusMonitorState _currentStatus;
         private HashSet<string> _ignoredFiles = new HashSet<string>();
 
-
         /// <summary>
         /// Occurs whenever git status monitor state changes.
         /// </summary>
@@ -53,7 +52,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// Occurs whenever current working directory status changes.
         /// </summary>
         public event EventHandler<GitWorkingDirectoryStatusEventArgs> GitWorkingDirectoryStatusChanged;
-
 
         public GitStatusMonitor()
         {
@@ -95,7 +93,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _globalIgnoreWatcher.IncludeSubdirectories = false;
             _globalIgnoreWatcher.NotifyFilter = NotifyFilters.LastWrite;
         }
-
 
         private GitStatusMonitorState CurrentStatus
         {

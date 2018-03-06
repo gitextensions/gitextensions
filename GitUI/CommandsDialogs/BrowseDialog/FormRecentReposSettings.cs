@@ -20,7 +20,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             SetComboWidth();
         }
 
-
         private void LoadSettings()
         {
             SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);

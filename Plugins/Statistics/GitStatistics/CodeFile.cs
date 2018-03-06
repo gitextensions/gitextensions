@@ -35,7 +35,6 @@ namespace GitStatistics
 
         internal bool IsTestFile { get; private set; }
 
-
         private bool IsDesignerFile()
         {
             return
