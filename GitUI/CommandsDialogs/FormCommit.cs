@@ -519,7 +519,7 @@ namespace GitUI.CommandsDialogs
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool DoAsync)
+        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool doAsync)
         {
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
@@ -527,7 +527,7 @@ namespace GitUI.CommandsDialogs
                     !showSkipWorktreeFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
-            if (DoAsync)
+            if (doAsync)
             {
                 _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
             }

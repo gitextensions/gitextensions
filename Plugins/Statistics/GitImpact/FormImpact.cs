@@ -13,16 +13,16 @@ namespace GitImpact
 
         private readonly SynchronizationContext _syncContext;
 
-        public FormImpact(IGitModule Module)
+        public FormImpact(IGitModule module)
         {
             _syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             Translate();
             UpdateAuthorInfo("");
-            if (Module != null)
+            if (module != null)
             {
-                Impact.Init(Module);
+                Impact.Init(module);
                 Impact.UpdateData();
                 Impact.Invalidated += Impact_Invalidated;
             }

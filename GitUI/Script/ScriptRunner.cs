@@ -512,7 +512,7 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
-        private static GitRevision GetCurrentRevision(GitModule module, RevisionGrid RevisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+        private static GitRevision GetCurrentRevision(GitModule module, RevisionGrid revisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
                                                       List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches,
                                                       GitRevision currentRevision)
         {
@@ -520,14 +520,14 @@ namespace GitUI.Script
             {
                 IList<IGitRef> refs;
 
-                if (RevisionGrid == null)
+                if (revisionGrid == null)
                 {
                     string currentRevisionGuid = module.GetCurrentCheckout();
                     refs = module.GetRefs(true, true).Where(gitRef => gitRef.Guid == currentRevisionGuid).ToList();
                 }
                 else
                 {
-                    currentRevision = RevisionGrid.GetCurrentRevision();
+                    currentRevision = revisionGrid.GetCurrentRevision();
                     refs = currentRevision.Refs;
                 }
 

@@ -137,9 +137,9 @@ namespace GitUI.UserControls
         private int _commandLineCharsInOutput;
         private string _lineChunk = null;
 
-        public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> FireDataReceived)
+        public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
         {
-            _fireDataReceived = FireDataReceived;
+            _fireDataReceived = fireDataReceived;
             _commandLineCharsInOutput = commandLineCharsInOutput;
             _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
         }

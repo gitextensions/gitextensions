@@ -99,7 +99,7 @@ namespace PatchApply
             return sb.ToString();
         }
 
-        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] FilePreabmle)
+        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreabmle)
         {
             StringBuilder sb = new StringBuilder();
             string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
@@ -128,7 +128,7 @@ namespace PatchApply
 
             string header = sb.ToString();
 
-            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
+            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
 
             if (selectedChunks == null)
             {
@@ -558,7 +558,7 @@ namespace PatchApply
             return result;
         }
 
-        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
+        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
             result._startLine = 0;
@@ -586,7 +586,7 @@ namespace PatchApply
             while (i < lines.Length)
             {
                 string line = lines[i];
-                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
+                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(filePreabmle)) : string.Empty);
                 PatchLine patchLine = new PatchLine()
                 {
                     Text = (reset ? "-" : "+") + preamble + line
@@ -707,9 +707,9 @@ namespace PatchApply
             return selectedChunks;
         }
 
-        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
+        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
+            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
             ChunkList result = new ChunkList();
             result.Add(chunk);
             return result;

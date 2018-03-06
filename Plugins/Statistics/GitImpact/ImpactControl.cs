@@ -58,9 +58,9 @@ namespace GitImpact
             MouseWheel += ImpactControl_MouseWheel;
         }
 
-        public void Init(IGitModule Module)
+        public void Init(IGitModule module)
         {
-            _impactLoader = new ImpactLoader(Module);
+            _impactLoader = new ImpactLoader(module);
             _impactLoader.RespectMailmap = true; // respect the .mailmap file
             _impactLoader.Updated += OnImpactUpdate;
         }

@@ -26,9 +26,9 @@ namespace GitUI.CommandsDialogs
 
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
-        public FormInit(string dir, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public FormInit(string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            _gitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
             Translate();
 

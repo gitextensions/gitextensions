@@ -64,12 +64,12 @@ namespace GitCommands
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
     public struct ConflictData
     {
-        public ConflictData(ConflictedFileData _base, ConflictedFileData _local,
-            ConflictedFileData _remote)
+        public ConflictData(ConflictedFileData @base, ConflictedFileData local,
+            ConflictedFileData remote)
         {
-            Base = _base;
-            Local = _local;
-            Remote = _remote;
+            Base = @base;
+            Local = local;
+            Remote = remote;
         }
 
         public ConflictedFileData Base;

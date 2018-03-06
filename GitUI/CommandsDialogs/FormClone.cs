@@ -37,10 +37,10 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
             : base(commands)
         {
-            _gitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
             Translate();
             _openedFromProtocolHandler = openedFromProtocolHandler;

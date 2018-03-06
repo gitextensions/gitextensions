@@ -37,9 +37,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly IRepositoryHostPlugin _gitHoster;
         private EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            _gitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();

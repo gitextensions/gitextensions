@@ -26,10 +26,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             }
         }
 
-        private void Init(IGitPlugin _gitPlugin)
+        private void Init(IGitPlugin gitPlugin)
         {
-            this._gitPlugin = _gitPlugin;
-            _settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Name);
+            _gitPlugin = gitPlugin;
+            _settingsCointainer = new GitPluginSettingsContainer(gitPlugin.Name);
             CreateSettingsControls();
             Translate();
         }

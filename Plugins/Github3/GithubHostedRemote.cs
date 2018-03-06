@@ -5,11 +5,11 @@ namespace Github3
     internal class GithubHostedRemote : IHostedRemote
     {
         private GithubRepo _repo;
-        public GithubHostedRemote(string Name, string Owner, string RemoteRepositoryName)
+        public GithubHostedRemote(string name, string owner, string remoteRepositoryName)
         {
-            this.Name = Name;
-            this.Owner = Owner;
-            this.RemoteRepositoryName = RemoteRepositoryName;
+            Name = name;
+            Owner = owner;
+            RemoteRepositoryName = remoteRepositoryName;
         }
 
         public IHostedRepository GetHostedRepository()

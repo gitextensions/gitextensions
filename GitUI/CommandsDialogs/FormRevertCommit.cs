@@ -13,10 +13,10 @@ namespace GitUI.CommandsDialogs
 
         private bool _isMerge;
 
-        public FormRevertCommit(GitUICommands commands, GitRevision Revision)
+        public FormRevertCommit(GitUICommands commands, GitRevision revision)
             : base(commands)
         {
-            this.Revision = Revision;
+            Revision = revision;
 
             InitializeComponent();
             Translate();
