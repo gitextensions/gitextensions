@@ -495,10 +495,10 @@ namespace GitImpact
         public List<string> Authors
         {
             get
-        {
-            lock (_dataLock)
-            return _authorStack;
-        }
+            {
+                lock (_dataLock)
+                   return _authorStack;
+            }
         }
 
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
