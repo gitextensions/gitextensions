@@ -301,6 +301,7 @@ namespace GitUI.CommitInfo
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
             bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
                             AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+
             // Include remote branches if requested
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -520,9 +521,11 @@ namespace GitUI.CommitInfo
         private string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
         {
             const string remotesPrefix = "remotes/";
+
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
             bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
                             AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+
             // Include remote branches if requested
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;

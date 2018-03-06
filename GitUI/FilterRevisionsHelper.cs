@@ -35,18 +35,21 @@ namespace GitUI
             _commitToolStripMenuItem.CheckOnClick = true;
             _commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
             _commitToolStripMenuItem.Text = "Commit";
+
             //
             // committerToolStripMenuItem
             //
             _committerToolStripMenuItem.CheckOnClick = true;
             _committerToolStripMenuItem.Name = "committerToolStripMenuItem";
             _committerToolStripMenuItem.Text = "Committer";
+
             //
             // authorToolStripMenuItem
             //
             _authorToolStripMenuItem.CheckOnClick = true;
             _authorToolStripMenuItem.Name = "authorToolStripMenuItem";
             _authorToolStripMenuItem.Text = "Author";
+
             //
             // diffContainsToolStripMenuItem
             //
@@ -54,6 +57,7 @@ namespace GitUI
             _diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
             _diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
             _diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
+
             //
             // hashToolStripMenuItem
             //

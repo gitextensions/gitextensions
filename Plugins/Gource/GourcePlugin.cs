@@ -133,6 +133,7 @@ namespace Gource
                 {
                     var directoryName = outputFolder;
                     var fileName = Path.GetFileName(theEntry.Name);
+
                     // create directory
                     if (directoryName != "")
                     {

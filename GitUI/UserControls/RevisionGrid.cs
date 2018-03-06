@@ -95,6 +95,7 @@ namespace GitUI
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
+
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
 
@@ -892,6 +893,7 @@ namespace GitUI
             if (Revisions.SelectedRows.Count > 0)
             {
                 LatestSelectedRowIndex = Revisions.SelectedRows[0].Index;
+
                 // if there was selected a new revision while data is being loaded
                 // then don't change the new selection when restoring selected revisions after data is loaded
                 if (_isRefreshingRevisions && !Revisions.UpdatingVisibleRows)
@@ -1400,6 +1402,7 @@ namespace GitUI
             if (_revisionGraphCommand != null)
             {
                 LatestRefs = _revisionGraphCommand.LatestRefs();
+
                 // Dispose command, it is not needed anymore
                 _revisionGraphCommand.Updated -= GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited -= GitGetCommitsCommandExited;
@@ -1638,6 +1641,7 @@ namespace GitUI
             else if (ShouldRenderAlternateBackColor(e.RowIndex))
             {
                 cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
+
                 // TODO if default background is nearly black, we should make it lighter instead
             }
             else
@@ -1670,6 +1674,7 @@ namespace GitUI
             {
                 Debug.Assert(backColor != null);
                 foreColor = Color.Gray;
+
                 // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
                 while (ColorHelper.GetColorBrightnessDifference(foreColor, backColor.Value) < 125)
                 {
@@ -1853,6 +1858,7 @@ namespace GitUI
                         if (gravatar == null)
                         {
                             gravatar = Resources.User;
+
                             // kick off download operation, will likely display the avatar during the next round of repaint
                             _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
                         }
@@ -3330,6 +3336,7 @@ namespace GitUI
             ToggleRevisionGraph();
             SetRevisionsLayout();
             MenuCommands.TriggerMenuChanged();
+
             // must show MergeCommits when showing revision graph
             if (!AppSettings.ShowMergeCommits && IsGraphLayout())
             {

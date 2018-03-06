@@ -67,6 +67,7 @@ namespace GitCommandsTests.ExternalLinks
             manager.Add(definition);
 
             var effectiveSettings = manager.GetEffectiveSettings();
+
             // 2 comes from the user roaming settings
             // 3 come from the distributed
             effectiveSettings.Count.Should().Be(5);
@@ -96,6 +97,7 @@ namespace GitCommandsTests.ExternalLinks
             manager.Add(definition);
 
             var effectiveSettings = manager.GetEffectiveSettings();
+
             // 1 comes from the local
             // 3 come from the distributed
             // 2 comes from the local
@@ -127,6 +129,7 @@ namespace GitCommandsTests.ExternalLinks
             manager.Add(definition);
 
             var effectiveSettings = manager.GetEffectiveSettings();
+
             // 1 comes from the user roaming settings
             // 4 come from the distributed
             // 1 comes from the local
@@ -158,6 +161,7 @@ namespace GitCommandsTests.ExternalLinks
             manager.Save();
 
             var effectiveSettings = manager.GetEffectiveSettings();
+
             // 0 comes from the user roaming settings
             // 3 come from the distributed
             // 1 comes from the local

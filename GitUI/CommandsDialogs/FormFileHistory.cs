@@ -35,6 +35,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             _asyncLoader = new AsyncLoader();
+
             // set tab page images
             {
                 var imageList = new ImageList();
@@ -242,6 +243,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
                 while (line != null);
+
                 // here we need --name-only to get the previous filenames in the revision graph
                 res.PathFilter = listOfFileNames.ToString();
                 res.RevisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();

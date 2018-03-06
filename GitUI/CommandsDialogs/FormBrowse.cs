@@ -85,6 +85,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _directoryIsNotAValidRepository =
             new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
+
         // ReSharper restore InconsistentNaming
 
         private readonly TranslationString _updateCurrentSubmodule =
@@ -234,6 +235,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     RevisionGrid.UpdateArtificialCommitCount(status);
+
                     // The diff filelist is not updated, as the selected diff is unset
                     // _revisionDiff.RefreshArtificial();
                 };
@@ -296,6 +298,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.DisplayAvatarOnRight();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+
                 // Move difftab to left
                 CommitInfoTabControl.RemoveIfExists(DiffTabPage);
                 CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
@@ -598,6 +601,7 @@ namespace GitUI.CommandsDialogs
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
+
             // Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
@@ -649,6 +653,7 @@ namespace GitUI.CommandsDialogs
             UpdateJumplist(validWorkingDir);
 
             OnActivate();
+
             // load custom user menu
             LoadUserMenu();
 
@@ -692,6 +697,7 @@ namespace GitUI.CommandsDialogs
             gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
             kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
             checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
+
             // TODO: add more
         }
 
@@ -770,9 +776,11 @@ namespace GitUI.CommandsDialogs
             foreach (ScriptInfo scriptInfo in scripts)
             {
                 ToolStripButton tempButton = new ToolStripButton();
+
                 // store scriptname
                 tempButton.Text = scriptInfo.Name;
                 tempButton.Tag = "userscript";
+
                 // add handler
                 tempButton.Click += UserMenu_Click;
                 tempButton.Enabled = true;
@@ -781,6 +789,7 @@ namespace GitUI.CommandsDialogs
                 ////scriptInfo.Icon = "Cow";
                 tempButton.Image = scriptInfo.GetIcon();
                 tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+
                 // add to toolstrip
                 ToolStrip.Items.Add(tempButton);
             }
@@ -1643,6 +1652,7 @@ namespace GitUI.CommandsDialogs
         {
             Repositories.RepositoryHistory.Repositories.Clear();
             Repositories.SaveSettings();
+
             // Force clear recent repositories list from dashboard.
             _dashboard?.ShowRecentRepositories();
         }
@@ -2103,6 +2113,7 @@ namespace GitUI.CommandsDialogs
             _splitterManager.AddSplitter(MainSplitContainer, "MainSplitContainer");
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
+
             // hide status in order to restore splitters against the full height (the most common case)
             statusStrip.Hide();
             _splitterManager.RestoreSplitters();
@@ -2562,6 +2573,7 @@ namespace GitUI.CommandsDialogs
             // responsiveness if there are numerous submodules (e.g. > 100).
             var cancelToken = _submodulesStatusCts.Token;
             string thisModuleDir = Module.WorkingDir;
+
             // First task: Gather list of submodules on a background thread.
             var updateTask = Task.Factory.StartNew(() =>
             {

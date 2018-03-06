@@ -204,6 +204,7 @@ namespace GitCommands.Remote
 
             // if create a new remote or updated the url - we may need to perform "update remote"
             bool updateRemoteRequired = false;
+
             // if operation return anything back, relay that to the user
             var output = string.Empty;
 

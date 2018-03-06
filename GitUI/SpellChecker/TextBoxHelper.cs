@@ -155,6 +155,7 @@ namespace GitUI.SpellChecker
                 // Convert the point into a DWord with horizontal position
                 // in the loword and vertical position in the hiword:
                 var xy = (point.X & 0xFFFF) + ((point.Y & 0xFFFF) << 16);
+
                 // Get the position from the text box.
                 var res =
                     NativeMethods.SendMessageInt(
@@ -177,6 +178,7 @@ namespace GitUI.SpellChecker
                         NativeMethods.EM_LINEINDEX,
                         new IntPtr(lineNumber),
                         IntPtr.Zero).ToInt32();
+
                 // Return the combined index:
                 return lineStartIndex + charIndex;
             }

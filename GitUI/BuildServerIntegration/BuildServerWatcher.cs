@@ -320,6 +320,7 @@ namespace GitUI.BuildServerIntegration
                     catch (InvalidOperationException ex)
                     {
                         Debug.Write(ex);
+
                         // Invalid arguments, do not return a build server adapter
                     }
                 }

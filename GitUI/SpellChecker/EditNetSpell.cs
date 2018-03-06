@@ -258,6 +258,7 @@ namespace GitUI.SpellChecker
             _spelling.ReplacedWord += SpellingReplacedWord;
             _spelling.DeletedWord += SpellingDeletedWord;
             _spelling.MisspelledWord += SpellingMisspelledWord;
+
             //
             // wordDictionary
             //
@@ -571,6 +572,7 @@ namespace GitUI.SpellChecker
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
             RepoDistSettings settings;
+
             // if a Module is available, then always change the "repository local" setting
             // it will set a dictionary only for this Module (repository) localy
             if (IsUICommandsInitialized)
@@ -810,6 +812,7 @@ namespace GitUI.SpellChecker
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
+
             // restore old color only if oldPos doesn't intersects with colored selection
             if (restoreColor)
             {
@@ -1034,6 +1037,7 @@ namespace GitUI.SpellChecker
                 {
                     // if shrinking wasn't acceptable, move higher
                     top = Math.Max(0, TextBox.Height - height);
+
                     // and reduce height if moving up wasn't enough
                     height = Math.Min(TextBox.Height - top, height);
                 }

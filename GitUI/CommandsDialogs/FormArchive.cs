@@ -163,6 +163,7 @@ namespace GitUI.CommandsDialogs
             {
                 // 1. get all changed (and not deleted files) from selected to current revision
                 var files = UICommands.Module.GetDiffFiles(DiffSelectedRevision.Guid, SelectedRevision.Guid).Where(f => !f.IsDeleted);
+
                 // 2. wrap file names with ""
                 // 3. join together with space as separator
                 return string.Join(" ", files.Select(f => f.Name.QuoteNE()));

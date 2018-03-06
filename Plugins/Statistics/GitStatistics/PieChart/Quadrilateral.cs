@@ -18,6 +18,7 @@ namespace GitStatistics.PieChart
                     (byte)PathPointType.Line,
                     (byte)PathPointType.Line,
                     (byte)PathPointType.Line
+
                     // | (byte)PathPointType.CloseSubpath
                 };
 

@@ -25,6 +25,7 @@ namespace GitUI.SpellChecker
         public SpellCheckEditControl(RichTextBox richTextBox)
         {
             _richTextBox = richTextBox;
+
             // Start receiving messages
             AssignHandle(richTextBox.Handle);
         }
@@ -39,8 +40,10 @@ namespace GitUI.SpellChecker
                 case 15: // this is the WM_PAINT message
                     // invalidate the TextBox so that it gets refreshed properly
                     _richTextBox.Invalidate();
+
                     // call the default win32 Paint method for the TextBox first
                     base.WndProc(ref m);
+
                     // now use our code to draw extra stuff over the TextBox
                     CustomPaint();
 
@@ -86,6 +89,7 @@ namespace GitUI.SpellChecker
             var lh = LineHeight();
             var ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
             if (_richTextBox.Text.Length > 1 &&
+
                 // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
                 _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
                 && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
@@ -95,6 +99,7 @@ namespace GitUI.SpellChecker
 
             // Mark misspelled words
             DrawLines(Lines, DrawType.Wave);
+
             // Now we just draw our internal buffer on top of the TextBox.
             // Everything should be at the right place.
             _textBoxGraphics.DrawImageUnscaled(_bitmap, 0, 0);

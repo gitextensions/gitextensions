@@ -91,6 +91,7 @@ namespace GitCommands
 
             // Default!
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
+
             // to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
             string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
@@ -1272,6 +1273,7 @@ namespace GitCommands
         private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
+
             // Find renamed files...
             if (fromDiff)
             {

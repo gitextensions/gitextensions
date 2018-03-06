@@ -22,6 +22,7 @@ namespace GitUI
             _localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             _tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             _remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+
             //
             // localToolStripMenuItem
             //
@@ -29,12 +30,14 @@ namespace GitUI
             _localToolStripMenuItem.CheckOnClick = true;
             _localToolStripMenuItem.Name = "localToolStripMenuItem";
             _localToolStripMenuItem.Text = "Local";
+
             //
             // tagsToolStripMenuItem
             //
             _tagsToolStripMenuItem.CheckOnClick = true;
             _tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
             _tagsToolStripMenuItem.Text = "Tag";
+
             //
             // remoteToolStripMenuItem
             //

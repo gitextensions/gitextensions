@@ -352,6 +352,7 @@ namespace GitUI
                 }
 
                 WindowPosition windowPosition = _windowPositionList.Get(name);
+
                 // Don't save location when we center modal form
                 if (windowPosition != null && Owner != null && _windowCentred)
                 {

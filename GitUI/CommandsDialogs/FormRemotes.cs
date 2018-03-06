@@ -278,6 +278,7 @@ Inactive remote is completely invisible to git.");
             Application.Idle -= application_Idle;
 
             pnlMgtPuttySsh.Visible = GitCommandHelpers.Plink();
+
             // if Putty SSH isn't enabled, reduce the minimum height of the form
             MinimumSize = new Size(MinimumSize.Width, pnlMgtPuttySsh.Visible ? MinimumSize.Height : MinimumSize.Height - pnlMgtPuttySsh.Height);
 
@@ -295,6 +296,7 @@ Inactive remote is completely invisible to git.");
             }
 
             _remoteManager = new GitRemoteManager(() => Module);
+
             // load the data for the very first time
             Initialize(PreselectRemoteOnLoad);
         }

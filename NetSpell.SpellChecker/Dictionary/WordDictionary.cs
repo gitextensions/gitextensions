@@ -71,6 +71,7 @@ namespace NetSpell.SpellChecker.Dictionary
                     using (var sr = new StreamReader(fs, Encoding.UTF8))
                     {
                         fs = null;
+
                         // read line by line
                         while (sr.Peek() >= 0)
                         {
@@ -224,6 +225,7 @@ namespace NetSpell.SpellChecker.Dictionary
 
             // save suffixed words for use when removing prefix
             List<string> suffixWords = new List<string>();
+
             // Add word to suffix word list
             suffixWords.Add(word);
 
@@ -339,6 +341,7 @@ namespace NetSpell.SpellChecker.Dictionary
             foreach (char key in prefixKeys)
             {
                 AffixRule rule = PrefixRules[key.ToString(CultureInfo.CurrentUICulture)];
+
                 // apply prefix to all suffix words
                 foreach (string suffixWord in suffixWords)
                 {
@@ -431,6 +434,7 @@ namespace NetSpell.SpellChecker.Dictionary
 
                                     // part 1 = affix key
                                     currentRule.Name = partMatches[0].Value;
+
                                     // part 2 = combine flag
                                     if (partMatches[1].Value == "Y")
                                     {
@@ -466,6 +470,7 @@ namespace NetSpell.SpellChecker.Dictionary
 
                                         // part 3 = add chars
                                         entry.AddCharacters = partMatches[2].Value;
+
                                         // part 4 = conditions
                                         AffixUtility.EncodeConditions(partMatches[3].Value, entry);
 
@@ -490,8 +495,10 @@ namespace NetSpell.SpellChecker.Dictionary
                                 // splits word into its parts
                                 string[] parts = tempLine.Split('/');
                                 Word tempWord = new Word();
+
                                 // part 1 = base word
                                 tempWord.Text = parts[0];
+
                                 // part 2 = affix keys
                                 if (parts.Length >= 2)
                                 {
@@ -556,6 +563,7 @@ namespace NetSpell.SpellChecker.Dictionary
                         && rule.ConditionCount <= tempWord.Length)
                     {
                         int passCount = 0;
+
                         // loop through conditions
                         for (int i = 0; i < rule.ConditionCount; i++)
                         {

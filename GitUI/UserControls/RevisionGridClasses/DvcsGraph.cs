@@ -916,6 +916,7 @@ namespace GitUI.RevisionGridClasses
             int height = _cacheCountMax * _rowHeight;
             int width = GraphColumn.Width;
             if (_graphBitmap == null ||
+
                 // Resize the bitmap when the with or height is changed. The height won't change very often.
                 // The with changes more often, when branches become visible/invisible.
                 // Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
@@ -1337,6 +1338,7 @@ namespace GitUI.RevisionGridClasses
         private void dataGrid_Resize(object sender, EventArgs e)
         {
             _rowHeight = RowTemplate.Height;
+
             // Keep an extra page in the cache
             _cacheCountMax = Height * 2 / _rowHeight + 1;
             ClearDrawCache();

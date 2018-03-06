@@ -391,6 +391,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void UserNameSet_Click(object sender, EventArgs e)
         {
             GotoPageGlobalSettings();
+
             // nice-to-have: jump directly to correct text box
         }
 

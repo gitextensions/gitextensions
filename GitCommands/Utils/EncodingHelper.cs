@@ -87,6 +87,7 @@ namespace GitCommands
                     {
                         ms = null;
                         reader.Peek();
+
                         // .Net automatically detect Unicode encoding in StreamReader
                         encoding = reader.CurrentEncoding;
                         errorString = reader.ReadToEnd();

@@ -93,6 +93,7 @@ namespace GitCommands.Git
             branchName = Rule05(branchName, options);
             branchName = Rule04(branchName, options);
             branchName = Rule03(branchName, options);
+
             // rule #2 is not applicable
             // rule #6 runs as second last to ensure no consecutive '/' are left after previous normalisations
             branchName = Rule06(branchName, options);

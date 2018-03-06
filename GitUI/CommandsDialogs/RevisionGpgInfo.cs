@@ -38,6 +38,7 @@ namespace GitUI.CommandsDialogs
 
                 DisplayTagSignatureStatus(info.TagStatus);
                 message = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(info.TagVerificationMessage);
+
                 // if there is a not signed tag - show 'not signed' text
                 // NoTag case is hidden by ApplyLayout
                 txtTagGpgInfo.Text = info.TagStatus != TagStatus.TagNotSigned ? message : _tagNotSigned.Text;

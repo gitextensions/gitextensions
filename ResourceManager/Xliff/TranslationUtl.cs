@@ -365,6 +365,7 @@ namespace ResourceManager.Xliff
         {
             BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
             object obj = null;
+
             // try to find parameter less constructor first
             foreach (ConstructorInfo constructor in type.GetConstructors(flags))
             {

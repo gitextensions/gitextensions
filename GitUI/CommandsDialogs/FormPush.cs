@@ -224,6 +224,7 @@ namespace GitUI.CommandsDialogs
             else if (UserGitRemotes.Any())
             {
                 var defaultRemote = UserGitRemotes.FirstOrDefault(x => x.Name.Equals("origin", StringComparison.OrdinalIgnoreCase));
+
                 // we couldn't find the default assigned remote for the selected branch
                 // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
                 // so pick the default user remote
@@ -969,6 +970,7 @@ namespace GitUI.CommandsDialogs
         {
             IList<IGitRef> localHeads = GetLocalBranches().ToList();
             var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
+
             // Add all the local branches.
             foreach (var head in localHeads)
             {

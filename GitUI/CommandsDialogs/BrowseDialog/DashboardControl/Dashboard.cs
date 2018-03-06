@@ -68,6 +68,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void Dashboard_Load(object sender, EventArgs e)
         {
             DonateCategory.Dock = DockStyle.Top;
+
             // Show buttons
             CommonActions.DisableContextMenu();
             var openItem = new DashboardItem(Resources.IconRepoOpen, _openRepository.Text);

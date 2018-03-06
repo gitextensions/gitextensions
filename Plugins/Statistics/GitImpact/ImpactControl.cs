@@ -24,17 +24,22 @@ namespace GitImpact
 
         // <Author, <Commits, Added Lines, Deleted Lines>>
         private Dictionary<string, ImpactLoader.DataPoint> _authors;
+
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
         private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact;
 
         // List of authors that determines the drawing order
         private List<string> _authorStack;
+
         // The paths for each author
         private Dictionary<string, GraphicsPath> _paths;
+
         // The brush for each author
         private Dictionary<string, SolidBrush> _brushes;
+
         // The changed-lines-labels for each author
         private Dictionary<string, List<Tuple<PointF, int>>> _lineLabels;
+
         // The week-labels
         private List<Tuple<PointF, DateTime>> _weekLabels;
 
@@ -83,6 +88,7 @@ namespace GitImpact
         void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
             _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
+
             // Redraw when we've scrolled
             Invalidate();
         }
@@ -172,6 +178,7 @@ namespace GitImpact
         {
             _scrollBar = new System.Windows.Forms.HScrollBar();
             SuspendLayout();
+
             //
             // scrollBar
             //
@@ -184,6 +191,7 @@ namespace GitImpact
             _scrollBar.SmallChange = 0;
             _scrollBar.TabIndex = 0;
             _scrollBar.Scroll += OnScroll;
+
             //
             // ImpactControl
             //
@@ -494,6 +502,7 @@ namespace GitImpact
 
                 // Remove author from the stack
                 _authorStack.Remove(author);
+
                 // and add it again at the end
                 _authorStack.Add(author);
             }

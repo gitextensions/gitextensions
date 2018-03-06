@@ -97,6 +97,7 @@ namespace CommonTestUtils
                 // Note that the intermittent failures mentioned below are likely related too.
                 ((GitModule)Module).EffectiveConfigFile?.SettingsCache?.Dispose();
                 ((GitModule)Module).EffectiveSettings?.SettingsCache?.Dispose();
+
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
                 Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories).ForEach(File.Delete);
                 Directory.Delete(TemporaryPath, true);

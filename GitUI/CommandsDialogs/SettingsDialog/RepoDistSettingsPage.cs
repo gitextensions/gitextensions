@@ -69,6 +69,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void InitializeComponent()
         {
             SuspendLayout();
+
             //
             // RepoDistSettingsPage
             //

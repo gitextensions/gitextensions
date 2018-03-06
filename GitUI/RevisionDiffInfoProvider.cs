@@ -19,6 +19,7 @@ namespace GitUI
         {
             // Note: Order in revisions is that first clicked is last in array
             string error = "";
+
             // Detect rename and copy
             extraDiffArgs = "-M -C";
 

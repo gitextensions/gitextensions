@@ -19,6 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             set
             {
                 _KeyData = value;
+
                 // TODO: do not change text color on already assigned keys, which occur only once
                 ForeColor = (HotkeySettingsManager.IsUniqueKey(_KeyData)) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 Text = value.ToText() ?? _hotkeyNotSet.Text;

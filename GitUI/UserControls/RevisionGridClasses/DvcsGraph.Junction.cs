@@ -99,6 +99,7 @@ namespace GitUI.RevisionGridClasses
                 }
 
                 var bottom = new Junction(this, aNode);
+
                 // Add 1, since aNode was at the index
                 index += 1;
                 while (index < NodesCount)

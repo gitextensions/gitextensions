@@ -541,6 +541,7 @@ namespace AppVeyorIntegration
     {
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
         private int _buildProgressCount;
+
         // From build build list
         public string BuildId { get; set; }
         public string CommitId { get; set; }

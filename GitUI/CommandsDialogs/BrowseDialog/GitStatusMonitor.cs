@@ -36,6 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool _ignoredFilesAreStale;
         private string _gitPath;
         private string _submodulesPath;
+
         // Timestamps to schedule status updates, limit the update interval dynamically
         private int _nextUpdateTime;
         private int _previousUpdateTime;
@@ -255,6 +256,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
                 if (_commandIsRunning ||
+
                     // don't update status while repository is being modyfied by GitExt
                     // or while any git process is running, mostly repository status will change
                     // after these actions. Moreover, calling git status while other git command is performed
@@ -270,6 +272,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _statusIsUpToDate = true;
                 _previousUpdateTime = Environment.TickCount;
                 AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
+
                 // Schedule update every 5 min, even if we don't know that anything changed
                 CalculateNextUpdateTime(MaxUpdatePeriod);
             }
@@ -278,6 +281,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string RunStatusCommand()
         {
             _ignoredFilesPending = _ignoredFilesAreStale;
+
             // git-status with ignored files when needed only
             string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default);
             return Module.RunGitCmd(command);

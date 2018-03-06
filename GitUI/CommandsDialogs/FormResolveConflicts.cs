@@ -47,6 +47,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteFileButtonText = new TranslationString("Delete file");
         private readonly TranslationString _keepModifiedButtonText = new TranslationString("Keep modified");
         private readonly TranslationString _keepBaseButtonText = new TranslationString("Keep base file");
+
         // ReSharper restore InconsistentNaming
 
         private readonly TranslationString _conflictedFilesContextMenuText = new TranslationString("Solve");
@@ -470,6 +471,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     string arguments = _mergetoolCmd;
+
                     // Check if there is a base file. If not, ask user to fall back to 2-way merge.
                     // git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     // For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the

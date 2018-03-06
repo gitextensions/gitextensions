@@ -324,6 +324,7 @@ namespace GitUI.Editor
             treatAllFilesAsTextToolStripMenuItem.Visible = visible;
             copyNewVersionToolStripMenuItem.Visible = visible;
             copyOldVersionToolStripMenuItem.Visible = visible;
+
             // TODO The following should not be enabled if this is afile and the file does not exist
             cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff && !Module.IsBareRepository();
             revertSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff && !Module.IsBareRepository();
@@ -816,6 +817,7 @@ namespace GitUI.Editor
                 int pos = _internalFileViewer.GetSelectionPosition();
                 string fileText = _internalFileViewer.GetText();
                 int hpos = fileText.IndexOf("\n@@");
+
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
@@ -957,6 +959,7 @@ namespace GitUI.Editor
 
             var firstVisibleLine = _internalFileViewer.LineAtCaret;
             var emptyLineCheck = false;
+
             // go to the top of change block
             while (firstVisibleLine > 0 &&
                 _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new string[] { "+", "-" }))
@@ -1167,6 +1170,7 @@ namespace GitUI.Editor
                 IEnumerable<string> lines = code.Split('\n');
                 lines = lines.Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
                 int hpos = fileText.IndexOf("\n@@");
+
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {

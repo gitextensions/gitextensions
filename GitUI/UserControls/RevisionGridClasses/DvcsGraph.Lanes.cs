@@ -18,6 +18,7 @@ namespace GitUI.RevisionGridClasses
             public Lanes(Graph aGraph)
             {
                 _sourceGraph = aGraph;
+
                 // Rebuild lanes
                 _laneRows = new List<Graph.ILaneRow>();
             }

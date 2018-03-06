@@ -33,6 +33,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 .Select(ei => ei.GetEncoding())
                 .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
                 .ToList();
+
             // If exists utf-8, then replace to utf-8 without BOM
             var utf8 = availableEncoding.Where(e => typeof(UTF8Encoding) == e.GetType()).FirstOrDefault();
             if (utf8 != null)
@@ -94,6 +95,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             // Get selected encoding
             var encoding = ListIncludedEncodings.SelectedItem as Encoding;
             Type encodingType = null;
+
             // Get type if exists
             if (encoding != null)
             {

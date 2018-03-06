@@ -208,6 +208,7 @@ namespace GitUI.CommandsDialogs
             catch (Exception e)
             {
                 ExceptionUtils.ShowException(e);
+
                 // Bail out before the user saves the incompletely loaded settings
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;

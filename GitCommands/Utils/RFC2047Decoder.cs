@@ -96,6 +96,7 @@ namespace GitCommands
 
             // Get the type of the encoding
             char type = input[encodingName.Length + 3];
+
             // Start after the name of the encoding and the other required parts
             int startPosition = encodingName.Length + 5;
             switch (char.ToLowerInvariant(type))

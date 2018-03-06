@@ -779,6 +779,7 @@ namespace NetSpell.SpellChecker
             int length = _words[replacedIndex].Length;
 
             _text.Remove(index, length);
+
             // if first letter upper case, match case for replacement word
             if (char.IsUpper(_words[replacedIndex].ToString(), 0))
             {
@@ -900,6 +901,7 @@ namespace NetSpell.SpellChecker
                         {
                             misspelledWord = true;
                             OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));       // raise event
+
                             // break;
                         }
                     }
@@ -908,6 +910,7 @@ namespace NetSpell.SpellChecker
                     {
                         misspelledWord = true;
                         OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));      // raise event
+
                         // break;
                     }
                 }
@@ -1045,6 +1048,7 @@ namespace NetSpell.SpellChecker
                         if (codes.ContainsKey(word.PhoneticCode))
                         {
                             List<string> words = _dictionary.ExpandWord(word);
+
                             // add expanded words
                             foreach (string expandedWord in words)
                             {
@@ -1090,6 +1094,7 @@ namespace NetSpell.SpellChecker
             for (int i = 0; i < tempSuggestion.Count; i++)
             {
                 string word = tempSuggestion[i].Text;
+
                 // looking for duplicates
                 if (!Suggestions.Contains(word))
                 {

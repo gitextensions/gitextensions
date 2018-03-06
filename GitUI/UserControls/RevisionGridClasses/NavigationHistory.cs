@@ -8,6 +8,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         // history of selected items (browse history)
         // head == currently selected item
         private readonly Stack<string> _prevItems = new Stack<string>();
+
         // backtracked items
         // head == item to show when navigating forward
         private readonly Stack<string> _nextItems = new Stack<string>();

@@ -135,6 +135,7 @@ See the changes in the commit form.");
             try
             {
                 tvGitTree.SuspendLayout();
+
                 // Save state only when there is selected node
                 if (tvGitTree.SelectedNode != null)
                 {
@@ -150,12 +151,14 @@ See the changes in the commit form.");
 
                 // Refresh tree
                 tvGitTree.Nodes.Clear();
+
                 // restore selected file and scroll position when new selection is done
                 if (_revision != null)
                 {
                     _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
                     ////GitTree.Sort();
                     TreeNode lastMatchedNode = null;
+
                     // Load state
                     var currenNodes = tvGitTree.Nodes;
                     TreeNode matchedNode = null;

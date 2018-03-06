@@ -194,6 +194,7 @@ namespace GitStatistics.PieChart
             _actualSweepAngle = sweepAngle;
             _surfaceColor = surfaceColor;
             _shadowStyle = shadowStyle;
+
             // create pens for rendering
             var edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
             Pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
@@ -375,6 +376,7 @@ namespace GitStatistics.PieChart
             DrawVisibleStartSide(graphics);
             DrawVisibleEndSide(graphics);
             DrawVisiblePeriphery(graphics);
+
             // draw the top pie slice
             DrawTop(graphics);
         }
@@ -902,6 +904,7 @@ namespace GitStatistics.PieChart
             BoundingRectangle =
                 new RectangleF(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect);
             SliceHeight = sliceHeight;
+
             // recalculates start and sweep angle used for rendering
             StartAngle = TransformAngle(_actualStartAngle);
             SweepAngle = _actualSweepAngle;
@@ -917,6 +920,7 @@ namespace GitStatistics.PieChart
 
             // recreates brushes
             CreateSurfaceBrushes(_surfaceColor, _shadowStyle);
+
             // calculates center and end points on periphery
             var xCenter = xBoundingRect + widthBoundingRect / 2;
             var yCenter = yBoundingRect + heightBoundingRect / 2;
@@ -967,6 +971,7 @@ namespace GitStatistics.PieChart
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
             var peripherySurfaceBounds = new ArrayList();
+
             // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees
             if (!(SweepAngle == 0 || (StartAngle >= 180 && StartAngle + SweepAngle <= 360)))
@@ -1122,6 +1127,7 @@ namespace GitStatistics.PieChart
             }
 
             var angleDegrees = angle * 180 / Math.PI;
+
             // point is inside the pie slice only if between start and end angle
             if ((angleDegrees >= startAngle && angleDegrees <= (startAngle + sweepAngle)) ||
                 (startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle)))
@@ -1132,6 +1138,7 @@ namespace GitStatistics.PieChart
                 var b2 = b * b;
                 var cosFi = Math.Cos(angle);
                 var sinFi = Math.Sin(angle);
+
                 // distance of the ellipse perimeter point
                 var ellipseRadius = (b * a) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
                 return ellipseRadius > r;

@@ -255,8 +255,10 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
             {
                 // word with out affix
                 string tempWord = word.Substring(entry.AddCharacters.Length);
+
                 // add back strip chars
                 tempWord = entry.StripCharacters + tempWord;
+
                 // check that this is valid
                 int passCount = 0;
                 for (int i = 0; i < entry.ConditionCount; i++)
@@ -305,8 +307,10 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
             {
                 // word with out affix
                 string tempWord = word.Substring(0, tempLength);
+
                 // add back strip chars
                 tempWord += entry.StripCharacters;
+
                 // check that this is valid
                 int passCount = 0;
                 for (int i = 0; i < entry.ConditionCount; i++)

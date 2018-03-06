@@ -61,6 +61,7 @@ namespace GitCommands.Repository
         public bool SortMostRecentRepos { get; set; }
         public bool SortLessRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
+
         // need to be set before shortening using middleDots strategy
         public Graphics Graphics { get; set; }
         public Font MeasureFont { get; set; }
@@ -84,6 +85,7 @@ namespace GitCommands.Repository
             bool signDir = ShorteningStrategy_MostSignDir.Equals(ShorteningStrategy);
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
+
             // the maxRecentRepositories repositories will be added at beginning
             // rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
@@ -111,6 +113,7 @@ namespace GitCommands.Repository
             }
 
             int r = mostRecentRepos.Count - 1;
+
             // remove not anchored repos if there is more than maxRecentRepositories repos
             while (mostRecentRepos.Count > n && r >= 0)
             {

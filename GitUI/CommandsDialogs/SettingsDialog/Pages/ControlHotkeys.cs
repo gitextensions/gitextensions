@@ -158,6 +158,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 // Update the KeyData with the chosen one
                 hotkey.KeyData = Keys.None;
+
                 // Refresh the ListView
                 UpdateListViewItems(SelectedHotkeySettings);
                 txtHotkey.KeyData = hotkey.KeyData;

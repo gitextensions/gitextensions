@@ -171,6 +171,7 @@ namespace GitUI.RevisionGridClasses
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Oldest == node
                         && parent.Ancestors.Count == 0
+
                         // If this is true, the current revision is in the middle of a branch
                         // and is about to start a new branch. This will also mean that the last
                         // revisions are non-relative. Make sure a new junction is added and this
@@ -300,10 +301,12 @@ namespace GitUI.RevisionGridClasses
             public void Prune()
             {
                 Node[] nodesToRemove = Nodes.Values.Where(n => n.Data == null).ToArray();
+
                 // Remove all nodes that don't have a value associated with them.
                 foreach (Node n in nodesToRemove)
                 {
                     Nodes.Remove(n.Id);
+
                     // This guy should have been at the end of some junctions
                     foreach (Junction j in n.Descendants)
                     {

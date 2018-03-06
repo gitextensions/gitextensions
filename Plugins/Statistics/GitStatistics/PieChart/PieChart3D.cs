@@ -471,6 +471,7 @@ namespace GitStatistics.PieChart
 
             var pieSlices = (PieSlice[])pieSlicesList.ToArray(typeof(PieSlice));
             var indexFound = -1;
+
             // if not found yet, then check for periferies
             var incrementIndex = 0;
             var decrementIndex = pieSlices.Length - 1;
@@ -505,6 +506,7 @@ namespace GitStatistics.PieChart
             if (indexFound < 0)
             {
                 var foremostPieIndex = GetForemostPieSlice(pieSlices);
+
                 // check for start sides from the foremost slice to the left
                 // side
                 var i = foremostPieIndex;
@@ -661,6 +663,7 @@ namespace GitStatistics.PieChart
                 var itemValue = Values[i];
 
                 var sweepAngle = sum == 0 ? 0 : (double)itemValue / sum * 360;
+
                 // displacement from the center of the ellipse
                 var xDisplacement = SliceRelativeDisplacements[displacementIndex];
                 var yDisplacement = SliceRelativeDisplacements[displacementIndex];
@@ -714,6 +717,7 @@ namespace GitStatistics.PieChart
                 }
 
                 ++colorIndex;
+
                 // if all colors have been exhausted, reset color index
                 if (colorIndex >= SliceColors.Length)
                 {
@@ -873,6 +877,7 @@ namespace GitStatistics.PieChart
         protected void DrawSliceSides(Graphics graphics)
         {
             var pieSlices = new ArrayList(PieSlices);
+
             // if the first slice spreads across 180 and 360 degrees boundaries it
             // will appear on both left and right edge so its periphery has to be
             // drawn twice

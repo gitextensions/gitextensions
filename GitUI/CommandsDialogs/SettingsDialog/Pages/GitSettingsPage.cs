@@ -103,6 +103,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             PageHost.LoadAll();
+
             // TODO?: rescan
 
             // orginal:

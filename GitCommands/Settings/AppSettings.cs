@@ -111,6 +111,7 @@ namespace GitCommands
                     finally
                     {
                         SettingsContainer = oldSC;
+
                         // refresh settings if needed
                         SettingsContainer.GetString(string.Empty, null);
                     }

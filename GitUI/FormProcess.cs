@@ -262,6 +262,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             SuspendLayout();
+
             //
             // FormProcess
             //

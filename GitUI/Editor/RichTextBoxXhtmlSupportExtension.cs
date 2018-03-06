@@ -1104,6 +1104,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                 rtb.EndUpdate(oldMask);
                 rtb.HideSelection = false;
+
                 //--------------------------
             }
 
@@ -1207,6 +1208,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
 
             SetHideSelectionInternal(handleRef, false);
+
             // reposition to first
             rtb.Select(0, 0);
             EndUpdate(handleRef, oldMask);
@@ -1529,6 +1531,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
 
             rtb.HideSelection = false;
+
             // reposition to final
             rtb.Select(rtb.TextLength + 1, 0);
         }

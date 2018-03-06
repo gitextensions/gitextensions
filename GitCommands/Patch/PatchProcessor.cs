@@ -109,6 +109,7 @@ namespace PatchApply
                     }
 
                     patch.File = Patch.FileType.Binary;
+
                     // TODO: NOT SUPPORTED!
                     patch.Apply = false;
                     state = PatchProcessorState.OutsidePatch;
@@ -177,6 +178,7 @@ namespace PatchApply
         {
             string[] lines = patchText.Split('\n');
             int i = 0;
+
             // skip email header
             for (; i < lines.Length; i++)
             {

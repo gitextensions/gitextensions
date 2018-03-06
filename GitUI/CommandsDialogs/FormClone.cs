@@ -178,6 +178,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var dirTo = Path.Combine(destination, _NO_TRANSLATE_NewDirectory.Text);
+
                 // this will fail if the path is anyhow invalid
                 dirTo = new Uri(dirTo).LocalPath;
 
@@ -192,6 +193,7 @@ namespace GitUI.CommandsDialogs
                 if (!cbDownloadFullHistory.Checked)
                 {
                     depth = 1;
+
                     // Single branch considerations:
                     // If neither depth nor single-branch family params are specified, then it's like no-single-branch by default.
                     // If depth is specified, then single-branch is assumed.

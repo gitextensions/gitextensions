@@ -149,6 +149,7 @@ namespace ReleaseNotesGenerator
         #endregion // Read and decode from clipboard
 
         #region Write to Clipboard
+
         // Helper to convert an integer into an 8 digit string.
         // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.
         internal static string To8DigitString(int x)
@@ -179,6 +180,7 @@ namespace ReleaseNotesGenerator
             var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
             Clipboard.Clear();
             Clipboard.SetDataObject(dataObject);
+
             // now the clipboard can be pasted as text (HTML code) to text editor
             // or as table to MS Word or LibreOffice Writer
         }

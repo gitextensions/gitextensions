@@ -221,6 +221,7 @@ namespace GitUI
             TextLocation p2 = _editor.Document.OffsetToPosition(range.Offset + range.Length);
             _editor.ActiveTextAreaControl.SelectionManager.SetSelection(p1, p2);
             _editor.ActiveTextAreaControl.ScrollTo(p1.Line, p1.Column);
+
             // Also move the caret to the end of the selection, because when the user
             // presses F3, the caret is where we start searching next time.
             _editor.ActiveTextAreaControl.Caret.Position = p2;
@@ -311,6 +312,7 @@ namespace GitUI
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
             int count = 0;
+
             // BUG FIX: if the replacement string contains the original search string
             // (e.g. replace "red" with "very red") we must avoid looping around and
             // replacing forever! To fix, start replacing at beginning of region (by

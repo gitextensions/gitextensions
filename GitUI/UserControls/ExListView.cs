@@ -141,6 +141,7 @@ namespace GitUI.UserControls
                 public LVHITTESTFLAGS flags;
                 public int iItem;
                 public int iSubItem;
+
                 // Vista/Win7+
                 public int iGroup;
             }
@@ -160,6 +161,7 @@ namespace GitUI.UserControls
                 LVHT_BELOW = 0x00000010,
                 LVHT_TORIGHT = 0x00000020,
                 LVHT_TOLEFT = 0x00000040,
+
                 // Vista/Win7+ only
                 LVHT_EX_GROUP_HEADER = 0x10000000,
                 LVHT_EX_GROUP_FOOTER = 0x20000000,

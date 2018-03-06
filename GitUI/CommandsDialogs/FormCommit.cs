@@ -569,6 +569,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Debug.Assert(_currentItem != null);
+
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
 
@@ -661,6 +662,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Debug.Assert(_currentItem != null);
+
             // Prepare git command
             string args = "apply --whitespace=nowarn";
 
@@ -1043,6 +1045,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     StageAllAccordingToFilter();
+
                     // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
                     if (Staged.IsEmpty)
                     {

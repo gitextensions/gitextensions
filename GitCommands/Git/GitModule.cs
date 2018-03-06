@@ -442,6 +442,7 @@ namespace GitCommands
             var result = RunGitCmdResult("submodule status " + submodulePath);
 
             if (result.ExitCode == 0
+
                 // submodule removed
                 || result.StdError.StartsWith("No submodule mapping found in .gitmodules for path"))
             {
@@ -1621,6 +1622,7 @@ namespace GitCommands
             if (revision == GitRevision.UnstagedGuid)
             {
                 Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
+
                 // Not an error to user, just nothing happens
                 return "";
             }
@@ -2865,6 +2867,7 @@ namespace GitCommands
             result.CmdResult = GetTreeFromRemoteRefs(remote, tags, branches);
 
             var tree = result.CmdResult.StdOutput;
+
             // If the authentication failed because of a missing key, ask the user to supply one.
             if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
             {
@@ -3158,6 +3161,7 @@ namespace GitCommands
                     notEmptyPatterns
                     .Select(pattern => "-x " + pattern.Quote())
                     .Join(" ");
+
                 // filter duplicates out of the result because options -c and -m may return
                 // same files at times
                 return RunGitCmd("ls-files -z -o -m -c -i " + excludeParams)

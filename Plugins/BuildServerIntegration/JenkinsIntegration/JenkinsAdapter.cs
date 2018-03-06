@@ -245,6 +245,7 @@ namespace JenkinsIntegration
                     }
 
                     _LastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
+
                     // Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
                     // (for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
                     foreach (var buildDetails in build.Result.JobDescription.Reverse())

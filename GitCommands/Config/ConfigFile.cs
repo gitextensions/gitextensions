@@ -89,6 +89,7 @@ namespace GitCommands.Config
             foreach (var section in ConfigSections)
             {
                 var keys = section.AsDictionary();
+
                 // Skip empty sections
                 if (keys.Count == 0)
                 {

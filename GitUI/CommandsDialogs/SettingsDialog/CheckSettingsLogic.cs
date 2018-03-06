@@ -134,6 +134,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             yield return programFiles + @"\msysgit\";
             yield return @"C:\msysgit\";
+
             // cygwin has old git version on windows and bash has a lot of bugs
             yield return @"C:\cygwin\";
             yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -304,6 +305,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void SetMergetoolPathText(string text)
         {
             GlobalConfigFileSettings.SetPathValue(string.Format("mergetool.{0}.path", GetGlobalMergeToolText()), text);
+
             // orig (TODO: remove comment and rename method):
             //// MergetoolPath.Text = ...
         }
@@ -311,6 +313,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void SetMergeToolCmdText(string text)
         {
             GlobalConfigFileSettings.SetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()), text);
+
             // orig (TODO: remove comment and rename method):
             //// MergeToolCmd.Text = ...
         }
@@ -318,6 +321,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private string GetGlobalMergeToolText()
         {
             return GlobalConfigFileSettings.GetValue("merge.tool");
+
             // orig (TODO: remove comment and rename method):
             //// GlobalMergeTool.Text;
         }
@@ -325,6 +329,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public string GetMergeToolCmdText()
         {
             return GlobalConfigFileSettings.GetValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()));
+
             // orig (TODO: remove comment and rename method):
             //// MergeToolCmd.Text
         }

@@ -36,6 +36,7 @@ namespace ReleaseNotesGeneratorTests
         public void CopyToClipboard()
         {
             HtmlFragment.CopyToClipboard("<p>Hallo</p>");
+
             // Verify manually that the content can be pasted as text and into MS Word or
             // LibreOffice Writer. There it should create a formatted table.
         }

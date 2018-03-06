@@ -60,6 +60,7 @@ namespace GitUI.Script
             System.Resources.ResourceManager rm
                 = new System.Resources.ResourceManager("GitUI.Properties.Resources",
                     System.Reflection.Assembly.GetExecutingAssembly());
+
             // return icon
             return (System.Drawing.Bitmap)rm.GetObject(Icon);
         }

@@ -136,6 +136,7 @@ namespace PatchApply
             }
 
             string body = selectedChunks.ToStagePatch(false, true);
+
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
@@ -512,6 +513,7 @@ namespace PatchApply
                     {
                         Text = line
                     };
+
                     // do not refactor, there are no break points condition in VS Experss
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
                     {
@@ -589,6 +591,7 @@ namespace PatchApply
                 {
                     Text = (reset ? "-" : "+") + preamble + line
                 };
+
                 // do not refactor, there are no breakpoints condition in VS Experss
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
                 {
@@ -659,6 +662,7 @@ namespace PatchApply
         public static ChunkList GetSelectedChunks(string text, int selectionPosition, int selectionLength, bool staged, out string header)
         {
             header = null;
+
             // When there is no patch, return nothing
             if (string.IsNullOrEmpty(text))
             {
@@ -685,6 +689,7 @@ namespace PatchApply
             {
                 string chunkStr = chunks[i];
                 currentPos += 3;
+
                 // if selection intersects with chunsk
                 if (currentPos + chunkStr.Length >= selectionPosition)
                 {

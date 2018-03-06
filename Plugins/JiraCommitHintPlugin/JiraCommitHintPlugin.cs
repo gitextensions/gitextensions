@@ -37,6 +37,7 @@ namespace JiraCommitHintPlugin
         private readonly StringSetting _urlSettings = new StringSetting("Jira URL", JiraUrlLabel, @"https://jira.atlassian.com");
         private readonly StringSetting _userSettings = new StringSetting("Jira user", JiraUserLabel, string.Empty);
         private readonly PasswordSetting _passwordSettings = new PasswordSetting("Jira password", JiraPasswordLabel, string.Empty);
+
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
         private readonly StringSetting _jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
         private readonly StringSetting _stringTemplateSetting = new StringSetting("Jira Message Template", MessageTemplateLabel, defaultFormat);
