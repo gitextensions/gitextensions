@@ -13,11 +13,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private bool _isSelectionChangeTriggeredByGoto;
         private List<TreeNode> _nodesFoundByTextBox;
         private const string FindPrompt = "Type to find";
-        private readonly Dictionary<SettingsPageReference, TreeNode> _Pages2NodeMap = new Dictionary<SettingsPageReference, TreeNode>();
-        private readonly IList<ISettingsPage> _SettingsPages = new List<ISettingsPage>();
+        private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new Dictionary<SettingsPageReference, TreeNode>();
+        private readonly IList<ISettingsPage> _settingsPages = new List<ISettingsPage>();
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
-        public IEnumerable<ISettingsPage> SettingsPages => _SettingsPages;
+        public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;
 
         public SettingsTreeViewUserControl()
         {
@@ -43,11 +43,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 if (asRoot)
                 {
                     // e. g. to set the Checklist on the "Git Extensions" node
-                    node = _Pages2NodeMap[parentPageReference];
+                    node = _pages2NodeMap[parentPageReference];
                 }
                 else
                 {
-                    if (!_Pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
+                    if (!_pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
                     {
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
                     }
@@ -57,8 +57,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             node.Tag = page;
-            _Pages2NodeMap.Add(page.PageReference, node);
-            _SettingsPages.Add(page);
+            _pages2NodeMap.Add(page.PageReference, node);
+            _settingsPages.Add(page);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
             else
             {
-                _Pages2NodeMap.TryGetValue(settingsPageReference, out node);
+                _pages2NodeMap.TryGetValue(settingsPageReference, out node);
             }
 
             if (node != null)

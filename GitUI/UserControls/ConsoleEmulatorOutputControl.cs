@@ -133,13 +133,13 @@ namespace GitUI.UserControls
     [CLSCompliant(false)]
     public class ConsoleCommandLineOutputProcessor
     {
-        private Action<TextEventArgs> _FireDataReceived;
+        private Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
         private string _lineChunk = null;
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> FireDataReceived)
         {
-            _FireDataReceived = FireDataReceived;
+            _fireDataReceived = FireDataReceived;
             _commandLineCharsInOutput = commandLineCharsInOutput;
             _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
         }
@@ -203,7 +203,7 @@ namespace GitUI.UserControls
                     }
                 }
 
-                _FireDataReceived(new TextEventArgs(outputLine));
+                _fireDataReceived(new TextEventArgs(outputLine));
             }
         }
 
@@ -211,7 +211,7 @@ namespace GitUI.UserControls
         {
             if (_lineChunk != null)
             {
-                _FireDataReceived(new TextEventArgs(_lineChunk));
+                _fireDataReceived(new TextEventArgs(_lineChunk));
                 _lineChunk = null;
             }
         }

@@ -22,14 +22,14 @@ namespace GitCommands
         }
 
         private static int _defaultThreadId = -1;
-        private static TaskScheduler _DefaultContinuationTaskScheduler;
+        private static TaskScheduler _defaultContinuationTaskScheduler;
         public static TaskScheduler DefaultContinuationTaskScheduler
         {
             get
             {
-                if (_defaultThreadId == Thread.CurrentThread.ManagedThreadId && _DefaultContinuationTaskScheduler != null)
+                if (_defaultThreadId == Thread.CurrentThread.ManagedThreadId && _defaultContinuationTaskScheduler != null)
                 {
-                    return _DefaultContinuationTaskScheduler;
+                    return _defaultContinuationTaskScheduler;
                 }
 
                 return TaskScheduler.FromCurrentSynchronizationContext();
@@ -38,7 +38,7 @@ namespace GitCommands
             set
             {
                 _defaultThreadId = Thread.CurrentThread.ManagedThreadId;
-                _DefaultContinuationTaskScheduler = value;
+                _defaultContinuationTaskScheduler = value;
             }
         }
 

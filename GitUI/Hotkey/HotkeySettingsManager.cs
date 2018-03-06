@@ -15,19 +15,19 @@ namespace GitUI.Hotkey
     internal class HotkeySettingsManager
     {
         #region Serializer
-        private static XmlSerializer _Serializer;
+        private static XmlSerializer _serializer;
 
         /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
         private static XmlSerializer Serializer
         {
             get
             {
-                if (_Serializer == null)
+                if (_serializer == null)
                 {
-                    _Serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+                    _serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
                 }
 
-                return _Serializer;
+                return _serializer;
             }
         }
         #endregion

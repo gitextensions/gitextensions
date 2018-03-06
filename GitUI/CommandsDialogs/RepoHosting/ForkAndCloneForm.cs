@@ -35,11 +35,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private readonly IRepositoryHostPlugin _gitHoster;
-        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
         public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = GitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
@@ -326,7 +326,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
             }
 
-            _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+            _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Close();
         }

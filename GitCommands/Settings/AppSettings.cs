@@ -1481,18 +1481,18 @@ namespace GitCommands
             return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
-        private static RegistryKey _VersionIndependentRegKey;
+        private static RegistryKey _versionIndependentRegKey;
 
         private static RegistryKey VersionIndependentRegKey
         {
             get
             {
-                if (_VersionIndependentRegKey == null)
+                if (_versionIndependentRegKey == null)
                 {
-                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                    _versionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 }
 
-                return _VersionIndependentRegKey;
+                return _versionIndependentRegKey;
             }
         }
 

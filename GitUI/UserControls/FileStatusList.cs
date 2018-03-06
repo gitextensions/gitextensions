@@ -25,9 +25,9 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private readonly TranslationString _UnsupportedMultiselectAction =
+        private readonly TranslationString _unsupportedMultiselectAction =
             new TranslationString("Operation not supported");
-        private readonly TranslationString _DiffWithParent =
+        private readonly TranslationString _diffWithParent =
             new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff =
             new TranslationString("Combined Diff");
@@ -901,7 +901,7 @@ namespace GitUI
                     }
                     else
                     {
-                        groupName = _DiffWithParent.Text + " " + GetDescriptionForRevision(pair.Key.Guid);
+                        groupName = _diffWithParent.Text + " " + GetDescriptionForRevision(pair.Key.Guid);
                     }
 
                     group = new ListViewGroup(groupName);
@@ -1143,7 +1143,7 @@ namespace GitUI
             if (revisions.Count > 2)
             {
                 // Not a limitations, to keep compatibility with existing RevisionDiff
-                NoFiles.Text = _UnsupportedMultiselectAction.Text;
+                NoFiles.Text = _unsupportedMultiselectAction.Text;
             }
             else if (Revision != null)
             {
@@ -1215,7 +1215,7 @@ namespace GitUI
         #region Filtering
 
         private long _lastUserInputTime;
-        private string _ToolTipText = "";
+        private string _toolTipText = "";
 
         private static Regex RegexForFiltering(string value)
         {
@@ -1248,7 +1248,7 @@ namespace GitUI
                 {
                     if (NoUserInput(timerLastChanged))
                     {
-                        _ToolTipText = "";
+                        _toolTipText = "";
                         var fileCount = 0;
                         try
                         {
@@ -1256,7 +1256,7 @@ namespace GitUI
                         }
                         catch (ArgumentException ae)
                         {
-                            _ToolTipText = ae.Message;
+                            _toolTipText = ae.Message;
                         }
 
                         if (fileCount > 0)
@@ -1298,7 +1298,7 @@ namespace GitUI
 
         private void FilterComboBox_MouseEnter(object sender, EventArgs e)
         {
-            FilterToolTip.SetToolTip(FilterComboBox, _ToolTipText);
+            FilterToolTip.SetToolTip(FilterComboBox, _toolTipText);
         }
 
         private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)

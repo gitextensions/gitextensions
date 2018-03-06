@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public partial class SettingsPageHeader : GitExtensionsControl
     {
-        private readonly SettingsPageWithHeader _Page;
+        private readonly SettingsPageWithHeader _page;
 
         public SettingsPageHeader(SettingsPageWithHeader page)
         {
@@ -34,14 +34,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 settingsPagePanel.Controls.Add(page);
                 page.Dock = DockStyle.Fill;
-                _Page = page;
+                _page = page;
                 ConfigureHeader();
             }
         }
 
         private void ConfigureHeader()
         {
-            ILocalSettingsPage localSettings = _Page as ILocalSettingsPage;
+            ILocalSettingsPage localSettings = _page as ILocalSettingsPage;
 
             if (localSettings == null)
             {
@@ -107,7 +107,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (GlobalRB.Checked)
             {
-                _Page.SetGlobalSettings();
+                _page.SetGlobalSettings();
             }
         }
     }

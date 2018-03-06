@@ -67,7 +67,7 @@ namespace GitCommands
 
     public class ActionNotifier : LockableNotifier
     {
-        private Action _NotifyAction;
+        private Action _notifyAction;
 
         public ActionNotifier(Action notifyAction)
         {
@@ -76,12 +76,12 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(notifyAction));
             }
 
-            _NotifyAction = notifyAction;
+            _notifyAction = notifyAction;
         }
 
         protected override void InternalNotify()
         {
-            _NotifyAction();
+            _notifyAction();
         }
     }
 }

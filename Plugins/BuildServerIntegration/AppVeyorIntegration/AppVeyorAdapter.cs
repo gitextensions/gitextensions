@@ -58,7 +58,7 @@ namespace AppVeyorIntegration
         private HashSet<string> _fetchBuilds;
         private string _accountToken;
         private static readonly Dictionary<string, Project> Projects = new Dictionary<string, Project>();
-        private Func<string, bool> _IsCommitInRevisionGrid;
+        private Func<string, bool> _isCommitInRevisionGrid;
         private bool _shouldLoadTestResults;
         private bool _shouldDisplayGitHubPullRequestBuilds;
         private string _gitHubToken;
@@ -71,7 +71,7 @@ namespace AppVeyorIntegration
                 throw new InvalidOperationException("Already initialized");
             }
 
-            _IsCommitInRevisionGrid = isCommitInRevisionGrid;
+            _isCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
             var projectNamesSetting = config.GetString("AppVeyorProjectName", null);
@@ -252,7 +252,7 @@ namespace AppVeyorIntegration
                                     commitSha1 = b["commitId"].ToObject<string>();
                                 }
 
-                                if (commitSha1 == null || !_IsCommitInRevisionGrid(commitSha1))
+                                if (commitSha1 == null || !_isCommitInRevisionGrid(commitSha1))
                                 {
                                     return null;
                                 }

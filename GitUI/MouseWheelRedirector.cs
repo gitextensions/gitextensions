@@ -36,7 +36,7 @@ namespace GitUI
         }
 
         private IntPtr _previousHWnd = IntPtr.Zero;
-        private bool _GEControl;
+        private bool _gEControl;
 
         public bool PreFilterMessage(ref Message m)
         {
@@ -58,10 +58,10 @@ namespace GitUI
                         }
 
                         _previousHWnd = hwnd;
-                        _GEControl = control != null;
+                        _gEControl = control != null;
                     }
 
-                    if (_GEControl)
+                    if (_gEControl)
                     {
                         NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
                         return true;

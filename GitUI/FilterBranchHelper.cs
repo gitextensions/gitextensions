@@ -9,13 +9,13 @@ namespace GitUI
     public class FilterBranchHelper : IDisposable
     {
         private bool _applyingFilter;
-        private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
-        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
-        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
+        private ToolStripComboBox _nO_TRANSLATE_toolStripBranches;
+        private ToolStripDropDownButton _nO_TRANSLATE_toolStripDropDownButton2;
+        private RevisionGrid _nO_TRANSLATE_RevisionGrid;
         private ToolStripMenuItem _localToolStripMenuItem;
         private ToolStripMenuItem _tagsToolStripMenuItem;
         private ToolStripMenuItem _remoteToolStripMenuItem;
-        private GitModule Module => _NO_TRANSLATE_RevisionGrid.Module;
+        private GitModule Module => _nO_TRANSLATE_RevisionGrid.Module;
 
         public FilterBranchHelper()
         {
@@ -50,21 +50,21 @@ namespace GitUI
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid revisionGrid)
             : this()
         {
-            _NO_TRANSLATE_toolStripBranches = toolStripBranches;
-            _NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
-            _NO_TRANSLATE_RevisionGrid = revisionGrid;
+            _nO_TRANSLATE_toolStripBranches = toolStripBranches;
+            _nO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
+            _nO_TRANSLATE_RevisionGrid = revisionGrid;
 
-            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
+            _nO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
             {
                 _localToolStripMenuItem,
                 _tagsToolStripMenuItem,
                 _remoteToolStripMenuItem
             });
 
-            _NO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
-            _NO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;
-            _NO_TRANSLATE_toolStripBranches.Leave += toolStripBranches_Leave;
-            _NO_TRANSLATE_toolStripBranches.KeyUp += toolStripBranches_KeyUp;
+            _nO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
+            _nO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;
+            _nO_TRANSLATE_toolStripBranches.Leave += toolStripBranches_Leave;
+            _nO_TRANSLATE_toolStripBranches.KeyUp += toolStripBranches_KeyUp;
         }
 
         public void InitToolStripBranchFilter()
@@ -73,7 +73,7 @@ namespace GitUI
             bool tag = _tagsToolStripMenuItem.Checked;
             bool remote = _remoteToolStripMenuItem.Checked;
 
-            _NO_TRANSLATE_toolStripBranches.Items.Clear();
+            _nO_TRANSLATE_toolStripBranches.Items.Clear();
 
             if (Module.IsValidGitWorkingDir())
             {
@@ -82,19 +82,19 @@ namespace GitUI
                     {
                         foreach (var branch in branches)
                         {
-                            _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+                            _nO_TRANSLATE_toolStripBranches.Items.Add(branch);
                         }
 
-                        var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+                        var autoCompleteList = _nO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
                         if (!autoCompleteList.SequenceEqual(branches))
                         {
-                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
-                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+                            _nO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                            _nO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
                         }
                     });
             }
 
-            _NO_TRANSLATE_toolStripBranches.Enabled = Module.IsValidGitWorkingDir();
+            _nO_TRANSLATE_toolStripBranches.Enabled = Module.IsValidGitWorkingDir();
         }
 
         private List<string> GetBranchHeads(bool local, bool remote)
@@ -163,11 +163,11 @@ namespace GitUI
             _applyingFilter = true;
             try
             {
-                string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
-                bool success = _NO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(filter);
+                string filter = _nO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _nO_TRANSLATE_toolStripBranches.Text : string.Empty;
+                bool success = _nO_TRANSLATE_RevisionGrid.SetAndApplyBranchFilter(filter);
                 if (success && refresh)
                 {
-                    _NO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
+                    _nO_TRANSLATE_RevisionGrid.ForceRefreshRevisions();
                 }
             }
             finally
@@ -178,19 +178,19 @@ namespace GitUI
 
         private void UpdateBranchFilterItems()
         {
-            string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
+            string filter = _nO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _nO_TRANSLATE_toolStripBranches.Text : string.Empty;
             var branches = GetBranchAndTagRefs(_localToolStripMenuItem.Checked, _tagsToolStripMenuItem.Checked, _remoteToolStripMenuItem.Checked);
             var matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
 
-            var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;
-            _NO_TRANSLATE_toolStripBranches.Items.Clear();
-            _NO_TRANSLATE_toolStripBranches.Items.AddRange(matches);
-            _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
+            var index = _nO_TRANSLATE_toolStripBranches.SelectionStart;
+            _nO_TRANSLATE_toolStripBranches.Items.Clear();
+            _nO_TRANSLATE_toolStripBranches.Items.AddRange(matches);
+            _nO_TRANSLATE_toolStripBranches.SelectionStart = index;
         }
 
         public void SetBranchFilter(string filter, bool refresh)
         {
-            _NO_TRANSLATE_toolStripBranches.Text = filter;
+            _nO_TRANSLATE_toolStripBranches.Text = filter;
             ApplyBranchFilter(refresh);
         }
 

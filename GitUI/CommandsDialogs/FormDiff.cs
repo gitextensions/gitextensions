@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private readonly RevisionGrid _RevisionGrid;
+        private readonly RevisionGrid _revisionGrid;
         private string _baseCommitDisplayStr;
         private string _headCommitDisplayStr;
         private GitRevision _baseRevision;
@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
         public FormDiff(GitUICommands commands, RevisionGrid revisionGrid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(commands)
         {
-            _RevisionGrid = revisionGrid;
+            _revisionGrid = revisionGrid;
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
 
@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                _RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
+                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
             }
         }
 

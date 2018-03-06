@@ -165,24 +165,24 @@ namespace GitUI.Editor
             set { _internalFileViewer.ShowLineNumbers = value; }
         }
 
-        private Encoding _Encoding;
+        private Encoding _encoding;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public Encoding Encoding
         {
             get
             {
-                if (_Encoding == null)
+                if (_encoding == null)
                 {
-                    _Encoding = Module.FilesEncoding;
+                    _encoding = Module.FilesEncoding;
                 }
 
-                return _Encoding;
+                return _encoding;
             }
 
             set
             {
-                _Encoding = value;
+                _encoding = value;
             }
         }
 

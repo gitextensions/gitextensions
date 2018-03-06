@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _openedFromProtocolHandler;
         private readonly string _url;
-        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private EventHandler<GitModuleEventArgs> _gitModuleChanged;
         private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 
@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
         public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
             : base(commands)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
             _openedFromProtocolHandler = openedFromProtocolHandler;
@@ -241,10 +241,10 @@ namespace GitUI.CommandsDialogs
                     GitUICommands uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && _GitModuleChanged != null &&
+                else if (ShowInTaskbar == false && _gitModuleChanged != null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    _GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                    _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
                 }
 
                 Close();

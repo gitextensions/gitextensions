@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Authors file \"{0}\" does not exists. Continue without authors file?");
 
         private readonly TranslationString _questionContinueWithoutAuthorsCaption = new TranslationString("Authors file");
-        private readonly EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
         private FormSvnClone()
             : this(null, null)
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
         public FormSvnClone(GitUICommands commands, EventHandler<GitModuleEventArgs> GitModuleChanged)
             : base(commands)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
         }
@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                    _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
                 }
 
                 Close();

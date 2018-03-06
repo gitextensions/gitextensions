@@ -99,7 +99,7 @@ namespace GitUI
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
 
-        private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
+        private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
 
         private string _rebaseOnTopOf;
 
@@ -108,10 +108,10 @@ namespace GitUI
         /// </summary>
         private IEnumerable<IGitRef> LatestRefs
         {
-            get { return _LatestRefs; }
+            get { return _latestRefs; }
             set
             {
-                _LatestRefs = value;
+                _latestRefs = value;
                 AmbiguousRefs = null;
             }
         }
@@ -1043,23 +1043,23 @@ namespace GitUI
 
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
-            private readonly string _AuthorFilter;
-            private readonly Regex _AuthorFilterRegex;
-            private readonly string _CommitterFilter;
-            private readonly Regex _CommitterFilterRegex;
-            private readonly string _MessageFilter;
-            private readonly Regex _MessageFilterRegex;
-            private readonly string _ShaFilter;
-            private readonly Regex _ShaFilterRegex;
+            private readonly string _authorFilter;
+            private readonly Regex _authorFilterRegex;
+            private readonly string _committerFilter;
+            private readonly Regex _committerFilterRegex;
+            private readonly string _messageFilter;
+            private readonly Regex _messageFilterRegex;
+            private readonly string _shaFilter;
+            private readonly Regex _shaFilterRegex;
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex, ignoreCase);
-                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex, ignoreCase);
-                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex, ignoreCase);
-                if (!string.IsNullOrEmpty(_MessageFilter) && MessageFilterCouldBeSHA(_MessageFilter))
+                SetUpVars(authorFilter, ref _authorFilter, ref _authorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, ref _committerFilter, ref _committerFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, ref _messageFilter, ref _messageFilterRegex, ignoreCase);
+                if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
                 {
-                    SetUpVars(messageFilter, ref _ShaFilter, ref _ShaFilterRegex, false);
+                    SetUpVars(messageFilter, ref _shaFilter, ref _shaFilterRegex, false);
                 }
             }
 
@@ -1093,10 +1093,10 @@ namespace GitUI
 
             public override bool PassThru(GitRevision rev)
             {
-                return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
-                       CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
-                        (_ShaFilter != null && CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid)));
+                return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
+                       CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
+                       (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
+                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -2698,22 +2698,22 @@ namespace GitUI
             RefreshOwnScripts();
         }
 
-        private ISet<string> _AmbiguousRefs;
+        private ISet<string> _ambiguousRefs;
         private ISet<string> AmbiguousRefs
         {
             get
             {
-                if (_AmbiguousRefs == null)
+                if (_ambiguousRefs == null)
                 {
-                    _AmbiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
+                    _ambiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
                 }
 
-                return _AmbiguousRefs;
+                return _ambiguousRefs;
             }
 
             set
             {
-                _AmbiguousRefs = value;
+                _ambiguousRefs = value;
             }
         }
 

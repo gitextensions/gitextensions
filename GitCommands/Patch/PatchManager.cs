@@ -432,21 +432,21 @@ namespace PatchApply
 
     internal class Chunk
     {
-        private int _StartLine;
-        private List<SubChunk> _SubChunks = new List<SubChunk>();
-        private SubChunk _CurrentSubChunk = null;
+        private int _startLine;
+        private List<SubChunk> _subChunks = new List<SubChunk>();
+        private SubChunk _currentSubChunk = null;
 
         public SubChunk CurrentSubChunk
         {
             get
             {
-                if (_CurrentSubChunk == null)
+                if (_currentSubChunk == null)
                 {
-                    _CurrentSubChunk = new SubChunk();
-                    _SubChunks.Add(_CurrentSubChunk);
+                    _currentSubChunk = new SubChunk();
+                    _subChunks.Add(_currentSubChunk);
                 }
 
-                return _CurrentSubChunk;
+                return _currentSubChunk;
             }
         }
 
@@ -467,7 +467,7 @@ namespace PatchApply
             // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
             {
-                _CurrentSubChunk = null; // start new SubChunk
+                _currentSubChunk = null; // start new SubChunk
             }
 
             if (removed)
@@ -485,7 +485,7 @@ namespace PatchApply
             header = header.SkipStr("-");
             header = header.TakeUntilStr(",");
 
-            return int.TryParse(header, out _StartLine);
+            return int.TryParse(header, out _startLine);
         }
 
         public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
@@ -561,7 +561,7 @@ namespace PatchApply
         public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
-            result._StartLine = 0;
+            result._startLine = 0;
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
@@ -640,7 +640,7 @@ namespace PatchApply
             int addedCount = 0;
             int removedCount = 0;
 
-            foreach (SubChunk subChunk in _SubChunks)
+            foreach (SubChunk subChunk in _subChunks)
             {
                 string subDiff = subChunkToPatch(subChunk, ref addedCount, ref removedCount, ref wereSelectedLines);
                 diff = diff.Combine("\n", subDiff);
@@ -651,7 +651,7 @@ namespace PatchApply
                 return null;
             }
 
-            diff = "@@ -" + _StartLine + "," + removedCount + " +" + _StartLine + "," + addedCount + " @@".Combine("\n", diff);
+            diff = "@@ -" + _startLine + "," + removedCount + " +" + _startLine + "," + addedCount + " @@".Combine("\n", diff);
 
             return diff;
         }

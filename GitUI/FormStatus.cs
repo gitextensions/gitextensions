@@ -17,8 +17,8 @@ namespace GitUI
         public delegate void ProcessStart(FormStatus form);
         public delegate void ProcessAbort(FormStatus form);
 
-        private readonly bool _UseDialogSettings = true;
-        private DispatcherFrameModalControler _ModalControler;
+        private readonly bool _useDialogSettings = true;
+        private DispatcherFrameModalControler _modalControler;
 
         public FormStatus() : this(true)
         {
@@ -32,14 +32,14 @@ namespace GitUI
         public FormStatus(ConsoleOutputControl consoleOutput, bool useDialogSettings)
             : base(true)
         {
-            _UseDialogSettings = useDialogSettings;
+            _useDialogSettings = useDialogSettings;
             ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
             InitializeComponent();
             Translate();
-            if (_UseDialogSettings)
+            if (_useDialogSettings)
             {
                 KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
             }
@@ -173,14 +173,14 @@ namespace GitUI
 
                 _errorOccurred = !isSuccess;
 
-                if (isSuccess && !_showOnError && (_UseDialogSettings && AppSettings.CloseProcessDialog))
+                if (isSuccess && !_showOnError && (_useDialogSettings && AppSettings.CloseProcessDialog))
                 {
                     Close();
                 }
             }
             finally
             {
-                _ModalControler?.EndModal(isSuccess);
+                _modalControler?.EndModal(isSuccess);
             }
         }
 
@@ -214,8 +214,8 @@ namespace GitUI
             KeepDialogOpen.Visible = false;
             Abort.Visible = false;
             _showOnError = true;
-            _ModalControler = new DispatcherFrameModalControler(this, owner);
-            _ModalControler.BeginModal();
+            _modalControler = new DispatcherFrameModalControler(this, owner);
+            _modalControler.BeginModal();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -231,7 +231,7 @@ namespace GitUI
                 return;
             }
 
-            if (_ModalControler != null)
+            if (_modalControler != null)
             {
                 return;
             }
@@ -320,34 +320,34 @@ namespace GitUI
 
     internal class DispatcherFrameModalControler
     {
-        private DispatcherFrame _DispatcherFrame = new DispatcherFrame();
-        private FormStatus _FormStatus;
-        private IWin32Window _Owner;
+        private DispatcherFrame _dispatcherFrame = new DispatcherFrame();
+        private FormStatus _formStatus;
+        private IWin32Window _owner;
 
         public DispatcherFrameModalControler(FormStatus formStatus, IWin32Window owner)
         {
-            _FormStatus = formStatus;
-            _Owner = owner;
+            _formStatus = formStatus;
+            _owner = owner;
         }
 
         public void BeginModal()
         {
-            _FormStatus.Start();
-            Dispatcher.PushFrame(_DispatcherFrame);
+            _formStatus.Start();
+            Dispatcher.PushFrame(_dispatcherFrame);
         }
 
         public void EndModal(bool success)
         {
             if (!success)
             {
-                _FormStatus.ShowDialog(_Owner);
+                _formStatus.ShowDialog(_owner);
             }
             else
             {
-                _FormStatus.AfterClosed();
+                _formStatus.AfterClosed();
             }
 
-            _DispatcherFrame.Continue = false;
+            _dispatcherFrame.Continue = false;
         }
     }
 }

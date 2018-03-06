@@ -78,7 +78,7 @@ namespace GitUI.SpellChecker
                     return string.Empty;
                 }
 
-                return _IsWatermarkShowing ? string.Empty : TextBox.Text;
+                return _isWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
             {
@@ -147,18 +147,18 @@ namespace GitUI.SpellChecker
             }
         }
 
-        private bool _IsWatermarkShowing;
-        private string _WatermarkText = "";
+        private bool _isWatermarkShowing;
+        private string _watermarkText = "";
         [Category("Appearance")]
         [DefaultValue("")]
         public string WatermarkText
         {
-            get { return _WatermarkText; }
+            get { return _watermarkText; }
 
             set
             {
                 HideWatermark();
-                _WatermarkText = value;
+                _watermarkText = value;
                 ShowWatermark();
             }
         }
@@ -300,7 +300,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
 
             // Do not check spelling of watermark text
-            if (!_IsWatermarkShowing)
+            if (!_isWatermarkShowing)
             {
                 try
                 {
@@ -621,7 +621,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
-            if (!_IsWatermarkShowing)
+            if (!_isWatermarkShowing)
             {
                 OnTextChanged(e);
 
@@ -739,7 +739,7 @@ namespace GitUI.SpellChecker
         {
             if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
-                _IsWatermarkShowing = true;
+                _isWatermarkShowing = true;
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
                 TextBox.Text = WatermarkText;
@@ -748,10 +748,10 @@ namespace GitUI.SpellChecker
 
         private void HideWatermark()
         {
-            if (_IsWatermarkShowing && TextBoxFont != null)
+            if (_isWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
-                _IsWatermarkShowing = false;
+                _isWatermarkShowing = false;
                 TextBox.Text = string.Empty;
                 TextBox.ForeColor = SystemColors.WindowText;
             }

@@ -53,7 +53,7 @@ Current Branch:
 {cDefaultRemotePathFromUrl}");
         #endregion translation
 
-        private string _IconName = "bug";
+        private string _iconName = "bug";
 
         public ScriptsSettingsPage()
         {
@@ -146,11 +146,11 @@ Current Branch:
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
             sbtn_icon.Image = ResizeForSplitButton(scriptInfo.GetIcon());
-            _IconName = scriptInfo.Icon;
+            _iconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
             {
-                if (item.ToString() == _IconName)
+                if (item.ToString() == _iconName)
                 {
                     item.Font = new Font(item.Font, FontStyle.Bold);
                 }
@@ -190,7 +190,7 @@ Current Branch:
                 selectedScriptInfo.IsPowerShell = scriptIsPowerShell.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
-                selectedScriptInfo.Icon = _IconName;
+                selectedScriptInfo.Icon = _iconName;
             }
         }
 
@@ -295,7 +295,7 @@ Current Branch:
             // set new image on button
             sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
 
-            _IconName = ((ToolStripMenuItem)sender).Text;
+            _iconName = ((ToolStripMenuItem)sender).Text;
 
             // store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());

@@ -392,7 +392,7 @@ namespace GitCommands
             return systemPath;
         }
 
-        private string _GitCommonDirectory;
+        private string _gitCommonDirectory;
 
         /// <summary>
         /// Returns git common directory
@@ -402,17 +402,17 @@ namespace GitCommands
         {
             get
             {
-                if (_GitCommonDirectory == null)
+                if (_gitCommonDirectory == null)
                 {
                     var commDir = RunGitCmdResult("rev-parse --git-common-dir");
-                    _GitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
-                    if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !Directory.Exists(_GitCommonDirectory))
+                    _gitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
+                    if (!commDir.ExitedSuccessfully || _gitCommonDirectory == ".git" || !Directory.Exists(_gitCommonDirectory))
                     {
-                        _GitCommonDirectory = GetGitDirectory();
+                        _gitCommonDirectory = GetGitDirectory();
                     }
                 }
 
-                return _GitCommonDirectory;
+                return _gitCommonDirectory;
             }
         }
 

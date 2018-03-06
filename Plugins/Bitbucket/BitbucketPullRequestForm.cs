@@ -166,12 +166,12 @@ namespace Bitbucket
             }
         }
 
-        private Dictionary<Repository, IEnumerable<string>> _Branches = new Dictionary<Repository, IEnumerable<string>>();
+        private Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
-            if (_Branches.ContainsKey(selectedRepo))
+            if (_branches.ContainsKey(selectedRepo))
             {
-                return _Branches[selectedRepo];
+                return _branches[selectedRepo];
             }
 
             var list = new List<string>();
@@ -185,7 +185,7 @@ namespace Bitbucket
                 }
             }
 
-            _Branches.Add(selectedRepo, list);
+            _branches.Add(selectedRepo, list);
             return list;
         }
 
