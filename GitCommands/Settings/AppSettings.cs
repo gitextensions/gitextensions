@@ -1315,7 +1315,7 @@ namespace GitCommands
             set => SetBool("dashboardshowcurrentbranch", value);
         }
 
-        public static string ownScripts
+        public static string OwnScripts
         {
             get => GetString("ownScripts", "");
             set => SetString("ownScripts", value);

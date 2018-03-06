@@ -20,7 +20,7 @@ namespace Github3
     internal class GithubLoginInfo
     {
         private static string _username;
-        public static string username
+        public static string Username
         {
             get
             {

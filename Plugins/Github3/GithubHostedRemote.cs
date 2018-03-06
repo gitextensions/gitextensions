@@ -41,6 +41,6 @@ namespace Github3
 
         public string Data => Owner + "/" + RemoteRepositoryName;
         public string DisplayData => Data;
-        public bool IsOwnedByMe => GithubLoginInfo.username == Owner;
+        public bool IsOwnedByMe => GithubLoginInfo.Username == Owner;
     }
 }

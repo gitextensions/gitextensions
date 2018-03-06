@@ -18,7 +18,7 @@ namespace GitUI.Script
         {
             if (Scripts == null)
             {
-                DeserializeFromXml(AppSettings.ownScripts);
+                DeserializeFromXml(AppSettings.OwnScripts);
                 if (Scripts != null)
                 {
                     FixAmbiguousHotkeyCommandIdentifiers(Scripts);

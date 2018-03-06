@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             Translate();
         }
 
-        private TextBox getNewTextBox()
+        private TextBox GetNewTextBox()
         {
             TextBox tb = new TextBox();
             tb.BackColor = Color.White;
@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return tb;
         }
 
-        private TabPage getNewTabPage(TextBox tb, string caption)
+        private TabPage GetNewTabPage(TextBox tb, string caption)
         {
             TabPage tp = new TabPage();
             tp.Margin = new System.Windows.Forms.Padding(0);
@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return tp;
         }
 
-        private TabControl getNewTabControl()
+        private TabControl GetNewTabControl()
         {
             TabControl tc = new TabControl();
             tc.Dock = DockStyle.Fill;
@@ -62,13 +62,13 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             SuspendLayout();
             Controls.Clear();
 
-            _tabControl = getNewTabControl();
+            _tabControl = GetNewTabControl();
             _tabControl.SuspendLayout();
 
             for (int i = 0; i < tabCaptions.Length; i++)
             {
-                _textboxes[i] = getNewTextBox();
-                _tabPages[i] = getNewTabPage(_textboxes[i], tabCaptions[i]);
+                _textboxes[i] = GetNewTextBox();
+                _tabPages[i] = GetNewTabPage(_textboxes[i], tabCaptions[i]);
                 _tabControl.Controls.Add(_tabPages[i]);
             }
 

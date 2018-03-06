@@ -2370,10 +2370,10 @@ namespace GitUI.CommandsDialogs
                 RescanChanges();
             }
 
-            updateAuthorInfo();
+            UpdateAuthorInfo();
         }
 
-        private void updateAuthorInfo()
+        private void UpdateAuthorInfo()
         {
             GetUserSettings();
             string author = "";
@@ -2707,7 +2707,7 @@ namespace GitUI.CommandsDialogs
         {
             toolAuthor.Text = "";
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
-            updateAuthorInfo();
+            UpdateAuthorInfo();
         }
 
         private void gpgSignCommitChanged(object sender, EventArgs e)
@@ -3109,7 +3109,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolAuthor_Leave(object sender, EventArgs e)
         {
-            updateAuthorInfo();
+            UpdateAuthorInfo();
         }
 
         /// <summary>

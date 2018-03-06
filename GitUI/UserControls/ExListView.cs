@@ -278,7 +278,7 @@ namespace GitUI.UserControls
             return rtnval;
         }
 
-        private void setGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
+        private void SetGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
         {
             if (lstvwgrp == null)
             {
@@ -310,7 +310,7 @@ namespace GitUI.UserControls
 
             foreach (ListViewGroup lvg in Groups)
             {
-                setGrpState(lvg, state);
+                SetGrpState(lvg, state);
             }
         }
     }

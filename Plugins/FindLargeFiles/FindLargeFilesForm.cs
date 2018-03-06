@@ -86,7 +86,7 @@ namespace FindLargeFiles
                             {
                                 if (Int32.TryParse(dataFields[3], out var compressedSize))
                                 {
-                                    curGitObject.compressedSizeInBytes = compressedSize;
+                                    curGitObject.CompressedSizeInBytes = compressedSize;
                                     BranchesGrid.Invoke((Action)(() => { _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject)); }));
                                 }
                             }

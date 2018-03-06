@@ -3812,15 +3812,15 @@ namespace GitUI
 
         private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            launchRebase("e");
+            LaunchRebase("e");
         }
 
         private void rewordCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            launchRebase("r");
+            LaunchRebase("r");
         }
 
-        private void launchRebase(string command)
+        private void LaunchRebase(string command)
         {
             if (LatestSelectedRevision == null)
             {

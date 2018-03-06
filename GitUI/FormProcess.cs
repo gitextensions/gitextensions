@@ -32,8 +32,8 @@ namespace GitUI
         public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
         {
-            ProcessCallback = processStart;
-            AbortCallback = processAbort;
+            ProcessCallback = ProcessStart;
+            AbortCallback = ProcessAbort;
             ProcessString = process ?? AppSettings.GitCommand;
             ProcessArguments = arguments;
             Remote = "";
@@ -132,7 +132,7 @@ namespace GitUI
         {
         }
 
-        private void processStart(FormStatus form)
+        private new void ProcessStart(FormStatus form)
         {
             BeforeProcessStart();
             string QuotedProcessString = ProcessString;
@@ -164,7 +164,7 @@ namespace GitUI
             }
         }
 
-        private void processAbort(FormStatus form)
+        private new void ProcessAbort(FormStatus form)
         {
             KillProcess();
         }
