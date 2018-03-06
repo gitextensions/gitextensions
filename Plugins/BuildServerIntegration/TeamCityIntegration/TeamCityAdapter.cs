@@ -397,8 +397,6 @@ namespace TeamCityIntegration
                     UpdateHttpClientOptionsNtlmAuth(buildServerCredentials);
                     return GetStreamAsync(restServicePath, cancellationToken);
                 }
-
-                throw new OperationCanceledException(task.Result.ReasonPhrase);
             }
 
             throw new HttpRequestException(task.Result.ReasonPhrase);
