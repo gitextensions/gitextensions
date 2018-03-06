@@ -214,14 +214,14 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                int RightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
+                int rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
 
                 _scrollBar.Minimum = 0;
                 _scrollBar.Maximum = (int)(Math.Max(0, GetGraphWidth() - ClientSize.Width) * 1.1);
                 _scrollBar.SmallChange = _scrollBar.Maximum / 22;
                 _scrollBar.LargeChange = _scrollBar.Maximum / 11;
 
-                _scrollBar.Value = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - RightValue);
+                _scrollBar.Value = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - rightValue);
             }
         }
 

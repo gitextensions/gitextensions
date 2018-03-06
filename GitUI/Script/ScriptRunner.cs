@@ -420,10 +420,10 @@ namespace GitUI.Script
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
                     case "{UserInput}":
-                        using (SimplePrompt Prompt = new SimplePrompt())
+                        using (SimplePrompt prompt = new SimplePrompt())
                         {
-                            Prompt.ShowDialog();
-                            argument = argument.Replace(option, Prompt.UserInput);
+                            prompt.ShowDialog();
+                            argument = argument.Replace(option, prompt.UserInput);
                         }
 
                         break;

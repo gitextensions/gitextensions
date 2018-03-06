@@ -1025,11 +1025,11 @@ namespace GitUI.CommandsDialogs
 
                 System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
-                int LastRow = hti.RowIndex;
+                int lastRow = hti.RowIndex;
                 ConflictedFiles.ClearSelection();
-                if (LastRow >= 0 && ConflictedFiles.Rows.Count > LastRow)
+                if (lastRow >= 0 && ConflictedFiles.Rows.Count > lastRow)
                 {
-                    ConflictedFiles.Rows[LastRow].Selected = true;
+                    ConflictedFiles.Rows[lastRow].Selected = true;
                 }
 
                 SetAvailableCommands(true);

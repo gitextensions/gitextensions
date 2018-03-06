@@ -872,9 +872,9 @@ namespace GitUI
             var previouslySelectedItems = new List<GitItemStatus>();
             if (updateCausedByFilter)
             {
-                foreach (ListViewItem Item in FileStatusListView.SelectedItems)
+                foreach (ListViewItem item in FileStatusListView.SelectedItems)
                 {
-                    previouslySelectedItems.Add(Item.Tag as GitItemStatus);
+                    previouslySelectedItems.Add(item.Tag as GitItemStatus);
                 }
 
                 DataSourceChanged?.Invoke(this, new EventArgs());

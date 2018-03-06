@@ -352,21 +352,21 @@ namespace GitUI.RevisionGridClasses
                 // for each node n in S do
                 //    visit(n)
 
-                var L = new Queue<Node>();
-                var S = new Queue<Node>();
-                var P = new Queue<Node>();
+                var l = new Queue<Node>();
+                var s = new Queue<Node>();
+                var p = new Queue<Node>();
                 foreach (Node h in GetRefs())
                 {
-                    foreach (Junction j in h.Ancestors)
+                    foreach (Junction aj in h.Ancestors)
                     {
-                        if (!S.Contains(j.Oldest))
+                        if (!s.Contains(aj.Oldest))
                         {
-                            S.Enqueue(j.Oldest);
+                            s.Enqueue(aj.Oldest);
                         }
 
-                        if (!S.Contains(j.Youngest))
+                        if (!s.Contains(aj.Youngest))
                         {
-                            S.Enqueue(j.Youngest);
+                            s.Enqueue(aj.Youngest);
                         }
                     }
                 }
@@ -375,9 +375,9 @@ namespace GitUI.RevisionGridClasses
                 Visit localVisit = visit;
                 visit = (Node n) =>
                 {
-                    if (!P.Contains(n))
+                    if (!p.Contains(n))
                     {
-                        P.Enqueue(n);
+                        p.Enqueue(n);
                         foreach (Junction e in n.Ancestors)
                         {
                             if (localVisit != null)
@@ -386,43 +386,43 @@ namespace GitUI.RevisionGridClasses
                             }
                         }
 
-                        L.Enqueue(n);
+                        l.Enqueue(n);
                         return true;
                     }
 
                     return false;
                 };
-                foreach (Node n in S)
+                foreach (Node n in s)
                 {
                     visit(n);
                 }
 
                 // Sanity check
-                var J = new Queue<Junction>();
-                var X = new Queue<Node>();
-                foreach (Node n in L)
+                var j = new Queue<Junction>();
+                var x = new Queue<Node>();
+                foreach (Node n in l)
                 {
                     foreach (Junction e in n.Descendants)
                     {
-                        if (X.Contains(e.Youngest))
+                        if (x.Contains(e.Youngest))
                         {
                             Debugger.Break();
                         }
 
-                        if (!J.Contains(e))
+                        if (!j.Contains(e))
                         {
-                            J.Enqueue(e);
+                            j.Enqueue(e);
                         }
                     }
 
-                    X.Enqueue(n);
+                    x.Enqueue(n);
                 }
 
-                if (J.Count != _junctions.Count)
+                if (j.Count != _junctions.Count)
                 {
                     foreach (var junction in _junctions)
                     {
-                        if (!J.Contains(junction))
+                        if (!j.Contains(junction))
                         {
                             if (junction.Oldest != junction.Youngest)
                             {
@@ -432,7 +432,7 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
 
-                return L.ToArray();
+                return l.ToArray();
             }
 
             private bool GetNode(string id, out Node node)

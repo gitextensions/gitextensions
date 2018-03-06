@@ -108,8 +108,8 @@ namespace FindLargeFiles
             _revList = _gitCommands.RunGitCmd("rev-list HEAD").Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
-            Thread MyThread = new Thread(FindLargeFilesFunction);
-            MyThread.Start();
+            Thread thread = new Thread(FindLargeFilesFunction);
+            thread.Start();
         }
 
         private IEnumerable<GitObject> GetLargeFiles(float threshold)

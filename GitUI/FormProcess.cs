@@ -135,13 +135,13 @@ namespace GitUI
         private new void ProcessStart(FormStatus form)
         {
             BeforeProcessStart();
-            string QuotedProcessString = ProcessString;
-            if (QuotedProcessString.IndexOf(' ') != -1)
+            string quotedProcessString = ProcessString;
+            if (quotedProcessString.IndexOf(' ') != -1)
             {
-                QuotedProcessString = QuotedProcessString.Quote();
+                quotedProcessString = quotedProcessString.Quote();
             }
 
-            AddMessageLine(QuotedProcessString + " " + ProcessArguments);
+            AddMessageLine(quotedProcessString + " " + ProcessArguments);
 
             try
             {

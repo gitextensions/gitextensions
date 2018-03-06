@@ -263,8 +263,8 @@ namespace GitUI.UserControls
         private static int? GetGroupID(ListViewGroup lstvwgrp)
         {
             int? rtnval = null;
-            Type GrpTp = lstvwgrp.GetType();
-            PropertyInfo pi = GrpTp.GetProperty("ID", BindingFlags.NonPublic |
+            Type groupType = lstvwgrp.GetType();
+            PropertyInfo pi = groupType.GetProperty("ID", BindingFlags.NonPublic |
                                                       BindingFlags.Instance);
             if (pi != null)
             {
@@ -285,14 +285,14 @@ namespace GitUI.UserControls
                 return;
             }
 
-            int? GrpId = GetGroupID(lstvwgrp);
+            int? groupId = GetGroupID(lstvwgrp);
             int groupIndex = Groups.IndexOf(lstvwgrp);
             var group = new NativeMethods.LVGROUP();
             group.CbSize = Marshal.SizeOf(group);
             group.State = state;
             group.Mask = NativeMethods.ListViewGroupMask.State;
             var handleRef = new HandleRef(this, Handle);
-            group.IGroupId = GrpId ?? groupIndex;
+            group.IGroupId = groupId ?? groupIndex;
             NativeMethods.SendMessage(handleRef,
                 NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
             NativeMethods.SendMessage(handleRef,

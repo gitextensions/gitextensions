@@ -1145,7 +1145,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = module.GetSubmodulesLocalPaths();
+            IList<string> submodules = module.GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1191,7 +1191,7 @@ namespace GitCommands
                     }
 
                     gitItemStatusX.IsStaged = true;
-                    if (Submodules.Contains(gitItemStatusX.Name))
+                    if (submodules.Contains(gitItemStatusX.Name))
                     {
                         gitItemStatusX.IsSubmodule = true;
                     }
@@ -1217,7 +1217,7 @@ namespace GitCommands
                 }
 
                 gitItemStatusY.IsStaged = false;
-                if (Submodules.Contains(gitItemStatusY.Name))
+                if (submodules.Contains(gitItemStatusY.Name))
                 {
                     gitItemStatusY.IsSubmodule = true;
                 }
