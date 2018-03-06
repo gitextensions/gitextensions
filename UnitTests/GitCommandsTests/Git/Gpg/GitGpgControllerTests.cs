@@ -181,6 +181,5 @@ namespace GitCommandsTests.Git.Gpg
 
             Assert.AreEqual(expected, actual);
         }
-
     }
 }

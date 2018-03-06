@@ -180,8 +180,10 @@ namespace GitUI.SpellChecker
             if (!EnvUtils.RunningOnWindows())
                 return 12;
 
-            if (_lineHeight == 0 && !EnvUtils.RunningOnWindows()) {
-                if (_richTextBox.Lines.Any(line => line.Length != 0)) {
+            if (_lineHeight == 0 && !EnvUtils.RunningOnWindows())
+            {
+                if (_richTextBox.Lines.Any(line => line.Length != 0))
+                {
                     _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, 0);
                 }
             }

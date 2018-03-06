@@ -176,10 +176,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             foreach (var info in _pullRequestsInfo)
             {
                 var lvi = new ListViewItem
-                              {
-                                  Text = info.Id,
-                                  Tag = info
-                              };
+                {
+                    Text = info.Id,
+                    Tag = info
+                };
                 lvi.SubItems.Add(info.Title);
                 lvi.SubItems.Add(info.Owner);
                 lvi.SubItems.Add(info.Created.ToString());
@@ -269,13 +269,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 var gis = new GitItemStatus
-                              {
-                                  IsChanged = true,
-                                  IsNew = false,
-                                  IsDeleted = false,
-                                  IsTracked = true,
-                                  Name = match.Groups[2].Value.Trim()
-                              };
+                {
+                    IsChanged = true,
+                    IsNew = false,
+                    IsDeleted = false,
+                    IsTracked = true,
+                    Name = match.Groups[2].Value.Trim()
+                };
 
                 giss.Add(gis);
                 _diffCache.Add(gis.Name, match.Groups[3].Value);
@@ -310,7 +310,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             UICommands.RepoChangedNotifier.Lock();
             try
             {
-
                 var remoteName = _currentPullRequestInfo.Owner;
                 var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl;
                 var remoteRef = _currentPullRequestInfo.HeadRef;

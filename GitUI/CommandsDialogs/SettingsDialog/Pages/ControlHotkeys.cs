@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             this.SelectedHotkeySettings = null;
 
-            this.cmbSettings.Items.Clear();
+            cmbSettings.Items.Clear();
             if (settings != null)
                 foreach (var setting in settings)
                     cmbSettings.Items.Add(setting);
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             this.SelectedHotkeyCommand = null;
 
-            this.listMappings.Items.Clear();
+            listMappings.Items.Clear();
             if (setting != null)
             {
                 foreach (var cmd in setting.Commands)
@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     {
                         var item = new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() ?? _hotkeyNotSet.Text });
                         item.Tag = cmd;
-                        this.listMappings.Items.Add(item);
+                        listMappings.Items.Add(item);
                     }
                 }
             }
@@ -118,12 +118,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void cmbSettings_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.SelectedHotkeySettings = this.cmbSettings.SelectedItem as HotkeySettings;
+            this.SelectedHotkeySettings = cmbSettings.SelectedItem as HotkeySettings;
         }
 
         private void listMappings_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var lvi = this.listMappings.SelectedItems.Count > 0 ? this.listMappings.SelectedItems[0] : null;
+            var lvi = listMappings.SelectedItems.Count > 0 ? listMappings.SelectedItems[0] : null;
             if (lvi != null)
             {
                 var hotkey = lvi.Tag as HotkeyCommand;

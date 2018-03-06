@@ -215,6 +215,5 @@ namespace GitUI
             else
                 return container.FindFocusedControl();
         }
-
     }
 }

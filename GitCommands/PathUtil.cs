@@ -164,6 +164,5 @@ namespace GitCommands
             shellPath = null;
             return false;
         }
-
     }
 }

@@ -34,6 +34,5 @@ namespace GitUI
                 BackColor = Color.Salmon;
             }
         }
-
     }
 }

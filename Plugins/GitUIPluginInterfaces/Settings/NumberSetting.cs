@@ -24,7 +24,7 @@ namespace GitUIPluginInterfaces
         public ISettingControlBinding CreateControlBinding()
         {
             return new TextBoxBinding(this, CustomControl);
-    }
+        }
 
         private class TextBoxBinding : SettingControlBinding<NumberSetting<T>, TextBox>
         {
@@ -124,6 +124,5 @@ namespace GitUIPluginInterfaces
                 return (T)settingVal;
             }
         }
-
     }
 }

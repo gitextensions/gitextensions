@@ -181,5 +181,4 @@ namespace GitCommands.Settings
             keepBackup = new BoolNullableSetting("keepBackup", this, true);
         }
     }
-
 }

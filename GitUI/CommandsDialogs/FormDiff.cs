@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.ContextMenuStrip = DiffContextMenu;
 
             this.Load += (sender, args) => PopulateDiffFiles();
-            this.DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
+            DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
         }
 
         private void DiffTextOnExtraDiffArgumentsChanged(object sender, EventArgs eventArgs)
@@ -175,7 +175,6 @@ namespace GitUI.CommandsDialogs
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var candidates = DiffFiles.GitItemStatuses;
 
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>

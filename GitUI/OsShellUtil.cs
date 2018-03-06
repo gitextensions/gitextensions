@@ -1,9 +1,8 @@
-﻿namespace GitUI
+﻿using System.Diagnostics;
+using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Dialogs;
+namespace GitUI
 {
-    using System.Diagnostics;
-    using System.Windows.Forms;
-    using Microsoft.WindowsAPICodePack.Dialogs;
-
     public static class OsShellUtil
     {
         public static void OpenAs(string file)

@@ -34,7 +34,6 @@ namespace GitUI.HelperDialogs
                     revisionGrid.SetInitialRevision(guid);
                 }
             }
-
         }
 
         public GitCommands.GitRevision SelectedRevision { get; private set; }

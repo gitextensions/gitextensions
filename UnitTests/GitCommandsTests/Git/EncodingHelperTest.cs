@@ -171,6 +171,5 @@ namespace GitCommandsTests.Git
         // Couldn't find a test so far where StreamReader.CurrentEncoding is different than given Encoding
 
         #endregion
-
     }
 }

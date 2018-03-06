@@ -226,5 +226,4 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             : base(setting.FullPath, aCaption, setting.DefaultValue)
         { }
     }
-
 }

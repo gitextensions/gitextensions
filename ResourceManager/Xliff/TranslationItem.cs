@@ -9,7 +9,6 @@ namespace ResourceManager.Xliff
     {
         public TranslationItem()
         {
-
         }
 
         public TranslationItem(string name, string property, string source)

@@ -16,12 +16,12 @@ namespace Bitbucket
         public static Settings Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
         {
             var result = new Settings
-                             {
-                                 Username = plugin.BitbucketUsername.ValueOrDefault(settings),
-                                 Password = plugin.BitbucketPassword.ValueOrDefault(settings),
-                                 BitbucketUrl = plugin.BitbucketBaseUrl.ValueOrDefault(settings),
-                                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
-                             };
+            {
+                Username = plugin.BitbucketUsername.ValueOrDefault(settings),
+                Password = plugin.BitbucketPassword.ValueOrDefault(settings),
+                BitbucketUrl = plugin.BitbucketBaseUrl.ValueOrDefault(settings),
+                DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
+            };
 
             var module = ((GitModule)gitModule);
 

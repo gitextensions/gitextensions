@@ -4,7 +4,6 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-
     public interface IGlobalSettingsPage : ISettingsPage
     {
         void SetGlobalSettings();
@@ -101,9 +100,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         }
                     };
                 }
-
             }
-
         }
 
         private void GlobalRB_CheckedChanged(object sender, EventArgs e)

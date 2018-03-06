@@ -7,7 +7,6 @@ using System.Reflection;
 /// </summary>
 internal static class TraceWriter
 {
-
     public static TraceSwitch Switch = new TraceSwitch(Assembly.GetAssembly(typeof(TraceWriter)).GetName().Name, "Trace Helper Switch");
 
     public static void TraceError(string format, params object[] args)
@@ -43,7 +42,8 @@ internal static class TraceWriter
     public static void TraceWarning(string value)
     {
         if (Switch.TraceWarning)
-            Trace.WriteLine(value, GetCallingMethod(new StackTrace(1)));        }
+            Trace.WriteLine(value, GetCallingMethod(new StackTrace(1)));
+    }
 
     public static void TraceVerbose(string format, params object[] args)
     {
@@ -64,6 +64,5 @@ internal static class TraceWriter
         string functionName = frame.GetMethod().Name;
         return string.Format("{0}.{1}", className, functionName);
     }
-
 }
 

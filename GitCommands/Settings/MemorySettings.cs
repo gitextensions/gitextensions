@@ -5,7 +5,6 @@
         public MemorySettings()
             : base(null, new MemorySettingsCache())
         {
-
         }
     }
 }

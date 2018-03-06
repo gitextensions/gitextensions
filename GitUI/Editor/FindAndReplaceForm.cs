@@ -147,7 +147,8 @@ namespace GitUI
             int startIdx = -1;
             int currentIdx = -1;
             TextRange range = null;
-            do {
+            do
+            {
                 Caret caret = _editor.ActiveTextAreaControl.Caret;
                 if (viaF3 && _search.HasScanRegion &&
                     !Globals.IsInRange(caret.Offset, _search.BeginOffset, _search.EndOffset))

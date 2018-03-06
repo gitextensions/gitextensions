@@ -26,7 +26,6 @@ namespace GitUI
         public FormStatus(bool useDialogSettings)
             : this(null, useDialogSettings)
         {
-
         }
 
         public FormStatus(ConsoleOutputControl aConsoleOutput, bool useDialogSettings)
@@ -106,7 +105,7 @@ namespace GitUI
                     }
                     // Show last progress message in the title, unless it's showin in the control body already
                     if (!ConsoleOutput.IsDisplayingFullProcessOutput)
-                      Text = text;
+                        Text = text;
                 };
             BeginInvoke(method, this);
         }

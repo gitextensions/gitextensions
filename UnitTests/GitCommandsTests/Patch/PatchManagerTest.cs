@@ -215,7 +215,6 @@ namespace GitCommandsTests.Patch
                 PatchOutput.Append(GitModule.ReEncodeString(line, fileEncoding, GitModule.LosslessEncoding));
                 PatchOutput.Append("\n");
             }
-
         }
     }
 }

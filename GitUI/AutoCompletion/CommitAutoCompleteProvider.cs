@@ -42,7 +42,7 @@ namespace GitUI.AutoCompletion
                                 var text = GetChangedFileText(_module, file);
                                 var matches = regex.Matches(text);
                                 foreach (Match match in matches)
-                                        // Skip first group since it always contains the entire matched string (regardless of capture groups)
+                                    // Skip first group since it always contains the entire matched string (regardless of capture groups)
                                     foreach (Group @group in match.Groups.OfType<Group>().Skip(1))
                                         foreach (Capture capture in @group.Captures)
                                             autoCompleteWords.Add(capture.Value);
@@ -75,8 +75,8 @@ namespace GitUI.AutoCompletion
 
             Stream s = Assembly.GetEntryAssembly().GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
             if (s == null)
-                {
-                    throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
+            {
+                throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }
             using (var sr = new StreamReader(s))
             {

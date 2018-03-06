@@ -150,7 +150,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void MessageChx_CheckedChanged(object sender, EventArgs e)
         {
-
             if (SelectedLinkDefinition != null)
             {
                 if (MessageChx.Checked)

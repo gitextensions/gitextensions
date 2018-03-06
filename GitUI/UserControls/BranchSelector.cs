@@ -111,7 +111,6 @@ namespace GitUI.UserControls
                         .Where(a => !GitModule.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
-
             }
             for (int index = 1; index < _containRevisons.Length; index++)
             {

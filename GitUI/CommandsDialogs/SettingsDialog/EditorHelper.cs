@@ -48,6 +48,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exec = "\"" + exec + "\"";
             return exec + commandLineParameter;
         }
-
     }
 }

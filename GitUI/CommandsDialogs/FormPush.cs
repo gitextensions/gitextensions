@@ -409,7 +409,6 @@ namespace GitUI.CommandsDialogs
                 HandleOnExitCallback = HandlePushOnExit
             })
             {
-
                 form.ShowDialog(owner);
                 ErrorOccurred = form.ErrorOccurred();
 
@@ -873,7 +872,6 @@ namespace GitUI.CommandsDialogs
                         Remote = remote
                     })
                     {
-
                         formProcess.ShowDialog(this);
                         if (formProcess.ErrorOccurred())
                         {

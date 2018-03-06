@@ -320,13 +320,13 @@ namespace TranslationApp
         {
             using (var fileDialog =
                 new SaveFileDialog
-                    {
-                        Title = saveAsText.Text,
-                        FileName = translations.Text + ".xlf",
-                        Filter = saveAsTextFilter.Text + "|*.xlf",
-                        DefaultExt = ".xlf",
-                        AddExtension = true
-                    })
+                {
+                    Title = saveAsText.Text,
+                    FileName = translations.Text + ".xlf",
+                    Filter = saveAsTextFilter.Text + "|*.xlf",
+                    DefaultExt = ".xlf",
+                    AddExtension = true
+                })
             {
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
@@ -475,11 +475,10 @@ namespace TranslationApp
                 if (translateGrid.CurrentCell.RowIndex < translateGrid.Rows.Count - 1)
                     translateItemBindingSource.MoveNext();
             }
-            else
-                if (translateGrid.Rows.Count > 0)
-                {
-                    translateGrid.Rows[0].Selected = true;
-                }
+            else if (translateGrid.Rows.Count > 0)
+            {
+                translateGrid.Rows[0].Selected = true;
+            }
         }
 
         private void previousButton_Click(object sender, EventArgs e)
@@ -489,11 +488,10 @@ namespace TranslationApp
                 if (translateGrid.CurrentCell.RowIndex > 0)
                     translateItemBindingSource.MovePrevious();
             }
-            else
-                if (translateGrid.Rows.Count > 0)
-                {
-                    translateGrid.Rows[0].Selected = true;
-                }
+            else if (translateGrid.Rows.Count > 0)
+            {
+                translateGrid.Rows[0].Selected = true;
+            }
         }
 
         private void toolStripButtonNew_Click(object sender, EventArgs e)

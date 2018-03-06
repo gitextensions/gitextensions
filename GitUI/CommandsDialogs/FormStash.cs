@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
-                    Encoding encoding = this.View.Encoding;
+                    Encoding encoding = View.Encoding;
                     View.ViewPatch(() =>
                     {
                         Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
@@ -309,13 +309,13 @@ namespace GitUI.CommandsDialogs
             {
                 if (((ToolStripButton)sender).Checked)
                 {
-                    this.StashMessage.ReadOnly = false;
-                    this.StashMessage.Focus();
-                    this.StashMessage.SelectAll();
+                    StashMessage.ReadOnly = false;
+                    StashMessage.Focus();
+                    StashMessage.SelectAll();
                 }
                 else
                 {
-                    this.StashMessage.ReadOnly = true;
+                    StashMessage.ReadOnly = true;
                 }
             }
         }

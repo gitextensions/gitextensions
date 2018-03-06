@@ -63,7 +63,6 @@ namespace GitCommands.Repository
         /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
         private string ReadRepositoryDescription(string workingDir)
         {
-
             var repositoryPath = _gitDirectoryResolver.Resolve(workingDir);
             var repositoryDescriptionFilePath = Path.Combine(repositoryPath, RepositoryDescriptionFileName);
             if (!File.Exists(repositoryDescriptionFilePath))
@@ -83,6 +82,5 @@ namespace GitCommands.Repository
                 return null;
             }
         }
-
     }
 }

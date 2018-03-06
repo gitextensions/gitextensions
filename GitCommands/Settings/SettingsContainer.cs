@@ -66,6 +66,5 @@ namespace GitCommands.Settings
 
             return false;
         }
-
     }
 }

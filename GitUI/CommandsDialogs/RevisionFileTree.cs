@@ -445,7 +445,7 @@ See the changes in the commit form.");
 
         private void expandSubtreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           tvGitTree.SelectedNode?.ExpandAll();
+            tvGitTree.SelectedNode?.ExpandAll();
         }
 
         private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -632,7 +632,6 @@ See the changes in the commit form.");
 
         private void assumeUnchangedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             bool wereErrors;
             var itemStatus = new GitItemStatus();
             itemStatus.Name = GetSelectedFile();

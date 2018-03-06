@@ -8,7 +8,6 @@ using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-
     [TestClass]
     public class GitCommandCacheTest
     {
@@ -28,7 +27,6 @@ namespace GitCommandsTests.Git
             GitCommandCache.Add("git command", output, error);
 
             Assert.IsTrue(expectedCachedCommand.SequenceEqual(GitCommandCache.CachedCommands()));
-
         }
 
         [TestMethod]

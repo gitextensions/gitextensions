@@ -160,7 +160,6 @@ namespace GitUI.Script
             FetchAll.AddToRevisionGridContextMenu = true;
             FetchAll.Enabled = false;
             Scripts.Add(FetchAll);
-
         }
 
         internal static int NextHotkeyCommandIdentifier()

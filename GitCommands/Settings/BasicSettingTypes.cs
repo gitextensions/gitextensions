@@ -1,6 +1,5 @@
 ﻿namespace GitCommands.Settings
 {
-
     public class StringSetting : Setting<string>
     {
         public StringSetting(string aName, SettingsPath settingsSource, string aDefaultValue)

@@ -524,7 +524,6 @@ namespace AppVeyorIntegration
         {
             get
             {
-
                 if (Status != BuildStatus.InProgress)
                 {
                     return Status.ToString("G");

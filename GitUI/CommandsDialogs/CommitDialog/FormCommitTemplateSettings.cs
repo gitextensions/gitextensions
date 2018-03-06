@@ -52,7 +52,6 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             _NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex = 0;
             checkBoxAutoWrap.Checked = AppSettings.CommitValidationAutoWrap;
-
         }
 
         private void SaveSettings()

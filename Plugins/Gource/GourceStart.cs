@@ -108,10 +108,10 @@ namespace Gource
         {
             using (var fileDialog =
                 new OpenFileDialog
-                    {
-                        Filter = "Gource (gource.exe)|gource.exe",
-                        FileName = GourcePath.Text
-                    })
+                {
+                    Filter = "Gource (gource.exe)|gource.exe",
+                    FileName = GourcePath.Text
+                })
             {
                 fileDialog.ShowDialog(this);
 

@@ -184,6 +184,5 @@ namespace GitUI
             }
             base.DataReceived(sender, e);
         }
-
     }
 }

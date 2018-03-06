@@ -23,5 +23,4 @@ namespace GitPluginShared.Commands
             return new ItemCommandT().IsEnabled(application);
         }
     }
-
 }

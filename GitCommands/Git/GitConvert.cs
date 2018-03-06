@@ -38,7 +38,7 @@ namespace GitCommands
                 }
             }
 
-            for (long index = 1;  index < buf.LongLength; index++)
+            for (long index = 1; index < buf.LongLength; index++)
             {
                 if (buf[index] == 0x0A)
                 {
@@ -164,7 +164,5 @@ namespace GitCommands
 
             return false;
         }
-
-
     }
 }

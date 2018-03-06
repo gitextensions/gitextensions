@@ -29,7 +29,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 if (word.Length >= entry.ConditionCount)
                 {
                     int passCount = 0;
-                    for (int i = 0;  i < entry.ConditionCount; i++)
+                    for (int i = 0; i < entry.ConditionCount; i++)
                     {
                         int charCode = word[i];
                         if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
@@ -76,7 +76,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 if (word.Length >= entry.ConditionCount)
                 {
                     int passCount = 0;
-                    for (int i = 0;  i < entry.ConditionCount; i++)
+                    for (int i = 0; i < entry.ConditionCount; i++)
                     {
                         int charCode = word[word.Length - (entry.ConditionCount - i)];
                         if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
@@ -219,7 +219,6 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 
             entry.ConditionCount = num;
             return;
-
         }
 
         /// <summary>
@@ -243,7 +242,6 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
         /// </remarks>
         public static string RemovePrefix(string word, AffixEntry entry)
         {
-
             int tempLength = word.Length - entry.AddCharacters.Length;
             if ((tempLength > 0)
                 && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
@@ -255,7 +253,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 tempWord = entry.StripCharacters + tempWord;
                 // check that this is valid
                 int passCount = 0;
-                for (int i = 0;  i < entry.ConditionCount; i++)
+                for (int i = 0; i < entry.ConditionCount; i++)
                 {
                     int charCode = tempWord[i];
                     if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
@@ -267,7 +265,6 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 {
                     return tempWord;
                 }
-
             }
             return word;
         }
@@ -303,7 +300,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 tempWord += entry.StripCharacters;
                 // check that this is valid
                 int passCount = 0;
-                for (int i = 0;  i < entry.ConditionCount; i++)
+                for (int i = 0; i < entry.ConditionCount; i++)
                 {
                     int charCode = tempWord[tempWord.Length - (entry.ConditionCount - i)];
                     if ((entry.Condition[charCode] & (1 << i)) == (1 << i))

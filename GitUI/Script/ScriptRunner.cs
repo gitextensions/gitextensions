@@ -361,7 +361,6 @@ namespace GitUI.Script
         private static string ExpandCommandVariables(string originalCommand, GitModule aModule)
         {
             return originalCommand.Replace("{WorkingDir}", aModule.WorkingDir);
-
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<IGitRef> selectedRemoteBranches,

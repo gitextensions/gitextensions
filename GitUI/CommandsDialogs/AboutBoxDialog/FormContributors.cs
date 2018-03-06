@@ -6,7 +6,6 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public class FormContributors : GitExtensionsForm
     {
-
         private readonly static string[] tabCaptions = new string[] {
             "The Coders", "The Translators", "The Designers"
         };
@@ -59,7 +58,6 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
         private void SetupForm()
         {
-
             SuspendLayout();
             Controls.Clear();
 
@@ -85,7 +83,6 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             this.Text = "Thanks to...";
 
             this.ResumeLayout(false);
-
         }
 
         public void LoadContributors(string coders, string translators, string designers, string others)

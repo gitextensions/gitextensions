@@ -225,8 +225,8 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
             /* If not changed, by default show "no sign commit" */
-            if (this.gpgSignCommitToolStripComboBox.SelectedIndex == -1)
-                this.gpgSignCommitToolStripComboBox.SelectedIndex = 0;
+            if (gpgSignCommitToolStripComboBox.SelectedIndex == -1)
+                gpgSignCommitToolStripComboBox.SelectedIndex = 0;
         }
 
         private void ConfigureMessageBox()
@@ -784,7 +784,7 @@ namespace GitUI.CommandsDialogs
             {
                 var fc = this.FindFocusedControl();
 
-                if (fc == this.Ok)
+                if (fc == Ok)
                 {
                     if (Unstaged.GitItemStatuses.Any())
                         Unstaged.Focus();
@@ -1104,7 +1104,6 @@ namespace GitUI.CommandsDialogs
                     {
                         if (DialogResult.No == MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
                             return false;
-
                     }
                 }
                 catch
@@ -1359,12 +1358,12 @@ namespace GitUI.CommandsDialogs
                 {
                     if (!item.IsSubmodule) { isFile = true; }
                 }
-                this.stagedToolStripSeparator14.Visible = isFile;
-                this.stagedEditFileToolStripMenuItem11.Visible = isFile;
-                this.stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
-                this.stagedOpenToolStripMenuItem7.Visible = isFile;
-                this.stagedToolStripSeparator17.Visible = isFile;
-                this.stagedOpenWithToolStripMenuItem8.Visible = isFile;
+                stagedToolStripSeparator14.Visible = isFile;
+                stagedEditFileToolStripMenuItem11.Visible = isFile;
+                stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
+                stagedOpenToolStripMenuItem7.Visible = isFile;
+                stagedToolStripSeparator17.Visible = isFile;
+                stagedOpenWithToolStripMenuItem8.Visible = isFile;
             }
         }
 
@@ -2115,9 +2114,6 @@ namespace GitUI.CommandsDialogs
         {
             _userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
             _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
-
-
-
         }
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
@@ -2755,7 +2751,6 @@ namespace GitUI.CommandsDialogs
 
         private void commitCommitter_Click(object sender, EventArgs e)
         {
-
             UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 

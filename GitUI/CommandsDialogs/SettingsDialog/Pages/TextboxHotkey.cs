@@ -35,6 +35,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // Swallow all keys
             return true;
         }
-
     }
 }

@@ -45,11 +45,11 @@ namespace GitUI.CommandsDialogs
         private string SelectPatchFile(string initialDirectory)
         {
             using (var dialog = new OpenFileDialog
-                             {
-                                 Filter = _patchFileFilterString.Text + "|*.patch",
-                                 InitialDirectory = initialDirectory,
-                                 Title = _patchFileFilterTitle.Text
-                             })
+            {
+                Filter = _patchFileFilterString.Text + "|*.patch",
+                InitialDirectory = initialDirectory,
+                Title = _patchFileFilterTitle.Text
+            })
             {
                 return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
             }
@@ -77,12 +77,10 @@ namespace GitUI.CommandsDialogs
 
         private void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void ViewPatch_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

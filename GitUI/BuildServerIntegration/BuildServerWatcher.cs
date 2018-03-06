@@ -222,25 +222,25 @@ namespace GitUI.BuildServerIntegration
             if (BuildStatusImageColumnIndex == -1)
             {
                 var buildStatusImageColumn = new DataGridViewImageColumn
-                                                 {
-                                                     AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                                                     Width = 16,
-                                                     ReadOnly = true,
-                                                     Resizable = DataGridViewTriState.False,
-                                                     SortMode = DataGridViewColumnSortMode.NotSortable
-                                                 };
+                {
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                    Width = 16,
+                    ReadOnly = true,
+                    Resizable = DataGridViewTriState.False,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
                 BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
             }
 
             if (BuildStatusMessageColumnIndex == -1 && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
             {
                 var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
-                                                {
-                                                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                                                    ReadOnly = true,
-                                                    FillWeight = 50,
-                                                    SortMode = DataGridViewColumnSortMode.NotSortable
-                                                };
+                {
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                    ReadOnly = true,
+                    FillWeight = 50,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
 
                 BuildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
             }

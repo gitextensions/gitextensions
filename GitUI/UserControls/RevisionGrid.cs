@@ -124,7 +124,7 @@ namespace GitUI
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
 
-            this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 
             Translate();
 
@@ -829,7 +829,6 @@ namespace GitUI
                 {
                     LastSelectedRows = Revisions.SelectedIds;
                 }
-
             }
 
             SelectionTimer.Enabled = false;
@@ -3023,7 +3022,6 @@ namespace GitUI
 
         internal void ShowRevisionGraph_ToolStripMenuItemClick(object sender, EventArgs e)
         {
-
             ToggleRevisionGraph();
             SetRevisionsLayout();
             MenuCommands.TriggerMenuChanged();
@@ -3127,7 +3125,6 @@ namespace GitUI
 
                 Revisions.ShowAuthor(!IsCardLayout());
                 Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
-
             }
             else
             {

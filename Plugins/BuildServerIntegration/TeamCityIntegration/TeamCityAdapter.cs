@@ -22,7 +22,6 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace TeamCityIntegration
 {
-
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
@@ -127,10 +126,9 @@ namespace TeamCityIntegration
                             GetProjectFromNameXmlResponseAsync(name, CancellationToken.None)
                             .ContinueWith(
                             task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
-                                   select element.Attribute("id").Value,
+                                    select element.Attribute("id").Value,
                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
                     }
-
                 }
             }
         }
@@ -317,14 +315,14 @@ namespace TeamCityIntegration
             }
 
             var buildInfo = new BuildInfo
-                {
-                    Id = idValue,
-                    StartDate = DecodeJsonDateTime(startDateText),
-                    Status = ParseBuildStatus(statusValue),
-                    Description = statusText,
-                    CommitHashList = commitHashList,
-                    Url = webUrl
-                };
+            {
+                Id = idValue,
+                StartDate = DecodeJsonDateTime(startDateText),
+                Status = ParseBuildStatus(statusValue),
+                Description = statusText,
+                CommitHashList = commitHashList,
+                Url = webUrl
+            };
             return buildInfo;
         }
 
@@ -422,7 +420,6 @@ namespace TeamCityIntegration
                 Console.WriteLine(exception);
                 throw;
             }
-
         }
 
         public void UpdateHttpClientOptionsGuestAuth()
@@ -439,8 +436,8 @@ namespace TeamCityIntegration
 
         private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
         {
-          byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
-          return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
+            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)

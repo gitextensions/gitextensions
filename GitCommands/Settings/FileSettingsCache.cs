@@ -65,7 +65,6 @@ namespace GitCommands.Settings
                 {
                     if (_saveTimer != null)
                     {
-
                         _saveTimer.Dispose();
                         _saveTimer = null;
                         _fileWatcher.Changed -= _fileWatcher_Changed;

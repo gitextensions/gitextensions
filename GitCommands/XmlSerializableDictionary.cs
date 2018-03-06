@@ -6,8 +6,6 @@ using System.Xml.Serialization;
 
 namespace GitCommands
 {
-
-
     [XmlRoot("dictionary")]
     [Serializable]
     public class XmlSerializableDictionary<TKey, TValue>
@@ -46,7 +44,6 @@ namespace GitCommands
             {
                 while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
                 {
-
                     reader.ReadStartElement("item");
                     reader.ReadStartElement("key");
 
@@ -66,16 +63,13 @@ namespace GitCommands
                     reader.ReadEndElement();
 
                     reader.MoveToContent();
-
                 }
             }
             reader.ReadEndElement();
-
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
@@ -101,10 +95,7 @@ namespace GitCommands
 
 
                 writer.WriteEndElement();
-
             }
-
-
         }
         #endregion
 

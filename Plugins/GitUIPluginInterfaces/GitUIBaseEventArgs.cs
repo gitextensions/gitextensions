@@ -26,7 +26,5 @@ namespace GitUIPluginInterfaces
         public IGitModule GitModule => GitUICommands.GitModule;
 
         public string Arguments { get; private set; }
-
     }
-
 }

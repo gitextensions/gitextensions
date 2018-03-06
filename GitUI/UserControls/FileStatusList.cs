@@ -681,7 +681,7 @@ namespace GitUI
             if (isSubmoduleSelected)
             {
                 _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ?
-                    new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) :
+                    new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold) :
                     new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
         }

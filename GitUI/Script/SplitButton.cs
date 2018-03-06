@@ -262,7 +262,6 @@ namespace GitUI.Script
             {
                 State = PushButtonState.Hot;
             }
-
         }
 
         protected override void OnMouseLeave(EventArgs e)

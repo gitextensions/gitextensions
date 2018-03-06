@@ -8,7 +8,6 @@ namespace GitCommands
 {
     public static class ExceptionUtils
     {
-
         public static void ShowException(Exception e)
         {
             ShowException(e, true);

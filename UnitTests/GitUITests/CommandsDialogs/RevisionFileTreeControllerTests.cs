@@ -29,8 +29,8 @@ namespace GitUITests.CommandsDialogs
             _iconProvider = Substitute.For<IFileAssociatedIconProvider>();
             _controller = new RevisionFileTreeController(() => @"c:\repo", _revisionInfoProvider, _iconProvider);
 
-             _rootNode = new TreeNode();
-             _imageList = new ImageList();
+            _rootNode = new TreeNode();
+            _imageList = new ImageList();
         }
 
         [TearDown]

@@ -176,19 +176,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SetCurrentDiffFont(Font newFont)
         {
-            this._diffFont = newFont;
+            _diffFont = newFont;
             SetFontButtonText(newFont, diffFontChangeButton);
         }
 
         private void SetCurrentApplicationFont(Font newFont)
         {
-            this._applicationFont = newFont;
+            _applicationFont = newFont;
             SetFontButtonText(newFont, applicationFontChangeButton);
         }
 
         private void SetCurrentCommitFont(Font newFont)
         {
-            this.commitFont = newFont;
+            commitFont = newFont;
             SetFontButtonText(newFont, commitFontChangeButton);
         }
 

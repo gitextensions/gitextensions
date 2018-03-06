@@ -62,7 +62,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 else
                 {
                     radioButtonCheckoutExistingBranch.Checked = true;
-
                 }
                 ValidateWorktreeOptions();
             }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -164,7 +163,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }
             else
             {
-
                 createWorktreeButton.Enabled = !(string.IsNullOrWhiteSpace(textBoxNewBranchName.Text)
                                                  || ExistingBranches.Any(b => b.Name == textBoxNewBranchName.Text));
             }

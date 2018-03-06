@@ -52,7 +52,6 @@ namespace GitCommandsTests.Helpers
         [TestMethod]
         public void TestCompare()
         {
-
             FillFilePaths();
             CreateTestFiles();
 
@@ -64,7 +63,6 @@ namespace GitCommandsTests.Helpers
             Assert.IsFalse(file1Info.Compare(_file3Path));
             Assert.IsTrue(file1Info.Compare(file2Info));
             Assert.IsFalse(file1Info.Compare(file3Info));
-
         }
 
         [TestMethod]
@@ -102,6 +100,5 @@ namespace GitCommandsTests.Helpers
             if (File.Exists(_file3Path))
                 File.Delete(_file3Path);
         }
-
     }
 }

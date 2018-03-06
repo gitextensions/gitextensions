@@ -109,7 +109,6 @@ namespace GitUI.RevisionGridClasses
 
             private bool MoveNext()
             {
-
                 // If there are no lanes, there is nothing more to draw
                 if (laneNodes.Count == 0 || sourceGraph.Count <= laneRows.Count)
                 {
@@ -547,9 +546,9 @@ namespace GitUI.RevisionGridClasses
                     private readonly List<int> countEnd = new List<int>();
                     private readonly List<int> countStart = new List<int>();
 
-                    #pragma warning disable 0649
+#pragma warning disable 0649
                     private readonly Graph.LaneInfo emptyItem;
-                    #pragma warning restore 0649
+#pragma warning restore 0649
 
                     public List<Edge> EdgeList { get; } = new List<Edge>();
 

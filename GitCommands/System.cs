@@ -218,12 +218,10 @@ namespace System
             else
                 return str.Substring(0, maxLength - 3) + "...";
         }
-
     }
 
     public static class BoolExtensions
     {
-
         /// <summary>
         /// Translates this bool value to the git command line force flag
         /// </summary>
@@ -231,6 +229,5 @@ namespace System
         {
             return force ? " -f " : string.Empty;
         }
-
     }
 }

@@ -103,8 +103,6 @@ namespace GitStatistics
             {
                 NumberTestCodeLines += codeLines;
             }
-
-
         }
     }
 }

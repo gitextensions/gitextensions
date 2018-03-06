@@ -88,7 +88,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     }, null);
                 Done();
             }
-
         }
 
         void CheckForNewerVersion(string releases)
@@ -185,7 +184,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Enum.TryParse<ReleaseType>(section.GetValue("ReleaseType"), true, out version.ReleaseType);
 
             return version;
-
         }
 
         public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
@@ -210,7 +208,5 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             return versions.Where(version => version.Version.CompareTo(currentVersion) > 0);
         }
-
     }
-
 }

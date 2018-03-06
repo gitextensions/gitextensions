@@ -628,7 +628,6 @@ namespace GitUI.SpellChecker
         {
             if (!e.Alt && !e.Control && !e.Shift && _keysToSendToAutoComplete.ContainsKey(e.KeyCode) && AutoComplete.Visible)
             {
-
                 if (e.KeyCode == Keys.Up && AutoComplete.SelectedIndex == 0)
                     AutoComplete.SelectedIndex = AutoComplete.Items.Count - 1;
                 else if (e.KeyCode == Keys.Down && AutoComplete.SelectedIndex == AutoComplete.Items.Count - 1)
