@@ -1,5 +1,4 @@
-﻿
-namespace GitUI.Script
+﻿namespace GitUI.Script
 {
     public enum ScriptEvent
     {

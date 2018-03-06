@@ -1,4 +1,3 @@
-
 namespace NetSpell.SpellChecker
 {
     /// <summary>
