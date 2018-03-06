@@ -60,9 +60,9 @@ namespace GitCommands.Statistics
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
         private readonly IGitModule _Module;
 
-        public ImpactLoader(IGitModule aModule)
+        public ImpactLoader(IGitModule module)
         {
-            _Module = aModule;
+            _Module = module;
         }
 
         public void Dispose()

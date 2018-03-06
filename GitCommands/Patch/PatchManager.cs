@@ -608,7 +608,7 @@ namespace PatchApply
                         {
                             // if the last line is selected to be reset and there is no new line at the end of file
                             // then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
-                            PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(aLine => !aLine.Selected);
+                            PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(l => !l.Selected);
                             if (lastNotSelectedLine != null)
                             {
                                 lastNotSelectedLine.Selected = true;

@@ -35,8 +35,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormVerify(GitUICommands aCommands)
-            : base(aCommands)
+        public FormVerify(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
@@ -44,9 +44,9 @@ namespace GitUI.CommandsDialogs
             Translate();
             Warnings.AutoGenerateColumns = false;
 
-            if (aCommands != null)
+            if (commands != null)
             {
-                _gitTagController = new GitTagController(aCommands);
+                _gitTagController = new GitTagController(commands);
             }
         }
 

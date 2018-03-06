@@ -142,22 +142,22 @@ namespace Github3
 
         public bool ConfigurationOk => true;
 
-        public bool GitModuleIsRelevantToMe(IGitModule aModule)
+        public bool GitModuleIsRelevantToMe(IGitModule module)
         {
-            return GetHostedRemotesForModule(aModule).Count > 0;
+            return GetHostedRemotesForModule(module).Count > 0;
         }
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule)
+        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
         {
             var repoInfos = new List<IHostedRemote>();
 
-            string[] remotes = aModule.GetRemotes(false);
+            string[] remotes = module.GetRemotes(false);
             foreach (string remote in remotes)
             {
-                var url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
                 {
                     continue;

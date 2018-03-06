@@ -28,10 +28,10 @@ namespace Gerrit
         private readonly IGitModule _Module;
 
         // public only because of FormTranslate
-        public GerritSettings(IGitModule aModule)
+        public GerritSettings(IGitModule module)
         {
             Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
-            _Module = aModule;
+            _Module = module;
             Port = 29418;
             DefaultBranch = "master";
             DefaultRemote = "gerrit";
@@ -58,21 +58,21 @@ namespace Gerrit
             }
         }
 
-        public static GerritSettings Load([NotNull] IGitModule aModule)
+        public static GerritSettings Load([NotNull] IGitModule module)
         {
-            return Load(null, aModule);
+            return Load(null, module);
         }
 
-        public static GerritSettings Load([CanBeNull] IWin32Window owner, [NotNull] IGitModule aModule)
+        public static GerritSettings Load([CanBeNull] IWin32Window owner, [NotNull] IGitModule module)
         {
-            if (aModule == null)
+            if (module == null)
             {
-                throw new ArgumentNullException(nameof(aModule));
+                throw new ArgumentNullException(nameof(module));
             }
 
-            string path = aModule.WorkingDir + ".gitreview";
+            string path = module.WorkingDir + ".gitreview";
 
-            var result = new GerritSettings(aModule);
+            var result = new GerritSettings(module);
 
             try
             {

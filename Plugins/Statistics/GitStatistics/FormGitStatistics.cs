@@ -58,9 +58,9 @@ namespace GitStatistics
 #pragma warning restore 0414
         private readonly IGitModule _module;
 
-        public FormGitStatistics(IGitModule aModule, string codeFilePattern, bool countSubmodule)
+        public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodule)
         {
-            _module = aModule;
+            _module = module;
             _codeFilePattern = codeFilePattern;
             _countSubmodule = countSubmodule;
             InitializeComponent();

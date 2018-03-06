@@ -8,30 +8,30 @@ namespace GitCommands.Settings
     {
         private readonly XmlSerializableDictionary<string, string> _EncodedNameMap = new XmlSerializableDictionary<string, string>();
 
-        public GitExtSettingsCache(string aSettingsFilePath, bool autoSave = true)
-            : base(aSettingsFilePath, autoSave)
+        public GitExtSettingsCache(string settingsFilePath, bool autoSave = true)
+            : base(settingsFilePath, autoSave)
         {
         }
 
-        public static GitExtSettingsCache FromCache(string aSettingsFilePath)
+        public static GitExtSettingsCache FromCache(string settingsFilePath)
         {
             Lazy<GitExtSettingsCache> createSettingsCache = new Lazy<GitExtSettingsCache>(() =>
                 {
-                    return new GitExtSettingsCache(aSettingsFilePath, true);
+                    return new GitExtSettingsCache(settingsFilePath, true);
                 });
 
-            return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
+            return FileSettingsCache.FromCache(settingsFilePath, createSettingsCache);
         }
 
-        public static GitExtSettingsCache Create(string aSettingsFilePath, bool allowCache = true)
+        public static GitExtSettingsCache Create(string settingsFilePath, bool allowCache = true)
         {
             if (allowCache)
             {
-                return FromCache(aSettingsFilePath);
+                return FromCache(settingsFilePath);
             }
             else
             {
-                return new GitExtSettingsCache(aSettingsFilePath, false);
+                return new GitExtSettingsCache(settingsFilePath, false);
             }
         }
 
@@ -55,13 +55,13 @@ namespace GitCommands.Settings
 
         protected override void ReadSettings(string fileName)
         {
-            XmlReaderSettings rSettings = new XmlReaderSettings
+            XmlReaderSettings readerSettings = new XmlReaderSettings
             {
                 IgnoreWhitespace = true,
                 CheckCharacters = false
             };
 
-            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))
+            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, readerSettings))
             {
                 _EncodedNameMap.ReadXml(xr);
             }

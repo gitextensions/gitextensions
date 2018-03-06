@@ -108,13 +108,13 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormPull(GitUICommands aCommands, string defaultRemoteBranch, string defaultRemote)
-            : base(aCommands)
+        public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
 
-            if (aCommands == null)
+            if (commands == null)
             {
                 return;
             }
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
 
             // If this repo is shallow, show an option to Unshallow
             // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
-            bool isRepoShallow = File.Exists(aCommands.Module.ResolveGitInternalPath("shallow"));
+            bool isRepoShallow = File.Exists(commands.Module.ResolveGitInternalPath("shallow"));
             if (isRepoShallow)
             {
                 Unshallow.Visible = true;

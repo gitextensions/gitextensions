@@ -20,8 +20,8 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultRemoteBranch;
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
 
-        public FormDeleteRemoteBranch(GitUICommands aCommands, string defaultRemoteBranch)
-            : base(aCommands)
+        public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

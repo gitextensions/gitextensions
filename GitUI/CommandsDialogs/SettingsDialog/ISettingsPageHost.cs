@@ -19,9 +19,9 @@
 
     public class SettingsPageHostMock : ISettingsPageHost
     {
-        public SettingsPageHostMock(CheckSettingsLogic aCheckSettingsLogic)
+        public SettingsPageHostMock(CheckSettingsLogic checkSettingsLogic)
         {
-            CheckSettingsLogic = aCheckSettingsLogic;
+            CheckSettingsLogic = checkSettingsLogic;
         }
 
         public void GotoPage(SettingsPageReference settingsPageReference)

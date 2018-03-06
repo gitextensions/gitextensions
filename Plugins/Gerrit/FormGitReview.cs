@@ -48,13 +48,13 @@ namespace Gerrit
             }
         }
 
-        public FormGitReview(IGitUICommands aUICommands)
+        public FormGitReview(IGitUICommands uiCommands)
             : base(true)
         {
             InitializeComponent();
             Translate();
 
-            UICommands = (GitUICommands)aUICommands;
+            UICommands = (GitUICommands)uiCommands;
             if (UICommands != null)
             {
                 LoadGitReview();

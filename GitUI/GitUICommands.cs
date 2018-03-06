@@ -2453,9 +2453,9 @@ namespace GitUI
 
             public event GitRemoteCommandCompletedEventHandler Completed;
 
-            internal GitRemoteCommand(GitModule aModule)
+            internal GitRemoteCommand(GitModule module)
             {
-                Module = aModule;
+                Module = module;
             }
 
             public void Execute()

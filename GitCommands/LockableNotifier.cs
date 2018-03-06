@@ -11,9 +11,9 @@ namespace GitCommands
 
         protected abstract void InternalNotify();
 
-        private void CheckNotify(int aLockCount)
+        private void CheckNotify(int lockCount)
         {
-            if (aLockCount == 0 && _notifyRequested)
+            if (lockCount == 0 && _notifyRequested)
             {
                 _notifyRequested = false;
                 InternalNotify();
@@ -69,14 +69,14 @@ namespace GitCommands
     {
         private Action _NotifyAction;
 
-        public ActionNotifier(Action aNotifyAction)
+        public ActionNotifier(Action notifyAction)
         {
-            if (aNotifyAction == null)
+            if (notifyAction == null)
             {
-                throw new ArgumentNullException(nameof(aNotifyAction));
+                throw new ArgumentNullException(nameof(notifyAction));
             }
 
-            _NotifyAction = aNotifyAction;
+            _NotifyAction = notifyAction;
         }
 
         protected override void InternalNotify()

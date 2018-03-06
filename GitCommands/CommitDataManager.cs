@@ -247,11 +247,11 @@ namespace GitCommands
             }
 
             var message = new StringBuilder();
-            bool bNotesStart = false;
+            bool notesStart = false;
             for (int i = startIndex; i <= endIndex; i++)
             {
                 string line = lines[i];
-                if (bNotesStart)
+                if (notesStart)
                 {
                     line = "    " + line;
                 }
@@ -259,7 +259,7 @@ namespace GitCommands
                 message.AppendLine(line);
                 if (lines[i] == "Notes:")
                 {
-                    bNotesStart = true;
+                    notesStart = true;
                 }
             }
 

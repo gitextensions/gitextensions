@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private string _prevTitle;
         private readonly AsyncLoader _remoteLoader = new AsyncLoader();
 
-        public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
-            : base(aCommands)
+        public CreatePullRequestForm(GitUICommands commands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
+            : base(commands)
         {
             _repoHost = repoHost;
             _chooseRemote = chooseRemote;

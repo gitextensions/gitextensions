@@ -11,8 +11,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
     {
         private List<WorkTree> _worktrees;
 
-        public FormManageWorktree(GitUICommands aCommands)
-            : base(aCommands)
+        public FormManageWorktree(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Worktrees.AutoGenerateColumns = false;

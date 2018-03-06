@@ -24,9 +24,9 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private GitModule Module => UICommands.Module;
 
-        public IndexWatcher(IGitUICommandsSource aUICommandsSource)
+        public IndexWatcher(IGitUICommandsSource uiCommandsSource)
         {
-            _UICommandsSource = aUICommandsSource;
+            _UICommandsSource = uiCommandsSource;
             _UICommandsSource.GitUICommandsChanged += UICommandsSource_GitUICommandsChanged;
             GitIndexWatcher = new FileSystemWatcher();
             RefsWatcher = new FileSystemWatcher();

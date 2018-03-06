@@ -34,16 +34,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected GitModule Module => CommonLogic.Module;
 
-        protected virtual void Init(ISettingsPageHost aPageHost)
+        protected virtual void Init(ISettingsPageHost pageHost)
         {
-            _PageHost = aPageHost;
+            _PageHost = pageHost;
         }
 
-        public static T Create<T>(ISettingsPageHost aPageHost) where T : SettingsPageBase, new()
+        public static T Create<T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
         {
             T result = new T();
 
-            result.Init(aPageHost);
+            result.Init(pageHost);
 
             return result;
         }
@@ -102,26 +102,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         protected abstract ISettingsSource GetCurrentSettings();
         protected abstract bool AreEffectiveSettings { get; }
 
-        public void AddControlBinding(ISettingControlBinding aBinding)
+        public void AddControlBinding(ISettingControlBinding binding)
         {
-            _controlBindings.Add(aBinding);
+            _controlBindings.Add(binding);
         }
 
-        protected void AddSettingBinding(BoolNullableSetting aSetting, CheckBox aCheckBox)
+        protected void AddSettingBinding(BoolNullableSetting setting, CheckBox checkBox)
         {
-            var adapter = new BoolCheckBoxAdapter(aSetting, aCheckBox);
+            var adapter = new BoolCheckBoxAdapter(setting, checkBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        protected void AddSettingBinding(IntNullableSetting aSetting, TextBox aControl)
+        protected void AddSettingBinding(IntNullableSetting setting, TextBox control)
         {
-            var adapter = new IntTextBoxAdapter(aSetting, aControl);
+            var adapter = new IntTextBoxAdapter(setting, control);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        protected void AddSettingBinding(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+        protected void AddSettingBinding(GitCommands.Settings.StringSetting setting, ComboBox comboBox)
         {
-            var adapter = new StringComboBoxAdapter(aSetting, aComboBox);
+            var adapter = new StringComboBoxAdapter(setting, comboBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
@@ -177,28 +177,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class BoolCheckBoxAdapter : GitUIPluginInterfaces.BoolSetting
     {
-        public BoolCheckBoxAdapter(BoolNullableSetting aSetting, CheckBox aCheckBox)
-            : base(aSetting.FullPath, aSetting.DefaultValue.Value)
+        public BoolCheckBoxAdapter(BoolNullableSetting setting, CheckBox checkBox)
+            : base(setting.FullPath, setting.DefaultValue.Value)
         {
-            CustomControl = aCheckBox;
+            CustomControl = checkBox;
         }
     }
 
     public class StringComboBoxAdapter : GitUIPluginInterfaces.ChoiceSetting
     {
-        public StringComboBoxAdapter(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
-            : base(aSetting.FullPath, aComboBox.Items.Cast<string>().ToList(), aSetting.DefaultValue)
+        public StringComboBoxAdapter(GitCommands.Settings.StringSetting setting, ComboBox comboBox)
+            : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.DefaultValue)
         {
-            CustomControl = aComboBox;
+            CustomControl = comboBox;
         }
     }
 
     public class IntTextBoxAdapter : GitUIPluginInterfaces.NumberSetting<int>
     {
-        public IntTextBoxAdapter(IntNullableSetting aSetting, TextBox aControl)
-            : base(aSetting.FullPath, aSetting.DefaultValue.Value)
+        public IntTextBoxAdapter(IntNullableSetting setting, TextBox control)
+            : base(setting.FullPath, setting.DefaultValue.Value)
         {
-            CustomControl = aControl;
+            CustomControl = control;
         }
     }
 }

@@ -45,13 +45,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Close();
         }
 
-        public void SearchForUpdatesAndShow(IWin32Window aOwnerWindow, bool alwaysShow)
+        public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
         {
-            OwnerWindow = aOwnerWindow;
+            OwnerWindow = ownerWindow;
             new Thread(SearchForUpdates).Start();
             if (alwaysShow)
             {
-                ShowDialog(aOwnerWindow);
+                ShowDialog(ownerWindow);
             }
         }
 

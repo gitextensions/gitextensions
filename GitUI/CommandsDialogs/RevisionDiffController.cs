@@ -53,7 +53,9 @@ namespace GitUI.CommandsDialogs
 
     public sealed class ContextMenuDiffToolInfo
     {
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
         public ContextMenuDiffToolInfo(bool aIsLocal, bool bIsLocal, bool bIsNormal, bool localExists, bool multipleRevisionsSelected)
+#pragma warning restore SA1305 // Field names should not use Hungarian notation
         {
             AIsLocal = aIsLocal;
             BIsLocal = bIsLocal;

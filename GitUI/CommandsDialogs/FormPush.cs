@@ -79,8 +79,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormPush(GitUICommands aCommands)
-            : base(aCommands)
+        public FormPush(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
 
             // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             // they are reset to false
-            if (aCommands != null)
+            if (commands != null)
             {
                 _remoteManager = new GitRemoteManager(() => Module);
                 Init();
@@ -952,17 +952,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private static string TakeCommandOutput(string aProcessOutput)
+        private static string TakeCommandOutput(string processOutput)
         {
             // the command output consists of lines in the format:
             // fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
-            int firstTabIdx = aProcessOutput.IndexOf('\t');
+            int firstTabIdx = processOutput.IndexOf('\t');
             if (firstTabIdx < 40)
             {
                 return string.Empty;
             }
 
-            var cmdOutput = aProcessOutput.Substring(firstTabIdx - 40);
+            var cmdOutput = processOutput.Substring(firstTabIdx - 40);
             return cmdOutput;
         }
 

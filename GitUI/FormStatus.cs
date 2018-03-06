@@ -29,11 +29,11 @@ namespace GitUI
         {
         }
 
-        public FormStatus(ConsoleOutputControl aConsoleOutput, bool useDialogSettings)
+        public FormStatus(ConsoleOutputControl consoleOutput, bool useDialogSettings)
             : base(true)
         {
             _UseDialogSettings = useDialogSettings;
-            ConsoleOutput = aConsoleOutput ?? ConsoleOutputControl.CreateInstance();
+            ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
@@ -324,10 +324,10 @@ namespace GitUI
         private FormStatus _FormStatus;
         private IWin32Window _Owner;
 
-        public DispatcherFrameModalControler(FormStatus aFormStatus, IWin32Window aOwner)
+        public DispatcherFrameModalControler(FormStatus formStatus, IWin32Window owner)
         {
-            _FormStatus = aFormStatus;
-            _Owner = aOwner;
+            _FormStatus = formStatus;
+            _Owner = owner;
         }
 
         public void BeginModal()

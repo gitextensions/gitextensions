@@ -8,8 +8,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormCommitCount : GitModuleForm
     {
-        public FormCommitCount(GitUICommands aCommands)
-            : base(aCommands)
+        public FormCommitCount(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;

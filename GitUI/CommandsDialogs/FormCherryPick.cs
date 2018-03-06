@@ -24,8 +24,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormCherryPick(GitUICommands aCommands, GitRevision revision)
-            : base(aCommands)
+        public FormCherryPick(GitUICommands commands, GitRevision revision)
+            : base(commands)
         {
             Revision = revision;
             InitializeComponent();

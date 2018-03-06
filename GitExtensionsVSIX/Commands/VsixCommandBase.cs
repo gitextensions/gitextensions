@@ -8,9 +8,9 @@ namespace GitExtensionsVSIX.Commands
     {
         public readonly CommandBase BaseCommand;
 
-        public VsixCommandBase(CommandBase aBaseCommand)
+        public VsixCommandBase(CommandBase baseCommand)
         {
-            BaseCommand = aBaseCommand;
+            BaseCommand = baseCommand;
         }
 
         virtual public void BeforeQueryStatus(DTE2 application, OleMenuCommand menuCommand)

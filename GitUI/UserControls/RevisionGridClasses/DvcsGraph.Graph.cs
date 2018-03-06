@@ -74,9 +74,9 @@ namespace GitUI.RevisionGridClasses
 
             public int CachedCount => _lanes.CachedCount;
 
-            public void Filter(string aId)
+            public void Filter(string id)
             {
-                Node node = Nodes[aId];
+                Node node = Nodes[id];
 
                 if (!node.IsFiltered)
                 {
@@ -85,7 +85,7 @@ namespace GitUI.RevisionGridClasses
                 }
 
                 // Clear the filtered lane data.
-                // TODO: We could be smart and only clear items after Node[aId]. The check
+                // TODO: We could be smart and only clear items after Node[id]. The check
                 // below isn't valid, since it could be either the filtered or unfiltered
                 // lane...
                 ////if (node.InLane != int.MaxValue)
@@ -105,15 +105,15 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public void HighlightBranch(string aId)
+            public void HighlightBranch(string id)
             {
                 ClearHighlightBranch();
-                HighlightBranchRecursive(aId);
+                HighlightBranchRecursive(id);
             }
 
-            public bool IsRevisionRelative(string aGuid)
+            public bool IsRevisionRelative(string guid)
             {
-                if (Nodes.TryGetValue(aGuid, out var startNode))
+                if (Nodes.TryGetValue(guid, out var startNode))
                 {
                     return startNode.Ancestors.Any(a => a.IsRelative);
                 }
@@ -121,9 +121,9 @@ namespace GitUI.RevisionGridClasses
                 return false;
             }
 
-            public void HighlightBranchRecursive(string aId)
+            public void HighlightBranchRecursive(string id)
             {
-                if (Nodes.TryGetValue(aId, out var startNode))
+                if (Nodes.TryGetValue(id, out var startNode))
                 {
                     foreach (Junction junction in startNode.Ancestors)
                     {
@@ -141,22 +141,22 @@ namespace GitUI.RevisionGridClasses
 
             public event GraphUpdatedHandler Updated;
 
-            public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
+            public void Add(string id, string[] parentIds, DataType type, GitRevision data)
             {
                 // If we haven't seen this node yet, create a new junction.
-                if (!GetNode(aId, out var node) && (aParentIds == null || aParentIds.Length == 0))
+                if (!GetNode(id, out var node) && (parentIds == null || parentIds.Length == 0))
                 {
                     var newJunction = new Junction(node, node);
                     _junctions.Add(newJunction);
                 }
 
                 _nodeCount++;
-                node.Data = aData;
-                node.DataType = aType;
+                node.Data = data;
+                node.DataType = type;
                 node.Index = AddedNodes.Count;
                 AddedNodes.Add(node);
 
-                foreach (string parentId in aParentIds)
+                foreach (string parentId in parentIds)
                 {
                     GetNode(parentId, out var parent);
 
@@ -176,7 +176,7 @@ namespace GitUI.RevisionGridClasses
                         // and is about to start a new branch. This will also mean that the last
                         // revisions are non-relative. Make sure a new junction is added and this
                         // is the start of a new branch (and color!)
-                        && (aType & DataType.Active) != DataType.Active)
+                        && (type & DataType.Active) != DataType.Active)
                     {
                         // The node isn't a junction point. Just the parent to the node's
                         // (only) ancestor junction.
@@ -210,7 +210,7 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
 
-                bool isRelative = (aType & DataType.Active) == DataType.Active;
+                bool isRelative = (type & DataType.Active) == DataType.Active;
                 if (!isRelative && node.Descendants.Any(d => d.IsRelative))
                 {
                     isRelative = true;
@@ -259,7 +259,7 @@ namespace GitUI.RevisionGridClasses
                 _filterNodeCount = 0;
             }
 
-            public void ProcessNode(Node aNode)
+            public void ProcessNode(Node node)
             {
                 if (_isFilter)
                 {
@@ -268,7 +268,7 @@ namespace GitUI.RevisionGridClasses
 
                 for (int i = _processedNodes; i < AddedNodes.Count; i++)
                 {
-                    if (AddedNodes[i] == aNode)
+                    if (AddedNodes[i] == node)
                     {
                         bool isChanged = false;
                         while (i > _processedNodes)
@@ -435,12 +435,12 @@ namespace GitUI.RevisionGridClasses
                 return L.ToArray();
             }
 
-            private bool GetNode(string aId, out Node aNode)
+            private bool GetNode(string id, out Node node)
             {
-                if (!Nodes.TryGetValue(aId, out aNode))
+                if (!Nodes.TryGetValue(id, out node))
                 {
-                    aNode = new Node(aId);
-                    Nodes.Add(aId, aNode);
+                    node = new Node(id);
+                    Nodes.Add(id, node);
                     return false;
                 }
 
@@ -453,10 +453,10 @@ namespace GitUI.RevisionGridClasses
             {
                 private List<Junction> _junctions;
 
-                public LaneInfo(int aConnectLane, Junction aJunction)
+                public LaneInfo(int connectLane, Junction junction)
                 {
-                    ConnectLane = aConnectLane;
-                    _junctions = new List<Junction>(1) { aJunction };
+                    ConnectLane = connectLane;
+                    _junctions = new List<Junction>(1) { junction };
                 }
 
                 public int ConnectLane { get; set; }
@@ -469,13 +469,13 @@ namespace GitUI.RevisionGridClasses
                     return other;
                 }
 
-                public void UnionWith(LaneInfo aOther)
+                public void UnionWith(LaneInfo other)
                 {
-                    foreach (Junction other in aOther._junctions)
+                    foreach (Junction otherJunction in other._junctions)
                     {
-                        if (!_junctions.Contains(other))
+                        if (!_junctions.Contains(otherJunction))
                         {
-                            _junctions.Add(other);
+                            _junctions.Add(otherJunction);
                         }
                     }
 

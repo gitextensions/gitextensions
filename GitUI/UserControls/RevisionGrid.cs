@@ -880,10 +880,10 @@ namespace GitUI
             return SetSelectedRevision(revision?.Guid);
         }
 
-        public void HighlightBranch(string aId)
+        public void HighlightBranch(string id)
         {
             RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
-            Revisions.HighlightBranch(aId);
+            Revisions.HighlightBranch(id);
         }
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
@@ -991,14 +991,14 @@ namespace GitUI
             return Revisions.GetRevisionChildren(revision);
         }
 
-        public bool IsValidRevisionIndex(int aIndex)
+        public bool IsValidRevisionIndex(int index)
         {
-            return aIndex >= 0 && aIndex < Revisions.RowCount;
+            return index >= 0 && index < Revisions.RowCount;
         }
 
-        public GitRevision GetRevision(int aRow)
+        public GitRevision GetRevision(int row)
         {
-            return Revisions.GetRowData(aRow);
+            return Revisions.GetRowData(row);
         }
 
         public GitRevision GetCurrentRevision()
@@ -1026,18 +1026,18 @@ namespace GitUI
 
         private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
         {
-            private RevisionGraphInMemFilter _fFilter1;
-            private RevisionGraphInMemFilter _fFilter2;
-            public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter aFilter1,
-                                              RevisionGraphInMemFilter aFilter2)
+            private RevisionGraphInMemFilter _filter1;
+            private RevisionGraphInMemFilter _filter2;
+            public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter filter1,
+                                              RevisionGraphInMemFilter filter2)
             {
-                _fFilter1 = aFilter1;
-                _fFilter2 = aFilter2;
+                _filter1 = filter1;
+                _filter2 = filter2;
             }
 
             public override bool PassThru(GitRevision rev)
             {
-                return _fFilter1.PassThru(rev) || _fFilter2.PassThru(rev);
+                return _filter1.PassThru(rev) || _filter2.PassThru(rev);
             }
         }
 
@@ -1805,7 +1805,7 @@ namespace GitUI
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
                             drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
-                            var superprojectRef = superprojectRefs.FirstOrDefault(spGitRef => gitRef.CompleteName == spGitRef.CompleteName);
+                            var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                             if (superprojectRef != null)
                             {
                                 superprojectRefs.Remove(superprojectRef);
@@ -2079,7 +2079,7 @@ namespace GitUI
         }
 
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
-        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule aModule)
+        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule module)
         {
             // code taken from CommitInfo.cs
             CommitData commitData = _commitDataManager.CreateFromRevision(revision);

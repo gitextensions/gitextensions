@@ -13,8 +13,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
 
-        public FormCleanupRepository(GitUICommands aCommands)
-            : base(aCommands)
+        public FormCleanupRepository(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent(); Translate();
             PreviewOutput.ReadOnly = true;

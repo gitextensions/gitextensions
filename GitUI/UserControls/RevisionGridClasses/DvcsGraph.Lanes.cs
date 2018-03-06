@@ -15,9 +15,9 @@ namespace GitUI.RevisionGridClasses
             private readonly List<Graph.ILaneRow> _laneRows;
             private readonly Graph _sourceGraph;
 
-            public Lanes(Graph aGraph)
+            public Lanes(Graph graph)
             {
-                _sourceGraph = aGraph;
+                _sourceGraph = graph;
 
                 // Rebuild lanes
                 _laneRows = new List<Graph.ILaneRow>();
@@ -70,9 +70,9 @@ namespace GitUI.RevisionGridClasses
                 _laneNodes.Clear();
                 _currentRow.Clear();
 
-                foreach (Node aNode in _sourceGraph.GetRefs())
+                foreach (Node node in _sourceGraph.GetRefs())
                 {
-                    Update(aNode);
+                    Update(node);
                 }
             }
 
@@ -87,15 +87,15 @@ namespace GitUI.RevisionGridClasses
                 return isValid;
             }
 
-            public void Update(Node aNode)
+            public void Update(Node node)
             {
-                if (aNode.Descendants.Count != 0)
+                if (node.Descendants.Count != 0)
                 {
                     return;
                 }
 
                 // This node is a head, create a new lane for it
-                Node h = aNode;
+                Node h = node;
                 if (h.Ancestors.Count != 0)
                 {
                     foreach (Junction j in h.Ancestors)
@@ -501,23 +501,23 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
 
-                public void Replace(int aOld, int aNew)
+                public void Replace(int old, int @new)
                 {
-                    for (int j = _edges.CountNext(aOld) - 1; j >= 0; --j)
+                    for (int j = _edges.CountNext(old) - 1; j >= 0; --j)
                     {
-                        Graph.LaneInfo info = _edges.RemoveNext(aOld, j, out var start, out _);
-                        info.ConnectLane = aNew;
+                        Graph.LaneInfo info = _edges.RemoveNext(old, j, out var start, out _);
+                        info.ConnectLane = @new;
                         _edges.Add(start, info);
                     }
                 }
 
-                public void Swap(int aOld, int aNew)
+                public void Swap(int old, int @new)
                 {
                     // TODO: There is a more efficient way to do this
                     int temp = _edges.CountNext();
-                    Replace(aOld, temp);
-                    Replace(aNew, aOld);
-                    Replace(temp, aNew);
+                    Replace(old, temp);
+                    Replace(@new, old);
+                    Replace(temp, @new);
                 }
 
                 public Graph.ILaneRow Advance()
@@ -765,9 +765,9 @@ namespace GitUI.RevisionGridClasses
                 private readonly Lanes _lanes;
                 private int _index;
 
-                public LaneEnumerator(Lanes aLanes)
+                public LaneEnumerator(Lanes lanes)
                 {
-                    _lanes = aLanes;
+                    _lanes = lanes;
                     Reset();
                 }
 
@@ -883,9 +883,9 @@ namespace GitUI.RevisionGridClasses
             {
                 private readonly Edge[] _edges;
 
-                public SavedLaneRow(Node aNode)
+                public SavedLaneRow(Node node)
                 {
-                    Node = aNode;
+                    Node = node;
                     NodeLane = -1;
                     _edges = null;
                 }

@@ -37,8 +37,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormSettings(GitUICommands aCommands, SettingsPageReference initalPage = null)
-            : base(aCommands)
+        public FormSettings(GitUICommands commands, SettingsPageReference initalPage = null)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.SuspendLayout();
 
             // if form is created for translation purpose
-            if (aCommands == null)
+            if (commands == null)
             {
                 return;
             }

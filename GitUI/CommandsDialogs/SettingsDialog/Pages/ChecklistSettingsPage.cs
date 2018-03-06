@@ -427,23 +427,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public bool CheckSettings()
         {
-            bool bValid = true;
+            bool isValid = true;
             try
             {
-                // once a check fails, we want bValid to stay false
-                bValid = CheckGitCmdValid();
-                bValid = CheckGlobalUserSettingsValid() && bValid;
-                bValid = CheckEditorTool() && bValid;
-                bValid = CheckMergeTool() && bValid;
-                bValid = CheckDiffToolConfiguration() && bValid;
-                bValid = CheckTranslationConfigSettings() && bValid;
+                // once a check fails, we want isValid to stay false
+                isValid = CheckGitCmdValid();
+                isValid = CheckGlobalUserSettingsValid() && isValid;
+                isValid = CheckEditorTool() && isValid;
+                isValid = CheckMergeTool() && isValid;
+                isValid = CheckDiffToolConfiguration() && isValid;
+                isValid = CheckTranslationConfigSettings() && isValid;
 
                 if (EnvUtils.RunningOnWindows())
                 {
-                    bValid = CheckGitExtensionsInstall() && bValid;
-                    bValid = CheckGitExtensionRegistrySettings() && bValid;
-                    bValid = CheckGitExe() && bValid;
-                    bValid = CheckSSHSettings() && bValid;
+                    isValid = CheckGitExtensionsInstall() && isValid;
+                    isValid = CheckGitExtensionRegistrySettings() && isValid;
+                    isValid = CheckGitExe() && isValid;
+                    isValid = CheckSSHSettings() && isValid;
                 }
             }
             catch (Exception ex)
@@ -451,16 +451,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MessageBox.Show(this, ex.Message);
             }
 
-            CheckAtStartup.Checked = IsCheckAtStartupChecked(bValid);
+            CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
 
-            return bValid;
+            return isValid;
         }
 
-        private static bool IsCheckAtStartupChecked(bool bValid)
+        private static bool IsCheckAtStartupChecked(bool isValid)
         {
             var retValue = AppSettings.CheckSettings;
 
-            if (bValid && retValue)
+            if (isValid && retValue)
             {
                 AppSettings.CheckSettings = false;
                 retValue = false;

@@ -36,11 +36,11 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormApplyPatch(GitUICommands aCommands)
-            : base(true, aCommands)
+        public FormApplyPatch(GitUICommands commands)
+            : base(true, commands)
         {
             InitializeComponent(); Translate();
-            if (aCommands != null)
+            if (commands != null)
             {
                 EnableButtons();
             }

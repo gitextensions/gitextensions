@@ -11,8 +11,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
         private readonly TranslationString _deleted = new TranslationString("deleted");
 
-        public FormMergeSubmodule(GitUICommands aCommands, string filename)
-            : base(aCommands)
+        public FormMergeSubmodule(GitUICommands commands, string filename)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

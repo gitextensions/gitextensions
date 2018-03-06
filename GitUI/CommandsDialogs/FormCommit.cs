@@ -157,13 +157,13 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormCommit(GitUICommands aCommands)
-            : this(aCommands, CommitKind.Normal, null)
+        public FormCommit(GitUICommands commands)
+            : this(commands, CommitKind.Normal, null)
         {
         }
 
-        public FormCommit(GitUICommands aCommands, CommitKind commitKind, GitRevision editedCommit)
-            : base(true, aCommands)
+        public FormCommit(GitUICommands commands, CommitKind commitKind, GitRevision editedCommit)
+            : base(true, commands)
         {
             _taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
@@ -794,7 +794,7 @@ namespace GitUI.CommandsDialogs
                 lastSelection = _currentSelection;
             }
 
-            var unStagedFiles = new List<GitItemStatus>();
+            var unstagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
 
             foreach (var fileStatus in allChangedFiles)
@@ -805,11 +805,11 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    unStagedFiles.Add(fileStatus);
+                    unstagedFiles.Add(fileStatus);
                 }
             }
 
-            Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
+            Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
             Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), stagedFiles);
 
             Loading.Visible = false;
@@ -842,7 +842,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            RestoreSelectedFiles(unStagedFiles, stagedFiles, lastSelection);
+            RestoreSelectedFiles(unstagedFiles, stagedFiles, lastSelection);
 
             OnStageAreaLoaded?.Invoke();
 
@@ -883,7 +883,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RestoreSelectedFiles(IList<GitItemStatus> unStagedFiles, IList<GitItemStatus> stagedFiles, IList<GitItemStatus> lastSelection)
+        private void RestoreSelectedFiles(IList<GitItemStatus> unstagedFiles, IList<GitItemStatus> stagedFiles, IList<GitItemStatus> lastSelection)
         {
             if (_currentFilesList == null || _currentFilesList.IsEmpty)
             {
@@ -891,7 +891,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var newItems = _currentFilesList == Staged ? stagedFiles : unStagedFiles;
+            var newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
             var names = lastSelection.ToHashSet(x => x.Name);
             var newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
 
@@ -1421,7 +1421,7 @@ namespace GitUI.CommandsDialogs
                 _skipUpdate = true;
                 InitializedStaged();
                 var stagedFiles = Staged.GitItemStatuses.ToList();
-                var unStagedFiles = Unstaged.GitItemStatuses.ToList();
+                var unstagedFiles = Unstaged.GitItemStatuses.ToList();
                 foreach (var item in allFiles)
                 {
                     var item1 = item;
@@ -1431,7 +1431,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     var item2 = item;
-                    if (unStagedFiles.Exists(i => i.Name == item2.Name))
+                    if (unstagedFiles.Exists(i => i.Name == item2.Name))
                     {
                         continue;
                     }
@@ -1454,7 +1454,7 @@ namespace GitUI.CommandsDialogs
                             IsTracked = true,
                             IsStaged = false
                         };
-                        unStagedFiles.Add(clone);
+                        unstagedFiles.Add(clone);
 
                         item.IsRenamed = false;
                         item.IsNew = true;
@@ -1463,10 +1463,10 @@ namespace GitUI.CommandsDialogs
                     }
 
                     item.IsStaged = false;
-                    unStagedFiles.Add(item);
+                    unstagedFiles.Add(item);
                 }
 
-                Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
+                Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
                 Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), stagedFiles);
                 _skipUpdate = false;
                 Staged.SelectStoredNextIndex();
@@ -1662,7 +1662,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     InitializedStaged();
-                    var unStagedFiles = Unstaged.GitItemStatuses.ToList();
+                    var unstagedFiles = Unstaged.GitItemStatuses.ToList();
                     _skipUpdate = true;
                     var names = new HashSet<string>();
                     foreach (var item in files)
@@ -1672,7 +1672,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     var unstagedItems = new HashSet<GitItemStatus>();
-                    foreach (var item in unStagedFiles)
+                    foreach (var item in unstagedFiles)
                     {
                         if (names.Contains(item.Name))
                         {
@@ -1680,8 +1680,8 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-                    unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
+                    unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
+                    unstagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
                         (item.SubmoduleStatus.Result == null ||
                         (!item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item))));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
@@ -1691,7 +1691,7 @@ namespace GitUI.CommandsDialogs
                         item.SubmoduleStatus.Result.Status = SubmoduleStatus.Unknown;
                     }
 
-                    Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
+                    Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
                     Unstaged.ClearSelected();
                     _skipUpdate = false;
                     Unstaged.SelectStoredNextIndex();
@@ -2818,8 +2818,8 @@ namespace GitUI.CommandsDialogs
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = Unstaged.SelectedItems.ToList();
-            if (unStagedFiles.Count == 0)
+            var unstagedFiles = Unstaged.SelectedItems.ToList();
+            if (unstagedFiles.Count == 0)
             {
                 return;
             }
@@ -2831,7 +2831,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
+            foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = Module.GetSubmodule(item.Name);
 
@@ -2841,8 +2841,8 @@ namespace GitUI.CommandsDialogs
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var unstagedFiles = module.GetUnstagedFiles();
-                    foreach (var file in unstagedFiles.Where(file => file.IsNew))
+                    var submoduleUnstagedFiles = module.GetUnstagedFiles();
+                    foreach (var file in submoduleUnstagedFiles.Where(file => file.IsNew))
                     {
                         try
                         {
@@ -2871,13 +2871,13 @@ namespace GitUI.CommandsDialogs
 
         private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = Unstaged.SelectedItems.ToList();
-            if (unStagedFiles.Count == 0)
+            var unstagedFiles = Unstaged.SelectedItems.ToList();
+            if (unstagedFiles.Count == 0)
             {
                 return;
             }
 
-            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
+            foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
             }
@@ -2887,13 +2887,13 @@ namespace GitUI.CommandsDialogs
 
         private void stashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = Unstaged.SelectedItems.ToList();
-            if (unStagedFiles.Count == 0)
+            var unstagedFiles = Unstaged.SelectedItems.ToList();
+            if (unstagedFiles.Count == 0)
             {
                 return;
             }
 
-            foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
+            foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
                 GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(item.Name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);

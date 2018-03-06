@@ -31,8 +31,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormStash(GitUICommands aCommands)
-            : base(aCommands)
+        public FormStash(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;

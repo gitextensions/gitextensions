@@ -61,8 +61,8 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public FormGitIgnore(GitUICommands aCommands, bool localExclude)
-            : base(aCommands)
+        public FormGitIgnore(GitUICommands commands, bool localExclude)
+            : base(commands)
         {
             _localExclude = localExclude;
             InitializeComponent();

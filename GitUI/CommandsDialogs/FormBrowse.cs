@@ -154,8 +154,8 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        public FormBrowse(GitUICommands aCommands, string filter)
-            : base(true, aCommands)
+        public FormBrowse(GitUICommands commands, string filter)
+            : base(true, commands)
         {
             // Save value for commit info panel, may be changed
             _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
                 oldcommands.BrowseRepo = null;
                 UICommands.BrowseRepo = this;
             };
-            if (aCommands != null)
+            if (commands != null)
             {
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -330,8 +330,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormBrowse(GitUICommands aCommands, string filter, string selectCommit)
-            : this(aCommands, filter)
+        public FormBrowse(GitUICommands commands, string filter, string selectCommit)
+            : this(commands, filter)
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
@@ -1201,18 +1201,18 @@ namespace GitUI.CommandsDialogs
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
         {
-            bool bSilent = (ModifierKeys & Keys.Shift) != 0;
-            UICommands.StartPushDialog(this, bSilent);
+            bool isSilent = (ModifierKeys & Keys.Shift) != 0;
+            UICommands.StartPushDialog(this, isSilent);
         }
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
-            bool bSilent;
+            bool isSilent;
             if (sender == toolStripButtonPull || sender == pullToolStripMenuItem)
             {
                 if (Module.LastPullAction == AppSettings.PullAction.None)
                 {
-                    bSilent = (ModifierKeys & Keys.Shift) != 0;
+                    isSilent = (ModifierKeys & Keys.Shift) != 0;
                 }
                 else if (Module.LastPullAction == AppSettings.PullAction.FetchAll)
                 {
@@ -1221,18 +1221,18 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    bSilent = (sender == toolStripButtonPull);
+                    isSilent = (sender == toolStripButtonPull);
                     Module.LastPullActionToFormPullAction();
                 }
             }
             else
             {
-                bSilent = sender != pullToolStripMenuItem1;
+                isSilent = sender != pullToolStripMenuItem1;
 
                 Module.LastPullActionToFormPullAction();
             }
 
-            UICommands.StartPullDialog(this, bSilent);
+            UICommands.StartPullDialog(this, isSilent);
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
@@ -2850,9 +2850,9 @@ namespace GitUI.CommandsDialogs
                         break;
                     default:
                         // Choose the console: bash from git with fallback to cmd
-                        string sJustBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                        string sJustSh = "sh.exe"; // Fallback to SH
-                        exeList = new[] { sJustBash, sJustSh };
+                        string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                        string justSh = "sh.exe"; // Fallback to SH
+                        exeList = new[] { justBash, justSh };
                         break;
                 }
 

@@ -37,8 +37,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
-            : base(aCommands)
+        public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
+            : base(commands)
         {
             _GitModuleChanged = GitModuleChanged;
             InitializeComponent();
@@ -140,18 +140,18 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool CanBeGitURL(string anURL)
+        private bool CanBeGitURL(string url)
         {
-            if (anURL == null)
+            if (url == null)
             {
                 return false;
             }
 
-            string anURLLowered = anURL.ToLowerInvariant();
+            string urlLowered = url.ToLowerInvariant();
 
-            return (anURLLowered.StartsWith("http") ||
-                anURLLowered.StartsWith("git") ||
-                anURLLowered.StartsWith("ssh"));
+            return (urlLowered.StartsWith("http") ||
+                urlLowered.StartsWith("git") ||
+                urlLowered.StartsWith("ssh"));
         }
 
         private void OkClick(object sender, EventArgs e)

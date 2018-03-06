@@ -286,13 +286,13 @@ namespace GitUI.UserControls
             }
 
             int? GrpId = GetGroupID(lstvwgrp);
-            int gIndex = Groups.IndexOf(lstvwgrp);
+            int groupIndex = Groups.IndexOf(lstvwgrp);
             var group = new NativeMethods.LVGROUP();
             group.CbSize = Marshal.SizeOf(group);
             group.State = state;
             group.Mask = NativeMethods.ListViewGroupMask.State;
             var handleRef = new HandleRef(this, Handle);
-            group.IGroupId = GrpId ?? gIndex;
+            group.IGroupId = GrpId ?? groupIndex;
             NativeMethods.SendMessage(handleRef,
                 NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
             NativeMethods.SendMessage(handleRef,

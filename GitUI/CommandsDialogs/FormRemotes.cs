@@ -80,8 +80,8 @@ Inactive remote is completely invisible to git.");
             new TranslationString("Inactive");
         #endregion
 
-        public FormRemotes(GitUICommands aCommands)
-            : base(aCommands)
+        public FormRemotes(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

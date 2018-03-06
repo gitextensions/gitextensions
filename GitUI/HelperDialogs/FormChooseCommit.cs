@@ -14,15 +14,15 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        private FormChooseCommit(GitUICommands aCommands)
-            : base(aCommands)
+        private FormChooseCommit(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
         }
 
-        public FormChooseCommit(GitUICommands aCommands, string preselectCommit, bool showArtificial = false)
-            : this(aCommands)
+        public FormChooseCommit(GitUICommands commands, string preselectCommit, bool showArtificial = false)
+            : this(commands)
         {
             revisionGrid.MultiSelect = false;
             revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();

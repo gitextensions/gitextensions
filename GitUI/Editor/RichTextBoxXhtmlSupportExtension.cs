@@ -9,6 +9,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
+
 namespace GitUI.Editor.RichTextBoxExtension
 {
     internal static class RichTextBoxXhtmlSupportExtension

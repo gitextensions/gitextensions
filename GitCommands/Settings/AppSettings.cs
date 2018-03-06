@@ -98,14 +98,14 @@ namespace GitCommands
             set => SetBool("RememberAmendCommitState", value);
         }
 
-        public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
+        public static void UsingContainer(RepoDistSettings settingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
                     var oldSC = SettingsContainer;
                     try
                     {
-                        SettingsContainer = aSettingsContainer;
+                        SettingsContainer = settingsContainer;
                         action();
                     }
                     finally
@@ -1701,7 +1701,7 @@ namespace GitCommands
 
     public class AppSettingsPath : SettingsPath
     {
-        public AppSettingsPath(string aPathName) : base(null, aPathName)
+        public AppSettingsPath(string pathName) : base(null, pathName)
         {
         }
 

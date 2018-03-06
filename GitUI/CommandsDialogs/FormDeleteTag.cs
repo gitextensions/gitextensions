@@ -7,8 +7,8 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDeleteTag : GitModuleForm
     {
-        public FormDeleteTag(GitUICommands aCommands, string tag)
-            : base(aCommands)
+        public FormDeleteTag(GitUICommands commands, string tag)
+            : base(commands)
         {
             InitializeComponent(); Translate();
             Tag = tag;

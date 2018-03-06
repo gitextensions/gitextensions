@@ -49,10 +49,10 @@ namespace GitUIPluginInterfaces
         private T _control;
         protected readonly S Setting;
 
-        protected SettingControlBinding(S aSetting, T aCustomControl)
+        protected SettingControlBinding(S setting, T customControl)
         {
-            Setting = aSetting;
-            _control = aCustomControl;
+            Setting = setting;
+            _control = customControl;
         }
 
         private T Control

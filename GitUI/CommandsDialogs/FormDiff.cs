@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _btnSwapTooltip =
             new TranslationString("Swap BASE and Compare commits");
 
-        public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
-            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
+        public FormDiff(GitUICommands commands, RevisionGrid revisionGrid, string baseCommitSha,
+            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(commands)
         {
             _RevisionGrid = revisionGrid;
             _baseCommitDisplayStr = baseCommitDisplayStr;

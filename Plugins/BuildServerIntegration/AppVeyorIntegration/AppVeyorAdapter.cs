@@ -415,15 +415,15 @@ namespace AppVeyorIntegration
             }
 
             string testResults = string.Empty;
-            int nbTests = buildDescription["testsCount"].ToObject<int>();
-            if (nbTests != 0)
+            int testCount = buildDescription["testsCount"].ToObject<int>();
+            if (testCount != 0)
             {
-                int nbFailedTests = buildDescription["failedTestsCount"].ToObject<int>();
-                int nbSkippedTests = nbTests - buildDescription["passedTestsCount"].ToObject<int>();
-                testResults = " : " + nbTests + " tests";
-                if (nbFailedTests != 0 || nbSkippedTests != 0)
+                int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
+                int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
+                testResults = " : " + testCount + " tests";
+                if (failedTestCount != 0 || skippedTestCount != 0)
                 {
-                    testResults += string.Format(" ( {0} failed, {1} skipped )", nbFailedTests, nbSkippedTests);
+                    testResults += string.Format(" ( {0} failed, {1} skipped )", failedTestCount, skippedTestCount);
                 }
 
                 buildDetails.TestsResultText = " " + testResults;

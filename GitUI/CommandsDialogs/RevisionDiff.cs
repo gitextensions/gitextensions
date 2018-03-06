@@ -539,12 +539,14 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
             bool aIsLocal = selectedRevisions.Count == 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
             bool bIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
             bool multipleRevisionsSelected = selectedRevisions.Count == 2;
 
             bool localExists = false;
             bool bIsNormal = false; // B is assumed to be new or deleted (check from DiffFiles)
+#pragma warning restore SA1305 // Field names should not use Hungarian notation
 
             // enable *<->Local items only when (any) local file exists
             foreach (var item in DiffFiles.SelectedItems)

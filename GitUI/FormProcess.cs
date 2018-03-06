@@ -29,7 +29,7 @@ namespace GitUI
         {
         }
 
-        public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
         {
             ProcessCallback = ProcessStart;
@@ -38,15 +38,15 @@ namespace GitUI
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = input;
-            WorkingDirectory = aWorkingDirectory;
+            WorkingDirectory = workingDirectory;
             Text = Text + " (" + WorkingDirectory + ")";
 
             ConsoleOutput.ProcessExited += delegate { OnExit(ConsoleOutput.ExitCode); };
             ConsoleOutput.DataReceived += DataReceivedCore;
         }
 
-        public FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
-            : this(null, process, arguments, aWorkingDirectory, input, useDialogSettings)
+        public FormProcess(string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
+            : this(null, process, arguments, workingDirectory, input, useDialogSettings)
         {
         }
 
@@ -80,28 +80,28 @@ namespace GitUI
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
         }
 
-        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings))
+            using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
             }
         }
 
-        public static bool ShowStandardProcessDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        public static bool ShowStandardProcessDialog(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             var outputCtrl = new EditboxBasedConsoleOutputControl();
-            using (var formProcess = new FormProcess(outputCtrl, process, arguments, aWorkingDirectory, input, useDialogSettings))
+            using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
             }
         }
 
-        public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            FormProcess formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings);
+            FormProcess formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings);
 
             formProcess.ControlBox = true;
             formProcess.Show(owner);

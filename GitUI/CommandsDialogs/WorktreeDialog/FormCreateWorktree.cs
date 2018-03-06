@@ -19,8 +19,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         public string WorktreeDirectory => newWorktreeDirectory.Text;
         public bool OpenWorktree => openWorktreeCheckBox.Checked;
 
-        public FormCreateWorktree(GitUICommands aCommands)
-            : base(aCommands)
+        public FormCreateWorktree(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             _branchesLoader = new AsyncLoader();

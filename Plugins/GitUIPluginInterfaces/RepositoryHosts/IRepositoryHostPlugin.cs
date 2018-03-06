@@ -12,7 +12,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         bool ConfigurationOk { get; }
 
-        bool GitModuleIsRelevantToMe(IGitModule aModule);
-        List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule);
+        bool GitModuleIsRelevantToMe(IGitModule module);
+        List<IHostedRemote> GetHostedRemotesForModule(IGitModule module);
     }
 }

@@ -8,10 +8,10 @@ namespace GitCommands.Settings
         public L LowerPriority { get; private set; }
         public C SettingsCache { get; private set; }
 
-        public SettingsContainer(L aLowerPriority, C aSettingsCache)
+        public SettingsContainer(L lowerPriority, C settingsCache)
         {
-            LowerPriority = aLowerPriority;
-            SettingsCache = aSettingsCache;
+            LowerPriority = lowerPriority;
+            SettingsCache = settingsCache;
         }
 
         public void LockedAction(Action action)

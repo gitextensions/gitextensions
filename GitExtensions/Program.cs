@@ -108,15 +108,15 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
+            GitUICommands commands = new GitUICommands(GetWorkingDir(args));
 
             if (args.Length <= 1)
             {
-                uCommands.StartBrowseDialog();
+                commands.StartBrowseDialog();
             }
             else // if we are here args.Length > 1
             {
-                uCommands.RunCommand(args);
+                commands.RunCommand(args);
             }
 
             AppSettings.SaveSettings();

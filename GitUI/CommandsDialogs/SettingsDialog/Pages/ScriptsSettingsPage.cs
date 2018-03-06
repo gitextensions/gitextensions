@@ -306,17 +306,17 @@ Current Branch:
             return ResizeBitmap(b, 12, 12);
         }
 
-        public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
+        public Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             if (b == null)
             {
                 return null;
             }
 
-            Bitmap result = new Bitmap(nWidth, nHeight);
+            Bitmap result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage((Image)result))
             {
-                g.DrawImage(b, 0, 0, nWidth, nHeight);
+                g.DrawImage(b, 0, 0, width, height);
             }
 
             return result;

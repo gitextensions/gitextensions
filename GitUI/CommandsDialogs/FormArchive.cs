@@ -96,8 +96,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormArchive(GitUICommands aCommands)
-            : base(true, aCommands)
+        public FormArchive(GitUICommands commands)
+            : base(true, commands)
         {
             InitializeComponent();
             Translate();

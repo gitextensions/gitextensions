@@ -12,7 +12,7 @@ namespace ResourceManager
         string CreateTagLink(string tag);
         string CreateBranchLink(string noPrefixBranch);
         string CreateCommitLink(string guid, string linkText = null, bool preserveGuidInLinkText = false);
-        string ParseLink(string aLinkText);
+        string ParseLink(string linkText);
     }
 
     public sealed class LinkFactory : ILinkFactory
@@ -87,14 +87,14 @@ namespace ResourceManager
             return AddLink(linkText, "gitext://gotocommit/" + guid);
         }
 
-        public string ParseLink(string aLinkText)
+        public string ParseLink(string linkText)
         {
-            if (_linksMap.TryGetValue(aLinkText, out var linkUri))
+            if (_linksMap.TryGetValue(linkText, out var linkUri))
             {
                 return linkUri;
             }
 
-            string uriCandidate = aLinkText;
+            string uriCandidate = linkText;
             while (uriCandidate != null)
             {
                 if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
@@ -105,7 +105,7 @@ namespace ResourceManager
                 uriCandidate = uriCandidate.SkipStr("#");
             }
 
-            return aLinkText;
+            return linkText;
         }
     }
 }

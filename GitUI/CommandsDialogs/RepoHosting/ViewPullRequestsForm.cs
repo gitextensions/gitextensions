@@ -34,8 +34,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
         }
 
-        private ViewPullRequestsForm(GitUICommands aCommands)
-            : base(aCommands)
+        private ViewPullRequestsForm(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -46,8 +46,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 };
         }
 
-        public ViewPullRequestsForm(GitUICommands aCommands, IRepositoryHostPlugin gitHoster)
-            : this(aCommands)
+        public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
+            : this(commands)
         {
             _gitHoster = gitHoster;
         }

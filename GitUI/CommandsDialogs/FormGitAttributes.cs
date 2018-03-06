@@ -27,8 +27,8 @@ namespace GitUI.CommandsDialogs
         public string GitAttributesFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormGitAttributes(GitUICommands aCommands)
-            : base(aCommands)
+        public FormGitAttributes(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

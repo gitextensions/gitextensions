@@ -13,14 +13,14 @@ namespace GitUI
             GitHosters = new List<IRepositoryHostPlugin>();
         }
 
-        public static IRepositoryHostPlugin TryGetGitHosterForModule(GitModule aModule)
+        public static IRepositoryHostPlugin TryGetGitHosterForModule(GitModule module)
         {
-            if (!aModule.IsValidGitWorkingDir())
+            if (!module.IsValidGitWorkingDir())
             {
                 return null;
             }
 
-            return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(aModule));
+            return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(module));
         }
     }
 }

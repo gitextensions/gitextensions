@@ -30,8 +30,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        internal FormFileHistory(GitUICommands aCommands)
-            : base(aCommands)
+        internal FormFileHistory(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             _asyncLoader = new AsyncLoader();
@@ -63,8 +63,8 @@ namespace GitUI.CommandsDialogs
             _longShaProvider = new LongShaProvider(() => Module);
         }
 
-        public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
-            : this(aCommands)
+        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision, bool filterByRevision)
+            : this(commands)
         {
             FileChanges.SetInitialRevision(revision?.Guid);
             Translate();
@@ -108,8 +108,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormFileHistory(GitUICommands aCommands, string fileName)
-            : this(aCommands, fileName, null, false)
+        public FormFileHistory(GitUICommands commands, string fileName)
+            : this(commands, fileName, null, false)
         {
         }
 

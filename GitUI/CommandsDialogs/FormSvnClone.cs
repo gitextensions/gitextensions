@@ -27,8 +27,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormSvnClone(GitUICommands aCommands, EventHandler<GitModuleEventArgs> GitModuleChanged)
-            : base(aCommands)
+        public FormSvnClone(GitUICommands commands, EventHandler<GitModuleEventArgs> GitModuleChanged)
+            : base(commands)
         {
             _GitModuleChanged = GitModuleChanged;
             InitializeComponent();

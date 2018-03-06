@@ -14,10 +14,10 @@ namespace GitCommands.Repository
         public string ShortName { get; set; }
         public string DirName { get; set; }
 
-        public RecentRepoInfo(Repository aRepo, bool aMostRecent)
+        public RecentRepoInfo(Repository repo, bool mostRecent)
         {
-            Repo = aRepo;
-            MostRecent = aMostRecent;
+            Repo = repo;
+            MostRecent = mostRecent;
             try
             {
                 DirInfo = new DirectoryInfo(Repo.Path);

@@ -25,16 +25,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         private readonly SettingsPageWithHeader _Page;
 
-        public SettingsPageHeader(SettingsPageWithHeader aPage)
+        public SettingsPageHeader(SettingsPageWithHeader page)
         {
             InitializeComponent();
             Translate();
 
-            if (aPage != null)
+            if (page != null)
             {
-                settingsPagePanel.Controls.Add(aPage);
-                aPage.Dock = DockStyle.Fill;
-                _Page = aPage;
+                settingsPagePanel.Controls.Add(page);
+                page.Dock = DockStyle.Fill;
+                _Page = page;
                 ConfigureHeader();
             }
         }

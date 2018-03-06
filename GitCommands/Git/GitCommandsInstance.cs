@@ -13,9 +13,9 @@ namespace GitCommands
 
         public string WorkingDirectory { get; private set; }
 
-        public GitCommandsInstance(string aWorkingDirectory)
+        public GitCommandsInstance(string workingDirectory)
         {
-            WorkingDirectory = aWorkingDirectory;
+            WorkingDirectory = workingDirectory;
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]

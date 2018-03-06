@@ -18,8 +18,8 @@ namespace GitUI.HelperDialogs
             Hard
         }
 
-        public FormResetCurrentBranch(GitUICommands aCommands, GitRevision Revision, ResetType resetType = ResetType.Mixed)
-            : base(aCommands)
+        public FormResetCurrentBranch(GitUICommands commands, GitRevision Revision, ResetType resetType = ResetType.Mixed)
+            : base(commands)
         {
             this.Revision = Revision;
 

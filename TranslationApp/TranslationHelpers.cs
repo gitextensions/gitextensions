@@ -92,9 +92,9 @@ namespace TranslationApp
                 foreach (var item in pair.Value)
                 {
                     var curItems = oldItems.Where(
-                        trItem => trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
-                                  trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
-                                  trItem.Property == item.Property);
+                        oldItem => oldItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
+                                  oldItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
+                                  oldItem.Property == item.Property);
                     var curItem = curItems.FirstOrDefault();
 
                     if (curItem == null)
@@ -136,9 +136,9 @@ namespace TranslationApp
 
                 // update untranslated items
                 var untranlatedItems =
-                    from trItem in transItems
-                    where (String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
-                    select trItem;
+                    from transItem in transItems
+                    where (String.IsNullOrEmpty(transItem.TranslatedValue)) && dict.ContainsKey(transItem.NeutralValue)
+                    select transItem;
 
                 foreach (var untranlatedItem in untranlatedItems)
                 {

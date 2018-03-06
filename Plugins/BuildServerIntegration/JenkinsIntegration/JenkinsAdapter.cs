@@ -303,12 +303,12 @@ namespace JenkinsIntegration
 
                 if (element["totalCount"] != null)
                 {
-                    int nbTests = element["totalCount"].ToObject<int>();
-                    if (nbTests != 0)
+                    int testCount = element["totalCount"].ToObject<int>();
+                    if (testCount != 0)
                     {
-                        int nbFailedTests = element["failCount"].ToObject<int>();
-                        int nbSkippedTests = element["skipCount"].ToObject<int>();
-                        testResults = $"{nbTests} tests ({nbFailedTests} failed, {nbSkippedTests} skipped)";
+                        int failedTestCount = element["failCount"].ToObject<int>();
+                        int skippedTestCount = element["skipCount"].ToObject<int>();
+                        testResults = $"{testCount} tests ({failedTestCount} failed, {skippedTestCount} skipped)";
                     }
                 }
             }

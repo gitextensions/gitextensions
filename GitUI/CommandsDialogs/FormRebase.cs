@@ -33,8 +33,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        private FormRebase(GitUICommands aCommands)
-            : base(aCommands)
+        private FormRebase(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -46,15 +46,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormRebase(GitUICommands aCommands, string defaultBranch)
-            : this(aCommands)
+        public FormRebase(GitUICommands commands, string defaultBranch)
+            : this(commands)
         {
             _defaultBranch = defaultBranch;
         }
 
-        public FormRebase(GitUICommands aCommands, string from, string to, string defaultBranch, bool interactive = false,
+        public FormRebase(GitUICommands commands, string from, string to, string defaultBranch, bool interactive = false,
             bool startRebaseImmediately = true)
-            : this(aCommands, defaultBranch)
+            : this(commands, defaultBranch)
         {
             txtFrom.Text = from;
             _defaultToBranch = to;

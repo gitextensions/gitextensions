@@ -55,8 +55,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        internal FormCheckoutBranch(GitUICommands aCommands)
-            : base(aCommands)
+        internal FormCheckoutBranch(GitUICommands commands)
+            : base(commands)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
             InitializeComponent();
@@ -67,13 +67,13 @@ namespace GitUI.CommandsDialogs
             Shown += FormCheckoutBranch_Shown;
         }
 
-        public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote)
-            : this(aCommands, branch, remote, null)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote)
+            : this(commands, branch, remote, null)
         {
         }
 
-        public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote, string[] containRevisons)
-            : this(aCommands)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons)
+            : this(commands)
         {
             _isLoading = true;
 

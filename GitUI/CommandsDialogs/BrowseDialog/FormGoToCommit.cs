@@ -23,8 +23,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly AsyncLoader _tagsLoader;
         private readonly AsyncLoader _branchesLoader;
 
-        public FormGoToCommit(GitUICommands aCommands)
-            : base(aCommands)
+        public FormGoToCommit(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

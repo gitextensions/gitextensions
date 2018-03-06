@@ -6,8 +6,8 @@ namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        private FormCommitDiff(GitUICommands aCommands)
-            : base(aCommands)
+        private FormCommitDiff(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -21,8 +21,8 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        public FormCommitDiff(GitUICommands aCommands, string revisionGuid)
-            : this(aCommands)
+        public FormCommitDiff(GitUICommands commands, string revisionGuid)
+            : this(commands)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,

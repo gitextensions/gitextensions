@@ -15,8 +15,8 @@ namespace GitUI.CommandsDialogs
         private bool _hasChanges;
         private string _fileName;
 
-        public FormEditor(GitUICommands aCommands, string fileName, bool showWarning)
-            : base(aCommands)
+        public FormEditor(GitUICommands commands, string fileName, bool showWarning)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
