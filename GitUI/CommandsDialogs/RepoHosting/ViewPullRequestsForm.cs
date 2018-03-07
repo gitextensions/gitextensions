@@ -146,8 +146,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var currentRemote = Module.GetCurrentRemote();
             var hostedRemote = _selectHostedRepoCB.Items.
                 Cast<IHostedRemote>().
-                Where(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase)).
-                FirstOrDefault();
+                FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
 
             if (hostedRemote == null)
             {
