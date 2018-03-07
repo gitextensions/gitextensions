@@ -6,11 +6,11 @@ namespace GitUI
 {
     public class FilterRevisionsHelper : IDisposable
     {
-        private ToolStripTextBox _nO_TRANSLATE_textBox;
-        private ToolStripDropDownButton _nO_TRANSLATE_dropDownButton;
-        private RevisionGrid _nO_TRANSLATE_revisionGrid;
-        private ToolStripLabel _nO_TRANSLATE_label;
-        private ToolStripButton _nO_TRANSLATE_showFirstParentButton;
+        private ToolStripTextBox _NO_TRANSLATE_textBox;
+        private ToolStripDropDownButton _NO_TRANSLATE_dropDownButton;
+        private RevisionGrid _NO_TRANSLATE_revisionGrid;
+        private ToolStripLabel _NO_TRANSLATE_label;
+        private ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
         private ToolStripMenuItem _commitToolStripMenuItem;
         private ToolStripMenuItem _committerToolStripMenuItem;
@@ -18,7 +18,7 @@ namespace GitUI
         private ToolStripMenuItem _diffContainsToolStripMenuItem;
         private ToolStripMenuItem _hashToolStripMenuItem;
 
-        private Form _nO_TRANSLATE_form;
+        private Form _NO_TRANSLATE_form;
 
         public FilterRevisionsHelper()
         {
@@ -70,14 +70,14 @@ namespace GitUI
         public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
             : this()
         {
-            _nO_TRANSLATE_dropDownButton = dropDownButton;
-            _nO_TRANSLATE_textBox = textBox;
-            _nO_TRANSLATE_revisionGrid = revisionGrid;
-            _nO_TRANSLATE_label = label;
-            _nO_TRANSLATE_showFirstParentButton = showFirstParentButton;
-            _nO_TRANSLATE_form = form;
+            _NO_TRANSLATE_dropDownButton = dropDownButton;
+            _NO_TRANSLATE_textBox = textBox;
+            _NO_TRANSLATE_revisionGrid = revisionGrid;
+            _NO_TRANSLATE_label = label;
+            _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
+            _NO_TRANSLATE_form = form;
 
-            _nO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
+            _NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
             {
                 _commitToolStripMenuItem,
                 _committerToolStripMenuItem,
@@ -85,18 +85,18 @@ namespace GitUI
                 _diffContainsToolStripMenuItem
             });
 
-            _nO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
+            _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
-            _nO_TRANSLATE_label.Click += ToolStripLabelClick;
-            _nO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
-            _nO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
-            _nO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
-            _nO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += RevisionGridShowFirstParentsToggled;
+            _NO_TRANSLATE_label.Click += ToolStripLabelClick;
+            _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
+            _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
+            _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
+            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += RevisionGridShowFirstParentsToggled;
         }
 
         public void SetFilter(string filter)
         {
-            _nO_TRANSLATE_textBox.Text = filter;
+            _NO_TRANSLATE_textBox.Text = filter;
             ApplyFilter();
         }
 
@@ -113,36 +113,37 @@ namespace GitUI
             filterParams[3] = _diffContainsToolStripMenuItem.Checked;
             try
             {
-                _nO_TRANSLATE_revisionGrid.FormatQuickFilter(_nO_TRANSLATE_textBox.Text,
-                                               filterParams,
-                                               out revListArgs,
-                                               out inMemMessageFilter,
-                                               out inMemCommitterFilter,
-                                               out inMemAuthorFilter);
+                _NO_TRANSLATE_revisionGrid.FormatQuickFilter(
+                    _NO_TRANSLATE_textBox.Text,
+                    filterParams,
+                    out revListArgs,
+                    out inMemMessageFilter,
+                    out inMemCommitterFilter,
+                    out inMemAuthorFilter);
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(_nO_TRANSLATE_form, ex.Message, "Filter error");
-                _nO_TRANSLATE_textBox.Text = "";
+                MessageBox.Show(_NO_TRANSLATE_form, ex.Message, "Filter error");
+                _NO_TRANSLATE_textBox.Text = "";
                 return;
             }
 
-            if ((_nO_TRANSLATE_revisionGrid.QuickRevisionFilter == revListArgs) &&
-                (_nO_TRANSLATE_revisionGrid.InMemMessageFilter == inMemMessageFilter) &&
-                (_nO_TRANSLATE_revisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
-                (_nO_TRANSLATE_revisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
-                _nO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase)
+            if ((_NO_TRANSLATE_revisionGrid.QuickRevisionFilter == revListArgs) &&
+                (_NO_TRANSLATE_revisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (_NO_TRANSLATE_revisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (_NO_TRANSLATE_revisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                _NO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase)
             {
                 return;
             }
 
-            _nO_TRANSLATE_revisionGrid.QuickRevisionFilter = revListArgs;
-            _nO_TRANSLATE_revisionGrid.InMemMessageFilter = inMemMessageFilter;
-            _nO_TRANSLATE_revisionGrid.InMemCommitterFilter = inMemCommitterFilter;
-            _nO_TRANSLATE_revisionGrid.InMemAuthorFilter = inMemAuthorFilter;
-            _nO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase = true;
-            _nO_TRANSLATE_revisionGrid.Visible = true;
-            _nO_TRANSLATE_revisionGrid.ForceRefreshRevisions();
+            _NO_TRANSLATE_revisionGrid.QuickRevisionFilter = revListArgs;
+            _NO_TRANSLATE_revisionGrid.InMemMessageFilter = inMemMessageFilter;
+            _NO_TRANSLATE_revisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            _NO_TRANSLATE_revisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            _NO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase = true;
+            _NO_TRANSLATE_revisionGrid.Visible = true;
+            _NO_TRANSLATE_revisionGrid.ForceRefreshRevisions();
         }
 
         private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
@@ -165,12 +166,12 @@ namespace GitUI
 
         private void ToolStripShowFirstParentButtonClick(object sender, EventArgs e)
         {
-            _nO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
+            _NO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
         }
 
         private void RevisionGridShowFirstParentsToggled(object sender, EventArgs e)
         {
-            _nO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
+            _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
         }
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -190,7 +191,7 @@ namespace GitUI
 
         public void SetLimit(int limit)
         {
-            _nO_TRANSLATE_revisionGrid.SetLimit(limit);
+            _NO_TRANSLATE_revisionGrid.SetLimit(limit);
         }
 
         public void Dispose()
