@@ -1181,7 +1181,7 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
             {
-                var firstLine = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                var firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
                 if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine)
                 {
                     if (MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
@@ -1193,7 +1193,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
             {
-                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                 {
                     if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine)
@@ -1208,7 +1208,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.CommitValidationSecondLineMustBeEmpty)
             {
-                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
                 if (lines.Length > 2)
                 {
                     if (lines[1].Length != 0)
@@ -2052,7 +2052,7 @@ namespace GitUI.CommandsDialogs
 
             if (!prevMsgs.Contains(msg))
             {
-                prevMsgs = new string[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
+                prevMsgs = new[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
             }
 
             foreach (var localLastCommitMessage in prevMsgs)

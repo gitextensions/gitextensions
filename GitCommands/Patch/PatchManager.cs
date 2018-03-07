@@ -72,7 +72,7 @@ namespace PatchApply
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
             {
@@ -580,7 +580,7 @@ namespace PatchApply
 
             int eolLength = eol.Length;
 
-            string[] lines = fileText.Split(new string[] { eol }, StringSplitOptions.None);
+            string[] lines = fileText.Split(new[] { eol }, StringSplitOptions.None);
             int i = 0;
 
             while (i < lines.Length)
@@ -680,7 +680,7 @@ namespace PatchApply
             header = text.Substring(0, patchPos);
             string diff = text.Substring(patchPos - 1);
 
-            string[] chunks = diff.Split(new string[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
             ChunkList selectedChunks = new ChunkList();
             int i = 0;
             int currentPos = patchPos - 1;

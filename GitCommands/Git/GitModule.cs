@@ -2113,7 +2113,7 @@ namespace GitCommands
         public IList<PatchFile> GetInteractiveRebasePatchFiles()
         {
             string todoFile = GetRebaseDir() + "git-rebase-todo";
-            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
+            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
 
             IList<PatchFile> patchFiles = new List<PatchFile>();
 
@@ -2353,7 +2353,7 @@ namespace GitCommands
         public string[] GetRemotes(bool allowEmpty)
         {
             string remotes = RunGitCmd("remote show");
-            return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return allowEmpty ? remotes.Split('\n') : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public IEnumerable<string> GetSettings(string setting)
@@ -3178,7 +3178,7 @@ namespace GitCommands
         public string[] GetFullTree(string id)
         {
             string tree = RunCacheableCmd(AppSettings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
-            return tree.Split(new char[] { '\0', '\n' });
+            return tree.Split(new[] { '\0', '\n' });
         }
 
         public IEnumerable<IGitItem> GetTree(string id, bool full)
@@ -3241,7 +3241,7 @@ namespace GitCommands
                     if (line.StartsWith("\t"))
                     {
                         blameLine.LineText = line.Substring(1) // trim ONLY first tab
-                                                 .Trim(new char[] { '\r' }); // trim \r, this is a workaround for a \r\n bug
+                                                 .Trim(new[] { '\r' }); // trim \r, this is a workaround for a \r\n bug
                         blameLine.LineText = ReEncodeStringFromLossless(blameLine.LineText, encoding);
                     }
                     else if (line.StartsWith("author-mail"))
@@ -3331,7 +3331,7 @@ namespace GitCommands
             {
                 // index
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
-                string[] s = blob.Split(new char[] { ' ', '\t' });
+                string[] s = blob.Split(new[] { ' ', '\t' });
                 if (s.Length >= 2)
                 {
                     return s[1];
@@ -3340,7 +3340,7 @@ namespace GitCommands
             else
             {
                 string blob = RunGitCmd(string.Format("ls-tree -r {0} \"{1}\"", revision, fileName));
-                string[] s = blob.Split(new char[] { ' ', '\t' });
+                string[] s = blob.Split(new[] { ' ', '\t' });
                 if (s.Length >= 3)
                 {
                     return s[2];
@@ -3394,11 +3394,11 @@ namespace GitCommands
         {
             string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
             string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
-            string[] messages = output.Split(new string[] { sep }, StringSplitOptions.RemoveEmptyEntries);
+            string[] messages = output.Split(new[] { sep }, StringSplitOptions.RemoveEmptyEntries);
 
             if (messages.Length == 0)
             {
-                return new string[] { string.Empty };
+                return new[] { string.Empty };
             }
 
             return messages.Select(cm =>

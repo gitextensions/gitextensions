@@ -649,7 +649,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetUrl(this LinkClickedEventArgs e)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 return "";
@@ -666,7 +666,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 url = "";

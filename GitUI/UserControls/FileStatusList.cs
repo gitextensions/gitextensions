@@ -1174,7 +1174,7 @@ namespace GitUI
                 {
                     if (!AppSettings.ShowDiffForAllParents)
                     {
-                        parentRevs = new GitRevision[] { parentRevs[0] };
+                        parentRevs = new[] { parentRevs[0] };
                     }
 
                     foreach (var rev in parentRevs)

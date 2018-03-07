@@ -23,7 +23,7 @@ namespace GitUITests.Helpers
         public void DiffKindRevisionTests_AB_1p()
         {
             IList<GitRevision> revisions = new List<GitRevision> { new GitRevision("HEAD") };
-            revisions[0].ParentGuids = new string[] { "parent" };
+            revisions[0].ParentGuids = new[] { "parent" };
             Assert.AreEqual("", RevisionDiffInfoProvider.Get(revisions, RevisionDiffKind.DiffAB, out _, out var firstRevision, out var secondRevision), "null rev");
             Assert.AreEqual("parent", firstRevision, "first");
             Assert.AreEqual("HEAD", secondRevision, "second");

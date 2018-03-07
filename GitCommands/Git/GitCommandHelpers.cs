@@ -1150,7 +1150,7 @@ namespace GitCommands
             IList<string> submodules = module.GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
-            var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var files = trimmedStatus.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
@@ -1158,7 +1158,7 @@ namespace GitCommands
                     continue;
                 }
 
-                int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
+                int splitIndex = files[n].IndexOfAny(new[] { '\0', '\t', ' ' }, 1);
 
                 string status = string.Empty;
                 string fileName = string.Empty;

@@ -1751,8 +1751,7 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
         {
-            bool pushCompleted;
-            return StartPushDialog(owner, pushOnShow, out pushCompleted);
+            return StartPushDialog(owner, pushOnShow, out _);
         }
 
         public bool StartPushDialog(bool pushOnShow)
@@ -2239,7 +2238,7 @@ namespace GitUI
             {
                 if (File.Exists(args[2]))
                 {
-                    string path = File.ReadAllText(args[2]).Trim().Split(new char[] { '\n' }, 1).FirstOrDefault();
+                    string path = File.ReadAllText(args[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
                     if (Directory.Exists(path))
                     {
                         c = new GitUICommands(path);

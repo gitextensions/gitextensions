@@ -962,7 +962,7 @@ namespace GitUI.Editor
 
             // go to the top of change block
             while (firstVisibleLine > 0 &&
-                _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new string[] { "+", "-" }))
+                _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new[] { "+", "-" }))
             {
                 firstVisibleLine--;
             }
@@ -971,8 +971,8 @@ namespace GitUI.Editor
             {
                 var lineContent = _internalFileViewer.GetLineText(line);
 
-                if (lineContent.StartsWithAny(new string[] { "+", "-" })
-                    && !lineContent.StartsWithAny(new string[] { "++", "--" }))
+                if (lineContent.StartsWithAny(new[] { "+", "-" })
+                    && !lineContent.StartsWithAny(new[] { "++", "--" }))
                 {
                     emptyLineCheck = true;
                 }
@@ -1173,7 +1173,7 @@ namespace GitUI.Editor
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
-                    char[] specials = new char[] { ' ', '-', '+' };
+                    char[] specials = new[] { ' ', '-', '+' };
                     lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
                 }
 

@@ -411,7 +411,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 return exeName;
             }
 
-            var vsVersions = new string[] { "14.0", "12.0", "11.0" };
+            var vsVersions = new[] { "14.0", "12.0", "11.0" };
 
             foreach (var version in vsVersions)
             {

@@ -30,12 +30,12 @@ namespace GitUI.Editor.Diff
 
         protected override List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
         {
-            return LinePrefixHelper.GetLinesStartingWith(document, ref line, new string[] { "+", " +" }, ref found);
+            return LinePrefixHelper.GetLinesStartingWith(document, ref line, new[] { "+", " +" }, ref found);
         }
 
         protected override List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
         {
-            return LinePrefixHelper.GetLinesStartingWith(document, ref line, new string[] { "-", " -" }, ref found);
+            return LinePrefixHelper.GetLinesStartingWith(document, ref line, new[] { "-", " -" }, ref found);
         }
     }
 }

@@ -81,7 +81,7 @@ namespace FindLargeFiles
                         pbRevisions.Invoke((Action)(() => pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length)));
                         foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
                         {
-                            string[] dataFields = gitobj.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] dataFields = gitobj.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (_list.TryGetValue(dataFields[0], out var curGitObject))
                             {
                                 if (int.TryParse(dataFields[3], out var compressedSize))
@@ -105,7 +105,7 @@ namespace FindLargeFiles
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            _revList = _gitCommands.RunGitCmd("rev-list HEAD").Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            _revList = _gitCommands.RunGitCmd("rev-list HEAD").Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
             Thread thread = new Thread(FindLargeFilesFunction);
@@ -119,12 +119,12 @@ namespace FindLargeFiles
             {
                 pbRevisions.Invoke((Action)(() => pbRevisions.Value = i));
                 string rev = _revList[i];
-                string[] objects = _gitCommands.RunGitCmd(string.Concat("ls-tree -zrl ", rev)).Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] objects = _gitCommands.RunGitCmd(string.Concat("ls-tree -zrl ", rev)).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string objData in objects)
                 {
                     // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"
                     var dataPack = objData.Split('\t');
-                    var data = dataPack[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var data = dataPack[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (data[1] == "blob")
                     {
                         int.TryParse(data[3], out var size);

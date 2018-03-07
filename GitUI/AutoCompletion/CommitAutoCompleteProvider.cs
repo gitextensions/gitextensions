@@ -89,7 +89,7 @@ namespace GitUI.AutoCompletion
 
             using (var sr = new StreamReader(s))
             {
-                return sr.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                return sr.ReadToEnd().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 

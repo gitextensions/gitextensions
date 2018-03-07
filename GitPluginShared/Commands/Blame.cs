@@ -11,7 +11,7 @@ namespace GitPluginShared.Commands
             var textSelection = item.DTE.ActiveDocument.Selection as TextSelection;
             if (textSelection != null)
             {
-                arguments = new string[] { textSelection.CurrentLine.ToString() };
+                arguments = new[] { textSelection.CurrentLine.ToString() };
             }
 
             RunGitEx("blame", fileName, arguments);
