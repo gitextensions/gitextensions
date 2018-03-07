@@ -11,9 +11,6 @@ namespace GitUI
 {
     public partial class FormStatus : GitExtensionsForm
     {
-        public delegate void ProcessStart(FormStatus form);
-        public delegate void ProcessAbort(FormStatus form);
-
         private readonly bool _useDialogSettings = true;
         private DispatcherFrameModalControler _modalControler;
 
@@ -46,7 +43,7 @@ namespace GitUI
             }
         }
 
-        public FormStatus(ProcessStart process, ProcessAbort abort)
+        public FormStatus(Action<FormStatus> process, Action<FormStatus> abort)
             : this(new EditboxBasedConsoleOutputControl(), true)
         {
             ProcessCallback = process;
@@ -54,8 +51,8 @@ namespace GitUI
         }
 
         protected readonly ConsoleOutputControl ConsoleOutput; // Naming: protected stuff must be CLS-compliant here
-        public ProcessStart ProcessCallback;
-        public ProcessAbort AbortCallback;
+        public Action<FormStatus> ProcessCallback;
+        public Action<FormStatus> AbortCallback;
         private bool _errorOccurred;
         private bool _showOnError;
 

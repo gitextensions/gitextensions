@@ -131,7 +131,7 @@ namespace GitUI
         {
         }
 
-        private new void ProcessStart(FormStatus form)
+        private void ProcessStart(FormStatus form)
         {
             BeforeProcessStart();
             string quotedProcessString = ProcessString;
@@ -163,7 +163,7 @@ namespace GitUI
             }
         }
 
-        private new void ProcessAbort(FormStatus form)
+        private void ProcessAbort(FormStatus form)
         {
             KillProcess();
         }

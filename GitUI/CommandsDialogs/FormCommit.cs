@@ -540,7 +540,8 @@ namespace GitUI.CommandsDialogs
 
         public void ShowDialogWhenChanges(IWin32Window owner)
         {
-            ComputeUnstagedFiles((allChangedFiles) =>
+            ComputeUnstagedFiles(
+                (allChangedFiles) =>
                 {
                     if (allChangedFiles.Count > 0)
                     {
@@ -721,7 +722,8 @@ namespace GitUI.CommandsDialogs
         private void UpdateBranchNameDisplay()
         {
             Task.Run(() => Module.GetSelectedBranch())
-                .ContinueWith(task =>
+                .ContinueWith(
+                    task =>
                 {
                     var currentBranchName = task.Result;
                     branchNameLabel.Text = currentBranchName;
@@ -1082,12 +1084,13 @@ namespace GitUI.CommandsDialogs
 
             if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
             {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
-                                                        _notOnBranchCaption.Text,
-                                                        _notOnBranchMainInstruction.Text,
-                                                        _notOnBranch.Text,
-                                                        _notOnBranchButtons.Text,
-                                                        true);
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(
+                    this,
+                    _notOnBranchCaption.Text,
+                    _notOnBranchMainInstruction.Text,
+                    _notOnBranch.Text,
+                    _notOnBranchButtons.Text,
+                    true);
                 switch (idx)
                 {
                     case 0:
@@ -1640,16 +1643,17 @@ namespace GitUI.CommandsDialogs
                 bool wereErrors = false;
                 if (AppSettings.ShowErrorsWhenStagingFiles)
                 {
-                    FormStatus.ProcessStart processStart =
-                        form =>
-                        {
-                            form.AppendMessageCrossThread(string.Format(_stageFiles.Text + "\n",
-                                                         files.Count));
-                            var output = Module.StageFiles(files, out wereErrors);
-                            form.AppendMessageCrossThread(output);
-                            form.Done(string.IsNullOrEmpty(output));
-                        };
-                    using (var process = new FormStatus(processStart, null) { Text = _stageDetails.Text })
+                    void ProcessStart(FormStatus form)
+                    {
+                        form.AppendMessageCrossThread(
+                            string.Format(
+                                _stageFiles.Text + "\n", files.Count));
+                        var output = Module.StageFiles(files, out wereErrors);
+                        form.AppendMessageCrossThread(output);
+                        form.Done(string.IsNullOrEmpty(output));
+                    }
+
+                    using (var process = new FormStatus(ProcessStart, null) { Text = _stageDetails.Text })
                     {
                         process.ShowDialogOnError(this);
                     }
@@ -2009,7 +2013,8 @@ namespace GitUI.CommandsDialogs
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this,
+            if (MessageBox.Show(
+                this,
                 _deleteUntrackedFiles.Text,
                 _deleteUntrackedFilesCaption.Text,
                 MessageBoxButtons.YesNo) !=
@@ -2077,9 +2082,11 @@ namespace GitUI.CommandsDialogs
                 {
                     Tag = commitMessage,
                     Text =
-                        commitMessage.Substring(0,
-                                                Math.Min(Math.Min(50, commitMessage.Length),
-                                                         commitMessage.Contains("\n") ? commitMessage.IndexOf('\n') : 99)) +
+                        commitMessage.Substring(
+                            0,
+                            Math.Min(
+                                                    Math.Min(50, commitMessage.Length),
+                                                    commitMessage.Contains("\n") ? commitMessage.IndexOf('\n') : 99)) +
                         "..."
                 };
 
@@ -3058,7 +3065,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Process gitProcess = Module.RunExternalCmdDetachedShowConsole(AppSettings.GitCommand,
+            Process gitProcess = Module.RunExternalCmdDetachedShowConsole(
+                AppSettings.GitCommand,
                 "add -p \"" + Unstaged.SelectedItem.Name + "\"");
 
             if (gitProcess != null)
@@ -3073,10 +3081,11 @@ namespace GitUI.CommandsDialogs
                         gitProcess.WaitForExit();
                         gitProcess.Dispose();
                     })
-                    .ContinueWith(_ => RescanChanges(),
-                    _interactiveAddBashCloseWaitCts.Token,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    formsTaskScheduler);
+                    .ContinueWith(
+                        _ => RescanChanges(),
+                        _interactiveAddBashCloseWaitCts.Token,
+                        TaskContinuationOptions.OnlyOnRanToCompletion,
+                        formsTaskScheduler);
             }
         }
 
