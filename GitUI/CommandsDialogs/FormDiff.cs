@@ -152,9 +152,10 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUI.RevisionDiffKind.DiffAB;
             }
 
-            foreach (var selectedItem in DiffFiles.SelectedItems)
+            foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
-                _RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
+                IList<GitRevision> revs = new List<GitRevision> { DiffFiles.Revision, itemWithParent.ParentRevision };
+                _RevisionGrid.OpenWithDifftool(revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }
 
