@@ -16,7 +16,8 @@ namespace GitUI.CommandsDialogs
         public FormCleanupRepository(GitUICommands commands)
             : base(commands)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             PreviewOutput.ReadOnly = true;
             checkBoxPathFilter_CheckedChanged(null, null);
         }

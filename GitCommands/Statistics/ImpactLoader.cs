@@ -107,7 +107,11 @@ namespace GitCommands.Statistics
         public bool ShowSubmodules
         {
             get => _showSubmodules;
-            set { Stop(); _showSubmodules = value; }
+            set
+            {
+                Stop();
+                _showSubmodules = value;
+            }
         }
 
         private Task[] GetTasks(CancellationToken token)

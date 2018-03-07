@@ -16,7 +16,8 @@ namespace GitUI.CommandsDialogs
         public FormViewPatch(GitUICommands commands)
             : base(commands)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
 
             PatchManager = new PatchManager();
         }

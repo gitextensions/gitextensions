@@ -109,7 +109,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             AsyncLoader.DoAsync(
                hostedRepo.GetPullRequests,
-               res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
+               res =>
+               {
+                   SetPullRequestsData(res);
+                   _selectHostedRepoCB.Enabled = true;
+               },
                ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Exception.Message,
                                        _strError.Text));
         }

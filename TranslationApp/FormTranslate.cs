@@ -35,7 +35,8 @@ namespace TranslationApp
         public FormTranslate()
             : base(true)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
         private void FormTranslate_Load(object sender, EventArgs e)

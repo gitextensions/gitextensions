@@ -23,7 +23,8 @@ namespace GitUI.HelperDialogs
         {
             Revision = revision;
 
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
 
             switch (resetType)
             {

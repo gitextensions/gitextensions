@@ -13,7 +13,8 @@ namespace GitUI
 
         public PatchGrid()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             Patches.CellPainting += Patches_CellPainting;
         }
 

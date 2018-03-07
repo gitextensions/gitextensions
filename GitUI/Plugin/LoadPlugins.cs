@@ -55,7 +55,8 @@ namespace GitUI
                             Action<Exception> getEx = null;
                             getEx = arg =>
                             {
-                                exceptionInfo += arg.Message + "\r\n"; if (arg.InnerException != null)
+                                exceptionInfo += arg.Message + "\r\n";
+                                if (arg.InnerException != null)
                                 {
                                     getEx(arg.InnerException);
                                 }

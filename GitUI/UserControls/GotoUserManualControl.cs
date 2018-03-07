@@ -29,7 +29,8 @@ namespace GitUI.UserControls
             get { return _manualSectionAnchorName; }
             set
             {
-                _manualSectionAnchorName = value; if (_isLoaded)
+                _manualSectionAnchorName = value;
+                if (_isLoaded)
                 {
                     UpdateTooltip();
                 }
@@ -42,7 +43,8 @@ namespace GitUI.UserControls
             get { return _manualSectionSubfolder; }
             set
             {
-                _manualSectionSubfolder = value; if (_isLoaded)
+                _manualSectionSubfolder = value;
+                if (_isLoaded)
                 {
                     UpdateTooltip();
                 }
