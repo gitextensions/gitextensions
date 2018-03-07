@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
-            if (8 == IntPtr.Size
+            if (IntPtr.Size == 8
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
             {
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");

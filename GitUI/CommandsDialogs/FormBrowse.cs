@@ -1468,7 +1468,7 @@ namespace GitUI.CommandsDialogs
         private void RebaseToolStripMenuItemClick(object sender, EventArgs e)
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-            if (2 == revisions.Count)
+            if (revisions.Count == 2)
             {
                 string to = null;
                 string from = null;

@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
 
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
-            if (CommitKind.Normal == _commitKind)
+            if (_commitKind == CommitKind.Normal)
             {
                 GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
             }
@@ -1183,7 +1183,7 @@ namespace GitUI.CommandsDialogs
                 var firstLine = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
                 if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine)
                 {
-                    if (DialogResult.No == MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                    if (MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
@@ -1197,7 +1197,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine)
                     {
-                        if (DialogResult.No == MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        if (MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -1212,7 +1212,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (lines[1].Length != 0)
                     {
-                        if (DialogResult.No == MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        if (MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -1226,7 +1226,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (!Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx))
                     {
-                        if (DialogResult.No == MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        if (MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -2591,7 +2591,7 @@ namespace GitUI.CommandsDialogs
 
             int len = Math.Min(lineLimit, lineLength) - offset;
 
-            if (!textAppended && 0 < len)
+            if (!textAppended && len > 0)
             {
                 Message.ChangeTextColor(line, offset, len, Color.Black);
             }

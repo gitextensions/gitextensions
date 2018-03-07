@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs
         {
             if (UserGitRemotes.Count < 1)
             {
-                if (DialogResult.Yes == MessageBox.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error))
+                if (MessageBox.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
                     OpenRemotesDialogAndRefreshList(null);
                     return UserGitRemotes.Count > 0;
@@ -290,7 +290,7 @@ namespace GitUI.CommandsDialogs
                 {
                     // Ask if this is really what the user wants
                     if (!AppSettings.DontConfirmPushNewBranch &&
-                        DialogResult.No == MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo))
+                        MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         return false;
                     }

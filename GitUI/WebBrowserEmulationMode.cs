@@ -43,10 +43,10 @@ namespace GitUI
                     System.Security.AccessControl.RegistryRights.QueryValues))
                 {
                     var version = ieKey.GetValue("svcVersion");
-                    if (null == version)
+                    if (version == null)
                     {
                         version = ieKey.GetValue("Version");
-                        if (null == version)
+                        if (version == null)
                         {
                             return false;
                         }

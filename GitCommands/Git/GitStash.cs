@@ -54,7 +54,7 @@ namespace GitCommands.Git
 
         public override bool Equals(object obj)
         {
-            if (null == obj)
+            if (obj == null)
             {
                 return false;
             }

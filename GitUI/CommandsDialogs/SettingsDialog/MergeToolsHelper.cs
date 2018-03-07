@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
 
-                if (8 == IntPtr.Size
+                if (IntPtr.Size == 8
                     || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
                 {
                     programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");

@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             _commitTemplates = CommitTemplateItem.LoadFromSettings();
 
-            if (null == _commitTemplates)
+            if (_commitTemplates == null)
             {
                 _commitTemplates = new CommitTemplateItem[_maxCommitTemplates];
                 for (int i = 0; i < _commitTemplates.Length; i++)

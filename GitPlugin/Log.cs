@@ -42,7 +42,7 @@ namespace GitPlugin
 
         public static void AddHandler(IHandler handler)
         {
-            if (null == handler)
+            if (handler == null)
             {
                 return;
             }

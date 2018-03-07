@@ -63,11 +63,11 @@ namespace ResourceManager
         {
             if (linkText == null)
             {
-                if (GitRevision.UnstagedGuid == guid)
+                if (guid == GitRevision.UnstagedGuid)
                 {
                     linkText = Strings.GetCurrentUnstagedChanges();
                 }
-                else if (GitRevision.IndexGuid == guid)
+                else if (guid == GitRevision.IndexGuid)
                 {
                     linkText = Strings.GetCurrentIndex();
                 }

@@ -49,7 +49,7 @@ namespace GitUI.HelperDialogs
         private void btnOK_Click(object sender, EventArgs e)
         {
             var revisions = revisionGrid.GetSelectedRevisions();
-            if (1 == revisions.Count)
+            if (revisions.Count == 1)
             {
                 SelectedRevision = revisions[0];
                 DialogResult = DialogResult.OK;
@@ -81,7 +81,7 @@ namespace GitUI.HelperDialogs
         private void revisionGrid_SelectionChanged(object sender, EventArgs e)
         {
             var revisions = revisionGrid.GetSelectedRevisions();
-            if (1 != revisions.Count)
+            if (revisions.Count != 1)
             {
                 return;
             }

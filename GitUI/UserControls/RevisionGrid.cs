@@ -541,7 +541,7 @@ namespace GitUI
             {
                 dlg.Init(actionLabel, refs);
                 dlg.Location = PointToScreen(new Point(rect.Right, rect.Bottom));
-                if (DialogResult.OK != dlg.ShowDialog(this) || dlg.SelectedRef == null)
+                if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef == null)
                 {
                     return;
                 }

@@ -361,11 +361,12 @@ Inactive remote is completely invisible to git.");
 
                 // if the user has just created a fresh new remote
                 // there may be a need to configure it
-                if (result.ShouldUpdateRemote && !string.IsNullOrEmpty(remoteUrl) &&
-                DialogResult.Yes == MessageBox.Show(this,
-                                                    _questionAutoPullBehaviour.Text,
-                                                    _questionAutoPullBehaviourCaption.Text,
-                                                    MessageBoxButtons.YesNo))
+                if (result.ShouldUpdateRemote &&
+                    !string.IsNullOrEmpty(remoteUrl) &&
+                    MessageBox.Show(this,
+                        _questionAutoPullBehaviour.Text,
+                        _questionAutoPullBehaviourCaption.Text,
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     FormRemoteProcess.ShowDialog(this, "remote update");
                     _remoteManager.ConfigureRemotes(remote);
@@ -392,10 +393,11 @@ Inactive remote is completely invisible to git.");
                 return;
             }
 
-            if (DialogResult.Yes == MessageBox.Show(this,
-                                                    _questionDeleteRemote.Text,
-                                                    _questionDeleteRemoteCaption.Text,
-                                                    MessageBoxButtons.YesNo))
+            if (MessageBox.Show(
+                this,
+                _questionDeleteRemote.Text,
+                _questionDeleteRemoteCaption.Text,
+                MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 var output = _remoteManager.RemoveRemote(_selectedRemote);
                 if (!string.IsNullOrEmpty(output))
