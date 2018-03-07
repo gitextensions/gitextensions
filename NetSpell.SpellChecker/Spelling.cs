@@ -583,7 +583,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         public int EditDistance(string source, string target)
         {
-            return EditDistance(source, target, true);
+            return EditDistance(source, target, positionPriority: true);
         }
 
         /// <summary>

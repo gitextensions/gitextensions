@@ -89,12 +89,7 @@ namespace Gerrit
                 !HaveValidCommitMsgHook(e.GitModule);
         }
 
-        private bool HaveValidCommitMsgHook(IGitModule gitModule)
-        {
-            return HaveValidCommitMsgHook(gitModule, false);
-        }
-
-        private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force)
+        private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force = false)
         {
             if (gitModule == null)
             {

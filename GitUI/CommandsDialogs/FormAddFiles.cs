@@ -12,17 +12,12 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormAddFiles(GitUICommands commands, string addFile)
+        public FormAddFiles(GitUICommands commands, string addFile = null)
             : base(commands)
         {
             InitializeComponent();
             Translate();
             Filter.Text = addFile ?? ".";
-        }
-
-        public FormAddFiles(GitUICommands commands)
-            : this(commands, null)
-        {
         }
 
         private void ShowFilesClick(object sender, EventArgs e)

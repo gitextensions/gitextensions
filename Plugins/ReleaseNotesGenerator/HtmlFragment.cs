@@ -158,26 +158,15 @@ namespace ReleaseNotesGenerator
         }
 
         /// <summary>
-        /// Clears clipboard and copy a HTML fragment to the clipboard. This generates the header.
-        /// </summary>
-        /// <param name="htmlFragment">A html fragment.</param>
-        /// <example>
-        ///    HtmlFragment.CopyToClipboard("<b>Hello!</b>");
-        /// </example>
-        public static void CopyToClipboard(string htmlFragment)
-        {
-            CopyToClipboard(htmlFragment, null, null);
-        }
-
-        /// <summary>
         /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
         /// </summary>
         /// <param name="htmlFragment">a html fragment</param>
         /// <param name="title">optional title of the HTML document (can be null)</param>
         /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-        public static void CopyToClipboard(string htmlFragment, string title, Uri sourceUri)
+        public static void CopyToClipboard(string htmlFragment, string title = null, Uri sourceUri = null)
         {
             var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
+
             Clipboard.Clear();
             Clipboard.SetDataObject(dataObject);
 

@@ -19,21 +19,17 @@ namespace GitUI
             _timer.Tick += _timer_Elapsed;
         }
 
-        public void Start(int interval)
+        public void Start(int interval = 600)
         {
             _timer.Stop();
             _timer.Interval = interval;
             _timer.Enabled = true;
         }
 
-        public void Start()
-        {
-            Start(600);
-        }
-
         public void Stop(bool flush)
         {
             _timer.Stop();
+
             if (flush)
             {
                 _timer_Elapsed(null, null);

@@ -935,11 +935,6 @@ namespace GitUI
             }
         }
 
-        public List<GitRevision> GetSelectedRevisions()
-        {
-            return GetSelectedRevisions(null);
-        }
-
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
@@ -969,7 +964,7 @@ namespace GitUI
             return description;
         }
 
-        public List<GitRevision> GetSelectedRevisions(SortDirection? direction)
+        public List<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
             var rows = Revisions
                 .SelectedRows

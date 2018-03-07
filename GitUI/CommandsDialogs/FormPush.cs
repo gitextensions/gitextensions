@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner)
+        public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {
             if (!PushChanges(owner))
             {
@@ -155,11 +155,6 @@ namespace GitUI.CommandsDialogs
             }
 
             return DialogResult.OK;
-        }
-
-        public DialogResult PushAndShowDialogWhenFailed()
-        {
-            return PushAndShowDialogWhenFailed(null);
         }
 
         private bool CheckIfRemoteExist()

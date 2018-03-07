@@ -94,12 +94,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormResolveConflicts(GitUICommands commands)
-            : this(commands, true)
-        {
-        }
-
-        public FormResolveConflicts(GitUICommands commands, bool offerCommit)
+        public FormResolveConflicts(GitUICommands commands, bool offerCommit = true)
             : base(commands)
         {
             InitializeComponent();

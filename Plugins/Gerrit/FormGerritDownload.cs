@@ -30,17 +30,12 @@ namespace Gerrit
             Translate();
         }
 
-        public void PushAndShowDialogWhenFailed(IWin32Window owner)
+        public void PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {
             if (!DownloadChange(owner))
             {
                 ShowDialog(owner);
             }
-        }
-
-        public void PushAndShowDialogWhenFailed()
-        {
-            PushAndShowDialogWhenFailed(null);
         }
 
         private void DownloadClick(object sender, EventArgs e)

@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
             _longShaProvider = new LongShaProvider(() => Module);
         }
 
-        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision, bool filterByRevision)
+        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)
             : this(commands)
         {
             FileChanges.SetInitialRevision(revision?.Guid);
@@ -106,11 +106,6 @@ namespace GitUI.CommandsDialogs
             {
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
             }
-        }
-
-        public FormFileHistory(GitUICommands commands, string fileName)
-            : this(commands, fileName, null, false)
-        {
         }
 
         protected override void OnRuntimeLoad(EventArgs e)

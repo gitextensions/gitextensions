@@ -1497,22 +1497,7 @@ namespace GitCommands
             return RunGitCmd(arguments);
         }
 
-        public string ResetSoft(string commit)
-        {
-            return ResetSoft(commit, "");
-        }
-
-        public string ResetMixed(string commit)
-        {
-            return ResetMixed(commit, "");
-        }
-
-        public string ResetHard(string commit)
-        {
-            return ResetHard(commit, "");
-        }
-
-        public string ResetSoft(string commit, string file)
+        public string ResetSoft(string commit, string file = "")
         {
             var args = "reset --soft";
 
@@ -1529,7 +1514,7 @@ namespace GitCommands
             return RunGitCmd(args);
         }
 
-        public string ResetMixed(string commit, string file)
+        public string ResetMixed(string commit, string file = "")
         {
             var args = "reset --mixed";
 
@@ -1546,7 +1531,7 @@ namespace GitCommands
             return RunGitCmd(args);
         }
 
-        public string ResetHard(string commit, string file)
+        public string ResetHard(string commit, string file = "")
         {
             var args = "reset --hard";
 
