@@ -442,7 +442,7 @@ namespace GitUI.SpellChecker
                     foreach (var suggestion in _spelling.Suggestions)
                     {
                         var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
-                        si.Font = new System.Drawing.Font(si.Font, FontStyle.Bold);
+                        si.Font = new Font(si.Font, FontStyle.Bold);
                     }
 
                     AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick)

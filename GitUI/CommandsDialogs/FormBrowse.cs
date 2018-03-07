@@ -2143,7 +2143,7 @@ namespace GitUI.CommandsDialogs
             base.OnClosed(e);
         }
 
-        private void CommandsToolStripMenuItem_DropDownOpening(object sender, System.EventArgs e)
+        private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             // Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();

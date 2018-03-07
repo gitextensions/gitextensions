@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _branchNameLoader = new AsyncLoader();
                 _branchNameLoader.Load(() =>
                 {
-                    if (!GitCommands.GitModule.IsBareRepository(repository.Path))
+                    if (!GitModule.IsBareRepository(repository.Path))
                     {
                         return GitModule.GetSelectedBranchFast(repository.Path);
                     }
@@ -144,7 +144,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             if ((sender == Icon || sender == _NO_TRANSLATE_Title) &&
-                ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+                ClientRectangle.Contains(PointToClient(MousePosition)))
             {
                 return;
             }
@@ -152,7 +152,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             BackColor = SystemColors.Control;
         }
 
-        private void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        private void DashboardItem_VisibleChanged(object sender, EventArgs e)
         {
             if (!Visible)
             {

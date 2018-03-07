@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
         }
 
-        private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)
+        private void chkUseSSL_CheckedChanged(object sender, EventArgs e)
         {
             if (!chkUseSSL.Checked)
             {

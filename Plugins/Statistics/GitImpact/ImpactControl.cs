@@ -176,18 +176,18 @@ namespace GitImpact
 
         private void InitializeComponent()
         {
-            _scrollBar = new System.Windows.Forms.HScrollBar();
+            _scrollBar = new HScrollBar();
             SuspendLayout();
 
             //
             // scrollBar
             //
-            _scrollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
+            _scrollBar.Dock = DockStyle.Bottom;
             _scrollBar.LargeChange = 0;
-            _scrollBar.Location = new System.Drawing.Point(0, 133);
+            _scrollBar.Location = new Point(0, 133);
             _scrollBar.Maximum = 0;
             _scrollBar.Name = "_scrollBar";
-            _scrollBar.Size = new System.Drawing.Size(150, 17);
+            _scrollBar.Size = new Size(150, 17);
             _scrollBar.SmallChange = 0;
             _scrollBar.TabIndex = 0;
             _scrollBar.Scroll += OnScroll;

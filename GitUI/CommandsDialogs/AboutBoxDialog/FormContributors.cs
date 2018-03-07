@@ -27,10 +27,10 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             tb.BackColor = Color.White;
             tb.Dock = DockStyle.Fill;
             tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            tb.Margin = new System.Windows.Forms.Padding(0);
+            tb.Margin = new Padding(0);
             tb.Multiline = true;
             tb.ReadOnly = true;
-            tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            tb.ScrollBars = ScrollBars.Vertical;
             tb.TabStop = false;
             return tb;
         }
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         private TabPage GetNewTabPage(TextBox tb, string caption)
         {
             TabPage tp = new TabPage();
-            tp.Margin = new System.Windows.Forms.Padding(0);
+            tp.Margin = new Padding(0);
             tp.Text = caption;
             tp.Controls.Add(tb);
             return tp;

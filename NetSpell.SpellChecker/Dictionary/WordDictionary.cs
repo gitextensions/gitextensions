@@ -20,11 +20,11 @@ namespace NetSpell.SpellChecker.Dictionary
     /// <summary>
     /// The WordDictionary class contains all the logic for managing the word list.
     /// </summary>
-    [ToolboxBitmap(typeof(NetSpell.SpellChecker.Dictionary.WordDictionary), "Dictionary.bmp")]
-    public class WordDictionary : System.ComponentModel.Component
+    [ToolboxBitmap(typeof(WordDictionary), "Dictionary.bmp")]
+    public class WordDictionary : Component
     {
         private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";
-        private System.ComponentModel.Container _components;
+        private Container _components;
 
         /// <summary>
         ///     Initializes a new instance of the class
@@ -37,7 +37,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// <summary>
         ///     Initializes a new instance of the class
         /// </summary>
-        public WordDictionary(System.ComponentModel.IContainer container)
+        public WordDictionary(IContainer container)
         {
             container.Add(this);
             InitializeComponent();

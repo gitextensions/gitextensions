@@ -93,12 +93,12 @@ namespace GitCommands
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
-            if (object.ReferenceEquals(x, y))
+            if (ReferenceEquals(x, y))
             {
                 return true;
             }
 
-            if (object.ReferenceEquals(x, null) || object.ReferenceEquals(y, null))
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
             {
                 return false;
             }

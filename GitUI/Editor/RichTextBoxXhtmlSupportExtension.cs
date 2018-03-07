@@ -1195,7 +1195,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }
@@ -1527,7 +1527,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }

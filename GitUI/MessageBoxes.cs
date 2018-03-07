@@ -89,7 +89,7 @@ namespace GitUI
 
         public static bool CacheHostkey(IWin32Window owner)
         {
-            return MessageBox.Show(owner, Instance._serverHostkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes;
+            return MessageBox.Show(owner, Instance._serverHostkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
         public static bool ConfirmUpdateSubmodules(IWin32Window win)

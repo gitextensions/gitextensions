@@ -112,7 +112,7 @@ namespace ReleaseNotesGenerator
 
                     // Optional Source URL, used for resolving relative links.
                     case "sourceurl":
-                        SourceUrl = new System.Uri(val);
+                        SourceUrl = new Uri(val);
                         break;
                 }
             } // end for
@@ -144,7 +144,7 @@ namespace ReleaseNotesGenerator
         /// <summary>
         /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
         /// </summary>
-        public System.Uri SourceUrl { get; }
+        public Uri SourceUrl { get; }
 
         #endregion // Read and decode from clipboard
 

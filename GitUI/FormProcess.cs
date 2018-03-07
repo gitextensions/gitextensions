@@ -266,7 +266,7 @@ namespace GitUI
             // FormProcess
             //
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(565, 326);
             Name = "FormProcess";
             ResumeLayout(false);

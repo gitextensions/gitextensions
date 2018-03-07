@@ -37,7 +37,7 @@ namespace Bitbucket
             }
             else
             {
-                reviewers.ForEach(r => request.Reviewers += r["user"]["displayName"] + " (" + r["approved"] + ")" + System.Environment.NewLine);
+                reviewers.ForEach(r => request.Reviewers += r["user"]["displayName"] + " (" + r["approved"] + ")" + Environment.NewLine);
                 if (request.Reviewers.EndsWith(", "))
                 {
                     request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
@@ -50,7 +50,7 @@ namespace Bitbucket
             }
             else
             {
-                participants.ForEach(r => request.Reviewers += r["user"]["displayName"] + " (" + r["approved"] + ")" + System.Environment.NewLine);
+                participants.ForEach(r => request.Reviewers += r["user"]["displayName"] + " (" + r["approved"] + ")" + Environment.NewLine);
                 if (request.Reviewers.EndsWith(", "))
                 {
                     request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);

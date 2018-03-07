@@ -167,7 +167,7 @@ namespace PatchApply
         public string GetMD5Hash(string input)
         {
             IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
-            var s = new System.Text.StringBuilder();
+            var s = new StringBuilder();
             foreach (byte b in bs)
             {
                 s.Append(b.ToString("x2").ToLower());
@@ -179,7 +179,7 @@ namespace PatchApply
         private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
         {
             var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+            byte[] bs = Encoding.UTF8.GetBytes(input);
             bs = x.ComputeHash(bs);
             return bs;
         }

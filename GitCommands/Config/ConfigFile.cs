@@ -327,7 +327,7 @@ namespace GitCommands.Config
 
             public void Parse(string fileContent = null)
             {
-                _fileContent = fileContent ?? File.ReadAllText(FileName, ConfigFile.GetEncoding());
+                _fileContent = fileContent ?? File.ReadAllText(FileName, GetEncoding());
 
                 ParsePart parseFunc = ReadUnknown;
 

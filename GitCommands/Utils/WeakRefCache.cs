@@ -48,7 +48,7 @@ namespace GitCommands.Utils
             return (T)cached;
         }
 
-        private void OnClearTimer(object source, System.Timers.ElapsedEventArgs e)
+        private void OnClearTimer(object source, ElapsedEventArgs e)
         {
             lock (_weakMap)
             {

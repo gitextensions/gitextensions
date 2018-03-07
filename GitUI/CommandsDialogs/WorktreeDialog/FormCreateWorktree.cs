@@ -86,12 +86,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }
         }
 
-        private void comboBoxBranches_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void GoIfEnterKey(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void GoIfEnterKey(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {

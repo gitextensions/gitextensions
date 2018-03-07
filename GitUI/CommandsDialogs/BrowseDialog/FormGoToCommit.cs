@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Go()
         {
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Close();
         }
 
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Go();
         }
 
-        private void linkGitRevParse_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void linkGitRevParse_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html#_specifying_revisions");
         }
@@ -206,19 +206,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Go();
         }
 
-        private void comboBoxTags_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxTags_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void comboBoxBranches_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void GoIfEnterKey(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void GoIfEnterKey(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 Go();
             }

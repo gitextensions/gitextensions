@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin)
         {
-            var result = SettingsPageBase.Create<PluginSettingsPage>(pageHost);
+            var result = Create<PluginSettingsPage>(pageHost);
             result.Init(gitPlugin);
             return result;
         }

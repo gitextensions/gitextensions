@@ -473,7 +473,7 @@ namespace GitCommands
                 {
                     return CultureInfo.GetCultureInfo(CurrentLanguageCode);
                 }
-                catch (System.Globalization.CultureNotFoundException)
+                catch (CultureNotFoundException)
                 {
                     Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
                     return CultureInfo.GetCultureInfo("en");

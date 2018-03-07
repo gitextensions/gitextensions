@@ -83,7 +83,7 @@ namespace ResourceManager
         /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
             _translated = true;
         }
 
