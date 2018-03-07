@@ -1114,13 +1114,15 @@ namespace GitUI
         public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IList<GitItemStatus> items = null)
         {
             Revision = selectedRev;
+
             if (parentRev == null)
             {
                 parentRev = new GitRevision("");
             }
 
-            IGitItemsWithParents dictionary = items == null ? null :
-                dictionary = new GitItemsWithParents { { parentRev, items } };
+            IGitItemsWithParents dictionary = items == null
+                ? null
+                : new GitItemsWithParents { { parentRev, items } };
 
             GitItemStatusesWithParents = dictionary;
         }
