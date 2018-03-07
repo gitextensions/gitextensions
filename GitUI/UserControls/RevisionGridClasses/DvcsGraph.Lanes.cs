@@ -425,8 +425,9 @@ namespace GitUI.RevisionGridClasses
                         _currentRow.Add(_currentRow.NodeLane, new Graph.LaneInfo(curLane, lane.Junction));
                     }
                 }
-                else // lane.Count > 1
+                else
                 {
+                    // lane.Count > 1
                     _currentRow.Add(_currentRow.NodeLane, new Graph.LaneInfo(curLane, lane.Junction));
                 }
 

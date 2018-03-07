@@ -2801,8 +2801,9 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_terminal == null) // Lazy-create on first opening the tab
+                if (_terminal == null)
                 {
+                    // Lazy-create on first opening the tab
                     tabpage.Controls.Clear();
                     tabpage.Controls.Add(
                         _terminal = new ConEmuControl()
@@ -2813,7 +2814,8 @@ namespace GitUI.CommandsDialogs
                         });
                 }
 
-                if (_terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
+                // If user has typed "exit" in there, restart the shell; otherwise just return
+                if (_terminal.IsConsoleEmulatorOpen)
                 {
                     return;
                 }

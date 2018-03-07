@@ -114,8 +114,9 @@ namespace GitExtensions
             {
                 commands.StartBrowseDialog();
             }
-            else // if we are here args.Length > 1
+            else
             {
+                // if we are here args.Length > 1
                 commands.RunCommand(args);
             }
 
@@ -231,8 +232,9 @@ namespace GitExtensions
                     exceptionHandled = true;
                 }
             }
-            finally // if we fail in this somehow at least this message might get somewhere
+            finally
             {
+                // if we fail in this somehow at least this message might get somewhere
                 if (!exceptionHandled)
                 {
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

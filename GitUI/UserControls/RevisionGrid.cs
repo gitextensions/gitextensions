@@ -428,8 +428,9 @@ namespace GitUI
             }
 
             curIndex = curIndex >= 0 ? curIndex : 0;
-            if (e.KeyChar == 8 && _quickSearchString.Length > 1) // backspace
+            if (e.KeyChar == 8 && _quickSearchString.Length > 1)
             {
+                // backspace
                 RestartQuickSearchTimer();
 
                 _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
@@ -1901,8 +1902,9 @@ namespace GitUI
                 }
                 else if (columnIndex == idColIndex)
                 {
-                    if (!revision.IsArtificial) // do not show artificial GUID
+                    if (!revision.IsArtificial)
                     {
+                        // do not show artificial GUID
                         var text = revision.Guid;
                         var rect = RevisionGridUtils.GetCellRectangle(e);
                         RevisionGridUtils.DrawColumnText(e.Graphics, text, _fontOfSHAColumn,
@@ -2023,8 +2025,9 @@ namespace GitUI
             int dateColIndex = DateDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            if (columnIndex == graphColIndex && !revision.IsArtificial) // Do not show artificial guid
+            if (columnIndex == graphColIndex && !revision.IsArtificial)
             {
+                // Do not show artificial guid
                 e.Value = revision.Guid;
             }
             else if (columnIndex == messageColIndex)

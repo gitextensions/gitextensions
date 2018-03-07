@@ -51,8 +51,9 @@ namespace GitUI.UserControls.RevisionGridClasses
                 UpdateMenuCommandShortcutKeyDisplayString(_navigateMenuCommands, navigateMenuCommands2);
                 UpdateMenuCommandShortcutKeyDisplayString(_viewMenuCommands, viewMenuCommands2);
 
-                if (_revisionGrid != null) // null when TranslationApp is started
+                if (_revisionGrid != null)
                 {
+                    // null when TranslationApp is started
                     TriggerMenuChanged(); // trigger refresh
                 }
             }

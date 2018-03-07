@@ -302,8 +302,9 @@ namespace GitUI.UserControls
 
         public void SetGroupState(ListViewGroupState state)
         {
-            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward
+            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6)
             {
+                // Only Vista and forward
                 // allows collapse of ListViewGroups
                 return;
             }

@@ -83,12 +83,14 @@ namespace GitUI.CommandsDialogs
                 Stashes.Items.Add(stashedItem);
             }
 
-            if (ManageStashes && Stashes.Items.Count > 1) // more than just the default ("Current working directory changes")
+            if (ManageStashes && Stashes.Items.Count > 1)
             {
+                // more than just the default ("Current working directory changes")
                 Stashes.SelectedIndex = 1; // -> auto-select first non-default
             }
-            else if (Stashes.Items.Count > 0) // (no stashes) -> select default ("Current working directory changes")
+            else if (Stashes.Items.Count > 0)
             {
+                // (no stashes) -> select default ("Current working directory changes")
                 Stashes.SelectedIndex = 0;
             }
         }
@@ -141,8 +143,9 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.WaitCursor;
 
             if (stashedItem != null &&
-                gitStash == _currentWorkingDirStashItem) // current working directory
+                gitStash == _currentWorkingDirStashItem)
             {
+                // current working directory
                 View.ViewCurrentChanges(stashedItem);
             }
             else if (stashedItem != null)

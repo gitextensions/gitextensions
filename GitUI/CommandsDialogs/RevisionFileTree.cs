@@ -93,9 +93,11 @@ See the changes in the commit form.");
 
                 foundNode = currentFoundNode;
 
-                if (i < pathParts.Length - 1) // if not the last path part...
+                // if not the last path part...
+                if (i < pathParts.Length - 1)
                 {
-                    foundNode.Expand(); // load more data
+                    // load more data
+                    foundNode.Expand();
                     currentNodes = currentFoundNode.Nodes;
                 }
             }

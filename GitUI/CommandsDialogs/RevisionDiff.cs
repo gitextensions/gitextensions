@@ -232,8 +232,9 @@ namespace GitUI.CommandsDialogs
                 Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
                 itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
             }
-            else // acts as parent
+            else
             {
+                // acts as parent
                 // if file is new to the parent, it has to be removed
                 var addedItems = selectedItems.Where(item => item.IsNew);
                 Module.RemoveFiles(addedItems.Select(item => item.Name), false);

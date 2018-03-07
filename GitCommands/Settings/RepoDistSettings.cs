@@ -60,9 +60,10 @@ namespace GitCommands.Settings
             bool isEffectiveLevel = LowerPriority != null && LowerPriority.LowerPriority != null;
             bool isDetachedOrGlobal = LowerPriority == null;
 
-            if (isDetachedOrGlobal || // there is no lower level
-                SettingsCache.HasValue(name)) // or the setting is assigned on this level
+            if (isDetachedOrGlobal || SettingsCache.HasValue(name))
             {
+                // there is no lower level
+                // or the setting is assigned on this level
                 SettingsCache.SetValue(name, value, encode);
             }
             else if (isEffectiveLevel)
@@ -87,8 +88,9 @@ namespace GitCommands.Settings
                     LowerPriority.LowerPriority.SetValue(name, value, encode);
                 }
             }
-            else// the settings is not assigned on this level, recurse to the lower level
+            else
             {
+                // the settings is not assigned on this level, recurse to the lower level
                 LowerPriority.SetValue(name, value, encode);
             }
         }

@@ -209,8 +209,9 @@ namespace GitUI.RevisionGridClasses
 
                 this.InvokeSync(() =>
                     {
-                        lock (_backgroundEvent) // Make sure the background thread isn't running
+                        lock (_backgroundEvent)
                         {
+                            // Make sure the background thread isn't running
                             lock (_backgroundThread)
                             {
                                 _backgroundScrollTo = 0;
@@ -681,7 +682,7 @@ namespace GitUI.RevisionGridClasses
             {
                 // Currently we are doing some important work; we are recieving
                 // rows that the user is viewing
-                if (Loading != null && _graphData.Count > RowCount) // && graphData.Count != RowCount)
+                if (Loading != null && _graphData.Count > RowCount) //// && graphData.Count != RowCount)
                 {
                     Loading(this, new LoadingEventArgs(true));
                 }
@@ -864,12 +865,14 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            if (adjacentColors.Count == 0) // This is an end-point. We need to 'pick' a new color
+            if (adjacentColors.Count == 0)
             {
+                // This is an end-point. We need to 'pick' a new color
                 colorIndex = 0;
             }
-            else // This is a parent branch, calculate new color based on parent branch
+            else
             {
+                // This is a parent branch, calculate new color based on parent branch
                 int start = adjacentColors[0];
                 int i;
                 for (i = 0; i < preferedColors.Length; i++)

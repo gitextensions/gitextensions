@@ -297,7 +297,8 @@ namespace GitUI
             AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
 
             // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
-            if ((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!_errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
+            // Not checking for UseDialogSettings because checkbox is only visible with True
+            if ((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!_errorOccurred /* and successful */))
             {
                 Close();
             }

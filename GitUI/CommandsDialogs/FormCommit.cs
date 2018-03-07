@@ -573,8 +573,9 @@ namespace GitUI.CommandsDialogs
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
 
-            if (_currentItemStaged) // staged
+            if (_currentItemStaged)
             {
+                // staged
                 args += " --reverse";
             }
 
@@ -666,8 +667,9 @@ namespace GitUI.CommandsDialogs
             // Prepare git command
             string args = "apply --whitespace=nowarn";
 
-            if (_currentItemStaged) // staged
+            if (_currentItemStaged)
             {
+                // staged
                 args += " --reverse --index";
             }
 
@@ -921,8 +923,10 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            const long fiveMB = 5 * 1024 * 1024;
+
             long length = GetItemLength(item.Name);
-            if (length < 5 * 1024 * 1024) // 5Mb
+            if (length < fiveMB)
             {
                 SetSelectedDiff(item, staged);
             }

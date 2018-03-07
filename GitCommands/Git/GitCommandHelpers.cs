@@ -1133,13 +1133,15 @@ namespace GitCommands
             if (lastNewLinePos > 0)
             {
                 int ind = trimmedStatus.LastIndexOf('\0');
-                if (ind < lastNewLinePos) // Warning at end
+                if (ind < lastNewLinePos)
                 {
+                    // Warning at end
                     lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind : 0);
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(nl);
                 }
-                else // Warning at beginning
+                else
                 {
+                    // Warning at beginning
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
                 }
             }
@@ -1179,8 +1181,9 @@ namespace GitCommands
                 if (x != '?' && x != '!' && x != ' ')
                 {
                     GitItemStatus gitItemStatusX = null;
-                    if (x == 'R' || x == 'C') // Find renamed files...
+                    if (x == 'R' || x == 'C')
                     {
+                        // Find renamed files...
                         string nextfile = n + 1 < files.Length ? files[n + 1] : "";
                         gitItemStatusX = GitItemStatusFromCopyRename(fromDiff, nextfile, fileName, x, status);
                         n++;
@@ -1205,8 +1208,9 @@ namespace GitCommands
                 }
 
                 GitItemStatus gitItemStatusY;
-                if (y == 'R' || y == 'C') // Find renamed files...
+                if (y == 'R' || y == 'C')
                 {
+                    // Find renamed files...
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
                     gitItemStatusY = GitItemStatusFromCopyRename(false, nextfile, fileName, y, status);
                     n++;

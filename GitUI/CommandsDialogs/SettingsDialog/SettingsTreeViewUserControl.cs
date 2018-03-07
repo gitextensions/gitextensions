@@ -112,8 +112,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                     // search for keywords (space combines as 'and')
                     var andKeywords = searchFor.Split(' ');
-                    if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword)))) // only part of a keyword must match to have a match
+                    if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword))))
                     {
+                        // only part of a keyword must match to have a match
                         if (!_nodesFoundByTextBox.Contains(node))
                         {
                             _nodesFoundByTextBox.Add(node);

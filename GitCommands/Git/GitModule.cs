@@ -3287,8 +3287,9 @@ namespace GitCommands
                     {
                         blameHeader.FileName = ReEncodeFileNameFromLossless(line.Substring("filename".Length).Trim());
                     }
-                    else if (line.IndexOf(' ') == 40) // SHA1, create new line!
+                    else if (line.IndexOf(' ') == 40)
                     {
+                        // SHA1, create new line!
                         blameLine = new GitBlameLine();
                         var headerParams = line.Split(' ');
                         blameLine.CommitGuid = headerParams[0];
@@ -3319,14 +3320,16 @@ namespace GitCommands
 
         public string GetFileBlobHash(string fileName, string revision)
         {
-            if (revision == GitRevision.UnstagedGuid) // working directory changes
+            if (revision == GitRevision.UnstagedGuid)
             {
+                // working directory changes
                 Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
 
-            if (revision == GitRevision.IndexGuid) // index
+            if (revision == GitRevision.IndexGuid)
             {
+                // index
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
                 string[] s = blob.Split(new char[] { ' ', '\t' });
                 if (s.Length >= 2)
@@ -3687,10 +3690,12 @@ namespace GitCommands
                     }
                     else if (toEncodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        encoding = null; // no recoding is needed
+                        // no recoding is needed
+                        encoding = null;
                     }
-                    else if (CpEncodingPattern.IsMatch(toEncodingName)) // Encodings written as e.g. "cp1251", which is not a supported encoding string
+                    else if (CpEncodingPattern.IsMatch(toEncodingName))
                     {
+                        // Encodings written as e.g. "cp1251", which is not a supported encoding string
                         encoding = Encoding.GetEncoding(int.Parse(toEncodingName.Substring(2)));
                     }
                     else
@@ -3698,8 +3703,9 @@ namespace GitCommands
                         encoding = Encoding.GetEncoding(toEncodingName);
                     }
                 }
-                else// bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
+                else
                 {
+                    // bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
                     encoding = LogOutputEncoding;
                 }
             }

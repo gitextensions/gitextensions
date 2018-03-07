@@ -845,18 +845,22 @@ namespace GitUI.CommandsDialogs
                                                                             caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // base
+
+                if (frm.KeepBase)
                 {
+                    // base
                     ChooseBaseOnConflict(item.Filename);
                 }
 
-                if (frm.KeepLocal) // local
+                if (frm.KeepLocal)
                 {
+                    // local
                     ChooseLocalOnConflict(item.Filename);
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
@@ -880,18 +884,22 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // delete
+
+                if (frm.KeepBase)
                 {
+                    // delete
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
 
-                if (frm.KeepLocal) // local
+                if (frm.KeepLocal)
                 {
+                    // local
                     ChooseLocalOnConflict(item.Filename);
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
@@ -917,18 +925,22 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // base
+
+                if (frm.KeepBase)
                 {
+                    // base
                     ChooseBaseOnConflict(item.Filename);
                 }
 
-                if (frm.KeepLocal) // delete
+                if (frm.KeepLocal)
                 {
+                    // delete
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
@@ -954,18 +966,22 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // base
+
+                if (frm.KeepBase)
                 {
+                    // base
                     ChooseBaseOnConflict(item.Filename);
                 }
 
-                if (frm.KeepLocal) // delete
+                if (frm.KeepLocal)
                 {
+                    // delete
                     ChooseLocalOnConflict(item.Filename);
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
             }
