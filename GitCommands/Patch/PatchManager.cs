@@ -565,11 +565,11 @@ namespace PatchApply
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
-            if ("crlf".Equals(gitEol))
+            if (gitEol == "crlf")
             {
                 eol = "\r\n";
             }
-            else if ("native".Equals(gitEol))
+            else if (gitEol == "native")
             {
                 eol = Environment.NewLine;
             }
@@ -597,7 +597,7 @@ namespace PatchApply
 
                 if (i == lines.Length - 1)
                 {
-                    if (!line.Equals(string.Empty))
+                    if (line != string.Empty)
                     {
                         result.CurrentSubChunk.IsNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         result.AddDiffLine(patchLine, reset);

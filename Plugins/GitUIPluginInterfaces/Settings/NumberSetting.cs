@@ -56,9 +56,10 @@ namespace GitUIPluginInterfaces
             public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
             {
                 var controlValue = control.Text;
+
                 if (areSettingsEffective)
                 {
-                    if (ConvertToString(Setting.ValueOrDefault(settings)).Equals(controlValue))
+                    if (ConvertToString(Setting.ValueOrDefault(settings)) == controlValue)
                     {
                         return;
                     }

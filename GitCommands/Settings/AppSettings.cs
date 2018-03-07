@@ -143,7 +143,8 @@ namespace GitCommands
             if (gitExtDir.Length > len)
             {
                 var path = gitExtDir.Substring(gitExtDir.Length - len);
-                if (debugPath.ToPosixPath().Equals(path.ToPosixPath()))
+
+                if (debugPath.ToPosixPath() == path.ToPosixPath())
                 {
                     string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
                     return Path.Combine(projectPath, "Bin");

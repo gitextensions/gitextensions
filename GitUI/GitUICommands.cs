@@ -1874,31 +1874,32 @@ namespace GitUI
             }
 
             var command = args[1];
-            if (command.Equals("blame") && args.Length <= 2)
+
+            if (command == "blame" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
                 return;
             }
 
-            if (command.Equals("difftool") && args.Length <= 2)
+            if (command == "difftool" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool");
                 return;
             }
 
-            if (command.Equals("filehistory") && args.Length <= 2)
+            if (command == "filehistory" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
                 return;
             }
 
-            if (command.Equals("fileeditor") && args.Length <= 2)
+            if (command == "fileeditor" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                 return;
             }
 
-            if (command.Equals("revert") && args.Length <= 2)
+            if (command == "revert" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open revert, there is no file selected.", "Revert");
                 return;

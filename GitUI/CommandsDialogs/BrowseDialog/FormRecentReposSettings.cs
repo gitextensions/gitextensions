@@ -68,15 +68,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void SetShorteningStrategy(string strategy)
         {
-            if (RecentRepoSplitter.ShorteningStrategy_None.Equals(strategy))
+            if (strategy == RecentRepoSplitter.ShorteningStrategy_None)
             {
                 dontShortenRB.Checked = true;
             }
-            else if (RecentRepoSplitter.ShorteningStrategy_MostSignDir.Equals(strategy))
+            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MostSignDir)
             {
                 mostSigDirRB.Checked = true;
             }
-            else if (RecentRepoSplitter.ShorteningStrategy_MiddleDots.Equals(strategy))
+            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MiddleDots)
             {
                 middleDotRB.Checked = true;
             }

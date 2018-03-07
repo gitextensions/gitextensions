@@ -211,7 +211,7 @@ namespace GitUIPluginInterfaces
             try
             {
                 string fontSize;
-                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                if (parts.Length == 3 && parts[2] == InvariantCultureId)
                 {
                     fontSize = parts[1];
                 }

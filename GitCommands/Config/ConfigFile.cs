@@ -69,7 +69,7 @@ namespace GitCommands.Config
             value = value.Replace("\n", "\\n");
             value = value.Replace("\t", "\\t");
 
-            if (value.IndexOfAny(CommentChars) != -1 || !value.Trim().Equals(value))
+            if (value.IndexOfAny(CommentChars) != -1 || value.Trim() != value)
             {
                 value = value.Quote();
             }

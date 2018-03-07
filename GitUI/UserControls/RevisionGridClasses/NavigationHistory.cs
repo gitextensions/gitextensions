@@ -18,7 +18,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// </summary>
         public void Push(string curr)
         {
-            if ((_prevItems.Count == 0) || !_prevItems.Peek().Equals(curr))
+            if (_prevItems.Count == 0 || _prevItems.Peek() != curr)
             {
                 _prevItems.Push(curr);
                 _nextItems.Clear();

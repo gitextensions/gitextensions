@@ -214,9 +214,10 @@ namespace GitUI.Blame
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
-            // refresh only when something changed
             string guid = revision.Guid;
-            if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+
+            // refresh only when something changed
+            if (!force && guid == _blameHash && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
             {
                 return;
             }

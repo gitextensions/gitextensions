@@ -295,7 +295,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             {
                 foreach (RepositoryCategory newRepositoryCategory in Repositories.RepositoryCategories)
                 {
-                    if (newRepositoryCategory.Description.Equals(toolStripItem.Text))
+                    if (newRepositoryCategory.Description == toolStripItem.Text)
                     {
                         RepositoryCategory.RemoveRepository(_repository);
                         _repository.RepositoryType = RepositoryType.Repository;

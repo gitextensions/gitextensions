@@ -86,7 +86,7 @@ namespace GitExtensions
 
             try
             {
-                if (!(args.Length >= 2 && args[1].Equals("uninstall"))
+                if (!(args.Length >= 2 && args[1] == "uninstall")
                     && (AppSettings.CheckSettings
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
@@ -194,7 +194,7 @@ namespace GitExtensions
                 var in3 = ce.InnerException.InnerException;
 
                 // saves having to have a reference to System.Xml just to check that we have an XmlException
-                if (in3.GetType().Name.Equals("XmlException"))
+                if (in3.GetType().Name == "XmlException")
                 {
                     var localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 

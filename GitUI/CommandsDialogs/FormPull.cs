@@ -605,7 +605,7 @@ namespace GitUI.CommandsDialogs
 
             if (_branch == localBranch.Text)
             {
-                if (remote.Equals(currentBranchRemote.Value) || currentBranchRemote.Value.IsNullOrEmpty())
+                if (remote == currentBranchRemote.Value || currentBranchRemote.Value.IsNullOrEmpty())
                 {
                     curLocalBranch = Branches.Text.IsNullOrEmpty() ? null : _branch;
                 }
@@ -620,7 +620,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
-                && !remote.Equals(currentBranchRemote.Value) && !Fetch.Checked)
+                && remote != currentBranchRemote.Value && !Fetch.Checked)
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
@@ -745,7 +745,7 @@ namespace GitUI.CommandsDialogs
                 IEnumerable<GitRemote> remotes = (IEnumerable<GitRemote>)_NO_TRANSLATE_Remotes.DataSource;
                 foreach (var r in remotes)
                 {
-                    if (!r.Name.IsNullOrWhiteSpace() && !r.Name.Equals(AllRemotes))
+                    if (!r.Name.IsNullOrWhiteSpace() && r.Name != AllRemotes)
                     {
                         yield return r.Name;
                     }
@@ -984,7 +984,7 @@ namespace GitUI.CommandsDialogs
 
         private void localBranch_Leave(object sender, EventArgs e)
         {
-            if (!_branch.Equals(localBranch.Text.Trim()) && Branches.Text.IsNullOrWhiteSpace())
+            if (_branch != localBranch.Text.Trim() && Branches.Text.IsNullOrWhiteSpace())
             {
                 Branches.Text = localBranch.Text;
             }

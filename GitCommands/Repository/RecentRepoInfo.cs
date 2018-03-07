@@ -82,8 +82,8 @@ namespace GitCommands.Repository
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
-            bool middleDot = ShorteningStrategy_MiddleDots.Equals(ShorteningStrategy);
-            bool signDir = ShorteningStrategy_MostSignDir.Equals(ShorteningStrategy);
+            bool middleDot = ShorteningStrategy == ShorteningStrategy_MiddleDots;
+            bool signDir = ShorteningStrategy == ShorteningStrategy_MostSignDir;
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
 
