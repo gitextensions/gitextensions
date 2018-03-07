@@ -567,8 +567,7 @@ namespace GitUI.RevisionGridClasses
             Rectangle srcRect = DrawGraph(e.RowIndex);
             if (!srcRect.IsEmpty)
             {
-                e.Graphics.DrawImage
-                    (
+                e.Graphics.DrawImage(
                         _graphBitmap,
                         e.CellBounds,
                         srcRect,
@@ -1066,8 +1065,7 @@ namespace GitUI.RevisionGridClasses
 
         private Rectangle CreateRectangle(int neededRow, int width)
         {
-            return new Rectangle
-                (
+            return new Rectangle(
                 0,
                 ((_cacheHeadRow + neededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
                 width,
@@ -1218,8 +1216,7 @@ namespace GitUI.RevisionGridClasses
             wa.Clip = oldClip;
             {
                 // Draw node
-                var nodeRect = new Rectangle
-                    (
+                var nodeRect = new Rectangle(
                     wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
                     wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
                     _nodeDimension,

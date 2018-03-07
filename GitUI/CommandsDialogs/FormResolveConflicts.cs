@@ -1166,8 +1166,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageFile(string filename)
         {
-            var processStart = new FormStatus.ProcessStart
-                (
+            var processStart = new FormStatus.ProcessStart(
                     delegate(FormStatus form)
                     {
                         form.AddMessageLine(string.Format(_stageFilename.Text, filename));
