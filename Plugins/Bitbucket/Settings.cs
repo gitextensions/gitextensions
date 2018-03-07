@@ -1,8 +1,8 @@
-﻿using GitCommands;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Bitbucket
 {

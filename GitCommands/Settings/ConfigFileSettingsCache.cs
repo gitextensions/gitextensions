@@ -1,6 +1,6 @@
-﻿using GitCommands.Config;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings

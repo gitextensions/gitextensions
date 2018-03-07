@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-
-using GitCommands;
-
-using GitUI.UserControls;
-
-using JetBrains.Annotations;
 using System.Windows.Threading;
+using GitCommands;
+using GitUI.UserControls;
+using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI

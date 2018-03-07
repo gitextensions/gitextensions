@@ -1,7 +1,7 @@
-﻿using GitUIPluginInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {

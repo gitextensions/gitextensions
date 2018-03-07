@@ -1,12 +1,12 @@
-﻿using GitUIPluginInterfaces;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
+using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 
 namespace Gource

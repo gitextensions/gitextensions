@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.Win32;
 using System.ComponentModel;
+using Microsoft.Win32;
 
 namespace GitUI
 {

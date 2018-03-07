@@ -1,6 +1,6 @@
-﻿using GitCommands;
-using System;
+﻿using System;
 using System.Diagnostics;
+using GitCommands;
 
 namespace GitUI.Script
 {
