@@ -1309,12 +1309,14 @@ namespace GitCommands
 
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
-            Func<string, bool> ex = (string parents) =>
-                {
-                    string[] tab = parents.Split(' ');
-                    return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
-                };
-            return revisionsTab.Any(ex);
+
+            bool IsTwoSha1Hashes(string parents)
+            {
+                string[] tab = parents.Split(' ');
+                return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
+            }
+
+            return revisionsTab.Any(IsTwoSha1Hashes);
         }
 
         public ConfigFile GetSubmoduleConfigFile()

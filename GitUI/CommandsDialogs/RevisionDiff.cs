@@ -454,14 +454,14 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> findDiffFilesMatches = (string name) =>
+            IList<GitItemStatus> FindDiffFilesMatches(string name)
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
-            };
+            }
 
             GitItemStatus selectedItem;
-            using (var searchWindow = new SearchWindow<GitItemStatus>(findDiffFilesMatches)
+            using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
             {
                 Owner = FindForm()
             })
