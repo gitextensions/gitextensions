@@ -35,7 +35,7 @@ namespace GitUI.HelperDialogs
 
                 DiffFiles.SetDiffs(new[] { revision });
 
-                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir; ;
+                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir;
             }
         }
 

@@ -15,8 +15,6 @@ namespace GitUI.CommandsDialogs
             Cancel, Reset, ResetAndDelete
         }
 
-;
-
         public ActionEnum SelectedAction { get; private set; }
 
         public FormResetChanges(bool hasExistingFiles, bool hasNewFiles)
