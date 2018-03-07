@@ -34,7 +34,6 @@ namespace TfsInterop
         private string _urlPrefix;
         private IBuildServer _buildServer;
         private TfsTeamProjectCollection _tfsCollection;
-        private VssConnection _connection;
         private BuildHttpClient _buildClient;
         private string _projectName;
 
@@ -282,7 +281,6 @@ namespace TfsInterop
 
                 _buildDefinitions2015 = buildDefs.ToArray();
                 _buildClient = buildClient;
-                _connection = connection;
                 _projectName = projectName;
             }
             catch (Exception ex)
@@ -487,7 +485,6 @@ namespace TfsInterop
             _tfsCollection?.Dispose();
             _buildDefinitions = null;
             _buildDefinitions2015 = null;
-            _connection = null;
             _buildClient = null;
             GC.Collect();
         }

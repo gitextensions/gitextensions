@@ -25,7 +25,6 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
-        private GetNextFileFnc _fileLoader;
         private readonly IFullPathResolver _fullPathResolver;
 
         public FileViewer()
@@ -1089,7 +1088,6 @@ namespace GitUI.Editor
         public void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _internalFileViewer.SetFileLoader(fileLoader);
-            _fileLoader = fileLoader;
         }
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
