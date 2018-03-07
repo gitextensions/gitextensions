@@ -147,9 +147,10 @@ namespace GitUI
                 {
                     try
                     {
-                        TaskbarManager.Instance.SetProgressState(isSuccess
-                                                                     ? TaskbarProgressBarState.Normal
-                                                                     : TaskbarProgressBarState.Error);
+                        TaskbarManager.Instance.SetProgressState(
+                            isSuccess
+                                ? TaskbarProgressBarState.Normal
+                                : TaskbarProgressBarState.Error);
 
                         TaskbarManager.Instance.SetProgressValue(100, 100);
                     }
@@ -158,14 +159,9 @@ namespace GitUI
                     }
                 }
 
-                if (isSuccess)
-                {
-                    picBoxSuccessFail.Image = Properties.Resources.success;
-                }
-                else
-                {
-                    picBoxSuccessFail.Image = Properties.Resources.error;
-                }
+                picBoxSuccessFail.Image = isSuccess
+                    ? Properties.Resources.success
+                    : Properties.Resources.error;
 
                 _errorOccurred = !isSuccess;
 

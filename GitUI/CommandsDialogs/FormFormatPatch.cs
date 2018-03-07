@@ -219,14 +219,10 @@ namespace GitUI.CommandsDialogs
                     using (var credentials = new SmtpCredentials())
                     {
                         credentials.login.Text = from;
-                        if (credentials.ShowDialog(this) == DialogResult.OK)
-                        {
-                            smtpClient.Credentials = new NetworkCredential(credentials.login.Text, credentials.password.Text);
-                        }
-                        else
-                        {
-                            smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
-                        }
+
+                        smtpClient.Credentials = credentials.ShowDialog(this) == DialogResult.OK
+                            ? new NetworkCredential(credentials.login.Text, credentials.password.Text)
+                            : CredentialCache.DefaultNetworkCredentials;
                     }
 
                     ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };

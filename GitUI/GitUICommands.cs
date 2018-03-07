@@ -222,16 +222,9 @@ namespace GitUI
 
         public bool StartCommandLineProcessDialog(IGitCommand cmd, IWin32Window parentForm)
         {
-            bool executed;
-
-            if (cmd.AccessesRemote())
-            {
-                executed = FormRemoteProcess.ShowDialog(parentForm, Module, cmd.ToLine());
-            }
-            else
-            {
-                executed = FormProcess.ShowDialog(parentForm, Module, cmd.ToLine());
-            }
+            var executed = cmd.AccessesRemote()
+                ? FormRemoteProcess.ShowDialog(parentForm, Module, cmd.ToLine())
+                : FormProcess.ShowDialog(parentForm, Module, cmd.ToLine());
 
             if (executed && cmd.ChangesRepoState())
             {
@@ -705,15 +698,9 @@ namespace GitUI
                         formPull.SetForFetchAll();
                     }
 
-                    DialogResult dlgResult;
-                    if (pullOnShow)
-                    {
-                        dlgResult = formPull.PullAndShowDialogWhenFailed(owner);
-                    }
-                    else
-                    {
-                        dlgResult = formPull.ShowDialog(owner);
-                    }
+                    var dlgResult = pullOnShow
+                        ? formPull.PullAndShowDialogWhenFailed(owner)
+                        : formPull.ShowDialog(owner);
 
                     if (dlgResult == DialogResult.OK)
                     {
@@ -1508,15 +1495,9 @@ namespace GitUI
                         form.CheckForceWithLease();
                     }
 
-                    DialogResult dlgResult;
-                    if (pushOnShow)
-                    {
-                        dlgResult = form.PushAndShowDialogWhenFailed(owner);
-                    }
-                    else
-                    {
-                        dlgResult = form.ShowDialog(owner);
-                    }
+                    var dlgResult = pushOnShow
+                        ? form.PushAndShowDialogWhenFailed(owner)
+                        : form.ShowDialog(owner);
 
                     if (dlgResult == DialogResult.OK)
                     {

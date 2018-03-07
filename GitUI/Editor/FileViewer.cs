@@ -650,16 +650,9 @@ namespace GitUI.Editor
 
         private string GetFileText(string fileName)
         {
-            string path;
-
-            if (File.Exists(fileName))
-            {
-                path = fileName;
-            }
-            else
-            {
-                path = _fullPathResolver.Resolve(fileName);
-            }
+            var path = File.Exists(fileName)
+                ? fileName
+                : _fullPathResolver.Resolve(fileName);
 
             if (!File.Exists(path))
             {

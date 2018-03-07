@@ -136,25 +136,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             else if (comboBoxTags.Focused)
             {
-                if (_selectedTag != null)
-                {
-                    _selectedRevision = _selectedTag.Guid;
-                }
-                else
-                {
-                    _selectedRevision = "";
-                }
+                _selectedRevision = _selectedTag != null ? _selectedTag.Guid : "";
             }
             else if (comboBoxBranches.Focused)
             {
-                if (_selectedBranch != null)
-                {
-                    _selectedRevision = _selectedBranch.Guid;
-                }
-                else
-                {
-                    _selectedRevision = "";
-                }
+                _selectedRevision = _selectedBranch != null ? _selectedBranch.Guid : "";
             }
         }
 

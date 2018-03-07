@@ -50,17 +50,12 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, ComboBox control)
             {
-                string settingVal;
-                if (areSettingsEffective)
-                {
-                    settingVal = Setting.ValueOrDefault(settings);
-                }
-                else
-                {
-                    settingVal = Setting[settings];
-                }
+                string settingVal = areSettingsEffective
+                    ? Setting.ValueOrDefault(settings)
+                    : Setting[settings];
 
                 control.SelectedIndex = Setting.Values.IndexOf(settingVal);
+
                 if (control.SelectedIndex == -1)
                 {
                     control.Text = settingVal;

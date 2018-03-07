@@ -259,14 +259,7 @@ namespace GitUI.Blame
                          new string(' ', 100)).Trim('\r', '\n'));
                 }
 
-                if (blameLine.LineText == null)
-                {
-                    blameFile.AppendLine("");
-                }
-                else
-                {
-                    blameFile.AppendLine(blameLine.LineText.Trim('\r', '\n'));
-                }
+                blameFile.AppendLine(blameLine.LineText?.Trim('\r', '\n') ?? "");
             }
 
             BlameCommitter.ViewTextAsync("committer.txt", blameCommitter.ToString());

@@ -810,14 +810,11 @@ namespace GitUI.CommandsDialogs
 
         private void FillFormTitle()
         {
-            if (Fetch.Checked)
-            {
-                Text = string.Format(_formTitleFetch.Text, Module.WorkingDir);
-            }
-            else
-            {
-                Text = string.Format(_formTitlePull.Text, Module.WorkingDir);
-            }
+            var format = Fetch.Checked
+                ? _formTitleFetch.Text
+                : _formTitlePull.Text;
+
+            Text = string.Format(format, Module.WorkingDir);
         }
 
         private void StashClick(object sender, EventArgs e)

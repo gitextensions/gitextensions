@@ -240,14 +240,9 @@ namespace GitUI.Script
                             break;
                         }
 
-                        if (selectedRemotes.Count == 1)
-                        {
-                            remote = selectedRemotes[0];
-                        }
-                        else
-                        {
-                            remote = AskToSpecify(selectedRemotes, "Selected Revision Remote");
-                        }
+                        remote = selectedRemotes.Count == 1
+                            ? selectedRemotes[0]
+                            : AskToSpecify(selectedRemotes, "Selected Revision Remote");
 
                         argument = argument.Replace(option, remote);
                         break;
@@ -258,14 +253,9 @@ namespace GitUI.Script
                             break;
                         }
 
-                        if (selectedRemotes.Count == 1)
-                        {
-                            remote = selectedRemotes[0];
-                        }
-                        else
-                        {
-                            remote = AskToSpecify(selectedRemotes, "Selected Revision Remote");
-                        }
+                        remote = selectedRemotes.Count == 1
+                            ? selectedRemotes[0]
+                            : AskToSpecify(selectedRemotes, "Selected Revision Remote");
 
                         url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, url);
@@ -277,14 +267,9 @@ namespace GitUI.Script
                             break;
                         }
 
-                        if (selectedRemotes.Count == 1)
-                        {
-                            remote = selectedRemotes[0];
-                        }
-                        else
-                        {
-                            remote = AskToSpecify(selectedRemotes, "Selected Revision Remote");
-                        }
+                        remote = selectedRemotes.Count == 1
+                            ? selectedRemotes[0]
+                            : AskToSpecify(selectedRemotes, "Selected Revision Remote");
 
                         url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, GetRemotePath(url));

@@ -675,14 +675,8 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
 
             text = v[0];
-            if (v.Length == 1)
-            {
-                url = v[0];
-            }
-            else
-            {
-                url = v[1];
-            }
+
+            url = v.Length == 1 ? v[0] : v[1];
         }
 
         // format states
@@ -1036,14 +1030,9 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             if (value)
             {
-                if (state == ctformatStates.nctNone)
-                {
-                    state = ctformatStates.nctNew;
-                }
-                else
-                {
-                    state = ctformatStates.nctContinue;
-                }
+                state = state == ctformatStates.nctNone
+                    ? ctformatStates.nctNew
+                    : ctformatStates.nctContinue;
             }
             else
             {

@@ -616,14 +616,9 @@ Inactive remote is completely invisible to git.");
             comboBoxPushUrl.Visible = visible;
             folderBrowserButtonPushUrl.Visible = visible;
 
-            if (!visible)
-            {
-                label2.Text = _labelUrlAsFetchPush.Text;
-            }
-            else
-            {
-                label2.Text = _labelUrlAsFetch.Text;
-            }
+            label2.Text = visible
+                ? _labelUrlAsFetch.Text
+                : _labelUrlAsFetchPush.Text;
         }
     }
 }

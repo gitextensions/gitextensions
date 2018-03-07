@@ -71,16 +71,13 @@ namespace ResourceManager
                 {
                     linkText = Strings.GetCurrentIndex();
                 }
+                else if (preserveGuidInLinkText)
+                {
+                    linkText = guid;
+                }
                 else
                 {
-                    if (preserveGuidInLinkText)
-                    {
-                        linkText = guid;
-                    }
-                    else
-                    {
-                        linkText = GitRevision.ToShortSha(guid);
-                    }
+                    linkText = GitRevision.ToShortSha(guid);
                 }
             }
 

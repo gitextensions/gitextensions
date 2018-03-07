@@ -239,16 +239,12 @@ namespace GitUI.CommandsDialogs
                 _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
                 {
                     var status = e.ItemStatuses.ToList();
+
                     _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
 
-                    if (status.Count == 0 || !countToolbar)
-                    {
-                        _toolStripGitStatus.Text = _commitButtonText.Text;
-                    }
-                    else
-                    {
-                        _toolStripGitStatus.Text = string.Format(_commitButtonText + " ({0})", status.Count.ToString());
-                    }
+                    _toolStripGitStatus.Text = countToolbar && status.Count != 0
+                        ? string.Format(_commitButtonText + " ({0})", status.Count.ToString())
+                        : _commitButtonText.Text;
 
                     if (countArtificial)
                     {

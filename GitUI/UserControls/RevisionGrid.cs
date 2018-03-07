@@ -602,25 +602,17 @@ namespace GitUI
                 return;
             }
 
-            int? searchResult;
-            if (reverse)
-            {
-                searchResult = SearchInReverseOrder(startIndex, searchString);
-            }
-            else
-            {
-                searchResult = SearchForward(startIndex, searchString);
-            }
+            int? searchResult = reverse
+                ? SearchInReverseOrder(startIndex, searchString)
+                : SearchForward(startIndex, searchString);
 
-            if (!searchResult.HasValue)
+            if (searchResult.HasValue)
             {
-                return;
+                Revisions.ClearSelection();
+                Revisions.Rows[searchResult.Value].Selected = true;
+
+                Revisions.CurrentCell = Revisions.Rows[searchResult.Value].Cells[1];
             }
-
-            Revisions.ClearSelection();
-            Revisions.Rows[searchResult.Value].Selected = true;
-
-            Revisions.CurrentCell = Revisions.Rows[searchResult.Value].Cells[1];
         }
 
         private int? SearchForward(int startIndex, string searchString)

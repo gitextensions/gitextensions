@@ -98,28 +98,23 @@ namespace ProxySwitcher
         private void SetProxy_Button_Click(object sender, EventArgs e)
         {
             var httpproxy = BuildHttpProxy();
-            if (ApplyGlobally_CheckBox.Checked)
-            {
-                _gitCommands.RunGitCmd("config --global http.proxy " + httpproxy);
-            }
-            else
-            {
-                _gitCommands.RunGitCmd("config http.proxy " + httpproxy);
-            }
+
+            var arguments = ApplyGlobally_CheckBox.Checked
+                ? $"config --global http.proxy {httpproxy}"
+                : $"config http.proxy {httpproxy}";
+
+            _gitCommands.RunGitCmd(arguments);
 
             RefreshProxy();
         }
 
         private void UnsetProxy_Button_Click(object sender, EventArgs e)
         {
-            if (ApplyGlobally_CheckBox.Checked)
-            {
-                _gitCommands.RunGitCmd("config --global --unset http.proxy");
-            }
-            else
-            {
-                _gitCommands.RunGitCmd("config --unset http.proxy");
-            }
+            var arguments = ApplyGlobally_CheckBox.Checked
+                ? "config --global --unset http.proxy"
+                : "config --unset http.proxy";
+
+            _gitCommands.RunGitCmd(arguments);
 
             RefreshProxy();
         }

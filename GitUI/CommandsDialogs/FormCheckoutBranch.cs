@@ -211,14 +211,9 @@ namespace GitUI.CommandsDialogs
 
                 if (_containRevisons == null)
                 {
-                    if (LocalBranch.Checked)
-                    {
-                        branchNames = GetLocalBranches().Select(b => b.Name);
-                    }
-                    else
-                    {
-                        branchNames = GetRemoteBranches().Select(b => b.Name);
-                    }
+                    var branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
+
+                    branchNames = branches.Select(b => b.Name);
                 }
                 else
                 {

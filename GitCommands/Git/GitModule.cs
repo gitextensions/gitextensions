@@ -2413,15 +2413,10 @@ namespace GitCommands
                 !firstRevision.IsArtificial() &&
                 !secondRevision.IsNullOrEmpty() &&
                 !firstRevision.IsNullOrEmpty();
-            string patch;
-            if (cacheResult)
-            {
-                patch = RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
-            }
-            else
-            {
-                patch = RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
-            }
+
+            var patch = cacheResult
+                ? RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding)
+                : RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
 
             patchManager.LoadPatch(patch, encoding);
 
@@ -3173,21 +3168,15 @@ namespace GitCommands
         public IEnumerable<IGitItem> GetTree(string id, bool full)
         {
             string args = "-z";
+
             if (full)
             {
                 args += " -r";
             }
 
-            string tree;
-
-            if (GitRevision.IsFullSha1Hash(id))
-            {
-                tree = RunCacheableCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
-            }
-            else
-            {
-                tree = RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
-            }
+            var tree = GitRevision.IsFullSha1Hash(id)
+                ? RunCacheableCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding)
+                : RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
 
             return _gitTreeParser.Parse(tree);
         }

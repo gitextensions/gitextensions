@@ -499,15 +499,9 @@ namespace GitCommands.Config
                             _escapedValue = true;
                             return ReadValue;
                         case '"':
-                            if (_quotedValue)
-                            {
-                                _token.Append(_valueToken);
-                            }
-                            else
-                            {
-                                _token.Append(_valueToken.ToString().Trim());
-                            }
-
+                            _token.Append(_quotedValue
+                                ? _valueToken.ToString()
+                                : _valueToken.ToString().Trim());
                             _valueToken.Clear();
                             _quotedValue = !_quotedValue;
                             return ReadValue;
