@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     return string.Empty;
                 },
-                UpdateBranchName);
+                    UpdateBranchName);
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);

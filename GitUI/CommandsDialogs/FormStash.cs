@@ -235,15 +235,15 @@ namespace GitUI.CommandsDialogs
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
                                         this,
-                                       _stashDropConfirmTitle.Text,
-                                       _cannotBeUndone.Text,
-                                       _areYouSure.Text,
-                                       "",
-                                       "",
-                                       _dontShowAgain.Text,
-                                       PSTaskDialog.eTaskDialogButtons.OKCancel,
-                                       PSTaskDialog.eSysIcons.Information,
-                                       PSTaskDialog.eSysIcons.Information);
+                                        _stashDropConfirmTitle.Text,
+                                        _cannotBeUndone.Text,
+                                        _areYouSure.Text,
+                                        "",
+                                        "",
+                                        _dontShowAgain.Text,
+                                        PSTaskDialog.eTaskDialogButtons.OKCancel,
+                                        PSTaskDialog.eSysIcons.Information,
+                                        PSTaskDialog.eSysIcons.Information);
                 if (res == DialogResult.OK)
                 {
                     UICommands.StashDrop(this, stashName);

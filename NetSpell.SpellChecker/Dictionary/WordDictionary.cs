@@ -683,8 +683,8 @@ namespace NetSpell.SpellChecker.Dictionary
 #if FULL_PROFILE
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
 #endif
-            [NotifyParentProperty(true)]
-            public string DictionaryFolder { get; set; } = "";
+        [NotifyParentProperty(true)]
+        public string DictionaryFolder { get; set; } = "";
 
         /// <summary>
         ///     Set this to true to automatically create a user dictionary when

@@ -135,7 +135,7 @@ namespace TeamCityIntegration
                             .ContinueWith(
                             task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
                                     select element.Attribute("id").Value,
-                           TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
+                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
                     }
                 }
             }

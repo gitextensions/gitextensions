@@ -399,7 +399,7 @@ namespace GitImpact
                         author_points.Value[i] = Tuple.Create(
                             new Rectangle(author_points.Value[i].Item1.Left, (int)(author_points.Value[i].Item1.Top * height_factor),
                                           author_points.Value[i].Item1.Width, Math.Max(1, (int)(author_points.Value[i].Item1.Height * height_factor))),
-                                          author_points.Value[i].Item2);
+                            author_points.Value[i].Item2);
 
                         // Add lines-changed-labels
                         if (!_lineLabels.ContainsKey(author))

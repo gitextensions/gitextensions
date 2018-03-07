@@ -3076,7 +3076,7 @@ namespace GitUI.CommandsDialogs
                     .ContinueWith(_ => RescanChanges(),
                     _interactiveAddBashCloseWaitCts.Token,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
-                formsTaskScheduler);
+                    formsTaskScheduler);
             }
         }
 
