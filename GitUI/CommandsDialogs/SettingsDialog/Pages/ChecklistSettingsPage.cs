@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,7 +10,6 @@ using GitCommands.Config;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

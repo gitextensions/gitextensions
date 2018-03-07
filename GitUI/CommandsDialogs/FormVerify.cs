@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Tag;
 using GitUI.HelperDialogs;
 using ResourceManager;
-using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {

@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Build.WebApi;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.VisualStudio.Services.Common;
+using Microsoft.VisualStudio.Services.WebApi;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
-using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.Services.Common;
-using Microsoft.TeamFoundation.Build.Client;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.VisualStudio.Services.WebApi;
 
 namespace TfsInterop
 {

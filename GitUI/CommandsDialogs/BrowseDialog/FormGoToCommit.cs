@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using GitCommands;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using ResourceManager;
+using GitCommands;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

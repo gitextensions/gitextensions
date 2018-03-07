@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using System.Windows.Forms;
-using GitUIPluginInterfaces;
 using System.Linq;
+using System.Text;
 using System.Threading;
-using ResourceManager;
+using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace Bitbucket
 {

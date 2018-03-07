@@ -8,12 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.CommandsDialogs;
-using GitUI.Hotkey;
-using PatchApply;
 using GitCommands.Settings;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
+using GitUI.Hotkey;
+using PatchApply;
 using ResourceManager;
 
 namespace GitUI.Editor

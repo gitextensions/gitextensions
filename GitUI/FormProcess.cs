@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
-
 using GitUI.UserControls;
-using System.Collections.Generic;
 
 namespace GitUI
 {

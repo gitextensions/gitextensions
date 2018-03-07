@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
 using ConEmu.WinForms;
-
 using GitCommands;
 using GitCommands.Utils;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace GitUI.UserControls
 {

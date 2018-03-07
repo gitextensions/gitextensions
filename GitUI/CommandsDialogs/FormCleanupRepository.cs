@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using System.Linq;
 using GitCommands.Utils;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

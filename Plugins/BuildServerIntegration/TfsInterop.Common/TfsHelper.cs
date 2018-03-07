@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.TeamFoundation.Client;
+using System.Text.RegularExpressions;
 using Microsoft.TeamFoundation.Build.Client;
+using Microsoft.TeamFoundation.Client;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
-using System.Text.RegularExpressions;
 
 namespace TfsInterop
 {

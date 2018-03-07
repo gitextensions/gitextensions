@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.CommandsDialogs
 {

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
-
-using GitCommands;
-
-using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using GitUIPluginInterfaces;
 using GitCommands.Settings;
-using System.Linq;
+using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

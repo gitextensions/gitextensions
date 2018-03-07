@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Tag;
 using GitUI.Script;
 using ResourceManager;
-using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {

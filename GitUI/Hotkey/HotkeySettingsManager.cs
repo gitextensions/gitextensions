@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using ResourceManager;
-using GitCommands;
 
 namespace GitUI.Hotkey
 {

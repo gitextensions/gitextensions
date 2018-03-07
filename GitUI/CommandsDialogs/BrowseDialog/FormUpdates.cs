@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
-using GitCommands.Config;
 using GitCommands;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

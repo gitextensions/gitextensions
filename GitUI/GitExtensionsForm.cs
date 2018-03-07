@@ -5,9 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
-using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {

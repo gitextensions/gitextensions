@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs.AboutBoxDialog
