@@ -13,7 +13,7 @@ namespace GitExtensionsVSIX.Commands
             BaseCommand = baseCommand;
         }
 
-        virtual public void BeforeQueryStatus(DTE2 application, OleMenuCommand menuCommand)
+        public virtual void BeforeQueryStatus(DTE2 application, OleMenuCommand menuCommand)
         {
             menuCommand.Enabled = BaseCommand.IsEnabled(application);
         }
