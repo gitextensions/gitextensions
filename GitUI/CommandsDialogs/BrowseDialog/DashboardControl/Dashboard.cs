@@ -138,9 +138,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                 {
                     return result;
                 }
@@ -275,8 +273,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void dashboardItem_Click(object sender, EventArgs e)
         {
-            var label = sender as DashboardItem;
-            if (label == null || string.IsNullOrEmpty(label.Path))
+            if (!(sender is DashboardItem label) || string.IsNullOrEmpty(label.Path))
             {
                 return;
             }
@@ -360,8 +357,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                 {
@@ -410,8 +406,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                 {

@@ -305,9 +305,7 @@ namespace GitUI
 
         private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            var gitItemStatus = e?.Item?.Tag as GitItemStatus;
-
-            if (gitItemStatus != null)
+            if (e?.Item?.Tag is GitItemStatus gitItemStatus)
             {
                 var imageWidth = 0;
                 if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
@@ -449,8 +447,7 @@ namespace GitUI
                     hoveredItem = null;
                 }
 
-                var gitItemStatus = hoveredItem?.Tag as GitItemStatus;
-                if (gitItemStatus != null)
+                if (hoveredItem?.Tag is GitItemStatus gitItemStatus)
                 {
                     string text;
                     if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)

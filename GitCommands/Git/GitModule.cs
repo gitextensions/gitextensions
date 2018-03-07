@@ -3759,8 +3759,7 @@ namespace GitCommands
                 return true;
             }
 
-            GitModule other = obj as GitModule;
-            return (other != null) && Equals(other);
+            return obj is GitModule other && Equals(other);
         }
 
         private bool Equals(GitModule other)

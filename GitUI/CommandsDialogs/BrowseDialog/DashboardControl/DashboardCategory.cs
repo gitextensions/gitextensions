@@ -286,29 +286,25 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void addToItem_Click(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
-            {
-                return;
-            }
-
             if (_repository == null)
             {
                 return;
             }
 
-            foreach (RepositoryCategory newRepositoryCategory in Repositories.RepositoryCategories)
+            if (sender is ToolStripItem toolStripItem)
             {
-                if (newRepositoryCategory.Description.Equals(toolStripItem.Text))
+                foreach (RepositoryCategory newRepositoryCategory in Repositories.RepositoryCategories)
                 {
-                    RepositoryCategory.RemoveRepository(_repository);
-                    _repository.RepositoryType = RepositoryType.Repository;
-                    newRepositoryCategory.AddRepository(_repository);
+                    if (newRepositoryCategory.Description.Equals(toolStripItem.Text))
+                    {
+                        RepositoryCategory.RemoveRepository(_repository);
+                        _repository.RepositoryType = RepositoryType.Repository;
+                        newRepositoryCategory.AddRepository(_repository);
+                    }
                 }
-            }
 
-            dashboardCategoryChanged(this, null);
+                dashboardCategoryChanged(this, null);
+            }
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)

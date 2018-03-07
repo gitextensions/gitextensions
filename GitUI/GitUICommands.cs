@@ -2400,8 +2400,7 @@ namespace GitUI
 
         public override bool Equals(object obj)
         {
-            GitUICommands other = obj as GitUICommands;
-            return (other != null) && Equals(other);
+            return obj is GitUICommands other && Equals(other);
         }
 
         private bool Equals(GitUICommands other)

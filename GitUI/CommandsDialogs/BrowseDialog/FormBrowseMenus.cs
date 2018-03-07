@@ -150,8 +150,7 @@ namespace GitUI.CommandsDialogs
                 var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
                 toolStripItems.Add(toolStripItem);
 
-                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
-                if (toolStripMenuItem != null)
+                if (toolStripItem is ToolStripMenuItem toolStripMenuItem)
                 {
                     menuCommand.RegisterMenuItem(toolStripMenuItem);
                     _itemsRegisteredWithMenuCommand.Add(toolStripMenuItem);

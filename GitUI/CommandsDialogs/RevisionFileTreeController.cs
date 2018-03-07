@@ -88,8 +88,7 @@ namespace GitUI.CommandsDialogs
                 var subNode = nodes.Add(childItem.Name);
                 subNode.Tag = childItem;
 
-                var gitItem = childItem as GitItem;
-                if (gitItem == null)
+                if (!(childItem is GitItem gitItem))
                 {
                     subNode.Nodes.Add(new TreeNode());
                     continue;

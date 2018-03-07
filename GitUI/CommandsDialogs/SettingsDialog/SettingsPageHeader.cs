@@ -41,9 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void ConfigureHeader()
         {
-            ILocalSettingsPage localSettings = _page as ILocalSettingsPage;
-
-            if (localSettings == null)
+            if (!(_page is ILocalSettingsPage localSettings))
             {
                 GlobalRB.Checked = true;
 
@@ -83,9 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 EffectiveRB.Checked = true;
 
-                IRepoDistSettingsPage repoDistPage = localSettings as IRepoDistSettingsPage;
-
-                if (repoDistPage == null)
+                if (!(localSettings is IRepoDistSettingsPage repoDistPage))
                 {
                     DistributedRB.Visible = false;
                     arrow3.Visible = false;

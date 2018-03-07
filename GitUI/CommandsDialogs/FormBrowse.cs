@@ -478,18 +478,15 @@ namespace GitUI.CommandsDialogs
         {
             var menuItem = sender as ToolStripMenuItem;
 
-            var plugin = menuItem?.Tag as IGitPlugin;
-            if (plugin == null)
+            if (menuItem?.Tag is IGitPlugin plugin)
             {
-                return;
-            }
+                var eventArgs = new GitUIEventArgs(this, UICommands);
 
-            var eventArgs = new GitUIEventArgs(this, UICommands);
-
-            bool refresh = plugin.Execute(eventArgs);
-            if (refresh)
-            {
-                RefreshToolStripMenuItemClick(null, null);
+                bool refresh = plugin.Execute(eventArgs);
+                if (refresh)
+                {
+                    RefreshToolStripMenuItemClick(null, null);
+                }
             }
         }
 
@@ -497,9 +494,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (ToolStripItem item in pluginsToolStripMenuItem.DropDownItems)
             {
-                var plugin = item.Tag as IGitPluginForRepository;
-
-                item.Enabled = plugin == null || validWorkingDir;
+                item.Enabled = !(item.Tag is IGitPluginForRepository) || validWorkingDir;
             }
         }
 
@@ -1535,8 +1530,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var toolStripMenuItem = sender as ToolStripMenuItem;
-            if (toolStripMenuItem != null)
+            if (sender is ToolStripMenuItem toolStripMenuItem)
             {
                 var submodule = toolStripMenuItem.Tag as string;
                 FormProcess.ShowDialog(this, Module.SuperprojectModule, GitCommandHelpers.SubmoduleUpdateCmd(submodule));
@@ -1640,14 +1634,10 @@ namespace GitUI.CommandsDialogs
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
         {
-            var button = sender as ToolStripMenuItem;
-
-            if (button == null)
+            if (sender is ToolStripMenuItem button)
             {
-                return;
+                ChangeWorkingDir(button.Text);
             }
-
-            ChangeWorkingDir(button.Text);
         }
 
         private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
@@ -2381,8 +2371,7 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
-            var menuSender = sender as ToolStripMenuItem;
-            if (menuSender != null)
+            if (sender is ToolStripMenuItem menuSender)
             {
                 SetWorkingDir(menuSender.Tag as string);
             }
@@ -2402,24 +2391,16 @@ namespace GitUI.CommandsDialogs
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
         {
-            var control = sender as ToolStripSplitButton;
-
-            if (control == null)
+            if (sender is ToolStripSplitButton control)
             {
-                return;
+                control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
+
+                if (control.Tag is Control controlToFocus)
+                {
+                    controlToFocus.Focus();
+                    control.Tag = null;
+                }
             }
-
-            control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
-
-            var controlToFocus = control.Tag as Control;
-
-            if (controlToFocus == null)
-            {
-                return;
-            }
-
-            controlToFocus.Focus();
-            control.Tag = null;
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
@@ -2432,8 +2413,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in toolStripButtonLevelUp.DropDownItems)
             {
-                var toolStripButton = item as ToolStripMenuItem;
-                if (toolStripButton != null)
+                if (item is ToolStripMenuItem toolStripButton)
                 {
                     toolStripButton.Click -= SubmoduleToolStripButtonClick;
                 }

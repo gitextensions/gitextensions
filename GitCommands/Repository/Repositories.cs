@@ -178,8 +178,7 @@ namespace GitCommands.Repository
                 stringReader = new StringReader(xml);
                 using (var xmlReader = new XmlTextReader(stringReader))
                 {
-                    var repos = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-                    if (repos != null)
+                    if (serializer.Deserialize(xmlReader) is BindingList<RepositoryCategory> repos)
                     {
                         repositories = new BindingList<RepositoryCategory>();
                         foreach (var repositoryCategory in repos.Where(r => r.CategoryType == RepositoryCategoryType.Repositories))
@@ -235,8 +234,7 @@ namespace GitCommands.Repository
                     using (var xmlReader = new XmlTextReader(stringReader))
                     {
                         stringReader = null;
-                        var obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
-                        if (obj != null)
+                        if (serializer.Deserialize(xmlReader) is RepositoryHistory obj)
                         {
                             history = obj;
                             history.SetIcon();

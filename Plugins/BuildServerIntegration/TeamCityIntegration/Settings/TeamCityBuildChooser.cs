@@ -113,17 +113,14 @@ namespace TeamCityIntegration.Settings
 
         private void SelectBuild()
         {
-            var build = treeViewTeamCityProjects.SelectedNode?.Tag as Build;
-            if (build == null)
+            if (treeViewTeamCityProjects.SelectedNode?.Tag is Build build)
             {
-                return;
+                TeamCityProjectName = build.ParentProject;
+                TeamCityBuildIdFilter = build.Id;
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
-
-            TeamCityProjectName = build.ParentProject;
-            TeamCityBuildIdFilter = build.Id;
-
-            DialogResult = DialogResult.OK;
-            Close();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

@@ -42,8 +42,7 @@ namespace GitUI
                     {
                         string exceptionInfo = "Exception info:\r\n";
 
-                        var rtle = ex as ReflectionTypeLoadException;
-                        if (rtle != null)
+                        if (ex is ReflectionTypeLoadException rtle)
                         {
                             foreach (var el in rtle.LoaderExceptions)
                             {
