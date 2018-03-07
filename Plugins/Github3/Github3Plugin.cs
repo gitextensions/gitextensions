@@ -11,13 +11,13 @@ using ResourceManager;
 
 namespace Github3
 {
-    internal class GithubAPIInfo
+    internal static class GithubAPIInfo
     {
         internal static string client_id = "ebc0e8947c206610d737";
         internal static string client_secret = "c993907df3f45145bf638842692b69c56d1ace4d";
     }
 
-    internal class GithubLoginInfo
+    internal static class GithubLoginInfo
     {
         private static string _username;
         public static string Username

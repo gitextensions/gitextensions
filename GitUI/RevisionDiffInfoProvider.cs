@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public sealed class RevisionDiffInfoProvider
+    public static class RevisionDiffInfoProvider
     {
         /// <summary>
         /// One row selected:

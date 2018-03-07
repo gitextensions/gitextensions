@@ -65,7 +65,7 @@ namespace GitUI.UserControls
 
         #region Win32 Apis
 
-        protected class NativeMethods
+        protected static class NativeMethods
         {
             [DllImport("user32", CharSet = CharSet.Auto)]
             public static extern IntPtr SendMessage(HandleRef hWnd,

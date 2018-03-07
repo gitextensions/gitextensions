@@ -9,14 +9,9 @@ namespace GitUI.SpellChecker
     ///   Wraps API calls for access to missing functionality
     ///   from the System.Windows.Forms text box.
     /// </summary>
-    internal class TextBoxHelper
+    internal static class TextBoxHelper
     {
         private const double AnInch = 14.4;
-
-        private TextBoxHelper()
-        {
-            // intentionally left blank
-        }
 
         internal static int GetTextWidthAtCharIndex(TextBoxBase textBoxBase, int index, int length)
         {

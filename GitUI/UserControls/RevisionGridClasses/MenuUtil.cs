@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    internal class MenuUtil
+    internal static class MenuUtil
     {
         private static readonly CaptionCustomMenuRenderer customMenuRenderer = new CaptionCustomMenuRenderer();
         private static Font disabledFont;

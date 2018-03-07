@@ -308,7 +308,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         }
 
         #region Win32 Apis
-        internal class NativeMethods
+        internal static class NativeMethods
         {
             // Constants from the Platform SDK.
             internal const int WM_USER = 0x0400;
