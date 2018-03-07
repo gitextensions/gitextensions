@@ -363,6 +363,7 @@ namespace GitUI.CommandsDialogs
             {
                 orgFileName = selectedRevisions[0].Name;
             }
+
             FileChanges.OpenWithDifftool(selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
         }
 
