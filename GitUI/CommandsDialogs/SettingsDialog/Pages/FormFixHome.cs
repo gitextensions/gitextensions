@@ -194,7 +194,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                     otherHome.Checked = true;
                     otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                    return;
                 }
             }
             catch

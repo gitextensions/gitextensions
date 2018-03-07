@@ -312,7 +312,7 @@ namespace GitUI.CommandsDialogs
             // a special meaning, and can be dangerous if used inappropriately.
             if (_commitKind == CommitKind.Normal)
             {
-                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
+                CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
             }
 
             _splitterManager.SaveSplitters();
@@ -1796,11 +1796,11 @@ namespace GitUI.CommandsDialogs
                                     Directory.Delete(path, true);
                                 }
                             }
-                            catch (System.IO.IOException)
+                            catch (IOException)
                             {
                                 filesInUse.Add(item.Name);
                             }
-                            catch (System.UnauthorizedAccessException)
+                            catch (UnauthorizedAccessException)
                             {
                             }
                         }
@@ -2723,11 +2723,11 @@ namespace GitUI.CommandsDialogs
             // Change the icon for commit button
             if (gpgSignCommitToolStripComboBox.SelectedIndex > 0)
             {
-                Commit.Image = GitUI.Properties.Resources.IconKey;
+                Commit.Image = Properties.Resources.IconKey;
             }
             else
             {
-                Commit.Image = GitUI.Properties.Resources.IconClean;
+                Commit.Image = Properties.Resources.IconClean;
             }
 
             toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
@@ -2864,10 +2864,10 @@ namespace GitUI.CommandsDialogs
                                 Directory.Delete(path, true);
                             }
                         }
-                        catch (System.IO.IOException)
+                        catch (IOException)
                         {
                         }
-                        catch (System.UnauthorizedAccessException)
+                        catch (UnauthorizedAccessException)
                         {
                         }
                     }
@@ -3009,7 +3009,6 @@ namespace GitUI.CommandsDialogs
             }
             catch
             {
-                return;
             }
         }
 

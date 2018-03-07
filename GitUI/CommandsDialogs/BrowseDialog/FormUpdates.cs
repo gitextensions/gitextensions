@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Process.Start(UpdateUrl);
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
             }
         }
@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e);
+                Debug.WriteLine(e);
                 return null;
             }
 

@@ -1118,10 +1118,10 @@ namespace GitUI
                         Directory.Delete(path, true);
                     }
                 }
-                catch (System.IO.IOException)
+                catch (IOException)
                 {
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (UnauthorizedAccessException)
                 {
                 }
             }
@@ -1619,7 +1619,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
@@ -2083,7 +2083,7 @@ namespace GitUI
                 case "fileeditor":  // filename
                     if (!StartFileEditorDialog(args[2]))
                     {
-                        System.Environment.ExitCode = -1;
+                        Environment.ExitCode = -1;
                     }
 
                     return;

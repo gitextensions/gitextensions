@@ -153,7 +153,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private IList<string> _sortedRefs;
-        private System.Drawing.Rectangle _headerResize; // Cache desired size for commit header
+        private Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
@@ -364,8 +364,8 @@ namespace GitUI.CommitInfo
             int gravatarIndex, revInfoIndex, gravatarSpan, revInfoSpan;
             if (right)
             {
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+                tableLayout.ColumnStyles.Add(new ColumnStyle());
                 gravatarIndex = 1;
                 revInfoIndex = 0;
                 gravatarSpan = 1;
@@ -373,8 +373,8 @@ namespace GitUI.CommitInfo
             }
             else
             {
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                tableLayout.ColumnStyles.Add(new ColumnStyle());
+                tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 gravatarIndex = 0;
                 revInfoIndex = 1;
                 gravatarSpan = 2;

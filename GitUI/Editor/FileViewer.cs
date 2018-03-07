@@ -61,12 +61,12 @@ namespace GitUI.Editor
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
-            ignoreWhiteSpaces.Image = GitUI.Properties.Resources.ignore_whitespaces;
+            ignoreWhiteSpaces.Image = Properties.Resources.ignore_whitespaces;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
 
             ignoreAllWhitespaces.Checked = AppSettings.IgnoreAllWhitespaceChanges;
-            ignoreAllWhitespaces.Image = GitUI.Properties.Resources.ignore_all_whitespaces;
+            ignoreAllWhitespaces.Image = Properties.Resources.ignore_all_whitespaces;
             ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
             ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
@@ -229,7 +229,7 @@ namespace GitUI.Editor
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
-        private void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
             ContextMenuOpening?.Invoke(sender, e);

@@ -169,13 +169,12 @@ namespace GitUI.CommandsDialogs
                         if (!SaveGitIgnore())
                         {
                             e.Cancel = true;
-                            return;
                         }
 
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;
-                        return;
+                        break;
                 }
             }
         }

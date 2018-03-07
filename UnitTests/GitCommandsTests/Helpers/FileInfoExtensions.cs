@@ -43,7 +43,6 @@ namespace GitCommandsTests.Helpers
                     {
                         areEqual = false;
                         state.Stop();
-                        return;
                     }
                 });
                 return areEqual;

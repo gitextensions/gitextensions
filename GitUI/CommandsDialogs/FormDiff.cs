@@ -128,28 +128,28 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            GitUI.RevisionDiffKind diffKind;
+            RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffALocal;
+                diffKind = RevisionDiffKind.DiffALocal;
             }
             else if (sender == bLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+                diffKind = RevisionDiffKind.DiffBLocal;
             }
             else if (sender == parentOfALocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+                diffKind = RevisionDiffKind.DiffAParentLocal;
             }
             else if (sender == parentOfBLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+                diffKind = RevisionDiffKind.DiffBParentLocal;
             }
             else
             {
                 Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
-                diffKind = GitUI.RevisionDiffKind.DiffAB;
+                diffKind = RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)

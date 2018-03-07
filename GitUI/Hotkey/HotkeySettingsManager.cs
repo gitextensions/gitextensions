@@ -331,7 +331,7 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadScriptHotkeys()
         {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+            var curScripts = Script.ScriptManager.GetScripts();
 
             HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
             /* define unusable int for identifying a shortcut for a custom script is pressed

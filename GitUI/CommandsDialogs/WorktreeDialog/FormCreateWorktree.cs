@@ -74,7 +74,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             if (comboBoxBranches.DataSource == null)
             {
-                return;
             }
         }
 
@@ -82,7 +81,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             if (comboBoxBranches.SelectedValue == null)
             {
-                return;
             }
         }
 
@@ -173,7 +171,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             if (createWorktreeButton.Enabled)
             {
                 createWorktreeButton.Enabled = IsTargetFolderValid();
-                return;
             }
         }
 

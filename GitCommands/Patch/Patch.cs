@@ -76,13 +76,10 @@ namespace PatchApply
             if (Type == PatchType.NewFile)
             {
                 HandleNewFilePatchType();
-                return;
             }
-
-            if (Type == PatchType.ChangeFile)
+            else if (Type == PatchType.ChangeFile)
             {
                 HandleChangeFilePatchType(filesContentEncoding);
-                return;
             }
         }
 

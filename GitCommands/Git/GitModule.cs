@@ -2446,7 +2446,7 @@ namespace GitCommands
             return GetPatch(patchManager, fileName, oldFileName);
         }
 
-        private Patch GetPatch(PatchApply.PatchManager patchManager, string fileName, string oldFileName)
+        private Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
         {
             foreach (Patch p in patchManager.Patches)
             {

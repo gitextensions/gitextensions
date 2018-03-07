@@ -36,7 +36,7 @@ namespace GitUI
             Translate();
             if (_useDialogSettings)
             {
-                KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
             }
             else
             {
@@ -159,11 +159,11 @@ namespace GitUI
 
                 if (isSuccess)
                 {
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
+                    picBoxSuccessFail.Image = Properties.Resources.success;
                 }
                 else
                 {
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+                    picBoxSuccessFail.Image = Properties.Resources.error;
                 }
 
                 _errorOccurred = !isSuccess;
