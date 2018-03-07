@@ -17,8 +17,8 @@ namespace GitUIPluginInterfaces
             DefaultValue = defaultValue;
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public string DefaultValue { get; set; }
         public TextBox CustomControl { get; set; }
 

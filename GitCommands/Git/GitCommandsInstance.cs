@@ -11,7 +11,7 @@ namespace GitCommands
         private Process _myProcess;
         private readonly object _processLock = new object();
 
-        public string WorkingDirectory { get; private set; }
+        public string WorkingDirectory { get; }
 
         public GitCommandsInstance(string workingDirectory)
         {

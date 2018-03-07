@@ -28,7 +28,7 @@ namespace GitCommands
             GitModule = gitModule;
         }
 
-        public GitModule GitModule { get; private set; }
+        public GitModule GitModule { get; }
     }
 
     public enum SubmoduleStatus

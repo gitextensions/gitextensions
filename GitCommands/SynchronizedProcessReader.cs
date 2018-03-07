@@ -9,7 +9,7 @@ namespace GitCommands
 {
     public class SynchronizedProcessReader
     {
-        public Process Process { get; private set; }
+        public Process Process { get; }
         public byte[] Output { get; private set; }
         public byte[] Error { get; private set; }
 

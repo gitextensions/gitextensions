@@ -12,7 +12,7 @@ namespace GitCommands.Config
     {
         public string FileName { get; }
 
-        public bool Local { get; private set; }
+        public bool Local { get; }
 
         public ConfigFile(string fileName, bool local)
         {
@@ -31,7 +31,7 @@ namespace GitCommands.Config
             }
         }
 
-        public IList<IConfigSection> ConfigSections { get; private set; }
+        public IList<IConfigSection> ConfigSections { get; }
 
         public IEnumerable<IConfigSection> GetConfigSections(string sectionName)
         {

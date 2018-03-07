@@ -1016,7 +1016,7 @@ namespace GitCommands
             set => SetBool("StartWithRecentWorkingDir", value);
         }
 
-        public static CommandLogger GitLog { get; private set; }
+        public static CommandLogger GitLog { get; }
 
         public static string Plink
         {

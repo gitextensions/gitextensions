@@ -23,8 +23,8 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public string DefaultValue { get; set; }
         public IList<string> Values { get; set; }
         public ComboBox CustomControl { get; set; }

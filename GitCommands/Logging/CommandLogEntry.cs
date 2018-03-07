@@ -4,9 +4,9 @@ namespace GitCommands.Logging
 {
   public class CommandLogEntry
   {
-    public string Command { get; private set; }
-    public DateTime ExecutionStartTimestamp { get; private set; }
-    public DateTime ExecutionEndTimestamp { get; private set; }
+    public string Command { get; }
+    public DateTime ExecutionStartTimestamp { get; }
+    public DateTime ExecutionEndTimestamp { get; }
 
     public CommandLogEntry(string command, DateTime executionStartTimestamp, DateTime executionEndTimestamp)
     {

@@ -17,7 +17,7 @@ namespace GitCommands.Settings
         private System.Timers.Timer _saveTimer = new System.Timers.Timer(SaveTime);
         private readonly bool _autoSave;
 
-        public string SettingsFilePath { get; private set; }
+        public string SettingsFilePath { get; }
 
         public FileSettingsCache(string settingsFilePath, bool autoSave = true)
         {

@@ -180,7 +180,7 @@ namespace GitUI
 
         public event GitUIEventHandler PostRegisterPlugin;
 
-        public ILockableNotifier RepoChangedNotifier { get; private set; }
+        public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion

@@ -21,7 +21,7 @@ namespace GitStatistics
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
 
-        public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
+        public Dictionary<string, int> LinesOfCodePerExtension { get; }
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
         {

@@ -14,8 +14,8 @@ namespace GitCommands
             Lines = new List<GitBlameLine>();
         }
 
-        public IList<GitBlameHeader> Headers { get; private set; }
-        public IList<GitBlameLine> Lines { get; private set; }
+        public IList<GitBlameHeader> Headers { get; }
+        public IList<GitBlameLine> Lines { get; }
 
         public GitBlameHeader FindHeaderForCommitGuid(string commitGuid)
         {
