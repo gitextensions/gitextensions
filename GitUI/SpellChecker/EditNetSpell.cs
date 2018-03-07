@@ -446,11 +446,11 @@ namespace GitUI.SpellChecker
                     }
 
                     AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick)
-                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                        .Enabled = _spelling.CurrentWord.Length > 0;
                     AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick)
-                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                        .Enabled = _spelling.CurrentWord.Length > 0;
                     AddContextMenuItem(_removeWordText.Text, RemoveWordClick)
-                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                        .Enabled = _spelling.CurrentWord.Length > 0;
 
                     if (_spelling.Suggestions.Count > 0)
                     {
@@ -464,13 +464,13 @@ namespace GitUI.SpellChecker
             }
 
             AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick)
-                .Enabled = (TextBox.SelectedText.Length > 0);
+                .Enabled = TextBox.SelectedText.Length > 0;
             AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick)
-                .Enabled = (TextBox.SelectedText.Length > 0);
+                .Enabled = TextBox.SelectedText.Length > 0;
             AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick)
                 .Enabled = Clipboard.ContainsText();
             AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick)
-                .Enabled = (TextBox.SelectedText.Length > 0);
+                .Enabled = TextBox.SelectedText.Length > 0;
             AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
             /*AddContextMenuSeparator();

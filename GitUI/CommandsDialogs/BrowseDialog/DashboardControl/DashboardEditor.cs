@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return;
             }
 
-            var datasource = ((BindingList<Repository>)((DataGridView)sender).DataSource);
+            var datasource = (BindingList<Repository>)((DataGridView)sender).DataSource;
             var repositoryToRemove = (Repository)e.Row.DataBoundItem;
 
             RepositoriesGrid.DataSource = null;

@@ -125,7 +125,7 @@ namespace GitUI.Editor
 
         private bool RunTime()
         {
-            return (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv");
+            return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -231,7 +231,7 @@ namespace GitUI.Editor
 
         private void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            copyToolStripMenuItem.Enabled = (_internalFileViewer.GetSelectionLength() > 0);
+            copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
             ContextMenuOpening?.Invoke(sender, e);
         }
 
@@ -1082,7 +1082,7 @@ namespace GitUI.Editor
 
         public bool HasAnyPatches()
         {
-            return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
+            return _internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@");
         }
 
         public void SetFileLoader(GetNextFileFnc fileLoader)

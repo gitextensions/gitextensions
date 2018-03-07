@@ -213,7 +213,7 @@ namespace Bitbucket
 
         private void RefreshDDLBranch(ComboBox branchComboBox, object selectedValue)
         {
-            List<string> branchNames = (GetBitbucketBranches((Repository)selectedValue)).ToList();
+            List<string> branchNames = GetBitbucketBranches((Repository)selectedValue).ToList();
             if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
             {
                 branchNames.Sort();

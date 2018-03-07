@@ -249,7 +249,7 @@ namespace GitStatistics
                     };
 
             TestCodeText.Text = string.Format(_linesOfTestCodeP.Text, lineCounter.NumberTestCodeLines, percent_t) + Environment.NewLine +
-                string.Format(_linesOfProductionCodeP.Text, (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines), percent_p);
+                string.Format(_linesOfProductionCodeP.Text, lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines, percent_p);
 
             string percentBlank = ((double)lineCounter.NumberBlankLines / lineCounter.NumberLines).ToString("P1");
             string percentComments = ((double)lineCounter.NumberCommentsLines / lineCounter.NumberLines).ToString("P1");

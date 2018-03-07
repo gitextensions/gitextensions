@@ -382,7 +382,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             // submodules directory's subdir changed
             // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
-            if (e.FullPath.StartsWith(_submodulesPath) && (Directory.Exists(e.FullPath)))
+            if (e.FullPath.StartsWith(_submodulesPath) && Directory.Exists(e.FullPath))
             {
                 return;
             }

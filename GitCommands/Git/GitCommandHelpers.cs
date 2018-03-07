@@ -200,13 +200,13 @@ namespace GitCommands
         {
             return (arguments.Contains("@") && arguments.Contains("://")) ||
                    (arguments.Contains("@") && arguments.Contains(":")) ||
-                   (arguments.Contains("ssh://")) ||
-                   (arguments.Contains("http://")) ||
-                   (arguments.Contains("git://")) ||
-                   (arguments.Contains("push")) ||
-                   (arguments.Contains("remote")) ||
-                   (arguments.Contains("fetch")) ||
-                   (arguments.Contains("pull"));
+                   arguments.Contains("ssh://") ||
+                   arguments.Contains("http://") ||
+                   arguments.Contains("git://") ||
+                   arguments.Contains("push") ||
+                   arguments.Contains("remote") ||
+                   arguments.Contains("fetch") ||
+                   arguments.Contains("pull");
         }
 
         /// <summary>

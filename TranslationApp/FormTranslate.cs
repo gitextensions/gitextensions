@@ -215,7 +215,7 @@ namespace TranslationApp
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
-            categoryDataGridViewTextBoxColumn.Visible = (translateCategories.SelectedItem == _allCategories);
+            categoryDataGridViewTextBoxColumn.Visible = translateCategories.SelectedItem == _allCategories;
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
         }
 

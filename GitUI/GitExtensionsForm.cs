@@ -233,7 +233,7 @@ namespace GitUI
                 return;
             }
 
-            _windowCentred = (StartPosition == FormStartPosition.CenterParent);
+            _windowCentred = StartPosition == FormStartPosition.CenterParent;
 
             var position = LookupWindowPosition(name);
 
@@ -284,16 +284,16 @@ namespace GitUI
         private static Rectangle? FindWindowScreen(Point location)
         {
             SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
-            foreach (var rect in (from screen in Screen.AllScreens
-                                  select screen.WorkingArea))
+            foreach (var rect in from screen in Screen.AllScreens
+                                  select screen.WorkingArea)
             {
                 if (rect.Contains(location) && !distance.ContainsKey(0.0f))
                 {
                     return null; // title in screen
                 }
 
-                int midPointX = (rect.X + (rect.Width / 2));
-                int midPointY = (rect.Y + (rect.Height / 2));
+                int midPointX = rect.X + (rect.Width / 2);
+                int midPointY = rect.Y + (rect.Height / 2);
                 float d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
                     ((location.Y - midPointY) * (location.Y - midPointY)));
                 distance.Add(d, rect);

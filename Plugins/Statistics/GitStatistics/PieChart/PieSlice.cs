@@ -1123,7 +1123,7 @@ namespace GitStatistics.PieChart
             var angle = Math.Atan2(y, x);
             if (angle < 0)
             {
-                angle += (2 * Math.PI);
+                angle += 2 * Math.PI;
             }
 
             var angleDegrees = angle * 180 / Math.PI;

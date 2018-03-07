@@ -278,7 +278,7 @@ namespace AppVeyorIntegration
                                     Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                     BaseApiUrl = baseApiUrl,
                                     AppVeyorBuildReportUrl = baseApiUrl + "/build/" + version,
-                                    PullRequestText = (pullRequestId != null ? " PR#" + pullRequestId.Value<string>() : string.Empty),
+                                    PullRequestText = pullRequestId != null ? " PR#" + pullRequestId.Value<string>() : string.Empty,
                                     Duration = duration,
                                     TestsResultText = string.Empty
                                 };

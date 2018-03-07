@@ -132,7 +132,7 @@ namespace GitCommands
                 switch (currentByte)
                 {
                     case (byte)'=':
-                        bool canPeekAhead = (i < workingBytes.Length - 2);
+                        bool canPeekAhead = i < workingBytes.Length - 2;
                         if (!canPeekAhead)
                         {
                             workingBytes[outputPos] = workingBytes[i];

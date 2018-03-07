@@ -556,7 +556,7 @@ namespace GitStatistics.PieChart
 
             if (indexFound > -1)
             {
-                indexFound %= (PieSlicesMapping.Count);
+                indexFound %= PieSlicesMapping.Count;
                 return (int)PieSlicesMapping[indexFound];
             }
 
@@ -580,7 +580,7 @@ namespace GitStatistics.PieChart
             {
                 var pieSlice = pieSlices[i];
                 if (((pieSlice.StartAngle <= 90) && ((pieSlice.StartAngle + pieSlice.SweepAngle) >= 90)) ||
-                    ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && ((pieSlice.StartAngle) <= 450) &&
+                    ((pieSlice.StartAngle + pieSlice.SweepAngle > 360) && (pieSlice.StartAngle <= 450) &&
                      (pieSlice.StartAngle + pieSlice.SweepAngle) >= 450))
                 {
                     return i;
@@ -684,7 +684,7 @@ namespace GitStatistics.PieChart
                             X + (largestDisplacementEllipseSize.Width / 2) + xDisplacement,
                             Y + (largestDisplacementEllipseSize.Height / 2) + yDisplacement,
                             topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
-                            (float)(sweepAngle), SliceColors[colorIndex], ShadowStyle, EdgeColorType,
+                            (float)sweepAngle, SliceColors[colorIndex], ShadowStyle, EdgeColorType,
                             EdgeLineWidth);
                 }
                 else
@@ -692,7 +692,7 @@ namespace GitStatistics.PieChart
                     slice = CreatePieSlice(X + (largestDisplacementEllipseSize.Width / 2) + xDisplacement,
                                            Y + (largestDisplacementEllipseSize.Height / 2) + yDisplacement,
                                            topEllipeSize.Width, topEllipeSize.Height, PieHeight,
-                                           (float)(startAngle % 360), (float)(sweepAngle), SliceColors[colorIndex],
+                                           (float)(startAngle % 360), (float)sweepAngle, SliceColors[colorIndex],
                                            ShadowStyle, EdgeColorType, EdgeLineWidth);
                 }
 
@@ -784,7 +784,7 @@ namespace GitStatistics.PieChart
                                                   EdgeColorType edgeColorType, float edgeLineWidth)
         {
             return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
-                                (startAngle % 360), sweepAngle, color, shadowStyle, edgeColorType, edgeLineWidth);
+                                startAngle % 360, sweepAngle, color, shadowStyle, edgeColorType, edgeLineWidth);
         }
 
         /// <summary>
@@ -839,7 +839,7 @@ namespace GitStatistics.PieChart
             var highLightedColor = ColorUtil.CreateColorWithCorrectedLightness(color,
                                                                                ColorUtil.BrightnessEnhancementFactor1);
             return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
-                                (startAngle % 360), sweepAngle, highLightedColor, shadowStyle, edgeColorType,
+                                startAngle % 360, sweepAngle, highLightedColor, shadowStyle, edgeColorType,
                                 edgeLineWidth);
         }
 

@@ -86,9 +86,9 @@ namespace GitUI.UserControls
             public const int WM_PAINT = 0x0F;
             public const int WM_REFLECT_NOTIFY = 0x204E;
             public const int LVM_FIRST = 0x1000;
-            public const int LVM_HITTEST = (LVM_FIRST + 18);
-            public const int LVM_SETGROUPINFO = (LVM_FIRST + 147);
-            public const int LVM_SUBITEMHITTEST = (LVM_FIRST + 57);
+            public const int LVM_HITTEST = LVM_FIRST + 18;
+            public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
+            public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
 
             #endregion Windows constants
 
@@ -156,7 +156,7 @@ namespace GitUI.UserControls
                 LVHT_ONITEMICON = 0x00000002,
                 LVHT_ONITEMLABEL = 0x00000004,
                 LVHT_ONITEMSTATEICON = 0x00000008,
-                LVHT_ONITEM = (LVHT_ONITEMICON | LVHT_ONITEMLABEL | LVHT_ONITEMSTATEICON),
+                LVHT_ONITEM = LVHT_ONITEMICON | LVHT_ONITEMLABEL | LVHT_ONITEMSTATEICON,
                 LVHT_ABOVE = 0x00000008,
                 LVHT_BELOW = 0x00000010,
                 LVHT_TORIGHT = 0x00000020,

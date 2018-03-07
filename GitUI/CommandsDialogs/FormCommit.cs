@@ -1120,7 +1120,7 @@ namespace GitUI.CommandsDialogs
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
                 var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage, noVerifyToolStripMenuItem.Checked,
-                                                                                    (gpgSignCommitToolStripComboBox.SelectedIndex > 0), toolStripGpgKeyTextBox.Text));
+                                                                                    gpgSignCommitToolStripComboBox.SelectedIndex > 0, toolStripGpgKeyTextBox.Text));
 
                 UICommands.RepoChangedNotifier.Notify();
 
@@ -2999,7 +2999,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 ToolStripMenuItem item = (ToolStripMenuItem)sender;
-                CommitTemplateItem templateItem = (CommitTemplateItem)(item.Tag);
+                CommitTemplateItem templateItem = (CommitTemplateItem)item.Tag;
                 Message.Text = templateItem.Text;
                 Message.Focus();
             }

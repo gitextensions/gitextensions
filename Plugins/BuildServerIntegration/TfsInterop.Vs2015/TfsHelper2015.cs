@@ -81,7 +81,7 @@ namespace TfsInterop
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
+                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).Cast<IBuildDefinition>().ToArray();
                 }
 
                 ConnectToTfsServer2015(hostname, teamCollection, projectName, buildDefinitionNameFilter);
@@ -274,7 +274,7 @@ namespace TfsInterop
 
                 foreach (var def in definitions)
                 {
-                    if (string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || (buildDefinitionNameFilter.IsMatch(def.Name)))
+                    if (string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || buildDefinitionNameFilter.IsMatch(def.Name))
                     {
                         buildDefs.Add(def);
                     }
@@ -351,7 +351,7 @@ namespace TfsInterop
                         Label = b.BuildNumber,
                         StartDate = b.StartTime.Value,
                         Status = ConvertStatus2015(b),
-                        IsFinished = (b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed),
+                        IsFinished = b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed,
                         Description = GetStatus2015(b) + duration,
                         Revision = GetCommitFromSourceVersion(b.SourceVersion),
                         Url = _urlPrefix + id

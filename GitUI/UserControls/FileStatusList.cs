@@ -500,8 +500,8 @@ namespace GitUI
         {
             get
             {
-                return (FileStatusListView.Items.Cast<ListViewItem>().
-                    Select(selectedItem => selectedItem.Tag as GitItemStatus));
+                return FileStatusListView.Items.Cast<ListViewItem>().
+                    Select(selectedItem => selectedItem.Tag as GitItemStatus);
             }
         }
 

@@ -1223,7 +1223,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    isSilent = (sender == toolStripButtonPull);
+                    isSilent = sender == toolStripButtonPull;
                     Module.LastPullActionToFormPullAction();
                 }
             }

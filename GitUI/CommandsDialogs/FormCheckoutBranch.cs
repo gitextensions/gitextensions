@@ -367,7 +367,7 @@ namespace GitUI.CommandsDialogs
                             eTaskDialogButtons.YesNo,
                             eSysIcons.Question,
                             eSysIcons.Question);
-                        messageBoxResult = (res == DialogResult.Yes);
+                        messageBoxResult = res == DialogResult.Yes;
                         if (cTaskDialog.VerificationChecked)
                         {
                             AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;

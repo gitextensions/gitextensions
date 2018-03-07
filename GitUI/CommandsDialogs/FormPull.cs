@@ -343,7 +343,7 @@ namespace GitUI.CommandsDialogs
                     PSTaskDialog.eTaskDialogButtons.YesNo,
                     PSTaskDialog.eSysIcons.Question,
                     PSTaskDialog.eSysIcons.Question);
-                messageBoxResult = (res == DialogResult.Yes);
+                messageBoxResult = res == DialogResult.Yes;
                 if (PSTaskDialog.cTaskDialog.VerificationChecked)
                 {
                     AppSettings.AutoPopStashAfterPull = messageBoxResult;

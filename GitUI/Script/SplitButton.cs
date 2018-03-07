@@ -366,7 +366,7 @@ namespace GitUI.Script
                               bounds.Width - _dropDownRectangle.Width - internalBorder,
                               bounds.Height - (internalBorder * 2) + 2);
 
-            bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles);
+            bool drawSplitLine = State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles;
 
             if (RightToLeft == RightToLeft.Yes)
             {
@@ -451,7 +451,7 @@ namespace GitUI.Script
             Point middle = new Point(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
 
             // if the width is odd - favor pushing it over one pixel right.
-            middle.X += (dropDownRect.Width % 2);
+            middle.X += dropDownRect.Width % 2;
 
             Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
@@ -518,8 +518,8 @@ namespace GitUI.Script
             }
 
             // Pad the result
-            ret_size.Height += (Padding.Vertical + 6);
-            ret_size.Width += (Padding.Horizontal + 6);
+            ret_size.Height += Padding.Vertical + 6;
+            ret_size.Width += Padding.Horizontal + 6;
 
             // pad the splitButton arrow region
             if (_showSplit)
@@ -872,7 +872,7 @@ namespace GitUI.Script
 
             if (e.CloseReason == ToolStripDropDownCloseReason.AppClicked)
             {
-                _skipNextOpen = (_dropDownRectangle.Contains(PointToClient(Cursor.Position))) && MouseButtons == MouseButtons.Left;
+                _skipNextOpen = _dropDownRectangle.Contains(PointToClient(Cursor.Position)) && MouseButtons == MouseButtons.Left;
             }
         }
 

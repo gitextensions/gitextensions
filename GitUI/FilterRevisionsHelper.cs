@@ -131,7 +131,7 @@ namespace GitUI
                 (_nO_TRANSLATE_revisionGrid.InMemMessageFilter == inMemMessageFilter) &&
                 (_nO_TRANSLATE_revisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
                 (_nO_TRANSLATE_revisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
-                (_nO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase))
+                _nO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase)
             {
                 return;
             }

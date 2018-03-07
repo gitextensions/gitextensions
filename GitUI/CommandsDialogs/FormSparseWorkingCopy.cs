@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (!args.Cancel)
                 {
-                    args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, (args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text)), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
+                    args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
                 }
             };
         }

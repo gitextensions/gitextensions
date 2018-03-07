@@ -298,7 +298,7 @@ namespace GitUI
 
             // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
             // Not checking for UseDialogSettings because checkbox is only visible with True
-            if ((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!_errorOccurred /* and successful */))
+            if ((!KeepDialogOpen.Checked /* keep off */) && Ok.Enabled /* done */ && (!_errorOccurred /* and successful */))
             {
                 Close();
             }

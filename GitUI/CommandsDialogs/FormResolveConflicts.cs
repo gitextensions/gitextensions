@@ -732,9 +732,9 @@ namespace GitUI.CommandsDialogs
                 conflictDescription.Text = string.Format(_fileModifiedLocallyAndDelededRemotely.Text, localSide, remoteSide);
             }
 
-            baseFileName.Text = (baseFileExists ? item.Base.Filename : _noBase.Text);
-            localFileName.Text = (localFileExists ? item.Local.Filename : _deleted.Text);
-            remoteFileName.Text = (remoteFileExists ? item.Remote.Filename : _deleted.Text);
+            baseFileName.Text = baseFileExists ? item.Base.Filename : _noBase.Text;
+            localFileName.Text = localFileExists ? item.Local.Filename : _deleted.Text;
+            remoteFileName.Text = remoteFileExists ? item.Remote.Filename : _deleted.Text;
 
             var itemType = GetItemType(item.Filename);
             if (itemType == ItemType.Submodule)

@@ -465,11 +465,11 @@ namespace GitUI
         private void RevisionsKeyDown(object sender, KeyEventArgs e)
         {
             // BrowserBack/BrowserForward keys and additional handling for Alt+Right/Left sent by some keyboards
-            if ((e.KeyCode == Keys.BrowserBack) || ((e.KeyCode == Keys.Left) && (e.Modifiers.HasFlag(Keys.Alt))))
+            if ((e.KeyCode == Keys.BrowserBack) || ((e.KeyCode == Keys.Left) && e.Modifiers.HasFlag(Keys.Alt)))
             {
                 NavigateBackward();
             }
-            else if ((e.KeyCode == Keys.BrowserForward) || ((e.KeyCode == Keys.Right) && (e.Modifiers.HasFlag(Keys.Alt))))
+            else if ((e.KeyCode == Keys.BrowserForward) || ((e.KeyCode == Keys.Right) && e.Modifiers.HasFlag(Keys.Alt)))
             {
                 NavigateForward();
             }
@@ -1627,7 +1627,7 @@ namespace GitUI
             drawRefArgs.Graphics = e.Graphics;
             drawRefArgs.CellBounds = e.CellBounds;
 
-            drawRefArgs.IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
+            drawRefArgs.IsRowSelected = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
 
             // Determine background colour for cell
             Brush cellBackgroundBrush;
@@ -2696,7 +2696,7 @@ namespace GitUI
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
-            openBuildReportToolStripMenuItem.Visible = (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url));
+            openBuildReportToolStripMenuItem.Visible = revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url);
 
             RefreshOwnScripts();
         }

@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 comboBoxText = "<" + _emptyTemplate.Text + ">";
             }
 
-            _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", (line + 1), comboBoxText);
+            _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", line + 1, comboBoxText);
         }
     }
 }

@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
             bool isOrphan = Orphan.Checked;
             ClearOrphan.Enabled = isOrphan;
 
-            chkbxCheckoutAfterCreate.Enabled = (isOrphan == false); // auto-checkout for orphan
+            chkbxCheckoutAfterCreate.Enabled = isOrphan == false; // auto-checkout for orphan
             if (isOrphan)
             {
                 chkbxCheckoutAfterCreate.Checked = true;

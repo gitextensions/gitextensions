@@ -93,7 +93,7 @@ namespace GitUI.UserControls
                 // process used to execute external commands
                 var process = new Process();
                 ProcessStartInfo startInfo = GitCommandHelpers.CreateProcessStartInfo(command, arguments, workdir, GitModule.SystemEncoding);
-                startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
+                startInfo.CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine;
                 foreach (var envVariable in envVariables)
                 {
                     startInfo.EnvironmentVariables.Add(envVariable.Key, envVariable.Value);
@@ -178,7 +178,7 @@ namespace GitUI.UserControls
         protected override void Dispose(bool disposing)
         {
             KillProcess();
-            if ((disposing) && (_timer != null))
+            if (disposing && _timer != null)
             {
                 _timer.Dispose();
                 _timer = null;

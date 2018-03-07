@@ -149,9 +149,9 @@ namespace GitUI.CommandsDialogs
 
             string urlLowered = url.ToLowerInvariant();
 
-            return (urlLowered.StartsWith("http") ||
+            return urlLowered.StartsWith("http") ||
                 urlLowered.StartsWith("git") ||
-                urlLowered.StartsWith("ssh"));
+                urlLowered.StartsWith("ssh");
         }
 
         private void OkClick(object sender, EventArgs e)

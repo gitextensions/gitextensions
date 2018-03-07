@@ -723,7 +723,7 @@ namespace GitUI.RevisionGridClasses
                             return false;
                         }
 
-                        return (_countEnd[lane] > 0);
+                        return _countEnd[lane] > 0;
                     }
 
                     private void Remove(int start, int end)
@@ -838,7 +838,7 @@ namespace GitUI.RevisionGridClasses
 
                 public Node Current => _node ?? (_index < Junction.NodesCount ? Junction[_index] : null);
 
-                public bool IsClear => (Junction == null && _node == null);
+                public bool IsClear => Junction == null && _node == null;
 
                 public void Clear()
                 {

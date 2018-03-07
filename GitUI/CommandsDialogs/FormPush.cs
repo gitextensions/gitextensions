@@ -1084,7 +1084,7 @@ namespace GitUI.CommandsDialogs
 
         private void _NO_TRANSLATE_Branch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RemoteBranch.Enabled = (_NO_TRANSLATE_Branch.Text != AllRefs);
+            RemoteBranch.Enabled = _NO_TRANSLATE_Branch.Text != AllRefs;
         }
 
         /// <summary>

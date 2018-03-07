@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            SelectedAction = (cbDeleteNewFilesAndDirectories.Checked) ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
+            SelectedAction = cbDeleteNewFilesAndDirectories.Checked ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
             Close();
         }
     }

@@ -342,7 +342,7 @@ namespace GitUI.Hotkey
 
             return curScripts.
                 Where(s => !s.Name.IsNullOrEmpty()).
-                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) })
+                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
             .ToArray();
         }
     }

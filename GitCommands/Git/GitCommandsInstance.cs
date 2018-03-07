@@ -40,7 +40,7 @@ namespace GitCommands
                 // process used to execute external commands
                 var process = new Process();
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
-                startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
+                startInfo.CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine;
                 process.StartInfo = startInfo;
 
                 process.EnableRaisingEvents = true;

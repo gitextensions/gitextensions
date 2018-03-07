@@ -1041,7 +1041,7 @@ namespace GitUI.RevisionGridClasses
                     _graphWorkArea.Clip = oldClip;
                 }
 
-                bool isLast = (rowIndex == end - 1);
+                bool isLast = rowIndex == end - 1;
                 if (isLast)
                 {
                     var newClip = new Region(laneRect);

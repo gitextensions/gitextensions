@@ -137,7 +137,7 @@ namespace TranslationApp
                 // update untranslated items
                 var untranlatedItems =
                     from transItem in transItems
-                    where (String.IsNullOrEmpty(transItem.TranslatedValue)) && dict.ContainsKey(transItem.NeutralValue)
+                    where String.IsNullOrEmpty(transItem.TranslatedValue) && dict.ContainsKey(transItem.NeutralValue)
                     select transItem;
 
                 foreach (var untranlatedItem in untranlatedItems)

@@ -379,19 +379,19 @@ namespace GitUI.Editor.RichTextBoxExtension
         public static bool IsSuperScript(this RichTextBox rtb)
         {
             CHARFORMAT cf = rtb.GetCharFormat();
-            return ((cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT);
+            return (cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT;
         }
 
         public static bool IsSubScript(this RichTextBox rtb)
         {
             CHARFORMAT cf = rtb.GetCharFormat();
-            return ((cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT);
+            return (cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT;
         }
 
         public static bool IsLink(this RichTextBox rtb)
         {
             CHARFORMAT cf = rtb.GetCharFormat();
-            return ((cf.dwEffects & CFE.LINK) == CFE.LINK);
+            return (cf.dwEffects & CFE.LINK) == CFE.LINK;
         }
 
         private static void AddLink(this RichTextBox rtb, string text)
@@ -618,7 +618,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         // convert COLORREF to Color
         private static Color GetColor(int crColor)
         {
-            byte r = (byte)(crColor);
+            byte r = (byte)crColor;
             byte g = (byte)(crColor >> 8);
             byte b = (byte)(crColor >> 16);
 
@@ -629,8 +629,8 @@ namespace GitUI.Editor.RichTextBoxExtension
         private static int GetCOLORREF(int r, int g, int b)
         {
             int r2 = r;
-            int g2 = (g << 8);
-            int b2 = (b << 16);
+            int g2 = g << 8;
+            int b2 = b << 16;
 
             int result = r2 | g2 | b2;
 
@@ -1385,7 +1385,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             case "size":
                                 cs.cf.dwMask |= CFM.SIZE;
                                 yHeight = int.Parse(reader.Value);
-                                yHeight *= (20 * 5);
+                                yHeight *= 20 * 5;
                                 break;
                             case "color":
                                 cs.cf.dwMask |= CFM.COLOR;

@@ -80,7 +80,7 @@ namespace Bitbucket
 
         public string DestDisplayName => string.Format("{0}/{1}", DestProjectName, DestRepo);
 
-        public string DisplayName => string.Format("#{0}: {1}, {2}", Id, Title, (ConvertFromUnixTimestamp(CreatedDate)).ToString("yyyy-MM-dd"));
+        public string DisplayName => string.Format("#{0}: {1}, {2}", Id, Title, ConvertFromUnixTimestamp(CreatedDate).ToString("yyyy-MM-dd"));
 
         public static DateTime ConvertFromUnixTimestamp(double timestamp)
         {

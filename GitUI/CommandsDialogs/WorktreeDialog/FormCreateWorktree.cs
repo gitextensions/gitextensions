@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             textBoxNewBranchName.Enabled = radioButtonCreateNewBranch.Checked;
             if (radioButtonCheckoutExistingBranch.Checked)
             {
-                createWorktreeButton.Enabled = (comboBoxBranches.SelectedItem != null);
+                createWorktreeButton.Enabled = comboBoxBranches.SelectedItem != null;
             }
             else
             {

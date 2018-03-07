@@ -335,7 +335,7 @@ namespace GitImpact
                     int y = 0;
 
                     // Iterate through authors
-                    foreach (var pair in (from entry in week.Value orderby entry.Value.ChangedLines descending select entry))
+                    foreach (var pair in from entry in week.Value orderby entry.Value.ChangedLines descending select entry)
                     {
                         string author = pair.Key;
 

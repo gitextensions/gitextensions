@@ -23,7 +23,7 @@ namespace Bitbucket
                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
             };
 
-            var module = ((GitModule)gitModule);
+            var module = (GitModule)gitModule;
 
             var remotes = module.GetRemotes()
                 .Where(s => !string.IsNullOrWhiteSpace(s))

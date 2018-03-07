@@ -117,7 +117,7 @@ namespace GitCommands
             }
 
             return string.Format("{0}{1}:{2}",
-                (_force ? "+" : ""),
+                _force ? "+" : "",
                 _localBranch,
                 _remoteBranch);
         }

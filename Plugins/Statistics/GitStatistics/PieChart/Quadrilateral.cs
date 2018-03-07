@@ -133,7 +133,7 @@ namespace GitStatistics.PieChart
                 ++intersections;
             }
 
-            return (intersections % 2 != 0);
+            return intersections % 2 != 0;
         }
 
         /// <summary>

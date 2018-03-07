@@ -574,7 +574,7 @@ namespace GitUI
                 {
                     if (MatchFirstCh(lookForCh, _document.GetCharAt(offset), MatchCase)
                         &&
-                        ((IsWholeWordMatch(offset)) ||
+                        (IsWholeWordMatch(offset) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                     {
                         return new TextRange(_document, offset, LookFor.Length);
@@ -587,7 +587,7 @@ namespace GitUI
                 {
                     if (MatchFirstCh(lookForCh, _document.GetCharAt(offset), MatchCase)
                         &&
-                        ((IsWholeWordMatch(offset)) ||
+                        (IsWholeWordMatch(offset) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                     {
                         return new TextRange(_document, offset, LookFor.Length);
