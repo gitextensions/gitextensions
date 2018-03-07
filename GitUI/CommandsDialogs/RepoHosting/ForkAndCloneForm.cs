@@ -81,7 +81,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             AsyncLoader.DoAsync(
                 () => _gitHoster.GetMyRepos(),
-
                 repos =>
                 {
                     _myReposLV.Items.Clear();
@@ -94,7 +93,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         _myReposLV.Items.Add(lvi);
                     }
                 },
-
                 ex =>
                 {
                     _myReposLV.Items.Clear();
