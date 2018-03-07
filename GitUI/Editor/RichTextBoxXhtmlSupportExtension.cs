@@ -1156,9 +1156,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                 paraFormatChanged = false;
             }
 
-            public List<KeyValuePair<int, int>> links;
-            public Stack<CHARFORMAT> scf;
-            public Stack<PARAFORMAT> spf;
+            public readonly List<KeyValuePair<int, int>> links;
+            public readonly Stack<CHARFORMAT> scf;
+            public readonly Stack<PARAFORMAT> spf;
             public CHARFORMAT cf;
             public PARAFORMAT pf;
             public bool charFormatChanged;

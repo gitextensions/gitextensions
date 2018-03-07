@@ -158,7 +158,7 @@ namespace Bitbucket
             }
         }
 
-        private Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
+        private readonly Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (_branches.ContainsKey(selectedRepo))

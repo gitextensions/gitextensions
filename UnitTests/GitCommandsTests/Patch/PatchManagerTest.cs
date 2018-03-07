@@ -12,9 +12,9 @@ namespace GitCommandsTests.Patch
     [TestClass]
     public class PatchManagerTest
     {
-        private string _bigPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/big.patch");
-        private string _bigBinPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/bigBin.patch");
-        private string _rebaseDiffFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/rebase.diff");
+        private readonly string _bigPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/big.patch");
+        private readonly string _bigBinPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/bigBin.patch");
+        private readonly string _rebaseDiffFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/rebase.diff");
 
         [TestMethod]
         public void TestPatchManagerInstanceNotNull()

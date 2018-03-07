@@ -10,13 +10,13 @@ namespace GitUI
         private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
         private readonly ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
-        private ToolStripMenuItem _commitToolStripMenuItem;
-        private ToolStripMenuItem _committerToolStripMenuItem;
-        private ToolStripMenuItem _authorToolStripMenuItem;
-        private ToolStripMenuItem _diffContainsToolStripMenuItem;
-        private ToolStripMenuItem _hashToolStripMenuItem;
+        private readonly ToolStripMenuItem _commitToolStripMenuItem;
+        private readonly ToolStripMenuItem _committerToolStripMenuItem;
+        private readonly ToolStripMenuItem _authorToolStripMenuItem;
+        private readonly ToolStripMenuItem _diffContainsToolStripMenuItem;
+        private readonly ToolStripMenuItem _hashToolStripMenuItem;
 
-        private Form _NO_TRANSLATE_form;
+        private readonly Form _NO_TRANSLATE_form;
 
         public FilterRevisionsHelper()
         {

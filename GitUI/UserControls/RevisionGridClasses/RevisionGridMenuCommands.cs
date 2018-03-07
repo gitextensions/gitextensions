@@ -18,7 +18,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
 
-        private RevisionGrid _revisionGrid;
+        private readonly RevisionGrid _revisionGrid;
 
         // must both be created only once
         private IEnumerable<MenuCommand> _navigateMenuCommands;

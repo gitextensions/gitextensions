@@ -32,7 +32,7 @@ namespace GitUI.Hotkey
         }
         #endregion
 
-        private static List<Keys> UsedKeys = new List<Keys>();
+        private static readonly List<Keys> UsedKeys = new List<Keys>();
 
         /// <summary>
         /// Returns whether the hotkey is already assigned.

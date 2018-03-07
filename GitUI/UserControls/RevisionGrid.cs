@@ -1022,8 +1022,9 @@ namespace GitUI
 
         private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
         {
-            private RevisionGraphInMemFilter _filter1;
-            private RevisionGraphInMemFilter _filter2;
+            private readonly RevisionGraphInMemFilter _filter1;
+            private readonly RevisionGraphInMemFilter _filter2;
+
             public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter filter1,
                                               RevisionGraphInMemFilter filter2)
             {

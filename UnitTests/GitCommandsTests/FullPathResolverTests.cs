@@ -9,7 +9,7 @@ namespace GitCommandsTests
     [TestFixture]
     public class FullPathResolverTests
     {
-        private string _workingDir = @"c:\dev\repo";
+        private readonly string _workingDir = @"c:\dev\repo";
         private FullPathResolver _resolver;
 
         [SetUp]

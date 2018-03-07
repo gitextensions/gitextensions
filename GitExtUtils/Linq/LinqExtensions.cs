@@ -131,7 +131,7 @@ namespace System.Linq
 
         private class FuncComparer<T> : IComparer<T>
         {
-            private Func<T, T, int> _comparer;
+            private readonly Func<T, T, int> _comparer;
 
             public FuncComparer(Func<T, T, int> comparer)
             {

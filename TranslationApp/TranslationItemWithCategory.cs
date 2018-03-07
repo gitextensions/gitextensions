@@ -21,7 +21,7 @@ namespace TranslationApp
 
         public string Category { get; set; }
 
-        private TranslationItem _item;
+        private readonly TranslationItem _item;
         public TranslationItem GetTranslationItem()
         {
             return _item;

@@ -131,7 +131,7 @@ namespace GitUI.UserControls
     [CLSCompliant(false)]
     public class ConsoleCommandLineOutputProcessor
     {
-        private Action<TextEventArgs> _fireDataReceived;
+        private readonly Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
         private string _lineChunk;
 

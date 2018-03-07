@@ -8,7 +8,7 @@ namespace GitUI.Editor.Diff
 {
     public class DiffLineNumAnalyzer
     {
-        private static Regex regex = new Regex(
+        private static readonly Regex regex = new Regex(
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

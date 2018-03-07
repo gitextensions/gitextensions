@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
-        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly IFullPathResolver _fullPathResolver;
 
         /// <summary>
@@ -2599,7 +2599,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private List<string> _formattedLines = new List<string>();
+        private readonly List<string> _formattedLines = new List<string>();
 
         private bool DidFormattedLineChange(int lineNumber)
         {

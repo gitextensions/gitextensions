@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
         private bool _initialized;
-        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
 
         public Dashboard()
         {

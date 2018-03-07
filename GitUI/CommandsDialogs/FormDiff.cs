@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private readonly GitRevision _mergeBase;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
-        private ToolTip _toolTipControl = new ToolTip();
+        private readonly ToolTip _toolTipControl = new ToolTip();
 
         private readonly TranslationString _anotherBranchTooltip =
             new TranslationString("Select another branch");

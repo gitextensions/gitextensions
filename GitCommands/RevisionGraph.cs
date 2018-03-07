@@ -103,7 +103,7 @@ namespace GitCommands
         public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        private static char[] ShellGlobCharacters = { '?', '*', '[' };
+        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
 
         public void Execute()
         {

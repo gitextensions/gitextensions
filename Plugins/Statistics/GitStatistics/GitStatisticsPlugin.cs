@@ -11,11 +11,11 @@ namespace GitStatistics
             Translate();
         }
 
-        private StringSetting _codeFiles = new StringSetting("Code files",
+        private readonly StringSetting _codeFiles = new StringSetting("Code files",
                                 "*.c;*.cpp;*.cc;*.cxx;*.h;*.hpp;*.hxx;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" +
                                 "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js;*.mk;*.java");
-        private StringSetting _ignoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
-        private BoolSetting _ignoreSubmodules = new BoolSetting("Ignore submodules", true);
+        private readonly StringSetting _ignoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+        private readonly BoolSetting _ignoreSubmodules = new BoolSetting("Ignore submodules", true);
 
         #region IGitPlugin Members
 

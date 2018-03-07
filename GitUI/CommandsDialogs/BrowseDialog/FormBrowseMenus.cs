@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
     /// </summary>
     internal class FormBrowseMenus : ITranslate, IDisposable
     {
-        private ToolStrip _menuStrip;
+        private readonly ToolStrip _menuStrip;
 
         private IList<MenuCommand> _navigateMenuCommands;
         private IList<MenuCommand> _viewMenuCommands;
@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
 
         // we have to remember which items we registered with the menucommands because other
         // location (RevisionGrid) can register items too!
-        private IList<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new List<ToolStripMenuItem>();
+        private readonly IList<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new List<ToolStripMenuItem>();
 
         public FormBrowseMenus(ToolStrip menuStrip)
         {

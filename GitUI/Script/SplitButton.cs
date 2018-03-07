@@ -37,7 +37,7 @@ namespace GitUI.Script
 
         private const int SplitSectionWidth = 18;
 
-        private static int BorderSize = SystemInformation.Border3DSize.Width * 2;
+        private static readonly int BorderSize = SystemInformation.Border3DSize.Width * 2;
         private bool _skipNextOpen;
         private Rectangle _dropDownRectangle;
         private bool _showSplit;
