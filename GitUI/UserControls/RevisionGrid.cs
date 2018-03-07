@@ -158,7 +158,7 @@ namespace GitUI
             Revisions.MouseDown += RevisionsMouseDown;
 
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
-            BranchFilter = String.Empty;
+            BranchFilter = string.Empty;
             SetShowBranches();
             QuickRevisionFilter = "";
             FixedRevisionFilter = "";
@@ -1204,7 +1204,7 @@ namespace GitUI
                     Loading.Visible = false;
                     NoGit.Visible = true;
                     string dir = Module.WorkingDir;
-                    if (String.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
+                    if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
                         (Directory.GetDirectories(dir).Length == 0 &&
                         Directory.GetFiles(dir).Length == 0))
                     {
@@ -3830,12 +3830,12 @@ namespace GitUI
                 return;
             }
 
-            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.FirstParentGuid,
+            string rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.FirstParentGuid,
                 interactive: true, preserveMerges: false, autosquash: false, autostash: true);
 
             using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
             {
-                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", String.Format("sed -i -re '0,/pick/s//{0}/'", command));
+                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(this);
             }
 

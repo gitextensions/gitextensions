@@ -126,7 +126,7 @@ namespace GitCommands
             }
 
             string dir = ReadStringRegValue("InstallDir", string.Empty);
-            if (String.IsNullOrEmpty(dir))
+            if (string.IsNullOrEmpty(dir))
             {
                 return GetGitExtensionsDirectory();
             }
@@ -252,7 +252,7 @@ namespace GitCommands
         {
             get
             {
-                if (String.IsNullOrEmpty(GitCommandValue))
+                if (string.IsNullOrEmpty(GitCommandValue))
                 {
                     return "git";
                 }
@@ -1407,13 +1407,13 @@ namespace GitCommands
 
         public static string CommitValidationRegEx
         {
-            get => GetString("CommitValidationRegEx", String.Empty);
+            get => GetString("CommitValidationRegEx", string.Empty);
             set => SetString("CommitValidationRegEx", value);
         }
 
         public static string CommitTemplates
         {
-            get => GetString("CommitTemplates", String.Empty);
+            get => GetString("CommitTemplates", string.Empty);
             set => SetString("CommitTemplates", value);
         }
 
@@ -1509,7 +1509,7 @@ namespace GitCommands
                 yield break;
             }
 
-            foreach (String name in oldSettings.GetValueNames())
+            foreach (string name in oldSettings.GetValueNames())
             {
                 object value = oldSettings.GetValue(name, null);
                 if (value != null)

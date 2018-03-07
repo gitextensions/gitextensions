@@ -259,7 +259,7 @@ namespace GitStatistics.PieChart
         {
             base.OnMouseEnter(e);
             _defaultToolTipAutoPopDelay = _toolTip.AutoPopDelay;
-            _toolTip.AutoPopDelay = Int16.MaxValue;
+            _toolTip.AutoPopDelay = short.MaxValue;
         }
 
         protected override void OnMouseLeave(EventArgs e)

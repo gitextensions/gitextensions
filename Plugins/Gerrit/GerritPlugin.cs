@@ -348,7 +348,7 @@ namespace Gerrit
             // The first line of the output contains the file we're receiving
             // in a format like "C0755 4248 commit-msg".
 
-            if (String.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content))
             {
                 return null;
             }

@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             for (int i = 0; i < _commitTemplates.Length; i++)
             {
-                _NO_TRANSLATE_comboBoxCommitTemplates.Items.Add(String.Empty);
+                _NO_TRANSLATE_comboBoxCommitTemplates.Items.Add(string.Empty);
                 RefreshLineInListBox(i);
             }
 
@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 comboBoxText = "<" + _emptyTemplate.Text + ">";
             }
 
-            _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", line + 1, comboBoxText);
+            _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = string.Format("{0} : {1}", line + 1, comboBoxText);
         }
     }
 }

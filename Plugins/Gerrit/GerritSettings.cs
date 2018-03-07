@@ -54,7 +54,7 @@ namespace Gerrit
 
             if (!remotes.Contains(DefaultRemote))
             {
-                throw new GerritSettingsException(String.Format(_settingsErrorDefaultRemoteNotPresent.Text, DefaultRemote));
+                throw new GerritSettingsException(string.Format(_settingsErrorDefaultRemoteNotPresent.Text, DefaultRemote));
             }
         }
 

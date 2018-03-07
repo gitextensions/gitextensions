@@ -18,9 +18,9 @@ namespace FindLargeFiles
         public string SHA { get; set; }
         public string Path { get; set; }
         internal int SizeInBytes { get; set; }
-        public string Size => String.Format("{0:F2} Mb", SizeInBytes / 1024.0f / 1024);
+        public string Size => string.Format("{0:F2} Mb", SizeInBytes / 1024.0f / 1024);
         internal int CompressedSizeInBytes { get; set; }
-        public string CompressedSize => CompressedSizeInBytes >= 0 ? String.Format("{0:F2} Mb", CompressedSizeInBytes / 1024.0f / 1024) : "<Unknown>";
+        public string CompressedSize => CompressedSizeInBytes >= 0 ? string.Format("{0:F2} Mb", CompressedSizeInBytes / 1024.0f / 1024) : "<Unknown>";
         public int CommitCount => Commit.Count;
         public DateTime LastCommitDate { get; set; }
         public bool Delete { get; set; }

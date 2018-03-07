@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private IEnumerable<string> GetPuttyLocations()
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
-            if (!String.IsNullOrEmpty(envVariable))
+            if (!string.IsNullOrEmpty(envVariable))
             {
                 yield return envVariable;
             }
@@ -107,7 +107,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
             if (8 == IntPtr.Size
-                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
             {
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
             }

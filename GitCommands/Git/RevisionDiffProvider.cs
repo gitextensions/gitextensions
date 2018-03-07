@@ -87,7 +87,7 @@ namespace GitCommands.Git
             if (secondRevision == StagedOpt)
             {
                 extra += " " + StagedOpt;
-                secondRevision = String.Empty;
+                secondRevision = string.Empty;
             }
 
             if (fileName.IsNullOrWhiteSpace())

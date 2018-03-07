@@ -212,7 +212,7 @@ namespace GitUI.CommandsDialogs
                     if (status == GitStatusMonitorState.Stopped)
                     {
                         _toolStripGitStatus.Visible = false;
-                        _toolStripGitStatus.Text = String.Empty;
+                        _toolStripGitStatus.Text = string.Empty;
                     }
                     else if (status == GitStatusMonitorState.Running)
                     {

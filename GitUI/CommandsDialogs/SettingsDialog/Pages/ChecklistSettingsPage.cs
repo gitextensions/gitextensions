@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
             ////GitBinPath.Text = Settings.GitBinDir;
             PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(null, null);
@@ -405,7 +405,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);

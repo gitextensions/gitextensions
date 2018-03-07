@@ -34,7 +34,7 @@ namespace GitCommands.Git
 
         public bool Equals(string firstAuthorEmail, string secondAuthorEmail)
         {
-            return String.Equals(firstAuthorEmail, secondAuthorEmail, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(firstAuthorEmail, secondAuthorEmail, StringComparison.OrdinalIgnoreCase);
         }
 
         public int GetHashCode(string authorEmail)

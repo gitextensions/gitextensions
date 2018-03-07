@@ -588,7 +588,7 @@ namespace GitUI.CommitInfo
             var tagString = tags
                 .Select(s => showBranchesAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
-            if (!String.IsNullOrEmpty(tagString))
+            if (!string.IsNullOrEmpty(tagString))
             {
                 return Environment.NewLine + WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
             }

@@ -99,9 +99,9 @@ namespace GitCommands
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
-        public string RevisionFilter = String.Empty;
-        public string PathFilter = String.Empty;
-        public string BranchFilter = String.Empty;
+        public string RevisionFilter = string.Empty;
+        public string PathFilter = string.Empty;
+        public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
         private static char[] ShellGlobCharacters = new[] { '?', '*', '[' };

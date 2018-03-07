@@ -29,7 +29,7 @@ namespace System
             }
         }
 
-        public static String TakeUntilStr(this string str, String untilStr)
+        public static string TakeUntilStr(this string str, string untilStr)
         {
             if (str == null)
             {

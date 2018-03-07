@@ -248,7 +248,7 @@ namespace ResourceManager
                 if (status.IsDirty)
                 {
                     string statusText = gitModule.GetStatusText(false);
-                    if (!String.IsNullOrEmpty(statusText))
+                    if (!string.IsNullOrEmpty(statusText))
                     {
                         sb.AppendLine("\nStatus:");
                         sb.Append(statusText);
@@ -256,7 +256,7 @@ namespace ResourceManager
                 }
 
                 string diffs = gitModule.GetDiffFilesText(status.OldCommit, status.Commit);
-                if (!String.IsNullOrEmpty(diffs))
+                if (!string.IsNullOrEmpty(diffs))
                 {
                     sb.AppendLine("\nDifferences:");
                     sb.Append(diffs);

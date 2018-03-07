@@ -400,7 +400,7 @@ namespace GitUI.SpellChecker
             TextBox.Select(start, length);
         }
 
-        private ToolStripMenuItem AddContextMenuItem(String text, EventHandler eventHandler)
+        private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
         {
             ToolStripMenuItem menuItem = new ToolStripMenuItem(text, null, eventHandler);
             SpellCheckContextMenu.Items.Add(menuItem);
@@ -831,7 +831,7 @@ namespace GitUI.SpellChecker
             var lineLength = LineLength(afterLine);
             if (lineLength > 0)
             {
-                var bullet = addBullet ? " - " : String.Empty;
+                var bullet = addBullet ? " - " : string.Empty;
                 var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
                 var newLine = Environment.NewLine;
                 var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;

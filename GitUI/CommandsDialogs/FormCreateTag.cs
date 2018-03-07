@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
         {
             textBoxTagName.Select();
             _currentRemote = Module.GetCurrentRemote();
-            if (String.IsNullOrEmpty(_currentRemote))
+            if (string.IsNullOrEmpty(_currentRemote))
             {
                 _currentRemote = "origin";
             }

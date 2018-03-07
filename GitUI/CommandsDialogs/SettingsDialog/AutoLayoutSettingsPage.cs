@@ -174,13 +174,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         protected GroupBox groupBox;
 
-        public GroupBoxSettingsLayout(ISettingsLayout parentLayout, String groupBoxCaption)
+        public GroupBoxSettingsLayout(ISettingsLayout parentLayout, string groupBoxCaption)
             : base(parentLayout, AutoLayoutSettingsPage.CreateDefaultTableLayoutPanel())
         {
             CreateGroupBox(groupBoxCaption);
         }
 
-        private void CreateGroupBox(String groupBoxCaption)
+        private void CreateGroupBox(string groupBoxCaption)
         {
             var gbox = new GroupBox();
             groupBox = gbox;

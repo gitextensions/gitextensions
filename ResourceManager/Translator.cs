@@ -67,7 +67,7 @@ namespace ResourceManager
                         continue;
                     }
 
-                    if (String.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                    if (string.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
                     {
                         continue;
                     }

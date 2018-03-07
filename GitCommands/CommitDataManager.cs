@@ -221,8 +221,8 @@ namespace GitCommands
             }
 
             CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
-                String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
-                String.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
+                string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
+                string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject);
             return data;
         }

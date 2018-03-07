@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
                         Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
                         if (patch == null)
                         {
-                            return String.Empty;
+                            return string.Empty;
                         }
 
                         if (stashedItem.IsSubmodule)

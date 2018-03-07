@@ -231,7 +231,7 @@ namespace GitCommands
 
             fixedUrl += "\"";
 
-            if (!String.IsNullOrEmpty(uri.UserInfo))
+            if (!string.IsNullOrEmpty(uri.UserInfo))
             {
                 fixedUrl += uri.UserInfo + "@";
             }
@@ -471,7 +471,7 @@ namespace GitCommands
 
         public static string SubmoduleUpdateCmd(IEnumerable<string> submodules)
         {
-            string submodulesQuoted = String.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
+            string submodulesQuoted = string.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
             return SubmoduleUpdateCommand(submodulesQuoted);
         }
 
@@ -723,7 +723,7 @@ namespace GitCommands
                 sprogressOption = "--progress ";
             }
 
-            var options = String.Concat(sforce, sprogressOption);
+            var options = string.Concat(sforce, sprogressOption);
 
             if (all)
             {

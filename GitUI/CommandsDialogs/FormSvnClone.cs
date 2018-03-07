@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
 
                 var authorsfile = _NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetauthorsfile = false;
-                if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
+                if (!string.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
                 {
                     return;
                 }

@@ -189,7 +189,7 @@ namespace GitUIPluginInterfaces
         private static readonly string InvariantCultureId = "_IC_";
         public static string AsString(this Font value)
         {
-            return String.Format(CultureInfo.InvariantCulture,
+            return string.Format(CultureInfo.InvariantCulture,
                 "{0};{1};{2}", value.FontFamily.Name, value.Size, InvariantCultureId);
         }
 
@@ -220,7 +220,7 @@ namespace GitUIPluginInterfaces
                     fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
                 }
 
-                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
+                return new Font(parts[0], float.Parse(fontSize, CultureInfo.InvariantCulture));
             }
             catch (Exception)
             {

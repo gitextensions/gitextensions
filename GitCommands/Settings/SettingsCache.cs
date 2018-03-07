@@ -5,7 +5,7 @@ namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Dictionary<String, object> _byNameMap = new Dictionary<String, object>();
+        private readonly Dictionary<string, object> _byNameMap = new Dictionary<string, object>();
 
         public SettingsCache()
         {

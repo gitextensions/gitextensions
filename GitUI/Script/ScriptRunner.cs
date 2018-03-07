@@ -103,7 +103,7 @@ namespace GitUI.Script
 
         private static bool RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
         {
-            if (scriptInfo.AskConfirmation && DialogResult.No == MessageBox.Show(owner, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            if (scriptInfo.AskConfirmation && DialogResult.No == MessageBox.Show(owner, string.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 return false;
             }

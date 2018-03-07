@@ -189,7 +189,7 @@ namespace GitCommands.Config
 
         public string GetValue(string setting, string defaultValue)
         {
-            if (String.IsNullOrEmpty(setting))
+            if (string.IsNullOrEmpty(setting))
             {
                 throw new ArgumentNullException();
             }

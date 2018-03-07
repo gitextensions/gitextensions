@@ -225,7 +225,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when looking up the position in
         ///   the settings</param>
-        private void RestorePosition(String name)
+        private void RestorePosition(string name)
         {
             if (!Visible ||
                 WindowState == FormWindowState.Minimized)
@@ -331,7 +331,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when writing the position to the
         ///   settings</param>
-        private void SavePosition(String name)
+        private void SavePosition(string name)
         {
             try
             {
@@ -382,7 +382,7 @@ namespace GitUI
         ///   doesn't exist, or would not be visible on any screen in the user's
         ///   current display setup.
         /// </returns>
-        private static WindowPosition LookupWindowPosition(String name)
+        private static WindowPosition LookupWindowPosition(string name)
         {
             try
             {

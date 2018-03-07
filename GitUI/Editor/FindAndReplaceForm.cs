@@ -553,7 +553,7 @@ namespace GitUI
                 return true;
             }
 
-            if (!matchCase && a == Char.ToUpperInvariant(b))
+            if (!matchCase && a == char.ToUpperInvariant(b))
             {
                 return true;
             }
@@ -617,7 +617,7 @@ namespace GitUI
         private bool IsAlphaNumeric(int offset)
         {
             char c = _document.GetCharAt(offset);
-            return Char.IsLetterOrDigit(c) || c == '_';
+            return char.IsLetterOrDigit(c) || c == '_';
         }
 
         private bool IsPartWordMatch(int offset)
