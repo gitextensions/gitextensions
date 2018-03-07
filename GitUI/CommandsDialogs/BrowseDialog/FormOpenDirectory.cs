@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _warningOpenFailedCaption =
             new TranslationString("Error");
 
-        private GitModule choosenModule = null;
+        private GitModule _choosenModule = null;
 
         public FormOpenDirectory(GitModule currentModule)
         {
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             using (var open = new FormOpenDirectory(currentModule))
             {
                 open.ShowDialog(owner);
-                return open.choosenModule;
+                return open._choosenModule;
             }
         }
 
@@ -83,8 +83,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _NO_TRANSLATE_Directory.Text = _NO_TRANSLATE_Directory.Text.Trim();
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
-                choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-                Repositories.AddMostRecentRepository(choosenModule.WorkingDir);
+                _choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
+                Repositories.AddMostRecentRepository(_choosenModule.WorkingDir);
                 Close();
             }
             else
@@ -107,7 +107,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
                 if (currentDirectory.Parent == null)
+                {
                     return;
+                }
+
                 string parentPath = currentDirectory.Parent.FullName.TrimEnd('\\');
                 _NO_TRANSLATE_Directory.Text = parentPath;
                 _NO_TRANSLATE_Directory.Focus();

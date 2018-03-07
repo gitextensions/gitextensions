@@ -60,9 +60,14 @@ namespace GitPlugin
         public void RegisterCommand(string commandName, CommandBase command)
         {
             if (commandName.IndexOf('.') >= 0)
+            {
                 throw new ArgumentException("Command name cannot contain dot symbol.", nameof(commandName));
+            }
+
             if (!_commands.ContainsKey(commandName))
+            {
                 _commands.Add(commandName, command);
+            }
         }
 
         public bool CanHandleCommand(string commandName)
@@ -80,7 +85,10 @@ namespace GitPlugin
         {
             var array = commandName.Split('.');
             if (array.Length != 3)
+            {
                 return null;
+            }
+
             var commandKey = array[2];
             return _commands.TryGetValue(commandKey, out var result) ? result : null;
         }
@@ -89,7 +97,10 @@ namespace GitPlugin
         {
             var command = TryGetCommand(commandName);
             if (command == null)
+            {
                 return false;
+            }
+
             command.OnCommand(Application, OutputPane);
             return true;
         }
@@ -101,8 +112,11 @@ namespace GitPlugin
             foreach (Command command in commands)
             {
                 if (command.Name == fullName)
+                {
                     return command;
+                }
             }
+
             return null;
         }
 
@@ -212,6 +226,7 @@ namespace GitPlugin
                 {
                     return true;
                 }
+
                 control =
                     GetMenuBar()
                         .Controls.Cast<CommandBarControl>()
@@ -220,6 +235,7 @@ namespace GitPlugin
                 {
                     return true;
                 }
+
                 CommandBar cb =
                     CommandBars.Cast<CommandBar>()
                         .FirstOrDefault(c => c.Name == OldGitMainMenuName);
@@ -231,6 +247,7 @@ namespace GitPlugin
             catch (Exception)
             {
             }
+
             return false;
         }
 
@@ -257,6 +274,7 @@ namespace GitPlugin
             catch (Exception)
             {
             }
+
             return false;
         }
 
@@ -276,7 +294,9 @@ namespace GitPlugin
                 {
                     OutputPane.OutputString("Error creating git menu (trying to add commands to tools menu): " + ex);
                     if (mainMenuBar == null)
+                    {
                         mainMenuBar = (CommandBar)GetMenuBar().Controls[toolsMenuName];
+                    }
                 }
                 catch (Exception ex2)
                 {
@@ -313,7 +333,9 @@ namespace GitPlugin
         {
             CommandBar commandBar = CommandBars[toolbarName];
             if (commandBar != null)
+            {
                 AddMenuCommand(commandBar, commandName, caption, tooltip, iconIndex, insertIndex, beginGroup);
+            }
         }
 
         public void AddPopupCommand(CommandBarPopup popup, string commandName, string caption,
@@ -321,7 +343,9 @@ namespace GitPlugin
         {
             // Do not try to add commands to a null menu
             if (popup == null)
+            {
                 return;
+            }
 
             AddToolbarOrMenuCommand(popup.CommandBar, commandName, caption, tooltip, iconIndex, insertIndex,
                         vsCommandStyle.vsCommandStylePictAndText, beginGroup);
@@ -332,13 +356,18 @@ namespace GitPlugin
         {
             // Do not try to add commands to a null bar
             if (bar == null)
+            {
                 return;
+            }
 
             // Get commands collection
             var commands = (Commands2)Application.Commands;
             var command = GetCommand(commandName, caption, tooltip, iconIndex, commandStyle, commands);
             if (command == null)
+            {
                 return;
+            }
+
             if (!HasCommand(bar, caption))
             {
 #if DEBUG
@@ -360,9 +389,13 @@ namespace GitPlugin
                 foreach (CommandBarButton control in cb.Controls)
                 {
                     if (control.Caption.StartsWith("Commit"))
+                    {
                         control.Style = MsoButtonStyle.msoButtonIconAndCaption;
+                    }
                     else
+                    {
                         control.Style = MsoButtonStyle.msoButtonIcon;
+                    }
                 }
             }
         }
@@ -375,7 +408,9 @@ namespace GitPlugin
             // Add command
             Command command = GetCommand(commandName);
             if (_visualStudioCommands.ContainsKey(commandName))
+            {
                 return command;
+            }
 
             if (command == null && iconIndex > 0)
             {
@@ -406,6 +441,7 @@ namespace GitPlugin
             {
                 _visualStudioCommands[commandName] = command;
             }
+
             return command;
         }
     }

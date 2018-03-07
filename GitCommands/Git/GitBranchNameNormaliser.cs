@@ -93,6 +93,7 @@ namespace GitCommands.Git
             branchName = Rule05(branchName, options);
             branchName = Rule04(branchName, options);
             branchName = Rule03(branchName, options);
+
             // rule #2 is not applicable
             // rule #6 runs as second last to ensure no consecutive '/' are left after previous normalisations
             branchName = Rule06(branchName, options);
@@ -101,12 +102,9 @@ namespace GitCommands.Git
             return branchName;
         }
 
-
         /// <summary>
         /// Indicates whether the given character can be used in a branch name.
         /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
         public static bool IsValidChar(char c)
         {
             return (c >= 32 && c < 127) &&
@@ -114,13 +112,10 @@ namespace GitCommands.Git
                     Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
         }
 
-
         /// <summary>
         /// Branch name can include slash '/' for hierarchical (directory) grouping,
         /// but no slash-separated component can begin with a dot '.' or end with the sequence '.lock'.
         /// </summary>
-        /// <param name="branchName"></param>
-        /// <param name="options"></param>
         /// <returns>Normalised branch name.</returns>
         internal string Rule01(string branchName, GitBranchNameOptions options)
         {
@@ -131,11 +126,13 @@ namespace GitCommands.Git
                 {
                     tokens[i] = Regex.Replace(tokens[i], "^(\\.)*", options.ReplacementToken);
                 }
+
                 if (tokens[i].EndsWith(".lock", StringComparison.OrdinalIgnoreCase))
                 {
                     tokens[i] = Regex.Replace(tokens[i], "(\\.lock)$", options.ReplacementToken + "lock");
                 }
             }
+
             return tokens.Join("/");
         }
 
@@ -172,6 +169,7 @@ namespace GitCommands.Git
                     result.Append(options.ReplacementToken);
                 }
             }
+
             return result.ToString();
         }
 
@@ -199,10 +197,12 @@ namespace GitCommands.Git
             {
                 branchName = branchName.Substring(1);
             }
+
             if (branchName.EndsWith("/"))
             {
                 branchName = branchName.Substring(0, branchName.Length - 1);
             }
+
             return branchName;
         }
 

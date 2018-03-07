@@ -1,5 +1,4 @@
-﻿
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace GitCommands
 {

@@ -53,12 +53,16 @@ namespace GitUI
                     dialog.IsFolderPicker = true;
 
                     if (selectedPath != null)
+                    {
                         dialog.InitialDirectory = selectedPath;
+                    }
 
                     var result = dialog.ShowDialog(ownerWindow.Handle);
 
                     if (result == CommonFileDialogResult.Ok)
+                    {
                         return dialog.FileName;
+                    }
                 }
             }
             else
@@ -67,12 +71,16 @@ namespace GitUI
                 using (var dialog = new FolderBrowserDialog())
                 {
                     if (selectedPath != null)
+                    {
                         dialog.SelectedPath = selectedPath;
+                    }
 
                     var result = dialog.ShowDialog(ownerWindow);
 
                     if (result == DialogResult.OK)
+                    {
                         return dialog.SelectedPath;
+                    }
                 }
             }
 

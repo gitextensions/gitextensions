@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly string _defaultBranch;
         private string _currentBranch;
-        private readonly HashSet<string> mergedBranches = new HashSet<string>();
+        private readonly HashSet<string> _mergedBranches = new HashSet<string>();
 
         public FormDeleteBranch(GitUICommands aCommands, string defaultBranch)
             : base(aCommands)
@@ -36,13 +36,19 @@ namespace GitUI.CommandsDialogs
             foreach (var branch in Module.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))
-                    mergedBranches.Add(branch.Trim());
+                {
+                    _mergedBranches.Add(branch.Trim());
+                }
                 else if (!branch.StartsWith("* ") || (branch.StartsWith("* ") && !GitModule.IsDetachedHead(branch.Substring(2))))
+                {
                     _currentBranch = branch.Trim('*', ' ');
+                }
             }
 
             if (_defaultBranch != null)
+            {
                 Branches.SetSelectedText(_defaultBranch);
+            }
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -63,7 +69,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // always treat branches as unmerged if there is no current branch (HEAD is detached)
-                var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !mergedBranches.Contains(branch.Name));
+                var hasUnmergedBranches = _currentBranch == null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
 
                 // we could show yes/no dialog and set forcing checkbox automatically, but more safe way is asking user to do it himself
                 if (hasUnmergedBranches && !ForceDelete.Checked)
@@ -76,7 +82,9 @@ namespace GitUI.CommandsDialogs
                 // (actually we could check if there are another branches pointing to that commit)
                 if (hasUnmergedBranches
                     && MessageBox.Show(this, _deleteBranchQuestion.Text, _deleteBranchCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                {
                     return;
+                }
 
                 var cmd = new GitDeleteBranchCmd(selectedBranches, ForceDelete.Checked);
                 UICommands.StartCommandLineProcessDialog(cmd, this);
@@ -85,6 +93,7 @@ namespace GitUI.CommandsDialogs
             {
                 Trace.WriteLine(ex.Message);
             }
+
             Close();
         }
     }

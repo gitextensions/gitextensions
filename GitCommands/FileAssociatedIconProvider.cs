@@ -38,7 +38,6 @@ namespace GitCommands
         // unit tests only
         internal int CacheCount => LoadedFileIcons.Count;
 
-
         /// <summary>
         /// Retrieves the icon associated with the given file type.
         /// The retrieved icons are cached by extensions.

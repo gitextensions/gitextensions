@@ -18,7 +18,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private FormBisect()
             : this((GitUICommands)null)
-        { }
+        {
+        }
 
         private FormBisect(GitUICommands aCommands)
             : base(aCommands)
@@ -65,7 +66,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
             var errorOccurred = !FormProcess.ShowDialog(this, command);
             if (errorOccurred)
+            {
                 return;
+            }
 
             command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, endRevision);
             FormProcess.ShowDialog(this, command);

@@ -23,7 +23,10 @@ namespace GitUI.CommandsDialogs
 
             // for translation form
             if (fileName != null)
+            {
                 OpenFile(fileName);
+            }
+
             fileViewer.TextChanged += (s, e) => HasChanges = true;
             fileViewer.TextLoaded += (s, e) => HasChanges = false;
             panelMessage.Visible = showWarning;
@@ -82,6 +85,7 @@ namespace GitUI.CommandsDialogs
                                 return;
                             }
                         }
+
                         DialogResult = DialogResult.OK;
                         break;
                     case DialogResult.Cancel:

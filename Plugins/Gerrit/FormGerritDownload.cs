@@ -33,7 +33,9 @@ namespace Gerrit
         public void PushAndShowDialogWhenFailed(IWin32Window owner)
         {
             if (!DownloadChange(owner))
+            {
                 ShowDialog(owner);
+            }
         }
 
         public void PushAndShowDialogWhenFailed()
@@ -44,7 +46,9 @@ namespace Gerrit
         private void DownloadClick(object sender, EventArgs e)
         {
             if (DownloadChange(this))
+            {
                 Close();
+            }
         }
 
         private bool DownloadChange(IWin32Window owner)
@@ -56,6 +60,7 @@ namespace Gerrit
                 MessageBox.Show(owner, _selectRemote.Text);
                 return false;
             }
+
             if (string.IsNullOrEmpty(change))
             {
                 MessageBox.Show(owner, _selectChange.Text);
@@ -96,7 +101,9 @@ namespace Gerrit
             fetchCommand.CommandText = FetchCommand(_NO_TRANSLATE_Remotes.Text, refspec);
 
             if (!RunCommand(fetchCommand, change))
+            {
                 return false;
+            }
 
             var checkoutCommand = UICommands.CreateRemoteCommand();
 
@@ -114,14 +121,18 @@ namespace Gerrit
                         recycleCommand.CommandText = "checkout " + branchName;
 
                         if (!RunCommand(recycleCommand, change))
+                        {
                             return;
+                        }
 
                         var resetCommand = UICommands.CreateRemoteCommand();
 
                         resetCommand.CommandText = GitCommandHelpers.ResetHardCmd("FETCH_HEAD");
 
                         if (!RunCommand(resetCommand, change))
+                        {
                             return;
+                        }
 
                         e.IsError = false;
                     }
@@ -146,7 +157,9 @@ namespace Gerrit
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
+            {
                 progressOption = "--progress ";
+            }
 
             remote = FixPath(remote);
 
@@ -169,7 +182,9 @@ namespace Gerrit
             string projectName = fetchUrl.AbsolutePath.TrimStart('/');
 
             if (projectName.EndsWith(".git"))
+            {
                 projectName = projectName.Substring(0, projectName.Length - 4);
+            }
 
             string change = GerritUtil.RunGerritCommand(
                 this,

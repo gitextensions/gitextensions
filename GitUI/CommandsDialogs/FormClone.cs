@@ -25,9 +25,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
         private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
 
-        private bool openedFromProtocolHandler;
-        private readonly string url;
-        private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private bool _openedFromProtocolHandler;
+        private readonly string _url;
+        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
         private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 
@@ -40,11 +40,11 @@ namespace GitUI.CommandsDialogs
         public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
             : base(aCommands)
         {
-            this.GitModuleChanged = GitModuleChanged;
+            _GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
-            this.openedFromProtocolHandler = openedFromProtocolHandler;
-            this.url = url;
+            _openedFromProtocolHandler = openedFromProtocolHandler;
+            _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
             _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
         }
@@ -56,9 +56,9 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (CanBeGitURL(url) || GitModule.IsValidGitWorkingDir(url))
+            if (CanBeGitURL(_url) || GitModule.IsValidGitWorkingDir(_url))
             {
-                _NO_TRANSLATE_From.Text = url;
+                _NO_TRANSLATE_From.Text = _url;
             }
             else
             {
@@ -81,6 +81,7 @@ namespace GitUI.CommandsDialogs
                 {
                     // We tried.
                 }
+
                 // if the From field is empty, then fill it with the current repository remote URL in hope
                 // that the cloned repository is hosted on the same server
                 if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
@@ -91,9 +92,13 @@ namespace GitUI.CommandsDialogs
                         var remotes = Module.GetRemotes();
 
                         if (remotes.Any(s => s.Equals("origin", StringComparison.InvariantCultureIgnoreCase)))
+                        {
                             currentBranchRemote = "origin";
+                        }
                         else
+                        {
                             currentBranchRemote = remotes.FirstOrDefault();
+                        }
                     }
 
                     string pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
@@ -108,7 +113,9 @@ namespace GitUI.CommandsDialogs
                     {
                         // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
                         if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                        {
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
+                        }
                     }
                     catch (Exception)
                     {
@@ -120,13 +127,17 @@ namespace GitUI.CommandsDialogs
             // if there is no destination directory, then use the parent of the current working directory
             // this would clone the new repo at the same level as the current one by default
             if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+            {
                 _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
+            }
 
             FromTextUpdate(null, null);
 
             cbLfs.Enabled = Module.HasLfsSupport();
             if (!cbLfs.Enabled)
+            {
                 cbLfs.Checked = false;
+            }
         }
 
         private bool CanBeGitURL(string anURL)
@@ -167,11 +178,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var dirTo = Path.Combine(destination, _NO_TRANSLATE_NewDirectory.Text);
+
                 // this will fail if the path is anyhow invalid
                 dirTo = new Uri(dirTo).LocalPath;
 
                 if (!Directory.Exists(dirTo))
+                {
                     Directory.CreateDirectory(dirTo);
+                }
 
                 // Shallow clone params
                 int? depth = null;
@@ -179,6 +193,7 @@ namespace GitUI.CommandsDialogs
                 if (!cbDownloadFullHistory.Checked)
                 {
                     depth = 1;
+
                     // Single branch considerations:
                     // If neither depth nor single-branch family params are specified, then it's like no-single-branch by default.
                     // If depth is specified, then single-branch is assumed.
@@ -190,9 +205,13 @@ namespace GitUI.CommandsDialogs
                 // Branch name param
                 string branch = _NO_TRANSLATE_Branches.Text;
                 if (branch == _branchDefaultRemoteHead.Text)
+                {
                     branch = "";
+                }
                 else if (branch == _branchNone.Text)
+                {
                     branch = null;
+                }
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                             CentralRepository.Checked, cbIntializeAllSubmodules.Checked, branch, depth, isSingleBranch, cbLfs.Checked);
@@ -202,7 +221,9 @@ namespace GitUI.CommandsDialogs
                     fromProcess.ShowDialog(this);
 
                     if (fromProcess.ErrorOccurred() || Module.InTheMiddleOfPatch())
+                    {
                         return;
+                    }
                 }
 
                 Repositories.AddMostRecentRepository(dirTo);
@@ -214,15 +235,17 @@ namespace GitUI.CommandsDialogs
                     clonedGitModule.LocalConfigFile.Save();
                 }
 
-                if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
+                if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
                     GitUICommands uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && GitModuleChanged != null &&
+                else if (ShowInTaskbar == false && _GitModuleChanged != null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
-                    GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                {
+                    _GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                }
 
                 Close();
             }
@@ -269,7 +292,9 @@ namespace GitUI.CommandsDialogs
             {
                 _NO_TRANSLATE_To.Items.Clear();
                 foreach (Repository repo in repos)
+                {
                     _NO_TRANSLATE_From.Items.Add(repo.Path);
+                }
             }
         }
 
@@ -280,10 +305,11 @@ namespace GitUI.CommandsDialogs
             {
                 _NO_TRANSLATE_To.Items.Clear();
                 foreach (Repository repo in repos)
+                {
                     _NO_TRANSLATE_To.Items.Add(repo.Path);
+                }
             }
         }
-
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
@@ -293,9 +319,10 @@ namespace GitUI.CommandsDialogs
         private void FormCloneLoad(object sender, EventArgs e)
         {
             if (!GitCommandHelpers.Plink())
+            {
                 LoadSSHKey.Visible = false;
+            }
         }
-
 
         private void FromSelectedIndexChanged(object sender, EventArgs e)
         {
@@ -322,16 +349,24 @@ namespace GitUI.CommandsDialogs
             string destinationPath = string.Empty;
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
+            {
                 destinationPath += "[" + label2.Text + "]";
+            }
             else
+            {
                 destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
+            }
 
             destinationPath += "\\";
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))
+            {
                 destinationPath += "[" + label3.Text + "]";
+            }
             else
+            {
                 destinationPath += _NO_TRANSLATE_NewDirectory.Text;
+            }
 
             Info.Text = string.Format(_infoNewRepositoryLocation.Text, destinationPath);
 
@@ -430,8 +465,11 @@ namespace GitUI.CommandsDialogs
                 _branchListLoader.Dispose();
 
                 if (components != null)
+                {
                     components.Dispose();
+                }
             }
+
             base.Dispose(disposing);
         }
     }

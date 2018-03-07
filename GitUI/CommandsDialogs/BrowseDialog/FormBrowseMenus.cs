@@ -1,5 +1,4 @@
-﻿
-using GitCommands;
+﻿using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
 using System;
@@ -60,8 +59,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// each new command set will be automatically separated by a separator
         /// </summary>
-        /// <param name="mainMenuItem"></param>
-        /// <param name="menuCommands"></param>
         public void AddMenuCommandSet(MainMenuItem mainMenuItem, IEnumerable<MenuCommand> menuCommands)
         {
             IList<MenuCommand> selectedMenuCommands = null; // make that more clear
@@ -77,6 +74,7 @@ namespace GitUI.CommandsDialogs
                     {
                         _navigateMenuCommands.Add(MenuCommand.CreateSeparator());
                     }
+
                     selectedMenuCommands = _navigateMenuCommands;
                     break;
 
@@ -89,6 +87,7 @@ namespace GitUI.CommandsDialogs
                     {
                         _viewMenuCommands.Add(MenuCommand.CreateSeparator());
                     }
+
                     selectedMenuCommands = _viewMenuCommands;
                     break;
             }

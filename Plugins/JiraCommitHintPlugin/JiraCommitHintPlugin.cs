@@ -30,20 +30,21 @@ namespace JiraCommitHintPlugin
 
         private const string description = "Jira Commit Hint";
         private const string defaultFormat = "{Key} {Summary}";
-        private Jira jira;
-        private string query;
-        private string stringTemplate = defaultFormat;
-        private readonly BoolSetting enabledSettings = new BoolSetting("Jira hint plugin enabled", EnablePluginLabel, false);
-        private readonly StringSetting urlSettings = new StringSetting("Jira URL", JiraUrlLabel, @"https://jira.atlassian.com");
-        private readonly StringSetting userSettings = new StringSetting("Jira user", JiraUserLabel, string.Empty);
-        private readonly PasswordSetting passwordSettings = new PasswordSetting("Jira password", JiraPasswordLabel, string.Empty);
+        private Jira _jira;
+        private string _query;
+        private string _stringTemplate = defaultFormat;
+        private readonly BoolSetting _enabledSettings = new BoolSetting("Jira hint plugin enabled", EnablePluginLabel, false);
+        private readonly StringSetting _urlSettings = new StringSetting("Jira URL", JiraUrlLabel, @"https://jira.atlassian.com");
+        private readonly StringSetting _userSettings = new StringSetting("Jira user", JiraUserLabel, string.Empty);
+        private readonly PasswordSetting _passwordSettings = new PasswordSetting("Jira password", JiraPasswordLabel, string.Empty);
+
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
-        private readonly StringSetting jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
-        private readonly StringSetting stringTemplateSetting = new StringSetting("Jira Message Template", MessageTemplateLabel, defaultFormat);
-        private readonly StringSetting jiraFields = new StringSetting("Jira fields", JiraFieldsLabel, $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
-        private readonly StringSetting jiraQueryHelpLink = new StringSetting("    ", "");
-        private JiraTaskDTO[] currentMessages;
-        private Button btnPreview;
+        private readonly StringSetting _jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
+        private readonly StringSetting _stringTemplateSetting = new StringSetting("Jira Message Template", MessageTemplateLabel, defaultFormat);
+        private readonly StringSetting _jiraFields = new StringSetting("Jira fields", JiraFieldsLabel, $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
+        private readonly StringSetting _jiraQueryHelpLink = new StringSetting("    ", "");
+        private JiraTaskDTO[] _currentMessages;
+        private Button _btnPreview;
 
         public JiraCommitHintPlugin()
         {
@@ -52,11 +53,17 @@ namespace JiraCommitHintPlugin
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            if (enabledSettings.ValueOrDefault(Settings))
+            if (_enabledSettings.ValueOrDefault(Settings))
+            {
                 return false;
-            if (jira == null)
+            }
+
+            if (_jira == null)
+            {
                 return false;
-            GetMessageToCommit(jira, query, stringTemplate).ContinueWith(t =>
+            }
+
+            GetMessageToCommit(_jira, _query, _stringTemplate).ContinueWith(t =>
             {
                 MessageBox.Show(string.Join(Environment.NewLine, t.Result.Select(jt => jt.Text).ToArray()));
             });
@@ -65,48 +72,49 @@ namespace JiraCommitHintPlugin
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            yield return enabledSettings;
+            yield return _enabledSettings;
 
-            urlSettings.CustomControl = new TextBox();
-            yield return urlSettings;
+            _urlSettings.CustomControl = new TextBox();
+            yield return _urlSettings;
 
-            userSettings.CustomControl = new TextBox();
-            yield return userSettings;
+            _userSettings.CustomControl = new TextBox();
+            yield return _userSettings;
 
-            passwordSettings.CustomControl = new TextBox { UseSystemPasswordChar = true };
-            yield return passwordSettings;
+            _passwordSettings.CustomControl = new TextBox { UseSystemPasswordChar = true };
+            yield return _passwordSettings;
 
-            jqlQuerySettings.CustomControl = new TextBox();
-            yield return jqlQuerySettings;
+            _jqlQuerySettings.CustomControl = new TextBox();
+            yield return _jqlQuerySettings;
 
             var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = 300 };
             queryHelperLink.Click += QueryHelperLink_Click;
             var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = 300 };
             txtJiraQueryHelpLink.Controls.Add(queryHelperLink);
-            jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
-            yield return jiraQueryHelpLink;
+            _jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
+            yield return _jiraQueryHelpLink;
 
-            jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
-            yield return jiraFields;
+            _jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
+            yield return _jiraFields;
 
             var txtTemplate = new TextBox { Height = 75, Multiline = true, ScrollBars = ScrollBars.Horizontal };
-            btnPreview = new Button { Text = PreviewButtionText, Top = 45, Anchor = AnchorStyles.Right };
-            btnPreview.Click += btnPreviewClick;
-            txtTemplate.Controls.Add(btnPreview);
-            stringTemplateSetting.CustomControl = txtTemplate;
-            yield return stringTemplateSetting;
+            _btnPreview = new Button { Text = PreviewButtionText, Top = 45, Anchor = AnchorStyles.Right };
+            _btnPreview.Click += btnPreviewClick;
+            txtTemplate.Controls.Add(_btnPreview);
+            _stringTemplateSetting.CustomControl = txtTemplate;
+            yield return _stringTemplateSetting;
         }
 
         private void QueryHelperLink_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(urlSettings.CustomControl.Text))
+            if (string.IsNullOrWhiteSpace(_urlSettings.CustomControl.Text))
             {
                 MessageBox.Show(null, InvalidUrlMessage, InvalidUrlCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             try
             {
-                Process.Start(urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
+                Process.Start(_urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
             }
             catch (Exception ex)
             {
@@ -118,9 +126,9 @@ namespace JiraCommitHintPlugin
         {
             try
             {
-                var localJira = Jira.CreateRestClient(urlSettings.CustomControl.Text, userSettings.CustomControl.Text, passwordSettings.CustomControl.Text);
-                var localQuery = jqlQuerySettings.CustomControl.Text;
-                var localStringTemplate = stringTemplateSetting.CustomControl.Text;
+                var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, _userSettings.CustomControl.Text, _passwordSettings.CustomControl.Text);
+                var localQuery = _jqlQuerySettings.CustomControl.Text;
+                var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
                 GetMessageToCommit(localJira, localQuery, localStringTemplate).ContinueWith(t =>
                 {
                     var preview = t.Result.FirstOrDefault();
@@ -145,23 +153,30 @@ namespace JiraCommitHintPlugin
 
         private void UpdateJiraSettings()
         {
-            if (!enabledSettings.ValueOrDefault(Settings))
+            if (!_enabledSettings.ValueOrDefault(Settings))
+            {
                 return;
+            }
 
-            var url = urlSettings.ValueOrDefault(Settings);
-            var userName = userSettings.ValueOrDefault(Settings);
-            var password = passwordSettings.ValueOrDefault(Settings);
+            var url = _urlSettings.ValueOrDefault(Settings);
+            var userName = _userSettings.ValueOrDefault(Settings);
+            var password = _passwordSettings.ValueOrDefault(Settings);
 
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(userName))
+            {
                 return;
+            }
 
-            jira = Jira.CreateRestClient(url, userName, password);
-            query = jqlQuerySettings.ValueOrDefault(Settings);
-            stringTemplate = stringTemplateSetting.ValueOrDefault(Settings);
-            if (btnPreview == null)
+            _jira = Jira.CreateRestClient(url, userName, password);
+            _query = _jqlQuerySettings.ValueOrDefault(Settings);
+            _stringTemplate = _stringTemplateSetting.ValueOrDefault(Settings);
+            if (_btnPreview == null)
+            {
                 return;
-            btnPreview.Click -= btnPreviewClick;
-            btnPreview = null;
+            }
+
+            _btnPreview.Click -= btnPreviewClick;
+            _btnPreview = null;
         }
 
         private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
@@ -180,15 +195,20 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-            if (!enabledSettings.ValueOrDefault(Settings))
-                return;
-            if (jira?.Issues == null)
-                return;
-
-            GetMessageToCommit(jira, query, stringTemplate).ContinueWith(t =>
+            if (!_enabledSettings.ValueOrDefault(Settings))
             {
-                currentMessages = t.Result;
-                foreach (var message in currentMessages)
+                return;
+            }
+
+            if (_jira?.Issues == null)
+            {
+                return;
+            }
+
+            GetMessageToCommit(_jira, _query, _stringTemplate).ContinueWith(t =>
+            {
+                _currentMessages = t.Result;
+                foreach (var message in _currentMessages)
                 {
                     e.GitUICommands.AddCommitTemplate(message.Title, () => message.Text);
                 }
@@ -197,15 +217,22 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            if (!enabledSettings.ValueOrDefault(Settings))
+            if (!_enabledSettings.ValueOrDefault(Settings))
+            {
                 return;
-            if (currentMessages == null)
+            }
+
+            if (_currentMessages == null)
+            {
                 return;
-            foreach (var message in currentMessages)
+            }
+
+            foreach (var message in _currentMessages)
             {
                 e.GitUICommands.RemoveCommitTemplate(message.Title);
             }
-            currentMessages = null;
+
+            _currentMessages = null;
         }
 
         private static async Task<JiraTaskDTO[]> GetMessageToCommit(Jira jira, string query, string stringTemplate)

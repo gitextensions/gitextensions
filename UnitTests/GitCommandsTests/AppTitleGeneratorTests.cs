@@ -13,7 +13,6 @@ namespace GitCommandsTests
         private IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private AppTitleGenerator _appTitleGenerator;
 
-
         [SetUp]
         public void Setup()
         {

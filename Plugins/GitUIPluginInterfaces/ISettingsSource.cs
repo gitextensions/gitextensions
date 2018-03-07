@@ -15,8 +15,16 @@ namespace GitUIPluginInterfaces
             return GetValue<bool?>(name, null, x =>
             {
                 var val = x.ToString().ToLower();
-                if (val == "true") return true;
-                if (val == "false") return false;
+                if (val == "true")
+                {
+                    return true;
+                }
+
+                if (val == "false")
+                {
+                    return false;
+                }
+
                 return null;
             });
         }
@@ -41,7 +49,9 @@ namespace GitUIPluginInterfaces
             return GetValue<int?>(name, null, x =>
             {
                 if (int.TryParse(x, out var result))
+                {
                     return result;
+                }
 
                 return null;
             });
@@ -57,7 +67,9 @@ namespace GitUIPluginInterfaces
             return GetValue<float?>(name, null, x =>
             {
                 if (float.TryParse(x, out var result))
+                {
                     return result;
+                }
 
                 return null;
             });
@@ -78,7 +90,9 @@ namespace GitUIPluginInterfaces
             return GetValue<DateTime?>(name, null, x =>
             {
                 if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+                {
                     return result;
+                }
 
                 return null;
             });
@@ -126,7 +140,9 @@ namespace GitUIPluginInterfaces
                 var val = x.ToString();
 
                 if (Enum.TryParse(val, true, out T result))
+                {
                     return result;
+                }
 
                 return defaultValue;
             });
@@ -144,10 +160,14 @@ namespace GitUIPluginInterfaces
                 var val = x.ToString();
 
                 if (string.IsNullOrEmpty(val))
+                {
                     return null;
+                }
 
                 if (Enum.TryParse(val, true, out T result))
+                {
                     return result;
+                }
 
                 return null;
             });
@@ -164,7 +184,6 @@ namespace GitUIPluginInterfaces
         }
     }
 
-
     public static class FontParser
     {
         private static readonly string InvariantCultureId = "_IC_";
@@ -177,18 +196,24 @@ namespace GitUIPluginInterfaces
         public static Font Parse(this string value, Font defaultValue)
         {
             if (value == null)
+            {
                 return defaultValue;
+            }
 
             string[] parts = value.Split(';');
 
             if (parts.Length < 2)
+            {
                 return defaultValue;
+            }
 
             try
             {
                 string fontSize;
                 if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                {
                     fontSize = parts[1];
+                }
                 else
                 {
                     fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);

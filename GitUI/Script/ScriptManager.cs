@@ -20,7 +20,9 @@ namespace GitUI.Script
             {
                 DeserializeFromXml(AppSettings.ownScripts);
                 if (Scripts != null)
+                {
                     FixAmbiguousHotkeyCommandIdentifiers(Scripts);
+                }
             }
 
             return Scripts;
@@ -35,6 +37,7 @@ namespace GitUI.Script
                 {
                     si.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
                 }
+
                 ids.Add(si.HotkeyCommandIdentifier);
             }
         }
@@ -42,8 +45,12 @@ namespace GitUI.Script
         public static ScriptInfo GetScript(string key)
         {
             foreach (ScriptInfo script in GetScripts())
+            {
                 if (script.Name.Equals(key, StringComparison.CurrentCultureIgnoreCase))
+                {
                     return script;
+                }
+            }
 
             return null;
         }

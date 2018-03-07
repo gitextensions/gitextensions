@@ -48,6 +48,7 @@ namespace ReleaseNotesGenerator
                     {
                         resultList.Add(loglineCurrent);
                     }
+
                     loglineCurrent = logLine1;
                 }
                 else
@@ -60,6 +61,7 @@ namespace ReleaseNotesGenerator
             {
                 resultList.Add(loglineCurrent);
             }
+
             return resultList;
         }
     }

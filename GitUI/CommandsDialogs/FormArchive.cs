@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (checkboxRevisionFilter.Checked && this.DiffSelectedRevision == null)
+            if (checkboxRevisionFilter.Checked && DiffSelectedRevision == null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _noRevisionSelectedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -162,7 +162,8 @@ namespace GitUI.CommandsDialogs
             else if (checkboxRevisionFilter.Checked)
             {
                 // 1. get all changed (and not deleted files) from selected to current revision
-                var files = UICommands.Module.GetDiffFiles(this.DiffSelectedRevision.Guid, this.SelectedRevision.Guid).Where(f => !f.IsDeleted);
+                var files = UICommands.Module.GetDiffFiles(DiffSelectedRevision.Guid, SelectedRevision.Guid).Where(f => !f.IsDeleted);
+
                 // 2. wrap file names with ""
                 // 3. join together with space as separator
                 return string.Join(" ", files.Select(f => f.Name.QuoteNE()));
@@ -193,7 +194,9 @@ namespace GitUI.CommandsDialogs
         {
             textBoxPaths.Enabled = checkBoxPathFilter.Checked;
             if (checkBoxPathFilter.Checked)
+            {
                 checkboxRevisionFilter.Checked = false;
+            }
         }
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
@@ -215,7 +218,9 @@ namespace GitUI.CommandsDialogs
             gbDiffRevision.Enabled = checkboxRevisionFilter.Checked;
             btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
             if (checkboxRevisionFilter.Checked)
+            {
                 checkBoxPathFilter.Checked = false;
+            }
         }
     }
 }

@@ -103,7 +103,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
         {
             if (BuildServerType.SelectedIndex == 0 || string.IsNullOrEmpty(Module.WorkingDir))
+            {
                 return null;
+            }
+
             var defaultProjectName = Module.WorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
             var exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
@@ -121,7 +124,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private string GetSelectedBuildServerType()
         {
             if (BuildServerType.SelectedIndex == 0)
+            {
                 return null;
+            }
+
             return (string)BuildServerType.SelectedItem;
         }
 

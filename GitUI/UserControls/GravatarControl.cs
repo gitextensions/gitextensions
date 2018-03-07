@@ -33,7 +33,6 @@ namespace GitUI
         [Browsable(false)]
         public string Email { get; private set; }
 
-
         public void LoadImage(string email)
         {
             if (string.IsNullOrEmpty(email))
@@ -45,7 +44,6 @@ namespace GitUI
             Email = email;
             UpdateGravatar();
         }
-
 
         private void RefreshImage(Image image)
         {
@@ -68,7 +66,6 @@ namespace GitUI
             var image = await _gravatarService.GetAvatarAsync(Email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
             RefreshImage(image);
         }
-
 
         private async void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -101,6 +98,7 @@ namespace GitUI
             {
                 return;
             }
+
             AppSettings.GravatarDefaultImageType = ((DefaultImageType)tag).ToString();
             await _avatarCache.ClearAsync();
             UpdateGravatar();
@@ -124,6 +122,7 @@ namespace GitUI
                 AppSettings.GravatarDefaultImageType = DefaultImageType.None.ToString();
                 selectedItem = noneToolStripMenuItem;
             }
+
             selectedItem.Checked = true;
         }
     }

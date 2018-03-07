@@ -15,7 +15,6 @@ namespace GitCommandsTests
         private IGitModule _module;
         private GitRevisionInfoProvider _provider;
 
-
         [SetUp]
         public void Setup()
         {

@@ -20,7 +20,6 @@ namespace GitCommands.Config
     {
         private readonly IDictionary<string, IList<string>> _configKeys;
 
-
         internal ConfigSection(string name, bool forceCaseSensitive)
         {
             _configKeys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
@@ -42,14 +41,19 @@ namespace GitCommands.Config
                 var subSectionIndex = name.IndexOf('.');
 
                 if (subSectionIndex < 1)
+                {
                     throw new Exception("Invalid section name: " + name);
+                }
 
                 SectionName = name.Substring(0, subSectionIndex).Trim();
                 SubSection = name.Substring(subSectionIndex + 1).Trim();
                 SubSectionCaseSensitive = false;
             }
+
             if (forceCaseSensitive)
+            {
                 SubSectionCaseSensitive = true;
+            }
         }
 
         public string SectionName { get; set; }
@@ -59,7 +63,9 @@ namespace GitCommands.Config
         public static string FixPath(string path)
         {
             if (path.StartsWith("\\\\")) // for using unc paths -> these need to be backward slashes
+            {
                 return path;
+            }
 
             return path.ToPosixPath();
         }
@@ -77,9 +83,13 @@ namespace GitCommands.Config
         public void SetValue(string key, string value)
         {
             if (string.IsNullOrEmpty(value))
+            {
                 _configKeys.Remove(key);
+            }
             else
+            {
                 _configKeys[key] = new List<string> { value };
+            }
         }
 
         public void SetPathValue(string setting, string value)
@@ -90,7 +100,9 @@ namespace GitCommands.Config
         public void AddValue(string key, string value)
         {
             if (!_configKeys.ContainsKey(key))
+            {
                 _configKeys[key] = new List<string>();
+            }
 
             _configKeys[key].Add(value);
         }
@@ -105,7 +117,9 @@ namespace GitCommands.Config
             if (_configKeys.TryGetValue(key, out var list))
             {
                 if (list.Count > 0)
+                {
                     return list[list.Count - 1];
+                }
             }
 
             return defaultValue;
@@ -125,9 +139,13 @@ namespace GitCommands.Config
                 escSubSection = escSubSection.Replace("\\", "\\\\");
 
                 if (!SubSectionCaseSensitive)
+                {
                     escSubSection = escSubSection.ToLower();
+                }
+
                 result = result + " \"" + escSubSection + "\"";
             }
+
             result = result + "]";
             return result;
         }
@@ -136,9 +154,13 @@ namespace GitCommands.Config
         {
             StringComparison sc;
             if (SubSectionCaseSensitive)
+            {
                 sc = StringComparison.Ordinal;
+            }
             else
+            {
                 sc = StringComparison.OrdinalIgnoreCase;
+            }
 
             return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(SubSection, other.SubSection, sc);

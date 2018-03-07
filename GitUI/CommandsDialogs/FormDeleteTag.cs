@@ -30,7 +30,9 @@ namespace GitUI.CommandsDialogs
                 Module.DeleteTag(Tags.Text);
 
                 if (deleteTag.Checked && !string.IsNullOrEmpty(Tags.Text))
+                {
                     RemoveRemoteTag(Tags.Text);
+                }
 
                 DialogResult = DialogResult.OK;
                 Close();

@@ -36,7 +36,10 @@ namespace GitStatistics.PieChart
         {
             Debug.Assert(correctionFactor <= 1 && correctionFactor >= -1);
             if (correctionFactor == 0)
+            {
                 return color;
+            }
+
             float red = color.R;
             float green = color.G;
             float blue = color.B;
@@ -53,6 +56,7 @@ namespace GitStatistics.PieChart
                 green = (255 - green) * correctionFactor + green;
                 blue = (255 - blue) * correctionFactor + blue;
             }
+
             return Color.FromArgb((int)red, (int)green, (int)blue);
         }
     }

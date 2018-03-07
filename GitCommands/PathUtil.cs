@@ -9,7 +9,6 @@ namespace GitCommands
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
 
-
         /// <summary>Replaces native path separator with posix path separator.</summary>
         public static string ToPosixPath(this string path)
         {
@@ -28,8 +27,6 @@ namespace GitCommands
         ///
         /// This method can be used to add (or keep) a trailing path separator character to a directory path.
         /// </summary>
-        /// <param name="dirPath"></param>
-        /// <returns></returns>
         public static string EnsureTrailingPathSeparator(this string dirPath)
         {
             if (!dirPath.IsNullOrEmpty() &&
@@ -49,6 +46,7 @@ namespace GitCommands
             {
                 return false;
             }
+
             return true;
         }
 
@@ -57,7 +55,10 @@ namespace GitCommands
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
+            {
                 fileName = fileName.Substring(pos + 1);
+            }
+
             return fileName;
         }
 
@@ -76,8 +77,12 @@ namespace GitCommands
                     fileName = fileName.Substring(0, pos);
                 }
             }
+
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
+            {
                 return "";
+            }
+
             return fileName;
         }
 
@@ -86,7 +91,10 @@ namespace GitCommands
             posixPath = null;
             var directoryInfo = new DirectoryInfo(path);
             if (!directoryInfo.Exists)
+            {
                 return false;
+            }
+
             posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
             return true;
         }
@@ -101,15 +109,18 @@ namespace GitCommands
                 string path = repositoryUrl.TrimEnd(new[] { '\\', '/' });
 
                 if (path.EndsWith(standardRepositorySuffix))
+                {
                     path = path.Substring(0, path.Length - standardRepositorySuffix.Length);
+                }
 
                 if (path.Contains("\\") || path.Contains("/"))
+                {
                     name = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+                }
             }
 
             return name;
         }
-
 
         public static bool TryFindFullPath(string fileName, out string fullPath)
         {
@@ -134,6 +145,7 @@ namespace GitCommands
             {
                 // do nothing
             }
+
             fullPath = null;
             return false;
         }
@@ -147,11 +159,13 @@ namespace GitCommands
                 {
                     return true;
                 }
+
                 shellPath = Path.Combine(AppSettings.GitBinDir, shell);
                 if (File.Exists(shellPath))
                 {
                     return true;
                 }
+
                 if (TryFindFullPath(shell, out shellPath))
                 {
                     return true;
@@ -161,6 +175,7 @@ namespace GitCommands
             {
                 // do nothing
             }
+
             shellPath = null;
             return false;
         }

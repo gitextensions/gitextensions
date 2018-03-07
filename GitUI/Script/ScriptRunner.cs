@@ -28,13 +28,16 @@ namespace GitUI.Script
                     anyScriptExecuted = true;
                 }
             }
+
             return anyScriptExecuted;
         }
 
         public static bool RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGrid revisionGrid)
         {
             if (string.IsNullOrEmpty(script))
+            {
                 return false;
+            }
 
             ScriptInfo scriptInfo = ScriptManager.GetScript(script);
 
@@ -45,17 +48,28 @@ namespace GitUI.Script
             }
 
             if (string.IsNullOrEmpty(scriptInfo.Command))
+            {
                 return false;
+            }
 
             string argument = scriptInfo.Arguments;
             foreach (string option in Options)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
+                {
                     continue;
+                }
+
                 if (!option.StartsWith("{s"))
+                {
                     continue;
+                }
+
                 if (revisionGrid != null)
+                {
                     continue;
+                }
+
                 MessageBox.Show(owner,
                     string.Format("Option {0} is only supported when started from revision grid.", option),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -70,12 +84,20 @@ namespace GitUI.Script
             Uri uri;
             string path = "";
             if (Uri.TryCreate(url, UriKind.Absolute, out uri))
+            {
                 path = uri.LocalPath;
+            }
             else if (Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
+            {
                 path = uri.LocalPath;
+            }
+
             int pos = path.LastIndexOf(".");
             if (pos >= 0)
+            {
                 path = path.Substring(0, pos);
+            }
+
             return path;
         }
 
@@ -109,19 +131,26 @@ namespace GitUI.Script
             foreach (string option in Options)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
+                {
                     continue;
+                }
+
                 if (option.StartsWith("{c") && currentRevision == null)
                 {
                     currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision);
 
                     if (currentLocalBranches.Count == 1)
+                    {
                         currentRemote = aModule.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
+                    }
                     else
                     {
                         currentRemote = aModule.GetCurrentRemote();
                         if (string.IsNullOrEmpty(currentRemote))
+                        {
                             currentRemote = aModule.GetSetting(string.Format(SettingKeyString.BranchRemote,
                                 askToSpecify(currentLocalBranches, "Current Revision Branch")));
+                        }
                     }
                 }
                 else if (option.StartsWith("{s") && selectedRevision == null && revisionGrid != null)
@@ -141,40 +170,68 @@ namespace GitUI.Script
                         break;
                     case "{sTag}":
                         if (selectedTags.Count == 1)
+                        {
                             argument = argument.Replace(option, selectedTags[0].Name);
+                        }
                         else if (selectedTags.Count != 0)
+                        {
                             argument = argument.Replace(option, askToSpecify(selectedTags, "Selected Revision Tag"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{sBranch}":
                         if (selectedBranches.Count == 1)
+                        {
                             argument = argument.Replace(option, selectedBranches[0].Name);
+                        }
                         else if (selectedBranches.Count != 0)
+                        {
                             argument = argument.Replace(option,
                                                         askToSpecify(selectedBranches, "Selected Revision Branch"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{sLocalBranch}":
                         if (selectedLocalBranches.Count == 1)
+                        {
                             argument = argument.Replace(option, selectedLocalBranches[0].Name);
+                        }
                         else if (selectedLocalBranches.Count != 0)
+                        {
                             argument = argument.Replace(option,
                                                         askToSpecify(selectedLocalBranches,
                                                                      "Selected Revision Local Branch"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{sRemoteBranch}":
                         if (selectedRemoteBranches.Count == 1)
+                        {
                             argument = argument.Replace(option, selectedRemoteBranches[0].Name);
+                        }
                         else if (selectedRemoteBranches.Count != 0)
+                        {
                             argument = argument.Replace(option,
                                                         askToSpecify(selectedRemoteBranches,
                                                                      "Selected Revision Remote Branch"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{sRemote}":
                         if (selectedRemotes.Count == 0)
@@ -182,10 +239,16 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         if (selectedRemotes.Count == 1)
+                        {
                             remote = selectedRemotes[0];
+                        }
                         else
+                        {
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
+                        }
+
                         argument = argument.Replace(option, remote);
                         break;
                     case "{sRemoteUrl}":
@@ -194,10 +257,16 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         if (selectedRemotes.Count == 1)
+                        {
                             remote = selectedRemotes[0];
+                        }
                         else
+                        {
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
+                        }
+
                         url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, url);
                         break;
@@ -207,10 +276,16 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         if (selectedRemotes.Count == 1)
+                        {
                             remote = selectedRemotes[0];
+                        }
                         else
+                        {
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
+                        }
+
                         url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
@@ -234,40 +309,68 @@ namespace GitUI.Script
                         break;
                     case "{cTag}":
                         if (currentTags.Count == 1)
+                        {
                             argument = argument.Replace(option, currentTags[0].Name);
+                        }
                         else if (currentTags.Count != 0)
+                        {
                             argument = argument.Replace(option, askToSpecify(currentTags, "Current Revision Tag"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{cBranch}":
                         if (currentBranches.Count == 1)
+                        {
                             argument = argument.Replace(option, currentBranches[0].Name);
+                        }
                         else if (currentBranches.Count != 0)
+                        {
                             argument = argument.Replace(option,
                                                         askToSpecify(currentBranches, "Current Revision Branch"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{cLocalBranch}":
                         if (currentLocalBranches.Count == 1)
+                        {
                             argument = argument.Replace(option, currentLocalBranches[0].Name);
+                        }
                         else if (currentLocalBranches.Count != 0)
+                        {
                             argument = argument.Replace(option,
                                                         askToSpecify(currentLocalBranches,
                                                                      "Current Revision Local Branch"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{cRemoteBranch}":
                         if (currentRemoteBranches.Count == 1)
+                        {
                             argument = argument.Replace(option, currentRemoteBranches[0].Name);
+                        }
                         else if (currentRemoteBranches.Count != 0)
+                        {
                             argument = argument.Replace(option,
                                                         askToSpecify(currentRemoteBranches,
                                                                      "Current Revision Remote Branch"));
+                        }
                         else
+                        {
                             argument = argument.Replace(option, "");
+                        }
+
                         break;
                     case "{cHash}":
                         argument = argument.Replace(option, currentRevision.Guid);
@@ -293,6 +396,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         argument = argument.Replace(option, currentRemote);
                         break;
                     case "{cDefaultRemoteUrl}":
@@ -301,6 +405,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, url);
                         break;
@@ -310,6 +415,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
+
                         url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
@@ -319,12 +425,14 @@ namespace GitUI.Script
                             Prompt.ShowDialog();
                             argument = argument.Replace(option, Prompt.UserInput);
                         }
+
                         break;
                     case "{WorkingDir}":
                         argument = argument.Replace(option, aModule.WorkingDir);
                         break;
                 }
             }
+
             command = ExpandCommandVariables(command, aModule);
 
             if (scriptInfo.IsPowerShell)
@@ -337,22 +445,31 @@ namespace GitUI.Script
             {
                 command = command.Replace(PluginPrefix, "");
                 foreach (var plugin in Plugin.LoadedPlugins.Plugins)
+                {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands, argument);
                         return plugin.Execute(eventArgs);
                     }
+                }
+
                 return false;
             }
 
             if (!scriptInfo.RunInBackground)
+            {
                 FormProcess.ShowStandardProcessDialog(owner, command, argument, aModule.WorkingDir, null, true);
+            }
             else
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
+                {
                     Process.Start(argument);
+                }
                 else
+                {
                     aModule.RunExternalCmdDetached(command, argument);
+                }
             }
 
             return !scriptInfo.RunInBackground;
@@ -371,8 +488,9 @@ namespace GitUI.Script
             foreach (GitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
+                {
                     selectedTags.Add(head);
-
+                }
                 else if (head.IsHead || head.IsRemote)
                 {
                     selectedBranches.Add(head);
@@ -380,12 +498,17 @@ namespace GitUI.Script
                     {
                         selectedRemoteBranches.Add(head);
                         if (!selectedRemotes.Contains(head.Remote))
+                        {
                             selectedRemotes.Add(head.Remote);
+                        }
                     }
                     else
+                    {
                         selectedLocalBranches.Add(head);
+                    }
                 }
             }
+
             return selectedRevision;
         }
 
@@ -411,17 +534,24 @@ namespace GitUI.Script
                 foreach (IGitRef gitRef in refs)
                 {
                     if (gitRef.IsTag)
+                    {
                         currentTags.Add(gitRef);
+                    }
                     else if (gitRef.IsHead || gitRef.IsRemote)
                     {
                         currentBranches.Add(gitRef);
                         if (gitRef.IsRemote)
+                        {
                             currentRemoteBranches.Add(gitRef);
+                        }
                         else
+                        {
                             currentLocalBranches.Add(gitRef);
+                        }
                     }
                 }
             }
+
             return currentRevision;
         }
 
@@ -472,21 +602,29 @@ namespace GitUI.Script
             // Make sure we are able to run git, even if git is not in the path
             if (originalCommand.Equals("git", StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{git}", StringComparison.CurrentCultureIgnoreCase))
+            {
                 return AppSettings.GitCommand;
+            }
 
             if (originalCommand.Equals("gitextensions", StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitextensions}", StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("gitex", StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitex}", StringComparison.CurrentCultureIgnoreCase))
+            {
                 return AppSettings.GetGitExtensionsFullPath();
+            }
 
             if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
+            {
                 return "explorer";
+            }
 
             // Prefix should be {plugin:pluginname},{plugin=pluginname}
             var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             if (match.Success && match.Groups.Count > 1)
+            {
                 originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());
+            }
 
             return originalCommand;
         }

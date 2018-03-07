@@ -21,7 +21,9 @@ namespace GitUI.HelperDialogs
             Translate();
 
             if (branchesToSelect.Count > 350)
+            {
                 Branches.MultiColumn = true;
+            }
 
             Branches.DisplayMember = "Name";
             Branches.Items.AddRange(branchesToSelect.ToArray());
@@ -38,6 +40,7 @@ namespace GitUI.HelperDialogs
                     Branches.SetItemChecked(index, true);
                     return;
                 }
+
                 index++;
             }
         }
@@ -47,7 +50,9 @@ namespace GitUI.HelperDialogs
             IList<IGitRef> branches = new List<IGitRef>();
 
             foreach (IGitRef head in Branches.CheckedItems)
+            {
                 branches.Add(head);
+            }
 
             return branches;
         }

@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private readonly RevisionGrid RevisionGrid;
+        private readonly RevisionGrid _RevisionGrid;
         private string _baseCommitDisplayStr;
         private string _headCommitDisplayStr;
         private GitRevision _baseRevision;
@@ -21,28 +21,28 @@ namespace GitUI.CommandsDialogs
 
         ToolTip _toolTipControl = new ToolTip();
 
-        private readonly TranslationString anotherBranchTooltip =
+        private readonly TranslationString _anotherBranchTooltip =
             new TranslationString("Select another branch");
-        private readonly TranslationString anotherCommitTooltip =
+        private readonly TranslationString _anotherCommitTooltip =
             new TranslationString("Select another commit");
-        private readonly TranslationString btnSwapTooltip =
+        private readonly TranslationString _btnSwapTooltip =
             new TranslationString("Swap BASE and Compare commits");
 
         public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
         {
-            RevisionGrid = revisionGrid;
+            _RevisionGrid = revisionGrid;
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
 
             InitializeComponent();
             Translate();
 
-            _toolTipControl.SetToolTip(btnAnotherBaseBranch, anotherBranchTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherHeadBranch, anotherBranchTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherBaseCommit, anotherCommitTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherHeadCommit, anotherCommitTooltip.Text);
-            _toolTipControl.SetToolTip(btnSwap, btnSwapTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherBaseBranch, _anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherHeadBranch, _anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherBaseCommit, _anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherHeadCommit, _anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnSwap, _btnSwapTooltip.Text);
 
             if (!IsUICommandsInitialized)
             {// UICommands is not initialized in translation unit test.
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
 
-            this.Load += (sender, args) => PopulateDiffFiles();
+            Load += (sender, args) => PopulateDiffFiles();
             DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
         }
 
@@ -89,6 +89,7 @@ namespace GitUI.CommandsDialogs
         {
             ShowSelectedFileDiff();
         }
+
         private void ShowSelectedFileDiff()
         {
             if (DiffFiles.SelectedItem == null)
@@ -96,11 +97,15 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch("");
                 return;
             }
+
             var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
 
             IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
             if (items.Count() == 1)
+            {
                 items.Add(DiffFiles.SelectedItemParent);
+            }
+
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
@@ -119,18 +124,28 @@ namespace GitUI.CommandsDialogs
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (DiffFiles.SelectedItem == null)
+            {
                 return;
+            }
 
             GitUI.RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffALocal;
+            }
             else if (sender == bLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+            }
             else if (sender == parentOfALocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+            }
             else if (sender == parentOfBLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+            }
             else
             {
                 Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
@@ -139,7 +154,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
+                _RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
             }
         }
 
@@ -192,6 +207,7 @@ namespace GitUI.CommandsDialogs
                 searchWindow.ShowDialog(this);
                 selectedItem = searchWindow.SelectedItem;
             }
+
             if (selectedItem != null)
             {
                 DiffFiles.SelectedItem = selectedItem;
@@ -207,6 +223,7 @@ namespace GitUI.CommandsDialogs
         {
             PickAnotherBranch(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
         }
+
         private void btnAnotherCommit_Click(object sender, EventArgs e)
         {
             PickAnotherCommit(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);

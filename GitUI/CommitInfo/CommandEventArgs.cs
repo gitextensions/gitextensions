@@ -6,9 +6,10 @@ namespace GitUI.CommitInfo
     {
         public CommandEventArgs(string command, string data)
         {
-            this.Command = command;
-            this.Data = data;
+            Command = command;
+            Data = data;
         }
+
         public string Command { get; set; }
         public string Data { get; set; }
     }

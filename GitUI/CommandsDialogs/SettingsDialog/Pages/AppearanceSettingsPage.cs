@@ -18,9 +18,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private Font _diffFont;
         private Font _applicationFont;
-        private Font commitFont;
+        private Font _commitFont;
         private readonly IImageCache _avatarCache;
-
 
         public AppearanceSettingsPage()
         {
@@ -87,9 +86,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
             if (AppSettings.Dictionary.Equals("none", StringComparison.InvariantCultureIgnoreCase))
+            {
                 Dictionary.SelectedIndex = 0;
+            }
             else
+            {
                 Dictionary.Text = AppSettings.Dictionary;
+            }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
 
@@ -118,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.DiffFont = _diffFont;
             AppSettings.Font = _applicationFont;
-            AppSettings.CommitFont = commitFont;
+            AppSettings.CommitFont = _commitFont;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
@@ -165,7 +168,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void commitFontChangeButton_Click(object sender, EventArgs e)
         {
-            commitFontDialog.Font = commitFont;
+            commitFontDialog.Font = _commitFont;
             DialogResult result = commitFontDialog.ShowDialog(this);
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
@@ -188,7 +191,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SetCurrentCommitFont(Font newFont)
         {
-            commitFont = newFont;
+            _commitFont = newFont;
             SetFontButtonText(newFont, commitFontChangeButton);
         }
 

@@ -49,7 +49,9 @@ namespace FindLargeFiles
                         revData.Add(commit, date);
                     }
                     else
+                    {
                         date = revData[commit];
+                    }
 
                     if (!_list.TryGetValue(d.SHA, out var curGitObject))
                     {
@@ -60,11 +62,15 @@ namespace FindLargeFiles
                     else if (!curGitObject.Commit.Contains(commit))
                     {
                         if (curGitObject.LastCommitDate < date)
+                        {
                             curGitObject.LastCommitDate = date;
+                        }
+
                         BranchesGrid.Invoke((Action)(() => { _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject)); }));
                         curGitObject.Commit.Add(commit);
                     }
                 }
+
                 string objectsPackDirectory = _gitCommands.ResolveGitInternalPath("objects/pack/");
                 if (Directory.Exists(objectsPackDirectory))
                 {
@@ -87,6 +93,7 @@ namespace FindLargeFiles
                         }
                     }
                 }
+
                 pbRevisions.Invoke((Action)(() => pbRevisions.Hide()));
                 BranchesGrid.Invoke((Action)(() => BranchesGrid.ReadOnly = false));
             }
@@ -122,7 +129,9 @@ namespace FindLargeFiles
                     {
                         Int32.TryParse(data[3], out var size);
                         if (size >= thresholdSize)
+                        {
                             yield return new GitObject(data[2], dataPack[1], size, rev);
+                        }
                     }
                 }
             }
@@ -138,6 +147,7 @@ namespace FindLargeFiles
                     sb.AppendLine(String.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",
                         _gitCommands.GitCommand, gitObject.Path));
                 }
+
                 sb.AppendLine(String.Format("for /f %%a IN ('\"{0}\" for-each-ref --format=%%^(refname^) refs/original/') DO \"{0}\" update-ref -d %%a",
                         _gitCommands.GitCommand));
                 sb.AppendLine(String.Format("\"{0}\" reflog expire --expire=now --all",
@@ -146,6 +156,7 @@ namespace FindLargeFiles
                     _gitCommands.GitCommand));
                 _gitUiCommands.GitUICommands.StartBatchFileProcessDialog(sb.ToString());
             }
+
             Close();
         }
     }

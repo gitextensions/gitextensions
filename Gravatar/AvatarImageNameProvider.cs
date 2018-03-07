@@ -26,6 +26,7 @@
             {
                 return null;
             }
+
             return $"{email}.png";
         }
     }

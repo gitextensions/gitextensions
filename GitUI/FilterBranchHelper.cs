@@ -12,36 +12,39 @@ namespace GitUI
         private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
         private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
         private RevisionGrid _NO_TRANSLATE_RevisionGrid;
-        private ToolStripMenuItem localToolStripMenuItem;
-        private ToolStripMenuItem tagsToolStripMenuItem;
-        private ToolStripMenuItem remoteToolStripMenuItem;
+        private ToolStripMenuItem _localToolStripMenuItem;
+        private ToolStripMenuItem _tagsToolStripMenuItem;
+        private ToolStripMenuItem _remoteToolStripMenuItem;
         private GitModule Module => _NO_TRANSLATE_RevisionGrid.Module;
 
         public FilterBranchHelper()
         {
-            localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+
             //
             // localToolStripMenuItem
             //
-            localToolStripMenuItem.Checked = true;
-            localToolStripMenuItem.CheckOnClick = true;
-            localToolStripMenuItem.Name = "localToolStripMenuItem";
-            localToolStripMenuItem.Text = "Local";
+            _localToolStripMenuItem.Checked = true;
+            _localToolStripMenuItem.CheckOnClick = true;
+            _localToolStripMenuItem.Name = "localToolStripMenuItem";
+            _localToolStripMenuItem.Text = "Local";
+
             //
             // tagsToolStripMenuItem
             //
-            tagsToolStripMenuItem.CheckOnClick = true;
-            tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
-            tagsToolStripMenuItem.Text = "Tag";
+            _tagsToolStripMenuItem.CheckOnClick = true;
+            _tagsToolStripMenuItem.Name = "tagToolStripMenuItem";
+            _tagsToolStripMenuItem.Text = "Tag";
+
             //
             // remoteToolStripMenuItem
             //
-            remoteToolStripMenuItem.CheckOnClick = true;
-            remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
-            remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            remoteToolStripMenuItem.Text = "Remote";
+            _remoteToolStripMenuItem.CheckOnClick = true;
+            _remoteToolStripMenuItem.Name = "remoteToolStripMenuItem";
+            _remoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            _remoteToolStripMenuItem.Text = "Remote";
         }
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGrid revisionGrid)
@@ -51,22 +54,24 @@ namespace GitUI
             _NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
             _NO_TRANSLATE_RevisionGrid = revisionGrid;
 
-            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[] {
-                localToolStripMenuItem,
-                tagsToolStripMenuItem,
-                remoteToolStripMenuItem });
+            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                _localToolStripMenuItem,
+                _tagsToolStripMenuItem,
+                _remoteToolStripMenuItem
+            });
 
-            this._NO_TRANSLATE_toolStripBranches.DropDown += this.toolStripBranches_DropDown;
-            this._NO_TRANSLATE_toolStripBranches.TextUpdate += this.toolStripBranches_TextUpdate;
-            this._NO_TRANSLATE_toolStripBranches.Leave += this.toolStripBranches_Leave;
-            this._NO_TRANSLATE_toolStripBranches.KeyUp += this.toolStripBranches_KeyUp;
+            _NO_TRANSLATE_toolStripBranches.DropDown += toolStripBranches_DropDown;
+            _NO_TRANSLATE_toolStripBranches.TextUpdate += toolStripBranches_TextUpdate;
+            _NO_TRANSLATE_toolStripBranches.Leave += toolStripBranches_Leave;
+            _NO_TRANSLATE_toolStripBranches.KeyUp += toolStripBranches_KeyUp;
         }
 
         public void InitToolStripBranchFilter()
         {
-            bool local = localToolStripMenuItem.Checked;
-            bool tag = tagsToolStripMenuItem.Checked;
-            bool remote = remoteToolStripMenuItem.Checked;
+            bool local = _localToolStripMenuItem.Checked;
+            bool tag = _tagsToolStripMenuItem.Checked;
+            bool remote = _remoteToolStripMenuItem.Checked;
 
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
 
@@ -76,7 +81,9 @@ namespace GitUI
                     branches =>
                     {
                         foreach (var branch in branches)
+                        {
                             _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+                        }
 
                         var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
                         if (!autoCompleteList.SequenceEqual(branches))
@@ -108,6 +115,7 @@ namespace GitUI
                 var branches = Module.GetRefs(true, true);
                 list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
+
             return list;
         }
 
@@ -120,7 +128,10 @@ namespace GitUI
         {
             var list = GetBranchHeads(local, remote);
             if (tag)
+            {
                 list.AddRange(GetTagsRefs());
+            }
+
             return list;
         }
 
@@ -148,6 +159,7 @@ namespace GitUI
             {
                 return;
             }
+
             _applyingFilter = true;
             try
             {
@@ -167,7 +179,7 @@ namespace GitUI
         private void UpdateBranchFilterItems()
         {
             string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
-            var branches = GetBranchAndTagRefs(localToolStripMenuItem.Checked, tagsToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            var branches = GetBranchAndTagRefs(_localToolStripMenuItem.Checked, _tagsToolStripMenuItem.Checked, _remoteToolStripMenuItem.Checked);
             var matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
 
             var index = _NO_TRANSLATE_toolStripBranches.SelectionStart;
@@ -197,9 +209,9 @@ namespace GitUI
         {
             if (disposing)
             {
-                localToolStripMenuItem.Dispose();
-                remoteToolStripMenuItem.Dispose();
-                tagsToolStripMenuItem.Dispose();
+                _localToolStripMenuItem.Dispose();
+                _remoteToolStripMenuItem.Dispose();
+                _tagsToolStripMenuItem.Dispose();
             }
         }
     }

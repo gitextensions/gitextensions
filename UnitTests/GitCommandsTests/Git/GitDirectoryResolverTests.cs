@@ -38,7 +38,6 @@ namespace GitCommandsTests.Git
             _resolver = new GitDirectoryResolver(_fileSystem);
         }
 
-
         [Test]
         public void Resolve_should_throw_if_path_is_null()
         {

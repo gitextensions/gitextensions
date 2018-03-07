@@ -35,7 +35,6 @@ namespace GitStatistics
 
         internal bool IsTestFile { get; private set; }
 
-
         private bool IsDesignerFile()
         {
             return
@@ -53,7 +52,9 @@ namespace GitStatistics
         {
             InitializeCountLines();
             if (!File.Exists)
+            {
                 return;
+            }
 
             using (var sr = new StreamReader(File.FullName, true))
             {
@@ -61,7 +62,9 @@ namespace GitStatistics
                 {
                     var line = sr.ReadLine();
                     if (line != null)
+                    {
                         IncrementLineCountsFromLine(line.TrimStart());
+                    }
                 }
             }
         }
@@ -90,26 +93,46 @@ namespace GitStatistics
             NumberLines++;
 
             if (_inCodeGeneratedRegion || _isDesignerFile)
+            {
                 NumberLinesInDesignerFiles++;
+            }
             else if (string.IsNullOrEmpty(line))
+            {
                 NumberBlankLines++;
+            }
             else if (_inCommentBlock || line.StartsWith("'") || line.StartsWith(@"//"))
+            {
                 NumberCommentsLines++;
+            }
             else if (File.Extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            {
                 NumberCommentsLines++;
+            }
             else if (File.Extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            {
                 NumberCommentsLines++;
+            }
             else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            {
                 NumberCommentsLines++;
+            }
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--"))
+            {
                 NumberCommentsLines++;
+            }
             else if (File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) && (line.Contains("@*") && line.Contains("*@")))
+            {
                 NumberCommentsLines++;
+            }
             else if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%"))
+            {
                 NumberCommentsLines++;
+            }
 
             if (!_skipResetFlag)
+            {
                 ResetCodeBlockFlags(line);
+            }
         }
 
         private void SetCodeBlockFlags(string line)
@@ -125,28 +148,45 @@ namespace GitStatistics
                 line.StartsWith("#Region \" Component Designer generated code \"") ||
                 line.StartsWith("#region Web Form Designer generated code") ||
                 line.StartsWith("#Region \" Web Form Designer Generated Code \""))
+            {
                 _inCodeGeneratedRegion = true;
+            }
 
             if (line.StartsWith("/*"))
+            {
                 _inCommentBlock = true;
+            }
 
             if (File.Extension.Equals(".pas", StringComparison.OrdinalIgnoreCase) || File.Extension.Equals(".inc", StringComparison.OrdinalIgnoreCase))
             {
                 if (line.StartsWith("(*") && !line.StartsWith("(*$"))
+                {
                     _inCommentBlock = true;
+                }
+
                 if (line.StartsWith("{") && !line.StartsWith("{$"))
+                {
                     _inCommentBlock = true;
+                }
             }
 
             if (File.Extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
+            {
                 _inCommentBlock = true;
+            }
             else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
+            {
                 _inCommentBlock = true;
+            }
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--[["))
+            {
                 _inCommentBlock = true;
+            }
 
             if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%{"))
+            {
                 _inCommentBlock = true;
+            }
 
             // If we're not in a code-generated region, we should still check for normal
             // comments. This should help improve accuracy on resx files
@@ -188,26 +228,40 @@ namespace GitStatistics
         private void ResetCodeBlockFlags(string line)
         {
             if (_inCodeGeneratedRegion && (line.Contains("#endregion") || line.Contains("#End Region")))
+            {
                 _inCodeGeneratedRegion = false;
+            }
 
             if (_inCommentBlock && line.Contains("*/"))
+            {
                 _inCommentBlock = false;
+            }
 
             if (File.Extension.ToLower() == ".pas" || File.Extension.ToLower() == ".inc")
             {
                 if (line.Contains("*)") || line.Contains("}"))
+                {
                     _inCommentBlock = false;
+                }
             }
 
             if (File.Extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
+            {
                 _inCommentBlock = false;
+            }
             else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
+            {
                 _inCommentBlock = false;
+            }
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
+            {
                 _inCommentBlock = false;
+            }
 
             if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
+            {
                 _inCommentBlock = false;
+            }
 
             if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
                 (File.Extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !_inCodeGeneratedRegion) ||
@@ -232,7 +286,9 @@ namespace GitStatistics
             if (File.Extension.Equals(".py", StringComparison.OrdinalIgnoreCase))
             {
                 if (line.Contains("'''") || line.Contains("\"\"\""))
+                {
                     _inCommentBlock = false;
+                }
             }
         }
     }

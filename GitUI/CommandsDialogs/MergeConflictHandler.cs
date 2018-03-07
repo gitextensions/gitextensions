@@ -13,11 +13,15 @@ namespace GitUI.CommandsDialogs
                 {
                     SolveMergeConflicts(aCommands, owner, offerCommit);
                 }
+
                 return true;
             }
 
             if (offerUpdateSubmodules)
+            {
                 aCommands.UpdateSubmodules(owner);
+            }
+
             return false;
         }
 

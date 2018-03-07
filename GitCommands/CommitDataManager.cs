@@ -34,9 +34,7 @@ namespace GitCommands
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
         /// <summary>
@@ -51,12 +49,10 @@ namespace GitCommands
         private const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
 
-
         public CommitDataManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
-
 
         /// <summary>
         /// Gets the commit info for submodule.
@@ -65,7 +61,9 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
+            {
                 throw new ArgumentNullException(nameof(sha1));
+            }
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -85,6 +83,7 @@ namespace GitCommands
                 error = "Cannot find commit " + sha1;
                 return;
             }
+
             if (index >= info.Length)
             {
                 error = info;
@@ -101,7 +100,9 @@ namespace GitCommands
         {
             var module = GetModule();
             if (sha1 == null)
+            {
                 throw new ArgumentNullException(nameof(sha1));
+            }
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -121,6 +122,7 @@ namespace GitCommands
                 error = "Cannot find commit " + sha1;
                 return null;
             }
+
             if (index >= info.Length)
             {
                 error = info;
@@ -141,7 +143,10 @@ namespace GitCommands
         public CommitData CreateFromFormatedData(string data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException(nameof(data));
+            }
+
             var module = GetModule();
 
             var lines = data.Split('\n');
@@ -179,13 +184,14 @@ namespace GitCommands
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="commitData"></param>
         /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException(nameof(data));
+            }
+
             var module = GetModule();
 
             var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
@@ -210,7 +216,9 @@ namespace GitCommands
         public CommitData CreateFromRevision(GitRevision revision)
         {
             if (revision == null)
+            {
                 throw new ArgumentNullException(nameof(revision));
+            }
 
             CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
                 String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
@@ -219,7 +227,6 @@ namespace GitCommands
             return data;
         }
 
-
         private IGitModule GetModule()
         {
             var module = _getModule();
@@ -227,6 +234,7 @@ namespace GitCommands
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
 
@@ -234,7 +242,9 @@ namespace GitCommands
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
+            {
                 endIndex--;
+            }
 
             var message = new StringBuilder();
             bool bNotesStart = false;
@@ -242,10 +252,15 @@ namespace GitCommands
             {
                 string line = lines[i];
                 if (bNotesStart)
+                {
                     line = "    " + line;
+                }
+
                 message.AppendLine(line);
                 if (lines[i] == "Notes:")
+                {
                     bNotesStart = true;
+                }
             }
 
             return message.ToString();

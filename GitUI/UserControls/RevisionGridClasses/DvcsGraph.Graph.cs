@@ -20,32 +20,33 @@ namespace GitUI.RevisionGridClasses
 
             public readonly List<Node> AddedNodes = new List<Node>();
 
-            private readonly List<Junction> junctions = new List<Junction>();
+            private readonly List<Junction> _junctions = new List<Junction>();
             public readonly Dictionary<string, Node> Nodes = new Dictionary<string, Node>();
-            private readonly Lanes lanes;
-            private int filterNodeCount;
+            private readonly Lanes _lanes;
+            private int _filterNodeCount;
 
-            private bool isFilter;
-            private int nodeCount;
-            private int processedNodes;
+            private bool _isFilter;
+            private int _nodeCount;
+            private int _processedNodes;
 
             public Graph()
             {
-                lanes = new Lanes(this);
+                _lanes = new Lanes(this);
             }
 
             public bool IsFilter
             {
-                get { return isFilter; }
+                get { return _isFilter; }
                 set
                 {
-                    isFilter = value;
-                    lanes.Clear();
+                    _isFilter = value;
+                    _lanes.Clear();
                     foreach (Node n in Nodes.Values)
                     {
                         n.InLane = int.MaxValue;
                     }
-                    foreach (Junction j in junctions)
+
+                    foreach (Junction j in _junctions)
                     {
                         j.CurrentState = Junction.State.Unprocessed;
                     }
@@ -62,16 +63,16 @@ namespace GitUI.RevisionGridClasses
                 {
                     if (IsFilter)
                     {
-                        return filterNodeCount;
+                        return _filterNodeCount;
                     }
 
-                    return nodeCount;
+                    return _nodeCount;
                 }
             }
 
-            public ILaneRow this[int col] => lanes[col];
+            public ILaneRow this[int col] => _lanes[col];
 
-            public int CachedCount => lanes.CachedCount;
+            public int CachedCount => _lanes.CachedCount;
 
             public void Filter(string aId)
             {
@@ -79,7 +80,7 @@ namespace GitUI.RevisionGridClasses
 
                 if (!node.IsFiltered)
                 {
-                    filterNodeCount++;
+                    _filterNodeCount++;
                     node.IsFiltered = true;
                 }
 
@@ -127,7 +128,9 @@ namespace GitUI.RevisionGridClasses
                     foreach (Junction junction in startNode.Ancestors)
                     {
                         if (junction.HighLight)
+                        {
                             continue;
+                        }
 
                         junction.HighLight = true;
 
@@ -144,9 +147,10 @@ namespace GitUI.RevisionGridClasses
                 if (!GetNode(aId, out var node) && (aParentIds == null || aParentIds.Length == 0))
                 {
                     var newJunction = new Junction(node, node);
-                    junctions.Add(newJunction);
+                    _junctions.Add(newJunction);
                 }
-                nodeCount++;
+
+                _nodeCount++;
                 node.Data = aData;
                 node.DataType = aType;
                 node.Index = AddedNodes.Count;
@@ -167,6 +171,7 @@ namespace GitUI.RevisionGridClasses
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
                         && node.Descendants[0].Oldest == node
                         && parent.Ancestors.Count == 0
+
                         // If this is true, the current revision is in the middle of a branch
                         // and is about to start a new branch. This will also mean that the last
                         // revisions are non-relative. Make sure a new junction is added and this
@@ -181,27 +186,27 @@ namespace GitUI.RevisionGridClasses
                     {
                         // The node is in the middle of a junction. We need to split it.
                         Junction splitNode = node.Ancestors[0].Split(node);
-                        junctions.Add(splitNode);
+                        _junctions.Add(splitNode);
 
                         // The node is a junction point. We are a new junction
                         var junction = new Junction(node, parent);
-                        junctions.Add(junction);
+                        _junctions.Add(junction);
                     }
                     else if (parent.Descendants.Count == 1 && parent.Descendants[0].Oldest != parent)
                     {
                         // The parent is in the middle of a junction. We need to split it.
                         Junction splitNode = parent.Descendants[0].Split(parent);
-                        junctions.Add(splitNode);
+                        _junctions.Add(splitNode);
 
                         // The node is a junction point. We are a new junction
                         var junction = new Junction(node, parent);
-                        junctions.Add(junction);
+                        _junctions.Add(junction);
                     }
                     else
                     {
                         // The node is a junction point. We are a new junction
                         var junction = new Junction(node, parent);
-                        junctions.Add(junction);
+                        _junctions.Add(junction);
                     }
                 }
 
@@ -231,44 +236,48 @@ namespace GitUI.RevisionGridClasses
                 {
                     // TODO: It would be nice if we didn't have to start completely over...but it wouldn't
                     // be easy since we don't keep around all of the necessary lane state for each step.
-                    int lastLane = lanes.Count - 1;
-                    lanes.Clear();
-                    lanes.CacheTo(lastLane);
+                    int lastLane = _lanes.Count - 1;
+                    _lanes.Clear();
+                    _lanes.CacheTo(lastLane);
 
                     // We need to signal the DvcsGraph object that it needs to redraw everything.
                     Updated?.Invoke(this);
                 }
                 else
                 {
-                    lanes.Update(node);
+                    _lanes.Update(node);
                 }
             }
 
             public void Clear()
             {
                 AddedNodes.Clear();
-                junctions.Clear();
+                _junctions.Clear();
                 Nodes.Clear();
-                lanes.Clear();
-                nodeCount = 0;
-                filterNodeCount = 0;
+                _lanes.Clear();
+                _nodeCount = 0;
+                _filterNodeCount = 0;
             }
 
             public void ProcessNode(Node aNode)
             {
-                if (isFilter)
+                if (_isFilter)
                 {
                     return;
                 }
-                for (int i = processedNodes; i < AddedNodes.Count; i++)
+
+                for (int i = _processedNodes; i < AddedNodes.Count; i++)
                 {
                     if (AddedNodes[i] == aNode)
                     {
                         bool isChanged = false;
-                        while (i > processedNodes)
+                        while (i > _processedNodes)
                         {
                             // This only happens if we weren't in topo order
-                            if (Debugger.IsAttached) Debugger.Break();
+                            if (Debugger.IsAttached)
+                            {
+                                Debugger.Break();
+                            }
 
                             Node temp = AddedNodes[i];
                             AddedNodes[i] = AddedNodes[i - 1];
@@ -279,9 +288,11 @@ namespace GitUI.RevisionGridClasses
 
                         // Signal that these rows have changed
                         if (isChanged)
+                        {
                             Updated?.Invoke(this);
+                        }
 
-                        processedNodes++;
+                        _processedNodes++;
                         break;
                     }
                 }
@@ -290,10 +301,12 @@ namespace GitUI.RevisionGridClasses
             public void Prune()
             {
                 Node[] nodesToRemove = Nodes.Values.Where(n => n.Data == null).ToArray();
+
                 // Remove all nodes that don't have a value associated with them.
                 foreach (Node n in nodesToRemove)
                 {
                     Nodes.Remove(n.Id);
+
                     // This guy should have been at the end of some junctions
                     foreach (Junction j in n.Descendants)
                     {
@@ -305,19 +318,20 @@ namespace GitUI.RevisionGridClasses
             public IEnumerable<Node> GetRefs()
             {
                 var nodes = new List<Node>();
-                foreach (Junction j in junctions)
+                foreach (Junction j in _junctions)
                 {
                     if (j.Youngest.Descendants.Count == 0 && !nodes.Contains(j.Youngest))
                     {
                         nodes.Add(j.Youngest);
                     }
                 }
+
                 return nodes;
             }
 
             public bool CacheTo(int idx)
             {
-                return lanes.CacheTo(idx);
+                return _lanes.CacheTo(idx);
             }
 
             // TopoSorting is an easy way to detect if something has gone wrong with the graph
@@ -345,8 +359,15 @@ namespace GitUI.RevisionGridClasses
                 {
                     foreach (Junction j in h.Ancestors)
                     {
-                        if (!S.Contains(j.Oldest)) S.Enqueue(j.Oldest);
-                        if (!S.Contains(j.Youngest)) S.Enqueue(j.Youngest);
+                        if (!S.Contains(j.Oldest))
+                        {
+                            S.Enqueue(j.Oldest);
+                        }
+
+                        if (!S.Contains(j.Youngest))
+                        {
+                            S.Enqueue(j.Youngest);
+                        }
                     }
                 }
 
@@ -359,11 +380,16 @@ namespace GitUI.RevisionGridClasses
                         P.Enqueue(n);
                         foreach (Junction e in n.Ancestors)
                         {
-                            if (localVisit != null) localVisit(e.Oldest);
+                            if (localVisit != null)
+                            {
+                                localVisit(e.Oldest);
+                            }
                         }
+
                         L.Enqueue(n);
                         return true;
                     }
+
                     return false;
                 };
                 foreach (Node n in S)
@@ -382,23 +408,25 @@ namespace GitUI.RevisionGridClasses
                         {
                             Debugger.Break();
                         }
+
                         if (!J.Contains(e))
                         {
                             J.Enqueue(e);
                         }
                     }
+
                     X.Enqueue(n);
                 }
 
-                if (J.Count != junctions.Count)
+                if (J.Count != _junctions.Count)
                 {
-                    foreach (var junction in junctions)
+                    foreach (var junction in _junctions)
                     {
                         if (!J.Contains(junction))
                         {
                             if (junction.Oldest != junction.Youngest)
                             {
-                                Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, junctions.Count);
+                                Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, _junctions.Count);
                             }
                         }
                     }
@@ -415,6 +443,7 @@ namespace GitUI.RevisionGridClasses
                     Nodes.Add(aId, aNode);
                     return false;
                 }
+
                 return true;
             }
 
@@ -422,34 +451,35 @@ namespace GitUI.RevisionGridClasses
 
             public struct LaneInfo
             {
-                private List<Junction> junctions;
+                private List<Junction> _junctions;
 
                 public LaneInfo(int aConnectLane, Junction aJunction)
                 {
                     ConnectLane = aConnectLane;
-                    junctions = new List<Junction>(1) { aJunction };
+                    _junctions = new List<Junction>(1) { aJunction };
                 }
 
                 public int ConnectLane { get; set; }
 
-                public IEnumerable<Junction> Junctions => junctions;
+                public IEnumerable<Junction> Junctions => _junctions;
 
                 public LaneInfo Clone()
                 {
-                    var other = new LaneInfo { ConnectLane = ConnectLane, junctions = new List<Junction>(junctions) };
+                    var other = new LaneInfo { ConnectLane = ConnectLane, _junctions = new List<Junction>(_junctions) };
                     return other;
                 }
 
                 public void UnionWith(LaneInfo aOther)
                 {
-                    foreach (Junction other in aOther.junctions)
+                    foreach (Junction other in aOther._junctions)
                     {
-                        if (!junctions.Contains(other))
+                        if (!_junctions.Contains(other))
                         {
-                            junctions.Add(other);
+                            _junctions.Add(other);
                         }
                     }
-                    junctions.TrimExcess();
+
+                    _junctions.TrimExcess();
                 }
 
                 public static implicit operator int(LaneInfo a)

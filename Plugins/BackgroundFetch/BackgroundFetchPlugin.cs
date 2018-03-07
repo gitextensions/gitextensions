@@ -15,29 +15,29 @@ namespace BackgroundFetch
             Translate();
         }
 
-        private IDisposable cancellationToken;
-        private IGitUICommands currentGitUiCommands;
+        private IDisposable _cancellationToken;
+        private IGitUICommands _currentGitUiCommands;
 
-        private StringSetting GitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
-        private NumberSetting<int> FetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
-        private BoolSetting AutoRefresh = new BoolSetting("Refresh view after fetch", false);
-        private BoolSetting FetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
+        private StringSetting _GitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
+        private NumberSetting<int> _FetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
+        private BoolSetting _AutoRefresh = new BoolSetting("Refresh view after fetch", false);
+        private BoolSetting _FetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
 
         public override IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
-            yield return GitCommand;
-            yield return FetchInterval;
-            yield return AutoRefresh;
-            yield return FetchAllSubmodules;
+            yield return _GitCommand;
+            yield return _FetchInterval;
+            yield return _AutoRefresh;
+            yield return _FetchAllSubmodules;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
         {
             base.Register(gitUiCommands);
 
-            currentGitUiCommands = gitUiCommands;
-            currentGitUiCommands.PostSettings += OnPostSettings;
+            _currentGitUiCommands = gitUiCommands;
+            _currentGitUiCommands.PostSettings += OnPostSettings;
 
             RecreateObservable();
         }
@@ -51,18 +51,20 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            int fetchInterval = FetchInterval.ValueOrDefault(Settings);
+            int fetchInterval = _FetchInterval.ValueOrDefault(Settings);
 
-            var gitModule = currentGitUiCommands.GitModule;
+            var gitModule = _currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
             {
-                cancellationToken =
+                _cancellationToken =
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
                               .SelectMany(i =>
                               {
                                   // if git not runing - start fetch immediately
                                   if (!gitModule.IsRunningGitProcess())
+                                  {
                                       return Observable.Return(i);
+                                  }
 
                                   // in other case - every 5 seconds check if git still runnnig
                                   return Observable
@@ -75,20 +77,26 @@ namespace BackgroundFetch
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
-                                      if (FetchAllSubmodules.ValueOrDefault(Settings))
-                                          currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
+                                      if (_FetchAllSubmodules.ValueOrDefault(Settings))
+                                      {
+                                          _currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
+                                      }
 
-                                      var gitCmd = GitCommand.ValueOrDefault(Settings).Trim();
-                                      var msg = currentGitUiCommands.GitCommand(gitCmd);
-                                      if (AutoRefresh.ValueOrDefault(Settings))
+                                      var gitCmd = _GitCommand.ValueOrDefault(Settings).Trim();
+                                      var msg = _currentGitUiCommands.GitCommand(gitCmd);
+                                      if (_AutoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {
                                               if (msg.Contains("From"))
-                                                  currentGitUiCommands.RepoChangedNotifier.Notify();
+                                              {
+                                                  _currentGitUiCommands.RepoChangedNotifier.Notify();
+                                              }
                                           }
                                           else
-                                              currentGitUiCommands.RepoChangedNotifier.Notify();
+                                          {
+                                              _currentGitUiCommands.RepoChangedNotifier.Notify();
+                                          }
                                       }
                                   });
             }
@@ -96,10 +104,10 @@ namespace BackgroundFetch
 
         private void CancelBackgroundOperation()
         {
-            if (cancellationToken != null)
+            if (_cancellationToken != null)
             {
-                cancellationToken.Dispose();
-                cancellationToken = null;
+                _cancellationToken.Dispose();
+                _cancellationToken = null;
             }
         }
 
@@ -107,10 +115,10 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            if (currentGitUiCommands != null)
+            if (_currentGitUiCommands != null)
             {
-                currentGitUiCommands.PostSettings -= OnPostSettings;
-                currentGitUiCommands = null;
+                _currentGitUiCommands.PostSettings -= OnPostSettings;
+                _currentGitUiCommands = null;
             }
 
             base.Unregister(gitUiCommands);

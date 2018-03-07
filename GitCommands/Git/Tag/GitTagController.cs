@@ -30,7 +30,8 @@ namespace GitCommands.Git.Tag
 
         public GitTagController(IGitUICommands uiCommands)
             : this(uiCommands, new FileSystem())
-        { }
+        {
+        }
 
         /// <summary>
         /// Create the Tag depending on input parameter.

@@ -40,7 +40,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             {
                 var current = (string)worktreesLines.Current;
                 if (string.IsNullOrWhiteSpace(current))
+                {
                     continue;
+                }
 
                 var strings = current.Split(' ');
                 if (strings[0] == "worktree")
@@ -70,6 +72,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     }
                 }
             }
+
             Worktrees.DataSource = _worktrees;
             for (var i = 0; i < Worktrees.Rows.Count; i++)
             {
@@ -77,7 +80,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 {
                     Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
                     if (IsCurrentlyOpenedWorktree(_worktrees[0]))
+                    {
                         Worktrees.Rows[i].Cells["Open"].Value = Resources.IconBlank;
+                    }
                 }
                 else if (!CanDeleteWorkspace(_worktrees[i]))
                 {
@@ -85,17 +90,27 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
                 }
             }
+
             buttonPruneWorktrees.Enabled = _worktrees.Skip(1).Any(w => w.IsDeleted);
         }
 
         private bool CanDeleteWorkspace(WorkTree workTree)
         {
             if (workTree.IsDeleted)
+            {
                 return false;
+            }
+
             if (_worktrees.Count == 1)
+            {
                 return false;
+            }
+
             if (IsCurrentlyOpenedWorktree(workTree))
+            {
                 return false;
+            }
+
             return true;
         }
 
@@ -103,7 +118,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             return new DirectoryInfo(UICommands.GitModule.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
         }
-
 
         /// <summary>
         /// Here are the 3 types of lines return by the `worktree list --porcelain` that should be handled:
@@ -157,10 +171,15 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private void Worktrees_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex < 5)
+            {
                 return;
+            }
+
             var workTree = _worktrees[e.RowIndex];
             if (!CanDeleteWorkspace(workTree))
+            {
                 return;
+            }
 
             if (e.ColumnIndex == 5)
             {
@@ -173,13 +192,17 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                         Close();
                     }
                 }
+
                 return;
             }
 
             if (e.ColumnIndex == 6)
             {
                 if (e.RowIndex == 0)
+                {
                     return;
+                }
+
                 if (MessageBox.Show(this, "Are you sure you want to delete this worktree?", "Delete a worktree",
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -187,6 +210,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     {
                         Directory.Delete(workTree.Path, true);
                     }
+
                     PruneWorktrees();
                 }
             }

@@ -43,9 +43,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             string exec = MergeToolsHelper.FindFileInFolders(executableName, installFolders);
             if (String.IsNullOrEmpty(exec))
+            {
                 exec = editorName;
+            }
             else
+            {
                 exec = "\"" + exec + "\"";
+            }
+
             return exec + commandLineParameter;
         }
     }

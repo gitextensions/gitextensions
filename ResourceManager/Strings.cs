@@ -22,6 +22,7 @@ namespace ResourceManager
                 {
                     _instance = new Strings();
                 }
+
                 return _instance;
             }
         }
@@ -114,7 +115,6 @@ namespace ResourceManager
         private readonly TranslationString _currentIndex   = new TranslationString("Commit index");
         private readonly TranslationString _loadingData    = new TranslationString("Loading data...");
         private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
-
 
         public static string GetNSecondsAgoText(int value)
         {

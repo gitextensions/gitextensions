@@ -34,7 +34,6 @@ namespace GitCommands.Git
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
         private readonly IFileSystem _fileSystem;
 
-
         public IndexLockManager(IGitModule module, IGitDirectoryResolver gitDirectoryResolver, IFileSystem fileSystem)
         {
             _module = module;
@@ -46,7 +45,6 @@ namespace GitCommands.Git
             : this(module, new GitDirectoryResolver(), new FileSystem())
         {
         }
-
 
         /// <summary>
         /// Determines whether the given repository has index.lock file.
@@ -88,7 +86,6 @@ namespace GitCommands.Git
                 DeleteIndexLock(indexLock);
             }
         }
-
 
         private void DeleteIndexLock(string fileName)
         {

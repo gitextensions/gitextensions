@@ -26,25 +26,25 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
-        private AsyncLoader loader = new AsyncLoader();
+        private AsyncLoader _loader = new AsyncLoader();
 
         // only for translation
         private ViewPullRequestsForm()
             : this(null)
-        { }
+        {
+        }
 
         private ViewPullRequestsForm(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
-            loader.LoadingError += (sender, ex) =>
+            _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
         }
-
 
         public ViewPullRequestsForm(GitUICommands aCommands, IRepositoryHostPlugin gitHoster)
             : this(aCommands)
@@ -69,12 +69,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _isFirstLoad = true;
 
             this.Mask();
-            loader.Load(
+            _loader.Load(
                 () =>
                 {
                     var t = _gitHoster.GetHostedRemotesForModule(Module).ToList();
                     foreach (var el in t)
+                    {
                         el.GetHostedRepository(); // We do this now because we want to do it in the async part.
+                    }
+
                     return t;
                 },
                 hostedRemotes =>
@@ -82,7 +85,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
                     foreach (var hostedRepo in _hostedRemotes)
+                    {
                         _selectHostedRepoCB.Items.Add(hostedRepo);
+                    }
 
                     SelectHostedRepositoryForCurrentRemote();
                     this.UnMask();
@@ -95,7 +100,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var hostedRepo = hostedRemote?.GetHostedRepository();
             if (hostedRepo == null)
+            {
                 return;
+            }
 
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
@@ -123,7 +130,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _pullRequestsList.Items.Clear();
 
             if (_pullRequestsInfo == null)
+            {
                 return;
+            }
 
             LoadListView();
         }
@@ -139,7 +148,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             if (hostedRemote == null)
             {
                 if (_selectHostedRepoCB.Items.Count > 0)
+                {
                     _selectHostedRepoCB.SelectedIndex = 0;
+                }
             }
             else
             {
@@ -150,11 +161,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void SelectNextHostedRepository()
         {
             if (_selectHostedRepoCB.Items.Count == 0)
+            {
                 return;
+            }
 
             int i = _selectHostedRepoCB.SelectedIndex + 1;
             if (i >= _selectHostedRepoCB.Items.Count)
+            {
                 i = 0;
+            }
+
             _selectHostedRepoCB.SelectedIndex = i;
             _selectedOwner_SelectedIndexChanged(null, null);
         }
@@ -185,8 +201,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 lvi.SubItems.Add(info.Created.ToString());
                 _pullRequestsList.Items.Add(lvi);
             }
+
             if (_pullRequestsList.Items.Count > 0)
+            {
                 _pullRequestsList.Items[0].Selected = true;
+            }
         }
 
         private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
@@ -203,10 +222,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
             if (prevPri != null && prevPri.Equals(_currentPullRequestInfo))
+            {
                 return;
+            }
 
             if (_currentPullRequestInfo == null)
+            {
                 return;
+            }
+
             _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
             _diffViewer.ViewPatch("");
             _fileStatusList.SetDiffs();
@@ -238,7 +262,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             if (_discussionWB.Document != null)
             {
                 if (_discussionWB.Document.Window != null && _discussionWB.Document.Body != null)
+                {
                     _discussionWB.Document.Window.ScrollTo(0, _discussionWB.Document.Body.ScrollRectangle.Height);
+                }
             }
         }
 
@@ -287,7 +313,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _fetchBtn_Click(object sender, EventArgs e)
         {
             if (_currentPullRequestInfo == null)
+            {
                 return;
+            }
 
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
@@ -295,7 +323,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
             if (errorOccurred)
+            {
                 return;
+            }
 
             UICommands.RepoChangedNotifier.Notify();
 
@@ -305,7 +335,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _addAsRemoteAndFetch_Click(object sender, EventArgs e)
         {
             if (_currentPullRequestInfo == null)
+            {
                 return;
+            }
 
             UICommands.RepoChangedNotifier.Lock();
             try
@@ -332,6 +364,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
                         return;
                     }
+
                     UICommands.RepoChangedNotifier.Notify();
                 }
 
@@ -339,18 +372,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
                 if (errorOccurred)
+                {
                     return;
+                }
 
                 UICommands.RepoChangedNotifier.Notify();
 
                 cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
                 if (FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd))
+                {
                     UICommands.RepoChangedNotifier.Notify();
+                }
             }
             finally
             {
                 UICommands.RepoChangedNotifier.UnLock(false);
             }
+
             Close();
         }
 
@@ -358,7 +396,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var gis = _fileStatusList.SelectedItem;
             if (gis == null)
+            {
                 return;
+            }
 
             var data = _diffCache[gis.Name];
             _diffViewer.ViewPatch(data);
@@ -367,7 +407,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _closePullRequestBtn_Click(object sender, EventArgs e)
         {
             if (_currentPullRequestInfo == null)
+            {
                 return;
+            }
 
             try
             {
@@ -384,7 +426,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             string text = _postCommentText.Text;
             if (_currentPullRequestInfo == null || text == null || text.Trim().Length == 0)
+            {
                 return;
+            }
 
             try
             {
@@ -411,7 +455,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _refreshCommentsBtn_Click(object sender, EventArgs e)
         {
             if (_currentPullRequestInfo == null)
+            {
                 return;
+            }
 
             try
             {
@@ -432,8 +478,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (disposing)
             {
-                loader.Cancel();
-                loader.Dispose();
+                _loader.Cancel();
+                _loader.Dispose();
                 components?.Dispose();
             }
 

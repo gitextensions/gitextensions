@@ -36,16 +36,16 @@ namespace Gource
             Translate();
         }
 
-        private StringSetting GourcePath = new StringSetting("Path to Gource", "");
-        private StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        private StringSetting _GourcePath = new StringSetting("Path to Gource", "");
+        private StringSetting _GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 
         public override IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
-            yield return GourcePath;
-            yield return GourceArguments;
+            yield return _GourcePath;
+            yield return _GourceArguments;
         }
 
         public override bool Execute(GitUIBaseEventArgs eventArgs)
@@ -58,7 +58,7 @@ namespace Gource
                 return false;
             }
 
-            var pathToGource = GourcePath.ValueOrDefault(Settings);
+            var pathToGource = _GourcePath.ValueOrDefault(Settings);
 
             if (!string.IsNullOrEmpty(pathToGource))
             {
@@ -68,8 +68,8 @@ namespace Gource
                             string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        Settings.SetValue<string>(GourcePath.Name, GourcePath.DefaultValue, s => s);
-                        pathToGource = GourcePath.DefaultValue;
+                        Settings.SetValue<string>(_GourcePath.Name, _GourcePath.DefaultValue, s => s);
+                        pathToGource = _GourcePath.DefaultValue;
                     }
                 }
             }
@@ -86,6 +86,7 @@ namespace Gource
                         MessageBox.Show(ownerForm, _cannotFindGource.Text);
                         return false;
                     }
+
                     var downloadDir = Path.GetTempPath();
                     var fileName = Path.Combine(downloadDir, "gource.zip");
                     var downloadSize = DownloadFile(gourceUrl, fileName);
@@ -109,12 +110,13 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments.ValueOrDefault(Settings)))
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs, _GourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
-                Settings.SetValue<string>(GourceArguments.Name, gourceStart.GourceArguments, s => s);
-                Settings.SetValue<string>(GourcePath.Name, gourceStart.PathToGource, s => s);
+                Settings.SetValue<string>(_GourceArguments.Name, gourceStart.GourceArguments, s => s);
+                Settings.SetValue<string>(_GourcePath.Name, gourceStart.PathToGource, s => s);
             }
+
             return true;
         }
 
@@ -131,19 +133,26 @@ namespace Gource
                 {
                     var directoryName = outputFolder;
                     var fileName = Path.GetFileName(theEntry.Name);
+
                     // create directory
                     if (directoryName != "")
                     {
                         Directory.CreateDirectory(directoryName);
                     }
+
                     if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
+                    {
                         continue;
+                    }
 
                     var fullPath = Path.Combine(directoryName, theEntry.Name);
                     fullPath = fullPath.Replace("\\ ", "\\");
                     var fullDirPath = Path.GetDirectoryName(fullPath);
                     if (fullDirPath != null && !Directory.Exists(fullDirPath))
+                    {
                         Directory.CreateDirectory(fullDirPath);
+                    }
+
                     var streamWriter = File.Create(fullPath);
                     var data = new byte[2048];
                     while (true)
@@ -158,11 +167,15 @@ namespace Gource
                             break;
                         }
                     }
+
                     streamWriter.Close();
                 }
+
                 s.Close();
                 if (deleteZipFile)
+                {
                     File.Delete(zipPathAndFile);
+                }
             }
             catch (Exception e)
             {
@@ -210,7 +223,8 @@ namespace Gource
 
                     // Increment total bytes processed
                     bytesProcessed += bytesRead;
-                } while (bytesRead > 0);
+                }
+                while (bytesRead > 0);
             }
             catch (Exception e)
             {

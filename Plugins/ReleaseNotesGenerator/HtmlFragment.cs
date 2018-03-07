@@ -6,7 +6,6 @@ using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-
 namespace ReleaseNotesGenerator
 {
     /// <summary>
@@ -16,6 +15,7 @@ namespace ReleaseNotesGenerator
     internal class HtmlFragment
     {
         #region Read and decode from clipboard
+
         /// <summary>
         /// Get a HTML fragment from the clipboard.
         /// </summary>
@@ -69,13 +69,21 @@ namespace ReleaseNotesGenerator
 
                     // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
                     case "starthtml":
-                        if (startHmtl != 0) throw new FormatException("StartHtml is already declared");
+                        if (startHmtl != 0)
+                        {
+                            throw new FormatException("StartHtml is already declared");
+                        }
+
                         startHmtl = int.Parse(val);
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the context, or -1 if no context.
                     case "endhtml":
-                        if (startHmtl == 0) throw new FormatException("StartHTML must be declared before endHTML");
+                        if (startHmtl == 0)
+                        {
+                            throw new FormatException("StartHTML must be declared before endHTML");
+                        }
+
                         int endHtml = int.Parse(val);
 
                         Context = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
@@ -83,13 +91,21 @@ namespace ReleaseNotesGenerator
 
                     // Byte count from the beginning of the clipboard to the start of the fragment.
                     case "startfragment":
-                        if (startFragment != 0) throw new FormatException("StartFragment is already declared");
+                        if (startFragment != 0)
+                        {
+                            throw new FormatException("StartFragment is already declared");
+                        }
+
                         startFragment = int.Parse(val);
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the fragment.
                     case "endfragment":
-                        if (startFragment == 0) throw new FormatException("StartFragment must be declared before EndFragment");
+                        if (startFragment == 0)
+                        {
+                            throw new FormatException("StartFragment must be declared before EndFragment");
+                        }
+
                         int endFragment = int.Parse(val);
                         Fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
                         break;
@@ -107,7 +123,6 @@ namespace ReleaseNotesGenerator
             }
         }
 
-
         // Data. See properties for descriptions.
 
         /// <summary>
@@ -115,19 +130,16 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public string Version { get; }
 
-
         /// <summary>
         /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is enclosed in.
         /// May be null if context is not specified.
         /// </summary>
         public string Context { get; }
 
-
         /// <summary>
         /// Get just the fragment of HTML text.
         /// </summary>
         public string Fragment { get; }
-
 
         /// <summary>
         /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
@@ -137,6 +149,7 @@ namespace ReleaseNotesGenerator
         #endregion // Read and decode from clipboard
 
         #region Write to Clipboard
+
         // Helper to convert an integer into an 8 digit string.
         // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.
         internal static string To8DigitString(int x)
@@ -156,7 +169,6 @@ namespace ReleaseNotesGenerator
             CopyToClipboard(htmlFragment, null, null);
         }
 
-
         /// <summary>
         /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
         /// </summary>
@@ -168,6 +180,7 @@ namespace ReleaseNotesGenerator
             var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
             Clipboard.Clear();
             Clipboard.SetDataObject(dataObject);
+
             // now the clipboard can be pasted as text (HTML code) to text editor
             // or as table to MS Word or LibreOffice Writer
         }
@@ -196,6 +209,7 @@ namespace ReleaseNotesGenerator
             {
                 sb.AppendFormat("SourceURL:{0}", sourceUri);
             }
+
             int startHtml = sb.Length;
 
             const string pre =

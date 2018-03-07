@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+        private readonly Dictionary<String, object> _ByNameMap = new Dictionary<String, object>();
 
         public SettingsCache()
         {
@@ -33,7 +32,7 @@ namespace GitCommands
 
         public T LockedAction<T>(Func<T> action)
         {
-            lock (ByNameMap)
+            lock (_ByNameMap)
             {
                 return action();
             }
@@ -51,7 +50,7 @@ namespace GitCommands
             LockedAction(() =>
             {
                 ClearImpl();
-                ByNameMap.Clear();
+                _ByNameMap.Clear();
             });
         }
 
@@ -76,12 +75,13 @@ namespace GitCommands
                     foreach (var pair in keyValuePairs)
                     {
                         if (pair.Item2 != null)
+                        {
                             SetValueImpl(pair.Item1, pair.Item2);
+                        }
                     }
 
                     Save();
                 });
-
         }
 
         protected void EnsureSettingsAreUpToDate()
@@ -104,7 +104,9 @@ namespace GitCommands
                 string inMemValue = GetValue(name);
 
                 if (string.Equals(inMemValue, value))
+                {
                     return;
+                }
 
                 SetValueImpl(name, value);
 
@@ -131,9 +133,13 @@ namespace GitCommands
             string s;
 
             if (value == null)
+            {
                 s = null;
+            }
             else
+            {
                 s = encode(value);
+            }
 
             return LockedAction<bool>(() =>
             {
@@ -147,20 +153,24 @@ namespace GitCommands
             string s;
 
             if (value == null)
+            {
                 s = null;
+            }
             else
+            {
                 s = encode(value);
+            }
 
             LockedAction(() =>
             {
                 SetValue(name, s);
                 if (s == null)
                 {
-                    ByNameMap[name] = null;
+                    _ByNameMap[name] = null;
                 }
                 else
                 {
-                    ByNameMap[name] = value;
+                    _ByNameMap[name] = value;
                 }
             });
         }
@@ -174,7 +184,7 @@ namespace GitCommands
             {
                 EnsureSettingsAreUpToDate();
 
-                if (ByNameMap.TryGetValue(name, out o))
+                if (_ByNameMap.TryGetValue(name, out o))
                 {
                     if (o == null)
                     {
@@ -194,7 +204,9 @@ namespace GitCommands
                 else
                 {
                     if (decode == null)
+                    {
                         throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
+                    }
 
                     string s = GetValue(name);
 
@@ -205,7 +217,7 @@ namespace GitCommands
                     }
 
                     val = decode(s);
-                    ByNameMap[name] = val;
+                    _ByNameMap[name] = val;
                     return true;
                 }
             });

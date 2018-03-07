@@ -14,34 +14,42 @@ namespace GitUI.UserControls
         /// and all items in the group are displayed.
         /// </summary>
         Normal = 0,
+
         /// <summary>
         /// The group is collapsed.
         /// </summary>
         Collapsed = 1,
+
         /// <summary>
         /// The group is hidden.
         /// </summary>
         Hidden = 2,
+
         /// <summary>
         /// Version 6.00 and Windows Vista. The group does not display a header.
         /// </summary>
         NoHeader = 4,
+
         /// <summary>
         /// Version 6.00 and Windows Vista. The group can be collapsed.
         /// </summary>
         Collapsible = 8,
+
         /// <summary>
         /// Version 6.00 and Windows Vista. The group has keyboard focus.
         /// </summary>
         Focused = 16,
+
         /// <summary>
         /// Version 6.00 and Windows Vista. The group is selected.
         /// </summary>
         Selected = 32,
+
         /// <summary>
         /// Version 6.00 and Windows Vista. The group displays only a portion of its items.
         /// </summary>
         SubSeted = 64,
+
         /// <summary>
         /// Version 6.00 and Windows Vista. The subset link of the group has keyboard focus.
         /// </summary>
@@ -133,6 +141,7 @@ namespace GitUI.UserControls
                 public LVHITTESTFLAGS flags;
                 public int iItem;
                 public int iSubItem;
+
                 // Vista/Win7+
                 public int iGroup;
             }
@@ -152,6 +161,7 @@ namespace GitUI.UserControls
                 LVHT_BELOW = 0x00000010,
                 LVHT_TORIGHT = 0x00000020,
                 LVHT_TOLEFT = 0x00000040,
+
                 // Vista/Win7+ only
                 LVHT_EX_GROUP_HEADER = 0x10000000,
                 LVHT_EX_GROUP_FOOTER = 0x20000000,
@@ -216,10 +226,15 @@ namespace GitUI.UserControls
                     {
                         // NM_CUSTOMDRAW
                         if (_isInWmPaintMsg)
+                        {
                             base.WndProc(ref m);
+                        }
                     }
                     else
+                    {
                         base.WndProc(ref m);
+                    }
+
                     break;
                 case NativeMethods.WM_LBUTTONUP:
                 case NativeMethods.WM_LBUTTONDOWN:
@@ -230,8 +245,13 @@ namespace GitUI.UserControls
                     // if the click is on the group header, exit, otherwise send message
                     var handleRef = new HandleRef(this, Handle);
                     if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != new IntPtr(-1))
+                    {
                         if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
+                        {
                             return;
+                        }
+                    }
+
                     base.WndProc(ref m);
                     break;
                 default:
@@ -254,13 +274,16 @@ namespace GitUI.UserControls
                     rtnval = tmprtnval as int?;
                 }
             }
+
             return rtnval;
         }
 
         private void setGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
         {
             if (lstvwgrp == null)
+            {
                 return;
+            }
 
             int? GrpId = GetGroupID(lstvwgrp);
             int gIndex = Groups.IndexOf(lstvwgrp);
@@ -280,10 +303,15 @@ namespace GitUI.UserControls
         public void SetGroupState(ListViewGroupState state)
         {
             if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward
+            {
                 // allows collapse of ListViewGroups
                 return;
+            }
+
             foreach (ListViewGroup lvg in Groups)
+            {
                 setGrpState(lvg, state);
+            }
         }
     }
 }

@@ -19,7 +19,9 @@ namespace ResourceManager.Xliff
         public static TranslationFile Deserialize(string path)
         {
             if (!File.Exists(path))
+            {
                 return null;
+            }
 
             XmlSerializer serializer = new XmlSerializer(typeof(TranslationFile));
             TextReader stringReader = null;

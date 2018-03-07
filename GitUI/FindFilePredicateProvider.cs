@@ -10,7 +10,6 @@ namespace GitUI
         /// Returns the names of files that match the specified search pattern
         /// </summary>
         /// <param name="searchPattern">The search string to match against the pathes of files</param>
-        /// <param name="workingDir"></param>
         Func<string, bool> Get([NotNull] string searchPattern, [NotNull] string workingDir);
     }
 
@@ -19,9 +18,14 @@ namespace GitUI
         public Func<string, bool> Get(string searchPattern, string workingDir)
         {
             if (searchPattern == null)
+            {
                 throw new ArgumentNullException(nameof(searchPattern));
+            }
+
             if (workingDir == null)
+            {
                 throw new ArgumentNullException(nameof(workingDir));
+            }
 
             var pattern = searchPattern.ToPosixPath();
             var dir = workingDir.ToPosixPath();

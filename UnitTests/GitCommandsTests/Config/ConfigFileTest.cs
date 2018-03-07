@@ -26,7 +26,10 @@ namespace GitCommandsTests.Config
             get
             {
                 if (_Module == null)
+                {
                     _Module = new GitModule(GetTempFolder());
+                }
+
                 return _Module;
             }
         }
@@ -84,6 +87,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile configFile = new ConfigFile(GetConfigFileName() + "\\", false);
 
             Assert.IsNotNull(configFile);
@@ -312,6 +316,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasValue("section1.key1"));
             Assert.IsFalse(file.HasValue("section10.key1"));
@@ -324,6 +329,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(file.HasConfigSection("section1"));
             Assert.IsFalse(file.HasConfigSection("inexistent.section"));
@@ -337,6 +343,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
             CheckValueIsEqual(configFile, "section1.key1", "value1");
             CheckValueIsEqual(configFile, "section2.subsection.key2", "value2");
@@ -414,6 +421,7 @@ namespace GitCommandsTests.Config
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
+
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
             Assert.IsTrue(configFile.ConfigSections.Count == 3);
             configFile.RemoveConfigSection("section1");
@@ -456,7 +464,6 @@ namespace GitCommandsTests.Config
                 CheckValueIsEqual(configFile, "section1.key1", "newvalue1");
             }
         }
-
 
         [TestMethod]
         public void RandomTestCase1()
@@ -533,8 +540,6 @@ namespace GitCommandsTests.Config
                 content.AppendLine("	fetch = +refs/heads/*:refs/remotes/test/*");
                 content.AppendLine("	puttykeyfile = C:/Users/sergiy.pustovit/spustovit_sintez_key_1.ppk");
 
-
-
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
             }
@@ -609,7 +614,6 @@ namespace GitCommandsTests.Config
                 CheckValueIsEqual(configFile, "bugtraq.logregex", "data\\newline");
             }
         }
-
 
         [TestMethod]
         public void CommentsTest()
@@ -711,6 +715,7 @@ namespace GitCommandsTests.Config
                 AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
                 AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
             }
+
             // verify
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);

@@ -20,10 +20,10 @@ namespace GitUI.RevisionGridClasses
 
             private static uint debugIdNext;
 
-            private readonly List<Node> nodes = new List<Node>();
-            private readonly Dictionary<Node, int> nodeIndices = new Dictionary<Node, int>();
+            private readonly List<Node> _nodes = new List<Node>();
+            private readonly Dictionary<Node, int> _nodeIndices = new Dictionary<Node, int>();
 
-            private readonly uint debugId;
+            private readonly uint _debugId;
 
             public State CurrentState = State.Unprocessed;
             public bool IsRelative;
@@ -31,7 +31,7 @@ namespace GitUI.RevisionGridClasses
 
             public Junction(Node aNode, Node aParent)
             {
-                debugId = debugIdNext++;
+                _debugId = debugIdNext++;
 
                 AddNode(aNode);
                 if (aNode != aParent)
@@ -46,7 +46,7 @@ namespace GitUI.RevisionGridClasses
             {
                 // Private constructor used by split. This junction will be a
                 // ancestor of an existing junction.
-                debugId = debugIdNext++;
+                _debugId = debugIdNext++;
                 aNode.Ancestors.Remove(aDescendant);
                 AddNode(aNode);
             }
@@ -57,20 +57,24 @@ namespace GitUI.RevisionGridClasses
 
             public Node ChildOf(Node aParent)
             {
-                if (nodeIndices.TryGetValue(aParent, out var childIndex))
+                if (_nodeIndices.TryGetValue(aParent, out var childIndex))
                 {
                     if (childIndex > 0)
-                        return nodes[childIndex - 1];
+                    {
+                        return _nodes[childIndex - 1];
+                    }
                     else
+                    {
                         throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
+                    }
                 }
 
                 throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + aParent.ToString());
             }
 
-            public int NodesCount => nodes.Count;
+            public int NodesCount => _nodes.Count;
 
-            public Node this[int index] => nodes[index];
+            public Node this[int index] => _nodes[index];
 
             public void Add(Node aParent)
             {
@@ -89,10 +93,13 @@ namespace GitUI.RevisionGridClasses
             {
                 // The 'top' (Child->node) of the junction is retained by this.
                 // The 'bottom' (node->Parent) of the junction is returned.
-                if (!nodeIndices.TryGetValue(aNode, out var index))
+                if (!_nodeIndices.TryGetValue(aNode, out var index))
+                {
                     return null;
+                }
 
                 var bottom = new Junction(this, aNode);
+
                 // Add 1, since aNode was at the index
                 index += 1;
                 while (index < NodesCount)
@@ -109,24 +116,24 @@ namespace GitUI.RevisionGridClasses
 
             public Node TryGetParent(Node child)
             {
-                return nodeIndices.TryGetValue(child, out var childIndex) ? nodes[childIndex + 1] : null;
+                return _nodeIndices.TryGetValue(child, out var childIndex) ? _nodes[childIndex + 1] : null;
             }
 
             private void AddNode(Node node)
             {
-                nodeIndices.Add(node, NodesCount);
-                nodes.Add(node);
+                _nodeIndices.Add(node, NodesCount);
+                _nodes.Add(node);
             }
 
             private void RemoveNode(Node node)
             {
-                nodeIndices.Remove(node);
-                nodes.Remove(node);
+                _nodeIndices.Remove(node);
+                _nodes.Remove(node);
             }
 
             public override string ToString()
             {
-                return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodesCount, debugId);
+                return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodesCount, _debugId);
             }
         }
     }

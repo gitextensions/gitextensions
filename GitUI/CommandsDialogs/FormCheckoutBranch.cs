@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetNonFastForwardBranch =
             new TranslationString("You are going to reset the “{0}” branch to a new location\n" +
                 "discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
-        readonly TranslationString resetCaption = new TranslationString("Reset branch");
+        readonly TranslationString _resetCaption = new TranslationString("Reset branch");
         #endregion
 
         private readonly string[] _containRevisons;
@@ -49,7 +49,6 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<IGitRef> _localBranches;
         private IEnumerable<IGitRef> _remoteBranches;
-
 
         private FormCheckoutBranch()
             : this(null)
@@ -107,9 +106,13 @@ namespace GitUI.CommandsDialogs
                 // The dirty check is very expensive on large repositories. Without this setting
                 // the checkout branch dialog is too slow.
                 if (AppSettings.CheckForUncommittedChangesInCheckoutBranch)
+                {
                     _isDirtyDir = Module.IsDirtyDir();
+                }
                 else
+                {
                     _isDirtyDir = null;
+                }
 
                 localChangesGB.Visible = HasUncommittedChanges;
                 ChangesMode = AppSettings.CheckoutBranchAction;
@@ -121,17 +124,25 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private LocalChangesAction ChangesMode
         {
             get
             {
                 if (rbReset.Checked)
+                {
                     return LocalChangesAction.Reset;
+                }
+
                 if (rbMerge.Checked)
+                {
                     return LocalChangesAction.Merge;
+                }
+
                 if (rbStash.Checked)
+                {
                     return LocalChangesAction.Stash;
+                }
+
                 return LocalChangesAction.DontChange;
             }
             set
@@ -145,16 +156,17 @@ namespace GitUI.CommandsDialogs
 
         private bool HasUncommittedChanges => _isDirtyDir ?? true;
 
-
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
             bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
             if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
                 (!HasUncommittedChanges || AppSettings.UseDefaultCheckoutBranchAction))
+            {
                 return OkClick();
+            }
+
             return ShowDialog(owner);
         }
-
 
         private void ApplyLayout()
         {
@@ -220,9 +232,13 @@ namespace GitUI.CommandsDialogs
                 Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray());
 
                 if (_containRevisons != null && Branches.Items.Count == 1)
+                {
                     Branches.SelectedIndex = 0;
+                }
                 else
+                {
                     Branches.Text = null;
+                }
             }
         }
 
@@ -230,7 +246,9 @@ namespace GitUI.CommandsDialogs
         {
             DialogResult = OkClick();
             if (DialogResult == DialogResult.OK)
+            {
                 Close();
+            }
         }
 
         private DialogResult OkClick()
@@ -253,6 +271,7 @@ namespace GitUI.CommandsDialogs
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
+
                     if (!Module.CheckBranchFormat(cmd.NewBranchName))
                     {
                         MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
@@ -275,13 +294,14 @@ namespace GitUI.CommandsDialogs
                                 : GitRevision.ToShortSha(mergeBaseGuid);
 
                             string warningMessage = string.Format(_resetNonFastForwardBranch.Text, _localBranchName, mergeBaseText);
-                            if (MessageBox.Show(this, warningMessage, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                            if (MessageBox.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                             {
                                 DialogResult = DialogResult.None;
                                 return DialogResult.None;
                             }
                         }
                     }
+
                     cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
                     cmd.NewBranchName = _localBranchName;
                 }
@@ -300,9 +320,13 @@ namespace GitUI.CommandsDialogs
             }
 
             if ((Visible || AppSettings.UseDefaultCheckoutBranchAction) && HasUncommittedChanges)
+            {
                 cmd.LocalChanges = changes;
+            }
             else
+            {
                 cmd.LocalChanges = LocalChangesAction.DontChange;
+            }
 
             IWin32Window owner = Visible ? this : Owner;
 
@@ -310,10 +334,15 @@ namespace GitUI.CommandsDialogs
             if (changes == LocalChangesAction.Stash)
             {
                 if (_isDirtyDir == null && Visible)
+                {
                     _isDirtyDir = Module.IsDirtyDir();
+                }
+
                 stash = _isDirtyDir == true;
                 if (stash)
+                {
                     UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
+                }
             }
 
             var originalHash = Module.GetCurrentCheckout();
@@ -340,8 +369,11 @@ namespace GitUI.CommandsDialogs
                             eSysIcons.Question);
                         messageBoxResult = (res == DialogResult.Yes);
                         if (cTaskDialog.VerificationChecked)
+                        {
                             AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                        }
                     }
+
                     if (messageBoxResult ?? false)
                     {
                         UICommands.StashPop(this);
@@ -387,7 +419,9 @@ namespace GitUI.CommandsDialogs
         {
             txtCustomBranchName.Enabled = rbCreateBranchWithCustomName.Checked;
             if (rbCreateBranchWithCustomName.Checked)
+            {
                 txtCustomBranchName.SelectAll();
+            }
         }
 
         private bool LocalBranchExists(string name)
@@ -429,6 +463,7 @@ namespace GitUI.CommandsDialogs
                     i++;
                 }
             }
+
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
             rbResetBranch.Text = existsLocalBranch ? _rbResetBranchDefaultText : _createBranch.Text;
@@ -436,7 +471,9 @@ namespace GitUI.CommandsDialogs
             txtCustomBranchName.Text = _newLocalBranchName;
 
             if (branch.IsNullOrWhiteSpace())
+            {
                 lbChanges.Text = "";
+            }
             else
             {
                 Task.Factory.StartNew(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), branch))
@@ -447,7 +484,9 @@ namespace GitUI.CommandsDialogs
         private IEnumerable<IGitRef> GetLocalBranches()
         {
             if (_localBranches == null)
+            {
                 _localBranches = Module.GetRefs(false);
+            }
 
             return _localBranches;
         }
@@ -455,7 +494,9 @@ namespace GitUI.CommandsDialogs
         private IEnumerable<IGitRef> GetRemoteBranches()
         {
             if (_remoteBranches == null)
+            {
                 _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag);
+            }
 
             return _remoteBranches;
         }
@@ -471,6 +512,7 @@ namespace GitUI.CommandsDialogs
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
             }
+
             for (int index = 1; index < _containRevisons.Length; index++)
             {
                 var containRevison = _containRevisons[index];
@@ -481,9 +523,9 @@ namespace GitUI.CommandsDialogs
                                     !a.EndsWith("/HEAD"));
                 result.IntersectWith(branches);
             }
+
             return result.ToList();
         }
-
 
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)
         {

@@ -16,7 +16,6 @@ namespace GitUI
     {
         public static SynchronizationContext UISynchronizationContext;
 
-
         public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked = true)
         {
             // Note: Order in revisions is that first clicked is last in array
@@ -32,7 +31,9 @@ namespace GitUI
             {
                 string output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
                 if (!string.IsNullOrEmpty(output))
+                {
                     MessageBox.Show(grid, output);
+                }
             }
         }
 
@@ -58,29 +59,41 @@ namespace GitUI
             }
 
             if (file.IsSubmodule && file.SubmoduleStatus != null)
+            {
                 return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Result);
+            }
 
             PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
                 diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
 
             if (patch == null)
+            {
                 return string.Empty;
+            }
 
             if (file.IsSubmodule)
+            {
                 return LocalizationHelpers.ProcessSubmodulePatch(diffViewer.Module, file.Name, patch);
+            }
+
             return patch.Text;
         }
 
         public static Task ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 0)
+            {
                 return Task.FromResult(string.Empty);
+            }
 
             var selectedRevision = revisions[0];
             string secondRevision = selectedRevision?.Guid;
             string firstRevision = revisions.Count >= 2 ? revisions[1].Guid : null;
             if (firstRevision == null && selectedRevision != null)
+            {
                 firstRevision = selectedRevision.FirstParentGuid;
+            }
+
             return ViewChanges(diffViewer, firstRevision, secondRevision, file, defaultText);
         }
 
@@ -96,13 +109,17 @@ namespace GitUI
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)
         {
             if (tabControl.TabPages.Contains(page))
+            {
                 tabControl.TabPages.Remove(page);
+            }
         }
 
         public static void InsertIfNotExists(this TabControl tabControl, int index, TabPage page)
         {
             if (!tabControl.TabPages.Contains(page))
+            {
                 tabControl.TabPages.Insert(index, page);
+            }
         }
 
         public static void Mask(this Control control)
@@ -129,8 +146,12 @@ namespace GitUI
         private static MaskPanel FindMaskPanel(this Control control)
         {
             foreach (var c in control.Controls)
+            {
                 if (c is MaskPanel)
+                {
                     return c as MaskPanel;
+                }
+            }
 
             return null;
         }
@@ -157,7 +178,9 @@ namespace GitUI
                 yield return node;
 
                 foreach (TreeNode subNode in node.Nodes.AllNodes())
+                {
                     yield return subNode;
+                }
             }
         }
 
@@ -171,11 +194,15 @@ namespace GitUI
             SendOrPostCallback checkDisposedAndInvoke = (s) =>
             {
                 if (!control.IsDisposed)
+                {
                     action(s);
+                }
             };
 
             if (!control.IsDisposed)
+            {
                 UISynchronizationContext.Post(checkDisposedAndInvoke, state);
+            }
         }
 
         public static void InvokeSync(this Control control, Action action)
@@ -202,7 +229,9 @@ namespace GitUI
             };
 
             if (!control.IsDisposed)
+            {
                 UISynchronizationContext.Send(checkDisposedAndInvoke, state);
+            }
         }
 
         public static Control FindFocusedControl(this ContainerControl container)
@@ -211,9 +240,13 @@ namespace GitUI
             container = control as ContainerControl;
 
             if (container == null)
+            {
                 return control;
+            }
             else
+            {
                 return container.FindFocusedControl();
+            }
         }
     }
 }

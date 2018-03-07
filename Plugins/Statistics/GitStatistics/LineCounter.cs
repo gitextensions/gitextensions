@@ -28,8 +28,11 @@ namespace GitStatistics
             foreach (var directoryFilter in directoryFilters)
             {
                 if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -48,6 +51,7 @@ namespace GitStatistics
                     {
                         continue;
                     }
+
                     yield return fileInfo;
                 }
             }
@@ -64,7 +68,10 @@ namespace GitStatistics
             foreach (var file in GetFiles(filesToCheck, filters))
             {
                 if (DirectoryIsFiltered(file.Directory, directoryFilter))
+                {
                     continue;
+                }
+
                 var codeFile = new CodeFile(file.FullName);
                 codeFile.CountLines();
 
@@ -94,7 +101,9 @@ namespace GitStatistics
             var extension = codeFile.File.Extension.ToLower();
 
             if (!LinesOfCodePerExtension.ContainsKey(extension))
+            {
                 LinesOfCodePerExtension.Add(extension, 0);
+            }
 
             LinesOfCodePerExtension[extension] += codeLines;
             NumberCodeLines += codeLines;

@@ -40,6 +40,7 @@ namespace GitUI.CommandsDialogs
             IsBareRepository = isBareRepository;
             SingleFileExists = singleFileExists;
         }
+
         public IList<GitRevision> SelectedRevisions { get; }
         public GitItemStatus SelectedDiff { get; }
         public bool IsAnyCombinedDiff { get; }
@@ -60,6 +61,7 @@ namespace GitUI.CommandsDialogs
             LocalExists = localExists;
             MultipleRevisionsSelected = multipleRevisionsSelected;
         }
+
         public bool AIsLocal { get; }
         public bool BIsLocal { get; }
         public bool BIsNormal { get; }

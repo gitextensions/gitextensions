@@ -16,6 +16,7 @@ namespace GitUI.HelperDialogs
                 branchesListView.Items.Add(head.Name);
             }
         }
+
         public FormRunScriptSpecify(IEnumerable<string> options, string label)
         {
             InitializeComponent();
@@ -25,6 +26,7 @@ namespace GitUI.HelperDialogs
                 branchesListView.Items.Add(head);
             }
         }
+
         public string ret { get; private set; }
 
         private void button1_Click(object sender, EventArgs e)

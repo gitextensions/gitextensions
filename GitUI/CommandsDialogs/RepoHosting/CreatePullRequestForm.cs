@@ -88,7 +88,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
             }
             else if (_pullReqTargetsCB.Items.Count > 0)
+            {
                 _pullReqTargetsCB.SelectedIndex = 0;
+            }
 
             _pullReqTargetsCB_SelectedIndexChanged(null, null);
         }
@@ -110,12 +112,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     for (int i = 0; i < branches.Count; i++)
                     {
                         if (branches[i].Name == _currentBranch)
+                        {
                             selectItem = i;
+                        }
+
                         _remoteBranchesCB.Items.Add(branches[i].Name);
                     }
+
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
+                    {
                         _remoteBranchesCB.SelectedIndex = selectItem;
+                    }
                 },
                 ex => { ex.Handled = false; });
         }
@@ -133,7 +141,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _yourBranchesCB.Items.Clear();
 
             if (MyRemote == null)
+            {
                 return;
+            }
 
             AsyncLoader.DoAsync(
                 () => MyRemote.GetHostedRepository().Branches,
@@ -144,12 +154,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     for (int i = 0; i < branches.Count; i++)
                     {
                         if (branches[i].Name == _currentBranch)
+                        {
                             selectItem = i;
+                        }
+
                         _yourBranchesCB.Items.Add(branches[i].Name);
                     }
+
                     _createBtn.Enabled = true;
                     if (branches.Count > 0)
+                    {
                         _yourBranchesCB.SelectedIndex = selectItem;
+                    }
                 },
                 ex => { ex.Handled = false; });
         }
@@ -167,7 +183,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _createBtn_Click(object sender, EventArgs e)
         {
             if (_currentHostedRemote == null)
+            {
                 return;
+            }
 
             var title = _titleTB.Text.Trim();
             var body = _bodyTB.Text.Trim();

@@ -43,7 +43,8 @@ namespace GitUIPluginInterfaces
         {
             public CheckBoxBinding(BoolSetting aSetting, CheckBox aCustomControl)
                 : base(aSetting, aCustomControl)
-            { }
+            {
+            }
 
             public override CheckBox CreateControl()
             {

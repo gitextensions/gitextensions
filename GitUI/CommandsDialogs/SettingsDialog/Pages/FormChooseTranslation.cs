@@ -47,9 +47,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     BackgroundImageLayout = ImageLayout.Stretch
                 };
                 if (File.Exists(Path.Combine(Translator.GetTranslationDir(), translation + ".gif")))
+                {
                     translationImage.BackgroundImage = Image.FromFile(Path.Combine(Translator.GetTranslationDir(), translation + ".gif"));
+                }
                 else
+                {
                     translationImage.BackColor = Color.Black;
+                }
 
                 translationImage.Cursor = Cursors.Hand;
                 translationImage.Tag = translation;
@@ -83,7 +87,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void FormChooseTranslation_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (string.IsNullOrEmpty(AppSettings.Translation))
+            {
                 AppSettings.Translation = "English";
+            }
         }
     }
 }

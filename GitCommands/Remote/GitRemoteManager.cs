@@ -14,15 +14,12 @@ namespace GitCommands.Remote
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <param name="remote"></param>
-        /// <param name="branch"></param>
         /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
         string GetDefaultPushRemote(GitRemote remote, string branch);
 
         /// <summary>
         /// Loads the list of remotes configured in .git/config file.
         /// </summary>
-        /// <param name="loadDisabled"></param>
         IEnumerable<GitRemote> LoadRemotes(bool loadDisabled);
 
         /// <summary>
@@ -53,7 +50,6 @@ namespace GitCommands.Remote
         ///  Marks the remote as enabled or disabled in .git/config file.
         /// </summary>
         /// <param name="remoteName">The name of the remote.</param>
-        /// <param name="disabled"></param>
         void ToggleRemoteState(string remoteName, bool disabled);
     }
 
@@ -63,12 +59,10 @@ namespace GitCommands.Remote
         internal static readonly string SectionRemote = "remote";
         private readonly Func<IGitModule> _getModule;
 
-
         public GitRemoteManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
-
 
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
         [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
@@ -101,8 +95,6 @@ namespace GitCommands.Remote
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <param name="remote"></param>
-        /// <param name="branch"></param>
         /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
         // TODO: moved verbatim from FormPush.cs, perhaps needs refactoring
         public string GetDefaultPushRemote(GitRemote remote, string branch)
@@ -212,6 +204,7 @@ namespace GitCommands.Remote
 
             // if create a new remote or updated the url - we may need to perform "update remote"
             bool updateRemoteRequired = false;
+
             // if operation return anything back, relay that to the user
             var output = string.Empty;
 
@@ -294,7 +287,6 @@ namespace GitCommands.Remote
             module.LocalConfigFile.Save();
         }
 
-
         // pass the list in to minimise allocations
         private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
@@ -308,7 +300,6 @@ namespace GitCommands.Remote
             {
                 func = GetDisabledRemotes;
             }
-
 
             var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
             if (gitRemotes.Any())
@@ -332,6 +323,7 @@ namespace GitCommands.Remote
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
 

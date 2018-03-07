@@ -10,7 +10,6 @@ namespace ResourceManager
     {
         private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
 
-
         private static DateTime RoundDateTime(DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
@@ -35,30 +34,36 @@ namespace ResourceManager
             {
                 return Strings.GetNSecondsAgoText(ts.Seconds);
             }
+
             if (delta < 45 * 60)
             {
                 return Strings.GetNMinutesAgoText(ts.Minutes);
             }
+
             if (delta < 24 * 60 * 60)
             {
                 int hours = delta < 60 * 60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
                 return Strings.GetNHoursAgoText(hours);
             }
+
             // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
             if (delta < (displayWeeks ? 7 : 30) * 24 * 60 * 60)
             {
                 return Strings.GetNDaysAgoText(ts.Days);
             }
+
             if (displayWeeks && delta < 30 * 24 * 60 * 60)
             {
                 int weeks = Convert.ToInt32(ts.Days / 7.0);
                 return Strings.GetNWeeksAgoText(weeks);
             }
+
             if (delta < 365 * 24 * 60 * 60)
             {
                 int months = Convert.ToInt32(ts.Days / 30.0);
                 return Strings.GetNMonthsAgoText(months);
             }
+
             int years = Convert.ToInt32(ts.Days / 365.0);
             return Strings.GetNYearsAgoText(years);
         }
@@ -94,7 +99,10 @@ namespace ResourceManager
                 sb.Append(body);
             }
             else
+            {
                 sb.AppendLine("Commit hash:\t" + hash);
+            }
+
             return sb.ToString();
         }
 
@@ -103,16 +111,25 @@ namespace ResourceManager
             string text = patch?.Text;
             var status = GitCommandHelpers.GetSubmoduleStatus(text, module, fileName);
             if (status == null)
+            {
                 return "";
+            }
+
             return ProcessSubmoduleStatus(module, status);
         }
 
         public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
             if (module == null)
+            {
                 throw new ArgumentNullException(nameof(module));
+            }
+
             if (status == null)
+            {
                 throw new ArgumentNullException(nameof(status));
+            }
+
             GitModule gitModule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
@@ -137,7 +154,9 @@ namespace ResourceManager
                     var delim = new char[] { '\n', '\r' };
                     var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
+                    {
                         sb.AppendLine("\t\t" + curline);
+                    }
                 }
             }
             else
@@ -163,7 +182,9 @@ namespace ResourceManager
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
+                    {
                         sb.AppendLine("\t\t" + curline);
+                    }
                 }
             }
             else
@@ -209,11 +230,15 @@ namespace ResourceManager
                     sb.Append(status.RemovedCommits + " removed");
 
                     if (status.AddedCommits > 0)
+                    {
                         sb.Append(", ");
+                    }
                 }
 
                 if (status.AddedCommits > 0)
+                {
                     sb.Append(status.AddedCommits + " added");
+                }
 
                 sb.AppendLine();
             }

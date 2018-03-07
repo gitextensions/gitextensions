@@ -2,7 +2,6 @@
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 
-
 namespace GitCommandsTests.Patch
 {
     [TestClass]

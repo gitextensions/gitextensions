@@ -30,12 +30,13 @@ namespace Github3
             }
         }
 
-        private bool gotToken = false;
+        private bool _gotToken = false;
 
         public void web_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             checkAuth(e.Url.ToString());
         }
+
         public void web_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
             checkAuth(e.Url.ToString());
@@ -51,8 +52,10 @@ namespace Github3
 
         public void checkAuth(string url)
         {
-            if (gotToken)
+            if (_gotToken)
+            {
                 return;
+            }
 
             if (url.Contains("?code="))
             {
@@ -60,16 +63,19 @@ namespace Github3
                 var queryParams = GetParams(uri.Query);
                 if (queryParams.TryGetValue("code", out var code))
                 {
-                    this.Hide();
-                    this.Close();
+                    Hide();
+                    Close();
                     string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
                     if (token == null)
+                    {
                         return;
-                    gotToken = true;
+                    }
+
+                    _gotToken = true;
 
                     GithubLoginInfo.OAuthToken = token;
 
-                    MessageBox.Show(this.Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
+                    MessageBox.Show(Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
                 }
             }
         }

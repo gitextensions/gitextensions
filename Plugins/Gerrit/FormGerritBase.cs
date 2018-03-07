@@ -12,7 +12,8 @@ namespace Gerrit
 
         private FormGerritBase()
             : this(null)
-        { }
+        {
+        }
 
         protected FormGerritBase(IGitUICommands agitUiCommands)
             : base(true)
@@ -23,7 +24,9 @@ namespace Gerrit
         protected override void OnLoad(EventArgs e)
         {
             if (DesignMode)
+            {
                 return;
+            }
 
             Settings = GerritSettings.Load(Module);
 

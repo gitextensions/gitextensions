@@ -25,8 +25,6 @@ namespace GitUI.Help
         /// <summary>
         /// NOTE: will also be called if designer code calls "this.helpImageDisplayUserControl1.ShowImage2OnHover = true;"
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void HelpImageDisplayUserControl_Load(object sender, EventArgs e)
         {
             IsExpanded = LoadIsExpandedValueFromSettings(IsExpanded);
@@ -98,7 +96,9 @@ namespace GitUI.Help
                 _image1 = value;
                 UpdateImageDisplay();
                 if (IsExpanded)
+                {
                     UpdateControlSize();
+                }
             }
         }
 
@@ -110,7 +110,9 @@ namespace GitUI.Help
                 _image2 = value;
                 UpdateImageDisplay();
                 if (IsExpanded)
+                {
                     UpdateControlSize();
+                }
             }
         }
 
@@ -134,7 +136,10 @@ namespace GitUI.Help
         /// <summary>
         /// only shown when IsOnHoverShowImage2 is true
         /// </summary>
-        public string IsOnHoverShowImage2NoticeText { get { return labelHoverText.Text; } set { labelHoverText.Text = value; } }
+        public string IsOnHoverShowImage2NoticeText
+        {
+            get { return labelHoverText.Text; } set { labelHoverText.Text = value; }
+        }
 
         private bool _isHover;
         private bool _showImage2OnHover;
@@ -175,7 +180,9 @@ namespace GitUI.Help
                     size = new Size(w, h);
                 }
                 else
+                {
                     size = new Size(40, 40); // default size
+                }
 
                 // add vertical space of other controls
                 size.Height +=
@@ -202,6 +209,7 @@ namespace GitUI.Help
                     form.MinimumSize = new System.Drawing.Size();
                 }
             }
+
             Size = size;
             MinimumSize = size;
             if (form != null)

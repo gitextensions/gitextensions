@@ -31,7 +31,9 @@ namespace GitCommands
 
                 string quotedCmd = cmd;
                 if (quotedCmd.IndexOf(' ') != -1)
+                {
                     quotedCmd = quotedCmd.Quote();
+                }
 
                 var executionStartTimestamp = DateTime.Now;
 
@@ -57,6 +59,7 @@ namespace GitCommands
                 {
                     _myProcess = process;
                 }
+
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
 
@@ -76,7 +79,10 @@ namespace GitCommands
             {
                 // If there was another process running, kill it
                 if (_myProcess == null)
+                {
                     return;
+                }
+
                 try
                 {
                     if (!_myProcess.HasExited)

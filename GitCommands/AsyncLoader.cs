@@ -88,6 +88,7 @@ namespace GitCommands
                     {
                         token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
+
                     if (!token.IsCancellationRequested)
                     {
                         loadContent(token);
@@ -98,10 +99,16 @@ namespace GitCommands
                         if (task.IsFaulted)
                         {
                             foreach (var e in task.Exception.InnerExceptions)
+                            {
                                 if (!OnLoadingError(e))
+                                {
                                     throw e;
+                                }
+                            }
+
                             return;
                         }
+
                         try
                         {
                             if (!token.IsCancellationRequested)
@@ -112,7 +119,9 @@ namespace GitCommands
                         catch (Exception exception)
                         {
                             if (!OnLoadingError(exception))
+                            {
                                 throw;
+                            }
                         }
                     }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
         }
@@ -134,10 +143,12 @@ namespace GitCommands
                     {
                         token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
+
                     if (token.IsCancellationRequested)
                     {
                         return default;
                     }
+
                     return loadContent(token);
                 }, token)
                 .ContinueWith((task) =>
@@ -145,22 +156,32 @@ namespace GitCommands
                 if (task.IsFaulted)
                 {
                     foreach (var e in task.Exception.InnerExceptions)
+                    {
                         if (!OnLoadingError(e))
+                        {
                             throw e;
+                        }
+                    }
+
                     return default;
                 }
+
                 try
                 {
                     if (!token.IsCancellationRequested)
                     {
                         onLoaded(task.Result);
                     }
+
                     return task.Result;
                 }
                 catch (Exception exception)
                 {
                     if (!OnLoadingError(exception))
+                    {
                         throw;
+                    }
+
                     return default;
                 }
             }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
@@ -181,7 +202,9 @@ namespace GitCommands
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _cancelledTokenSource?.Dispose();
+            }
         }
 
         public void Dispose()

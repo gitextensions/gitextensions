@@ -42,7 +42,6 @@ namespace GravatarTests
             _cache = new DirectoryImageCache(_folderPath, 2, _fileSystem);
         }
 
-
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]

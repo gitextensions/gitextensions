@@ -13,8 +13,6 @@ using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    /// <summary>
-    /// </summary>
     public partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
         #region Translations
@@ -259,6 +257,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 path = Path.GetDirectoryName(path);
                 path = Path.Combine(path, CommonLogic.GitExtensionsShellEx32Name);
             }
+
             if (File.Exists(path))
             {
                 try
@@ -336,7 +335,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private readonly string[] AutoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
+        private readonly string[] _AutoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
@@ -359,7 +358,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 CheckSettingsLogic.SolveMergeToolPathForKDiff();
             }
-            else if (AutoConfigMergeTools.Any(tool => CommonLogic.IsMergeTool(tool)))
+            else if (_AutoConfigMergeTools.Any(tool => CommonLogic.IsMergeTool(tool)))
             {
                 CheckSettingsLogic.AutoConfigMergeToolCmd();
 
@@ -392,6 +391,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void UserNameSet_Click(object sender, EventArgs e)
         {
             GotoPageGlobalSettings();
+
             // nice-to-have: jump directly to correct text box
         }
 
@@ -456,7 +456,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return bValid;
         }
 
-
         private static bool IsCheckAtStartupChecked(bool bValid)
         {
             var retValue = AppSettings.CheckSettings;
@@ -466,6 +465,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 AppSettings.CheckSettings = false;
                 retValue = false;
             }
+
             return retValue;
         }
 
@@ -527,6 +527,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
                 return false;
             }
+
             if (EnvUtils.RunningOnWindows())
             {
                 if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -537,10 +538,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         RenderSettingUnset(DiffTool, DiffTool_Fix, _kdiffAsDiffConfiguredButNotFound.Text);
                         return false;
                     }
+
                     RenderSettingSet(DiffTool, DiffTool_Fix, _kdiffAsDiffConfigured.Text);
                     return true;
                 }
             }
+
             string difftool = CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings);
             RenderSettingSet(DiffTool, DiffTool_Fix, string.Format(_diffToolXConfigured.Text, difftool));
             return true;
@@ -565,9 +568,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         RenderSettingUnset(MergeTool, MergeTool_Fix, _kdiffAsMergeConfiguredButNotFound.Text);
                         return false;
                     }
+
                     RenderSettingSet(MergeTool, MergeTool_Fix, _kdiffAsMergeConfigured.Text);
                     return true;
                 }
+
                 string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge" || mergetool == "meld")
                 {
@@ -577,10 +582,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
                         return false;
                     }
+
                     RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_customMergeToolXConfigured.Text, mergetool));
                     return true;
                 }
             }
+
             RenderSettingSet(MergeTool, MergeTool_Fix, _mergeToolXConfigured.Text);
             return true;
         }
@@ -602,7 +609,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGitExtensionRegistrySettings()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return true;
+            }
 
             ShellExtensionsRegistered.Visible = true;
 
@@ -628,6 +637,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 RenderSettingUnset(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, string.Format(_shellExtNeedsToBeRegistered.Text, CommonLogic.GitExtensionsShellEx32Name));
                 return false;
             }
+
             RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtRegistered.Text);
             return true;
         }
@@ -635,7 +645,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGitExtensionsInstall()
         {
             if (!EnvUtils.RunningOnWindows())
+            {
                 return true;
+            }
 
             GitExtensionsInstall.Visible = true;
             if (string.IsNullOrEmpty(AppSettings.GetInstallDir()))
@@ -643,11 +655,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
                 return false;
             }
+
             if (AppSettings.GetInstallDir() != null && AppSettings.GetInstallDir().EndsWith(".exe"))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsFaulty.Text);
                 return false;
             }
+
             RenderSettingSet(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsCorrect.Text);
             return true;
         }
@@ -661,6 +675,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 RenderSettingUnset(settingButton, settingFixButton, textSettingUnset);
                 return false;
             }
+
             RenderSettingSet(settingButton, settingFixButton, textSettingGood);
             return true;
         }

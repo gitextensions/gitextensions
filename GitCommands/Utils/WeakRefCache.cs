@@ -7,7 +7,7 @@ namespace GitCommands.Utils
 {
     public class WeakRefCache : IDisposable
     {
-        private Dictionary<string, WeakReference> weakMap = new Dictionary<string, WeakReference>();
+        private Dictionary<string, WeakReference> _weakMap = new Dictionary<string, WeakReference>();
         private readonly Timer _clearTimer = new Timer(60 * 1000);
 
         public static readonly WeakRefCache Default = new WeakRefCache();
@@ -18,26 +18,23 @@ namespace GitCommands.Utils
             _clearTimer.Start();
         }
 
-        /// <summary>
-        /// TODO add expiration time (MemoryCache) after change to .net 4 full profile
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="objectUniqueKey"></param>
-        /// <param name="provideObject"></param>
-        /// <returns></returns>
+        // TODO add expiration time (MemoryCache) after change to .net 4 full profile
+
         public T Get<T>(string objectUniqueKey, Lazy<T> provideObject)
         {
             object cached = null;
 
-            lock (weakMap)
+            lock (_weakMap)
             {
-                if (weakMap.TryGetValue(objectUniqueKey, out var wref))
+                if (_weakMap.TryGetValue(objectUniqueKey, out var wref))
+                {
                     cached = wref.Target;
+                }
 
                 if (cached == null)
                 {
                     cached = provideObject.Value;
-                    weakMap[objectUniqueKey] = new WeakReference(cached);
+                    _weakMap[objectUniqueKey] = new WeakReference(cached);
                 }
                 else
                 {
@@ -53,11 +50,13 @@ namespace GitCommands.Utils
 
         private void OnClearTimer(object source, System.Timers.ElapsedEventArgs e)
         {
-            lock (weakMap)
+            lock (_weakMap)
             {
-                var toRemove = weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
+                var toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
                 foreach (var key in toRemove)
-                    weakMap.Remove(key);
+                {
+                    _weakMap.Remove(key);
+                }
             }
         }
 
@@ -70,7 +69,9 @@ namespace GitCommands.Utils
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _clearTimer.Dispose();
+            }
         }
     }
 }

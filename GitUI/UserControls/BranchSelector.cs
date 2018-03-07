@@ -62,9 +62,13 @@ namespace GitUI.UserControls
             }
 
             if (_containRevisons != null && Branches.Items.Count == 1)
+            {
                 Branches.SelectedIndex = 0;
+            }
             else
+            {
                 Branches.Text = null;
+            }
         }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
@@ -80,7 +84,7 @@ namespace GitUI.UserControls
             {
                 var branchName = SelectedBranchName;
                 var currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
-                Task.Factory.StartNew(() => this.Module.GetCommitCountString(currentCheckout, branchName))
+                Task.Factory.StartNew(() => Module.GetCommitCountString(currentCheckout, branchName))
                     .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }
@@ -88,7 +92,9 @@ namespace GitUI.UserControls
         public IList<string> GetLocalBranches()
         {
             if (_localBranches == null)
+            {
                 _localBranches = Module.GetRefs(false).Select(b => b.Name).ToList();
+            }
 
             return _localBranches;
         }
@@ -96,7 +102,9 @@ namespace GitUI.UserControls
         private IList<string> GetRemoteBranches()
         {
             if (_remoteBranches == null)
+            {
                 _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
+            }
 
             return _remoteBranches;
         }
@@ -112,6 +120,7 @@ namespace GitUI.UserControls
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
             }
+
             for (int index = 1; index < _containRevisons.Length; index++)
             {
                 var containRevison = _containRevisons[index];
@@ -122,6 +131,7 @@ namespace GitUI.UserControls
                                     !a.EndsWith("/HEAD"));
                 result.IntersectWith(branches);
             }
+
             return result.ToList();
         }
 
@@ -146,6 +156,7 @@ namespace GitUI.UserControls
         private void LocalBranch_CheckedChanged(object sender, EventArgs e)
         {
             Branches.Focus();
+
             // We only need to refresh the dialog once -> RemoteBranchCheckedChanged will trigger this
             ////BranchTypeChanged();
         }
@@ -157,6 +168,7 @@ namespace GitUI.UserControls
             {
                 Initialize(IsRemoteBranchChecked, null);
             }
+
             FireSelectionChangedEvent(sender, e);
         }
 

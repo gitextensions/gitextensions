@@ -47,6 +47,7 @@ namespace GitUI
                 {
                     instance = new MessageBoxes();
                 }
+
                 return instance;
             }
         }
@@ -108,7 +109,9 @@ namespace GitUI
                 FooterIcon: PSTaskDialog.eSysIcons.Information) == DialogResult.Yes;
 
             if (PSTaskDialog.cTaskDialog.VerificationChecked)
+            {
                 AppSettings.UpdateSubmodulesOnCheckout = result;
+            }
 
             return result;
         }

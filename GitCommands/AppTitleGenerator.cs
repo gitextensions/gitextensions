@@ -25,12 +25,10 @@ namespace GitCommands
         private const string RepositoryTitleFormat = "{0} ({1}) - Git Extensions";
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
-
         public AppTitleGenerator(IRepositoryDescriptionProvider repositoryDescriptionProvider)
         {
             _repositoryDescriptionProvider = repositoryDescriptionProvider;
         }
-
 
         /// <summary>
         /// Generates main window title according to given repository.
@@ -44,6 +42,7 @@ namespace GitCommands
             {
                 return DefaultTitle;
             }
+
             string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
             var title = string.Format(RepositoryTitleFormat, repositoryDescription, (branchName ?? "no branch").Trim('(', ')'));
 #if DEBUG

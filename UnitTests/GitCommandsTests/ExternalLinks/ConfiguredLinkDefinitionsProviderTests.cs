@@ -21,7 +21,6 @@ namespace GitCommandsTests.ExternalLinks
         private IExternalLinksLoader _externalLinksLoader;
         private ConfiguredLinkDefinitionsProvider _provider;
 
-
         [SetUp]
         public void Setup()
         {
@@ -53,7 +52,6 @@ namespace GitCommandsTests.ExternalLinks
             _testHelper.Dispose();
             _testHelper = null;
         }
-
 
         [Test]
         public void Get_should_throw_if_data_null()

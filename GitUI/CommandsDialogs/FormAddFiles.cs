@@ -33,7 +33,9 @@ namespace GitUI.CommandsDialogs
         private void AddFilesClick(object sender, EventArgs e)
         {
             if (FormProcess.ShowDialog(this, string.Format("add{0} \"{1}\"", force.Checked ? " -f" : "", Filter.Text), false))
+            {
                 Close();
+            }
         }
     }
 }

@@ -5,14 +5,14 @@ namespace Github3
 {
     class GithubBranch : IHostedBranch
     {
-        private Branch branch;
+        private Branch _branch;
 
         public GithubBranch(Branch branch)
         {
-            this.branch = branch;
+            _branch = branch;
         }
 
-        public string Name => branch.Name;
-        public string Sha => branch.Commit.Sha;
+        public string Name => _branch.Name;
+        public string Sha => _branch.Commit.Sha;
     }
 }

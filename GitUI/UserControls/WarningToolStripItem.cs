@@ -22,9 +22,13 @@ namespace GitUI
         void _blinkTimer_Tick(object sender, EventArgs e)
         {
             if (BackColor == Color.Salmon && Parent != null)
+            {
                 BackColor = Parent.BackColor;
+            }
             else
+            {
                 BackColor = Color.Salmon;
+            }
 
             _counter++;
 

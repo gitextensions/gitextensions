@@ -13,7 +13,6 @@ namespace GitCommands.ExternalLinks
         private readonly IExternalLinksLoader _externalLinksLoader = new ExternalLinksLoader();
         private readonly IList<ExternalLinkDefinition> _definitions;
 
-
         public ExternalLinksManager(RepoDistSettings settings)
         {
             _cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
@@ -24,7 +23,6 @@ namespace GitCommands.ExternalLinks
                 _lowerPriority = new ExternalLinksManager(settings.LowerPriority);
             }
         }
-
 
         /// <summary>
         /// Adds the provided definition at the lowest available level.
@@ -43,6 +41,7 @@ namespace GitCommands.ExternalLinks
                 {
                     _definitions.Add(definition);
                 }
+
                 // TODO: else notify the user?
             }
             else

@@ -45,7 +45,9 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             if (aCommands != null)
+            {
                 MailFrom.Text = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+            }
         }
 
         private void Browse_Click(object sender, EventArgs e)
@@ -72,7 +74,9 @@ namespace GitUI.CommandsDialogs
         private void OutputPath_TextChanged(object sender, EventArgs e)
         {
             if (Directory.Exists(OutputPath.Text))
+            {
                 AppSettings.LastFormatPatchDir = OutputPath.Text;
+            }
         }
 
         private void FormatPatch_Click(object sender, EventArgs e)
@@ -109,7 +113,9 @@ namespace GitUI.CommandsDialogs
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))
+                    {
                         File.Delete(file);
+                    }
                 }
                 else
                 {
@@ -161,16 +167,21 @@ namespace GitUI.CommandsDialogs
             {
                 result += Environment.NewLine + Environment.NewLine;
                 if (SendMail(savePatchesToDir))
+                {
                     result += _sendMailResult.Text + " " + MailTo.Text;
+                }
                 else
+                {
                     result += _sendMailResultFailed.Text;
-
+                }
 
                 // Clean up
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))
+                    {
                         File.Delete(file);
+                    }
                 }
             }
 
@@ -185,7 +196,9 @@ namespace GitUI.CommandsDialogs
                 string from = MailFrom.Text;
 
                 if (string.IsNullOrEmpty(from))
+                {
                     MessageBox.Show(this, _noGitMailConfigured.Text);
+                }
 
                 string to = MailTo.Text;
 
@@ -204,10 +217,15 @@ namespace GitUI.CommandsDialogs
                     {
                         credentials.login.Text = from;
                         if (credentials.ShowDialog(this) == DialogResult.OK)
+                        {
                             smtpClient.Credentials = new NetworkCredential(credentials.login.Text, credentials.password.Text);
+                        }
                         else
+                        {
                             smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+                        }
                     }
+
                     ServicePointManager.ServerCertificateValidationCallback =
                         (sender, certificate, chain, errors) => true;
                     smtpClient.Send(mail);
@@ -218,6 +236,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, ex.Message);
                 return false;
             }
+
             return true;
         }
 

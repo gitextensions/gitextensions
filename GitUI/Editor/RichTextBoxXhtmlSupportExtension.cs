@@ -396,7 +396,9 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
+            {
                 throw new InvalidOperationException("SelectionStart has invalid value");
+            }
 
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
@@ -410,7 +412,9 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
+            {
                 throw new InvalidOperationException("SelectionStart has invalid value");
+            }
 
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
@@ -424,6 +428,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 string tail = rtfText.Substring(idx);
                 rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
             }
+
             rtb.SelectedRtf = ("{\rtf1\ansi " + text + "\v #") + hyperlink + "\v0}";
             rtb.Select(position, text.Length + hyperlink.Length + 1);
             rtb.SetLink(true);
@@ -644,11 +649,17 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             var v = e.LinkText.Split(new char[] { '#' }, 2);
             if (v.Length == 0)
+            {
                 return "";
+            }
             else if (v.Length == 1)
+            {
                 return v[0];
+            }
             else
+            {
                 return v[1];
+            }
         }
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
@@ -660,11 +671,16 @@ namespace GitUI.Editor.RichTextBoxExtension
                 text = "";
                 return;
             }
+
             text = v[0];
             if (v.Length == 1)
+            {
                 url = v[0];
+            }
             else
+            {
                 url = v[1];
+            }
         }
 
         // format states
@@ -703,7 +719,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                 }
 
                 if (nAcum < strT.Length)
+                {
                     strHTML.Append(strT.Substring(nAcum));
+                }
             }
             catch (Exception /*ex*/)
             {
@@ -876,7 +894,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                         colFormat.Add(mfr);
                     }
                     else if (bacenter == ctformatStates.nctReset)
+                    {
                         bacenter = ctformatStates.nctNone;
+                    }
 
                     // align to left
                     UpdateState(pf.wAlignment == PFA.LEFT, ref baleft);
@@ -887,7 +907,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                         colFormat.Add(mfr);
                     }
                     else if (baleft == ctformatStates.nctReset)
+                    {
                         baleft = ctformatStates.nctNone;
+                    }
 
                     // align to right
                     UpdateState(pf.wAlignment == PFA.RIGHT, ref baright);
@@ -898,7 +920,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                         colFormat.Add(mfr);
                     }
                     else if (baright == ctformatStates.nctReset)
+                    {
                         baright = ctformatStates.nctNone;
+                    }
 
                     // bullet
                     UpdateState(pf.wNumbering == PFN.BULLET, ref bnumbering);
@@ -909,7 +933,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                         colFormat.Add(mfr);
                     }
                     else if (bnumbering == ctformatStates.nctReset)
+                    {
                         bnumbering = ctformatStates.nctNone;
+                    }
                 }
 
                 // bold
@@ -1001,6 +1027,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
+
             return sbT.ToString();
         }
 
@@ -1009,14 +1036,20 @@ namespace GitUI.Editor.RichTextBoxExtension
             if (value)
             {
                 if (state == ctformatStates.nctNone)
+                {
                     state = ctformatStates.nctNew;
+                }
                 else
+                {
                     state = ctformatStates.nctContinue;
+                }
             }
             else
             {
                 if (state != ctformatStates.nctNone)
+                {
                     state = ctformatStates.nctReset;
+                }
             }
         }
 
@@ -1071,6 +1104,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                 rtb.EndUpdate(oldMask);
                 rtb.HideSelection = false;
+
                 //--------------------------
             }
 
@@ -1093,6 +1127,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     result.Append(ch);
                 }
                 else
+                {
                     try
                     {
                         result.Append("&#" + (int)ch + ';');
@@ -1101,7 +1136,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                     {
                         result.Append('?');
                     }
+                }
             }
+
             return result.ToString();
         }
 
@@ -1151,13 +1188,16 @@ namespace GitUI.Editor.RichTextBoxExtension
                 {
                     XmlReader reader = XmlReader.Create(stringreader, settings);
                     while (reader.Read())
+                    {
                         ProcessNode(rtb, handleRef, reader, cs);
+                    }
                 }
             }
             catch (System.Xml.XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }
+
             // apply links style
             CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
             ncf.cbSize = Marshal.SizeOf(ncf);
@@ -1166,7 +1206,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                 rtb.Select(pair.Key, pair.Value);
                 SetCharFormat(handleRef, ncf);
             }
+
             SetHideSelectionInternal(handleRef, false);
+
             // reposition to first
             rtb.Select(0, 0);
             EndUpdate(handleRef, oldMask);
@@ -1196,9 +1238,15 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                         // apply format
                         if (cs.paraFormatChanged)
+                        {
                             SetParaFormat(handleRef, cs.pf);
+                        }
+
                         if (cs.charFormatChanged)
+                        {
                             SetCharFormat(handleRef, cs.cf);
+                        }
+
                         cs.charFormatChanged = false;
                         cs.paraFormatChanged = false;
 
@@ -1214,6 +1262,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             cs.paraFormatChanged = true;
                         }
                     }
+
                     break;
                 case XmlNodeType.Whitespace:
                 case XmlNodeType.SignificantWhitespace:
@@ -1275,6 +1324,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             cs.hyperlink = reader.Value;
                         }
                     }
+
                     reader.MoveToElement();
                     break;
                 case "p":
@@ -1303,6 +1353,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             }
                         }
                     }
+
                     reader.MoveToElement();
                     break;
                 case "li":
@@ -1313,6 +1364,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                         cs.pf.wNumbering = PFN.BULLET;
                         cs.paraFormatChanged = true;
                     }
+
                     break;
                 case "font":
                     cs.scf.Push(cs.cf);
@@ -1348,9 +1400,11 @@ namespace GitUI.Editor.RichTextBoxExtension
                                     Color color = Color.FromName(text);
                                     crFont = GetCOLORREF(color);
                                 }
+
                                 break;
                         }
                     }
+
                     reader.MoveToElement();
 
                     cs.cf.szFaceName = strFont;
@@ -1410,9 +1464,11 @@ namespace GitUI.Editor.RichTextBoxExtension
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }
                         }
+
                         // reposition to final
                         rtb.Select(rtb.TextLength + 1, 0);
                     }
+
                     cs.links.Add(new KeyValuePair<int, int>(cs.hyperlinkStart, length));
 
                     cs.hyperlinkStart = -1;
@@ -1473,7 +1529,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 Debug.WriteLine(ex.Message);
             }
+
             rtb.HideSelection = false;
+
             // reposition to final
             rtb.Select(rtb.TextLength + 1, 0);
         }

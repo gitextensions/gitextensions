@@ -14,11 +14,13 @@ namespace GitPluginShared.Commands
                         {
                             string file = GitCommands.RunGitExWait("searchfile", application.Solution.FullName);
                             if (file == null || string.IsNullOrEmpty(file.Trim()))
+                            {
                                 return;
+                            }
+
                             application.ExecuteCommand("File.OpenFile", file);
                         });
         }
-
 
         protected override CommandTarget SupportedTargets => CommandTarget.SolutionExplorerFileItem;
 

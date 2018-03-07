@@ -10,7 +10,6 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
         /// </summary>
         public bool BeginningOnly { get; set; }
 
-
         /// <summary>
         ///     The ascii condition array
         /// </summary>

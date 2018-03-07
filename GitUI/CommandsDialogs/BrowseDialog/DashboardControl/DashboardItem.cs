@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public sealed partial class DashboardItem : GitExtensionsControl
     {
-        private ToolTip toolTip;
+        private ToolTip _toolTip;
         private readonly AsyncLoader _branchNameLoader;
 
         private DashboardItem()
@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComponent();
             Translate();
             flowLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Icon.Width = Icon.Height;
         }
 
@@ -26,10 +26,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             : this()
         {
             if (repository == null)
+            {
                 return;
+            }
 
             Bitmap icon = GetRepositoryIcon(repository);
-
 
             if (AppSettings.DashboardShowCurrentBranch)
             {
@@ -40,6 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     {
                         return GitModule.GetSelectedBranchFast(repository.Path);
                     }
+
                     return string.Empty;
                 },
                 UpdateBranchName);
@@ -56,7 +58,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void Close()
         {
-            toolTip?.RemoveAll();
+            _toolTip?.RemoveAll();
         }
 
         private void Initialize(Bitmap icon, string path, string title, string text)
@@ -67,7 +69,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Path = path;
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_Title.Text))
+            {
                 _NO_TRANSLATE_Title.Text = Path;
+            }
 
             bool hasDescription = !string.IsNullOrEmpty(text);
             if (!hasDescription)
@@ -75,12 +79,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _NO_TRANSLATE_Description.AutoSize = false;
                 _NO_TRANSLATE_Description.Size = Size.Empty;
             }
+
             _NO_TRANSLATE_Description.Text = text;
 
             if (icon != null)
+            {
                 Icon.Image = icon;
+            }
 
-            toolTip = new ToolTip
+            _toolTip = new ToolTip
             {
                 InitialDelay = 1,
                 AutomaticDelay = 100,
@@ -89,7 +96,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 UseAnimation = false,
                 ReshowDelay = 1
             };
-            toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
+            _toolTip.SetToolTip(_NO_TRANSLATE_Title, Path);
 
             _NO_TRANSLATE_Title.MouseDown += Title_MouseDown;
             _NO_TRANSLATE_Title.Click += Title_Click;
@@ -116,7 +123,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         void Title_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
+            {
                 ContextMenuStrip?.Show((Control)sender, e.Location);
+            }
         }
 
         public string Path { get; private set; }
@@ -129,16 +138,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
         {
-            this.BackColor = SystemColors.ControlLight;
+            BackColor = SystemColors.ControlLight;
         }
 
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             if ((sender == Icon || sender == _NO_TRANSLATE_Title) &&
-                this.ClientRectangle.Contains(this.PointToClient(Control.MousePosition)))
+                ClientRectangle.Contains(PointToClient(Control.MousePosition)))
+            {
                 return;
+            }
 
-            this.BackColor = SystemColors.Control;
+            BackColor = SystemColors.Control;
         }
 
         void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
@@ -167,7 +178,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+            {
                 OnClick(e);
+            }
         }
 
         /// <summary>
@@ -182,6 +195,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _branchNameLoader?.Dispose();
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

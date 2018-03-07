@@ -17,7 +17,6 @@ namespace GitCommandsTests
         private IEnvironmentAbstraction _environment;
         private IEnvironmentPathsProvider _provider;
 
-
         [SetUp]
         public void Setup()
         {
@@ -50,7 +49,6 @@ namespace GitCommandsTests
 
             CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
         }
-
 
         [Platform(Include = "Win")]
         [TestCase("\\\\my-pc\\Work\\GitExtensions\\", true)]

@@ -13,7 +13,6 @@ namespace Gravatar
         /// </summary>
         event EventHandler Invalidated;
 
-
         /// <summary>
         /// Adds the image to the cache from the supplied stream.
         /// </summary>
@@ -56,7 +55,6 @@ namespace Gravatar
         private readonly int _cacheDays;
         private readonly IFileSystem _fileSystem;
 
-
         public DirectoryImageCache(string cachePath, int cacheDays, IFileSystem fileSystem)
         {
             _cachePath = cachePath;
@@ -73,12 +71,10 @@ namespace Gravatar
         {
         }
 
-
         /// <summary>
         /// Occurs whenever the cache is invalidated.
         /// </summary>
         public event EventHandler Invalidated;
-
 
         /// <summary>
         /// Adds the image to the cache from the supplied stream.
@@ -91,6 +87,7 @@ namespace Gravatar
             {
                 return;
             }
+
             if (!_fileSystem.Directory.Exists(_cachePath))
             {
                 _fileSystem.Directory.CreateDirectory(_cachePath);
@@ -108,6 +105,7 @@ namespace Gravatar
             {
                 // do nothing
             }
+
             OnInvalidated(EventArgs.Empty);
         }
 
@@ -120,6 +118,7 @@ namespace Gravatar
             {
                 return;
             }
+
             await Task.Run(() =>
             {
                 foreach (var file in _fileSystem.Directory.GetFiles(_cachePath))
@@ -153,6 +152,7 @@ namespace Gravatar
             {
                 return;
             }
+
             try
             {
                 await Task.Run(() => _fileSystem.File.Delete(file));
@@ -161,6 +161,7 @@ namespace Gravatar
             {
                 // do nothing
             }
+
             OnInvalidated(EventArgs.Empty);
         }
 
@@ -184,6 +185,7 @@ namespace Gravatar
                 {
                     return null;
                 }
+
                 using (Stream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
                     return Image.FromStream(fileStream);
@@ -206,7 +208,6 @@ namespace Gravatar
             return await Task.Run(() => GetImage(imageFileName, defaultBitmap));
         }
 
-
         private bool HasExpired(string fileName)
         {
             var file = _fileSystem.FileInfo.FromFileName(fileName);
@@ -214,6 +215,7 @@ namespace Gravatar
             {
                 return true;
             }
+
             return file.LastWriteTime < DateTime.Now.AddDays(-_cacheDays);
         }
 

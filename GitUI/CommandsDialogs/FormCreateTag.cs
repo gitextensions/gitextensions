@@ -27,7 +27,6 @@ namespace GitUI.CommandsDialogs
         private static readonly string[] DropwdownTagOperation = { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
         private readonly IGitTagController _gitTagController;
 
-
         public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
@@ -37,7 +36,9 @@ namespace GitUI.CommandsDialogs
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
+            {
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+            }
 
             if (aCommands != null)
             {
@@ -50,7 +51,10 @@ namespace GitUI.CommandsDialogs
             textBoxTagName.Select();
             _currentRemote = Module.GetCurrentRemote();
             if (String.IsNullOrEmpty(_currentRemote))
+            {
                 _currentRemote = "origin";
+            }
+
             pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
         }
 
@@ -61,7 +65,9 @@ namespace GitUI.CommandsDialogs
                 var tagName = CreateTag();
 
                 if (pushTag.Checked && !string.IsNullOrEmpty(tagName))
+                {
                     PushTag(tagName);
+                }
             }
             catch (Exception ex)
             {
@@ -142,6 +148,7 @@ namespace GitUI.CommandsDialogs
                 default:
                     throw new NotSupportedException("Invalid dropdownSelection");
             }
+
             return returnValue;
         }
     }

@@ -58,14 +58,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public static CheckState ToCheckboxState(this bool? booleanValue)
         {
             if (!booleanValue.HasValue)
+            {
                 return CheckState.Indeterminate;
+            }
+
             return booleanValue == true ? CheckState.Checked : CheckState.Unchecked;
         }
 
         public static bool? ToBoolean(this CheckState state)
         {
             if (state == CheckState.Indeterminate)
+            {
                 return null;
+            }
+
             return state == CheckState.Checked;
         }
     }

@@ -83,6 +83,7 @@ namespace TfsInterop
                         ? buildDefs
                         : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
                 }
+
                 ConnectToTfsServer2015(hostname, teamCollection, projectName, buildDefinitionNameFilter);
             }
             catch (Exception ex)
@@ -99,10 +100,15 @@ namespace TfsInterop
                 var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
                 buildSpec.InformationTypes = null;
                 if (sinceDate.HasValue)
+                {
                     buildSpec.MinFinishTime = sinceDate.Value;
+                }
 
                 if (running.HasValue && running.Value)
+                {
                     buildSpec.Status = Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress;
+                }
+
                 result.AddRange(_buildServer.QueryBuilds(buildSpec).Builds.Select(b =>
                 {
                     var id = b.Uri.AbsoluteUri.Substring(b.Uri.AbsoluteUri.LastIndexOf('/') + 1);
@@ -112,9 +118,13 @@ namespace TfsInterop
                         && b.Status != Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped)
                     {
                         if (b.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress)
+                        {
                             duration = " / " + GetDuration(DateTime.Now - b.StartTime);
+                        }
                         else
+                        {
                             duration = " / " + GetDuration(b.FinishTime - b.StartTime);
+                        }
                     }
 
                     return new BuildInfo
@@ -132,6 +142,7 @@ namespace TfsInterop
                     };
                 }).Cast<IBuild>().ToList());
             }
+
             result = QueryBuilds2015(result, sinceDate, running);
             return result;
         }
@@ -139,35 +150,66 @@ namespace TfsInterop
         private static string GetStatus(IBuildDetail build)
         {
             if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.NotStarted)
+            {
                 return "Not started";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress)
+            {
                 return "In progress...";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.None)
+            {
                 return "No status";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped)
+            {
                 return "Stopped";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded)
+            {
                 return "OK";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.Failed
                 || build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.PartiallySucceeded)
             {
                 if (build.CompilationStatus != Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded)
+                {
                     return "Compilation: " + GetStatusDescription(build.CompilationStatus);
+                }
+
                 if (build.TestStatus != Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded)
+                {
                     return "Tests: " + GetStatusDescription(build.TestStatus);
+                }
+
                 if (build.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.Failed)
+                {
                     return "KO";
+                }
+
                 return "Partially Succeeded";
             }
+
             return "-";
         }
 
         private static string GetStatusDescription(Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus status)
         {
             if (status == Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded)
+            {
                 return "OK";
+            }
+
             if (status == Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Failed)
+            {
                 return "KO";
+            }
+
             return "-";
         }
 
@@ -237,6 +279,7 @@ namespace TfsInterop
                         buildDefs.Add(def);
                     }
                 }
+
                 _buildDefinitions2015 = buildDefs.ToArray();
                 _buildClient = buildClient;
                 _connection = connection;
@@ -252,12 +295,16 @@ namespace TfsInterop
         {
             ////var result = new List<IBuild>();
             if (_buildDefinitions2015 == null)
+            {
                 return result;
+            }
             ////foreach (var _buildDefinition in _buildDefinitions)
             ////{
             Microsoft.TeamFoundation.Build.WebApi.BuildStatus statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.All;
             if (running.HasValue && running.Value)
+            {
                 statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress;
+            }
 
             ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { _buildDefinition.Id },
             ////                                       minFinishTime: sinceDate,
@@ -280,7 +327,9 @@ namespace TfsInterop
                     && b.StartTime.HasValue)
                 {
                     if (b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress)
+                    {
                         duration = " / " + GetDuration(DateTime.UtcNow - b.StartTime.Value);
+                    }
                     else
                     {
                         if (b.FinishTime.HasValue)
@@ -311,6 +360,7 @@ namespace TfsInterop
                     result.Add(ibuild);
                 }
             }
+
             return result;
         }
 
@@ -320,36 +370,55 @@ namespace TfsInterop
             {
                 return sourceVersion.Substring(sourceVersion.LastIndexOf(':') + 1);
             }
+
             return sourceVersion;
         }
 
         private static string GetStatus2015(Build build)
         {
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.NotStarted)
+            {
                 return "Not started";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress)
+            {
                 return "In progress...";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.None)
+            {
                 return "No status";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Postponed)
+            {
                 return "Postponed";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Cancelling)
+            {
                 return "Cancelling";
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed)
             {
                 if (build.Result.Value == BuildResult.Failed)
                 {
                     return "KO";
                 }
+
                 if (build.Result.Value == BuildResult.PartiallySucceeded)
                 {
                     return "Partially Succeeded";
                 }
+
                 if (build.Result.Value == BuildResult.Succeeded)
                 {
                     return "OK";
                 }
             }
+
             return "-";
         }
 
@@ -365,18 +434,33 @@ namespace TfsInterop
         private static BuildStatus ConvertStatus2015(Build build)
         {
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress)
+            {
                 return BuildStatus.InProgress;
+            }
+
             if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed)
             {
                 if (build.Result.Value == BuildResult.Failed)
+                {
                     return BuildStatus.Failure;
+                }
+
                 if (build.Result.Value == BuildResult.Succeeded)
+                {
                     return BuildStatus.Success;
+                }
+
                 if (build.Result.Value == BuildResult.Canceled)
+                {
                     return BuildStatus.Stopped;
+                }
+
                 if (build.Result.Value == BuildResult.PartiallySucceeded)
+                {
                     return BuildStatus.Unstable;
+                }
             }
+
             return BuildStatus.Unknown;
         }
 
@@ -384,9 +468,15 @@ namespace TfsInterop
         {
             string s = string.Empty;
             if (duration.Hours != 0)
+            {
                 s += duration.Hours + "h";
+            }
+
             if (duration.Minutes != 0)
+            {
                 s += duration.Minutes.ToString("00") + "m";
+            }
+
             s += duration.Seconds.ToString("00") + "s";
             return s;
         }

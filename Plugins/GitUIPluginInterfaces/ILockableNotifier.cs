@@ -1,5 +1,4 @@
-﻿
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     public interface ILockableNotifier
     {

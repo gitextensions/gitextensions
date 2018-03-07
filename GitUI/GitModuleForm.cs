@@ -10,6 +10,7 @@ namespace GitUI
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
         private GitUICommands _uiCommands;
+
         /// <summary>Gets a <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
         public GitUICommands UICommands
@@ -17,7 +18,9 @@ namespace GitUI
             get
             {
                 if (_uiCommands == null)
+                {
                     throw new InvalidOperationException("UICommands is null");
+                }
 
                 return _uiCommands;
             }
@@ -57,7 +60,10 @@ namespace GitUI
         protected override bool ExecuteCommand(int command)
         {
             if (ExecuteScriptCommand(command))
+            {
                 return true;
+            }
+
             return base.ExecuteCommand(command);
         }
 

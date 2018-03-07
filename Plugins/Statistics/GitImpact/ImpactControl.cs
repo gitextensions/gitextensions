@@ -18,24 +18,28 @@ namespace GitImpact
         private const int LinesFontSize = 10;
         private const int WeekFontSize = 8;
 
-
         private readonly object _dataLock = new object();
 
         private ImpactLoader _impactLoader;
 
         // <Author, <Commits, Added Lines, Deleted Lines>>
         private Dictionary<string, ImpactLoader.DataPoint> _authors;
+
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
         private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact;
 
         // List of authors that determines the drawing order
         private List<string> _authorStack;
+
         // The paths for each author
         private Dictionary<string, GraphicsPath> _paths;
+
         // The brush for each author
         private Dictionary<string, SolidBrush> _brushes;
+
         // The changed-lines-labels for each author
         private Dictionary<string, List<Tuple<PointF, int>>> _lineLabels;
+
         // The week-labels
         private List<Tuple<PointF, DateTime>> _weekLabels;
 
@@ -48,7 +52,7 @@ namespace GitImpact
             InitializeComponent();
 
             // Set DoubleBuffer flag for flicker-free drawing
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
 
             MouseWheel += ImpactControl_MouseWheel;
@@ -84,6 +88,7 @@ namespace GitImpact
         void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
             _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
+
             // Redraw when we've scrolled
             Invalidate();
         }
@@ -98,26 +103,36 @@ namespace GitImpact
 
                 // If week does not exist yet in the impact dictionary
                 if (!_impact.ContainsKey(commit.week))
+                {
                     // Create it
                     _impact.Add(commit.week, new Dictionary<string, ImpactLoader.DataPoint>());
+                }
 
                 // If author does not exist yet for this week in the impact dictionary
                 if (!_impact[commit.week].ContainsKey(commit.author))
+                {
                     // Create it
                     _impact[commit.week].Add(commit.author, commit.data);
+                }
                 else
+                {
                     // Otherwise just add the changes
                     _impact[commit.week][commit.author] += commit.data;
+                }
 
                 // UPDATE AUTHORS
 
                 // If author does not exist yet in the authors dictionary
                 if (!_authors.ContainsKey(commit.author))
+                {
                     // Create it
                     _authors.Add(commit.author, commit.data);
+                }
                 else
+                {
                     // Otherwise just add the changes
                     _authors[commit.author] += commit.data;
+                }
 
                 // Add authors to intermediate weeks where they didn't create commits
                 ImpactLoader.AddIntermediateEmptyWeeks(ref _impact, _authors);
@@ -126,8 +141,10 @@ namespace GitImpact
 
                 // If author does not exist yet in the author_stack
                 if (!_authorStack.Contains(commit.author))
+                {
                     // Add it to the front (drawn first)
                     _authorStack.Insert(0, commit.author);
+                }
             }
 
             UpdatePathsAndLabels();
@@ -160,7 +177,8 @@ namespace GitImpact
         private void InitializeComponent()
         {
             _scrollBar = new System.Windows.Forms.HScrollBar();
-            this.SuspendLayout();
+            SuspendLayout();
+
             //
             // scrollBar
             //
@@ -172,15 +190,16 @@ namespace GitImpact
             _scrollBar.Size = new System.Drawing.Size(150, 17);
             _scrollBar.SmallChange = 0;
             _scrollBar.TabIndex = 0;
-            this._scrollBar.Scroll += this.OnScroll;
+            _scrollBar.Scroll += OnScroll;
+
             //
             // ImpactControl
             //
-            this.Controls.Add(_scrollBar);
-            this.Name = "ImpactControl";
-            this.Paint += this.OnPaint;
-            this.Resize += this.OnResize;
-            this.ResumeLayout(false);
+            Controls.Add(_scrollBar);
+            Name = "ImpactControl";
+            Paint += OnPaint;
+            Resize += OnResize;
+            ResumeLayout(false);
         }
 
         private int GetGraphWidth()
@@ -215,7 +234,9 @@ namespace GitImpact
             {
                 // Nothing to draw
                 if (_impact.Count == 0)
+                {
                     return;
+                }
 
                 // Activate AntiAliasing
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -228,16 +249,22 @@ namespace GitImpact
                 foreach (var author in _authorStack)
                 {
                     if (_brushes.ContainsKey(author) && _paths.ContainsKey(author))
+                    {
                         e.Graphics.FillPath(_brushes[author], _paths[author]);
+                    }
                 }
 
                 // Draw black border around selected author
                 string selectedAuthor = _authorStack[_authorStack.Count - 1];
                 if (_brushes.ContainsKey(selectedAuthor) && _paths.ContainsKey(selectedAuthor))
+                {
                     e.Graphics.DrawPath(new Pen(Color.Black, 2), _paths[selectedAuthor]);
+                }
 
                 foreach (var author in _authorStack)
+                {
                     DrawAuthorLinesLabels(e.Graphics, author);
+                }
             }
 
             DrawWeekLabels(e.Graphics);
@@ -248,7 +275,9 @@ namespace GitImpact
             lock (_dataLock)
             {
                 if (!_lineLabels.ContainsKey(author))
+                {
                     return;
+                }
 
                 using (Font font = new Font("Arial", LinesFontSize))
                 {
@@ -316,7 +345,9 @@ namespace GitImpact
 
                         // Add rectangle to temporary list
                         if (!author_points_dict.ContainsKey(author))
+                        {
                             author_points_dict.Add(author, new List<Tuple<Rectangle, int>>());
+                        }
 
                         author_points_dict[author].Add(Tuple.Create(rc, pair.Value.ChangedLines));
 
@@ -346,8 +377,10 @@ namespace GitImpact
 
                 // Scale week label coordinates
                 for (int i = 0; i < _weekLabels.Count; i++)
+                {
                     _weekLabels[i] = Tuple.Create(new PointF(_weekLabels[i].Item1.X, _weekLabels[i].Item1.Y * (float)height_factor),
                                                   _weekLabels[i].Item2);
+                }
 
                 // Clear previous paths
                 _paths.Clear();
@@ -370,12 +403,16 @@ namespace GitImpact
 
                         // Add lines-changed-labels
                         if (!_lineLabels.ContainsKey(author))
+                        {
                             _lineLabels.Add(author, new List<Tuple<PointF, int>>());
+                        }
 
                         if (author_points.Value[i].Item1.Height > LinesFontSize * 1.5)
+                        {
                             _lineLabels[author].Add(Tuple.Create(new PointF(author_points.Value[i].Item1.Left + BlockWidth / 2,
                                 author_points.Value[i].Item1.Top + author_points.Value[i].Item1.Height / 2),
                                 author_points.Value[i].Item2));
+                        }
                     }
 
                     _paths.Add(author, new GraphicsPath());
@@ -391,10 +428,12 @@ namespace GitImpact
                                               author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Top);
 
                         if (i < author_points.Value.Count - 1)
+                        {
                             _paths[author].AddBezier(author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Top,
                                                     author_points.Value[i].Item1.Right + TransitionWidth / 2, author_points.Value[i].Item1.Top,
                                                     author_points.Value[i].Item1.Right + TransitionWidth / 2, author_points.Value[i + 1].Item1.Top,
                                                     author_points.Value[i + 1].Item1.Left, author_points.Value[i + 1].Item1.Top);
+                        }
                     }
 
                     // Right border
@@ -410,10 +449,12 @@ namespace GitImpact
                                               author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Bottom);
 
                         if (i > 0)
+                        {
                             _paths[author].AddBezier(author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Bottom,
                                                     author_points.Value[i].Item1.Left - TransitionWidth / 2, author_points.Value[i].Item1.Bottom,
                                                     author_points.Value[i].Item1.Left - TransitionWidth / 2, author_points.Value[i - 1].Item1.Bottom,
                                                     author_points.Value[i - 1].Item1.Right, author_points.Value[i - 1].Item1.Bottom);
+                        }
                     }
                 }
             }
@@ -435,9 +476,14 @@ namespace GitImpact
             lock (_dataLock)
             {
                 foreach (var author in _authorStack.Reverse<string>())
+                {
                     if (_paths.ContainsKey(author) && _paths[author].IsVisible(x + _scrollBar.Value, y))
+                    {
                         return author;
+                    }
+                }
             }
+
             return "";
         }
 
@@ -450,10 +496,13 @@ namespace GitImpact
             lock (_dataLock)
             {
                 if (!_authorStack.Contains(author))
+                {
                     return false;
+                }
 
                 // Remove author from the stack
                 _authorStack.Remove(author);
+
                 // and add it again at the end
                 _authorStack.Add(author);
             }
@@ -467,7 +516,9 @@ namespace GitImpact
         public string GetSelectedAuthor()
         {
             if (_authorStack.Count == 0)
+            {
                 return string.Empty;
+            }
 
             lock (_dataLock)
             {
@@ -486,20 +537,34 @@ namespace GitImpact
             lock (_dataLock)
             {
                 if (_brushes.ContainsKey(author))
+                {
                     return _brushes[author].Color;
+                }
             }
+
             return Color.Transparent;
         }
 
         [Browsable(false)]
-        public List<string> Authors { get { lock (_dataLock) return _authorStack; } }
+        public List<string> Authors
+        {
+            get
+            {
+                lock (_dataLock)
+                {
+                    return _authorStack;
+                }
+            }
+        }
 
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
         {
             lock (_dataLock)
             {
                 if (_authors.ContainsKey(author))
+                {
                     return _authors[author];
+                }
 
                 return new ImpactLoader.DataPoint(0, 0, 0);
             }

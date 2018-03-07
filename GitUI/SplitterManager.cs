@@ -8,7 +8,7 @@ namespace GitUI
     public class SplitterManager
     {
         private readonly ISettingsSource _settings;
-        private readonly List<SplitterData> splitters = new List<SplitterData>();
+        private readonly List<SplitterData> _splitters = new List<SplitterData>();
         private float _designTimeFontSize;
 
         public SplitterManager(ISettingsSource settings, float designTimeFontSize = 8.25F)
@@ -26,22 +26,22 @@ namespace GitUI
                 DefaultDistance = defaultDistance,
                 DesignTimeFontSize = _designTimeFontSize
             };
-            splitters.Add(data);
+            _splitters.Add(data);
         }
 
         public void RestoreSplitters()
         {
-            splitters.ForEach(s => s.RestoreFromSettings(_settings));
+            _splitters.ForEach(s => s.RestoreFromSettings(_settings));
         }
 
         public void SaveSplitters()
         {
-            splitters.ForEach(s => s.SaveToSettings(_settings));
+            _splitters.ForEach(s => s.SaveToSettings(_settings));
         }
 
         public void AdjustAccordingToFontSize()
         {
-            splitters.ForEach(s => s.AdjustToCurrentFontSize());
+            _splitters.ForEach(s => s.AdjustToCurrentFontSize());
         }
 
         private class SplitterData

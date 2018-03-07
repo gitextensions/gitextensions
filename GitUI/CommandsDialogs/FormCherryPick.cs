@@ -17,11 +17,12 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Error");
         #endregion
 
-        private bool isMerge;
+        private bool _isMerge;
 
         private FormCherryPick()
             : this(null, null)
-        { }
+        {
+        }
 
         public FormCherryPick(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
@@ -53,10 +54,13 @@ namespace GitUI.CommandsDialogs
             ParentsList.Items.Clear();
 
             if (Revision != null)
-                isMerge = Module.IsMerge(Revision.Guid);
-            panelParentsList.Visible = isMerge;
+            {
+                _isMerge = Module.IsMerge(Revision.Guid);
+            }
 
-            if (isMerge)
+            panelParentsList.Visible = _isMerge;
+
+            if (_isMerge)
             {
                 var parents = Module.GetParentsRevisions(Revision.Guid);
 
@@ -81,7 +85,7 @@ namespace GitUI.CommandsDialogs
             List<string> argumentsList = new List<string>();
             bool canExecute = true;
 
-            if (isMerge)
+            if (_isMerge)
             {
                 if (ParentsList.SelectedItems.Count == 0)
                 {

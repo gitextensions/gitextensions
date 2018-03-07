@@ -77,7 +77,9 @@ namespace GitCommands
         {
             // Never cache empty commands
             if (string.IsNullOrEmpty(cmd))
+            {
                 return;
+            }
 
             lock (queue)
             {
@@ -86,15 +88,20 @@ namespace GitCommands
 
                 // Limit cache to X commands
                 if (queue.Count >= CacheLimit)
+                {
                     commandCache.Remove(queue.Dequeue());
+                }
             }
+
             CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }
 
         public static void CleanCache()
         {
             lock (queue)
+            {
                 queue?.Clear();
+            }
 
             CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }

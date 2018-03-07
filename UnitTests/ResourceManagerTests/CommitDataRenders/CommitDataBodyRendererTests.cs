@@ -20,7 +20,6 @@ namespace ResourceManagerTests.CommitDataRenders
         private CommitDataBodyRenderer _renderer;
         private CommitDataBodyRenderer _rendererReal;
 
-
         [SetUp]
         public void Setup()
         {
@@ -31,7 +30,6 @@ namespace ResourceManagerTests.CommitDataRenders
             _renderer = new CommitDataBodyRenderer(_getModule, _linkFactory);
             _rendererReal = new CommitDataBodyRenderer(_getModule, new LinkFactory());
         }
-
 
         [Test]
         public void Render_should_throw_if_data_null()

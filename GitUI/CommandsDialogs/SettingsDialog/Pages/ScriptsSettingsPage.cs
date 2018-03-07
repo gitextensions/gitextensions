@@ -53,7 +53,7 @@ Current Branch:
 {cDefaultRemotePathFromUrl}");
         #endregion translation
 
-        private string IconName = "bug";
+        private string _IconName = "bug";
 
         public ScriptsSettingsPage()
         {
@@ -130,7 +130,9 @@ Current Branch:
         private void RefreshScriptDetails()
         {
             if (ScriptList.SelectedRows.Count == 0)
+            {
                 return;
+            }
 
             ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
 
@@ -144,11 +146,11 @@ Current Branch:
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
             sbtn_icon.Image = ResizeForSplitButton(scriptInfo.GetIcon());
-            IconName = scriptInfo.Icon;
+            _IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
             {
-                if (item.ToString() == IconName)
+                if (item.ToString() == _IconName)
                 {
                     item.Font = new Font(item.Font, FontStyle.Bold);
                 }
@@ -188,7 +190,7 @@ Current Branch:
                 selectedScriptInfo.IsPowerShell = scriptIsPowerShell.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
-                selectedScriptInfo.Icon = IconName;
+                selectedScriptInfo.Icon = _IconName;
             }
         }
 
@@ -232,7 +234,9 @@ Current Branch:
             })
             {
                 if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
                     commandTextBox.Text = ofd.FileName;
+                }
             }
         }
 
@@ -245,9 +249,14 @@ Current Branch:
                 removeScriptButton.Enabled = true;
                 moveDownButton.Enabled = moveUpButton.Enabled = false;
                 if (ScriptList.SelectedRows[0].Index > 0)
+                {
                     moveUpButton.Enabled = true;
+                }
+
                 if (ScriptList.SelectedRows[0].Index < ScriptList.RowCount - 1)
+                {
                     moveDownButton.Enabled = true;
+                }
             }
             else
             {
@@ -276,7 +285,9 @@ Current Branch:
             // reset bold item to regular
             var item = contextMenuStrip_SplitButton.Items.OfType<ToolStripMenuItem>().FirstOrDefault(s => s.Font.Bold);
             if (item != null)
+            {
                 item.Font = new Font(contextMenuStrip_SplitButton.Font, FontStyle.Regular);
+            }
 
             // make new item bold
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
@@ -284,7 +295,7 @@ Current Branch:
             // set new image on button
             sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
 
-            IconName = ((ToolStripMenuItem)sender).Text;
+            _IconName = ((ToolStripMenuItem)sender).Text;
 
             // store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
@@ -301,9 +312,13 @@ Current Branch:
             {
                 return null;
             }
+
             Bitmap result = new Bitmap(nWidth, nHeight);
             using (Graphics g = Graphics.FromImage((Image)result))
+            {
                 g.DrawImage(b, 0, 0, nWidth, nHeight);
+            }
+
             return result;
         }
 

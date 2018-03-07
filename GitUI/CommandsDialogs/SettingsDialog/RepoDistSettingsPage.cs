@@ -25,31 +25,41 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void SetEffectiveSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.EffectiveSettings);
+            }
         }
 
         public void SetLocalSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.LocalSettings);
+            }
         }
 
         public override void SetGlobalSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.GlobalSettings);
+            }
         }
 
         public void SetRepoDistSettings()
         {
             if (RepoDistSettingsSet != null)
+            {
                 SetCurrentSettings(RepoDistSettingsSet.RepoDistSettings);
+            }
         }
 
         private void SetCurrentSettings(RepoDistSettings settings)
         {
             if (CurrentSettings != null)
+            {
                 SaveSettings();
+            }
 
             CurrentSettings = settings;
 
@@ -58,13 +68,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
+
             //
             // RepoDistSettingsPage
             //
-            this.Name = "RepoDistSettingsPage";
-            this.Size = new System.Drawing.Size(951, 518);
-            this.ResumeLayout(false);
+            Name = "RepoDistSettingsPage";
+            Size = new System.Drawing.Size(951, 518);
+            ResumeLayout(false);
         }
     }
 }

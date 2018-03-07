@@ -11,8 +11,10 @@ namespace GitCommands
     {
         /// <summary>Gets the name or URL of the remote repo to push to.</summary>
         public string Remote { get; private set; }
+
         /// <summary>Gets the set of LocalBranch:RemoteBranch actions.</summary>
         public IEnumerable<GitPushAction> PushActions { get; private set; }
+
         /// <summary>Indicates whether to report progress during the push operation.</summary>
         public bool ReportProgress { get; set; }
 
@@ -20,18 +22,21 @@ namespace GitCommands
         ///  (or 'origin', if no remote is configured for the current branch).</summary>
         public GitPush()
             : this(null)
-        { }
+        {
+        }
 
         /// <summary>Works like 'git push {remote} :', where branches matching the refspec are pushed.</summary>
         public GitPush(string remote)
             : this(remote, (string)null)
-        { }
+        {
+        }
 
         /// <summary>'git push {remote} {source}' : Push to a matching ref in the remote,
         ///  or if non-existing, create one with the same name.</summary>
         public GitPush(string remote, string source)
             : this(remote, source, null)
-        { }
+        {
+        }
 
         /// <summary>Push a local branch to a remote branch.</summary>
         /// <param name="remote">Name or URL of the remote repository.</param>
@@ -41,14 +46,16 @@ namespace GitCommands
         /// ref even when the update is not a fast-forward.</param>
         public GitPush(string remote, string source, string destination, bool force = false)
             : this(remote, new GitPushAction(source, destination, force))
-        { }
+        {
+        }
 
         /// <summary>Push sets of local branches to a remote branches.</summary>
         /// <param name="remote">Name or URL of the remote repository.</param>
         /// <param name="pushActions">Sets of LocalBranch:RemoteBranch.</param>
         public GitPush(string remote, params GitPushAction[] pushActions)
             : this(remote, pushActions.AsEnumerable())
-        { }
+        {
+        }
 
         /// <summary>Push sets of local branches to remote branches.</summary>
         /// <param name="remote">Name or URL of the remote repository.</param>

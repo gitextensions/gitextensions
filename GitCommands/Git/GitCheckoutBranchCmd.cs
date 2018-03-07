@@ -22,11 +22,16 @@ namespace GitCommands.Git
             set
             {
                 if (value == LocalChangesAction.Stash)
+                {
                     _localChanges = LocalChangesAction.DontChange;
+                }
                 else
+                {
                     _localChanges = value;
+                }
             }
         }
+
         public NewBranch NewBranchAction { get; set; }
 
         public GitCheckoutBranchCmd(string branchName, bool remote)
@@ -43,16 +48,24 @@ namespace GitCommands.Git
         protected override IEnumerable<string> CollectArguments()
         {
             if (LocalChanges == LocalChangesAction.Merge)
+            {
                 yield return "--merge";
+            }
             else if (LocalChanges == LocalChangesAction.Reset)
+            {
                 yield return "--force";
+            }
 
             if (Remote)
             {
                 if (NewBranchAction == NewBranch.Create)
+                {
                     yield return "-b " + NewBranchName.Quote();
+                }
                 else if (NewBranchAction == NewBranch.Reset)
+                {
                     yield return "-B " + NewBranchName.Quote();
+                }
             }
 
             yield return BranchName.QuoteNE();

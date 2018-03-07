@@ -24,7 +24,6 @@ namespace GitUI.UserControls
         /// <summary>
         /// shows a message box if commitHash is invalid
         /// </summary>
-        /// <param name="commitHash"></param>
         public void SetSelectedCommitHash(string commitHash)
         {
             string oldCommitHash = SelectedCommitHash;
@@ -46,7 +45,7 @@ namespace GitUI.UserControls
             else
             {
                 textBoxCommitHash.Text = GitRevision.ToShortSha(SelectedCommitHash);
-                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), SelectedCommitHash))
+                Task.Factory.StartNew(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), SelectedCommitHash))
                      .ContinueWith(t => lbCommits.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }

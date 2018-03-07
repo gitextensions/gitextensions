@@ -76,13 +76,14 @@ namespace GitUI.CommandsDialogs
         private IGitIgnoreDialogModel CreateGitIgnoreDialogModel(bool localExclude)
         {
             if (localExclude)
+            {
                 return new GitLocalExcludeModel(Module);
+            }
 
             return new GitIgnoreModel(Module);
         }
 
         private string ExcludeFile => _dialogModel.ExcludeFile;
-
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
@@ -99,16 +100,18 @@ namespace GitUI.CommandsDialogs
                 Close();
                 return true;
             }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
 
         private void LoadGitIgnore()
         {
             try
             {
                 if (File.Exists(ExcludeFile))
+                {
                     _NO_TRANSLATE_GitIgnoreEdit.ViewFile(ExcludeFile);
+                }
             }
             catch (Exception ex)
             {
@@ -125,7 +128,10 @@ namespace GitUI.CommandsDialogs
         private bool SaveGitIgnore()
         {
             if (!HasUnsavedChanges())
+            {
                 return false;
+            }
+
             try
             {
                 FileInfoExtensions
@@ -135,7 +141,10 @@ namespace GitUI.CommandsDialogs
                         {
                             var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
                             if (!fileContent.EndsWith(Environment.NewLine))
+                            {
                                 fileContent += Environment.NewLine;
+                            }
+
                             File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                             _originalGitIgnoreFileContent = fileContent;
                         });
@@ -162,6 +171,7 @@ namespace GitUI.CommandsDialogs
                             e.Cancel = true;
                             return;
                         }
+
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;
@@ -173,7 +183,10 @@ namespace GitUI.CommandsDialogs
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository())
+            {
                 return;
+            }
+
             MessageBox.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }
@@ -187,7 +200,10 @@ namespace GitUI.CommandsDialogs
                 .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
             if (patternsToAdd.Length == 0)
+            {
                 return;
+            }
+
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;

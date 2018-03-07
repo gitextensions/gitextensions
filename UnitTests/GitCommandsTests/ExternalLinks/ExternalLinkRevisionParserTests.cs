@@ -21,7 +21,6 @@ namespace GitCommandsTests.ExternalLinks
         private ExternalLinkDefinition _linkDef;
         private GitRevision _revision;
 
-
         [SetUp]
         public void Setup()
         {
@@ -34,7 +33,6 @@ namespace GitCommandsTests.ExternalLinks
 
             _parser = new ExternalLinkRevisionParser(_remoteManager);
         }
-
 
         [Test]
         public void ParseGithubIssueForUpstreamLink()
@@ -70,7 +68,6 @@ namespace GitCommandsTests.ExternalLinks
             var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
-
 
         [Test]
         public void ParseGithubIssueForUpstreamAndOriginLink()
@@ -124,7 +121,6 @@ namespace GitCommandsTests.ExternalLinks
             actualLinks.Should().Equal(expectedLinks);
         }
 
-
         [Test]
         public void ParseLinkWithEmptyRemotePart()
         {
@@ -142,7 +138,6 @@ namespace GitCommandsTests.ExternalLinks
             var actualLinks = _parser.Parse(_revision, _linkDef);
             actualLinks.Should().Equal(expectedLinks);
         }
-
 
         private static BindingList<GitRemote> GetDefaultRemotes()
         {
@@ -210,7 +205,6 @@ namespace GitCommandsTests.ExternalLinks
 </ArrayOfGitExtLinkDef>
        ";
         }
-
 
         private static string GetEmptyRemotePartXmlDef()
         {

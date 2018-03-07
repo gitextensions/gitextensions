@@ -18,7 +18,9 @@ namespace GitUI.HelperDialogs
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (BuildServerCredentials == null)
+            {
                 BuildServerCredentials = new BuildServerCredentials();
+            }
 
             BuildServerCredentials.UseGuestAccess = radioButtonGuestAccess.Checked;
             BuildServerCredentials.Username = textBoxUserName.Text;

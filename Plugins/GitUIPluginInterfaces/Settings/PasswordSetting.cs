@@ -30,7 +30,8 @@ namespace GitUIPluginInterfaces
         {
             public TextBoxBinding(PasswordSetting aSetting, TextBox aCustomControl)
                 : base(aSetting, aCustomControl)
-            { }
+            {
+            }
 
             public override TextBox CreateControl()
             {

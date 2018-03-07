@@ -16,8 +16,12 @@ namespace GitUI
         {
             var path = Browse(parent);
             if (!string.IsNullOrEmpty(path))
+            {
                 if (LoadKey(parent, path))
+                {
                     return path;
+                }
+            }
 
             return null;
         }
@@ -35,7 +39,9 @@ namespace GitUI
             })
             {
                 if (dialog.ShowDialog(parent) == DialogResult.OK)
+                {
                     return dialog.FileName;
+                }
 
                 return null;
             }

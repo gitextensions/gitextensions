@@ -15,11 +15,13 @@ namespace GitCommands.Git
                 {
                     throw new ArgumentOutOfRangeException(nameof(replacementToken), "Replacement token must be a single character");
                 }
+
                 if (!GitBranchNameNormaliser.IsValidChar(replacementToken[0]))
                 {
                     throw new ArgumentOutOfRangeException(nameof(replacementToken), string.Format("Replacement token invalid: '{0}'", replacementToken));
                 }
             }
+
             ReplacementToken = replacementToken ?? string.Empty;
         }
 

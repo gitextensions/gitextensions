@@ -13,12 +13,16 @@ namespace GitCommands
 
         /// <summary>"refs/tags/"</summary>
         public static readonly string RefsTagsPrefix = "refs/tags/";
+
         /// <summary>"refs/heads/"</summary>
         public static readonly string RefsHeadsPrefix = "refs/heads/";
+
         /// <summary>"refs/remotes/"</summary>
         public static readonly string RefsRemotesPrefix = "refs/remotes/";
+
         /// <summary>"refs/bisect/"</summary>
         public static readonly string RefsBisectPrefix = "refs/bisect/";
+
         /// <summary>"^{}"</summary>
         public static readonly string TagDereferenceSuffix = "^{}";
 
@@ -26,7 +30,8 @@ namespace GitCommands
 
         public GitRef(IGitModule module, string guid, string completeName)
             : this(module, guid, completeName, string.Empty)
-        { }
+        {
+        }
 
         public GitRef(IGitModule module, string guid, string completeName, string remote)
         {
@@ -79,13 +84,17 @@ namespace GitCommands
             set
             {
                 if (String.IsNullOrEmpty(value))
+                {
                     Module.UnsetSetting(_remoteSettingName);
+                }
                 else
                 {
                     Module.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
+                    {
                         MergeWith = Name;
+                    }
                 }
             }
         }
@@ -112,9 +121,13 @@ namespace GitCommands
             set
             {
                 if (String.IsNullOrEmpty(value))
+                {
                     Module.UnsetSetting(_mergeSettingName);
+                }
                 else
+                {
                     Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
+                }
             }
         }
 
@@ -128,7 +141,6 @@ namespace GitCommands
             string merge = configFile.GetValue(_mergeSettingName);
             return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
         }
-
 
         public static GitRef NoHead(GitModule module)
         {

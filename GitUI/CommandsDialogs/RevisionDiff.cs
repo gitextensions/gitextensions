@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            this.HotkeysEnabled = true;
+            HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
         }
@@ -57,12 +57,13 @@ namespace GitUI.CommandsDialogs
                 _oldRevision = null;
                 _oldDiffItem = null;
             }
+
             RefreshArtificial();
         }
 
         public void RefreshArtificial()
         {
-            if (this.Visible)
+            if (Visible)
             {
                 var revisions = _revisionGrid.GetSelectedRevisions();
 
@@ -124,6 +125,7 @@ namespace GitUI.CommandsDialogs
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     return _diffTwoSelected.Text;
             }
+
             return _diffNotSupported.Text;
         }
 
@@ -140,11 +142,10 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             DiffText.ReloadHotkeys();
         }
-
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
@@ -160,7 +161,6 @@ namespace GitUI.CommandsDialogs
 
             base.OnRuntimeLoad(e);
         }
-
 
         private string DescribeRevision(string sha1)
         {
@@ -179,22 +179,29 @@ namespace GitUI.CommandsDialogs
             loadFileContent = Task.FromResult<string>(null);
             var revisions = _revisionGrid.GetSelectedRevisions();
             if (revisions.Count == 0)
+            {
                 return false;
+            }
 
             int idx = DiffFiles.SelectedIndex;
             if (idx == -1)
+            {
                 return false;
+            }
 
             fileIndex = DiffFiles.GetNextIndex(searchBackward, loop);
             if (fileIndex == idx)
             {
                 if (!loop)
+                {
                     return false;
+                }
             }
             else
             {
                 DiffFiles.SetSelectedIndex(fileIndex, notify: false);
             }
+
             loadFileContent = ShowSelectedFileDiff();
             return true;
         }
@@ -265,9 +272,9 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
             }
+
             await DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
-
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -276,13 +283,16 @@ namespace GitUI.CommandsDialogs
                 await ShowSelectedFileDiff();
             }
             catch (OperationCanceledException)
-            { }
+            {
+            }
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
         {
             if (DiffFiles.SelectedItem == null)
+            {
                 return;
+            }
 
             if (AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
             {
@@ -306,7 +316,9 @@ namespace GitUI.CommandsDialogs
         private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
         {
             if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
+            {
                 DiffText.ViewPatch(String.Empty);
+            }
         }
 
         private async void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -316,7 +328,8 @@ namespace GitUI.CommandsDialogs
                 await ShowSelectedFileDiff();
             }
             catch (OperationCanceledException)
-            { }
+            {
+            }
         }
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -341,6 +354,7 @@ namespace GitUI.CommandsDialogs
             unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
 
             cherryPickSelectedDiffFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
+
             // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
             diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
@@ -393,6 +407,7 @@ namespace GitUI.CommandsDialogs
             {
                 files.Add(item);
             }
+
             bool err;
             Module.StageFiles(files, out err);
             RefreshArtificial();
@@ -410,7 +425,9 @@ namespace GitUI.CommandsDialogs
                         Module.UnstageFileToRemove(item.Name);
 
                         if (item.IsRenamed)
+                        {
                             Module.UnstageFileToRemove(item.OldName);
+                        }
                     }
                     else
                     {
@@ -452,6 +469,7 @@ namespace GitUI.CommandsDialogs
                 searchWindow.ShowDialog(this);
                 selectedItem = searchWindow.SelectedItem;
             }
+
             if (selectedItem != null)
             {
                 DiffFiles.SelectedItem = selectedItem;
@@ -476,18 +494,28 @@ namespace GitUI.CommandsDialogs
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (DiffFiles.SelectedItem == null)
+            {
                 return;
+            }
 
             GitUI.RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffALocal;
+            }
             else if (sender == bLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+            }
             else if (sender == parentOfALocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+            }
             else if (sender == parentOfBLocalToolStripMenuItem)
+            {
                 diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+            }
             else
             {
                 diffKind = GitUI.RevisionDiffKind.DiffAB;
@@ -502,6 +530,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+
             // Should be blocked in the GUI but not an error to show to the user
             Debug.Assert(selectedRevisions.Count == 1 || selectedRevisions.Count == 2,
                 "Unexpectedly number of revisions for difftool" + selectedRevisions.Count);
@@ -526,7 +555,9 @@ namespace GitUI.CommandsDialogs
                 {
                     localExists = true;
                     if (localExists && bIsNormal)
+                    {
                         break;
+                    }
                 }
             }
 
@@ -617,6 +648,7 @@ namespace GitUI.CommandsDialogs
                     TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
                     resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0], 50) + ")";
                 }
+
                 if (revisions[0].HasParent)
                 {
                     resetFileToParentToolStripMenuItem.Visible = true;
@@ -674,10 +706,14 @@ namespace GitUI.CommandsDialogs
             IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
 
             if (revisions.Count == 0)
+            {
                 return;
+            }
 
             if (DiffFiles.SelectedItem == null)
+            {
                 return;
+            }
 
             GitItemStatus item = DiffFiles.SelectedItem;
 
@@ -727,21 +763,26 @@ namespace GitUI.CommandsDialogs
                             Module.UnstageFileToRemove(item.Name);
 
                             if (item.IsRenamed)
+                            {
                                 Module.UnstageFileToRemove(item.OldName);
+                            }
                         }
                         else
                         {
                             files.Add(item);
                         }
                     }
+
                     Module.UnstageFiles(files);
                 }
+
                 DiffFiles.StoreNextIndexToSelect();
                 var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
                 foreach (var item in items)
                 {
                     File.Delete(_fullPathResolver.Resolve(item.Name));
                 }
+
                 RefreshArtificial();
             }
             catch (Exception ex)
@@ -749,6 +790,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
                 return false;
             }
+
             return true;
         }
 
@@ -775,6 +817,7 @@ namespace GitUI.CommandsDialogs
                 GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 submodulCommands.StartCommitDialog(this, false);
             }
+
             RefreshArtificial();
         }
 
@@ -785,7 +828,9 @@ namespace GitUI.CommandsDialogs
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, true, true);
             if (resetType == FormResetChanges.ActionEnum.Cancel)
+            {
                 return;
+            }
 
             foreach (var name in submodules)
             {
@@ -804,15 +849,24 @@ namespace GitUI.CommandsDialogs
                         {
                             string path = _fullPathResolver.Resolve(file.Name);
                             if (File.Exists(path))
+                            {
                                 File.Delete(path);
+                            }
                             else
+                            {
                                 Directory.Delete(path, true);
+                            }
                         }
-                        catch (IOException) { }
-                        catch (UnauthorizedAccessException) { }
+                        catch (IOException)
+                        {
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                        }
                     }
                 }
             }
+
             RefreshArtificial();
         }
 
@@ -833,6 +887,7 @@ namespace GitUI.CommandsDialogs
                 GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
+
             RefreshArtificial();
         }
 
@@ -845,7 +900,11 @@ namespace GitUI.CommandsDialogs
             {
                 summary += Module.GetSubmoduleSummary(name);
             }
-            using (var frm = new FormEdit(summary)) frm.ShowDialog(this);
+
+            using (var frm = new FormEdit(summary))
+            {
+                frm.ShowDialog(this);
+            }
         }
     }
 }

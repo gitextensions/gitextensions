@@ -13,7 +13,6 @@ namespace GitCommands.Repository
             Repositories.AllowRemove = true;
         }
 
-
         public RepositoryCategory(string description)
         {
             Description = description;
@@ -40,7 +39,6 @@ namespace GitCommands.Repository
         {
             Repositories.Remove(repository);
         }
-
 
         public void AddRepository(Repository repo)
         {

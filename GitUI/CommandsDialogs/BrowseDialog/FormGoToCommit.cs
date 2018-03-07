@@ -42,7 +42,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// might return an empty or invalid revision
         /// </summary>
-        /// <returns></returns>
         public string GetSelectedRevision()
         {
             return _selectedRevision;
@@ -51,7 +50,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// returns null if revision does not exist (could not be revparsed)
         /// </summary>
-        /// <returns></returns>
         public string ValidateAndGetSelectedRevision()
         {
             string guid = Module.RevParse(_selectedRevision);
@@ -257,6 +255,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

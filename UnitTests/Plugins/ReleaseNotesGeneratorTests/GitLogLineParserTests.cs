@@ -10,13 +10,11 @@ namespace ReleaseNotesGeneratorTests
     {
         private IGitLogLineParser _parser;
 
-
         [SetUp]
         public void Setup()
         {
             _parser = new GitLogLineParser();
         }
-
 
         [TestCase(null)]
         [TestCase("")]

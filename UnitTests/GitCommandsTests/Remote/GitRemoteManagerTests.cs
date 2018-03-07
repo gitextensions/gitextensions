@@ -19,7 +19,6 @@ namespace GitCommandsTests.Remote
         private IConfigFileSettings _configFile;
         private IGitRemoteManager _controller;
 
-
         [SetUp]
         public void Setup()
         {
@@ -30,7 +29,6 @@ namespace GitCommandsTests.Remote
 
             _controller = new GitRemoteManager(() => _module);
         }
-
 
         [Test]
         public void LoadRemotes_should_not_throw_if_module_is_null()

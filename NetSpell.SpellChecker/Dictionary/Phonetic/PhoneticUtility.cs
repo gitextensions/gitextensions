@@ -79,6 +79,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
                         {
                             end = true;
                         }
+
                         break;
                 } // switch
 
@@ -102,6 +103,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
                         int charCode = cond;
                         rule.Condition[charCode] = rule.Condition[charCode] | (1 << rule.ConditionCount);
                     }
+
                     end = false;
                     rule.ConditionCount++;
                 } // if end

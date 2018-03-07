@@ -42,10 +42,16 @@ namespace GitUI.AutoCompletion
                                 var text = GetChangedFileText(_module, file);
                                 var matches = regex.Matches(text);
                                 foreach (Match match in matches)
+                                {
                                     // Skip first group since it always contains the entire matched string (regardless of capture groups)
                                     foreach (Group @group in match.Groups.OfType<Group>().Skip(1))
+                                    {
                                         foreach (Capture capture in @group.Captures)
+                                        {
                                             autoCompleteWords.Add(capture.Value);
+                                        }
+                                    }
+                                }
                             }
 
                             autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
@@ -71,13 +77,16 @@ namespace GitUI.AutoCompletion
             var path = Path.Combine(AppSettings.ApplicationDataPath.Value, "AutoCompleteRegexes.txt");
 
             if (File.Exists(path))
+            {
                 return File.ReadLines(path);
+            }
 
             Stream s = Assembly.GetEntryAssembly().GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
             if (s == null)
             {
                 throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
             }
+
             using (var sr = new StreamReader(s))
             {
                 return sr.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
@@ -100,7 +109,9 @@ namespace GitUI.AutoCompletion
                 var regex = new Regex(regexStr, RegexOptions.Compiled);
 
                 foreach (var extension in extensions)
+                {
                     regexes.Add(extension, regex);
+                }
             }
 
             return regexes;
@@ -111,12 +122,16 @@ namespace GitUI.AutoCompletion
             var changes = module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding);
 
             if (changes != null)
+            {
                 return changes.Text;
+            }
 
             var content = module.GetFileContents(file);
 
             if (content != null)
+            {
                 return content;
+            }
 
             // Try to read the contents of the file: if it cannot be read, skip the operation silently.
             try

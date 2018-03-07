@@ -22,7 +22,6 @@ namespace GitCommandsTests.Git.Gpg
             _gpgController = new GitGpgController(_module);
         }
 
-
         [TestCase(CommitStatus.GoodSignature, "G")]
         [TestCase(CommitStatus.SignatureError, "B")]
         [TestCase(CommitStatus.SignatureError, "U")]
@@ -44,20 +43,17 @@ namespace GitCommandsTests.Git.Gpg
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestCase]
         public void Validate_GetRevisionCommitSignatureStatusAsync_null_revision()
         {
             ((Func<Task>)(async () => await _gpgController.GetRevisionCommitSignatureStatusAsync(null))).ShouldThrow<ArgumentNullException>();
         }
 
-
         [TestCase]
         public void Validate_GetRevisionTagSignatureStatusAsync_null_revision()
         {
             ((Func<Task>)(async () => await _gpgController.GetRevisionTagSignatureStatusAsync(null))).ShouldThrow<ArgumentNullException>();
         }
-
 
         [TestCase(TagStatus.NoTag, 0)]
         [TestCase(TagStatus.Many, 2)]
@@ -79,7 +75,6 @@ namespace GitCommandsTests.Git.Gpg
             Assert.AreEqual(tagStatus, actual);
         }
 
-
         [TestCase(TagStatus.OneGood, "GOODSIG ... VALIDSIG ...")]
         [TestCase(TagStatus.TagNotSigned, "error: no signature found")]
         [TestCase(TagStatus.NoPubKey, "NO_PUBKEY ...")]
@@ -98,7 +93,6 @@ namespace GitCommandsTests.Git.Gpg
 
             Assert.AreEqual(tagStatus, actual);
         }
-
 
         [TestCase("return string")]
         public void Validate_GetCommitVerificationMessage(string returnString)
@@ -120,14 +114,11 @@ namespace GitCommandsTests.Git.Gpg
             Assert.Throws<ArgumentNullException>(() => _gpgController.GetCommitVerificationMessage(null));
         }
 
-
-
         [TestCase]
         public void Validate_GetTagVerifyMessage_null_revision()
         {
             Assert.Throws<ArgumentNullException>(() => _gpgController.GetTagVerifyMessage(null));
         }
-
 
         [TestCase(0, "")]
         [TestCase(1, "TagName")]

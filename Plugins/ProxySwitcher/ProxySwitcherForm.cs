@@ -44,8 +44,8 @@ namespace ProxySwitcher
         {
             if (string.IsNullOrEmpty(_plugin.HttpProxy.ValueOrDefault(_settings)))
             {
-                MessageBox.Show(this, _pleaseSetProxy.Text, this.Text, MessageBoxButtons.OK);
-                this.Close();
+                MessageBox.Show(this, _pleaseSetProxy.Text, Text, MessageBoxButtons.OK);
+                Close();
             }
             else
             {
@@ -79,8 +79,10 @@ namespace ProxySwitcher
                     sb.Append(":");
                     sb.Append(password);
                 }
+
                 sb.Append("@");
             }
+
             sb.Append(_plugin.HttpProxy.ValueOrDefault(_settings));
             var port = _plugin.HttpProxyPort.ValueOrDefault(_settings);
             if (!string.IsNullOrEmpty(port))
@@ -88,6 +90,7 @@ namespace ProxySwitcher
                 sb.Append(":");
                 sb.Append(port);
             }
+
             sb.Append("\"");
             return sb.ToString();
         }
@@ -103,6 +106,7 @@ namespace ProxySwitcher
             {
                 _gitCommands.RunGitCmd("config http.proxy " + httpproxy);
             }
+
             RefreshProxy();
         }
 
@@ -116,6 +120,7 @@ namespace ProxySwitcher
             {
                 _gitCommands.RunGitCmd("config --unset http.proxy");
             }
+
             RefreshProxy();
         }
     }

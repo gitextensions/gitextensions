@@ -8,9 +8,7 @@ using System.Collections.Generic;
 namespace GitUI
 {
     delegate void DataCallback(string text);
-    /// <summary>
-    ///
-    /// </summary>
+
     /// <param name="isError">if command finished with error</param>
     /// <param name="form">this form</param>
     /// <returns>if handled</returns>
@@ -28,7 +26,8 @@ namespace GitUI
 
         protected FormProcess()
             : base(true)
-        { }
+        {
+        }
 
         public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
@@ -81,7 +80,6 @@ namespace GitUI
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
         }
 
-
         public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
             using (var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings))
@@ -100,7 +98,6 @@ namespace GitUI
                 return !formProcess.ErrorOccurred();
             }
         }
-
 
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
@@ -140,7 +137,10 @@ namespace GitUI
             BeforeProcessStart();
             string QuotedProcessString = ProcessString;
             if (QuotedProcessString.IndexOf(' ') != -1)
+            {
                 QuotedProcessString = QuotedProcessString.Quote();
+            }
+
             AddMessageLine(QuotedProcessString + " " + ProcessArguments);
 
             try
@@ -184,9 +184,6 @@ namespace GitUI
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         /// <param name="isError">if command finished with error</param>
         /// <returns>if handled</returns>
         protected virtual bool HandleOnExit(ref bool isError)
@@ -204,7 +201,9 @@ namespace GitUI
                     isError = exitcode != 0;
 
                     if (HandleOnExit(ref isError))
+                    {
                         return;
+                    }
                 }
                 catch
                 {
@@ -222,16 +221,22 @@ namespace GitUI
         private void DataReceivedCore(object sender, TextEventArgs e)
         {
             if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+            {
                 SetProgress(e.Text);
+            }
             else
             {
                 const string ansiSuffix = "\u001B[K";
                 string line = e.Text.Replace(ansiSuffix, "");
 
                 if (ConsoleOutput.IsDisplayingFullProcessOutput)
+                {
                     OutputLog.Append(line); // To the log only, display control displays it by itself
+                }
                 else
+                {
                     AppendOutput(line); // Both to log and display control
+                }
             }
 
             DataReceived(sender, e);
@@ -256,16 +261,17 @@ namespace GitUI
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
+
             //
             // FormProcess
             //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(565, 326);
-            this.Name = "FormProcess";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            ClientSize = new System.Drawing.Size(565, 326);
+            Name = "FormProcess";
+            ResumeLayout(false);
+            PerformLayout();
         }
     }
 }

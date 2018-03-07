@@ -40,6 +40,7 @@ namespace GitUITests
                         throw;
                     }
                 }
+
                 testTranslation[types.Key] = tranlation;
             }
         }

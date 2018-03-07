@@ -12,18 +12,21 @@ namespace FindLargeFiles
             Translate();
         }
 
-        private NumberSetting<float> SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
+        private NumberSetting<float> _SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
 
         public override IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
-            yield return SizeLargeFile;
+            yield return _SizeLargeFile;
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            using (var frm = new FindLargeFilesForm(SizeLargeFile.ValueOrDefault(Settings), gitUiCommands))
+            using (var frm = new FindLargeFilesForm(_SizeLargeFile.ValueOrDefault(Settings), gitUiCommands))
+            {
                 frm.ShowDialog(gitUiCommands.OwnerForm);
+            }
+
             return true;
         }
     }

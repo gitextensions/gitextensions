@@ -31,7 +31,8 @@ namespace GitUIPluginInterfaces
         {
             public TextBoxBinding(StringSetting aSetting, TextBox aCustomControl)
                 : base(aSetting, aCustomControl)
-            { }
+            {
+            }
 
             public override TextBox CreateControl()
             {
@@ -86,6 +87,5 @@ namespace GitUIPluginInterfaces
         {
             return this[settings] ?? DefaultValue;
         }
-
     }
 }

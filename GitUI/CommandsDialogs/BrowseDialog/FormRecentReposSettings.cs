@@ -20,7 +20,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             SetComboWidth();
         }
 
-
         private void LoadSettings()
         {
             SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
@@ -50,25 +49,41 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string GetShorteningStrategy()
         {
             if (dontShortenRB.Checked)
+            {
                 return RecentRepoSplitter.ShorteningStrategy_None;
+            }
             else if (mostSigDirRB.Checked)
+            {
                 return RecentRepoSplitter.ShorteningStrategy_MostSignDir;
+            }
             else if (middleDotRB.Checked)
+            {
                 return RecentRepoSplitter.ShorteningStrategy_MiddleDots;
+            }
             else
+            {
                 throw new Exception("Can not figure shortening strategy");
+            }
         }
 
         private void SetShorteningStrategy(string strategy)
         {
             if (RecentRepoSplitter.ShorteningStrategy_None.Equals(strategy))
+            {
                 dontShortenRB.Checked = true;
+            }
             else if (RecentRepoSplitter.ShorteningStrategy_MostSignDir.Equals(strategy))
+            {
                 mostSigDirRB.Checked = true;
+            }
             else if (RecentRepoSplitter.ShorteningStrategy_MiddleDots.Equals(strategy))
+            {
                 middleDotRB.Checked = true;
+            }
             else
+            {
                 throw new Exception("Unhandled shortening strategy: " + strategy);
+            }
         }
 
         private void RefreshRepos()
@@ -97,10 +112,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             foreach (RecentRepoInfo repo in mostRecentRepos)
+            {
                 MostRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
+            }
 
             foreach (RecentRepoInfo repo in lessRecentRepos)
+            {
                 LessRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
+            }
         }
 
         private void SetComboWidth()
@@ -171,25 +190,38 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool GetSelectedRepo(object sender, out RecentRepoInfo repo)
         {
             if (sender is ContextMenuStrip)
+            {
                 sender = ((ContextMenuStrip)sender).SourceControl;
+            }
             else if (sender is ToolStripItem)
+            {
                 return GetSelectedRepo(((ToolStripItem)sender).Owner, out repo);
+            }
             else
+            {
                 sender = null;
+            }
 
             ListView lb;
             if (sender == MostRecentLB)
+            {
                 lb = MostRecentLB;
+            }
             else if (sender == LessRecentLB)
+            {
                 lb = LessRecentLB;
+            }
             else
+            {
                 lb = null;
+            }
 
             repo = null;
             if (lb?.SelectedItems.Count > 0)
             {
                 repo = lb.SelectedItems[0].Tag as RecentRepoInfo;
             }
+
             return repo != null;
         }
 

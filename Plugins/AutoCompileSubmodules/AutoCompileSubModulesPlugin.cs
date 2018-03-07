@@ -20,9 +20,9 @@ namespace AutoCompileSubmodules
             Translate();
         }
 
-        private BoolSetting MsBuildEnabled = new BoolSetting("Enabled", false);
-        private StringSetting MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
-        private StringSetting MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        private BoolSetting _MsBuildEnabled = new BoolSetting("Enabled", false);
+        private StringSetting _MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
+        private StringSetting _MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
 
         private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
         private static string FindMsBuild()
@@ -34,9 +34,9 @@ namespace AutoCompileSubmodules
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            yield return MsBuildEnabled;
-            yield return MsBuildPath;
-            yield return MsBuildArguments;
+            yield return _MsBuildEnabled;
+            yield return _MsBuildPath;
+            yield return _MsBuildArguments;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -55,9 +55,11 @@ namespace AutoCompileSubmodules
         {
             // Only build when plugin is enabled
             if (string.IsNullOrEmpty(e.GitModule.WorkingDir))
+            {
                 return false;
+            }
 
-            var msbuildpath = MsBuildPath.ValueOrDefault(Settings);
+            var msbuildpath = _MsBuildPath.ValueOrDefault(Settings);
 
             var workingDir = new DirectoryInfo(e.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
@@ -75,16 +77,25 @@ namespace AutoCompileSubmodules
                         MessageBoxButtons.YesNoCancel);
 
                 if (result == DialogResult.Cancel)
+                {
                     return false;
+                }
 
                 if (result != DialogResult.Yes)
+                {
                     continue;
+                }
 
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
+                {
                     MessageBox.Show(e.OwnerForm, _enterCorrectMsBuildPath.Text);
+                }
                 else
-                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + MsBuildArguments.ValueOrDefault(Settings));
+                {
+                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + _MsBuildArguments.ValueOrDefault(Settings));
+                }
             }
+
             return false;
         }
 
@@ -95,8 +106,10 @@ namespace AutoCompileSubmodules
         /// </summary>
         private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {
-            if (e.ActionDone && MsBuildEnabled.ValueOrDefault(Settings))
+            if (e.ActionDone && _MsBuildEnabled.ValueOrDefault(Settings))
+            {
                 Execute(e);
+            }
         }
 
         private static string SolutionFilesToString(IList<FileInfo> solutionFiles)
@@ -108,6 +121,7 @@ namespace AutoCompileSubmodules
                 solutionString.Append(solutionFile.Name);
                 solutionString.Append("\n");
             }
+
             return solutionString.ToString();
         }
     }

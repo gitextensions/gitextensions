@@ -88,6 +88,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 MessageBox.Show(_cantReadRegistry.Text);
             }
+
             return value ?? string.Empty;
         }
 
@@ -95,13 +96,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
             if (!string.IsNullOrEmpty(editor))
+            {
                 return editor;
+            }
+
             editor = ConfigFileSettingsSet.GlobalSettings.GetValue("core.editor");
             if (!string.IsNullOrEmpty(editor))
+            {
                 return editor;
+            }
+
             editor = Environment.GetEnvironmentVariable("VISUAL");
             if (!string.IsNullOrEmpty(editor))
+            {
                 return editor;
+            }
+
             return Environment.GetEnvironmentVariable("EDITOR");
         }
 
@@ -121,9 +131,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void EncodingToCombo(Encoding encoding, ComboBox combo)
         {
             if (encoding == null)
+            {
                 combo.Text = "";
+            }
             else
+            {
                 combo.Text = encoding.EncodingName;
+            }
         }
 
         public Encoding ComboToEncoding(ComboBox combo)

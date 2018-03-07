@@ -16,8 +16,6 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Locates the node by the label.
         /// </summary>
-        /// <param name="nodes"></param>
-        /// <param name="label"></param>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
         TreeNode Find(TreeNodeCollection nodes, string label);
 
@@ -25,9 +23,6 @@ namespace GitUI.CommandsDialogs
         /// Loads children items for the provided item in to the specified nodes.
         /// For file type items it also loads icons associated with these types at the OS level.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="nodes"></param>
-        /// <param name="imageCollection"></param>
         void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection);
 
         /// <summary>
@@ -49,7 +44,6 @@ namespace GitUI.CommandsDialogs
         private readonly IGitRevisionInfoProvider _revisionInfoProvider;
         private readonly ConcurrentDictionary<string, IEnumerable<IGitItem>> _cachedItems = new ConcurrentDictionary<string, IEnumerable<IGitItem>>();
 
-
         public RevisionFileTreeController(Func<string> getWorkingDir, IGitRevisionInfoProvider revisionInfoProvider, IFileAssociatedIconProvider iconProvider)
         {
             _getWorkingDir = getWorkingDir;
@@ -57,12 +51,9 @@ namespace GitUI.CommandsDialogs
             _iconProvider = iconProvider;
         }
 
-
         /// <summary>
         /// Locates the node by the label.
         /// </summary>
-        /// <param name="nodes"></param>
-        /// <param name="label"></param>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
         public TreeNode Find(TreeNodeCollection nodes, string label)
         {
@@ -73,6 +64,7 @@ namespace GitUI.CommandsDialogs
                     return nodes[i];
                 }
             }
+
             return null;
         }
 
@@ -81,9 +73,6 @@ namespace GitUI.CommandsDialogs
         /// Loaded children are cached until <see cref="ResetCache"/> method is called.
         /// For file type items it also loads icons associated with these types at the OS level.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="nodes"></param>
-        /// <param name="imageCollection"></param>
         /// <remarks>The method DOES NOT check any input parameters for performance reasons.</remarks>
         public void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection)
         {
@@ -114,12 +103,14 @@ namespace GitUI.CommandsDialogs
                             subNode.Nodes.Add(new TreeNode());
                             break;
                         }
+
                     case GitObjectType.Commit:
                         {
                             subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Submodule;
                             subNode.Text = $@"{childItem.Name} (Submodule)";
                             break;
                         }
+
                     case GitObjectType.Blob:
                         {
                             var extension = Path.GetExtension(gitItem.FileName);
@@ -127,6 +118,7 @@ namespace GitUI.CommandsDialogs
                             {
                                 continue;
                             }
+
                             if (!imageCollection.ContainsKey(extension))
                             {
                                 // a little optimisation - initialise the first time it is required
@@ -137,8 +129,10 @@ namespace GitUI.CommandsDialogs
                                 {
                                     continue;
                                 }
+
                                 imageCollection.Add(extension, fileIcon);
                             }
+
                             subNode.ImageKey = subNode.SelectedImageKey = extension;
                             break;
                         }

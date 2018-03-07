@@ -44,7 +44,10 @@ namespace DeleteUnusedBranches
             public static Comparison<Branch> Create(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
             {
                 if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out var comparer))
+                {
                     return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
+                }
+
                 throw new NotSupportedException(string.Format("Custom sort by {0} property is not supported.", propertyDescriptor.Name));
             }
 

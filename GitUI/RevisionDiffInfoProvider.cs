@@ -19,6 +19,7 @@ namespace GitUI
         {
             // Note: Order in revisions is that first clicked is last in array
             string error = "";
+
             // Detect rename and copy
             extraDiffArgs = "-M -C";
 
@@ -50,6 +51,7 @@ namespace GitUI
                 {
                     firstRevision = revisions[1].Guid;
                 }
+
                 secondRevision = revisions[0].Guid;
             }
             else
@@ -100,6 +102,7 @@ namespace GitUI
                     }
                 }
             }
+
             return error;
         }
     }

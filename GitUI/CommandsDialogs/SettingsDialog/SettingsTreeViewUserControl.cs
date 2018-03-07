@@ -29,10 +29,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             SetFindPrompt(true);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="parentPageReference"></param>
         /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node)</param>
         public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, bool asRoot = false)
         {
@@ -52,7 +48,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 else
                 {
                     if (!_Pages2NodeMap.TryGetValue(parentPageReference, out var parentNode))
+                    {
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
+                    }
 
                     node = parentNode.Nodes.Add(page.GetTitle());
                 }
@@ -85,6 +83,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         return;
                     }
                 }
+
                 SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = page, IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
             }
         }
@@ -207,9 +206,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             TreeNode node;
             if (settingsPageReference == null)
+            {
                 node = treeView1.Nodes.Count > 0 ? treeView1.Nodes[0] : null;
+            }
             else
+            {
                 _Pages2NodeMap.TryGetValue(settingsPageReference, out node);
+            }
 
             if (node != null)
             {

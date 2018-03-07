@@ -42,7 +42,9 @@ namespace GitCommands.Settings
         {
             string configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".config", "git", "config");
             if (!File.Exists(configPath))
+            {
                 configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".gitconfig");
+            }
 
             return new ConfigFileSettings(aLowerPriority,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
@@ -57,20 +59,21 @@ namespace GitCommands.Settings
                 // Git 1.xx
                 configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
                 if (!File.Exists(configPath))
+                {
                     return null;
+                }
             }
 
             return new ConfigFileSettings(null,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
         }
 
-
         public readonly CorePath core;
         public readonly MergeToolPath mergetool;
 
         public string GetValue(string setting)
         {
-            return this.GetString(setting, string.Empty);
+            return GetString(setting, string.Empty);
         }
 
         public IList<string> GetValues(string setting)
@@ -86,7 +89,7 @@ namespace GitCommands.Settings
                 value = null;
             }
 
-            this.SetString(setting, value);
+            SetString(setting, value);
         }
 
         public void SetPathValue(string setting, string value)
@@ -136,7 +139,9 @@ namespace GitCommands.Settings
             string encodingName = GetValue(settingName);
 
             if (string.IsNullOrEmpty(encodingName))
+            {
                 result = null;
+            }
             else if (!AppSettings.AvailableEncodings.TryGetValue(encodingName, out result))
             {
                 try

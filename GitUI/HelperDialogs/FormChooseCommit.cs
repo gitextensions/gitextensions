@@ -11,7 +11,8 @@ namespace GitUI.HelperDialogs
     {
         private FormChooseCommit()
             : this(null)
-        { }
+        {
+        }
 
         private FormChooseCommit(GitUICommands aCommands)
             : base(aCommands)
@@ -84,12 +85,16 @@ namespace GitUI.HelperDialogs
             {
                 return;
             }
+
             SelectedRevision = revisions[0];
 
             flowLayoutPanelParents.Visible = SelectedRevision.HasParent;
 
             if (!flowLayoutPanelParents.Visible)
+            {
                 return;
+            }
+
             _parents = SelectedRevision.ParentGuids.ToDictionary(p => GitRevision.ToShortSha(p), p => p);
             linkLabelParent.Text = _parents.Keys.ElementAt(0);
 

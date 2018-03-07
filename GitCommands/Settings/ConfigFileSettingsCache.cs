@@ -31,9 +31,13 @@ namespace GitCommands.Settings
         public static ConfigFileSettingsCache Create(string aSettingsFilePath, bool aLocal, bool allowCache = true)
         {
             if (allowCache)
+            {
                 return FromCache(aSettingsFilePath, aLocal);
+            }
             else
+            {
                 return new ConfigFileSettingsCache(aSettingsFilePath, false, aLocal);
+            }
         }
 
         protected override void WriteSettings(string fileName)

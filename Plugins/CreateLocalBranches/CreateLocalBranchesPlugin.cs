@@ -14,7 +14,11 @@ namespace CreateLocalBranches
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            using (var frm = new CreateLocalBranchesForm(gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new CreateLocalBranchesForm(gitUiCommands))
+            {
+                frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            }
+
             return true;
         }
     }

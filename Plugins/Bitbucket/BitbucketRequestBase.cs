@@ -33,6 +33,7 @@ namespace Bitbucket
                 System.Net.ServicePointManager.ServerCertificateValidationCallback
                     = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
             }
+
             var client = new RestClient
             {
                 BaseUrl = new System.Uri(Settings.BitbucketUrl),
@@ -43,20 +44,27 @@ namespace Bitbucket
             if (RequestBody != null)
             {
                 if (RequestBody is string)
+                {
                     request.AddParameter("application/json", RequestBody, ParameterType.RequestBody);
+                }
                 else
+                {
                     request.AddBody(RequestBody);
+                }
             }
+
             // XSRF check fails when approving/creating
             request.AddHeader("X-Atlassian-Token", "no-check");
 
             var response = client.Execute(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
+            {
                 return new BitbucketResponse<T>
                 {
                     Success = false,
                     Messages = new[] { response.ErrorMessage }
                 };
+            }
 
             if ((int)response.StatusCode >= 300)
             {
@@ -89,6 +97,7 @@ namespace Bitbucket
                 var errorResponse = new BitbucketResponse<T> { Success = false };
                 return errorResponse;
             }
+
             if (json["errors"] != null)
             {
                 var messages = new List<string>();
@@ -105,16 +114,19 @@ namespace Bitbucket
                             sb.Append(reviewerError["message"]).AppendLine();
                         }
                     }
+
                     messages.Add(sb.ToString());
                 }
 
                 errorResponse.Messages = messages;
                 return errorResponse;
             }
+
             if (json["message"] != null)
             {
                 return new BitbucketResponse<T> { Success = false, Messages = new[] { json["message"].ToString() } };
             }
+
             return new BitbucketResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
         }
     }

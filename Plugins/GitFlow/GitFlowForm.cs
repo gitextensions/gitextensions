@@ -57,7 +57,9 @@ namespace GitFlow
             ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
 
             if (_gitUiCommands != null)
+            {
                 Init();
+            }
         }
 
         private void Init()
@@ -101,6 +103,7 @@ namespace GitFlow
                     return true;
                 }
             }
+
             branchType = null;
             branchName = null;
             return false;
@@ -112,16 +115,23 @@ namespace GitFlow
             cbManageType.Enabled = false;
             cbBranches.DataSource = new List<string> { _loading.Text };
             if (!Branches.ContainsKey(branchType))
+            {
                 _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
+            }
             else
+            {
                 DisplayBranchDatas();
+            }
         }
 
         private List<string> GetBranches(string typeBranch)
         {
             var result = _gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
             if (result.ExitCode != 0)
+            {
                 return new List<string>();
+            }
+
             string[] references = result.StdOutput.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
@@ -162,7 +172,9 @@ namespace GitFlow
             pnlBasedOn.Visible = manageBaseBranch;
 
             if (manageBaseBranch)
+            {
                 cbBaseBranch.DataSource = GetLocalBranches();
+            }
         }
         #endregion
 
@@ -170,7 +182,9 @@ namespace GitFlow
         private void btnInit_Click(object sender, EventArgs e)
         {
             if (RunCommand("flow init -d"))
+            {
                 Init();
+            }
         }
 
         private void btnStartBranch_Click(object sender, EventArgs e)
@@ -185,7 +199,9 @@ namespace GitFlow
                     LoadBranches(branchType);
                 }
                 else
+                {
                     Branches.Remove(branchType);
+                }
             }
         }
 
@@ -193,11 +209,20 @@ namespace GitFlow
         {
             var branchType = cbType.SelectedValue.ToString();
             if (branchType == Branch.release.ToString("G"))
+            {
                 return string.Empty;
+            }
+
             if (branchType == Branch.support.ToString("G"))
+            {
                 return " HEAD"; // Hoping that's a revision on master (How to get the sha of the selected line in GitExtension?)
+            }
+
             if (!cbBasedOn.Checked)
+            {
                 return string.Empty;
+            }
+
             return " " + cbBaseBranch.SelectedValue;
         }
 
@@ -249,6 +274,7 @@ namespace GitFlow
                 ShowToolTip(pbResultCommand, "error: " + resultText);
                 txtResult.Text = resultText;
             }
+
             return result.ExitCode == 0;
         }
         #endregion

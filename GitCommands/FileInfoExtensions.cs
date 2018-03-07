@@ -25,7 +25,9 @@ namespace GitCommands
 
             fileInfo.Refresh();
             if (fileInfo.Exists)
+            {
                 fileInfo.Attributes = oldAttributes;
+            }
         }
     }
 }

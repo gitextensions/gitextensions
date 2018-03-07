@@ -31,7 +31,9 @@ namespace Gerrit
         private void PublishClick(object sender, EventArgs e)
         {
             if (PublishChange(this))
+            {
                 Close();
+            }
         }
 
         private string PushCmd(string remote, string toBranch)
@@ -46,7 +48,9 @@ namespace Gerrit
 
             var sprogressOption = "";
             if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            {
                 sprogressOption = "--progress ";
+            }
 
             return String.Format("push {0}\"{1}\" {2}:{3}", sprogressOption, remote.Trim(), fromBranch, toBranch);
         }
@@ -60,6 +64,7 @@ namespace Gerrit
                 MessageBox.Show(owner, _selectRemote.Text);
                 return false;
             }
+
             if (string.IsNullOrEmpty(branch))
             {
                 MessageBox.Show(owner, _selectBranch.Text);
@@ -76,7 +81,9 @@ namespace Gerrit
             string topic = _NO_TRANSLATE_Topic.Text.Trim();
 
             if (!string.IsNullOrEmpty(topic))
+            {
                 targetBranch += "/" + topic;
+            }
 
             pushCommand.CommandText = PushCmd(
                 _NO_TRANSLATE_Remotes.Text,
@@ -99,17 +106,23 @@ namespace Gerrit
                         const string remotePrefix = "remote:";
 
                         if (change.StartsWith(remotePrefix))
+                        {
                             change = change.Substring(remotePrefix.Length);
+                        }
 
                         int escapePos = change.LastIndexOf((char)27);
                         if (escapePos != -1)
+                        {
                             change = change.Substring(0, escapePos);
+                        }
 
                         change = change.Trim();
 
                         int spacePos = change.IndexOf(' ');
                         if (spacePos != -1)
+                        {
                             change = change.Substring(0, spacePos);
+                        }
 
                         break;
                     }
@@ -120,7 +133,9 @@ namespace Gerrit
                 }
 
                 if (change != null)
+                {
                     FormGerritChangeSubmitted.ShowSubmitted(owner, change);
+                }
             }
 
             return true;
@@ -140,7 +155,9 @@ namespace Gerrit
 
                 int unused;
                 if (int.TryParse(branchName, out unused))
+                {
                     branchName = null;
+                }
             }
 
             return branchName;
@@ -151,7 +168,9 @@ namespace Gerrit
             string branch = Module.GetSelectedBranch();
 
             if (branch.StartsWith("(no"))
+            {
                 return targetBranch;
+            }
 
             return branch;
         }
@@ -169,10 +188,14 @@ namespace Gerrit
             _NO_TRANSLATE_Branch.Text = Settings.DefaultBranch;
 
             if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
+            {
                 _NO_TRANSLATE_Topic.Text = GetTopic(_NO_TRANSLATE_Branch.Text);
+            }
 
             if (_NO_TRANSLATE_Topic.Text == _NO_TRANSLATE_Branch.Text)
+            {
                 _NO_TRANSLATE_Topic.Text = null;
+            }
 
             _NO_TRANSLATE_Branch.Select();
 

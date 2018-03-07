@@ -33,9 +33,13 @@ namespace GitPluginShared.Commands
                         {
                             string headShort;
                             if (head.Length > 27)
+                            {
                                 headShort = "..." + head.Substring(head.Length - 23);
+                            }
                             else
+                            {
                                 headShort = head;
+                            }
 
                             newCaption = "&Commit (" + headShort + ")";
                         }
@@ -53,7 +57,9 @@ namespace GitPluginShared.Commands
 
                     // try apply new caption (operation can fail)
                     if (!PluginHelpers.ChangeCommandCaption(application, PluginHelpers.GitCommandBarName, "Commit changes", newCaption))
+                    {
                         _lastUpdatedCaption = null;
+                    }
                 }
             }
 
@@ -86,10 +92,16 @@ namespace GitPluginShared.Commands
                     }
                 }
                 else if (sel.Project != null)
+                {
                     return sel.Project.FullName;
+                }
             }
+
             if (application.Solution.IsOpen)
+            {
                 return application.Solution.FullName;
+            }
+
             return string.Empty;
         }
     }

@@ -33,7 +33,9 @@ namespace GitCommandsTests.Helpers
                 bool areEqual = true; // we need this as Parallel.For does not allow return value
 
                 if (currentFileBytes.Length != otherFileBytes.Length)
+                {
                     return false;
+                }
 
                 Parallel.For(0, currentFileBytes.LongLength, (i, state) =>
                 {
@@ -67,7 +69,9 @@ namespace GitCommandsTests.Helpers
         public static bool Compare(this FileInfo currentFile, FileInfo otherFile)
         {
             if (currentFile == null || otherFile == null)
+            {
                 return false;
+            }
 
             return currentFile.Compare(otherFile.FullName);
         }

@@ -17,7 +17,10 @@ namespace GitStatistics.PieChart
         {
             Debug.Assert(color != Color.Empty);
             if (edgeColorType == EdgeColorType.Contrast || edgeColorType == EdgeColorType.EnhancedContrast)
+            {
                 edgeColorType = GetContrastColorType(color, edgeColorType);
+            }
+
             float correctionFactor = 0;
             switch (edgeColorType)
             {
@@ -42,6 +45,7 @@ namespace GitStatistics.PieChart
                 case EdgeColorType.NoEdge:
                     return Color.Transparent;
             }
+
             return ColorUtil.CreateColorWithCorrectedLightness(color, correctionFactor);
         }
 
@@ -55,6 +59,7 @@ namespace GitStatistics.PieChart
                            ? EdgeColorType.DarkerThanSurface
                            : EdgeColorType.DarkerDarkerThanSurface;
             }
+
             return colorType ==
                    EdgeColorType.Contrast
                        ? EdgeColorType.LighterThanSurface

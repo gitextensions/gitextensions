@@ -44,7 +44,6 @@ namespace Gravatar
         {
         }
 
-
         /// <summary>
         /// Loads avatar either from the local cache or from the remote service.
         /// </summary>
@@ -83,11 +82,12 @@ namespace Gravatar
         public DefaultImageType GetDefaultImageType(string imageType)
         {
             if (!Enum.TryParse(imageType, true, out DefaultImageType defaultImageType))
+            {
                 defaultImageType = DefaultImageType.None;
+            }
 
             return defaultImageType;
         }
-
 
         /// <summary>
         /// Builds a <see cref="Uri"/> corresponding to a given email address.
@@ -171,7 +171,9 @@ namespace Gravatar
             }
 
             if (string.IsNullOrEmpty(imageUrl))
+            {
                 return null;
+            }
 
             return await DownloadImage(new Uri(imageUrl), imageFileName);
         }

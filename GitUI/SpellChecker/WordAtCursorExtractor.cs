@@ -7,17 +7,23 @@ namespace GitUI.SpellChecker
         public string Extract(string text, int cursor)
         {
             if (cursor < 0)
+            {
                 return string.Empty;
+            }
 
             var sb = new StringBuilder();
 
             while (cursor >= 0)
             {
                 if (text[cursor].IsSeparator() && !IsDot(text[cursor]))
+                {
                     break;
+                }
 
                 if (IsDot(text[cursor]) && !IsLeadingChar(text, cursor))
+                {
                     break;
+                }
 
                 sb.Insert(0, text[cursor--]);
             }

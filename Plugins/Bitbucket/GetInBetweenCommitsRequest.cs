@@ -37,6 +37,7 @@ namespace Bitbucket
             {
                 result.Add(Commit.Parse(commit));
             }
+
             return result;
         }
     }

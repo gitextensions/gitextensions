@@ -19,6 +19,7 @@ namespace GitUI.Editor
             {
                 return true;
             }
+
             return false;
         }
 

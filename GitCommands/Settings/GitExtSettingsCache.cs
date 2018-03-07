@@ -2,12 +2,11 @@
 using System.Text;
 using System.Xml;
 
-
 namespace GitCommands.Settings
 {
     public class GitExtSettingsCache : FileSettingsCache
     {
-        private readonly XmlSerializableDictionary<string, string> EncodedNameMap = new XmlSerializableDictionary<string, string>();
+        private readonly XmlSerializableDictionary<string, string> _EncodedNameMap = new XmlSerializableDictionary<string, string>();
 
         public GitExtSettingsCache(string aSettingsFilePath, bool autoSave = true)
             : base(aSettingsFilePath, autoSave)
@@ -27,14 +26,18 @@ namespace GitCommands.Settings
         public static GitExtSettingsCache Create(string aSettingsFilePath, bool allowCache = true)
         {
             if (allowCache)
+            {
                 return FromCache(aSettingsFilePath);
+            }
             else
+            {
                 return new GitExtSettingsCache(aSettingsFilePath, false);
+            }
         }
 
         protected override void ClearImpl()
         {
-            EncodedNameMap.Clear();
+            _EncodedNameMap.Clear();
         }
 
         protected override void WriteSettings(string fileName)
@@ -45,7 +48,7 @@ namespace GitCommands.Settings
                 xtw.WriteStartDocument();
                 xtw.WriteStartElement("dictionary");
 
-                EncodedNameMap.WriteXml(xtw);
+                _EncodedNameMap.WriteXml(xtw);
                 xtw.WriteEndElement();
             }
         }
@@ -60,7 +63,7 @@ namespace GitCommands.Settings
 
             using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))
             {
-                EncodedNameMap.ReadXml(xr);
+                _EncodedNameMap.ReadXml(xr);
             }
         }
 
@@ -68,17 +71,17 @@ namespace GitCommands.Settings
         {
             if (value == null)
             {
-                EncodedNameMap.Remove(key);
+                _EncodedNameMap.Remove(key);
             }
             else
             {
-                EncodedNameMap[key] = value;
+                _EncodedNameMap[key] = value;
             }
         }
 
         protected override string GetValueImpl(string key)
         {
-            EncodedNameMap.TryGetValue(key, out var value);
+            _EncodedNameMap.TryGetValue(key, out var value);
             return value;
         }
     }

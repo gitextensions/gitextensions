@@ -34,20 +34,23 @@ namespace GitUI.CommandsDialogs
 
         private FormSettings()
             : this(null)
-        { }
+        {
+        }
 
         public FormSettings(GitUICommands aCommands, SettingsPageReference initalPage = null)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
-            _translatedTitle = this.Text;
+            _translatedTitle = Text;
 
             settingsTreeView.SuspendLayout();
 
             // if form is created for translation purpose
             if (aCommands == null)
+            {
                 return;
+            }
 
 #if DEBUG
             buttonDiscard.Visible = true;
@@ -71,7 +74,6 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this), gitExtPageRef);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this), gitExtPageRef);
 
-
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), gitExtPageRef);
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<StartPageSettingsPage>(this), gitExtPageRef);
@@ -94,7 +96,9 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this), gitExtPageRef);
 
             if (EnvUtils.RunningOnWindows())
+            {
                 settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ShellExtensionSettingsPage>(this), gitExtPageRef);
+            }
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AdvancedSettingsPage>(this), gitExtPageRef);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
@@ -138,7 +142,9 @@ namespace GitUI.CommandsDialogs
         private void FormSettings_Load(object sender, EventArgs e)
         {
             if (DesignMode)
+            {
                 return;
+            }
 
             WindowState = FormWindowState.Normal;
         }
@@ -167,7 +173,7 @@ namespace GitUI.CommandsDialogs
                     title = "Plugin: " + title;
                 }
 
-                this.Text = _translatedTitle + " - " + title;
+                Text = _translatedTitle + " - " + title;
                 Application.DoEvents();
 
                 Cursor.Current = Cursors.WaitCursor;
@@ -186,7 +192,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                this.Text = _translatedTitle;
+                Text = _translatedTitle;
             }
         }
 
@@ -202,6 +208,7 @@ namespace GitUI.CommandsDialogs
             catch (Exception e)
             {
                 ExceptionUtils.ShowException(e);
+
                 // Bail out before the user saves the incompletely loaded settings
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;
@@ -217,6 +224,7 @@ namespace GitUI.CommandsDialogs
             {
                 Close();
             }
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -240,7 +248,9 @@ namespace GitUI.CommandsDialogs
             _commonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
 
             if (EnvUtils.RunningOnWindows())
+            {
                 FormFixHome.CheckHomePath();
+            }
 
             // TODO: to which settings page does this belong?
             GitCommandHelpers.SetEnvironmentVariable(true);

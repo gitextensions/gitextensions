@@ -21,7 +21,7 @@ namespace GitUI
         {
             base.WndProc(ref m);
 
-            if (this.ClickThrough &&
+            if (ClickThrough &&
                 m.Msg == NativeConstants.WM_MOUSEACTIVATE &&
                 m.Result == (IntPtr)NativeConstants.MA_ACTIVATEANDEAT)
             {

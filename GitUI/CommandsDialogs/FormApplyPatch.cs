@@ -41,7 +41,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent(); Translate();
             if (aCommands != null)
+            {
                 EnableButtons();
+            }
         }
 
         public void SetPatchFile(string name)
@@ -147,6 +149,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noFileSelectedText.Text);
                 return;
             }
+
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
             {
@@ -176,7 +179,10 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
 
             if (!Module.InTheMiddleOfAction() && !Module.InTheMiddleOfPatch())
+            {
                 Close();
+            }
+
             Cursor.Current = Cursors.Default;
         }
 

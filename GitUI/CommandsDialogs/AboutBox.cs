@@ -10,8 +10,11 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", new[] { Coders, Translators,
-                Designers, Other })
+            _contributersList = string.Join(", ", new[]
+            {
+                Coders, Translators,
+                Designers, Other
+            })
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
@@ -44,7 +47,9 @@ namespace GitUI.CommandsDialogs
         {
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
+            {
                 logoPictureBox.Image = image;
+            }
 
             thanksTimer_Tick(null, null);
             thanksTimer.Enabled = true;

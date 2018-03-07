@@ -11,7 +11,6 @@ namespace CommonTestUtils
         /// <summary>
         /// Creates a throw-away new repository in a temporary location.
         /// </summary>
-        /// <returns></returns>
         public GitModuleTestHelper(string repositoryName = "repo1")
         {
             TemporaryPath = GetTemporaryPath();
@@ -21,13 +20,13 @@ namespace CommonTestUtils
             {
                 throw new ArgumentException($"Repository '{path}' already exists", nameof(repositoryName));
             }
+
             Directory.CreateDirectory(path);
 
             var module = new GitModule(path);
             module.Init(false, false);
             Module = module;
         }
-
 
         /// <summary>
         /// Gets the module.
@@ -38,7 +37,6 @@ namespace CommonTestUtils
         /// Gets the temporary path where test repositories will be created for integration tests.
         /// </summary>
         public string TemporaryPath { get; }
-
 
         /// <summary>
         /// Creates a new file, writes the specified string to the file, and then closes the file.
@@ -99,6 +97,7 @@ namespace CommonTestUtils
                 // Note that the intermittent failures mentioned below are likely related too.
                 ((GitModule)Module).EffectiveConfigFile?.SettingsCache?.Dispose();
                 ((GitModule)Module).EffectiveSettings?.SettingsCache?.Dispose();
+
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
                 Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories).ForEach(File.Delete);
                 Directory.Delete(TemporaryPath, true);
@@ -108,7 +107,6 @@ namespace CommonTestUtils
                 // do nothing
             }
         }
-
 
         private void EnsureCreatedInTempFolder(string path)
         {

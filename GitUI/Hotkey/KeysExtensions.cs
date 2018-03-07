@@ -11,8 +11,6 @@ namespace GitUI.Hotkey
         /// <summary>
         /// Strips the modifier from KeyData
         /// </summary>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
         public static Keys GetKeyCode(this Keys keyData)
         {
             return keyData & Keys.KeyCode;
@@ -31,7 +29,13 @@ namespace GitUI.Hotkey
             Keys modifier = key & Keys.Modifiers;
 
             List<Keys> modifierList = new List<Keys>();
-            Action<Keys> addIfContains = m => { if (m == (m & modifier)) modifierList.Add(m); };
+            Action<Keys> addIfContains = m =>
+            {
+                if (m == (m & modifier))
+                {
+                    modifierList.Add(m);
+                }
+            };
 
             addIfContains(Keys.Control);
             addIfContains(Keys.Shift);
@@ -56,7 +60,9 @@ namespace GitUI.Hotkey
 
             // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
             if (str != null && str.Length == 2 && str[0] == 'D')
+            {
                 str = str[1].ToString();
+            }
 
             return str;
         }
@@ -75,6 +81,7 @@ namespace GitUI.Hotkey
 
             // var str = key.ToString(); // OLD: this is culture unspecific
             var culture = CultureInfo.CurrentCulture; // TODO: replace this with the GitExtensions language setting
+
             // for modifier keys this yields for example "Ctrl+None" thus we have to strip the rest after the +
             var str = new KeysConverter().ConvertToString(null, culture, key).TakeUntilStr("+");
             return str;

@@ -47,7 +47,6 @@ namespace GitUI.CommandsDialogs
             Branches.Select();
         }
 
-
         private void FormMergeBranchLoad(object sender, EventArgs e)
         {
             var selectedHead = Module.GetSelectedBranch();
@@ -56,12 +55,16 @@ namespace GitUI.CommandsDialogs
             Branches.BranchesToSelect = Module.GetRefs(true, true);
 
             if (_defaultBranch != null)
+            {
                 Branches.SetSelectedText(_defaultBranch);
+            }
             else
             {
                 string merge = Module.GetRemoteBranch(selectedHead);
                 if (!String.IsNullOrEmpty(merge))
+                {
                     Branches.SetSelectedText(merge);
+                }
             }
 
             if (!GitCommandHelpers.VersionInUse.SupportMergeUnrelatedHistory)
@@ -69,6 +72,7 @@ namespace GitUI.CommandsDialogs
                 allowUnrelatedHistories.Visible = false;
                 allowUnrelatedHistories.Checked = false;
             }
+
             Branches.Select();
         }
 
@@ -103,7 +107,9 @@ namespace GitUI.CommandsDialogs
             strategyHelp.Visible = NonDefaultMergeStrategy.Checked;
 
             if (!advanced.Checked)
+            {
                 _NO_TRANSLATE_mergeStrategy.Text = "";
+            }
         }
 
         private void strategyHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

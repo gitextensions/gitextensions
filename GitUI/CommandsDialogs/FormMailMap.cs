@@ -24,7 +24,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
 
-
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 
@@ -74,11 +73,13 @@ namespace GitUI.CommandsDialogs
                         _fullPathResolver.Resolve(".mailmap"),
                         x =>
                         {
-                            this.MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
-                            if (!this.MailMapFile.EndsWith(Environment.NewLine))
-                                this.MailMapFile += Environment.NewLine;
+                            MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
+                            if (!MailMapFile.EndsWith(Environment.NewLine))
+                            {
+                                MailMapFile += Environment.NewLine;
+                            }
 
-                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(this.MailMapFile));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(MailMapFile));
                         });
 
                 UICommands.RepoChangedNotifier.Notify();
@@ -103,7 +104,10 @@ namespace GitUI.CommandsDialogs
                 {
                     case DialogResult.Yes:
                         if (SaveFile())
+                        {
                             needToClose = true;
+                        }
+
                         break;
                     case DialogResult.No:
                         needToClose = true;
@@ -113,15 +117,23 @@ namespace GitUI.CommandsDialogs
                 }
             }
             else
+            {
                 needToClose = true;
+            }
 
             if (!needToClose)
+            {
                 e.Cancel = true;
+            }
         }
 
         private void FormMailMapLoad(object sender, EventArgs e)
         {
-            if (!Module.IsBareRepository()) return;
+            if (!Module.IsBareRepository())
+            {
+                return;
+            }
+
             MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text);
             Close();
         }

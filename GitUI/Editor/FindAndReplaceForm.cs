@@ -82,9 +82,15 @@ namespace GitUI
         {
             string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
             if (_editor != null && _editor.FileName != null)
+            {
                 text += " - " + Path.GetFileName(_editor.FileName);
+            }
+
             if (_search.HasScanRegion)
+            {
                 text += " (" + _selectionOnlyString.Text + ")";
+            }
+
             Text = text;
         }
 
@@ -98,9 +104,13 @@ namespace GitUI
             {
                 ISelection sel = sm.SelectionCollection[0];
                 if (sel.StartPosition.Line == sel.EndPosition.Line)
+                {
                     txtLookFor.Text = sm.SelectedText;
+                }
                 else
+                {
                     _search.SetScanRegion(sel);
+                }
             }
             else
             {
@@ -139,6 +149,7 @@ namespace GitUI
                                 MessageBoxIcon.Information);
                 return null;
             }
+
             _lastSearchWasBackward = searchBackward;
             _search.LookFor = txtLookFor.Text;
             _search.MatchCase = chkMatchCase.Checked;
@@ -160,7 +171,10 @@ namespace GitUI
 
                 int startFrom = caret.Offset - (searchBackward ? 1 : 0);
                 if (startFrom == -1)
+                {
                     startFrom = _search.EndOffset;
+                }
+
                 range = _search.FindNext(startFrom, searchBackward, out _lastSearchLoopedAround);
                 if (range != null && (!_lastSearchLoopedAround || _fileLoader == null))
                 {
@@ -170,7 +184,10 @@ namespace GitUI
                 {
                     range = null;
                     if (currentIdx != -1 && startIdx == -1)
+                    {
                         startIdx = currentIdx;
+                    }
+
                     if (_fileLoader(searchBackward, true, out var fileIndex, out var loadFileContent))
                     {
                         currentIdx = fileIndex;
@@ -188,9 +205,13 @@ namespace GitUI
                         break;
                     }
                 }
-            } while (range == null && startIdx != currentIdx && currentIdx != -1);
+            }
+            while (range == null && startIdx != currentIdx && currentIdx != -1);
             if (range == null && messageIfNotFound != null)
+            {
                 MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
             return range;
         }
 
@@ -200,6 +221,7 @@ namespace GitUI
             TextLocation p2 = _editor.Document.OffsetToPosition(range.Offset + range.Length);
             _editor.ActiveTextAreaControl.SelectionManager.SetSelection(p1, p2);
             _editor.ActiveTextAreaControl.ScrollTo(p1.Line, p1.Column);
+
             // Also move the caret to the end of the selection, because when the user
             // presses F3, the caret is where we start searching next time.
             _editor.ActiveTextAreaControl.Caret.Position = p2;
@@ -208,12 +230,17 @@ namespace GitUI
         private void btnHighlightAll_Click(object sender, EventArgs e)
         {
             if (!_highlightGroups.ContainsKey(_editor))
+            {
                 _highlightGroups[_editor] = new HighlightGroup(_editor);
+            }
+
             HighlightGroup group = _highlightGroups[_editor];
 
             if (string.IsNullOrEmpty(LookFor))
+            {
                 // Clear highlights
                 group.ClearMarkers();
+            }
             else
             {
                 group.ClearMarkers();
@@ -226,7 +253,10 @@ namespace GitUI
                 {
                     TextRange range = _search.FindNext(offset, false, out var looped);
                     if (range == null || looped)
+                    {
                         break;
+                    }
+
                     offset = range.Offset + range.Length;
                     count++;
 
@@ -234,11 +264,16 @@ namespace GitUI
                                            TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
                     group.AddMarker(m);
                 }
+
                 if (count == 0)
+                {
                     MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
+                }
                 else
+                {
                     Close();
+                }
             }
         }
 
@@ -267,13 +302,17 @@ namespace GitUI
         {
             SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
             if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
+            {
                 InsertText(txtReplaceWith.Text);
+            }
+
             await FindNext(false, _lastSearchWasBackward, _textNotFoundString.Text);
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
             int count = 0;
+
             // BUG FIX: if the replacement string contains the original search string
             // (e.g. replace "red" with "very red") we must avoid looping around and
             // replacing forever! To fix, start replacing at beginning of region (by
@@ -287,7 +326,9 @@ namespace GitUI
                 while (FindNext(false, false, null) != null)
                 {
                     if (_lastSearchLoopedAround)
+                    {
                         break;
+                    }
 
                     // Replace
                     count++;
@@ -298,8 +339,11 @@ namespace GitUI
             {
                 _editor.Document.UndoStack.EndUndoGroup();
             }
+
             if (count == 0)
+            {
                 MessageBox.Show(this, _noOccurrencesFoundString.Text);
+            }
             else
             {
                 MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count));
@@ -318,6 +362,7 @@ namespace GitUI
                     textArea.Caret.Position = textArea.SelectionManager.SelectionCollection[0].StartPosition;
                     textArea.SelectionManager.RemoveSelectedText();
                 }
+
                 textArea.InsertString(text);
             }
             finally
@@ -325,7 +370,6 @@ namespace GitUI
                 textArea.Document.UndoStack.EndUndoGroup();
             }
         }
-
 
         internal void SetFileLoader(GetNextFileFnc fileLoader)
         {
@@ -343,6 +387,7 @@ namespace GitUI
                 _search.Dispose();
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }
@@ -398,7 +443,10 @@ namespace GitUI
             get
             {
                 if (_region != null)
+                {
                     return _region.Offset;
+                }
+
                 return 0;
             }
         }
@@ -409,7 +457,10 @@ namespace GitUI
             get
             {
                 if (_region != null)
+                {
                     return _region.EndOffset;
+                }
+
                 return _document.TextLength;
             }
         }
@@ -460,8 +511,6 @@ namespace GitUI
         /// <summary>Finds next instance of LookFor, according to the search rules
         /// (MatchCase, MatchWholeWordOnly).</summary>
         /// <param name="beginAtOffset">Offset in Document at which to begin the search</param>
-        /// <param name="searchBackward"></param>
-        /// <param name="loopedAround"></param>
         /// <remarks>If there is a match at beginAtOffset precisely, it will be returned.</remarks>
         /// <returns>Region of document that matches the search string</returns>
         public TextRange FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
@@ -493,16 +542,21 @@ namespace GitUI
                     result = FindNextIn(startAt, curOffs, false);
                 }
             }
+
             return result;
         }
 
         private static bool MatchFirstCh(char a, char b, bool matchCase)
         {
             if (a == b)
+            {
                 return true;
+            }
 
             if (!matchCase && a == Char.ToUpperInvariant(b))
+            {
                 return true;
+            }
 
             return false;
         }
@@ -511,7 +565,6 @@ namespace GitUI
         {
             Debug.Assert(offset2 >= offset1);
             offset2 -= LookFor.Length;
-
 
             // Search
             char lookForCh = _lookFor2[0];
@@ -523,7 +576,9 @@ namespace GitUI
                         &&
                         ((IsWholeWordMatch(offset)) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
+                    {
                         return new TextRange(_document, offset, LookFor.Length);
+                    }
                 }
             }
             else
@@ -534,16 +589,22 @@ namespace GitUI
                         &&
                         ((IsWholeWordMatch(offset)) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
+                    {
                         return new TextRange(_document, offset, LookFor.Length);
+                    }
                 }
             }
+
             return null;
         }
 
         private bool IsWholeWordMatch(int offset)
         {
             if (IsWordBoundary(offset) && IsWordBoundary(offset + LookFor.Length))
+            {
                 return IsPartWordMatch(offset);
+            }
+
             return false;
         }
 
@@ -563,7 +624,10 @@ namespace GitUI
         {
             string substr = _document.GetText(offset, LookFor.Length);
             if (!MatchCase)
+            {
                 substr = substr.ToUpperInvariant();
+            }
+
             return substr == _lookFor2;
         }
     }
@@ -603,7 +667,10 @@ namespace GitUI
         public void ClearMarkers()
         {
             foreach (TextMarker m in _markers)
+            {
                 _document.MarkerStrategy.RemoveMarker(m);
+            }
+
             _markers.Clear();
             _editor.Refresh();
         }

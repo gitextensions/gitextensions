@@ -13,7 +13,7 @@ namespace GitCommands.Gpg
         GoodSignature = 1,
         SignatureError = 2,
         MissingPublicKey = 3,
-    };
+    }
 
     public enum TagStatus
     {
@@ -23,7 +23,7 @@ namespace GitCommands.Gpg
         Many = 3,
         NoPubKey = 4,
         TagNotSigned = 5
-    };
+    }
 
     public interface IGitGpgController
     {
@@ -52,7 +52,6 @@ namespace GitCommands.Gpg
         string GetTagVerifyMessage(GitRevision revision);
     }
 
-
     public class GitGpgController : IGitGpgController
     {
         private readonly Func<IGitModule> _getModule;
@@ -66,7 +65,6 @@ namespace GitCommands.Gpg
         private const string RevokedKey = "R";
         private const string MissingPubKey = "E";
         private const string NoSign = "N";
-
 
         /* Tag GPG status */
         private const string GoodSignature = "GOODSIG";
@@ -87,7 +85,6 @@ namespace GitCommands.Gpg
         {
             _getModule = getModule;
         }
-
 
         /// <summary>
         /// Obtain the commit signature status on current revision.
@@ -235,12 +232,13 @@ namespace GitCommands.Gpg
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
-
         private string GetTagVerificationMessage(IGitRef tagRef, bool raw = true)
         {
             string tagName = tagRef.LocalName;
             if (string.IsNullOrWhiteSpace(tagName))
+            {
                 return null;
+            }
 
             string rawFlag = raw == true ? "--raw" : "";
 
@@ -269,6 +267,7 @@ namespace GitCommands.Gpg
                 /* String printed in dialog box */
                 tagVerifyMessage = $"{tagVerifyMessage}{tagRef.LocalName}\r\n{GetTagVerificationMessage(tagRef, false)}\r\n\r\n";
             }
+
             return tagVerifyMessage;
         }
 
@@ -279,6 +278,7 @@ namespace GitCommands.Gpg
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
+
             return module;
         }
     }

@@ -1,4 +1,3 @@
-
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerSettingsUserControl

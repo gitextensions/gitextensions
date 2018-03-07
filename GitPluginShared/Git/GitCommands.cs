@@ -31,6 +31,7 @@ namespace GitPluginShared.Git
             {
                 MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
             }
+
             return "";
         }
 
@@ -39,7 +40,9 @@ namespace GitPluginShared.Git
             string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions", key);
 
             if (string.IsNullOrEmpty(result))
+            {
                 result = GetRegistryValue(Registry.Users, "Software\\GitExtensions", key);
+            }
 
             return result;
         }
@@ -92,7 +95,9 @@ namespace GitPluginShared.Git
             catch
             {
                 if (!File.Exists(Path.Combine(path, "GitExtensions.exe")))
+                {
                     MessageBox.Show("This plugin requires Git Extensions to be installed. This application can be downloaded from http://gitextensions.github.io/");
+                }
 
                 return null;
             }
@@ -135,13 +140,17 @@ namespace GitPluginShared.Git
                     {
                         head = File.ReadAllText(headFileName);
                         if (!head.Contains("ref:"))
+                        {
                             head = "no branch";
+                        }
                     }
                     else
                     {
                         head = RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out var exitCode);
                         if (exitCode == 1)
+                        {
                             head = "no branch";
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(head))
@@ -162,10 +171,14 @@ namespace GitPluginShared.Git
         private static string FindGitWorkingDir(string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
+            {
                 return "";
+            }
 
             if (!startDir.EndsWith("\\") && !startDir.EndsWith("/"))
+            {
                 startDir += "\\";
+            }
 
             var dir = startDir;
 
@@ -174,18 +187,25 @@ namespace GitPluginShared.Git
                 dir = dir.Substring(0, dir.LastIndexOfAny(new[] { '\\', '/' }));
 
                 if (ValidWorkingDir(dir))
+                {
                     return dir + "\\";
+                }
             }
+
             return startDir;
         }
 
         private static bool ValidWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
+            {
                 return false;
+            }
 
             if (Directory.Exists(Path.Combine(dir, ".git")) || File.Exists(Path.Combine(dir, ".git")))
+            {
                 return true;
+            }
 
             return !dir.Contains(".git") &&
                    Directory.Exists(Path.Combine(dir, "info")) &&

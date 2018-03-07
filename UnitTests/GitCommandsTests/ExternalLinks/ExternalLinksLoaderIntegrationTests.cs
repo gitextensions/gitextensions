@@ -12,13 +12,11 @@ namespace GitCommandsTests.ExternalLinks
     {
         private ExternalLinksLoader _loader;
 
-
         [SetUp]
         public void Setup()
         {
             _loader = new ExternalLinksLoader();
         }
-
 
         [TestCase("level1_repogit_GitExtensions", 1)]
         [TestCase("level2_repodist_GitExtensions", 3)]

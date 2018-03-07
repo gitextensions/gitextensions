@@ -62,7 +62,10 @@ namespace Gource
             GourceArguments = Arguments.Text;
             string gourceAvatarsDir = "";
             if (GourceArguments.Contains("$(AVATARS)"))
+            {
                 gourceAvatarsDir = LoadAvatars();
+            }
+
             string arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
             PathToGource = GourcePath.Text;
             GitWorkingDir = WorkingDir.Text;
@@ -76,7 +79,10 @@ namespace Gource
             var gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
             Directory.CreateDirectory(gourceAvatarsDir);
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
+            {
                 File.Delete(file);
+            }
+
             var lines = GitUIArgs.GitModule.RunGitCmd("log --pretty=format:\"%aE|%aN\"").Split('\n');
             HashSet<string> authors = new HashSet<string>();
             foreach (var line in lines)
@@ -101,6 +107,7 @@ namespace Gource
                     }
                 }
             }
+
             return gourceAvatarsDir;
         }
 

@@ -10,10 +10,12 @@ namespace GitStatistics.PieChart
         ///   pie.
         /// </summary>
         NoShadow,
+
         /// <summary>
         ///   Uniform shadow. Sides are drawn somewhat darker.
         /// </summary>
         UniformShadow,
+
         /// <summary>
         ///   Gradual shadow is used to fully simulate 3-D shadow.
         /// </summary>

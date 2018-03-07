@@ -9,6 +9,7 @@ namespace GitUI.CommandsDialogs
             : this(null, null)
         {
         }
+
         public FormCompareToBranch(GitUICommands aCommands, string selectedCommit) : base(aCommands)
         {
             MinimizeBox = false;
@@ -20,6 +21,7 @@ namespace GitUI.CommandsDialogs
             {// UICommands is not initialized in translation unit test.
                 return;
             }
+
             branchSelector.Initialize(remote: true, containRevisons: null);
             branchSelector.CommitToCompare = selectedCommit;
             Activated += OnActivated;
@@ -40,6 +42,7 @@ namespace GitUI.CommandsDialogs
                 DialogResult = DialogResult.OK;
                 Close();
             }
+
             branchSelector.Focus();
         }
     }

@@ -66,30 +66,37 @@ namespace GitCommandsTests.Git
                 var fetchCmd = module.FetchCmd("origin", "some-branch", "local");
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
+
             {
                 var fetchCmd = module.FetchCmd("origin", "some-branch", "local", true);
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
             }
+
             { // Using a URL as remote and passing a local branch creates the branch
                 var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local");
                 Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
+
             { // Using a URL as remote and not passing a local branch
                 var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null);
                 Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
+
             { // No remote branch -> No local branch
                 var fetchCmd = module.FetchCmd("origin", "", "local");
                 Assert.AreEqual("fetch --progress \"origin\" --no-tags", fetchCmd);
             }
+
             { // Pull doesn't accept a local branch ever
                 var fetchCmd = module.PullCmd("origin", "some-branch", false);
                 Assert.AreEqual("pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
+
             { // Not even for URL remote
                 var fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false);
                 Assert.AreEqual("pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
+
             { // Pull with rebase
                 var fetchCmd = module.PullCmd("origin", "some-branch", true);
                 Assert.AreEqual("pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
@@ -100,31 +107,34 @@ namespace GitCommandsTests.Git
         public void TestGetAllChangedFilesFromString()
         {
             GitModule module = new GitModule(null);
-
             {// git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
+
             {// git diff -M -C -z --cached --name-status
                 string statusString = "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
+
             {// git diff -M -C -z --cached --name-status
                 string statusString = "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
+
             {// git diff -M -C -z --cached --name-status
                 string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
+
             { // git status --porcelain --untracked-files=no -z
                 string statusString = "M  adfs.h\0M  dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
                 List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, false);

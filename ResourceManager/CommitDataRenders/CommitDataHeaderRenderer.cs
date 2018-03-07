@@ -21,14 +21,11 @@ namespace ResourceManager.CommitDataRenders
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <returns></returns>
         string Render(CommitData commitData, bool showRevisionsAsLinks);
 
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <param name="commitData"></param>
-        /// <returns></returns>
         string RenderPlain(CommitData commitData);
     }
 
@@ -42,7 +39,6 @@ namespace ResourceManager.CommitDataRenders
         private readonly IHeaderRenderStyleProvider _headerRendererStyleProvider;
         private readonly ILinkFactory _linkFactory;
 
-
         public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory linkFactory)
         {
             _labelFormatter = labelFormatter;
@@ -50,7 +46,6 @@ namespace ResourceManager.CommitDataRenders
             _headerRendererStyleProvider = headerRendererStyleProvider;
             _linkFactory = linkFactory;
         }
-
 
         public Font GetFont(Graphics g)
         {
@@ -65,7 +60,6 @@ namespace ResourceManager.CommitDataRenders
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <returns></returns>
         public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
             if (commitData == null)
@@ -123,8 +117,6 @@ namespace ResourceManager.CommitDataRenders
         /// <summary>
         /// Generate header.
         /// </summary>
-        /// <param name="commitData"></param>
-        /// <returns></returns>
         public string RenderPlain(CommitData commitData)
         {
             if (commitData == null)
@@ -143,16 +135,16 @@ namespace ResourceManager.CommitDataRenders
             {
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitterText(), padding) + commitData.Committer);
             }
+
             if (!datesEqual)
             {
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate));
             }
+
             header.Append(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + commitData.Guid);
 
             return header.ToString();
         }
-
-
 
         private static string GetEmail(string author)
         {
@@ -160,11 +152,13 @@ namespace ResourceManager.CommitDataRenders
             {
                 return "";
             }
+
             var ind = author.IndexOf("<", StringComparison.Ordinal);
             if (ind == -1)
             {
                 return "";
             }
+
             ++ind;
             return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
         }
@@ -180,6 +174,7 @@ namespace ResourceManager.CommitDataRenders
             {
                 commitsString = hashes.Select(guid => GitRevision.ToShortSha(guid)).Join(" ");
             }
+
             return commitsString;
         }
     }

@@ -6,13 +6,14 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public class FormContributors : GitExtensionsForm
     {
-        private readonly static string[] tabCaptions = new string[] {
+        private readonly static string[] tabCaptions = new string[]
+        {
             "The Coders", "The Translators", "The Designers"
         };
 
-        private readonly TextBox[] textboxes = new TextBox[tabCaptions.Length];
-        private readonly TabPage[] tabPages = new TabPage[tabCaptions.Length];
-        private TabControl tabControl;
+        private readonly TextBox[] _textboxes = new TextBox[tabCaptions.Length];
+        private readonly TabPage[] _tabPages = new TabPage[tabCaptions.Length];
+        private TabControl _tabControl;
 
         public FormContributors()
         {
@@ -61,36 +62,36 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             SuspendLayout();
             Controls.Clear();
 
-            tabControl = getNewTabControl();
-            tabControl.SuspendLayout();
+            _tabControl = getNewTabControl();
+            _tabControl.SuspendLayout();
 
             for (int i = 0; i < tabCaptions.Length; i++)
             {
-                textboxes[i] = getNewTextBox();
-                tabPages[i] = getNewTabPage(textboxes[i], tabCaptions[i]);
-                tabControl.Controls.Add(tabPages[i]);
+                _textboxes[i] = getNewTextBox();
+                _tabPages[i] = getNewTabPage(_textboxes[i], tabCaptions[i]);
+                _tabControl.Controls.Add(_tabPages[i]);
             }
 
-            Controls.Add(tabControl);
+            Controls.Add(_tabControl);
 
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.ClientSize = new Size(624, 442);
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.Text = "Thanks to...";
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(624, 442);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Thanks to...";
 
-            this.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         public void LoadContributors(string coders, string translators, string designers, string others)
         {
             const string NEWLINES = @"\r\n?|\n";
-            textboxes[0].Text = Regex.Replace(coders, NEWLINES, " ");
-            textboxes[1].Text = Regex.Replace(translators, NEWLINES, " ");
-            textboxes[2].Text = Regex.Replace(designers, NEWLINES, " ");
+            _textboxes[0].Text = Regex.Replace(coders, NEWLINES, " ");
+            _textboxes[1].Text = Regex.Replace(translators, NEWLINES, " ");
+            _textboxes[2].Text = Regex.Replace(designers, NEWLINES, " ");
         }
     }
 }

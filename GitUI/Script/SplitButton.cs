@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
-
 /* Get the latest version of SplitButton at: http://wyday.com/splitbutton/
  *
  * Copyright (c) 2010, wyDay
@@ -30,28 +29,25 @@ using System.Windows.Forms.VisualStyles;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 namespace GitUI.Script
 {
     public class SplitButton : Button
     {
         PushButtonState _state;
 
-
         const int SplitSectionWidth = 18;
 
         static int BorderSize = SystemInformation.Border3DSize.Width * 2;
-        bool skipNextOpen;
-        Rectangle dropDownRectangle;
-        bool showSplit;
+        bool _skipNextOpen;
+        Rectangle _dropDownRectangle;
+        bool _showSplit;
 
-        bool isSplitMenuVisible;
+        bool _isSplitMenuVisible;
 
+        ContextMenuStrip _splitMenuStrip;
+        ContextMenu _splitMenu;
 
-        ContextMenuStrip m_SplitMenuStrip;
-        ContextMenu m_SplitMenu;
-
-        TextFormatFlags textFormatFlags = TextFormatFlags.Default;
+        TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
 
         public SplitButton()
         {
@@ -76,13 +72,13 @@ namespace GitUI.Script
         [DefaultValue(null)]
         public ContextMenu SplitMenu
         {
-            get { return m_SplitMenu; }
+            get { return _splitMenu; }
             set
             {
                 // remove the event handlers for the old SplitMenu
-                if (m_SplitMenu != null)
+                if (_splitMenu != null)
                 {
-                    m_SplitMenu.Popup -= SplitMenu_Popup;
+                    _splitMenu.Popup -= SplitMenu_Popup;
                 }
 
                 // add the event handlers for the new SplitMenu
@@ -92,9 +88,11 @@ namespace GitUI.Script
                     value.Popup += SplitMenu_Popup;
                 }
                 else
+                {
                     ShowSplit = false;
+                }
 
-                m_SplitMenu = value;
+                _splitMenu = value;
             }
         }
 
@@ -103,15 +101,15 @@ namespace GitUI.Script
         {
             get
             {
-                return m_SplitMenuStrip;
+                return _splitMenuStrip;
             }
             set
             {
                 // remove the event handlers for the old SplitMenuStrip
-                if (m_SplitMenuStrip != null)
+                if (_splitMenuStrip != null)
                 {
-                    m_SplitMenuStrip.Closing -= SplitMenuStrip_Closing;
-                    m_SplitMenuStrip.Opening -= SplitMenuStrip_Opening;
+                    _splitMenuStrip.Closing -= SplitMenuStrip_Closing;
+                    _splitMenuStrip.Opening -= SplitMenuStrip_Opening;
                 }
 
                 // add the event handlers for the new SplitMenuStrip
@@ -122,10 +120,11 @@ namespace GitUI.Script
                     value.Opening += SplitMenuStrip_Opening;
                 }
                 else
+                {
                     ShowSplit = false;
+                }
 
-
-                m_SplitMenuStrip = value;
+                _splitMenuStrip = value;
             }
         }
 
@@ -134,9 +133,9 @@ namespace GitUI.Script
         {
             set
             {
-                if (value != showSplit)
+                if (value != _showSplit)
                 {
-                    showSplit = value;
+                    _showSplit = value;
                     Invalidate();
 
                     Parent?.PerformLayout();
@@ -167,15 +166,17 @@ namespace GitUI.Script
 
         protected override bool IsInputKey(Keys keyData)
         {
-            if (keyData.Equals(Keys.Down) && showSplit)
+            if (keyData.Equals(Keys.Down) && _showSplit)
+            {
                 return true;
+            }
 
             return base.IsInputKey(keyData);
         }
 
         protected override void OnGotFocus(EventArgs e)
         {
-            if (!showSplit)
+            if (!_showSplit)
             {
                 base.OnGotFocus(e);
                 return;
@@ -189,13 +190,12 @@ namespace GitUI.Script
 
         protected override void OnKeyDown(KeyEventArgs kevent)
         {
-            if (showSplit)
+            if (_showSplit)
             {
-                if (kevent.KeyCode.Equals(Keys.Down) && !isSplitMenuVisible)
+                if (kevent.KeyCode.Equals(Keys.Down) && !_isSplitMenuVisible)
                 {
                     ShowContextMenuStrip();
                 }
-
                 else if (kevent.KeyCode.Equals(Keys.Space) && kevent.Modifiers == Keys.None)
                 {
                     State = PushButtonState.Pressed;
@@ -216,7 +216,7 @@ namespace GitUI.Script
             }
             else if (kevent.KeyCode.Equals(Keys.Apps))
             {
-                if (MouseButtons == MouseButtons.None && !isSplitMenuVisible)
+                if (MouseButtons == MouseButtons.None && !_isSplitMenuVisible)
                 {
                     ShowContextMenuStrip();
                 }
@@ -234,7 +234,7 @@ namespace GitUI.Script
 
         protected override void OnLostFocus(EventArgs e)
         {
-            if (!showSplit)
+            if (!_showSplit)
             {
                 base.OnLostFocus(e);
                 return;
@@ -246,17 +246,17 @@ namespace GitUI.Script
             }
         }
 
-        bool isMouseEntered;
+        bool _isMouseEntered;
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (!showSplit)
+            if (!_showSplit)
             {
                 base.OnMouseEnter(e);
                 return;
             }
 
-            isMouseEntered = true;
+            _isMouseEntered = true;
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
             {
@@ -266,13 +266,13 @@ namespace GitUI.Script
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!showSplit)
+            if (!_showSplit)
             {
                 base.OnMouseLeave(e);
                 return;
             }
 
-            isMouseEntered = false;
+            _isMouseEntered = false;
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
             {
@@ -282,18 +282,20 @@ namespace GitUI.Script
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (!showSplit)
+            if (!_showSplit)
             {
                 base.OnMouseDown(e);
                 return;
             }
 
             // handle ContextMenu re-clicking the drop-down region to close the menu
-            if (m_SplitMenu != null && e.Button == MouseButtons.Left && !isMouseEntered)
-                skipNextOpen = true;
+            if (_splitMenu != null && e.Button == MouseButtons.Left && !_isMouseEntered)
+            {
+                _skipNextOpen = true;
+            }
 
-            if ((dropDownRectangle.Contains(e.Location) || this.WholeButtonDropdown) &&
-                !isSplitMenuVisible && e.Button == MouseButtons.Left)
+            if ((_dropDownRectangle.Contains(e.Location) || WholeButtonDropdown) &&
+                !_isSplitMenuVisible && e.Button == MouseButtons.Left)
             {
                 ShowContextMenuStrip();
             }
@@ -305,22 +307,22 @@ namespace GitUI.Script
 
         protected override void OnMouseUp(MouseEventArgs mevent)
         {
-            if (!showSplit)
+            if (!_showSplit)
             {
                 base.OnMouseUp(mevent);
                 return;
             }
 
             // if the right button was released inside the button
-            if (mevent.Button == MouseButtons.Right && ClientRectangle.Contains(mevent.Location) && !isSplitMenuVisible)
+            if (mevent.Button == MouseButtons.Right && ClientRectangle.Contains(mevent.Location) && !_isSplitMenuVisible)
             {
                 ShowContextMenuStrip();
             }
-            else if (m_SplitMenuStrip == null && m_SplitMenu == null || !isSplitMenuVisible)
+            else if (_splitMenuStrip == null && _splitMenu == null || !_isSplitMenuVisible)
             {
                 SetButtonDrawState();
 
-                if (ClientRectangle.Contains(mevent.Location) && !dropDownRectangle.Contains(mevent.Location))
+                if (ClientRectangle.Contains(mevent.Location) && !_dropDownRectangle.Contains(mevent.Location))
                 {
                     OnClick(new EventArgs());
                 }
@@ -331,8 +333,10 @@ namespace GitUI.Script
         {
             base.OnPaint(pevent);
 
-            if (!showSplit)
+            if (!_showSplit)
+            {
                 return;
+            }
 
             Graphics g = pevent.Graphics;
             Rectangle bounds = ClientRectangle;
@@ -353,22 +357,21 @@ namespace GitUI.Script
             }
 
             // calculate the current dropdown rectangle.
-            dropDownRectangle = new Rectangle(bounds.Right - SplitSectionWidth, 0, SplitSectionWidth, bounds.Height);
+            _dropDownRectangle = new Rectangle(bounds.Right - SplitSectionWidth, 0, SplitSectionWidth, bounds.Height);
 
             int internalBorder = BorderSize;
             Rectangle focusRect =
                 new Rectangle(internalBorder - 1,
                               internalBorder - 1,
-                              bounds.Width - dropDownRectangle.Width - internalBorder,
+                              bounds.Width - _dropDownRectangle.Width - internalBorder,
                               bounds.Height - (internalBorder * 2) + 2);
 
             bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles);
 
-
             if (RightToLeft == RightToLeft.Yes)
             {
-                dropDownRectangle.X = bounds.Left + 1;
-                focusRect.X = dropDownRectangle.Right;
+                _dropDownRectangle.X = bounds.Left + 1;
+                focusRect.X = _dropDownRectangle.Right;
 
                 if (drawSplitLine)
                 {
@@ -388,7 +391,7 @@ namespace GitUI.Script
             }
 
             // Draw an arrow in the correct location
-            PaintArrow(g, dropDownRectangle);
+            PaintArrow(g, _dropDownRectangle);
 
             // paint the image and text in the "button" part of the splitButton
             PaintTextandImage(g, new Rectangle(0, 0, ClientRectangle.Width - SplitSectionWidth, ClientRectangle.Height));
@@ -410,24 +413,36 @@ namespace GitUI.Script
             if (Image != null)
             {
                 if (Enabled)
+                {
                     g.DrawImage(Image, image_rectangle.X, image_rectangle.Y, Image.Width, Image.Height);
+                }
                 else
+                {
                     ControlPaint.DrawImageDisabled(g, Image, image_rectangle.X, image_rectangle.Y, BackColor);
+                }
             }
 
             // If we dont' use mnemonic, set formatFlag to NoPrefix as this will show ampersand.
             if (!UseMnemonic)
-                textFormatFlags = textFormatFlags | TextFormatFlags.NoPrefix;
+            {
+                _textFormatFlags = _textFormatFlags | TextFormatFlags.NoPrefix;
+            }
             else if (!ShowKeyboardCues)
-                textFormatFlags = textFormatFlags | TextFormatFlags.HidePrefix;
+            {
+                _textFormatFlags = _textFormatFlags | TextFormatFlags.HidePrefix;
+            }
 
             // draw the text
             if (!string.IsNullOrEmpty(Text))
             {
                 if (Enabled)
-                    TextRenderer.DrawText(g, Text, Font, text_rectangle, ForeColor, textFormatFlags);
+                {
+                    TextRenderer.DrawText(g, Text, Font, text_rectangle, ForeColor, _textFormatFlags);
+                }
                 else
-                    ControlPaint.DrawStringDisabled(g, Text, Font, BackColor, text_rectangle, textFormatFlags);
+                {
+                    ControlPaint.DrawStringDisabled(g, Text, Font, BackColor, text_rectangle, _textFormatFlags);
+                }
             }
         }
 
@@ -441,9 +456,13 @@ namespace GitUI.Script
             Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
             if (Enabled)
+            {
                 g.FillPolygon(SystemBrushes.ControlText, arrow);
+            }
             else
+            {
                 g.FillPolygon(SystemBrushes.ButtonShadow, arrow);
+            }
         }
 
         public override Size GetPreferredSize(Size proposedSize)
@@ -451,13 +470,17 @@ namespace GitUI.Script
             Size preferredSize = base.GetPreferredSize(proposedSize);
 
             // autosize correctly for splitbuttons
-            if (showSplit)
+            if (_showSplit)
             {
                 if (AutoSize)
+                {
                     return CalculateButtonAutoSize();
+                }
 
                 if (!string.IsNullOrEmpty(Text) && TextRenderer.MeasureText(Text, Font).Width + SplitSectionWidth > preferredSize.Width)
+                {
                     return preferredSize + new Size(SplitSectionWidth + BorderSize * 2, 0);
+                }
             }
 
             return preferredSize;
@@ -499,8 +522,10 @@ namespace GitUI.Script
             ret_size.Width += (Padding.Horizontal + 6);
 
             // pad the splitButton arrow region
-            if (showSplit)
+            if (_showSplit)
+            {
                 ret_size.Width += SplitSectionWidth;
+            }
 
             return ret_size;
         }
@@ -513,7 +538,7 @@ namespace GitUI.Script
 
         private void CalculateButtonTextAndImageLayout(ref Rectangle content_rect, out Rectangle textRectangle, out Rectangle imageRectangle)
         {
-            Size text_size = TextRenderer.MeasureText(Text, Font, content_rect.Size, textFormatFlags);
+            Size text_size = TextRenderer.MeasureText(Text, Font, content_rect.Size, _textFormatFlags);
             Size image_size = Image?.Size ?? Size.Empty;
 
             textRectangle = Rectangle.Empty;
@@ -527,11 +552,15 @@ namespace GitUI.Script
 
                     // Offset on Windows 98 style when button is pressed
                     if (_state == PushButtonState.Pressed && !Application.RenderWithVisualStyles)
+                    {
                         textRectangle.Offset(1, 1);
+                    }
 
                     // Image is dependent on ImageAlign
                     if (Image != null)
+                    {
                         imageRectangle = OverlayObjectRect(ref content_rect, ref image_size, ImageAlign);
+                    }
 
                     break;
                 case TextImageRelation.ImageAboveText:
@@ -610,7 +639,9 @@ namespace GitUI.Script
             int total_width = textSize.Width + element_spacing + imageSize.Width;
 
             if (!textFirst)
+            {
                 element_spacing += 2;
+            }
 
             // If the text is too big, chop it down to the size we have available to it
             if (total_width > totalArea.Width)
@@ -629,13 +660,21 @@ namespace GitUI.Script
             HorizontalAlignment h_image = GetHorizontalAlignment(ImageAlign);
 
             if (h_image == HorizontalAlignment.Left)
+            {
                 offset = 0;
+            }
             else if (h_image == HorizontalAlignment.Right && h_text == HorizontalAlignment.Right)
+            {
                 offset = excess_width;
+            }
             else if (h_image == HorizontalAlignment.Center && (h_text == HorizontalAlignment.Left || h_text == HorizontalAlignment.Center))
+            {
                 offset += excess_width / 3;
+            }
             else
+            {
                 offset += 2 * (excess_width / 3);
+            }
 
             if (textFirst)
             {
@@ -658,10 +697,14 @@ namespace GitUI.Script
             int total_height = textSize.Height + element_spacing + imageSize.Height;
 
             if (textFirst)
+            {
                 element_spacing += 2;
+            }
 
             if (textSize.Width > totalArea.Width)
+            {
                 textSize.Width = totalArea.Width;
+            }
 
             // If the there isn't enough room and we're text first, cut out the image
             if (total_height > totalArea.Height && textFirst)
@@ -680,13 +723,21 @@ namespace GitUI.Script
             VerticalAlignment v_image = GetVerticalAlignment(ImageAlign);
 
             if (v_image == VerticalAlignment.Top)
+            {
                 offset = 0;
+            }
             else if (v_image == VerticalAlignment.Bottom && v_text == VerticalAlignment.Bottom)
+            {
                 offset = excess_height;
+            }
             else if (v_image == VerticalAlignment.Center && (v_text == VerticalAlignment.Top || v_text == VerticalAlignment.Center))
+            {
                 offset += excess_height / 3;
+            }
             else
+            {
                 offset += 2 * (excess_height / 3);
+            }
 
             if (textFirst)
             {
@@ -699,7 +750,9 @@ namespace GitUI.Script
                 final_text_rect = new Rectangle(AlignInRectangle(totalArea, textSize, TextAlign).Left, final_image_rect.Bottom + element_spacing, textSize.Width, textSize.Height);
 
                 if (final_text_rect.Bottom > totalArea.Bottom)
+                {
                     final_text_rect.Y = totalArea.Top;
+                }
             }
 
             textRect = final_text_rect;
@@ -754,67 +807,78 @@ namespace GitUI.Script
             int y = 0;
 
             if (align == System.Drawing.ContentAlignment.BottomLeft || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.TopLeft)
+            {
                 x = outer.X;
+            }
             else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.TopCenter)
+            {
                 x = Math.Max(outer.X + ((outer.Width - inner.Width) / 2), outer.Left);
+            }
             else if (align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.MiddleRight || align == System.Drawing.ContentAlignment.TopRight)
+            {
                 x = outer.Right - inner.Width;
+            }
+
             if (align == System.Drawing.ContentAlignment.TopCenter || align == System.Drawing.ContentAlignment.TopLeft || align == System.Drawing.ContentAlignment.TopRight)
+            {
                 y = outer.Y;
+            }
             else if (align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.MiddleRight)
+            {
                 y = outer.Y + (outer.Height - inner.Height) / 2;
+            }
             else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.BottomLeft)
+            {
                 y = outer.Bottom - inner.Height;
+            }
 
             return new Rectangle(x, y, Math.Min(inner.Width, outer.Width), Math.Min(inner.Height, outer.Height));
         }
 
         #endregion Button Layout Calculations
 
-
         private void ShowContextMenuStrip()
         {
-            if (skipNextOpen)
+            if (_skipNextOpen)
             {
                 // we were called because we're closing the context menu strip
                 // when clicking the dropdown button.
-                skipNextOpen = false;
+                _skipNextOpen = false;
                 return;
             }
 
             State = PushButtonState.Pressed;
 
-            if (m_SplitMenu != null)
+            if (_splitMenu != null)
             {
-                m_SplitMenu.Show(this, new Point(0, Height));
+                _splitMenu.Show(this, new Point(0, Height));
             }
             else
             {
-                m_SplitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
+                _splitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
             }
         }
 
         void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            isSplitMenuVisible = true;
+            _isSplitMenuVisible = true;
         }
 
         void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-            isSplitMenuVisible = false;
+            _isSplitMenuVisible = false;
 
             SetButtonDrawState();
 
             if (e.CloseReason == ToolStripDropDownCloseReason.AppClicked)
             {
-                skipNextOpen = (dropDownRectangle.Contains(PointToClient(Cursor.Position))) && MouseButtons == MouseButtons.Left;
+                _skipNextOpen = (_dropDownRectangle.Contains(PointToClient(Cursor.Position))) && MouseButtons == MouseButtons.Left;
             }
         }
 
-
         void SplitMenu_Popup(object sender, EventArgs e)
         {
-            isSplitMenuVisible = true;
+            _isSplitMenuVisible = true;
         }
 
         protected override void WndProc(ref Message m)
@@ -823,7 +887,7 @@ namespace GitUI.Script
             if (m.Msg == 0x0212)
             {
                 // this message is only sent when a ContextMenu is closed (not a ContextMenuStrip)
-                isSplitMenuVisible = false;
+                _isSplitMenuVisible = false;
                 SetButtonDrawState();
             }
 

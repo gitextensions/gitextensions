@@ -10,7 +10,6 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="firstRevision">The first revision, "A"</param>
         /// <param name="secondRevision">The second "current" revision, "B"</param>
-        /// <returns></returns>
         string Get(string firstRevision, string secondRevision);
 
         /// <summary>
@@ -21,7 +20,6 @@ namespace GitCommands.Git
         /// <param name="fileName">The file to compare</param>
         /// <param name="oldFileName">The old name of the file</param>
         /// <param name="isTracked">The file is tracked</param>
-        /// <returns></returns>
         string Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked);
     }
 
@@ -39,7 +37,6 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="firstRevision">The first revision</param>
         /// <param name="secondRevision">The second "current" revision</param>
-        /// <returns></returns>
         public string Get(string firstRevision, string secondRevision)
         {
             return GetInternal(firstRevision, secondRevision);
@@ -53,7 +50,6 @@ namespace GitCommands.Git
         /// <param name="fileName">The file to compare</param>
         /// <param name="oldFileName">The old name of the file</param>
         /// <param name="isTracked">The file is tracked</param>
-        /// <returns></returns>
         public string Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
@@ -124,8 +120,6 @@ namespace GitCommands.Git
         /// Artificial "commits" are options, handle aliases too
         /// (order and handling of empty arguments is not handled here)
         /// </summary>
-        /// <param name="rev"></param>
-        /// <returns></returns>
         private string ArtificialToDiffOptions(string rev)
         {
             if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)

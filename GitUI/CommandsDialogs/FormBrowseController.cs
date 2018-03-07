@@ -13,12 +13,10 @@ namespace GitUI.CommandsDialogs
     {
         private readonly IGitGpgController _gitGpgController;
 
-
         public FormBrowseController(IGitGpgController gitGpgController)
         {
             _gitGpgController = gitGpgController;
         }
-
 
         public async Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision)
         {

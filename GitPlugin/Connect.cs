@@ -27,12 +27,18 @@ namespace GitPlugin
         {
             if (neededText != vsCommandStatusTextWanted.vsCommandStatusTextWantedNone ||
                 !_gitPlugin.CanHandleCommand(commandName))
+            {
                 return;
+            }
 
             if (_gitPlugin.IsCommandEnabled(commandName))
+            {
                 status = vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+            }
             else
+            {
                 status = vsCommandStatus.vsCommandStatusSupported;
+            }
         }
 
         public void Exec(string commandName, vsCommandExecOption executeOption,
@@ -40,7 +46,9 @@ namespace GitPlugin
         {
             handled = false;
             if (executeOption != vsCommandExecOption.vsCommandExecOptionDoDefault)
+            {
                 return;
+            }
 
             handled = _gitPlugin.OnCommand(commandName);
         }
@@ -93,7 +101,10 @@ namespace GitPlugin
 
         private void GitPluginInit()
         {
-            if (_gitPlugin == null) return;
+            if (_gitPlugin == null)
+            {
+                return;
+            }
 
             try
             {
@@ -193,7 +204,6 @@ namespace GitPlugin
                 _gitPlugin.AddToolbarCommand(commandBar, "Push", "Push", "Push changes to remote repository", 8, 4);
                 _gitPlugin.AddToolbarCommand(commandBar, "Stash", "Stash", "Stash changes", 3, 5);
                 _gitPlugin.AddToolbarCommand(commandBar, "Settings", "Settings", "Settings", 2, 6);
-
             }
             catch (Exception ex)
             {
@@ -220,7 +230,10 @@ namespace GitPlugin
 
         private void GitPluginUISetup()
         {
-            if (_gitPlugin == null) return;
+            if (_gitPlugin == null)
+            {
+                return;
+            }
 
             // TODO: After Setup call: devenv.exe /ResetAddin GitPlugin.Connect or
             //       Delete RegistryKey: HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\[version]\PreloadAddinStateManager\[GitPlugin.Connect-Key]
@@ -228,13 +241,13 @@ namespace GitPlugin
             try
             {
 #if DEBUG
-                this._gitPlugin.OutputPane.OutputString("Git Extensions plugin UI setup" + Environment.NewLine);
+                _gitPlugin.OutputPane.OutputString("Git Extensions plugin UI setup" + Environment.NewLine);
 #endif
 
-                this.GitPluginInit();
-                this.GitPluginUISetupMainMenu();
-                this.GitPluginUISetupCommandBar();
-                this.GitPluginUISetupContextMenu();
+                GitPluginInit();
+                GitPluginUISetupMainMenu();
+                GitPluginUISetupCommandBar();
+                GitPluginUISetupContextMenu();
 
                 // Uncomment the code block below to help find the name of commandbars in
                 // visual studio. All commandbars (and context menu's) will get a new entry
@@ -243,17 +256,19 @@ namespace GitPlugin
                 ////{
                 ////    _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
                 ////}
-
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
+                _gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
             }
         }
 
         private void GitPluginUIUpdate()
         {
-            if (_gitPlugin == null) return;
+            if (_gitPlugin == null)
+            {
+                return;
+            }
 
             GitPluginInit();
             GitPluginUIUpdateMenu();
@@ -275,7 +290,7 @@ namespace GitPlugin
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error installing GitExt menu: " + ex);
+                _gitPlugin.OutputPane.OutputString("Error installing GitExt menu: " + ex);
             }
         }
 
@@ -302,38 +317,38 @@ namespace GitPlugin
             ////GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
-                this._gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
-                this._gitPlugin.RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>());
-                this._gitPlugin.RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
-                this._gitPlugin.RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>());
-                this._gitPlugin.RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
-                this._gitPlugin.RegisterCommand("ResetChanges", new ToolbarCommand<Revert>());
-                this._gitPlugin.RegisterCommand("Commit", new ToolbarCommand<Commit>());
-                this._gitPlugin.RegisterCommand("Browse", new ToolbarCommand<Browse>());
-                this._gitPlugin.RegisterCommand("Clone", new ToolbarCommand<Clone>());
-                this._gitPlugin.RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>());
-                this._gitPlugin.RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>());
-                this._gitPlugin.RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>());
-                this._gitPlugin.RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>());
-                this._gitPlugin.RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>());
-                this._gitPlugin.RegisterCommand("Pull", new ToolbarCommand<Pull>());
-                this._gitPlugin.RegisterCommand("Push", new ToolbarCommand<Push>());
-                this._gitPlugin.RegisterCommand("Rebase", new ToolbarCommand<Rebase>());
-                this._gitPlugin.RegisterCommand("Merge", new ToolbarCommand<Merge>());
-                this._gitPlugin.RegisterCommand("CherryPick", new ToolbarCommand<Cherry>());
-                this._gitPlugin.RegisterCommand("Stash", new ToolbarCommand<Stash>());
-                this._gitPlugin.RegisterCommand("Settings", new ToolbarCommand<Settings>());
-                this._gitPlugin.RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>());
-                this._gitPlugin.RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>());
-                this._gitPlugin.RegisterCommand("About", new ToolbarCommand<About>());
-                this._gitPlugin.RegisterCommand("Bash", new ToolbarCommand<Bash>());
-                this._gitPlugin.RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>());
-                this._gitPlugin.RegisterCommand("Remotes", new ToolbarCommand<Remotes>());
-                this._gitPlugin.RegisterCommand("FindFile", new ToolbarCommand<FindFile>());
+                _gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
+                _gitPlugin.RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>());
+                _gitPlugin.RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
+                _gitPlugin.RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>());
+                _gitPlugin.RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
+                _gitPlugin.RegisterCommand("ResetChanges", new ToolbarCommand<Revert>());
+                _gitPlugin.RegisterCommand("Commit", new ToolbarCommand<Commit>());
+                _gitPlugin.RegisterCommand("Browse", new ToolbarCommand<Browse>());
+                _gitPlugin.RegisterCommand("Clone", new ToolbarCommand<Clone>());
+                _gitPlugin.RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>());
+                _gitPlugin.RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>());
+                _gitPlugin.RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>());
+                _gitPlugin.RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>());
+                _gitPlugin.RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>());
+                _gitPlugin.RegisterCommand("Pull", new ToolbarCommand<Pull>());
+                _gitPlugin.RegisterCommand("Push", new ToolbarCommand<Push>());
+                _gitPlugin.RegisterCommand("Rebase", new ToolbarCommand<Rebase>());
+                _gitPlugin.RegisterCommand("Merge", new ToolbarCommand<Merge>());
+                _gitPlugin.RegisterCommand("CherryPick", new ToolbarCommand<Cherry>());
+                _gitPlugin.RegisterCommand("Stash", new ToolbarCommand<Stash>());
+                _gitPlugin.RegisterCommand("Settings", new ToolbarCommand<Settings>());
+                _gitPlugin.RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>());
+                _gitPlugin.RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>());
+                _gitPlugin.RegisterCommand("About", new ToolbarCommand<About>());
+                _gitPlugin.RegisterCommand("Bash", new ToolbarCommand<Bash>());
+                _gitPlugin.RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>());
+                _gitPlugin.RegisterCommand("Remotes", new ToolbarCommand<Remotes>());
+                _gitPlugin.RegisterCommand("FindFile", new ToolbarCommand<FindFile>());
             }
             catch (Exception ex)
             {
-                this._gitPlugin.OutputPane.OutputString("Error adding commands: " + ex);
+                _gitPlugin.OutputPane.OutputString("Error adding commands: " + ex);
             }
         }
 
@@ -397,7 +412,6 @@ namespace GitPlugin
 
         #endregion
 
-
         private string GetToolsMenuName()
         {
             string toolsMenuName;
@@ -421,6 +435,7 @@ namespace GitPlugin
                 {
                     resourceName = String.Concat(cultureInfo.TwoLetterISOLanguageName, "Tools");
                 }
+
                 toolsMenuName = resourceManager.GetString(resourceName);
             }
             catch (Exception)

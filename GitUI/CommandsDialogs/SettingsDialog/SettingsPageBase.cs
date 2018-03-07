@@ -21,7 +21,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             get
             {
                 if (_PageHost == null)
+                {
                     throw new InvalidOperationException("PageHost instance was not passed to page: " + GetType().FullName);
+                }
 
                 return _PageHost;
             }
@@ -30,8 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         protected CheckSettingsLogic CheckSettingsLogic => PageHost.CheckSettingsLogic;
         protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
-
-        protected GitModule Module => this.CommonLogic.Module;
+        protected GitModule Module => CommonLogic.Module;
 
         protected virtual void Init(ISettingsPageHost aPageHost)
         {
@@ -124,20 +125,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        IList<string> childrenText;
+        IList<string> _childrenText;
 
         /// <summary>
         /// override to provide search keywords
         /// </summary>
         public virtual IEnumerable<string> GetSearchKeywords()
         {
-            return childrenText ?? (childrenText = GetChildrenText(this));
+            return _childrenText ?? (_childrenText = GetChildrenText(this));
         }
 
         /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
         static IList<string> GetChildrenText(Control control)
         {
-            if (control.HasChildren == false) { return new string[0]; }
+            if (control.HasChildren == false)
+            {
+                return new string[0];
+            }
 
             List<string> texts = new List<string>();
             foreach (Control child in control.Controls)
@@ -154,8 +158,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     // TODO(optional): convert numeric dropdown values to text
                     texts.Add(child.Text.Trim().ToLowerInvariant());
                 }
+
                 texts.AddRange(GetChildrenText(child)); // recurse
             }
+
             return texts;
         }
 

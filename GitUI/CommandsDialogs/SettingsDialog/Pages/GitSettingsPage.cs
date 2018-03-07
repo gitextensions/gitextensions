@@ -97,8 +97,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
             PageHost.SaveAll();
-            using (var frm = new FormFixHome()) frm.ShowDialog(this);
+            using (var frm = new FormFixHome())
+            {
+                frm.ShowDialog(this);
+            }
+
             PageHost.LoadAll();
+
             // TODO?: rescan
 
             // orginal:

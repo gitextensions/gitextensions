@@ -25,9 +25,14 @@ namespace Github3
             get
             {
                 if (_username == "")
+                {
                     return null;
+                }
+
                 if (_username != null)
+                {
                     return _username;
+                }
 
                 try
                 {
@@ -39,7 +44,9 @@ namespace Github3
                         return _username;
                     }
                     else
+                    {
                         _username = "";
+                    }
 
                     return null;
                 }
@@ -74,7 +81,9 @@ namespace Github3
             Translate();
 
             if (instance == null)
+            {
                 instance = this;
+            }
 
             github = new Client();
         }
@@ -97,12 +106,15 @@ namespace Github3
             if (string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
             {
                 using (var frm = new OAuth())
+                {
                     frm.ShowDialog(gitUiCommands.OwnerForm);
+                }
             }
             else
             {
                 MessageBox.Show(gitUiCommands.OwnerForm, "You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
             }
+
             return false;
         }
 
@@ -138,7 +150,6 @@ namespace Github3
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        /// <returns></returns>
         public List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule)
         {
             var repoInfos = new List<IHostedRemote>();
@@ -148,16 +159,23 @@ namespace Github3
             {
                 var url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
+                {
                     continue;
+                }
 
                 var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.\-]+)\.git");
                 if (!m.Success)
+                {
                     m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.\-]+)(?:.git)?");
+                }
+
                 if (m.Success)
                 {
                     var hostedRemote = new GithubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
                     if (!repoInfos.Contains(hostedRemote))
+                    {
                         repoInfos.Add(hostedRemote);
+                    }
                 }
             }
 

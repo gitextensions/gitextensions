@@ -37,6 +37,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -44,6 +45,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitter.Width = 2 * splitterWidth;
                 splitManager.RestoreSplitters();
+
                 // assert
                 splitter.SplitterDistance.Should().Be(splitterDistance * 2);
             }
@@ -65,6 +67,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -73,6 +76,7 @@ namespace GitUITests
                 splitter.Width = splitterWidth + deltaWidth;
                 splitter.FixedPanel = FixedPanel.Panel1;
                 splitManager.RestoreSplitters();
+
                 // assert
                 splitter.SplitterDistance.Should().Be(splitterDistance);
             }
@@ -94,6 +98,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -103,6 +108,7 @@ namespace GitUITests
                 splitter.Width = splitterNewWidth;
                 splitter.FixedPanel = FixedPanel.Panel2;
                 splitManager.RestoreSplitters();
+
                 // assert splitter moved by the width delta
                 splitter.SplitterDistance.Should().Be(splitterDistance + deltaWidth);
             }
@@ -124,6 +130,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -137,7 +144,9 @@ namespace GitUITests
                 {
                     splitter.Panel1MinSize = 110;
                 }
+
                 splitManager.RestoreSplitters();
+
                 // assert
                 if (applyMinSize)
                 {
@@ -149,7 +158,6 @@ namespace GitUITests
                 }
             }
         }
-
 
         [TestCase(true)]
         [TestCase(false)]
@@ -167,6 +175,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -179,8 +188,10 @@ namespace GitUITests
                 {
                     splitter.Panel2MinSize = 110;
                 }
+
                 splitter.SplitterDistance = 60;
                 splitManager.RestoreSplitters();
+
                 // assert
                 if (applyMinSize)
                 {
@@ -209,6 +220,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -218,6 +230,7 @@ namespace GitUITests
                 splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize + deltaFontSize);
                 splitter.FixedPanel = FixedPanel.Panel1;
                 splitManager.RestoreSplitters();
+
                 // assert
                 float scaleFactor = 1F * (_designTimeFontSize + deltaFontSize) / _designTimeFontSize;
                 int expectedPanel1Width = Convert.ToInt32(splitterDistance * scaleFactor);
@@ -242,6 +255,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -251,6 +265,7 @@ namespace GitUITests
                 splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize + deltaFontSize);
                 splitter.FixedPanel = FixedPanel.Panel2;
                 splitManager.RestoreSplitters();
+
                 // assert
                 float scaleFactor = 1F * (_designTimeFontSize + deltaFontSize) / _designTimeFontSize;
                 int expectedPanel2Width = Convert.ToInt32(panel2Width * scaleFactor);
@@ -275,6 +290,7 @@ namespace GitUITests
                 splitManager.AddSplitter(splitter, splitterName);
                 splitManager.SaveSplitters();
             }
+
             {
                 // act
                 SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
@@ -284,6 +300,7 @@ namespace GitUITests
                 splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize + deltaFontSize);
                 splitter.FixedPanel = FixedPanel.None;
                 splitManager.RestoreSplitters();
+
                 // assert
                 splitter.SplitterDistance.Should().Be(splitterDistance);
             }

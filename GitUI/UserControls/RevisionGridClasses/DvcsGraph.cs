@@ -144,9 +144,14 @@ namespace GitUI.RevisionGridClasses
         {
             DataGridViewColumn dataGridColumnGraph;
             if (ColumnCount <= 0 || GraphColumn.HeaderText != "")
+            {
                 dataGridColumnGraph = new DataGridViewTextBoxColumn();
+            }
             else
+            {
                 dataGridColumnGraph = GraphColumn;
+            }
+
             dataGridColumnGraph.HeaderText = "";
             dataGridColumnGraph.Frozen = true;
             dataGridColumnGraph.Name = "dataGridColumnGraph";
@@ -155,7 +160,9 @@ namespace GitUI.RevisionGridClasses
             dataGridColumnGraph.Width = 70;
             dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
             if (ColumnCount == 0 || GraphColumn.HeaderText != "")
+            {
                 Columns.Insert(0, dataGridColumnGraph);
+            }
         }
 
         /// <summary>
@@ -182,8 +189,8 @@ namespace GitUI.RevisionGridClasses
 
         public void ShowAuthor(bool show)
         {
-            this.AuthorColumn.Visible = show;
-            this.DateColumn.Visible = show;
+            AuthorColumn.Visible = show;
+            DateColumn.Visible = show;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
@@ -209,6 +216,7 @@ namespace GitUI.RevisionGridClasses
                                 _backgroundScrollTo = 0;
                                 _graphDataCount = 0;
                             }
+
                             lock (_graphData)
                             {
                                 _filterMode = value;
@@ -230,11 +238,13 @@ namespace GitUI.RevisionGridClasses
                 {
                     return null;
                 }
+
                 var data = new object[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
                     data[i] = _graphData[i].Node.Data;
                 }
+
                 return data;
             }
         }
@@ -250,27 +260,36 @@ namespace GitUI.RevisionGridClasses
                 {
                     return null;
                 }
+
                 var data = new string[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
                     if (_graphData[SelectedRows[i].Index] != null)
+                    {
                         data[SelectedRows.Count - 1 - i] = _graphData[SelectedRows[i].Index].Node.Id;
+                    }
                 }
+
                 return data;
             }
             set
             {
                 string[] currentSelection = SelectedIds;
                 if (value != null && currentSelection != null && value.SequenceEqual(currentSelection))
+                {
                     return;
+                }
 
                 lock (_backgroundEvent)
-                lock (_graphData)
+                {
+                    lock (_graphData)
                     {
                         ClearSelection();
                         CurrentCell = null;
                         if (value == null)
+                        {
                             return;
+                        }
 
                         foreach (string rowItem in value)
                         {
@@ -288,6 +307,7 @@ namespace GitUI.RevisionGridClasses
                             }
                         }
                     }
+                }
             }
         }
 
@@ -295,7 +315,9 @@ namespace GitUI.RevisionGridClasses
         protected override void Dispose(bool disposing)
         {
             lock (_backgroundEvent)
+            {
                 _shouldRun = false;
+            }
 
             if (disposing)
             {
@@ -304,11 +326,13 @@ namespace GitUI.RevisionGridClasses
                     _whiteBorderPen.Dispose();
                     _whiteBorderPen = null;
                 }
+
                 if (_blackBorderPen != null)
                 {
                     _blackBorderPen.Dispose();
                     _blackBorderPen = null;
                 }
+
                 if (_graphBitmap != null)
                 {
                     _graphBitmap.Dispose();
@@ -316,8 +340,11 @@ namespace GitUI.RevisionGridClasses
                 }
 
                 if (_backgroundEvent != null)
+                {
                     _backgroundEvent.Dispose();
+                }
             }
+
             base.Dispose(disposing);
         }
 
@@ -360,6 +387,7 @@ namespace GitUI.RevisionGridClasses
             {
                 _backgroundScrollTo = 0;
             }
+
             lock (_graphData)
             {
                 SetRowCount(0);
@@ -368,6 +396,7 @@ namespace GitUI.RevisionGridClasses
                 _graphDataCount = 0;
                 RebuildGraph();
             }
+
             _filterMode = FilterType.None;
         }
 
@@ -379,6 +408,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     n.IsFiltered = false;
                 }
+
                 _graphData.IsFilter = false;
             }
         }
@@ -402,7 +432,9 @@ namespace GitUI.RevisionGridClasses
                 }
 
                 if (row.Node.Ancestors.Count > 0)
+                {
                     return row.Node.Ancestors[0].IsRelative;
+                }
 
                 return true;
             }
@@ -411,13 +443,17 @@ namespace GitUI.RevisionGridClasses
         public GitRevision GetRowData(int aRow)
         {
             lock (_graphData)
+            {
                 return _graphData[aRow]?.Node.Data;
+            }
         }
 
         public string GetRowId(int aRow)
         {
             lock (_graphData)
+            {
                 return _graphData[aRow]?.Node.Id;
+            }
         }
 
         public int FindRow(string aId)
@@ -512,7 +548,10 @@ namespace GitUI.RevisionGridClasses
         public void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0)
+            {
                 return;
+            }
+
             if (Rows[e.RowIndex].Height != RowTemplate.Height)
             {
                 Rows[e.RowIndex].Height = RowTemplate.Height;
@@ -520,7 +559,9 @@ namespace GitUI.RevisionGridClasses
             }
 
             if ((e.State & DataGridViewElementStates.Visible) == 0 || e.ColumnIndex != 0)
+            {
                 return;
+            }
 
             Rectangle srcRect = DrawGraph(e.RowIndex);
             if (!srcRect.IsEmpty)
@@ -557,7 +598,9 @@ namespace GitUI.RevisionGridClasses
                     lock (_backgroundEvent)
                     {
                         if (!_shouldRun)
+                        {
                             return;
+                        }
 
                         int scrollTo;
                         lock (_backgroundThread)
@@ -573,7 +616,9 @@ namespace GitUI.RevisionGridClasses
                         }
 
                         if (RevisionGraphVisible)
+                        {
                             UpdateGraph(curCount, scrollTo);
+                        }
                         else
                         {
                             // do nothing... do not cache, the graph is invisible
@@ -599,6 +644,7 @@ namespace GitUI.RevisionGridClasses
                         {
                             _backgroundScrollTo = curCount;
                         }
+
                         break;
                     }
 
@@ -610,9 +656,14 @@ namespace GitUI.RevisionGridClasses
 
                     int count = 0;
                     if (FirstDisplayedCell != null)
+                    {
                         count = FirstDisplayedCell.RowIndex + DisplayedRowCount(true);
+                    }
+
                     if (curCount == count)
+                    {
                         this.InvokeAsync(UpdateColumnWidth);
+                    }
 
                     curCount = _graphData.CachedCount;
                     _graphDataCount = curCount;
@@ -713,8 +764,11 @@ namespace GitUI.RevisionGridClasses
                         AppSettings.BranchFilterEnabled) ? 1 : MaxLanes;
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
+
                 if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
+                {
                     GraphColumn.Width = _laneWidth * laneCount;
+                }
             }
         }
 
@@ -736,7 +790,6 @@ namespace GitUI.RevisionGridClasses
             return colors;
         }
 
-
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
         [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
         [Browsable(false)]
@@ -745,9 +798,15 @@ namespace GitUI.RevisionGridClasses
             get
             {
                 if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
+                {
                     return _revisionGraphDrawStyle;
+                }
+
                 if (AppSettings.RevisionGraphDrawNonRelativesGray)
+                {
                     return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                }
+
                 return RevisionGraphDrawStyleEnum.Normal;
             }
             set
@@ -761,15 +820,21 @@ namespace GitUI.RevisionGridClasses
         private Color GetJunctionColor(Junction aJunction)
         {
             // Draw non-relative branches gray
-            if (!aJunction.IsRelative && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+            if (!aJunction.IsRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+            {
                 return _nonRelativeColor;
+            }
 
             // Draw non-highlighted branches gray
-            if (!aJunction.HighLight && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
+            if (!aJunction.HighLight && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
+            {
                 return _nonRelativeColor;
+            }
 
             if (!AppSettings.MulticolorBranches)
+            {
                 return AppSettings.GraphColor;
+            }
 
             // This is the order to grab the colors in.
             int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
@@ -815,6 +880,7 @@ namespace GitUI.RevisionGridClasses
                         break;
                     }
                 }
+
                 if (i == preferedColors.Length)
                 {
                     var r = new Random();
@@ -850,6 +916,7 @@ namespace GitUI.RevisionGridClasses
             int height = _cacheCountMax * _rowHeight;
             int width = GraphColumn.Width;
             if (_graphBitmap == null ||
+
                 // Resize the bitmap when the with or height is changed. The height won't change very often.
                 // The with changes more often, when branches become visible/invisible.
                 // Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
@@ -861,6 +928,7 @@ namespace GitUI.RevisionGridClasses
                     _graphBitmap.Dispose();
                     _graphBitmap = null;
                 }
+
                 if (width > 0 && height > 0)
                 {
                     _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
@@ -887,6 +955,7 @@ namespace GitUI.RevisionGridClasses
                     neededHeadAdjustment = 0;
                 }
             }
+
             int newRows = 0;
             if (_cacheCount < _cacheCountMax)
             {
@@ -928,7 +997,9 @@ namespace GitUI.RevisionGridClasses
             if (RevisionGraphVisible)
             {
                 if (!DrawVisibleGraph(start, end))
+                {
                     return Rectangle.Empty;
+                }
             }
 
             return CreateRectangle(aNeededRow, width);
@@ -986,6 +1057,7 @@ namespace GitUI.RevisionGridClasses
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -1001,7 +1073,7 @@ namespace GitUI.RevisionGridClasses
 
         // end drawGraph
 
-        private RevisionGraphDrawStyleEnum revisionGraphDrawStyleCache;
+        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private bool DrawItem(Graphics wa, Graph.ILaneRow row)
         {
             if (row == null || row.NodeLane == -1)
@@ -1021,7 +1093,7 @@ namespace GitUI.RevisionGridClasses
             wa.Clear(Color.Transparent);
 
             // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
-            revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
+            _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
             ////for (int r = 0; r < 2; r++)
             for (int lane = 0; lane < row.Count; lane++)
@@ -1032,9 +1104,9 @@ namespace GitUI.RevisionGridClasses
                 {
                     Graph.LaneInfo laneInfo = row[lane, item];
 
-                    bool highLight = (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
-                                     (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
-                                     (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+                    bool highLight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
+                                     (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
+                                     (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
                     List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
 
@@ -1064,7 +1136,6 @@ namespace GitUI.RevisionGridClasses
                         else
                         {
                             Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
-
 
                             if (lastRealColor.IsEmpty)
                             {
@@ -1114,7 +1185,10 @@ namespace GitUI.RevisionGridClasses
                                     break;
                                 default:
                                     if (brushLineColorPen == null)
+                                    {
                                         brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                    }
+
                                     penLine = brushLineColorPen;
                                     break;
                             }
@@ -1152,23 +1226,28 @@ namespace GitUI.RevisionGridClasses
 
                 List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
 
-                bool highlight = (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                                 (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
-                                 (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+                bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
                 bool drawBorder = AppSettings.BranchBorders && highlight;
 
                 if (nodeColors.Count == 1)
                 {
                     nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
-                    if (nodeColors[0] == _nonRelativeColor) drawBorder = false;
+                    if (nodeColors[0] == _nonRelativeColor)
+                    {
+                        drawBorder = false;
+                    }
                 }
                 else
                 {
                     nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1],
                                                         LinearGradientMode.Horizontal);
                     if (nodeColors.All(c => c == _nonRelativeColor))
+                    {
                         drawBorder = false;
+                    }
                 }
 
                 if (_filterMode == FilterType.Highlight && row.Node.IsFiltered)
@@ -1192,7 +1271,9 @@ namespace GitUI.RevisionGridClasses
                     wa.FillRectangle(nodeBrush, nodeRect);
                     nodeRect.Inflate(1, 1);
                     using (var pen = new Pen(Color.Black, 3))
+                    {
                         wa.DrawRectangle(pen, nodeRect);
+                    }
                 }
                 else if (row.Node.IsSpecial)
                 {
@@ -1211,6 +1292,7 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
             }
+
             return true;
         }
 
@@ -1256,6 +1338,7 @@ namespace GitUI.RevisionGridClasses
         private void dataGrid_Resize(object sender, EventArgs e)
         {
             _rowHeight = RowTemplate.Height;
+
             // Keep an extra page in the cache
             _cacheCountMax = Height * 2 / _rowHeight + 1;
             ClearDrawCache();
@@ -1272,6 +1355,7 @@ namespace GitUI.RevisionGridClasses
                     Rows[0].Selected = true;
                     CurrentCell = Rows[0].Cells[1];
                 }
+
                 return;
             }
             else if (e.KeyData == Keys.End)
@@ -1282,8 +1366,10 @@ namespace GitUI.RevisionGridClasses
                     Rows[RowCount - 1].Selected = true;
                     CurrentCell = Rows[RowCount - 1].Cells[1];
                 }
+
                 return;
             }
+
             base.OnKeyDown(e);
         }
 
@@ -1333,8 +1419,10 @@ namespace GitUI.RevisionGridClasses
                     {
                         name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);
                     }
+
                     return string.Format("{0} ({1})", name, Index);
                 }
+
                 return Data.ToString();
             }
         }

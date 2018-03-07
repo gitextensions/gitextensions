@@ -13,18 +13,18 @@ namespace TranslationApp
     public partial class FormTranslate : GitExtensionsForm
     {
         // TranslationStrings
-        readonly TranslationString translateProgressText = new TranslationString("Translated {0} out of {1}");
-        readonly TranslationString allText = new TranslationString("All");
-        readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
-        readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
-        readonly TranslationString saveAsText = new TranslationString("Save as");
-        readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xlf)");
-        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no language code selected." +
+        readonly TranslationString _translateProgressText = new TranslationString("Translated {0} out of {1}");
+        readonly TranslationString _allText = new TranslationString("All");
+        readonly TranslationString _saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
+        readonly TranslationString _saveCurrentChangesCaption = new TranslationString("Save changes");
+        readonly TranslationString _saveAsText = new TranslationString("Save as");
+        readonly TranslationString _saveAsTextFilter = new TranslationString("Translation file (*.xlf)");
+        readonly TranslationString _noLanguageCodeSelected = new TranslationString("There is no language code selected." +
             Environment.NewLine + "Do you want to select a language code first?");
-        readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
-        readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
+        readonly TranslationString _noLanguageCodeSelectedCaption = new TranslationString("Language code");
+        readonly TranslationString _editingCellPrefixText = new TranslationString("[EDITING]");
 
-        private IDictionary<string, List<TranslationItemWithCategory>> translationItems;
+        private IDictionary<string, List<TranslationItemWithCategory>> _translationItems;
 
         readonly IDictionary<string, TranslationFile> _neutralTranslation = new Dictionary<string, TranslationFile>();
         IDictionary<string, TranslationFile> _translation = new Dictionary<string, TranslationFile>();
@@ -45,11 +45,14 @@ namespace TranslationApp
             translations.Items.AddRange(Translator.GetAllTranslations());
 
             FillNeutralTranslation();
-            _allCategories.Name = allText.Text;
+            _allCategories.Name = _allText.Text;
             UpdateCategoriesList();
             translations.SelectedItem = GitCommands.AppSettings.Translation; // should be called after FillNeutralTranslation()
             if (_translation == null)
+            {
                 LoadTranslation();
+            }
+
             translateCategories.SelectedItem = _allCategories;
             FillTranslateGrid(_allCategories);
 
@@ -71,9 +74,9 @@ namespace TranslationApp
 
         private void UpdateProgress()
         {
-            int translatedCount = translationItems.Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
-            int totalCount = translationItems.Count();
-            var progresMsg = string.Format(translateProgressText.Text, translatedCount, totalCount);
+            int translatedCount = _translationItems.Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
+            int totalCount = _translationItems.Count();
+            var progresMsg = string.Format(_translateProgressText.Text, translatedCount, totalCount);
             if (translateProgress.Text != progresMsg)
             {
                 translateProgress.Text = progresMsg;
@@ -86,7 +89,7 @@ namespace TranslationApp
             if (_translation.Count != 0)
             {
                 var items = TranslationHelpers.GetItemsDictionary(_translation);
-                translationItems = TranslationHelpers.LoadTranslation(_translation, items);
+                _translationItems = TranslationHelpers.LoadTranslation(_translation, items);
             }
             else
             {
@@ -98,7 +101,8 @@ namespace TranslationApp
                                select new TranslationItemWithCategory(item.Name, translationItem.Clone());
                     neutralItems.Add(pair.Key, list.ToList());
                 }
-                translationItems = neutralItems;
+
+                _translationItems = neutralItems;
             }
 
             UpdateProgress();
@@ -106,13 +110,17 @@ namespace TranslationApp
 
         private void FillTranslateGrid(TranslationCategory filter)
         {
-            if (translationItems == null)
+            if (_translationItems == null)
+            {
                 return;
+            }
 
             translateItemBindingSource.DataSource = null;
 
             if (filter == _allCategories)
+            {
                 filter = null;
+            }
 
             translateItemBindingSource.DataSource = GetCategoryItems(filter).ToList();
 
@@ -121,7 +129,7 @@ namespace TranslationApp
 
         private IEnumerable<TranslationItemWithCategory> GetCategoryItems(TranslationCategory filter)
         {
-            var filteredByCategory = translationItems.SelectMany(p => p.Value).Where(
+            var filteredByCategory = _translationItems.SelectMany(p => p.Value).Where(
                 translateItem => filter == null || filter.Name.Equals(translateItem.Category));
             var filteredItems = filteredByCategory.Where(
                 translateItem => !hideTranslatedItems.Checked);
@@ -133,7 +141,6 @@ namespace TranslationApp
             return translation.SelectMany(pair => pair.Value.TranslationCategories);
         }
 
-
         public void UpdateCategoriesList()
         {
             var tc = translateCategories.SelectedItem as TranslationCategory;
@@ -141,14 +148,20 @@ namespace TranslationApp
             translateCategories.Items.Add(_allCategories);
 
             if (!hideTranslatedItems.Checked)
+            {
                 translateCategories.Items.AddRange(GetCategories(_neutralTranslation).ToArray());
+            }
             else
             {
                 var categories = GetCategories(_neutralTranslation).Where(cat => GetCategoryItems(cat).Any());
                 translateCategories.Items.AddRange(categories.ToArray());
             }
+
             if (hideTranslatedItems.Checked && !GetCategoryItems(tc).Any())
+            {
                 tc = _allCategories;
+            }
+
             translateCategories.SelectedItem = tc;
         }
 
@@ -172,12 +185,16 @@ namespace TranslationApp
                         foreach (Type type in types.Value)
                         {
                             if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
+                            {
                                 obj.AddTranslationItems(translation);
+                            }
 
                             progressBar.Value = index;
                             index++;
                             if (index % 10 == 0)
+                            {
                                 Update();
+                            }
                         }
                     }
                     finally
@@ -195,7 +212,6 @@ namespace TranslationApp
             }
         }
 
-
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
             categoryDataGridViewTextBoxColumn.Visible = (translateCategories.SelectedItem == _allCategories);
@@ -205,8 +221,12 @@ namespace TranslationApp
         private void saveAs_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text))
-                if (MessageBox.Show(this, noLanguageCodeSelected.Text, noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                if (MessageBox.Show(this, _noLanguageCodeSelected.Text, _noLanguageCodeSelectedCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
                     return;
+                }
+            }
 
             toolStrip1.Select();
 
@@ -311,7 +331,9 @@ namespace TranslationApp
         private string GetSelectedLanguageCode()
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text) || _NO_TRANSLATE_languageCode.Text.Length < 2)
+            {
                 return null;
+            }
 
             return _NO_TRANSLATE_languageCode.Text.Substring(0, 2);
         }
@@ -321,16 +343,16 @@ namespace TranslationApp
             using (var fileDialog =
                 new SaveFileDialog
                 {
-                    Title = saveAsText.Text,
+                    Title = _saveAsText.Text,
                     FileName = translations.Text + ".xlf",
-                    Filter = saveAsTextFilter.Text + "|*.xlf",
+                    Filter = _saveAsTextFilter.Text + "|*.xlf",
                     DefaultExt = ".xlf",
                     AddExtension = true
                 })
             {
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    TranslationHelpers.SaveTranslation(GetSelectedLanguageCode(), translationItems, fileDialog.FileName);
+                    TranslationHelpers.SaveTranslation(GetSelectedLanguageCode(), _translationItems, fileDialog.FileName);
                     _changesMade = false;
                 }
             }
@@ -374,7 +396,7 @@ namespace TranslationApp
         {
             if (_changesMade)
             {
-                if (MessageBox.Show(this, saveCurrentChangesText.Text, saveCurrentChangesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(this, _saveCurrentChangesText.Text, _saveCurrentChangesCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     SaveAs();
                 }
@@ -416,7 +438,7 @@ namespace TranslationApp
 
             if (_translationItemWithCategoryInEditing != null)
             {
-                _translationItemWithCategoryInEditing.TranslatedValue = editingCellPrefixText.Text + " " + _translationItemWithCategoryInEditing.TranslatedValue;
+                _translationItemWithCategoryInEditing.TranslatedValue = _editingCellPrefixText.Text + " " + _translationItemWithCategoryInEditing.TranslatedValue;
             }
         }
 
@@ -443,7 +465,10 @@ namespace TranslationApp
 
                 var translateItem = (TranslationItemWithCategory)translateGrid.SelectedRows[0].DataBoundItem;
 
-                if (translateItem == null) return;
+                if (translateItem == null)
+                {
+                    return;
+                }
 
                 neutralText.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
@@ -473,7 +498,9 @@ namespace TranslationApp
             if (translateGrid.SelectedRows.Count == 1)
             {
                 if (translateGrid.CurrentCell.RowIndex < translateGrid.Rows.Count - 1)
+                {
                     translateItemBindingSource.MoveNext();
+                }
             }
             else if (translateGrid.Rows.Count > 0)
             {
@@ -486,7 +513,9 @@ namespace TranslationApp
             if (translateGrid.SelectedRows.Count == 1)
             {
                 if (translateGrid.CurrentCell.RowIndex > 0)
+                {
                     translateItemBindingSource.MovePrevious();
+                }
             }
             else if (translateGrid.Rows.Count > 0)
             {

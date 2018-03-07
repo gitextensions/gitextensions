@@ -7,7 +7,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private ExternalLinksManager _externalLinksManager;
 
-
         public RevisionLinksSettingsPage()
         {
             InitializeComponent();
@@ -25,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 _NO_TRANSLATE_Categories.SelectedIndex = 0;
             }
+
             CategoryChanged();
         }
 
@@ -113,7 +113,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void Remove_Click(object sender, EventArgs e)
         {
             if (SelectedLinkDefinition == null)
+            {
                 return;
+            }
 
             int idx = _NO_TRANSLATE_Categories.SelectedIndex;
 

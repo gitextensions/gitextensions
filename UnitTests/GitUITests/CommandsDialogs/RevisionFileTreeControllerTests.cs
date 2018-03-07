@@ -21,7 +21,6 @@ namespace GitUITests.CommandsDialogs
         private TreeNode _rootNode;
         private ImageList _imageList;
 
-
         [SetUp]
         public void Setup()
         {
@@ -39,7 +38,6 @@ namespace GitUITests.CommandsDialogs
             _imageList?.Dispose();
             _imageList = null;
         }
-
 
         [Test]
         public void LoadItemsInTreeView_should_not_add_nods_if_no_children()
@@ -70,6 +68,7 @@ namespace GitUITests.CommandsDialogs
                 _rootNode.Nodes[i].SelectedImageIndex.Should().Be(-1);
                 _rootNode.Nodes[i].Nodes.Count.Should().Be(1);
             }
+
             _imageList.Images.Count.Should().Be(0);
         }
 
@@ -90,6 +89,7 @@ namespace GitUITests.CommandsDialogs
                 _rootNode.Nodes[i].SelectedImageIndex.Should().Be(RevisionFileTreeController.TreeNodeImages.Folder);
                 _rootNode.Nodes[i].Nodes.Count.Should().Be(1);
             }
+
             _imageList.Images.Count.Should().Be(0);
         }
 
@@ -110,6 +110,7 @@ namespace GitUITests.CommandsDialogs
                 _rootNode.Nodes[i].SelectedImageIndex.Should().Be(RevisionFileTreeController.TreeNodeImages.Submodule);
                 _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
             }
+
             _imageList.Images.Count.Should().Be(0);
         }
 
@@ -147,6 +148,7 @@ namespace GitUITests.CommandsDialogs
                 _rootNode.Nodes[i].SelectedImageKey.Should().BeEmpty();
                 _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
             }
+
             _imageList.Images.Count.Should().Be(0);
             _iconProvider.DidNotReceive().Get(Arg.Any<string>(), Arg.Any<string>());
         }
@@ -169,6 +171,7 @@ namespace GitUITests.CommandsDialogs
                 _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
                 _iconProvider.Received(1).Get(Arg.Any<string>(), items[i].Name);
             }
+
             _imageList.Images.Count.Should().Be(0);
         }
 
@@ -192,9 +195,9 @@ namespace GitUITests.CommandsDialogs
                 _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
                 _iconProvider.Received(1).Get(Arg.Any<string>(), items[i].Name);
             }
+
             _imageList.Images.Count.Should().Be(1);
         }
-
 
         private IGitItem CreateGitItem(string name, bool isTree, bool isCommit, bool isBlol)
         {

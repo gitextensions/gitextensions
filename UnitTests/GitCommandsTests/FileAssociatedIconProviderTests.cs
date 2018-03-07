@@ -15,7 +15,6 @@ namespace GitCommandsTests
         private IFileSystem _fileSystem;
         private FileAssociatedIconProvider _iconProvider;
 
-
         [SetUp]
         public void Setup()
         {
@@ -25,7 +24,6 @@ namespace GitCommandsTests
             _iconProvider = new FileAssociatedIconProvider(_fileSystem);
             _iconProvider.ResetCache();
         }
-
 
         [TestCase(null, null)]
         [TestCase("", "")]

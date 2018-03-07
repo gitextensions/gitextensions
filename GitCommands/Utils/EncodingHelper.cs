@@ -22,14 +22,17 @@ namespace GitCommands
             {
                 sb.Append(encoding.GetString(output));
             }
+
             if (error != null && error.Length > 0 && output != null && output.Length > 0)
             {
                 sb.AppendLine();
             }
+
             if (error != null && error.Length > 0)
             {
                 sb.Append(encoding.GetString(error));
             }
+
             return sb.ToString();
         }
 
@@ -60,13 +63,16 @@ namespace GitCommands
                         encoding = reader.CurrentEncoding;
                         outputString = reader.ReadToEnd();
                         if (error == null || error.Length == 0)
+                        {
                             return outputString;
+                        }
                     }
                 }
                 finally
                 {
                     ms?.Dispose();
                 }
+
                 outputString = outputString + Environment.NewLine;
             }
 
@@ -81,11 +87,14 @@ namespace GitCommands
                     {
                         ms = null;
                         reader.Peek();
+
                         // .Net automatically detect Unicode encoding in StreamReader
                         encoding = reader.CurrentEncoding;
                         errorString = reader.ReadToEnd();
                         if (output == null || output.Length == 0)
+                        {
                             return errorString;
+                        }
                     }
                 }
                 finally

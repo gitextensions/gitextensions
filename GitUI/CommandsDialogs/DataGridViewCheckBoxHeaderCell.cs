@@ -10,18 +10,21 @@ namespace GitUI.CommandsDialogs
 {
     public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
     {
-        private bool wasAttached;
-        private bool selfChanging;
+        private bool _wasAttached;
+        private bool _selfChanging;
+
         /// <summary>
         /// Relative check box location (from cellbounds).
         /// </summary>
-        private Rectangle checkBoxArea;
-        private CheckState checkedState = CheckState.Indeterminate;
+        private Rectangle _checkBoxArea;
+        private CheckState _checkedState = CheckState.Indeterminate;
 
         public void AttachTo(DataGridViewCheckBoxColumn owningColumn)
         {
-            if (wasAttached)
+            if (_wasAttached)
+            {
                 throw new InvalidOperationException("This cell has already been attached to a column.");
+            }
 
             if (DataGridView != null)
             {
@@ -31,13 +34,13 @@ namespace GitUI.CommandsDialogs
                 DataGridView.CurrentCellDirtyStateChanged += OnCurrentCellDirtyStateChanged;
                 DataGridView.Rows.CollectionChanged += OnCollectionChanged;
                 UpdateCheckedState();
-                wasAttached = true;
+                _wasAttached = true;
             }
         }
 
         public void Detach()
         {
-            if (wasAttached)
+            if (_wasAttached)
             {
                 DataGridView.CurrentCellDirtyStateChanged -= OnCurrentCellDirtyStateChanged;
                 DataGridView.Rows.CollectionChanged -= OnCollectionChanged;
@@ -51,8 +54,11 @@ namespace GitUI.CommandsDialogs
 
         private void OnCurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
-            if (DataGridView.CurrentCell.ColumnIndex != OwningColumn.Index || selfChanging)
+            if (DataGridView.CurrentCell.ColumnIndex != OwningColumn.Index || _selfChanging)
+            {
                 return;
+            }
+
             DataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
             UpdateCheckedState();
         }
@@ -80,15 +86,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private CheckState CheckedState
         {
-            get { return checkedState; }
+            get { return _checkedState; }
             set
             {
-                if (value == checkedState)
+                if (value == _checkedState)
+                {
                     return;
-                checkedState = value;
+                }
+
+                _checkedState = value;
                 DataGridView.InvalidateCell(this);
             }
         }
@@ -120,17 +128,17 @@ namespace GitUI.CommandsDialogs
             var relativeLocation = new Point(cellBounds.Width / 2 - glyphSize.Width / 2, cellBounds.Height / 2 - glyphSize.Height / 2);
             var absoluteLocation = new Point(cellBounds.Location.X + relativeLocation.X, cellBounds.Location.Y + relativeLocation.Y);
 
-            checkBoxArea = new Rectangle(relativeLocation, glyphSize);
+            _checkBoxArea = new Rectangle(relativeLocation, glyphSize);
             CheckBoxRenderer.DrawCheckBox(graphics, absoluteLocation, CheckBoxState);
         }
 
         protected override void OnMouseClick(DataGridViewCellMouseEventArgs e)
         {
-            if (checkBoxArea.Contains(e.X, e.Y))
+            if (_checkBoxArea.Contains(e.X, e.Y))
             {
                 var newStateIsChecked = CheckedState != CheckState.Checked;
                 CheckedState = newStateIsChecked ? CheckState.Checked : CheckState.Unchecked;
-                selfChanging = true;
+                _selfChanging = true;
                 foreach (var cell in Cells)
                 {
                     if (cell == DataGridView.CurrentCell)
@@ -138,10 +146,13 @@ namespace GitUI.CommandsDialogs
                         // workaround for updating current cell
                         DataGridView.CurrentCell = null;
                     }
+
                     cell.Value = newStateIsChecked;
                 }
-                selfChanging = false;
+
+                _selfChanging = false;
             }
+
             base.OnMouseClick(e);
         }
     }

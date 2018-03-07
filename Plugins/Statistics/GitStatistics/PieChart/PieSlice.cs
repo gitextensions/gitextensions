@@ -194,6 +194,7 @@ namespace GitStatistics.PieChart
             _actualSweepAngle = sweepAngle;
             _surfaceColor = surfaceColor;
             _shadowStyle = shadowStyle;
+
             // create pens for rendering
             var edgeLineColor = EdgeColor.GetRenderingColor(edgeColorType, surfaceColor);
             Pen = new Pen(edgeLineColor) { LineJoin = LineJoin.Round };
@@ -357,6 +358,7 @@ namespace GitStatistics.PieChart
                 Pen.Dispose();
                 Pen = null;
             }
+
             DisposeBrushes();
         }
 
@@ -374,6 +376,7 @@ namespace GitStatistics.PieChart
             DrawVisibleStartSide(graphics);
             DrawVisibleEndSide(graphics);
             DrawVisiblePeriphery(graphics);
+
             // draw the top pie slice
             DrawTop(graphics);
         }
@@ -390,9 +393,15 @@ namespace GitStatistics.PieChart
         public bool Contains(PointF point)
         {
             if (PieSliceContainsPoint(point))
+            {
                 return true;
+            }
+
             if (PeripheryContainsPoint(point))
+            {
                 return true;
+            }
+
             return StartSide.Contains(point) || EndSide.Contains(point);
         }
 
@@ -519,13 +528,25 @@ namespace GitStatistics.PieChart
         {
             var boundingRectangle = new RectangleF(PointStart.X, PointStart.Y, 0, 0);
             if ((StartAngle == 0F) || (StartAngle + SweepAngle >= 360))
+            {
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Right);
+            }
+
             if ((StartAngle <= 90) && (StartAngle + SweepAngle >= 90) || (StartAngle + SweepAngle >= 450))
+            {
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Bottom + SliceHeight);
+            }
+
             if ((StartAngle <= 180) && (StartAngle + SweepAngle >= 180) || (StartAngle + SweepAngle >= 540))
+            {
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Left);
+            }
+
             if ((StartAngle <= 270) && (StartAngle + SweepAngle >= 270) || (StartAngle + SweepAngle >= 630))
+            {
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Top);
+            }
+
             GraphicsUtil.IncludePoint(ref boundingRectangle, Center);
             GraphicsUtil.IncludePoint(ref boundingRectangle, CenterBelow);
             GraphicsUtil.IncludePoint(ref boundingRectangle, PointStart);
@@ -574,8 +595,11 @@ namespace GitStatistics.PieChart
                     point,
                     surfaceBounds.StartPoint,
                     surfaceBounds.EndPoint))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -659,11 +683,17 @@ namespace GitStatistics.PieChart
                 case ShadowStyle.GradualShadow:
                     double angle = StartAngle - 180 - ShadowAngle;
                     if (angle < 0)
+                    {
                         angle += 360;
+                    }
+
                     BrushStartSide = CreateBrushForSide(surfaceColor, angle);
                     angle = StartAngle + SweepAngle - ShadowAngle;
                     if (angle < 0)
+                    {
                         angle += 360;
+                    }
+
                     BrushEndSide = CreateBrushForSide(surfaceColor, angle);
                     BrushPeripherySurface = CreateBrushForPeriphery(surfaceColor);
                     break;
@@ -680,16 +710,19 @@ namespace GitStatistics.PieChart
                 BrushSurface.Dispose();
                 BrushSurface = null;
             }
+
             if (BrushStartSide != null)
             {
                 BrushStartSide.Dispose();
                 BrushStartSide = null;
             }
+
             if (BrushEndSide != null)
             {
                 BrushEndSide.Dispose();
                 BrushEndSide = null;
             }
+
             if (BrushPeripherySurface != null)
             {
                 BrushPeripherySurface.Dispose();
@@ -804,7 +837,10 @@ namespace GitStatistics.PieChart
             var y = BoundingRectangle.Height * Math.Sin(angle * Math.PI / 180);
             var result = (float)(Math.Atan2(y, x) * 180 / Math.PI);
             if (result < 0)
+            {
                 return result + 360;
+            }
+
             return result;
         }
 
@@ -868,15 +904,23 @@ namespace GitStatistics.PieChart
             BoundingRectangle =
                 new RectangleF(xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect);
             SliceHeight = sliceHeight;
+
             // recalculates start and sweep angle used for rendering
             StartAngle = TransformAngle(_actualStartAngle);
             SweepAngle = _actualSweepAngle;
             if (SweepAngle % 180 != 0F)
+            {
                 SweepAngle = TransformAngle(_actualStartAngle + _actualSweepAngle) - StartAngle;
+            }
+
             if (SweepAngle < 0)
+            {
                 SweepAngle += 360;
+            }
+
             // recreates brushes
             CreateSurfaceBrushes(_surfaceColor, _shadowStyle);
+
             // calculates center and end points on periphery
             var xCenter = xBoundingRect + widthBoundingRect / 2;
             var yCenter = yBoundingRect + heightBoundingRect / 2;
@@ -897,16 +941,25 @@ namespace GitStatistics.PieChart
         private void InitializeSides()
         {
             if (StartAngle > 90 && StartAngle < 270)
+            {
                 StartSide =
                     new Quadrilateral(Center, PointStart, PointStartBelow, CenterBelow,
                                       SweepAngle != 180);
+            }
             else
+            {
                 StartSide = Quadrilateral.Empty;
+            }
+
             if (EndAngle > 270 || EndAngle < 90)
+            {
                 EndSide = new Quadrilateral(Center, PointEnd, PointEndBelow, CenterBelow,
                                             SweepAngle != 180);
+            }
             else
+            {
                 EndSide = Quadrilateral.Empty;
+            }
         }
 
         /// <summary>
@@ -918,6 +971,7 @@ namespace GitStatistics.PieChart
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
             var peripherySurfaceBounds = new ArrayList();
+
             // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees
             if (!(SweepAngle == 0 || (StartAngle >= 180 && StartAngle + SweepAngle <= 360)))
@@ -936,8 +990,10 @@ namespace GitStatistics.PieChart
                         x2.X = BoundingRectangle.X;
                         x2.Y = Center.Y;
                     }
+
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
                 }
+
                 // if lateral surface is visible from the right edge
                 if (StartAngle + SweepAngle > 360)
                 {
@@ -951,9 +1007,11 @@ namespace GitStatistics.PieChart
                         x2.X = BoundingRectangle.Left;
                         x2.Y = Center.Y;
                     }
+
                     peripherySurfaceBounds.Add(new PeripherySurfaceBounds(fi1, fi2, x1, x2));
                 }
             }
+
             return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
         }
 
@@ -1018,6 +1076,7 @@ namespace GitStatistics.PieChart
                                       point2
                                   });
             }
+
             return false;
         }
 
@@ -1063,8 +1122,12 @@ namespace GitStatistics.PieChart
             var y = point.Y - yBoundingRectangle - b;
             var angle = Math.Atan2(y, x);
             if (angle < 0)
+            {
                 angle += (2 * Math.PI);
+            }
+
             var angleDegrees = angle * 180 / Math.PI;
+
             // point is inside the pie slice only if between start and end angle
             if ((angleDegrees >= startAngle && angleDegrees <= (startAngle + sweepAngle)) ||
                 (startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle)))
@@ -1075,10 +1138,12 @@ namespace GitStatistics.PieChart
                 var b2 = b * b;
                 var cosFi = Math.Cos(angle);
                 var sinFi = Math.Sin(angle);
+
                 // distance of the ellipse perimeter point
                 var ellipseRadius = (b * a) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
                 return ellipseRadius > r;
             }
+
             return false;
         }
 

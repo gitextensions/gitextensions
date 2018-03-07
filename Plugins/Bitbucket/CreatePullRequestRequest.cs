@@ -60,6 +60,7 @@ namespace Bitbucket
 
                 reviewers.Add(r);
             }
+
             resource["reviewers"] = reviewers;
 
             return resource.ToString();

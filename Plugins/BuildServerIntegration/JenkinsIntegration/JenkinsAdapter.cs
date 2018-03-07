@@ -25,14 +25,18 @@ namespace JenkinsIntegration
     {
         public JenkinsIntegrationMetadata(string buildServerType)
             : base(buildServerType)
-        { }
+        {
+        }
 
         public override string CanBeLoaded
         {
             get
             {
                 if (EnvUtils.IsNet4FullOrHigher())
+                {
                     return null;
+                }
+
                 return ".Net 4 full framework required";
             }
         }
@@ -48,13 +52,15 @@ namespace JenkinsIntegration
 
         private HttpClient _httpClient;
 
-        private readonly Dictionary<string, JenkinsCacheInfo> LastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
+        private readonly Dictionary<string, JenkinsCacheInfo> _LastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
         private readonly IList<string> _projectsUrls = new List<string>();
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
+            {
                 throw new InvalidOperationException("Already initialized");
+            }
 
             _buildServerWatcher = buildServerWatcher;
 
@@ -93,7 +99,7 @@ namespace JenkinsIntegration
             if (!_projectsUrls.Contains(projectUrl))
             {
                 _projectsUrls.Add(projectUrl);
-                LastBuildCache[projectUrl] = new JenkinsCacheInfo();
+                _LastBuildCache[projectUrl] = new JenkinsCacheInfo();
             }
         }
 
@@ -139,6 +145,7 @@ namespace JenkinsIntegration
                                         timestamp = Math.Max(timestamp, ts);
                                     }
                                 }
+
                                 // else: The server had no response (overloaded?) or a multibranch pipeline is not configured
 
                                 if (jobDescription["lastBuild"] != null)
@@ -188,7 +195,7 @@ namespace JenkinsIntegration
                 IList<Task<ResponseInfo>> latestBuildInfos = new List<Task<ResponseInfo>>();
                 foreach (var projectUrl in _projectsUrls)
                 {
-                    if (LastBuildCache[projectUrl].Timestamp <= 0)
+                    if (_LastBuildCache[projectUrl].Timestamp <= 0)
                     {
                         // This job must be updated, no need to to check the latest builds
                         allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
@@ -207,7 +214,7 @@ namespace JenkinsIntegration
                 {
                     if (!info.IsFaulted)
                     {
-                        if (info.Result.Timestamp > LastBuildCache[info.Result.Url].Timestamp)
+                        if (info.Result.Timestamp > _LastBuildCache[info.Result.Url].Timestamp)
                         {
                             // The cache has at least one newer job, query the status
                             allBuildInfos.Add(GetBuildInfoTask(info.Result.Url, true, cancellationToken));
@@ -220,7 +227,6 @@ namespace JenkinsIntegration
                     observer.OnCompleted();
                     return;
                 }
-
 
                 foreach (var build in allBuildInfos)
                 {
@@ -238,7 +244,8 @@ namespace JenkinsIntegration
                         continue;
                     }
 
-                    LastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
+                    _LastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
+
                     // Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
                     // (for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
                     foreach (var buildDetails in build.Result.JobDescription.Reverse())
@@ -247,13 +254,14 @@ namespace JenkinsIntegration
                         {
                             return;
                         }
+
                         var buildInfo = CreateBuildInfo((JObject)buildDetails);
                         observer.OnNext(buildInfo);
 
                         if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
                         {
                             // Need to make a full requery next time
-                            LastBuildCache[build.Result.Url].Timestamp = 0;
+                            _LastBuildCache[build.Result.Url].Timestamp = 0;
                         }
                     }
                 }
@@ -275,7 +283,7 @@ namespace JenkinsIntegration
             }
         }
 
-        private readonly string JenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+        private readonly string _JenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
         private static BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
@@ -289,7 +297,10 @@ namespace JenkinsIntegration
             foreach (var element in action)
             {
                 if (element["lastBuiltRevision"] != null)
+                {
                     commitHashList.Add(element["lastBuiltRevision"]["SHA1"].ToObject<string>());
+                }
+
                 if (element["totalCount"] != null)
                 {
                     int nbTests = element["totalCount"].ToObject<int>();
@@ -438,7 +449,10 @@ namespace JenkinsIntegration
                 task =>
                 {
                     if (task.Status != TaskStatus.RanToCompletion)
+                    {
                         return string.Empty;
+                    }
+
                     using (var responseStream = task.Result)
                     {
                         return new StreamReader(responseStream).ReadToEnd();
@@ -470,8 +484,9 @@ namespace JenkinsIntegration
                     if (buildsInfo)
                     {
                         depth = 2;
-                        buildTree += ",builds[" + JenkinsTreeBuildInfo + "]";
+                        buildTree += ",builds[" + _JenkinsTreeBuildInfo + "]";
                     }
+
                     buildTree += "]";
                 }
                 else
@@ -487,12 +502,15 @@ namespace JenkinsIntegration
                 // Freestyle project
                 if (buildsInfo)
                 {
-                    buildTree += ",builds[" + JenkinsTreeBuildInfo + "]";
+                    buildTree += ",builds[" + _JenkinsTreeBuildInfo + "]";
                 }
             }
 
             if (!restServicePath.EndsWith("/"))
+            {
                 restServicePath += "/";
+            }
+
             restServicePath += "api/json?depth=" + depth + "&tree=" + buildTree;
             return restServicePath;
         }

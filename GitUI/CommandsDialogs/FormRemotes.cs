@@ -80,7 +80,6 @@ Inactive remote is completely invisible to git.");
             new TranslationString("Inactive");
         #endregion
 
-
         public FormRemotes(GitUICommands aCommands)
             : base(aCommands)
         {
@@ -111,7 +110,6 @@ Inactive remote is completely invisible to git.");
         /// </summary>
         private List<GitRemote> UserGitRemotes { get; set; }
 
-
         private void BindRemotes(string preselectRemote)
         {
             // we need to unwire and rewire the events to avoid excessive flickering
@@ -137,12 +135,14 @@ Inactive remote is completely invisible to git.");
                         flpnlRemoteManagement.Enabled = !((GitRemote)lvi.Tag).Disabled;
                     }
                 }
+
                 // default fallback - if the preselection didn't work select the first available one
                 if (Remotes.SelectedIndices.Count < 1)
                 {
                     var group = _lvgEnabled.Items.Count > 0 ? _lvgEnabled : _lvgDisabled;
                     group.Items[0].Selected = true;
                 }
+
                 Remotes.Select();
             }
             else
@@ -171,6 +171,7 @@ Inactive remote is completely invisible to git.");
             {
                 return null;
             }
+
             var head = RemoteBranches.SelectedRows[0].DataBoundItem as IGitRef;
             return head;
         }
@@ -271,13 +272,13 @@ Inactive remote is completely invisible to git.");
             }
         }
 
-
         private void application_Idle(object sender, EventArgs e)
         {
             // we need this event only once, so unwire
             Application.Idle -= application_Idle;
 
             pnlMgtPuttySsh.Visible = GitCommandHelpers.Plink();
+
             // if Putty SSH isn't enabled, reduce the minimum height of the form
             MinimumSize = new Size(MinimumSize.Width, pnlMgtPuttySsh.Visible ? MinimumSize.Height : MinimumSize.Height - pnlMgtPuttySsh.Height);
 
@@ -293,7 +294,9 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
+
             _remoteManager = new GitRemoteManager(() => Module);
+
             // load the data for the very first time
             Initialize(PreselectRemoteOnLoad);
         }
@@ -305,6 +308,7 @@ Inactive remote is completely invisible to git.");
                 btnToggleState.Visible = false;
                 return;
             }
+
             _selectedRemote.Disabled = !_selectedRemote.Disabled;
             _remoteManager.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
             BindBtnToggleState(_selectedRemote.Disabled);
@@ -351,6 +355,7 @@ Inactive remote is completely invisible to git.");
                     {
                         RemoteUpdate(remotes, _selectedRemote?.PushUrl, remotePushUrl);
                     }
+
                     Repositories.SaveSettings();
                 }
 
@@ -449,6 +454,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
+
             FormRemoteProcess.ShowDialog(this, "remote prune " + _selectedRemote.Name);
         }
 
@@ -474,6 +480,7 @@ Inactive remote is completely invisible to git.");
             {
                 RemoteRepositoryCombo.SelectedIndex = 0;
             }
+
             DefaultMergeWithCombo.Text = head.MergeWith;
         }
 
@@ -500,6 +507,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
+
             foreach (var remoteHead in Module.GetRefs(true, true))
             {
                 if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()))
@@ -516,6 +524,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
+
             head.TrackingRemote = RemoteRepositoryCombo.Text;
         }
 
@@ -526,6 +535,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
+
             head.MergeWith = DefaultMergeWithCombo.Text;
         }
 
@@ -604,9 +614,13 @@ Inactive remote is completely invisible to git.");
             folderBrowserButtonPushUrl.Visible = visible;
 
             if (!visible)
+            {
                 label2.Text = _labelUrlAsFetchPush.Text;
+            }
             else
+            {
                 label2.Text = _labelUrlAsFetch.Text;
+            }
         }
     }
 }

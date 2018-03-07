@@ -18,7 +18,9 @@ namespace GitUIPluginInterfaces
             DefaultValue = aDefaultValue;
             Values = values;
             if (DefaultValue == null && values.Any())
+            {
                 DefaultValue = values.First();
+            }
         }
 
         public string Name { get; private set; }
@@ -36,7 +38,8 @@ namespace GitUIPluginInterfaces
         {
             public ComboBoxBinding(ChoiceSetting aSetting, ComboBox aCustomControl)
                 : base(aSetting, aCustomControl)
-            { }
+            {
+            }
 
             public override ComboBox CreateControl()
             {

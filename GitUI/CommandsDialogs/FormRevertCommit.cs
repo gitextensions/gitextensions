@@ -44,6 +44,7 @@ namespace GitUI.CommandsDialogs
                     item.SubItems.Add(parents[i].CommitDate.ToShortDateString());
                     ParentsList.Items.Add(item);
                 }
+
                 ParentsList.TopItem.Selected = true;
                 Size size = MinimumSize;
                 size.Height += 100;

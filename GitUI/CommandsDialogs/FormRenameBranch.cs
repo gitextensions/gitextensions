@@ -15,7 +15,6 @@ namespace GitUI.CommandsDialogs
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
         private readonly string _oldName;
 
-
         public FormRenameBranch(GitUICommands aCommands, string defaultBranch)
             : base(aCommands)
         {
@@ -26,7 +25,6 @@ namespace GitUI.CommandsDialogs
             BranchNameTextBox.Text = defaultBranch;
             _oldName = defaultBranch;
         }
-
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {
@@ -68,6 +66,7 @@ namespace GitUI.CommandsDialogs
             {
                 Trace.WriteLine(ex.Message);
             }
+
             DialogResult = DialogResult.OK;
         }
     }

@@ -104,7 +104,9 @@ namespace GitExtensions
             }
 
             if (EnvUtils.RunningOnWindows())
+            {
                 MouseWheelRedirector.Active = true;
+            }
 
             GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
 
@@ -130,7 +132,9 @@ namespace GitExtensions
                 // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
                 if (Directory.Exists(dirArg))
+                {
                     workingDir = GitModule.FindGitWorkingDir(dirArg);
+                }
                 else
                 {
                     workingDir = Path.GetDirectoryName(dirArg);
@@ -138,7 +142,9 @@ namespace GitExtensions
                 }
 
                 if (Directory.Exists(workingDir))
+                {
                     workingDir = Path.GetFullPath(workingDir);
+                }
 
                 // Do not add this working directory to the recent repositories. It is a nice feature, but it
                 // also increases the startup time
@@ -149,14 +155,18 @@ namespace GitExtensions
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && AppSettings.StartWithRecentWorkingDir)
             {
                 if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
+                {
                     workingDir = AppSettings.RecentWorkingDir;
+                }
             }
 
             if (string.IsNullOrEmpty(workingDir))
             {
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
                 if (GitModule.IsValidGitWorkingDir(findWorkingDir))
+                {
                     workingDir = findWorkingDir;
+                }
             }
 
             return workingDir;
@@ -165,7 +175,6 @@ namespace GitExtensions
         /// <summary>
         /// Used in the rare event that the configuration file for the application is corrupted
         /// </summary>
-        /// <param name="ce"></param>
         private static void HandleConfigurationException(System.Configuration.ConfigurationException ce)
         {
             bool exceptionHandled = false;
@@ -189,6 +198,7 @@ namespace GitExtensions
                             try
                             {
                                 Directory.Delete(localSettingsPath, true); // deletes all application settings not just for this instance - but should work
+
                                 // Restart GitExtensions with the same arguments after old config is deleted?
                                 if (DialogResult.OK.Equals(MessageBox.Show(String.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
                                 {
@@ -200,6 +210,7 @@ namespace GitExtensions
                                         args[0] = "";
                                         p.StartInfo.Arguments = String.Join(" ", args);
                                     }
+
                                     p.Start();
                                 }
                             }
@@ -209,12 +220,14 @@ namespace GitExtensions
                             }
                         }
                     }
+
                     // assuming that there is no localSettingsPath directory in existence we probably have a portable installation.
                     else
                     {
                         string messageContent = String.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
                         MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+
                     exceptionHandled = true;
                 }
             }
@@ -224,6 +237,7 @@ namespace GitExtensions
                 {
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
                 System.Environment.Exit(1);
             }
         }

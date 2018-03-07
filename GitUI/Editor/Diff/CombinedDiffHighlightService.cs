@@ -11,6 +11,7 @@ namespace GitUI.Editor.Diff
         protected CombinedDiffHighlightService()
         {
         }
+
         protected override int GetDiffContentOffset()
         {
             return 2;

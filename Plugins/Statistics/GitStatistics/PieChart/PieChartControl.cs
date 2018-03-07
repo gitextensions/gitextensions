@@ -119,7 +119,6 @@ namespace GitStatistics.PieChart
             Invalidate();
         }
 
-
         public void SetTags(object[] value)
         {
             _tags = value;
@@ -194,8 +193,6 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Handles <c>OnResize</c> event.
         /// </summary>
-        /// <param name = "args">
-        /// </param>
         protected override void OnResize(EventArgs args)
         {
             Refresh();
@@ -210,7 +207,9 @@ namespace GitStatistics.PieChart
         protected void DoDraw(Graphics graphics)
         {
             if (_values == null || _values.Length <= 0 || !HasNonZeroValue())
+            {
                 return;
+            }
 
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             var width = ClientSize.Width - _leftMargin - _rightMargin;
@@ -218,13 +217,21 @@ namespace GitStatistics.PieChart
 
             // if the width or height if <=0 an exception would be thrown -> exit method..
             if (width <= 0 || height <= 0)
+            {
                 return;
+            }
+
             _pieChart?.Dispose();
             if (_colors != null && _colors.Length > 0)
+            {
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _colors,
                                            _sliceRelativeHeight);
+            }
             else
+            {
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _sliceRelativeHeight);
+            }
+
             _pieChart.FitToBoundingRectangle = _fitChart;
             _pieChart.SetInitialAngle(_initialAngle);
             _pieChart.SetSliceRelativeDisplacements(_relativeSliceDisplacements);
@@ -240,8 +247,11 @@ namespace GitStatistics.PieChart
             foreach (var value in _values)
             {
                 if (value != 0)
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -265,20 +275,27 @@ namespace GitStatistics.PieChart
         {
             base.OnMouseMove(e);
             if (_pieChart == null)
+            {
                 return;
+            }
 
             var index = _pieChart.FindPieSliceUnderPoint(new PointF(e.X, e.Y));
             if (index != -1)
             {
                 if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                {
                     _toolTip.SetToolTip(this, _values[index].ToString());
+                }
                 else
+                {
                     _toolTip.SetToolTip(this, ToolTips[index]);
+                }
             }
             else
             {
                 _toolTip.RemoveAll();
             }
+
             _highlightedIndex = index;
             Refresh();
         }
@@ -291,9 +308,13 @@ namespace GitStatistics.PieChart
                 if (index != -1)
                 {
                     if (ToolTips == null || ToolTips.Length <= index || ToolTips[index].Length == 0)
+                    {
                         _toolTip.SetToolTip(this, _values[index].ToString());
+                    }
                     else
+                    {
                         _toolTip.SetToolTip(this, ToolTips[index]);
+                    }
 
                     SliceSelected?.Invoke(this,
                         new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this), _tags?[index]));
@@ -302,9 +323,11 @@ namespace GitStatistics.PieChart
                 {
                     _toolTip.RemoveAll();
                 }
+
                 _highlightedIndex = index;
                 Refresh();
             }
+
             base.OnMouseDown(e);
         }
 

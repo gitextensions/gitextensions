@@ -13,6 +13,7 @@ namespace GitCommands
             Headers = new List<GitBlameHeader>();
             Lines = new List<GitBlameLine>();
         }
+
         public IList<GitBlameHeader> Headers { get; private set; }
         public IList<GitBlameLine> Lines { get; private set; }
 
@@ -62,6 +63,7 @@ namespace GitCommands
             {
                 number += (int)c;
             }
+
             return number;
         }
 
@@ -92,9 +94,15 @@ namespace GitCommands
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
             if (Object.ReferenceEquals(x, y))
+            {
                 return true;
+            }
+
             if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+            {
                 return false;
+            }
+
             return x.Author == y.Author && x.AuthorTime == y.AuthorTime &&
                 x.Committer == y.Committer && x.CommitterTime == y.CommitterTime &&
                 x.Summary == y.Summary && x.FileName == y.FileName;

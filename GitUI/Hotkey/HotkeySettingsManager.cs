@@ -16,13 +16,17 @@ namespace GitUI.Hotkey
     {
         #region Serializer
         private static XmlSerializer _Serializer;
+
         /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
         private static XmlSerializer Serializer
         {
             get
             {
                 if (_Serializer == null)
+                {
                     _Serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+                }
+
                 return _Serializer;
             }
         }
@@ -33,8 +37,6 @@ namespace GitUI.Hotkey
         /// <summary>
         /// Returns whether the hotkey is already assigned.
         /// </summary>
-        /// <param name="keyData"></param>
-        /// <returns></returns>
         public static bool IsUniqueKey(Keys keyData)
         {
             return UsedKeys.Contains(keyData);
@@ -53,9 +55,14 @@ namespace GitUI.Hotkey
             foreach (HotkeySettings hs in allSettings)
             {
                 if (hs.Name == name)
+                {
                     settings = hs;
+                }
+
                 if (hs.Name == "Scripts")
+                {
                     scriptkeys = hs;
+                }
             }
 
             ////HotkeyCommand[] scriptkeys = LoadSettings().FirstOrDefault(s => s.Name == name);
@@ -96,7 +103,9 @@ namespace GitUI.Hotkey
                     HotkeyCommand hotkeyCommand = hs.Commands[i];
 
                     if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData))
+                    {
                         UsedKeys.Add(hotkeyCommand.KeyData);
+                    }
                 }
             }
             ////MessageBox.Show(UsedKeys.Count.ToString());
@@ -116,7 +125,9 @@ namespace GitUI.Hotkey
                     AppSettings.SerializedHotkeys = strBuilder.ToString();
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
@@ -179,7 +190,9 @@ namespace GitUI.Hotkey
             MigrateSettings();
 
             if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+            {
                 settings = LoadSerializedSettings(AppSettings.SerializedHotkeys);
+            }
 
             return settings;
         }
@@ -195,7 +208,9 @@ namespace GitUI.Hotkey
                     settings = Serializer.Deserialize(reader) as HotkeySettings[];
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             return settings;
         }
@@ -230,7 +245,6 @@ namespace GitUI.Hotkey
             Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
 
             HotkeyCommand[] scriptsHotkeys = LoadScriptHotkeys();
-
 
             return new[]
               {

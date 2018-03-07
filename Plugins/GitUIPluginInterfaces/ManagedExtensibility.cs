@@ -57,6 +57,7 @@ namespace GitUIPluginInterfaces
                     Trace.TraceError("Failed to get exports, {0}", ex.ToString());
                 }
             }
+
             return ret;
         }
     }

@@ -28,9 +28,14 @@ namespace GitCommands
             get
             {
                 if (!Initialized)
+                {
                     return "Not initialized";
+                }
+
                 if (!UpToDate)
+                {
                     return "Modified";
+                }
 
                 return "Up-to-date";
             }
@@ -72,7 +77,10 @@ namespace GitCommands
         public override string ToString()
         {
             if (String.IsNullOrEmpty(Branch))
+            {
                 return LocalPath;
+            }
+
             return LocalPath + " [" + Branch + "]";
         }
     }

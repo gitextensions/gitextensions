@@ -46,7 +46,9 @@ namespace GitCommands.Config
         private void Load()
         {
             if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
+            {
                 return;
+            }
 
             ConfigFileParser parser = new ConfigFileParser(this);
             parser.Parse();
@@ -60,7 +62,6 @@ namespace GitCommands.Config
             parser.Parse(str);
         }
 
-
         public static string EscapeValue(string value)
         {
             value = value.Replace("\\", "\\\\");
@@ -69,7 +70,9 @@ namespace GitCommands.Config
             value = value.Replace("\t", "\\t");
 
             if (value.IndexOfAny(CommentChars) != -1 || !value.Trim().Equals(value))
+            {
                 value = value.Quote();
+            }
 
             return value;
         }
@@ -86,11 +89,13 @@ namespace GitCommands.Config
             foreach (var section in ConfigSections)
             {
                 var keys = section.AsDictionary();
+
                 // Skip empty sections
                 if (keys.Count == 0)
                 {
                     continue;
                 }
+
                 configFileContent.Append(section);
                 configFileContent.Append(Environment.NewLine);
 
@@ -154,7 +159,9 @@ namespace GitCommands.Config
             var keyIndex = FindKeyIndex(setting);
 
             if (keyIndex < 0 || keyIndex == setting.Length)
+            {
                 throw new Exception("Invalid setting name: " + setting);
+            }
 
             return keyIndex;
         }
@@ -183,7 +190,9 @@ namespace GitCommands.Config
         public string GetValue(string setting, string defaultValue)
         {
             if (String.IsNullOrEmpty(setting))
+            {
                 throw new ArgumentNullException();
+            }
 
             var keyIndex = FindAndCheckKeyIndex(setting);
 
@@ -193,7 +202,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
+            {
                 return defaultValue;
+            }
 
             return configSection.GetValue(keyName, defaultValue);
         }
@@ -213,7 +224,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
+            {
                 return new List<string>();
+            }
 
             return configSection.GetValues(keyName);
         }
@@ -245,7 +258,9 @@ namespace GitCommands.Config
         public void AddConfigSection(IConfigSection configSection)
         {
             if (FindConfigSection(configSection) != null)
+            {
                 throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
+            }
 
             ConfigSections.Add(configSection);
         }
@@ -255,7 +270,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
+            {
                 return;
+            }
 
             ConfigSections.Remove(configSection);
         }
@@ -278,8 +295,11 @@ namespace GitCommands.Config
             foreach (var configSection in ConfigSections)
             {
                 if (configSectionToFind.Equals(configSection))
+                {
                     return configSection;
+                }
             }
+
             return null;
         }
 
@@ -296,9 +316,9 @@ namespace GitCommands.Config
             private string FileName => _configFile.FileName;
 
             // parsed char
-            private int pos;
-            private StringBuilder token = new StringBuilder();
-            private StringBuilder valueToken = new StringBuilder();
+            private int _pos;
+            private StringBuilder _token = new StringBuilder();
+            private StringBuilder _valueToken = new StringBuilder();
 
             public ConfigFileParser(ConfigFile configFile)
             {
@@ -311,9 +331,9 @@ namespace GitCommands.Config
 
                 ParsePart parseFunc = ReadUnknown;
 
-                for (pos = 0; pos < _fileContent.Length; pos++)
+                for (_pos = 0; _pos < _fileContent.Length; _pos++)
                 {
-                    parseFunc = parseFunc(_fileContent[pos]);
+                    parseFunc = parseFunc(_fileContent[_pos]);
                 }
 
                 if (_fileContent.Length > 0 && !_fileContent.EndsWith("\n"))
@@ -324,8 +344,8 @@ namespace GitCommands.Config
 
             private void NewSection()
             {
-                var sectionName = token.ToString();
-                token.Clear();
+                var sectionName = _token.ToString();
+                _token.Clear();
                 _section = _configFile.FindConfigSection(sectionName);
                 if (_section == null)
                 {
@@ -336,24 +356,28 @@ namespace GitCommands.Config
 
             private void NewKey()
             {
-                _key = token.ToString().Trim();
-                token.Clear();
+                _key = _token.ToString().Trim();
+                _token.Clear();
 
                 if (_section == null)
+                {
                     throw new Exception(
                         string.Format("Key {0} in configfile {1} is not in a section.", _key, FileName));
+                }
             }
 
             private void NewValue()
             {
-                token.Append(valueToken.ToString().Trim());
-                valueToken.Clear();
+                _token.Append(_valueToken.ToString().Trim());
+                _valueToken.Clear();
 
-                string value = token.ToString();
+                string value = _token.ToString();
 
                 if (_key.IsNullOrEmpty())
+                {
                     throw new Exception(
                         string.Format("Value {0} for empty key in configfile {1}.", value, FileName));
+                }
 
                 _section.AddValue(_key, value);
 
@@ -371,14 +395,15 @@ namespace GitCommands.Config
                     {
                         case '\\':
                         case '"':
-                            token.Append(c);
+                            _token.Append(c);
                             break;
                         case 't':
-                            token.Append('\t');
+                            _token.Append('\t');
                             break;
                         default:
                             throw new Exception("Invalid escape character: " + Regex.Escape(c.ToString()));
                     }
+
                     _escapedSection = false;
                     return ReadSection;
                 }
@@ -392,7 +417,9 @@ namespace GitCommands.Config
                     }
 
                     if (c == '"')
+                    {
                         _quotedStringInSection = !_quotedStringInSection;
+                    }
 
                     switch (c)
                     {
@@ -400,7 +427,7 @@ namespace GitCommands.Config
                             _escapedSection = true;
                             return ReadSection;
                         default:
-                            token.Append(c);
+                            _token.Append(c);
                             return ReadSection;
                     }
                 }
@@ -412,15 +439,18 @@ namespace GitCommands.Config
                 {
                     case '\n':
                         // check for line continuation
-                        if (token.Length > 0 && token[token.Length - 1] == '\\')
+                        if (_token.Length > 0 && _token[_token.Length - 1] == '\\')
                         {
-                            token.Remove(token.Length - 1, 1);
+                            _token.Remove(_token.Length - 1, 1);
                             return ReadComment;
                         }
                         else
+                        {
                             return ReadUnknown;
+                        }
+
                     default:
-                        token.Append(c);
+                        _token.Append(c);
                         return ReadComment;
                 }
             }
@@ -434,11 +464,11 @@ namespace GitCommands.Config
                         return ReadValue;
                     case '\n':
                         NewKey();
-                        token.Append("true");
+                        _token.Append("true");
                         NewValue();
                         return ReadUnknown;
                     default:
-                        token.Append(c);
+                        _token.Append(c);
                         return ReadKey;
                 }
             }
@@ -454,13 +484,13 @@ namespace GitCommands.Config
                     {
                         case '\\':
                         case '"':
-                            valueToken.Append(c);
+                            _valueToken.Append(c);
                             break;
                         case 't':
-                            valueToken.Append('\t');
+                            _valueToken.Append('\t');
                             break;
                         case 'n':
-                            valueToken.Append('\n');
+                            _valueToken.Append('\n');
                             break;
                         case '\r':
                             return ReadValue;
@@ -471,6 +501,7 @@ namespace GitCommands.Config
                         default:
                             throw new Exception("Invalid escape character: " + Regex.Escape(c.ToString()));
                     }
+
                     _escapedValue = false;
                     return ReadValue;
                 }
@@ -484,22 +515,24 @@ namespace GitCommands.Config
                         case '"':
                             if (_quotedValue)
                             {
-                                token.Append(valueToken.ToString());
+                                _token.Append(_valueToken.ToString());
                             }
                             else
                             {
-                                token.Append(valueToken.ToString().Trim());
+                                _token.Append(_valueToken.ToString().Trim());
                             }
-                            valueToken.Clear();
+
+                            _valueToken.Clear();
                             _quotedValue = !_quotedValue;
                             return ReadValue;
                         case ';':
                         case '#':
                             if (_quotedValue)
                             {
-                                valueToken.Append(c);
+                                _valueToken.Append(c);
                                 return ReadValue;
                             }
+
                             NewValue();
                             return ReadComment;
                         case '\r':
@@ -508,7 +541,7 @@ namespace GitCommands.Config
                             NewValue();
                             return ReadUnknown;
                         default:
-                            valueToken.Append(c);
+                            _valueToken.Append(c);
                             return ReadValue;
                     }
                 }
@@ -516,7 +549,7 @@ namespace GitCommands.Config
 
             private ParsePart ReadUnknown(char c)
             {
-                token.Clear();
+                _token.Clear();
 
                 switch (c)
                 {
@@ -531,7 +564,7 @@ namespace GitCommands.Config
                     case '#':
                         return ReadComment;
                     default:
-                        token.Append(c);
+                        _token.Append(c);
                         return ReadKey;
                 }
             }

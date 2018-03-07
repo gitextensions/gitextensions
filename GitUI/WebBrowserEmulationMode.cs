@@ -14,7 +14,9 @@ namespace GitUI
 
             // Only when not running inside Visual Studio Designer
             if (LicenseManager.UsageMode != LicenseUsageMode.Runtime)
+            {
                 return;
+            }
 
             // FeatureControl settings are per-process
             var appName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
@@ -45,8 +47,11 @@ namespace GitUI
                     {
                         version = ieKey.GetValue("Version");
                         if (null == version)
+                        {
                             return false;
+                        }
                     }
+
                     int.TryParse(version.ToString().Split('.')[0], out browserVersion);
                 }
 

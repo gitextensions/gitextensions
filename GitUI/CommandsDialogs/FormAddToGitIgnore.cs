@@ -28,9 +28,15 @@ namespace GitUI.CommandsDialogs
             Translate();
 
             if (localExclude)
+            {
                 Text = _addToLocalExcludeTitle.Text;
+            }
+
             if (filePatterns != null)
+            {
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
+            }
+
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
@@ -66,7 +72,9 @@ namespace GitUI.CommandsDialogs
                     var gitIgnoreFileAddition = new StringBuilder();
 
                     if (File.Exists(fileName) && !File.ReadAllText(fileName, GitModule.SystemEncoding).EndsWith(Environment.NewLine))
+                    {
                         gitIgnoreFileAddition.Append(Environment.NewLine);
+                    }
 
                     foreach (var pattern in patterns)
                     {

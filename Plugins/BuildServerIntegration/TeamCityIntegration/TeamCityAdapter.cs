@@ -36,9 +36,13 @@ namespace TeamCityIntegration
             get
             {
                 if (EnvUtils.IsNet4FullOrHigher())
+                {
                     return null;
+                }
                 else
+                {
                     return ".Net 4 full framework required";
+                }
             }
         }
     }
@@ -48,14 +52,14 @@ namespace TeamCityIntegration
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class TeamCityAdapter : IBuildServerAdapter
     {
-        private IBuildServerWatcher buildServerWatcher;
+        private IBuildServerWatcher _buildServerWatcher;
 
-        private HttpClientHandler httpClientHandler;
-        private HttpClient httpClient;
+        private HttpClientHandler _httpClientHandler;
+        private HttpClient _httpClient;
 
-        private string httpClientHostSuffix;
+        private string _httpClientHostSuffix;
 
-        private readonly List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
+        private readonly List<Task<IEnumerable<string>>> _getBuildTypesTask = new List<Task<IEnumerable<string>>>();
 
         private CookieContainer _teamCityNtlmAuthCookie;
 
@@ -87,6 +91,7 @@ namespace TeamCityIntegration
             {
                 request.Credentials = CredentialCache.DefaultCredentials;
             }
+
             request.PreAuthenticate = true;
             request.GetResponse();
 
@@ -98,10 +103,12 @@ namespace TeamCityIntegration
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
-            if (this.buildServerWatcher != null)
+            if (_buildServerWatcher != null)
+            {
                 throw new InvalidOperationException("Already initialized");
+            }
 
-            this.buildServerWatcher = buildServerWatcher;
+            _buildServerWatcher = buildServerWatcher;
 
             ProjectNames = config.GetString("ProjectName", "").Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -110,6 +117,7 @@ namespace TeamCityIntegration
             {
                 return;
             }
+
             BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
             HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
@@ -119,10 +127,10 @@ namespace TeamCityIntegration
                 InitializeHttpClient(HostName);
                 if (ProjectNames.Length > 0)
                 {
-                    getBuildTypesTask.Clear();
+                    _getBuildTypesTask.Clear();
                     foreach (var name in ProjectNames)
                     {
-                        getBuildTypesTask.Add(
+                        _getBuildTypesTask.Add(
                             GetProjectFromNameXmlResponseAsync(name, CancellationToken.None)
                             .ContinueWith(
                             task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
@@ -141,21 +149,21 @@ namespace TeamCityIntegration
 
         private void CreateNewHttpClient(string hostName)
         {
-            httpClientHandler = new HttpClientHandler();
-            httpClient = new HttpClient(httpClientHandler)
+            _httpClientHandler = new HttpClientHandler();
+            _httpClient = new HttpClient(_httpClientHandler)
             {
                 Timeout = TimeSpan.FromMinutes(2),
                 BaseAddress = hostName.Contains("://")
                     ? new Uri(hostName, UriKind.Absolute)
                     : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
             };
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
         }
 
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey => httpClient.BaseAddress.Host;
+        public string UniqueKey => _httpClient.BaseAddress.Host;
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -169,7 +177,7 @@ namespace TeamCityIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (httpClient == null || httpClient.BaseAddress == null || ProjectNames.Length == 0)
+            if (_httpClient == null || _httpClient.BaseAddress == null || ProjectNames.Length == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -183,13 +191,13 @@ namespace TeamCityIntegration
         {
             try
             {
-                if (getBuildTypesTask.Any(task => PropagateTaskAnomalyToObserver(task, observer)))
+                if (_getBuildTypesTask.Any(task => PropagateTaskAnomalyToObserver(task, observer)))
                 {
                     return;
                 }
 
                 var localObserver = observer;
-                var buildTypes = getBuildTypesTask.SelectMany(t => t.Result).Where(id => BuildIdFilter.IsMatch(id));
+                var buildTypes = _getBuildTypesTask.SelectMany(t => t.Result).Where(id => BuildIdFilter.IsMatch(id));
                 var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
 
                 Task.Factory
@@ -343,7 +351,7 @@ namespace TeamCityIntegration
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+            return _httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                              .ContinueWith(
                                  task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
                                  cancellationToken,
@@ -383,7 +391,7 @@ namespace TeamCityIntegration
 
             if (unauthorized)
             {
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
+                var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, true);
                 var useBuildServerCredentials = buildServerCredentials != null
                                                 && !buildServerCredentials.UseGuestAccess
                                                 && (string.IsNullOrWhiteSpace(buildServerCredentials.Username) && string.IsNullOrWhiteSpace(buildServerCredentials.Password));
@@ -397,8 +405,6 @@ namespace TeamCityIntegration
                     UpdateHttpClientOptionsNtlmAuth(buildServerCredentials);
                     return GetStreamAsync(restServicePath, cancellationToken);
                 }
-
-                throw new OperationCanceledException(task.Result.ReasonPhrase);
             }
 
             throw new HttpRequestException(task.Result.ReasonPhrase);
@@ -408,12 +414,12 @@ namespace TeamCityIntegration
         {
             try
             {
-                httpClient.Dispose();
-                httpClientHandler.Dispose();
+                _httpClient.Dispose();
+                _httpClientHandler.Dispose();
 
-                httpClientHostSuffix = "httpAuth";
+                _httpClientHostSuffix = "httpAuth";
                 CreateNewHttpClient(HostName);
-                httpClientHandler.CookieContainer = GetTeamCityNtlmAuthCookie(httpClient.BaseAddress.AbsoluteUri, buildServerCredentials);
+                _httpClientHandler.CookieContainer = GetTeamCityNtlmAuthCookie(_httpClient.BaseAddress.AbsoluteUri, buildServerCredentials);
             }
             catch (Exception exception)
             {
@@ -424,14 +430,14 @@ namespace TeamCityIntegration
 
         public void UpdateHttpClientOptionsGuestAuth()
         {
-            httpClientHostSuffix = "guestAuth";
-            httpClient.DefaultRequestHeaders.Authorization = null;
+            _httpClientHostSuffix = "guestAuth";
+            _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
         private void UpdateHttpClientOptionsCredentialsAuth(IBuildServerCredentials buildServerCredentials)
         {
-            httpClientHostSuffix = "httpAuth";
-            httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
+            _httpClientHostSuffix = "httpAuth";
+            _httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
         }
 
         private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
@@ -459,7 +465,7 @@ namespace TeamCityIntegration
 
         private Uri FormatRelativePath(string restServicePath)
         {
-            return new Uri(string.Format("{0}/app/rest/{1}", httpClientHostSuffix, restServicePath), UriKind.Relative);
+            return new Uri(string.Format("{0}/app/rest/{1}", _httpClientHostSuffix, restServicePath), UriKind.Relative);
         }
 
         private Task<XDocument> GetBuildFromIdXmlResponseAsync(string buildId, CancellationToken cancellationToken)
@@ -528,7 +534,7 @@ namespace TeamCityIntegration
         {
             GC.SuppressFinalize(this);
 
-            httpClient?.Dispose();
+            _httpClient?.Dispose();
         }
 
         public Project GetProjectsTree()

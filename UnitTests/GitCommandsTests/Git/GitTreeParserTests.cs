@@ -16,7 +16,6 @@ namespace GitCommandsTests.Git
             _parser = new GitTreeParser();
         }
 
-
         [Test]
         public void Parse_should_return_empty_if_null()
         {
@@ -66,7 +65,6 @@ namespace GitCommandsTests.Git
             item.Name.Should().Be(".editorconfig");
             item.ObjectType.Should().Be(GitObjectType.Blob);
         }
-
 
         private static string GetLsTreeOutput()
         {
