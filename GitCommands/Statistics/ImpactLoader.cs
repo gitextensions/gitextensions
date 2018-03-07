@@ -29,7 +29,9 @@ namespace GitCommands.Statistics
 
         public struct DataPoint
         {
-            public int Commits, AddedLines, DeletedLines;
+            public int Commits;
+            public int AddedLines;
+            public int DeletedLines;
 
             public int ChangedLines => AddedLines + DeletedLines;
 

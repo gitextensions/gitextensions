@@ -16,7 +16,8 @@ namespace GitUI.CommandsDialogs
     {
         private IGitRemoteManager _remoteManager;
         private GitRemote _selectedRemote;
-        private readonly ListViewGroup _lvgEnabled, _lvgDisabled;
+        private readonly ListViewGroup _lvgEnabled;
+        private readonly ListViewGroup _lvgDisabled;
 
         #region Translation
         private readonly TranslationString _remoteBranchDataError =

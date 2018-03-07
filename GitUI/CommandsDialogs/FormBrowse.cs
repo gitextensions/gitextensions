@@ -2495,7 +2495,8 @@ namespace GitUI.CommandsDialogs
         {
             public readonly List<SubmoduleInfo> OurSubmodules = new List<SubmoduleInfo>();
             public readonly List<SubmoduleInfo> SuperSubmodules = new List<SubmoduleInfo>();
-            public SubmoduleInfo TopProject, Superproject;
+            public SubmoduleInfo TopProject;
+            public SubmoduleInfo Superproject;
             public string CurrentSubmoduleName;
         }
 
