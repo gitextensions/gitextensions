@@ -29,12 +29,12 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Style used for shadow.
         /// </summary>
-        private readonly ShadowStyle _shadowStyle = ShadowStyle.NoShadow;
+        private readonly ShadowStyle _shadowStyle;
 
         /// <summary>
         ///   Color of the surface.
         /// </summary>
-        private readonly Color _surfaceColor = Color.Empty;
+        private readonly Color _surfaceColor;
 
         /// <summary>
         ///   <c>Brush</c> used to render slice ending cut side.

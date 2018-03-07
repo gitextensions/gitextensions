@@ -11,7 +11,8 @@ namespace GitUI
 {
     public partial class FormStatus : GitExtensionsForm
     {
-        private readonly bool _useDialogSettings = true;
+        private readonly bool _useDialogSettings;
+
         private DispatcherFrameModalControler _modalControler;
 
         public FormStatus() : this(true)
