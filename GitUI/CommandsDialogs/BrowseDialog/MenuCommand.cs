@@ -29,12 +29,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return new ToolStripSeparator();
             }
 
-            var toolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem.Name = menuCommand.Name;
-            toolStripMenuItem.Text = menuCommand.Text;
-            toolStripMenuItem.Image = menuCommand.Image;
-            toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
-            toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
+            var toolStripMenuItem = new ToolStripMenuItem
+            {
+                Name = menuCommand.Name,
+                Text = menuCommand.Text,
+                Image = menuCommand.Image,
+                ShortcutKeys = menuCommand.ShortcutKeys,
+                ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString
+            };
+
             toolStripMenuItem.Click += (obj, sender) =>
             {
                 if (menuCommand.ExecuteAction != null)

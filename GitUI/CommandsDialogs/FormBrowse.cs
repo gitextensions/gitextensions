@@ -764,26 +764,25 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ToolStripSeparator toolstripseparator = new ToolStripSeparator();
-            toolstripseparator.Tag = "userscript";
-            ToolStrip.Items.Add(toolstripseparator);
+            ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
             foreach (ScriptInfo scriptInfo in scripts)
             {
-                ToolStripButton tempButton = new ToolStripButton();
-
-                // store scriptname
-                tempButton.Text = scriptInfo.Name;
-                tempButton.Tag = "userscript";
+                var tempButton = new ToolStripButton
+                {
+                    // store scriptname
+                    Text = scriptInfo.Name,
+                    Tag = "userscript",
+                    Enabled = true,
+                    Visible = true,
+                    Image = scriptInfo.GetIcon(),
+                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                    ////Image = GitUI.Properties.Resources.bug,
+                    ////Icon = "Cow"
+                };
 
                 // add handler
                 tempButton.Click += UserMenu_Click;
-                tempButton.Enabled = true;
-                tempButton.Visible = true;
-                ////tempButton.Image = GitUI.Properties.Resources.bug;
-                ////scriptInfo.Icon = "Cow";
-                tempButton.Image = scriptInfo.GetIcon();
-                tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
 
                 // add to toolstrip
                 ToolStrip.Items.Add(tempButton);

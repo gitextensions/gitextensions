@@ -121,16 +121,20 @@ namespace GitUI.CommandsDialogs
         {
             if (_navigateToolStripMenuItem == null)
             {
-                _navigateToolStripMenuItem = new ToolStripMenuItem();
-                _navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
-                _navigateToolStripMenuItem.Text = "Navigate";
+                _navigateToolStripMenuItem = new ToolStripMenuItem
+                {
+                    Name = "navigateToolStripMenuItem",
+                    Text = "Navigate"
+                };
             }
 
             if (_viewToolStripMenuItem == null)
             {
-                _viewToolStripMenuItem = new ToolStripMenuItem();
-                _viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-                _viewToolStripMenuItem.Text = "View";
+                _viewToolStripMenuItem = new ToolStripMenuItem
+                {
+                    Name = "viewToolStripMenuItem",
+                    Text = "View"
+                };
             }
         }
 

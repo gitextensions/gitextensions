@@ -223,8 +223,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             RecentRepositories.Clear();
 
-            RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
-            filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
+            var filteredRecentRepositoryHistory = new RepositoryCategory
+            {
+                Description = Repositories.RepositoryHistory.Description
+            };
 
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {

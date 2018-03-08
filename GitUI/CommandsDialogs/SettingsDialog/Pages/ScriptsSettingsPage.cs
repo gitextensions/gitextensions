@@ -337,9 +337,11 @@ Current Branch:
 
         private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
         {
-            var helpDisplayDialog = new SimpleHelpDisplayDialog();
-            helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
-            helpDisplayDialog.ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
+            var helpDisplayDialog = new SimpleHelpDisplayDialog
+            {
+                DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text,
+                ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine)
+            };
 
             helpDisplayDialog.ShowDialog();
         }

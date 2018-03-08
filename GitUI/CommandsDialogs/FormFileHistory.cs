@@ -202,8 +202,8 @@ namespace GitUI.CommandsDialogs
 
             FileName = fileName;
 
-            FixedFilterTuple res = new FixedFilterTuple();
-            res.PathFilter = " \"" + fileName + "\"";
+            var res = new FixedFilterTuple { PathFilter = $" \"{fileName}\"" };
+
             if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
@@ -324,10 +324,12 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
-                GitItemStatus file = new GitItemStatus();
-                file.IsTracked = true;
-                file.Name = fileName;
-                file.IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName));
+                var file = new GitItemStatus
+                {
+                    IsTracked = true,
+                    Name = fileName,
+                    IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
+                };
                 Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)

@@ -226,10 +226,11 @@ namespace PatchApply
 
         public PatchLine Clone()
         {
-            var c = new PatchLine();
-            c.Text = Text;
-            c.Selected = Selected;
-            return c;
+            return new PatchLine
+            {
+                Text = Text,
+                Selected = Selected
+            };
         }
 
         public void SetOperation(string operationMark)
@@ -560,8 +561,8 @@ namespace PatchApply
 
         public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk result = new Chunk();
-            result._startLine = 0;
+            Chunk result = new Chunk { _startLine = 0 };
+
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
@@ -709,10 +710,17 @@ namespace PatchApply
 
         public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
-            ChunkList result = new ChunkList();
-            result.Add(chunk);
-            return result;
+            return new ChunkList
+            {
+                Chunk.FromNewFile(
+                    module,
+                    text,
+                    selectionPosition,
+                    selectionLength,
+                    reset,
+                    filePreabmle,
+                    fileContentEncoding)
+            };
         }
 
         public string ToResetUnstagedLinesPatch()

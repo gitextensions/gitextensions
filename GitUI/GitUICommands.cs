@@ -1868,13 +1868,18 @@ namespace GitUI
 
         public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster, string chooseRemote = null, string chooseBranch = null)
         {
-            WrapRepoHostingCall("Create pull request", gitHoster,
-                                gh =>
-                                {
-                                    CreatePullRequestForm form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch);
-                                    form.ShowInTaskbar = true;
-                                    form.Show();
-                                });
+            WrapRepoHostingCall(
+                "Create pull request",
+                gitHoster,
+                gh =>
+                {
+                    var form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch)
+                    {
+                        ShowInTaskbar = true
+                    };
+
+                    form.Show();
+                });
         }
 
         public void RunCommand(string[] args)
@@ -2070,9 +2075,7 @@ namespace GitUI
             }
             #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
-            var frmCmdLine = new FormCommandlineHelp();
-            frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
-            Application.Run(frmCmdLine);
+            Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
         }
 
         private static void Uninstall()

@@ -1179,9 +1179,11 @@ namespace GitUI.Editor.RichTextBoxExtension
             IntPtr oldMask = BeginUpdate(handleRef);
             SetHideSelectionInternal(handleRef, true);
 
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
-            settings.CheckCharacters = false;
+            var settings = new XmlReaderSettings
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                CheckCharacters = false
+            };
 
             try
             {
@@ -1493,8 +1495,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             rtb.HideSelection = true;
 
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
 
             try
             {

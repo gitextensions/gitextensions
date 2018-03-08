@@ -289,10 +289,16 @@ See the changes in the commit form.");
 
         private void SpawnCommitBrowser(GitItem item)
         {
-            var process = new Process();
-            process.StartInfo.FileName = Application.ExecutablePath;
-            process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator());
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = Application.ExecutablePath,
+                    Arguments = "browse",
+                    WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator())
+                }
+            };
+
             process.Start();
         }
 
@@ -636,13 +642,14 @@ See the changes in the commit form.");
 
         private void assumeUnchangedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool wereErrors;
-            var itemStatus = new GitItemStatus();
-            itemStatus.Name = GetSelectedFile();
-            if (itemStatus.Name == null)
+            var selectedFile = GetSelectedFile();
+
+            if (selectedFile == null)
             {
                 return;
             }
+
+            var itemStatus = new GitItemStatus { Name = selectedFile };
 
             var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -651,7 +658,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out wereErrors);
+            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out var wereErrors);
 
             if (wereErrors)
             {
