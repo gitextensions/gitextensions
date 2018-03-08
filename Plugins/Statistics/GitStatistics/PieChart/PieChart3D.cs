@@ -25,7 +25,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Collection of reordered pie slices mapped to original order.
         /// </summary>
-        protected ArrayList PieSlicesMapping = new ArrayList();
+        protected ArrayList PieSlicesMapping { get; } = new ArrayList();
 
         /// <summary>
         ///   Array of colors used for rendering.

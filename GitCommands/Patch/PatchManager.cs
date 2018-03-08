@@ -240,12 +240,12 @@ namespace PatchApply
 
     internal class SubChunk
     {
-        public List<PatchLine> PreContext = new List<PatchLine>();
-        public List<PatchLine> RemovedLines = new List<PatchLine>();
-        public List<PatchLine> AddedLines = new List<PatchLine>();
-        public List<PatchLine> PostContext = new List<PatchLine>();
-        public string WasNoNewLineAtTheEnd;
-        public string IsNoNewLineAtTheEnd;
+        public List<PatchLine> PreContext { get; } = new List<PatchLine>();
+        public List<PatchLine> RemovedLines { get; } = new List<PatchLine>();
+        public List<PatchLine> AddedLines { get; } = new List<PatchLine>();
+        public List<PatchLine> PostContext { get; } = new List<PatchLine>();
+        public string WasNoNewLineAtTheEnd { get; set; }
+        public string IsNoNewLineAtTheEnd { get; set; }
 
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {

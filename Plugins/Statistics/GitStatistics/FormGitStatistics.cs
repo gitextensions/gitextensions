@@ -32,7 +32,7 @@ namespace GitStatistics
         private readonly string _codeFilePattern;
         private readonly bool _countSubmodule;
 
-        protected Color[] DecentColors =
+        protected Color[] DecentColors { get; } =
                 {
                     Color.Red,
                     Color.Yellow,

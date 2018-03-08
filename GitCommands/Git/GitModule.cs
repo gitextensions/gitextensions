@@ -57,8 +57,8 @@ namespace GitCommands
             Filename = filename;
         }
 
-        public string Hash;
-        public string Filename;
+        public string Hash { get; }
+        public string Filename { get; }
     }
 
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
@@ -72,9 +72,9 @@ namespace GitCommands
             Remote = remote;
         }
 
-        public ConflictedFileData Base;
-        public ConflictedFileData Local;
-        public ConflictedFileData Remote;
+        public ConflictedFileData Base { get; }
+        public ConflictedFileData Local { get; }
+        public ConflictedFileData Remote { get; }
 
         public string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
     }

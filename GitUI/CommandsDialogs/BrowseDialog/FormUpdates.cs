@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         #endregion
 
         public IWin32Window OwnerWindow;
-        public Version CurrentVersion;
+        public Version CurrentVersion { get; }
         public bool UpdateFound;
         public string UpdateUrl;
         public string NewVersion;

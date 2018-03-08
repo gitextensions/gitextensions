@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class TableSettingsLayout : BaseSettingsLayout
     {
-        protected TableLayoutPanel Panel;
+        protected TableLayoutPanel Panel { get; }
         private int _currentRow = -1;
 
         public TableSettingsLayout(ISettingsLayout parentLayout, TableLayoutPanel panel)

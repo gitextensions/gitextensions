@@ -14,7 +14,7 @@ namespace GitUI.Editor.Diff
 
         public class Result
         {
-            public Dictionary<int, DiffLineNum> LineNumbers = new Dictionary<int, DiffLineNum>();
+            public Dictionary<int, DiffLineNum> LineNumbers { get; } = new Dictionary<int, DiffLineNum>();
             public int MaxLineNumber;
         }
 
