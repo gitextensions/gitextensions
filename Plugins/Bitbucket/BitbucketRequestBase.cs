@@ -30,8 +30,7 @@ namespace Bitbucket
         {
             if (Settings.DisableSSL)
             {
-                System.Net.ServicePointManager.ServerCertificateValidationCallback
-                    = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
 
             var client = new RestClient
