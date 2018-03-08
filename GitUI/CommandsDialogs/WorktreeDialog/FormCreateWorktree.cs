@@ -70,20 +70,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         public IList<IGitRef> ExistingBranches { get; set; }
 
-        private void comboBoxBranches_TextChanged(object sender, EventArgs e)
-        {
-            if (comboBoxBranches.DataSource == null)
-            {
-            }
-        }
-
-        private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (comboBoxBranches.SelectedValue == null)
-            {
-            }
-        }
-
         private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
