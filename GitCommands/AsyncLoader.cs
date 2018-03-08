@@ -8,6 +8,7 @@ namespace GitCommands
     {
         private readonly TaskScheduler _continuationTaskScheduler;
         private CancellationTokenSource _cancelledTokenSource;
+
         public int Delay { get; set; }
 
         public AsyncLoader()
@@ -81,20 +82,25 @@ namespace GitCommands
             Cancel();
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
-            var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() =>
-                {
-                    if (Delay > 0)
-                    {
-                        token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
-                    }
 
-                    if (!token.IsCancellationRequested)
+            var token = _cancelledTokenSource.Token;
+
+            return Task.Factory.StartNew(
+                    () =>
                     {
-                        loadContent(token);
-                    }
-                }, token)
-                .ContinueWith((task) =>
+                        if (Delay > 0)
+                        {
+                            token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
+                        }
+
+                        if (!token.IsCancellationRequested)
+                        {
+                            loadContent(token);
+                        }
+                    },
+                    token)
+                .ContinueWith(
+                    task =>
                     {
                         if (task.IsFaulted)
                         {
@@ -123,7 +129,10 @@ namespace GitCommands
                                 throw;
                             }
                         }
-                    }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.NotOnCanceled,
+                    _continuationTaskScheduler);
         }
 
         public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
@@ -137,54 +146,60 @@ namespace GitCommands
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() =>
-                {
-                    if (Delay > 0)
+            return Task.Factory.StartNew(
+                    () =>
                     {
-                        token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
-                    }
-
-                    if (token.IsCancellationRequested)
-                    {
-                        return default;
-                    }
-
-                    return loadContent(token);
-                }, token)
-                .ContinueWith((task) =>
-            {
-                if (task.IsFaulted)
-                {
-                    foreach (var e in task.Exception.InnerExceptions)
-                    {
-                        if (!OnLoadingError(e))
+                        if (Delay > 0)
                         {
-                            throw e;
+                            token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                         }
-                    }
 
-                    return default;
-                }
+                        if (token.IsCancellationRequested)
+                        {
+                            return default;
+                        }
 
-                try
-                {
-                    if (!token.IsCancellationRequested)
+                        return loadContent(token);
+                    },
+                    token)
+                .ContinueWith(
+                    task =>
                     {
-                        onLoaded(task.Result);
-                    }
+                        if (task.IsFaulted)
+                        {
+                            foreach (var e in task.Exception.InnerExceptions)
+                            {
+                                if (!OnLoadingError(e))
+                                {
+                                    throw e;
+                                }
+                            }
 
-                    return task.Result;
-                }
-                catch (Exception exception)
-                {
-                    if (!OnLoadingError(exception))
-                    {
-                        throw;
-                    }
+                            return default;
+                        }
 
-                    return default;
-                }
-            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
+                        try
+                        {
+                            if (!token.IsCancellationRequested)
+                            {
+                                onLoaded(task.Result);
+                            }
+
+                            return task.Result;
+                        }
+                        catch (Exception exception)
+                        {
+                            if (!OnLoadingError(exception))
+                            {
+                                throw;
+                            }
+
+                            return default;
+                        }
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.NotOnCanceled,
+                    _continuationTaskScheduler);
         }
 
         public void Cancel()

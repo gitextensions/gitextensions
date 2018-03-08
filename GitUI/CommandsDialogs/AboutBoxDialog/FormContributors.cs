@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             TextBox tb = new TextBox();
             tb.BackColor = Color.White;
             tb.Dock = DockStyle.Fill;
-            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point,  (byte)0);
+            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             tb.Margin = new System.Windows.Forms.Padding(0);
             tb.Multiline = true;
             tb.ReadOnly = true;
@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         {
             TabControl tc = new TabControl();
             tc.Dock = DockStyle.Fill;
-            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point,  (byte)0);
+            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             tc.ItemSize = new Size(150, 26);
             tc.Margin = new Padding(0);
             tc.Padding = new Point(0, 0);
