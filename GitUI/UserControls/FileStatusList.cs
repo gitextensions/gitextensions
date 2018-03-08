@@ -170,8 +170,6 @@ namespace GitUI
                 ListViewItem currentItem = FileStatusListView.Items[curIdx];
                 var currentGroup = currentItem.Group;
 
-                int maxIdx = GitItemStatuses.Count() - 1;
-
                 if (searchBackward)
                 {
                     var nextItem = FindPrevItemInGroups(curIdx, currentGroup);

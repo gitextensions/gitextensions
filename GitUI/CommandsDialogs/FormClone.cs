@@ -422,8 +422,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (branchList.AuthenticationFail)
             {
-                string loadedKey;
-                if (FormPuttyError.AskForKey(this, out loadedKey))
+                if (FormPuttyError.AskForKey(this, out _))
                 {
                     LoadBranches();
                 }

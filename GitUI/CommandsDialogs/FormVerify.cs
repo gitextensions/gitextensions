@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{currentTag}", lostObject.Hash);
-                var success = _gitTagController.CreateTag(createTagArgs, this);
+                _gitTagController.CreateTag(createTagArgs, this);
             }
 
             return currentTag;

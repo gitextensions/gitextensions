@@ -114,8 +114,7 @@ namespace GitCommands
         /// <param name="templateName">The name of the template.</param>
         public void Unregister(string templateName)
         {
-            Func<string> notUsed;
-            RegisteredTemplatesDic.TryRemove(templateName, out notUsed);
+            RegisteredTemplatesDic.TryRemove(templateName, out _);
         }
     }
 }

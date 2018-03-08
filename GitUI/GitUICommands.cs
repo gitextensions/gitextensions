@@ -908,8 +908,7 @@ namespace GitUI
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow)
         {
-            bool errorOccurred;
-            return StartPullDialog(owner, pullOnShow, out errorOccurred, false);
+            return StartPullDialog(owner, pullOnShow, out _, false);
         }
 
         public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
@@ -929,14 +928,12 @@ namespace GitUI
 
         public bool StartPullDialog(bool pullOnShow, string remoteBranch)
         {
-            bool errorOccurred;
-            return StartPullDialog(pullOnShow, remoteBranch, out errorOccurred);
+            return StartPullDialog(pullOnShow, remoteBranch, out _);
         }
 
         public bool StartPullDialog(IWin32Window owner)
         {
-            bool errorOccurred;
-            return StartPullDialog(owner, false, out errorOccurred, false);
+            return StartPullDialog(owner, false, out _, false);
         }
 
         public bool StartPullDialog()

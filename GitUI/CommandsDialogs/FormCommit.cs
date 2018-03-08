@@ -2177,8 +2177,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
 
-            bool wereErrors;
-            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out wereErrors);
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out _);
 
             Initialize();
         }
@@ -2192,8 +2191,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
 
-            bool wereErrors;
-            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out wereErrors);
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out _);
 
             Initialize();
         }

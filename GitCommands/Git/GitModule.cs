@@ -1747,8 +1747,6 @@ namespace GitCommands
 
                 branchArguments = " +" + FormatBranchName(remoteBranch);
 
-                var remoteUrl = GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-
                 if (!string.IsNullOrEmpty(localBranch))
                 {
                     branchArguments += ":" + GitCommandHelpers.GetFullBranchName(localBranch);

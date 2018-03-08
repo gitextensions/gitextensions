@@ -50,7 +50,7 @@ namespace GravatarTests
             var image = await _cache.GetImageAsync(fileName, null);
 
             image.Should().BeNull();
-            var not_used = _fileInfo.DidNotReceive().LastWriteTime;
+            _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
 
         [Test]
@@ -183,7 +183,7 @@ namespace GravatarTests
         {
             await _cache.DeleteImageAsync(fileName);
 
-            var not_used = _fileInfo.DidNotReceive().LastWriteTime;
+            _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
 
         [Test]
@@ -242,7 +242,7 @@ namespace GravatarTests
             var image = await _cache.GetImageAsync(null, null);
 
             image.Should().BeNull();
-            var not_used = _fileInfo.DidNotReceive().LastWriteTime;
+            _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
 
         [Test]
@@ -253,7 +253,7 @@ namespace GravatarTests
             var image = await _cache.GetImageAsync(FileName, null);
 
             image.Should().BeNull();
-            var not_used = _fileInfo.DidNotReceive().LastWriteTime;
+            _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
 
         [Test]
@@ -265,7 +265,7 @@ namespace GravatarTests
             var image = await _cache.GetImageAsync(FileName, null);
 
             image.Should().BeNull();
-            var not_used = _fileInfo.Received(1).LastWriteTime;
+            _ = _fileInfo.Received(1).LastWriteTime;
         }
 
         [Test]

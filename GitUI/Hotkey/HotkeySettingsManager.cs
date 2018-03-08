@@ -333,7 +333,6 @@ namespace GitUI.Hotkey
         {
             var curScripts = Script.ScriptManager.GetScripts();
 
-            HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
             /* define unusable int for identifying a shortcut for a custom script is pressed
              * all integers above 9000 represent a scripthotkey
              * these integers are never matched in the 'switch' routine on a form and

@@ -409,8 +409,7 @@ namespace GitUI.CommandsDialogs
                 files.Add(item);
             }
 
-            bool err;
-            Module.StageFiles(files, out err);
+            Module.StageFiles(files, out _);
             RefreshArtificial();
         }
 

@@ -211,8 +211,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static bool CheckIfFileIsInPath(string fileName)
         {
-            string foo;
-            return PathUtil.TryFindFullPath(fileName, out foo);
+            return PathUtil.TryFindFullPath(fileName, out _);
         }
 
         public bool SolveMergeToolForKDiff()
@@ -290,8 +289,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void AutoConfigMergeToolCmd()
         {
-            string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(CommonLogic.ConfigFileSettingsSet, GetGlobalMergeToolText(), out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolFullPath(CommonLogic.ConfigFileSettingsSet, GetGlobalMergeToolText(), out _);
+
             if (string.IsNullOrEmpty(exeFile))
             {
                 SetMergetoolPathText("");

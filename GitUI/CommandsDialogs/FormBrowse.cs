@@ -2316,9 +2316,8 @@ namespace GitUI.CommandsDialogs
             }
 
             RefreshPullIcon();
-            bool pullCompelted;
 
-            UICommands.StartPullDialog(this, true, out pullCompelted, true);
+            UICommands.StartPullDialog(this, true, out _, true);
 
             // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)
