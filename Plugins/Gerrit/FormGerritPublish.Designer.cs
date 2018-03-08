@@ -39,7 +39,7 @@
             this._NO_TRANSLATE_Branch = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_Topic = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_Reviewers = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelReviewers = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Publish
@@ -50,7 +50,7 @@
             this.Publish.Location = new System.Drawing.Point(522, 142);
             this.Publish.Name = "Publish";
             this.Publish.Size = new System.Drawing.Size(101, 25);
-            this.Publish.TabIndex = 9;
+            this.Publish.TabIndex = 10;
             this.Publish.Text = "&Publish";
             this.Publish.UseVisualStyleBackColor = true;
             this.Publish.Click += new System.EventHandler(this.PublishClick);
@@ -93,7 +93,7 @@
             this.PublishDraft.Location = new System.Drawing.Point(101, 144);
             this.PublishDraft.Name = "PublishDraft";
             this.PublishDraft.Size = new System.Drawing.Size(134, 17);
-            this.PublishDraft.TabIndex = 7;
+            this.PublishDraft.TabIndex = 9;
             this.PublishDraft.Text = "Submit review as draft";
             this.PublishDraft.UseVisualStyleBackColor = true;
             // 
@@ -140,16 +140,16 @@
             this._NO_TRANSLATE_Reviewers.Location = new System.Drawing.Point(101, 108);
             this._NO_TRANSLATE_Reviewers.Name = "_NO_TRANSLATE_Reviewers";
             this._NO_TRANSLATE_Reviewers.Size = new System.Drawing.Size(522, 21);
-            this._NO_TRANSLATE_Reviewers.TabIndex = 11;
+            this._NO_TRANSLATE_Reviewers.TabIndex = 8;
             // 
-            // label1
+            // labelReviewers
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 111);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Reviewer(s):";
+            this.labelReviewers.AutoSize = true;
+            this.labelReviewers.Location = new System.Drawing.Point(13, 111);
+            this.labelReviewers.Name = "labelReviewers";
+            this.labelReviewers.Size = new System.Drawing.Size(69, 13);
+            this.labelReviewers.TabIndex = 7;
+            this.labelReviewers.Text = "Reviewer(s):";
             // 
             // FormGerritPublish
             // 
@@ -158,7 +158,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(644, 173);
             this.Controls.Add(this._NO_TRANSLATE_Reviewers);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelReviewers);
             this.Controls.Add(this._NO_TRANSLATE_Topic);
             this.Controls.Add(this._NO_TRANSLATE_Branch);
             this.Controls.Add(this.labelTopic);
@@ -192,6 +192,6 @@
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Branch;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Topic;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Reviewers;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelReviewers;
     }
 }

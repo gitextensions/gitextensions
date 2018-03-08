@@ -88,14 +88,11 @@ namespace Gerrit
             string reviewers = _NO_TRANSLATE_Reviewers.Text.Trim();
             if (!string.IsNullOrEmpty(reviewers))
             {
-                List<string> reviewersParam = new List<string>();
-                foreach (string reviewer in reviewers.Split(' '))
-                {
-                    if (!string.IsNullOrEmpty(reviewer))
-                        reviewersParam.Add("r=" + reviewer);
-                }
-
-                targetBranch += "%" + string.Join(",", reviewersParam);
+                String formattedReviewers = string.Join(",", reviewers.Split(' ')
+                                                                      .Where(r => !string.IsNullOrEmpty(r))
+                                                                      .Select(r => "r=" + r));
+                if (!formattedReviewers.IsNullOrEmpty())
+                    targetBranch += "%" + formattedReviewers;
             }
 
             pushCommand.CommandText = PushCmd(
