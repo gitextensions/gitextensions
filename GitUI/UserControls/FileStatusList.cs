@@ -1074,9 +1074,9 @@ namespace GitUI
             {
                 SuspendLayout();
 
-                var items = AllItems;
-                int i = 0;
-                foreach (var item in items)
+                var itemCount = AllItems.Count();
+
+                for (var i = 0; i < itemCount; i++)
                 {
                     FileStatusListView.Items[i].Selected = true;
                     i++;
