@@ -20,10 +20,10 @@ namespace GitCommandsTests.Git
         }
 
 #if !DEBUG
-        //Testcases that should assert in debug; should not occur but undefined behavior that should be blocked in GUI
-        //Cannot compare unstaged to unstaged or staged to staged but give predictive output in release builds
+        // Testcases that should assert in debug; should not occur but undefined behavior that should be blocked in GUI
+        // Cannot compare unstaged to unstaged or staged to staged but give predictive output in release builds
 
-        //Two empty parameters will compare working dir to index
+        // Two empty parameters will compare working dir to index
         [TestCase(null)]
         [TestCase("")]
         [TestCase(GitRevision.UnstagedGuid)]
@@ -32,7 +32,7 @@ namespace GitCommandsTests.Git
             _revisionDiffProvider.Get(firstRevision, GitRevision.UnstagedGuid).Should().BeEmpty();
         }
 
-        //Two staged revisions gives duplicated options, no reason to clean
+        // Two staged revisions gives duplicated options, no reason to clean
         [TestCase("^")]
         [TestCase(GitRevision.IndexGuid)]
         public void RevisionDiffProvider_should_return_cached_if_both_IndexGuid(string firstRevision)

@@ -23,6 +23,8 @@ extern CComModule _Module;
 #include <atlcom.h>
 #include <atlconv.h>
 
+// warning C4091 in shlobj.h
+#pragma warning( disable : 4091 )
 #include <shlobj.h>
 #include <comdef.h>
 
