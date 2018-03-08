@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>7.2</LangVersion>
-    <NoWarn>$(NoWarn);1573;1591</NoWarn>
+    <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
