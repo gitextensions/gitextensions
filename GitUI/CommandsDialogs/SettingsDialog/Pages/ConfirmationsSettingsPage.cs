@@ -50,11 +50,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
     public static class CheckboxExtension
     {
-        public static CheckState ToCheckboxState(this bool booleanValue)
-        {
-            return booleanValue.ToCheckboxState();
-        }
-
         public static CheckState ToCheckboxState(this bool? booleanValue)
         {
             if (!booleanValue.HasValue)
