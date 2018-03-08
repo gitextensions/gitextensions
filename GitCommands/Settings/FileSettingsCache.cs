@@ -19,7 +19,7 @@ namespace GitCommands.Settings
 
         public string SettingsFilePath { get; }
 
-        public FileSettingsCache(string settingsFilePath, bool autoSave = true)
+        protected FileSettingsCache(string settingsFilePath, bool autoSave = true)
         {
             SettingsFilePath = settingsFilePath;
             _autoSave = autoSave;

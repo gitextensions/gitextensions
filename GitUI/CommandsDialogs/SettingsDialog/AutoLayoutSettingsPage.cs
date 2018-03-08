@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         public readonly ISettingsLayout ParentLayout;
 
-        public BaseSettingsLayout(ISettingsLayout parentLayout)
+        protected BaseSettingsLayout(ISettingsLayout parentLayout)
         {
             ParentLayout = parentLayout;
         }
