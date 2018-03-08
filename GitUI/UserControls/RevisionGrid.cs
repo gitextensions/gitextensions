@@ -205,7 +205,7 @@ namespace GitUI
         {
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
                 var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
                 if (toolStripMenuItem != null)
                 {
@@ -1505,7 +1505,7 @@ namespace GitUI
 
             if (AppSettings.MaxRevisionGraphCommits > 0)
             {
-                revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
+                revListParams += string.Format("--max-count=\"{0}\" ", AppSettings.MaxRevisionGraphCommits);
             }
 
             return Module.ReadGitOutputLines(revListParams + initRevision).ToArray();

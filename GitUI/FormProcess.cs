@@ -61,7 +61,7 @@ namespace GitUI
 
         public static bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            return ShowDialog(owner, (string)null, arguments);
+            return ShowDialog(owner, null, arguments);
         }
 
         public static bool ShowDialog(GitModuleForm owner, string process, string arguments)

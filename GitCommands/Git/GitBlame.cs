@@ -61,7 +61,7 @@ namespace GitCommands
             int number = 0;
             foreach (char c in text)
             {
-                number += (int)c;
+                number += c;
             }
 
             return number;

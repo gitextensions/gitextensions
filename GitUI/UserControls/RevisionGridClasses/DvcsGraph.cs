@@ -1206,7 +1206,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     finally
                     {
-                        ((IDisposable)brushLineColorPen)?.Dispose();
+                        brushLineColorPen?.Dispose();
                         ((IDisposable)brushLineColor)?.Dispose();
                     }
                 }

@@ -373,7 +373,7 @@ namespace GitImpact
                 }
 
                 // Pre-calculate height scale factor
-                double height_factor = 0.9 * (float)Height / (float)h_max;
+                double height_factor = 0.9 * Height / h_max;
 
                 // Scale week label coordinates
                 for (int i = 0; i < _weekLabels.Count; i++)
