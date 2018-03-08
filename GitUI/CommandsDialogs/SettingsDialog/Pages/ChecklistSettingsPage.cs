@@ -335,7 +335,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private readonly string[] _autoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
+        private readonly string[] _autoConfigMergeTools = { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))

@@ -6,10 +6,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public class FormContributors : GitExtensionsForm
     {
-        private static readonly string[] tabCaptions = new[]
-        {
-            "The Coders", "The Translators", "The Designers"
-        };
+        private static readonly string[] tabCaptions = { "The Coders", "The Translators", "The Designers" };
 
         private readonly TextBox[] _textboxes = new TextBox[tabCaptions.Length];
         private readonly TabPage[] _tabPages = new TabPage[tabCaptions.Length];

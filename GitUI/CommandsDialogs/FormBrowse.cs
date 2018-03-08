@@ -865,7 +865,7 @@ namespace GitUI.CommandsDialogs
                     _pullButton.Click += PullToolStripMenuItemClick;
 
                     _toolbarButtonsCreated = true;
-                    ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
+                    ThumbnailToolBarButton[] buttons = { _commitButton, _pullButton, _pushButton };
 
                     // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
                     TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);

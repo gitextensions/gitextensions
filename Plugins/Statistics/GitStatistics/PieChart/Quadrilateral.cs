@@ -12,8 +12,7 @@ namespace GitStatistics.PieChart
         ///   <c>PathPointType</c>s describing the <c>GraphicsPath</c> points.
         /// </summary>
         private static readonly byte[] QuadrilateralPointTypes =
-            new[]
-                {
+            {
                     (byte)PathPointType.Start,
                     (byte)PathPointType.Line,
                     (byte)PathPointType.Line,

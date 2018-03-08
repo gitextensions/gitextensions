@@ -2144,7 +2144,7 @@ namespace GitUI
             NotFilled
         }
 
-        private static readonly float[] dashPattern = new float[] { 4, 4 };
+        private static readonly float[] dashPattern = { 4, 4 };
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)

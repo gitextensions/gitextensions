@@ -33,7 +33,6 @@ namespace GitStatistics
         private readonly bool _countSubmodule;
 
         protected Color[] DecentColors =
-            new[]
                 {
                     Color.Red,
                     Color.Yellow,

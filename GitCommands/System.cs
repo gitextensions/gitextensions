@@ -8,7 +8,7 @@ namespace System
     public static class StringExtensions
     {
         /// <summary>'\n'</summary>
-        private static readonly char[] NewLineSeparator = new[] { '\n' };
+        private static readonly char[] NewLineSeparator = { '\n' };
 
         public static string SkipStr(this string str, string toSkip)
         {

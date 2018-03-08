@@ -19,8 +19,8 @@ namespace GitCommandsTests.Git
         [TestMethod]
         public void TestAdd()
         {
-            byte[] output = new byte[] { 11, 12 };
-            byte[] error = new byte[] { 13, 14 };
+            byte[] output = { 11, 12 };
+            byte[] error = { 13, 14 };
             string[] expectedCachedCommand = { "git command" };
 
             GitCommandCache.Add("git command", output, error);
@@ -38,8 +38,8 @@ namespace GitCommandsTests.Git
         [TestMethod]
         public void TestTryGet()
         {
-            byte[] originalOutput = new byte[] { 11, 12 };
-            byte[] originalError = new byte[] { 13, 14 };
+            byte[] originalOutput = { 11, 12 };
+            byte[] originalError = { 13, 14 };
 
             GitCommandCache.Add("git command", originalOutput, originalError);
 
@@ -51,8 +51,8 @@ namespace GitCommandsTests.Git
         [TestMethod]
         public void TestClean()
         {
-            byte[] output = new byte[] { 11, 12 };
-            byte[] error = new byte[] { 13, 14 };
+            byte[] output = { 11, 12 };
+            byte[] error = { 13, 14 };
             string[] expectedCachedCommand = { "git command" };
 
             GitCommandCache.Add("git command", output, error);

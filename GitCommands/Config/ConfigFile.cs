@@ -54,7 +54,7 @@ namespace GitCommands.Config
             parser.Parse();
         }
 
-        public static readonly char[] CommentChars = new[] { ';', '#' };
+        public static readonly char[] CommentChars = { ';', '#' };
 
         public void LoadFromString(string str)
         {

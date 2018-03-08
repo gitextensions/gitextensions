@@ -453,7 +453,7 @@ namespace GitUI.Script
             // if the width is odd - favor pushing it over one pixel right.
             middle.X += dropDownRect.Width % 2;
 
-            Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
+            Point[] arrow = { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
             if (Enabled)
             {

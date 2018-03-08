@@ -1172,7 +1172,7 @@ namespace GitUI.Editor
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
-                    char[] specials = new[] { ' ', '-', '+' };
+                    char[] specials = { ' ', '-', '+' };
                     lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
                 }
 
