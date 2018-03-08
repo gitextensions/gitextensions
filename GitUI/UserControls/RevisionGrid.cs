@@ -1051,30 +1051,27 @@ namespace GitUI
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                SetUpVars(authorFilter, ref _authorFilter, ref _authorFilterRegex, ignoreCase);
-                SetUpVars(committerFilter, ref _committerFilter, ref _committerFilterRegex, ignoreCase);
-                SetUpVars(messageFilter, ref _messageFilter, ref _messageFilterRegex, ignoreCase);
+                SetUpVars(authorFilter, out _authorFilter, out _authorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, out _committerFilter, out _committerFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, out _messageFilter, out _messageFilterRegex, ignoreCase);
                 if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
                 {
-                    SetUpVars(messageFilter, ref _shaFilter, ref _shaFilterRegex, false);
+                    SetUpVars(messageFilter, out _shaFilter, out _shaFilterRegex, false);
                 }
             }
 
             private static void SetUpVars(string filterValue,
-                                   ref string filterStr,
-                                   ref Regex filterRegEx,
+                                   out string filterStr,
+                                   out Regex filterRegEx,
                                    bool ignoreCase)
             {
-                RegexOptions opts = RegexOptions.None;
-                if (ignoreCase)
-                {
-                    opts = opts | RegexOptions.IgnoreCase;
-                }
-
                 filterStr = filterValue?.Trim() ?? string.Empty;
+
+                var options = ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
+
                 try
                 {
-                    filterRegEx = new Regex(filterStr, opts);
+                    filterRegEx = new Regex(filterStr, options);
                 }
                 catch (ArgumentException)
                 {
