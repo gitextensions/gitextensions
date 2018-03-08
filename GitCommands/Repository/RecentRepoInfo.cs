@@ -171,7 +171,7 @@ namespace GitCommands.Repository
             }
         }
 
-        private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
+        private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
             // if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo != null)
@@ -233,7 +233,7 @@ namespace GitCommands.Repository
             }
         }
 
-        private string MakePath(string l, string r)
+        private static string MakePath(string l, string r)
         {
             if (l == null)
             {

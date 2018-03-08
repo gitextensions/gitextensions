@@ -18,7 +18,7 @@ namespace GitUI.Editor.Diff
             public int MaxLineNumber;
         }
 
-        private void AddToResult(Result result, DiffLineNum diffLine)
+        private static void AddToResult(Result result, DiffLineNum diffLine)
         {
             result.LineNumbers.Add(diffLine.LineNumInDiff, diffLine);
             result.MaxLineNumber = Math.Max(result.MaxLineNumber,

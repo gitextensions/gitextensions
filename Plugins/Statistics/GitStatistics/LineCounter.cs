@@ -31,7 +31,7 @@ namespace GitStatistics
             return false;
         }
 
-        private IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
+        private static IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
         {
             foreach (var file in filesToCheck)
             {

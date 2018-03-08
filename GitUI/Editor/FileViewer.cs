@@ -122,7 +122,7 @@ namespace GitUI.Editor
             base.DisposeUICommandsSource();
         }
 
-        private bool RunTime()
+        private static bool RunTime()
         {
             return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }

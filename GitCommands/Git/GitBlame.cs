@@ -56,7 +56,7 @@ namespace GitCommands
             // return Color.White;
         }
 
-        private int GenerateIntFromString(string text)
+        private static int GenerateIntFromString(string text)
         {
             int number = 0;
             foreach (char c in text)

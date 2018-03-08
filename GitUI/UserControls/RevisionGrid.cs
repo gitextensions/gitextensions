@@ -201,7 +201,7 @@ namespace GitUI
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
-        private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
         {
             foreach (var menuCommand in menuCommands)
             {
@@ -1307,7 +1307,7 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
+        private static SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
             if (gitModule.SuperprojectModule == null)
             {
@@ -1935,7 +1935,7 @@ namespace GitUI
                                                                _revisionHighlighting.AuthorEmailToHighlight);
         }
 
-        private bool ShouldRenderAlternateBackColor(int rowIndex)
+        private static bool ShouldRenderAlternateBackColor(int rowIndex)
         {
             return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
@@ -2131,7 +2131,7 @@ namespace GitUI
             return AppSettings.OtherTagColor;
         }
 
-        private float RoundToEven(float value)
+        private static float RoundToEven(float value)
         {
             int result = ((int)value / 2) * 2;
             return result < value ? result + 2 : result;
@@ -2208,12 +2208,12 @@ namespace GitUI
             return additionalOffset;
         }
 
-        private float GetArrowSize(float rowHeight)
+        private static float GetArrowSize(float rowHeight)
         {
             return rowHeight - 6;
         }
 
-        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
+        private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
             const float horShift = 4;
             const float verShift = 3;
@@ -2950,7 +2950,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private string TimeToString(DateTime time)
+        private static string TimeToString(DateTime time)
         {
             if (time == DateTime.MinValue || time == DateTime.MaxValue)
             {
@@ -3353,7 +3353,7 @@ namespace GitUI
             }
         }
 
-        private void ToggleRevisionGraph()
+        private static void ToggleRevisionGraph()
         {
             if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small)
             {
@@ -3798,7 +3798,7 @@ namespace GitUI
             OpenManual();
         }
 
-        private void OpenManual()
+        private static void OpenManual()
         {
             string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
             OsShellUtil.OpenUrlInDefaultBrowser(url);

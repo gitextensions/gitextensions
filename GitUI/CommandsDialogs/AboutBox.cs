@@ -17,13 +17,13 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        private string Coders => Resources.Coders.Replace(Environment.NewLine, " ");
+        private static string Coders => Resources.Coders.Replace(Environment.NewLine, " ");
 
-        private string Translators => Resources.Translators.Replace(Environment.NewLine, " ");
+        private static string Translators => Resources.Translators.Replace(Environment.NewLine, " ");
 
-        private string Designers => Resources.Designers.Replace(Environment.NewLine, " ");
+        private static string Designers => Resources.Designers.Replace(Environment.NewLine, " ");
 
-        private string Other => Resources.Other.Replace(Environment.NewLine, " ");
+        private static string Other => Resources.Other.Replace(Environment.NewLine, " ");
 
         private void okButton_Click(object sender, EventArgs e)
         {

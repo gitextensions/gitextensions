@@ -2400,7 +2400,7 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.Focus();
         }
 
-        private void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
+        private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
         {
             var control = sender as ToolStripSplitButton;
 

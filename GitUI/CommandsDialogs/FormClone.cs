@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool CanBeGitURL(string url)
+        private static bool CanBeGitURL(string url)
         {
             if (url == null)
             {

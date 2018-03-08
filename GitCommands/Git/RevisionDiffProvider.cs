@@ -120,7 +120,7 @@ namespace GitCommands.Git
         /// Artificial "commits" are options, handle aliases too
         /// (order and handling of empty arguments is not handled here)
         /// </summary>
-        private string ArtificialToDiffOptions(string rev)
+        private static string ArtificialToDiffOptions(string rev)
         {
             if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)
             {

@@ -165,7 +165,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        private HttpClient GetHttpClient(string baseUrl, string accountToken)
+        private static HttpClient GetHttpClient(string baseUrl, string accountToken)
         {
             var httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
             {
@@ -180,7 +180,7 @@ namespace AppVeyorIntegration
             return httpClient;
         }
 
-        private string BuildQueryUrl(string projectId)
+        private static string BuildQueryUrl(string projectId)
         {
             return ApiBaseUrl + projectId + "/history?recordsNumber=" + ProjectsToRetrieveCount;
         }

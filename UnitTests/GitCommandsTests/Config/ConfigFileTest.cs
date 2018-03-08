@@ -34,7 +34,7 @@ namespace GitCommandsTests.Config
             }
         }
 
-        private string GetTempFolder()
+        private static string GetTempFolder()
         {
             return Path.GetTempPath();
         }

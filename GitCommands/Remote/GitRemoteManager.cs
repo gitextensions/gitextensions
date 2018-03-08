@@ -327,13 +327,13 @@ namespace GitCommands.Remote
             return module;
         }
 
-        private string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
+        private static string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
         {
             var key = string.Format(settingKey, remoteName);
             return remoteEnabled ? key : DisabledSectionPrefix + key;
         }
 
-        private void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
+        private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
         {
             var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
             var fullSettingName = preffix + string.Format(settingName, remoteName);

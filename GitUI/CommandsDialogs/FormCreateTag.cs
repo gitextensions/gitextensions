@@ -128,7 +128,7 @@ namespace GitUI.CommandsDialogs
             tagMessage.Enabled = tagOperation.CanProvideMessage();
         }
 
-        private TagOperation GetSelectedOperation(int dropdownSelection)
+        private static TagOperation GetSelectedOperation(int dropdownSelection)
         {
             TagOperation returnValue = TagOperation.Lightweight;
             switch (dropdownSelection)

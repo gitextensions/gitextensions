@@ -37,7 +37,7 @@ namespace GitFlow
             support
         }
 
-        private List<string> BranchTypes
+        private static List<string> BranchTypes
         {
             get { return Enum.GetValues(typeof(Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
@@ -91,7 +91,7 @@ namespace GitFlow
             }
         }
 
-        private bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
+        private static bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
         {
             foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {
@@ -284,7 +284,8 @@ namespace GitFlow
         #endregion
 
         #region GUI interactions
-        private void ForceRefresh(Control c)
+
+        private static void ForceRefresh(Control c)
         {
             c.Invalidate();
             c.Update();

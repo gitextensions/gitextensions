@@ -464,7 +464,7 @@ namespace JenkinsIntegration
                 TaskScheduler.Current);
         }
 
-        private string FormatToGetJson(string restServicePath, bool buildsInfo = false)
+        private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)
         {
             string buildTree = "lastBuild[timestamp]";
             int depth = 1;

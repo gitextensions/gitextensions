@@ -36,7 +36,7 @@ namespace Gerrit
             }
         }
 
-        private string PushCmd(string remote, string toBranch)
+        private static string PushCmd(string remote, string toBranch)
         {
             remote = remote.ToPosixPath();
 

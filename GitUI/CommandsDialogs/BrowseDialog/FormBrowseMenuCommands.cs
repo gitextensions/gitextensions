@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             return _navigateMenuCommands;
         }
 
-        private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
+        private static IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
             var resultList = new List<MenuCommand>();
 

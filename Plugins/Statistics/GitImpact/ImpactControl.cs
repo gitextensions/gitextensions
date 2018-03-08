@@ -460,7 +460,7 @@ namespace GitImpact
             }
         }
 
-        private int GenerateIntFromString(string text)
+        private static int GenerateIntFromString(string text)
         {
             return text.Sum(c => (int)c);
         }

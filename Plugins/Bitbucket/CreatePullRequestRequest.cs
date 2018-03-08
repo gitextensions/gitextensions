@@ -66,7 +66,7 @@ namespace Bitbucket
             return resource.ToString();
         }
 
-        private JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
+        private static JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
         {
             var reference = new JObject();
             reference["id"] = branchName;

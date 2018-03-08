@@ -166,7 +166,7 @@ namespace GitCommands.Config
             return keyIndex;
         }
 
-        private int FindKeyIndex(string setting)
+        private static int FindKeyIndex(string setting)
         {
             return setting.LastIndexOf('.');
         }
