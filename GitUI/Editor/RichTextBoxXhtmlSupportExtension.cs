@@ -760,10 +760,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             bool fontSet = false;
             string strFont = "";
             int crFont = 0;
-            Color color = new Color();
             int yHeight = 0;
 
-            int i = 0;
+            int i;
             int pos = 0;
             int k = rtb.TextLength;
             char[] chtrim = { ' ', '\x0000' };
@@ -809,7 +808,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     int fsize = yHeight / (20 * 5);
 
                     // color object from COLORREF
-                    color = GetColor(crFont);
+                    var color = GetColor(crFont);
 
                     // add <font> tag
                     string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));

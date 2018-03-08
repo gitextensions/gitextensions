@@ -105,7 +105,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            string toString = string.Empty;
+            string toString;
             if (IsRenamed)
             {
                 toString = string.Concat("Renamed\n   ", OldName, "\nto\n   ", Name, "");

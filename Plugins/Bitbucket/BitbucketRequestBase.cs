@@ -85,7 +85,7 @@ namespace Bitbucket
 
         private static BitbucketResponse<T> ParseErrorResponse(string jsonString)
         {
-            var json = new JObject();
+            JObject json;
             try
             {
                 System.Console.WriteLine(jsonString);

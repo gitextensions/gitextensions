@@ -130,7 +130,7 @@ namespace GitCommandsTests.Git.Gpg
             GitRevision revision = new GitRevision(guid);
 
             GitRef gitRef;
-            string gitRefCompleteName = "";
+            string gitRefCompleteName;
             switch (usefulTagRefNumber)
             {
                 case 0:

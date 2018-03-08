@@ -546,13 +546,12 @@ namespace NetSpell.SpellChecker.Dictionary
         public string PhoneticCode(string word)
         {
             string tempWord = word.ToUpper();
-            string prevWord = "";
             StringBuilder code = new StringBuilder();
 
             while (tempWord.Length > 0)
             {
                 // save previous word
-                prevWord = tempWord;
+                var prevWord = tempWord;
                 foreach (PhoneticRule rule in PhoneticRules)
                 {
                     bool begining = tempWord.Length == word.Length ? true : false;

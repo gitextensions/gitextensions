@@ -880,13 +880,12 @@ namespace NetSpell.SpellChecker
 
             Initialize();
 
-            string currentWord = "";
             bool misspelledWord = false;
 
             for (int i = startWordIndex; i <= endWordIndex; i++)
             {
                 WordIndex = i; // saving the current word index
-                currentWord = CurrentWord;
+                var currentWord = CurrentWord;
 
                 if (CheckString(currentWord))
                 {

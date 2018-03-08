@@ -183,7 +183,7 @@ namespace GitCommands.Statistics
                 DateTime date = DateTime.Parse(header[0]).Date;
 
                 // Calculate first day of the commit week
-                date = commit.week = date.AddDays(-(int)date.DayOfWeek);
+                commit.week = date.AddDays(-(int)date.DayOfWeek);
 
                 // Reset commit data
                 commit.data.Commits = 1;

@@ -892,7 +892,7 @@ namespace GitUI
                 ListViewGroup group = null;
                 if (pair.Key != null)
                 {
-                    var groupName = "";
+                    string groupName;
                     if (pair.Key.Guid == CombinedDiff.Text)
                     {
                         groupName = CombinedDiff.Text;

@@ -2236,8 +2236,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FileStatusList list = sender as FileStatusList;
-            if (!SenderToFileStatusList(sender, out list))
+            if (!SenderToFileStatusList(sender, out var list))
             {
                 return;
             }
@@ -2382,9 +2381,10 @@ namespace GitUI.CommandsDialogs
         private void UpdateAuthorInfo()
         {
             GetUserSettings();
-            string author = "";
+
             string committer = string.Format("{0} {1} <{2}>", _commitCommitterInfo.Text, _userName, _userEmail);
 
+            string author;
             if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
             {
                 author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);

@@ -1092,8 +1092,7 @@ namespace GitUI.Editor
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Encoding encod = null;
-
+            Encoding encod;
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
             {
                 encod = Module.FilesEncoding;

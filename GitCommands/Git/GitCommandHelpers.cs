@@ -1160,8 +1160,8 @@ namespace GitCommands
 
                 int splitIndex = files[n].IndexOfAny(new[] { '\0', '\t', ' ' }, 1);
 
-                string status = string.Empty;
-                string fileName = string.Empty;
+                string status;
+                string fileName;
 
                 if (splitIndex < 0)
                 {
@@ -1180,7 +1180,7 @@ namespace GitCommands
 
                 if (x != '?' && x != '!' && x != ' ')
                 {
-                    GitItemStatus gitItemStatusX = null;
+                    GitItemStatus gitItemStatusX;
                     if (x == 'R' || x == 'C')
                     {
                         // Find renamed files...

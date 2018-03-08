@@ -414,13 +414,12 @@ namespace AppVeyorIntegration
                 buildDetails.Duration = GetBuildDuration(buildData);
             }
 
-            string testResults = string.Empty;
             int testCount = buildDescription["testsCount"].ToObject<int>();
             if (testCount != 0)
             {
                 int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
                 int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
-                testResults = " : " + testCount + " tests";
+                var testResults = " : " + testCount + " tests";
                 if (failedTestCount != 0 || skippedTestCount != 0)
                 {
                     testResults += string.Format(" ( {0} failed, {1} skipped )", failedTestCount, skippedTestCount);
