@@ -232,14 +232,14 @@ namespace GitFlow
 
         private void btnPublish_Click(object sender, EventArgs e)
         {
-            var branchType = cbType.SelectedValue.ToString();
+            var branchType = cbManageType.SelectedValue.ToString();
             RunCommand(string.Format("flow {0} publish {1}", branchType, cbBranches.SelectedValue));
         }
 
         private void btnPull_Click(object sender, EventArgs e)
         {
-            var branchType = cbType.SelectedValue.ToString();
-            RunCommand(string.Format("flow {0} pull {1} {2}" + branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
+            var branchType = cbManageType.SelectedValue.ToString();
+            RunCommand(string.Format("flow {0} pull {1} {2}", branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
