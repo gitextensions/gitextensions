@@ -165,35 +165,34 @@ namespace GitUI
         public int GetNextIndex(bool searchBackward, bool loop)
         {
             int curIdx = SelectedIndex;
-            if (curIdx >= 0)
+
+            if (curIdx < 0)
             {
-                ListViewItem currentItem = FileStatusListView.Items[curIdx];
-                var currentGroup = currentItem.Group;
+                return -1;
+            }
 
-                if (searchBackward)
+            ListViewItem currentItem = FileStatusListView.Items[curIdx];
+            var currentGroup = currentItem.Group;
+
+            if (searchBackward)
+            {
+                var nextItem = FindPrevItemInGroups(curIdx, currentGroup);
+                if (nextItem == null)
                 {
-                    var nextItem = FindPrevItemInGroups(curIdx, currentGroup);
-                    if (nextItem == null)
-                    {
-                        return loop ? GetLastIndex() : curIdx;
-                    }
-
-                    return nextItem.Index;
+                    return loop ? GetLastIndex() : curIdx;
                 }
-                else
-                {
-                    var nextItem = FindNextItemInGroups(curIdx, currentGroup);
-                    if (nextItem == null)
-                    {
-                        return loop ? 0 : curIdx;
-                    }
 
-                    return nextItem.Index;
-                }
+                return nextItem.Index;
             }
             else
             {
-                return -1;
+                var nextItem = FindNextItemInGroups(curIdx, currentGroup);
+                if (nextItem == null)
+                {
+                    return loop ? 0 : curIdx;
+                }
+
+                return nextItem.Index;
             }
         }
 

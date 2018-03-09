@@ -1105,20 +1105,19 @@ namespace GitUI
                                                                  string messageFilter,
                                                                  bool ignoreCase)
             {
-                if (!(string.IsNullOrEmpty(authorFilter) &&
-                      string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter) &&
-                      !MessageFilterCouldBeSHA(messageFilter)))
-                {
-                    return new RevisionGridInMemFilter(authorFilter,
-                                                       committerFilter,
-                                                       messageFilter,
-                                                       ignoreCase);
-                }
-                else
+                if (string.IsNullOrEmpty(authorFilter) &&
+                    string.IsNullOrEmpty(committerFilter) &&
+                    string.IsNullOrEmpty(messageFilter) &&
+                    !MessageFilterCouldBeSHA(messageFilter))
                 {
                     return null;
                 }
+
+                return new RevisionGridInMemFilter(
+                    authorFilter,
+                    committerFilter,
+                    messageFilter,
+                    ignoreCase);
             }
         }
 
