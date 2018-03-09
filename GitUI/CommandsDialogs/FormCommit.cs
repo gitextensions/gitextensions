@@ -540,8 +540,7 @@ namespace GitUI.CommandsDialogs
 
         public void ShowDialogWhenChanges(IWin32Window owner)
         {
-            ComputeUnstagedFiles(
-                (allChangedFiles) =>
+            ComputeUnstagedFiles((allChangedFiles) =>
                 {
                     if (allChangedFiles.Count > 0)
                     {
@@ -722,8 +721,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateBranchNameDisplay()
         {
             Task.Run(() => Module.GetSelectedBranch())
-                .ContinueWith(
-                    task =>
+                .ContinueWith(task =>
                 {
                     var currentBranchName = task.Result;
                     branchNameLabel.Text = currentBranchName;
@@ -2013,8 +2011,7 @@ namespace GitUI.CommandsDialogs
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(
-                this,
+            if (MessageBox.Show(this,
                 _deleteUntrackedFiles.Text,
                 _deleteUntrackedFilesCaption.Text,
                 MessageBoxButtons.YesNo) !=
@@ -3081,8 +3078,7 @@ namespace GitUI.CommandsDialogs
                         gitProcess.WaitForExit();
                         gitProcess.Dispose();
                     })
-                    .ContinueWith(
-                        _ => RescanChanges(),
+                    .ContinueWith(_ => RescanChanges(),
                         _interactiveAddBashCloseWaitCts.Token,
                         TaskContinuationOptions.OnlyOnRanToCompletion,
                         formsTaskScheduler);

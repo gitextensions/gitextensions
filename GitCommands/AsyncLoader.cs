@@ -85,8 +85,7 @@ namespace GitCommands
 
             var token = _cancelledTokenSource.Token;
 
-            return Task.Factory.StartNew(
-                    () =>
+            return Task.Factory.StartNew(() =>
                     {
                         if (Delay > 0)
                         {
@@ -99,8 +98,7 @@ namespace GitCommands
                         }
                     },
                     token)
-                .ContinueWith(
-                    task =>
+                .ContinueWith(task =>
                     {
                         if (task.IsFaulted)
                         {
@@ -146,8 +144,7 @@ namespace GitCommands
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(
-                    () =>
+            return Task.Factory.StartNew(() =>
                     {
                         if (Delay > 0)
                         {
@@ -162,8 +159,7 @@ namespace GitCommands
                         return loadContent(token);
                     },
                     token)
-                .ContinueWith(
-                    task =>
+                .ContinueWith(task =>
                     {
                         if (task.IsFaulted)
                         {
