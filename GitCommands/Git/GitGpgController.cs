@@ -143,13 +143,12 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            TagStatus tagStatus = TagStatus.NoTag;
-
             /* No Tag present, exit */
             var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+
             if (usefulTagRefs.Count == 0)
             {
-                return tagStatus;
+                return TagStatus.NoTag;
             }
 
             return await Task.Run(() =>
@@ -157,43 +156,33 @@ namespace GitCommands.Gpg
                 /* More than one tag on the revision */
                 if (usefulTagRefs.Count > 1)
                 {
-                    tagStatus = TagStatus.Many;
+                    return TagStatus.Many;
                 }
-                else
+
+                /* Raw message to be checked */
+                string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
+
+                /* Look for icon to be shown */
+                if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
                 {
-                    /* Raw message to be checked */
-                    string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
-
-                    /* Look for icon to be shown */
-                    if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
-                    {
-                        /* It's only one good tag */
-                        tagStatus = TagStatus.OneGood;
-                    }
-                    else
-                    {
-                        if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
-                        {
-                            /* One tag, but not signed */
-                            tagStatus = TagStatus.TagNotSigned;
-                        }
-                        else
-                        {
-                            if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
-                            {
-                                /* One tag, signed, but user has not the public key */
-                                tagStatus = TagStatus.NoPubKey;
-                            }
-                            else
-                            {
-                                /* One tag, signed, any other error */
-                                tagStatus = TagStatus.OneBad;
-                            }
-                        }
-                    }
+                    /* It's only one good tag */
+                    return TagStatus.OneGood;
                 }
 
-                return tagStatus;
+                if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
+                {
+                    /* One tag, but not signed */
+                    return TagStatus.TagNotSigned;
+                }
+
+                if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
+                {
+                    /* One tag, signed, but user has not the public key */
+                    return TagStatus.NoPubKey;
+                }
+
+                /* One tag, signed, any other error */
+                return TagStatus.OneBad;
             });
         }
 
