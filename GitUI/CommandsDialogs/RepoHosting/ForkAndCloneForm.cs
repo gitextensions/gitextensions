@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 var hist = Repositories.RepositoryHistory;
                 var lastRepo = hist.Repositories.FirstOrDefault();
-                if (lastRepo != null && !string.IsNullOrEmpty(lastRepo.Path))
+                if (!string.IsNullOrEmpty(lastRepo?.Path))
                 {
                     string p = lastRepo.Path.Trim('/', '\\');
 

@@ -278,7 +278,7 @@ namespace JenkinsIntegration
             catch (Exception ex)
             {
                 // Cancelling a subtask is similar to cancelling this task
-                if (ex.InnerException == null || !(ex.InnerException is OperationCanceledException))
+                if (!(ex.InnerException is OperationCanceledException))
                 {
                     observer.OnError(ex);
                 }

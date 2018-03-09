@@ -2876,7 +2876,7 @@ namespace GitUI.CommandsDialogs
 
         public void ChangeTerminalActiveFolder(string path)
         {
-            if (_terminal == null || _terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(path))
             {
                 return;
             }
@@ -2900,7 +2900,7 @@ namespace GitUI.CommandsDialogs
 
         private void ClearTerminalCommandLineAndRunCommand(string command)
         {
-            if (_terminal == null || _terminal.RunningSession == null || string.IsNullOrWhiteSpace(command))
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }

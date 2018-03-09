@@ -135,8 +135,7 @@ namespace GitUI.RevisionGridClasses
 
                     // NOTE: We could also compare with sourceGraph sourceGraph.AddedNodes[sourceGraph.processedNodes],
                     // since it should always be the same value
-                    if (_currentRow.Node == null ||
-                        _currentRow.Node.Data == null ||
+                    if (_currentRow.Node?.Data == null ||
                         (lane.Current.Data != null && lane.Current.Index < _currentRow.Node.Index))
                     {
                         _currentRow.Node = lane.Current;

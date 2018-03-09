@@ -81,7 +81,8 @@ namespace GitUI
         private void UpdateTitleBar()
         {
             string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
-            if (_editor != null && _editor.FileName != null)
+
+            if (_editor?.FileName != null)
             {
                 text += " - " + Path.GetFileName(_editor.FileName);
             }

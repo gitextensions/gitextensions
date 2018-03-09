@@ -131,7 +131,7 @@ namespace TeamCityIntegration.Settings
 
         private static bool IsBuildSelected(TreeNode selectedNode)
         {
-            return selectedNode != null && selectedNode.Tag is Build;
+            return selectedNode?.Tag is Build;
         }
 
         private void treeViewTeamCityProjects_AfterSelect(object sender, TreeViewEventArgs e)

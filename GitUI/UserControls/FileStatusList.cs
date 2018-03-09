@@ -573,7 +573,7 @@ namespace GitUI
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>()
-                    .Where(i => i.Group != null && i.Group.Tag as GitRevision != null)
+                    .Where(i => i.Group?.Tag as GitRevision != null)
                     .Select(i => i.Group.Tag as GitRevision);
             }
         }
@@ -585,7 +585,7 @@ namespace GitUI
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>()
-                    .Where(i => i.Group != null && i.Group.Tag as GitRevision != null)
+                    .Where(i => i.Group?.Tag as GitRevision != null)
                     .Select(i => new GitItemStatusWithParent(i.Group.Tag as GitRevision, i.Tag as GitItemStatus));
             }
         }

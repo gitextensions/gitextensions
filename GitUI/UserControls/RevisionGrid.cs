@@ -1601,7 +1601,7 @@ namespace GitUI
 
             var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
             var superprojectRefs = new List<IGitRef>();
-            if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
+            if (spi?.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {
                 superprojectRefs.AddRange(spi.Refs[revision.Guid].Where(ShowRemoteRef));
             }
@@ -2685,7 +2685,7 @@ namespace GitUI
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
-            openBuildReportToolStripMenuItem.Visible = revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url);
+            openBuildReportToolStripMenuItem.Visible = !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url);
 
             RefreshOwnScripts();
         }
@@ -3758,7 +3758,8 @@ namespace GitUI
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var revision = GetSelectedRevisions().First();
-            if (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
+
+            if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 Process.Start(revision.BuildStatus.Url);
             }

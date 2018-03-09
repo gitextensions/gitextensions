@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
                 detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
             }
 
-            if (filterByRevision && revision != null && revision.Guid != null)
+            if (filterByRevision && revision?.Guid != null)
             {
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
             }
