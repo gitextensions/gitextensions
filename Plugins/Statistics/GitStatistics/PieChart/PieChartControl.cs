@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace GitStatistics.PieChart
@@ -244,15 +245,7 @@ namespace GitStatistics.PieChart
 
         private bool HasNonZeroValue()
         {
-            foreach (var value in _values)
-            {
-                if (value != 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _values.Any(value => value != 0);
         }
 
         protected override void OnMouseEnter(EventArgs e)

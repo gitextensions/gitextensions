@@ -3766,16 +3766,15 @@ namespace GitCommands
         {
             var fileList = RunGitCmd("diff-tree --name-only -z --cc --no-commit-id " + shaOfMergeCommit);
 
-            var ret = new List<GitItemStatus>();
             if (string.IsNullOrWhiteSpace(fileList))
             {
-                return ret;
+                return Array.Empty<GitItemStatus>();
             }
 
             var files = fileList.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var file in files)
-            {
-                var item = new GitItemStatus
+
+            return files.Select(
+                file => new GitItemStatus
                 {
                     IsChanged = true,
                     IsConflict = true,
@@ -3784,11 +3783,7 @@ namespace GitCommands
                     IsStaged = false,
                     IsNew = false,
                     Name = file,
-                };
-                ret.Add(item);
-            }
-
-            return ret;
+                }).ToList();
         }
 
         public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath,

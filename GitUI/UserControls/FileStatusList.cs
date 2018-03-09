@@ -1147,14 +1147,8 @@ namespace GitUI
                 GitRevision[] parentRevs;
                 if (revisions.Count == 1)
                 {
-                    var list = new List<GitRevision>();
-                    foreach (var item in Revision.ParentGuids)
-                    {
-                        // Note: RevisionGrid could in some forms be used to get the parent guids
-                        list.Add(new GitRevision(item));
-                    }
-
-                    parentRevs = list.ToArray();
+                    // Note: RevisionGrid could in some forms be used to get the parent guids
+                    parentRevs = Revision.ParentGuids.Select(item => new GitRevision(item)).ToArray();
                 }
                 else
                 {

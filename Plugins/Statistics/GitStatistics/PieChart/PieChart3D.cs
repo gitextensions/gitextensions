@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 
 namespace GitStatistics.PieChart
 {
@@ -640,11 +641,7 @@ namespace GitStatistics.PieChart
         {
             // calculates the sum of values required to evaluate sweep angles
             // for individual pies
-            double sum = 0;
-            foreach (var itemValue in Values)
-            {
-                sum += (double)itemValue;
-            }
+            double sum = Values.Sum(itemValue => (double)itemValue);
 
             // some values and indices that will be used in the loop
             var topEllipeSize = TopEllipseSize;
@@ -984,15 +981,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         private static bool AreDisplacementsValid(IEnumerable<float> displacements)
         {
-            foreach (var value in displacements)
-            {
-                if (!IsDisplacementValid(value))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return displacements.All(IsDisplacementValid);
         }
 
         /// <summary>

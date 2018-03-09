@@ -776,11 +776,7 @@ namespace GitUI.RevisionGridClasses
 
         private List<Color> GetJunctionColors(IEnumerable<Junction> junction)
         {
-            List<Color> colors = new List<Color>();
-            foreach (Junction j in junction)
-            {
-                colors.Add(GetJunctionColor(j));
-            }
+            var colors = junction.Select(GetJunctionColor).ToList();
 
             if (colors.Count == 0)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace PatchApply
@@ -116,11 +117,7 @@ namespace PatchApply
 
         private void HandleChangeFilePatchType(Encoding filesContentEncoding)
         {
-            var fileLines = new List<string>();
-            foreach (string s in LoadFile(FileNameA, filesContentEncoding).Split('\n'))
-            {
-                fileLines.Add(s);
-            }
+            var fileLines = LoadFile(FileNameA, filesContentEncoding).Split('\n').ToList();
 
             int lineNumber = 0;
             foreach (string line in Text.Split('\n'))

@@ -99,18 +99,18 @@ namespace GitCommands.ExternalLinks
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.LocalBranches))
             {
-                foreach (var head in revision.Refs.Where(b => !b.IsRemote))
-                {
-                    links.Add(ParseRevisionPart(revision, definition, remoteMatch, head.LocalName));
-                }
+                links.AddRange(
+                    revision.Refs
+                        .Where(b => !b.IsRemote)
+                        .Select(head => ParseRevisionPart(revision, definition, remoteMatch, head.LocalName)));
             }
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.RemoteBranches))
             {
-                foreach (var head in revision.Refs.Where(b => b.IsRemote))
-                {
-                    links.Add(ParseRevisionPart(revision, definition, remoteMatch, head.LocalName));
-                }
+                links.AddRange(
+                    revision.Refs
+                        .Where(b => b.IsRemote)
+                        .Select(head => ParseRevisionPart(revision, definition, remoteMatch, head.LocalName)));
             }
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.Message))
