@@ -935,18 +935,14 @@ namespace GitUI
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
-            var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
 
-            string description;
+            var descriptiveRef = gitRefListsForRevision.AllBranches
+                .Concat(gitRefListsForRevision.AllTags)
+                .FirstOrDefault();
 
-            if (descriptiveRefs.Any())
-            {
-                description = GetRefUnambiguousName(descriptiveRefs.First());
-            }
-            else
-            {
-                description = revision.Subject;
-            }
+            var description = descriptiveRef != null
+                ? GetRefUnambiguousName(descriptiveRef)
+                : revision.Subject;
 
             if (!revision.IsArtificial)
             {

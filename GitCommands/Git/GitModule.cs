@@ -3134,7 +3134,9 @@ namespace GitCommands
         public IList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
         {
             var notEmptyPatterns = ignorePatterns
-                    .Where(pattern => !pattern.IsNullOrWhiteSpace());
+                .Where(pattern => !pattern.IsNullOrWhiteSpace())
+                .ToList();
+
             if (notEmptyPatterns.Count() != 0)
             {
                 var excludeParams =
