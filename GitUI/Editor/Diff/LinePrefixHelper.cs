@@ -40,10 +40,8 @@ namespace GitUI.Editor.Diff
                     {
                         break;
                     }
-                    else
-                    {
-                        beginIndex++;
-                    }
+
+                    beginIndex++;
                 }
             }
 

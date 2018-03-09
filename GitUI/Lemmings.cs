@@ -17,16 +17,14 @@ namespace GitUI
                     // X-Mass
                     return Resources.Cow_xmass;
                 }
-                else
-                    if (currentDate.Month == 6 && currentDate.Day == 21)
-                    {
-                        // summer
-                        return Resources.Cow_sunglass;
-                    }
-                    else
-                    {
-                        return Resources.Cow;
-                    }
+
+                if (currentDate.Month == 6 && currentDate.Day == 21)
+                {
+                    // summer
+                    return Resources.Cow_sunglass;
+                }
+
+                return Resources.Cow;
             }
 
             return null;
