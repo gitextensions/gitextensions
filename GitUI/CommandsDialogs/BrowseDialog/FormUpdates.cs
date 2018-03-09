@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 DownloadPage = section.GetValue("DownloadPage")
             };
 
-            Enum.TryParse<ReleaseType>(section.GetValue("ReleaseType"), true, out version.ReleaseType);
+            Enum.TryParse(section.GetValue("ReleaseType"), true, out version.ReleaseType);
 
             return version;
         }

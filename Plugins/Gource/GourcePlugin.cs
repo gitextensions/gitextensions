@@ -68,7 +68,7 @@ namespace Gource
                             string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        Settings.SetValue<string>(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
+                        Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
                         pathToGource = _gourcePath.DefaultValue;
                     }
                 }
@@ -113,8 +113,8 @@ namespace Gource
             using (var gourceStart = new GourceStart(pathToGource, eventArgs, _gourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
-                Settings.SetValue<string>(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
-                Settings.SetValue<string>(_gourcePath.Name, gourceStart.PathToGource, s => s);
+                Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
+                Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
             }
 
             return true;

@@ -742,7 +742,7 @@ namespace GitCommands
         public static PullAction? AutoPullOnPushRejectedAction
         {
             get => GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction");
-            set => SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value);
+            set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
         }
 
         public static bool DontConfirmPushNewBranch
