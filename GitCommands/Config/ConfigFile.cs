@@ -311,8 +311,8 @@ namespace GitCommands.Config
 
             private ConfigFile _configFile;
             private string _fileContent;
-            private IConfigSection _section = null;
-            private string _key = null;
+            private IConfigSection _section;
+            private string _key;
             private string FileName => _configFile.FileName;
 
             // parsed char
@@ -384,8 +384,8 @@ namespace GitCommands.Config
                 _key = null;
             }
 
-            private bool _escapedSection = false;
-            private bool _quotedStringInSection = false;
+            private bool _escapedSection;
+            private bool _quotedStringInSection;
 
             private ParsePart ReadSection(char c)
             {
@@ -473,8 +473,8 @@ namespace GitCommands.Config
                 }
             }
 
-            private bool _quotedValue = false;
-            private bool _escapedValue = false;
+            private bool _quotedValue;
+            private bool _escapedValue;
 
             private ParsePart ReadValue(char c)
             {

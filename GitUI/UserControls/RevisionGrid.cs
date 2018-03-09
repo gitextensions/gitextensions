@@ -94,7 +94,7 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
-        private GitRevision _baseCommitToCompare = null;
+        private GitRevision _baseCommitToCompare;
 
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
@@ -366,7 +366,7 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision;
         }
 
-        private bool _isRefreshingRevisions = false;
+        private bool _isRefreshingRevisions;
         private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {

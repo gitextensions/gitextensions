@@ -30,7 +30,7 @@ namespace Github3
             }
         }
 
-        private bool _gotToken = false;
+        private bool _gotToken;
 
         public void web_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {

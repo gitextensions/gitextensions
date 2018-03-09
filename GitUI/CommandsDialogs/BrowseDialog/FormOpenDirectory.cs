@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _warningOpenFailedCaption =
             new TranslationString("Error");
 
-        private GitModule _choosenModule = null;
+        private GitModule _choosenModule;
 
         public FormOpenDirectory(GitModule currentModule)
         {

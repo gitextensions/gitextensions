@@ -6,8 +6,8 @@ namespace GitCommands
 {
     public abstract class LockableNotifier : ILockableNotifier
     {
-        private int _lockCount = 0;
-        private bool _notifyRequested = false;
+        private int _lockCount;
+        private bool _notifyRequested;
 
         protected abstract void InternalNotify();
 

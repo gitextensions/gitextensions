@@ -56,7 +56,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
-        public bool IsUndoInProgress = false;
+        public bool IsUndoInProgress;
 
         public EditNetSpell()
         {
@@ -649,7 +649,7 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
-        private bool _skipSelectionUndo = false;
+        private bool _skipSelectionUndo;
 
         private void UndoHighlighting()
         {

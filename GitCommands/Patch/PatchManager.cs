@@ -244,8 +244,8 @@ namespace PatchApply
         public List<PatchLine> RemovedLines = new List<PatchLine>();
         public List<PatchLine> AddedLines = new List<PatchLine>();
         public List<PatchLine> PostContext = new List<PatchLine>();
-        public string WasNoNewLineAtTheEnd = null;
-        public string IsNoNewLineAtTheEnd = null;
+        public string WasNoNewLineAtTheEnd;
+        public string IsNoNewLineAtTheEnd;
 
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
@@ -434,7 +434,7 @@ namespace PatchApply
     {
         private int _startLine;
         private List<SubChunk> _subChunks = new List<SubChunk>();
-        private SubChunk _currentSubChunk = null;
+        private SubChunk _currentSubChunk;
 
         public SubChunk CurrentSubChunk
         {
