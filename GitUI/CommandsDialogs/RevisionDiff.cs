@@ -297,16 +297,18 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
             {
                 var submoduleName = DiffFiles.SelectedItem.Name;
-                DiffFiles.SelectedItem.SubmoduleStatus.ContinueWith(
-                    (t) =>
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
                     {
+                        var status = await DiffFiles.SelectedItem.SubmoduleStatus.Task.ConfigureAwait(false);
+
                         Process process = new Process();
                         process.StartInfo.FileName = Application.ExecutablePath;
-                        process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
+                        process.StartInfo.Arguments = "browse -commit=" + status.Commit;
                         process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
                         process.Start();
-                    },
-                    TaskScheduler.Default);
+                    });
             }
             else
             {

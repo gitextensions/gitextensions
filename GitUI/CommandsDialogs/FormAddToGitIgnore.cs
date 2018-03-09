@@ -114,7 +114,7 @@ namespace GitUI.CommandsDialogs
             _ignoredFilesLoader.Cancel();
             if (_NO_TRANSLATE_Preview.Enabled)
             {
-                _ignoredFilesLoader.Delay = 300;
+                _ignoredFilesLoader.Delay = TimeSpan.FromMilliseconds(300);
                 _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
                 _NO_TRANSLATE_Preview.DataSource = new List<string> { _updateStatusString.Text };
                 _NO_TRANSLATE_Preview.Enabled = false;

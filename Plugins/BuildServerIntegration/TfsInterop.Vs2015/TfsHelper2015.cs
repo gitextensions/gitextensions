@@ -10,6 +10,8 @@ using Microsoft.VisualStudio.Services.Common;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.VisualStudio.Services.WebApi;
+using System.Threading.Tasks;
+using GitUI;
 
 namespace TfsInterop
 {
@@ -84,7 +86,7 @@ namespace TfsInterop
                         : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
                 }
 
-                ConnectToTfsServer2015(hostname, teamCollection, projectName, buildDefinitionNameFilter);
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => ConnectToTfsServer2015Async(hostname, teamCollection, projectName, buildDefinitionNameFilter));
             }
             catch (Exception ex)
             {
@@ -143,7 +145,7 @@ namespace TfsInterop
                 }).Cast<IBuild>().ToList());
             }
 
-            result = QueryBuilds2015(result, sinceDate, running);
+            result = ThreadHelper.JoinableTaskFactory.Run(() => QueryBuilds2015Async(result, sinceDate, running));
             return result;
         }
 
@@ -245,7 +247,7 @@ namespace TfsInterop
             }
         }
 
-        public async void ConnectToTfsServer2015(string hostname, string teamCollection, string projectName, Regex buildDefinitionNameFilter = null)
+        public async Task ConnectToTfsServer2015Async(string hostname, string teamCollection, string projectName, Regex buildDefinitionNameFilter = null)
         {
             _hostname = hostname;
 
@@ -268,8 +270,8 @@ namespace TfsInterop
                 VssConnection connection = new VssConnection(new Uri(url), new VssCredentials(true));
 
                 connection.Settings.BypassProxyOnLocal = false;
-                BuildHttpClient buildClient = connection.GetClientAsync<BuildHttpClient>().Result;
-                var definitions = await buildClient.GetDefinitionsAsync(project: projectName);
+                BuildHttpClient buildClient = await connection.GetClientAsync<BuildHttpClient>().ConfigureAwait(false);
+                var definitions = await buildClient.GetDefinitionsAsync(project: projectName).ConfigureAwait(false);
                 var buildDefs = new List<DefinitionReference>();
 
                 foreach (var def in definitions)
@@ -291,7 +293,7 @@ namespace TfsInterop
             }
         }
 
-        public List<IBuild> QueryBuilds2015(List<IBuild> result, DateTime? sinceDate, bool? running)
+        public async Task<List<IBuild>> QueryBuilds2015Async(List<IBuild> result, DateTime? sinceDate, bool? running)
         {
             ////var result = new List<IBuild>();
             if (_buildDefinitions2015 == null)
@@ -309,13 +311,12 @@ namespace TfsInterop
             ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { _buildDefinition.Id },
             ////                                       minFinishTime: sinceDate,
             ////                                       statusFilter: statusFilter));
-            var task = _buildClient.GetBuildsAsync(project: _projectName,
+            var builds = await _buildClient.GetBuildsAsync(project: _projectName,
                                                       definitions: _buildDefinitions2015.Select(b => b.Id),
                                                       minFinishTime: sinceDate,
-                                                      statusFilter: statusFilter);
+                                                      statusFilter: statusFilter).ConfigureAwait(false);
             ////while (!task.IsCompleted) { }
             ////task.Wait();
-            List<Build> builds = task.Result;
             foreach (var b in builds)
             {
                 var id = b.Id.ToString();

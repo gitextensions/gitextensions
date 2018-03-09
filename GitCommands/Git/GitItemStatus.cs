@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -90,7 +91,7 @@ namespace GitCommands
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
-        public Task<GitSubmoduleStatus> SubmoduleStatus { get; set; }
+        public JoinableTask<GitSubmoduleStatus> SubmoduleStatus { get; set; }
 
         public int CompareTo(GitItemStatus other)
         {

@@ -1048,7 +1048,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                FillGpgInfo();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
                 FillBuildReport();
             }
 
@@ -1110,7 +1110,7 @@ namespace GitUI.CommandsDialogs
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
-        private async void FillGpgInfo()
+        private async Task FillGpgInfoAsync()
         {
             if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
             {
@@ -1161,7 +1161,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                FillGpgInfo();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
                 FillBuildReport();
             }
             catch (Exception ex)
@@ -1508,7 +1508,7 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
-            FillGpgInfo();
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
             FillBuildReport();
             FillTerminalTab();
         }
@@ -2574,9 +2574,10 @@ namespace GitUI.CommandsDialogs
             var cancelToken = _submodulesStatusCts.Token;
             string thisModuleDir = Module.WorkingDir;
 
-            // First task: Gather list of submodules on a background thread.
-            var updateTask = Task.Run(() =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                // First task: Gather list of submodules on a background thread.
+
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 GitModule threadModule = new GitModule(thisModuleDir);
                 SubmoduleInfoResult result = new SubmoduleInfoResult();
@@ -2666,14 +2667,12 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                return result;
-            }, cancelToken);
+                // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
+                // CreateSubmoduleMenuItem to update images with submodule status.
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancelToken);
+                cancelToken.ThrowIfCancellationRequested();
 
-            // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
-            // CreateSubmoduleMenuItem to update images with submodule status.
-            updateTask.ContinueWith((task) =>
-            {
-                if (task.Result == null)
+                if (result == null)
                 {
                     return;
                 }
@@ -2681,22 +2680,22 @@ namespace GitUI.CommandsDialogs
                 RemoveSubmoduleButtons();
                 var newItems = new List<ToolStripItem>();
 
-                task.Result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
-                if (task.Result.OurSubmodules.Count == 0)
+                result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                if (result.OurSubmodules.Count == 0)
                 {
                     newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
                 }
 
-                if (task.Result.Superproject != null)
+                if (result.Superproject != null)
                 {
                     newItems.Add(new ToolStripSeparator());
-                    if (task.Result.TopProject != null)
+                    if (result.TopProject != null)
                     {
-                        newItems.Add(CreateSubmoduleMenuItem(task.Result.TopProject, _topProjectModuleFormat.Text));
+                        newItems.Add(CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text));
                     }
 
-                    newItems.Add(CreateSubmoduleMenuItem(task.Result.Superproject, _superprojectModuleFormat.Text));
-                    task.Result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                    newItems.Add(CreateSubmoduleMenuItem(result.Superproject, _superprojectModuleFormat.Text));
+                    result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
                 }
 
                 newItems.Add(new ToolStripSeparator());
@@ -2705,10 +2704,10 @@ namespace GitUI.CommandsDialogs
                 mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
                 newItems.Add(mi);
 
-                if (task.Result.CurrentSubmoduleName != null)
+                if (result.CurrentSubmoduleName != null)
                 {
                     var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
-                    usmi.Tag = task.Result.CurrentSubmoduleName;
+                    usmi.Tag = result.CurrentSubmoduleName;
                     usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
                     newItems.Add(usmi);
                 }
@@ -2718,10 +2717,7 @@ namespace GitUI.CommandsDialogs
                 toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
 
                 _previousUpdateTime = DateTime.Now;
-            },
-                cancelToken,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                TaskScheduler.FromCurrentSynchronizationContext());
+            });
         }
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)

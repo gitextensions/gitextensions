@@ -4,18 +4,16 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
 using ResourceManager;
-using System.Threading.Tasks;
 
 namespace GitUI
 {
     public static class GitUIExtensions
     {
-        public static SynchronizationContext UISynchronizationContext;
-
         public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked = true)
         {
             // Note: Order in revisions is that first clicked is last in array
@@ -60,7 +58,7 @@ namespace GitUI
 
             if (file.IsSubmodule && file.SubmoduleStatus != null)
             {
-                return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Result);
+                return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Join());
             }
 
             PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
@@ -184,25 +182,21 @@ namespace GitUI
             }
         }
 
-        public static void InvokeAsync(this Control control, Action action)
+        public static Task InvokeAsync(this Control control, Action action)
         {
-            InvokeAsync(control, _ => action(), null);
+            return InvokeAsync(control, _ => action(), null);
         }
 
-        public static void InvokeAsync(this Control control, SendOrPostCallback action, object state)
+        public static async Task InvokeAsync(this Control control, SendOrPostCallback action, object state)
         {
-            SendOrPostCallback checkDisposedAndInvoke = (s) =>
-            {
-                if (!control.IsDisposed)
-                {
-                    action(s);
-                }
-            };
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            if (!control.IsDisposed)
+            if (control.IsDisposed)
             {
-                UISynchronizationContext.Post(checkDisposedAndInvoke, state);
+                return;
             }
+
+            action(state);
         }
 
         public static void InvokeSync(this Control control, Action action)
@@ -212,26 +206,19 @@ namespace GitUI
 
         public static void InvokeSync(this Control control, SendOrPostCallback action, object state)
         {
-            SendOrPostCallback checkDisposedAndInvoke = (s) =>
-            {
-                if (!control.IsDisposed)
+            ThreadHelper.JoinableTaskFactory.Run(
+                async () =>
                 {
                     try
                     {
-                        action(s);
+                        await InvokeAsync(control, action, state);
                     }
                     catch (Exception e)
                     {
                         e.Data["StackTrace" + e.Data.Count] = e.StackTrace;
                         throw;
                     }
-                }
-            };
-
-            if (!control.IsDisposed)
-            {
-                UISynchronizationContext.Send(checkDisposedAndInvoke, state);
-            }
+                });
         }
 
         public static Control FindFocusedControl(this ContainerControl container)

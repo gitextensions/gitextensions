@@ -1354,7 +1354,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeAsync(o =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o =>
                                   {
                                       Error.Visible = true;
                                       ////Error.BringToFront();
@@ -1362,13 +1362,13 @@ namespace GitUI
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
                                       Loading.Visible = false;
-                                  }, this);
+                                  }, this));
 
             DisposeRevisionGraphCommand();
-            this.InvokeAsync(() =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(() =>
                 {
                     throw new AggregateException(e.Exception);
-                });
+                }));
             e.Handled = true;
         }
 
@@ -1421,7 +1421,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(o =>
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1429,12 +1429,12 @@ namespace GitUI
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                           _isRefreshingRevisions = false;
-                                      }, this);
+                                      }, this));
             }
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(o =>
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1444,7 +1444,7 @@ namespace GitUI
                                           {
                                               BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                           }
-                                      }, this);
+                                      }, this));
             }
 
             DisposeRevisionGraphCommand();
@@ -1612,7 +1612,7 @@ namespace GitUI
                 return;
             }
 
-            var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
+            var spi = SuperprojectCurrentCheckout.CompletedOrDefault();
             var superprojectRefs = new List<IGitRef>();
             if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {

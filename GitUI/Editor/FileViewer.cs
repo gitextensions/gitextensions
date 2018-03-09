@@ -15,6 +15,7 @@ using GitCommands.Settings;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using ResourceManager;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Editor
 {
@@ -431,7 +432,7 @@ namespace GitUI.Editor
         }
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
-            bool isSubmodule, Task<GitSubmoduleStatus> status)
+            bool isSubmodule, JoinableTask<GitSubmoduleStatus> status)
         {
             if (!isSubmodule)
             {
@@ -442,12 +443,12 @@ namespace GitUI.Editor
             {
                 _async.LoadAsync(() =>
                     {
-                        if (status.Result == null)
+                        if (status.Join() == null)
                         {
                             return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
                         }
 
-                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status.Result);
+                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status.Join());
                     }, ViewPatch);
             }
             else

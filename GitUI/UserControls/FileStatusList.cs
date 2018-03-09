@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -92,7 +91,7 @@ namespace GitUI
                 Text = "Open with Git Extensions",
                 Image = Resources.gitex
             };
-            _openSubmoduleMenuItem.Click += (s, ea) => { OpenSubmodule(); };
+            _openSubmoduleMenuItem.Click += (s, ea) => { ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync()); };
         }
 
         protected override void DisposeCustomResources()
@@ -118,7 +117,7 @@ namespace GitUI
                     h => FileStatusListView.SelectedIndexChanged -= h)
                     .Where(x => _enableSelectedIndexChangeEvent)
                     .Throttle(SelectedIndexChangeThrottleDuration)
-                    .ObserveOn(SynchronizationContext.Current)
+                    .ObserveOn(MainThreadScheduler.Instance)
                     .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
             }
         }
@@ -332,9 +331,9 @@ namespace GitUI
             if (item.IsSubmodule &&
                 item.SubmoduleStatus != null &&
                 item.SubmoduleStatus.IsCompleted &&
-                item.SubmoduleStatus.Result != null)
+                item.SubmoduleStatus.Join() != null)
             {
-                text += item.SubmoduleStatus.Result.AddedAndRemovedString();
+                text += item.SubmoduleStatus.Join().AddedAndRemovedString();
             }
 
             return text;
@@ -685,7 +684,7 @@ namespace GitUI
             {
                 if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.IsSubmodule)
                 {
-                    OpenSubmodule();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync());
                 }
                 else
                 {
@@ -698,19 +697,17 @@ namespace GitUI
             }
         }
 
-        private void OpenSubmodule()
+        private async Task OpenSubmoduleAsync()
         {
             var submoduleName = SelectedItem.Name;
-            SelectedItem.SubmoduleStatus.ContinueWith(
-                (t) =>
-                {
-                    Process process = new Process();
-                    process.StartInfo.FileName = Application.ExecutablePath;
-                    process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                    process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
-                    process.Start();
-                },
-                TaskScheduler.Default);
+
+            var status = await SelectedItem.SubmoduleStatus.Task.ConfigureAwait(false);
+
+            Process process = new Process();
+            process.StartInfo.FileName = Application.ExecutablePath;
+            process.StartInfo.Arguments = "browse -commit=" + status.Commit;
+            process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
+            process.Start();
         }
 
         void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
@@ -758,7 +755,7 @@ namespace GitUI
                     return 2;
                 }
 
-                var status = gitItemStatus.SubmoduleStatus.Result;
+                var status = gitItemStatus.SubmoduleStatus.Join();
                 if (status == null)
                 {
                     return 2;
@@ -933,10 +930,16 @@ namespace GitUI
                         if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                         {
                             var capturedItem = item;
-                            item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(capturedItem),
-                                                              CancellationToken.None,
-                                                              TaskContinuationOptions.OnlyOnRanToCompletion,
-                                                              TaskScheduler.FromCurrentSynchronizationContext());
+
+                            ThreadHelper.JoinableTaskFactory.RunAsync(
+                                async () =>
+                                {
+                                    await item.SubmoduleStatus.JoinAsync().ConfigureAwait(true);
+
+                                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                                    listItem.ImageIndex = GetItemImageIndex(capturedItem);
+                                });
                         }
 
                         if (previouslySelectedItems.Contains(item))

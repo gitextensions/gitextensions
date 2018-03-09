@@ -10,7 +10,9 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
+using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitStatistics
@@ -51,15 +53,17 @@ namespace GitStatistics
                 };
 
         public string DirectoriesToIgnore { get; set; }
-        private readonly SynchronizationContext _syncContext;
         private LineCounter _lineCounter;
-#pragma warning disable 0414
         private Task _loadThread;
-#pragma warning restore 0414
         private readonly IGitModule _module;
 
         public FormGitStatistics(IGitModule aModule, string codeFilePattern, bool countSubmodule)
         {
+            if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
+            {
+                throw new InvalidOperationException();
+            }
+
             _module = aModule;
             _codeFilePattern = codeFilePattern;
             _countSubmodule = countSubmodule;
@@ -71,8 +75,6 @@ namespace GitStatistics
             TotalLinesOfTestCode.Font = TotalLinesOfCode.Font;
             TotalCommits.Font = TotalLinesOfCode.Font;
             LoadingLabel.Font = TotalLinesOfCode.Font;
-
-            _syncContext = SynchronizationContext.Current;
         }
 
         private void FormGitStatisticsSizeChanged(object sender, EventArgs e)
@@ -91,11 +93,15 @@ namespace GitStatistics
 
         private void InitializeCommitCount()
         {
-            Action<FormGitStatistics> a = sender =>
-            {
-                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(_module);
-                _syncContext.Post(o =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                    var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(_module);
+
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
                     if (IsDisposed)
                     {
                         return;
@@ -127,9 +133,7 @@ namespace GitStatistics
                     CommitCountPie.ToolTips = commitCountLabels;
 
                     CommitStatistics.Text = builder.ToString();
-                }, null);
-            };
-            a.BeginInvoke(null, null, this);
+                });
         }
 
         private void SetPieStyle(PieChartControl pie)
@@ -223,7 +227,11 @@ namespace GitStatistics
             }
 
             // Sync rest to UI thread
-            _syncContext.Post(o => UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels), null);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels);
+            });
         }
 
         private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,

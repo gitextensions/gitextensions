@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
@@ -84,8 +85,15 @@ namespace GitUI.UserControls
             {
                 var branchName = SelectedBranchName;
                 var currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
-                Task.Run(() => Module.GetCommitCountString(currentCheckout, branchName))
-                    .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
+                    {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                        var text = Module.GetCommitCountString(currentCheckout, branchName);
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        lbChanges.Text = text;
+                    });
             }
         }
 

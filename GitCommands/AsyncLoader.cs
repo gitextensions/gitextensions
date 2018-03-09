@@ -1,45 +1,19 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GitUI;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
     public class AsyncLoader : IDisposable
     {
-        private readonly TaskScheduler _continuationTaskScheduler;
         private CancellationTokenSource _cancelledTokenSource;
-        public int Delay { get; set; }
+        public TimeSpan Delay { get; set; }
 
         public AsyncLoader()
-            : this(DefaultContinuationTaskScheduler)
         {
-        }
-
-        public AsyncLoader(TaskScheduler continuationTaskScheduler)
-        {
-            _continuationTaskScheduler = continuationTaskScheduler;
-            Delay = 0;
-        }
-
-        private static int _defaultThreadId = -1;
-        private static TaskScheduler _DefaultContinuationTaskScheduler;
-        public static TaskScheduler DefaultContinuationTaskScheduler
-        {
-            get
-            {
-                if (_defaultThreadId == Thread.CurrentThread.ManagedThreadId && _DefaultContinuationTaskScheduler != null)
-                {
-                    return _DefaultContinuationTaskScheduler;
-                }
-
-                return TaskScheduler.FromCurrentSynchronizationContext();
-            }
-
-            set
-            {
-                _defaultThreadId = Thread.CurrentThread.ManagedThreadId;
-                _DefaultContinuationTaskScheduler = value;
-            }
+            Delay = TimeSpan.Zero;
         }
 
         public event EventHandler<AsyncErrorEventArgs> LoadingError = delegate { };
@@ -76,54 +50,62 @@ namespace GitCommands
             return LoadAsync((token) => loadContent(), onLoaded);
         }
 
-        public Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
+        public async Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Run(() =>
+
+            try
+            {
+                if (Delay > TimeSpan.Zero)
                 {
-                    if (Delay > 0)
+                    await Task.Delay(Delay, token).ConfigureAwait(false);
+                }
+                else
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                }
+
+                if (!token.IsCancellationRequested)
+                {
+                    loadContent(token);
+                }
+            }
+            catch (Exception e)
+            {
+                if (e is OperationCanceledException && token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                if (!OnLoadingError(e))
+                {
+                    throw;
+                }
+
+                return;
+            }
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            if (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    onLoaded();
+                }
+                catch (Exception e)
+                {
+                    if (!OnLoadingError(e))
                     {
-                        token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
+                        throw;
                     }
-
-                    if (!token.IsCancellationRequested)
-                    {
-                        loadContent(token);
-                    }
-                }, token)
-                .ContinueWith((task) =>
-                    {
-                        if (task.IsFaulted)
-                        {
-                            foreach (var e in task.Exception.InnerExceptions)
-                            {
-                                if (!OnLoadingError(e))
-                                {
-                                    throw e;
-                                }
-                            }
-
-                            return;
-                        }
-
-                        try
-                        {
-                            if (!token.IsCancellationRequested)
-                            {
-                                onLoaded();
-                            }
-                        }
-                        catch (Exception exception)
-                        {
-                            if (!OnLoadingError(exception))
-                            {
-                                throw;
-                            }
-                        }
-                    }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
+                }
+            }
         }
 
         public Task<T> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
@@ -131,60 +113,72 @@ namespace GitCommands
             return LoadAsync((token) => loadContent(), onLoaded);
         }
 
-        public Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
+        public async Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             Cancel();
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Run(() =>
-                {
-                    if (Delay > 0)
-                    {
-                        token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
-                    }
 
-                    if (token.IsCancellationRequested)
-                    {
-                        return default;
-                    }
+            T result;
 
-                    return loadContent(token);
-                }, token)
-                .ContinueWith((task) =>
+            try
             {
-                if (task.IsFaulted)
+                if (Delay > TimeSpan.Zero)
                 {
-                    foreach (var e in task.Exception.InnerExceptions)
-                    {
-                        if (!OnLoadingError(e))
-                        {
-                            throw e;
-                        }
-                    }
-
-                    return default;
+                    await Task.Delay(Delay, token).ConfigureAwait(false);
+                }
+                else
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 }
 
+                if (token.IsCancellationRequested)
+                {
+                    result = default(T);
+                }
+                else
+                {
+                    result = loadContent(token);
+                }
+            }
+            catch (Exception e)
+            {
+                if (e is OperationCanceledException && token.IsCancellationRequested)
+                {
+                    return default(T);
+                }
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                if (!OnLoadingError(e))
+                {
+                    throw;
+                }
+
+                return default(T);
+            }
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            if (!token.IsCancellationRequested)
+            {
                 try
                 {
-                    if (!token.IsCancellationRequested)
-                    {
-                        onLoaded(task.Result);
-                    }
-
-                    return task.Result;
+                    onLoaded(result);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    if (!OnLoadingError(exception))
+                    if (!OnLoadingError(e))
                     {
                         throw;
                     }
 
-                    return default;
+                    return default(T);
                 }
-            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
+            }
+
+            return result;
         }
 
         public void Cancel()
