@@ -173,14 +173,13 @@ namespace GitCommands
 
         public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
-            object o;
             T val = defaultValue;
 
             bool result = LockedAction(() =>
             {
                 EnsureSettingsAreUpToDate();
 
-                if (_byNameMap.TryGetValue(name, out o))
+                if (_byNameMap.TryGetValue(name, out object o))
                 {
                     if (o == null)
                     {
