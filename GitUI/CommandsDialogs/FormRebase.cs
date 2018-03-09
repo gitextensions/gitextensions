@@ -116,6 +116,7 @@ namespace GitUI.CommandsDialogs
                 chkStash.Enabled = false;
 
                 AddFiles.Enabled = true;
+                Commit.Enabled = true;
                 Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
                 Mergetool.Enabled = Module.InTheMiddleOfConflictedMerge();
                 Skip.Enabled = true;
@@ -126,6 +127,7 @@ namespace GitUI.CommandsDialogs
                 Branches.Enabled = true;
                 Ok.Enabled = true;
                 AddFiles.Enabled = false;
+                Commit.Enabled = false;
                 Resolved.Enabled = false;
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
@@ -286,6 +288,12 @@ namespace GitUI.CommandsDialogs
                     txtFrom.Text = chooseForm.SelectedRevision.Guid.Substring(0, 8);
                 }
             }
+        }
+
+        private void CommitButtonClick(object sender, EventArgs e)
+        {
+            UICommands.StartCommitDialog(this);
+            EnableButtons();
         }
     }
 }

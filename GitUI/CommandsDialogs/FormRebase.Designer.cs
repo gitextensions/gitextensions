@@ -68,6 +68,7 @@ namespace GitUI.CommandsDialogs
             this.panel4 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.Commit = new System.Windows.Forms.Button();
             this.flowLayoutPanel2.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
@@ -142,7 +143,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Abort
             // 
-            this.Abort.Location = new System.Drawing.Point(3, 290);
+            this.Abort.Location = new System.Drawing.Point(3, 321);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(162, 25);
             this.Abort.TabIndex = 12;
@@ -152,7 +153,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Skip
             // 
-            this.Skip.Location = new System.Drawing.Point(3, 259);
+            this.Skip.Location = new System.Drawing.Point(3, 290);
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(162, 25);
             this.Skip.TabIndex = 11;
@@ -386,7 +387,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
             this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 321);
+            this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 352);
             this.SolveMergeconflicts.Name = "SolveMergeconflicts";
             this.SolveMergeconflicts.Size = new System.Drawing.Size(161, 49);
             this.SolveMergeconflicts.TabIndex = 19;
@@ -399,7 +400,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ContinuePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ContinuePanel.Controls.Add(this.Resolved);
-            this.ContinuePanel.Location = new System.Drawing.Point(3, 219);
+            this.ContinuePanel.Location = new System.Drawing.Point(3, 250);
             this.ContinuePanel.Name = "ContinuePanel";
             this.ContinuePanel.Size = new System.Drawing.Size(160, 34);
             this.ContinuePanel.TabIndex = 7;
@@ -459,6 +460,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.Controls.Add(this.MergeToolPanel);
             this.flowLayoutPanel1.Controls.Add(this.panel3);
             this.flowLayoutPanel1.Controls.Add(this.AddFiles);
+            this.flowLayoutPanel1.Controls.Add(this.Commit);
             this.flowLayoutPanel1.Controls.Add(this.panel4);
             this.flowLayoutPanel1.Controls.Add(this.ContinuePanel);
             this.flowLayoutPanel1.Controls.Add(this.Skip);
@@ -505,7 +507,7 @@ namespace GitUI.CommandsDialogs
             // 
             // panel4
             // 
-            this.panel4.Location = new System.Drawing.Point(3, 198);
+            this.panel4.Location = new System.Drawing.Point(3, 229);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(10, 15);
             this.panel4.TabIndex = 22;
@@ -544,6 +546,16 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Name = "rebasePanel";
             this.rebasePanel.Size = new System.Drawing.Size(503, 27);
             this.rebasePanel.TabIndex = 32;
+            // 
+            // Commit
+            // 
+            this.Commit.Location = new System.Drawing.Point(3, 198);
+            this.Commit.Name = "Commit";
+            this.Commit.Size = new System.Drawing.Size(162, 25);
+            this.Commit.TabIndex = 23;
+            this.Commit.Text = "Commit...";
+            this.Commit.UseVisualStyleBackColor = true;
+            this.Commit.Click += new System.EventHandler(this.CommitButtonClick);
             // 
             // FormRebase
             // 
@@ -620,6 +632,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel rebasePanel;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
-        private System.Windows.Forms.CheckBox chkStash;		
+        private System.Windows.Forms.CheckBox chkStash;
+        private System.Windows.Forms.Button Commit;
     }
 }
