@@ -172,20 +172,26 @@
   <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
     <ItemGroup>
       <!-- Plugin binaries-->
-      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.dll" />
-      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.dll" />
-      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.dll" />
-      <!-- Plugin symbols-->
-      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.pdb" />
-      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.pdb" />
-      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.pdb" />
-      <!-- Plugin satellite assemblies -->
-      <PluginSatelliteBinary Include="..\Plugins\*\bin\$(Configuration)\*\*.dll" />
-      <PluginSatelliteBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*\*.dll" />
-      <PluginSatelliteBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*\*.dll" />
+      <PluginProjects Include="..\Plugins\*\*.csproj;..\Plugins\*\*\*.csproj" />
+      <PluginDirectory Include="@(PluginProjects->'%(RelativeDir)')" />
     </ItemGroup>
+
+    <PropertyGroup>
+      <PluginBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.dll')</PluginBinariesExpression>
+      <PluginSymbolsExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.pdb')</PluginSymbolsExpression>
+      <PluginSatelliteBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*\*.dll')</PluginSatelliteBinariesExpression>
+    </PropertyGroup>
+
     <ItemGroup>
-      <None Include="@(PluginBinary)" Exclude="..\Plugins\**\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll;..\Plugins\**\Microsoft.WITDataStore.dll">
+      <PluginBinary Include="$(PluginBinariesExpression)" />
+      <!-- Plugin symbols-->
+      <PluginBinary Include="$(PluginSymbolsExpression)" />
+      <!-- Plugin satellite assemblies -->
+      <PluginSatelliteBinary Include="$(PluginSatelliteBinariesExpression)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="@(PluginBinary)" Condition="'%(Filename)' != 'Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader' AND '%(Filename)' != 'Microsoft.WITDataStore'">
         <Link>Plugins\%(Filename)%(Extension)</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
