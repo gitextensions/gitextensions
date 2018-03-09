@@ -240,7 +240,7 @@ namespace GitCommands.Gpg
                 return null;
             }
 
-            string rawFlag = raw == true ? "--raw" : "";
+            string rawFlag = raw ? "--raw" : "";
 
             var module = GetModule();
             return module.RunGitCmd($"verify-tag {rawFlag} {tagName}");
