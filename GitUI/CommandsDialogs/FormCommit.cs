@@ -588,7 +588,8 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
                     _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
             }
@@ -677,7 +678,8 @@ namespace GitUI.CommandsDialogs
 
             if (_currentItemStaged)
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
                     _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
             }

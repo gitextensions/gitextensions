@@ -1211,15 +1211,17 @@ namespace GitUI.Editor
 
             if (reverse)
             {
-                patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, GetText(),
-                selectionStart, selectionLength,
-                false, Encoding);
+                patch = PatchManager.GetResetUnstagedLinesAsPatch(
+                    Module, GetText(),
+                    selectionStart, selectionLength,
+                    false, Encoding);
             }
             else
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
-                selectionStart, selectionLength,
-                false, Encoding, false);
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    GetText(),
+                    selectionStart, selectionLength,
+                    false, Encoding, false);
             }
 
             if (patch != null && patch.Length > 0)

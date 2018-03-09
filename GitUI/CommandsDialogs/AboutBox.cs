@@ -77,8 +77,7 @@ namespace GitUI.CommandsDialogs
         {
             using (FormContributors formContributors = new FormContributors())
             {
-                formContributors.LoadContributors(Coders, Translators,
-                    Designers, Other);
+                formContributors.LoadContributors(Coders, Translators, Designers);
                 formContributors.ShowDialog(this);
             }
         }

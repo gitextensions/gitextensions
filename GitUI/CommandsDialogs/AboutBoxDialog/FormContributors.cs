@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             ResumeLayout(false);
         }
 
-        public void LoadContributors(string coders, string translators, string designers, string others)
+        public void LoadContributors(string coders, string translators, string designers)
         {
             const string NEWLINES = @"\r\n?|\n";
             _textboxes[0].Text = Regex.Replace(coders, NEWLINES, " ");

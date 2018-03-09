@@ -104,7 +104,7 @@ namespace GitCommandsTests.Git
         [TestCase("///test///test///", "test/test")]
         public void Normalise_rule06(string input, string expected)
         {
-            _gitBranchNameNormaliser.Rule06(input, _gitBranchNameOptions).Should().Be(expected);
+            _gitBranchNameNormaliser.Rule06(input).Should().Be(expected);
         }
 
         // Branch name end with a dot '.'.
