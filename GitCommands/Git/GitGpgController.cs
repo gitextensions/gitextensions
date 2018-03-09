@@ -165,26 +165,21 @@ namespace GitCommands.Gpg
                     string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
 
                     /* Look for icon to be shown */
-                    var goodSignatureMatch = GoodSignatureTagRegex.Match(rawGpgMessage);
-                    var validSignatureMatch = ValidSignatureTagRegex.Match(rawGpgMessage);
-
-                    if (goodSignatureMatch.Success && validSignatureMatch.Success)
+                    if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
                     {
                         /* It's only one good tag */
                         tagStatus = TagStatus.OneGood;
                     }
                     else
                     {
-                        Match noSignature = NoSignatureFoundTagRegex.Match(rawGpgMessage);
-                        if (noSignature.Success)
+                        if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
                         {
                             /* One tag, but not signed */
                             tagStatus = TagStatus.TagNotSigned;
                         }
                         else
                         {
-                            Match noPubKeyMatch = NoPubKeyTagRegex.Match(rawGpgMessage);
-                            if (noPubKeyMatch.Success)
+                            if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
                             {
                                 /* One tag, signed, but user has not the public key */
                                 tagStatus = TagStatus.NoPubKey;
