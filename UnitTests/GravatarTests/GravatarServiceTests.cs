@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GitUI;
@@ -29,6 +30,7 @@ namespace GravatarTests
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public async Task GetAvatarAsync_should_not_call_gravatar_if_exist_in_cache()
         {
             var avatar = Resources.User;
@@ -66,6 +68,7 @@ namespace GravatarTests
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public async Task RemoveAvatarAsync_should_invoke_cache_remove()
         {
             await _service.DeleteAvatarAsync(Email);

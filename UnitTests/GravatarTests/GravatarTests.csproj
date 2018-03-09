@@ -73,6 +73,7 @@
       <HintPath>..\..\packages\System.IO.Abstractions.TestingHelpers.2.0.0.143\lib\net40\System.IO.Abstractions.TestingHelpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -82,6 +83,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GitUITests\ConfigureJoinableTaskFactoryAttribute.cs">
+      <Link>ConfigureJoinableTaskFactoryAttribute.cs</Link>
+    </Compile>
     <Compile Include="AvatarImageNameProviderTests.cs" />
     <Compile Include="DirectoryImageCacheTests.cs" />
     <Compile Include="GravatarServiceTests.cs" />
