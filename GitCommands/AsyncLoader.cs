@@ -56,27 +56,27 @@ namespace GitCommands
         {
             AsyncLoader loader = new AsyncLoader();
             loader.LoadingError += (sender, e) => onError(e);
-            return loader.Load(doMe, continueWith);
+            return loader.LoadAsync(doMe, continueWith);
         }
 
         public static Task<T> DoAsync<T>(Func<T> doMe, Action<T> continueWith)
         {
             AsyncLoader loader = new AsyncLoader();
-            return loader.Load(doMe, continueWith);
+            return loader.LoadAsync(doMe, continueWith);
         }
 
         public static Task DoAsync(Action doMe, Action continueWith)
         {
             AsyncLoader loader = new AsyncLoader();
-            return loader.Load(doMe, continueWith);
+            return loader.LoadAsync(doMe, continueWith);
         }
 
-        public Task Load(Action loadContent, Action onLoaded)
+        public Task LoadAsync(Action loadContent, Action onLoaded)
         {
-            return Load((token) => loadContent(), onLoaded);
+            return LoadAsync((token) => loadContent(), onLoaded);
         }
 
-        public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
+        public Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
             _cancelledTokenSource?.Dispose();
@@ -126,12 +126,12 @@ namespace GitCommands
                     }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _continuationTaskScheduler);
         }
 
-        public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
+        public Task<T> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            return Load((token) => loadContent(), onLoaded);
+            return LoadAsync((token) => loadContent(), onLoaded);
         }
 
-        public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
+        public Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             Cancel();
             _cancelledTokenSource?.Dispose();

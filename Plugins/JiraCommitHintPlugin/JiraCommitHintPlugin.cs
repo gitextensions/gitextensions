@@ -63,7 +63,7 @@ namespace JiraCommitHintPlugin
                 return false;
             }
 
-            GetMessageToCommit(_jira, _query, _stringTemplate).ContinueWith(t =>
+            GetMessageToCommitAsync(_jira, _query, _stringTemplate).ContinueWith(t =>
             {
                 MessageBox.Show(string.Join(Environment.NewLine, t.Result.Select(jt => jt.Text).ToArray()));
             });
@@ -129,7 +129,7 @@ namespace JiraCommitHintPlugin
                 var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, _userSettings.CustomControl.Text, _passwordSettings.CustomControl.Text);
                 var localQuery = _jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
-                GetMessageToCommit(localJira, localQuery, localStringTemplate).ContinueWith(t =>
+                GetMessageToCommitAsync(localJira, localQuery, localStringTemplate).ContinueWith(t =>
                 {
                     var preview = t.Result.FirstOrDefault();
                     MessageBox.Show(null, preview == null ? EmptyQueryResultMessage : preview.Text, EmptyQueryResultCaption);
@@ -205,7 +205,7 @@ namespace JiraCommitHintPlugin
                 return;
             }
 
-            GetMessageToCommit(_jira, _query, _stringTemplate).ContinueWith(t =>
+            GetMessageToCommitAsync(_jira, _query, _stringTemplate).ContinueWith(t =>
             {
                 _currentMessages = t.Result;
                 foreach (var message in _currentMessages)
@@ -235,7 +235,7 @@ namespace JiraCommitHintPlugin
             _currentMessages = null;
         }
 
-        private static async Task<JiraTaskDTO[]> GetMessageToCommit(Jira jira, string query, string stringTemplate)
+        private static async Task<JiraTaskDTO[]> GetMessageToCommitAsync(Jira jira, string query, string stringTemplate)
         {
             try
             {

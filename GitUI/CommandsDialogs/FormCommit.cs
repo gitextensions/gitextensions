@@ -529,7 +529,7 @@ namespace GitUI.CommandsDialogs
 
             if (DoAsync)
             {
-                _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
+                _unstagedLoader.LoadAsync(getAllChangedFilesWithSubmodulesStatus, onComputed);
             }
             else
             {

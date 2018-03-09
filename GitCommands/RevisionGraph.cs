@@ -108,7 +108,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            _backgroundLoader.Load(ProccessGitLog, ProccessGitLogExecuted);
+            _backgroundLoader.LoadAsync(ProccessGitLog, ProccessGitLogExecuted);
         }
 
         private void ProccessGitLog(CancellationToken taskState)

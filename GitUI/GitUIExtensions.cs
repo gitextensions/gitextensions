@@ -79,7 +79,7 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static Task ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
+        public static Task ViewChangesAsync(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 0)
             {
@@ -94,12 +94,12 @@ namespace GitUI
                 firstRevision = selectedRevision.FirstParentGuid;
             }
 
-            return ViewChanges(diffViewer, firstRevision, secondRevision, file, defaultText);
+            return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText);
         }
 
-        public static Task ViewChanges(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
+        public static Task ViewChangesAsync(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
         {
-            return diffViewer.ViewPatch(() =>
+            return diffViewer.ViewPatchAsync(() =>
             {
                 string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
                 return selectedPatch ?? defaultText;

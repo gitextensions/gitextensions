@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            diffViewer.ViewChanges(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, String.Empty);
+            diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, String.Empty);
             Cursor.Current = Cursors.Default;
         }
 

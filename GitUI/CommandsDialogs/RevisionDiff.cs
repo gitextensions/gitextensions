@@ -202,7 +202,7 @@ namespace GitUI.CommandsDialogs
                 DiffFiles.SetSelectedIndex(fileIndex, notify: false);
             }
 
-            loadFileContent = ShowSelectedFileDiff();
+            loadFileContent = ShowSelectedFileDiffAsync();
             return true;
         }
 
@@ -244,7 +244,7 @@ namespace GitUI.CommandsDialogs
             RefreshArtificial();
         }
 
-        private async Task ShowSelectedFileDiff()
+        private async Task ShowSelectedFileDiffAsync()
         {
             var items = _revisionGrid.GetSelectedRevisions();
             if (DiffFiles.SelectedItem == null || items.Count() == 0)
@@ -273,14 +273,14 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            await DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            await DiffText.ViewChangesAsync(items, DiffFiles.SelectedItem, String.Empty);
         }
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                await ShowSelectedFileDiff();
+                await ShowSelectedFileDiffAsync();
             }
             catch (OperationCanceledException)
             {
@@ -325,7 +325,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                await ShowSelectedFileDiff();
+                await ShowSelectedFileDiffAsync();
             }
             catch (OperationCanceledException)
             {

@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.Visible = true;
 
-            _asyncLoader.Load(() => BuildFilter(FileName), (filter) =>
+            _asyncLoader.LoadAsync(() => BuildFilter(FileName), (filter) =>
             {
                 if (filter == null)
                 {
@@ -331,7 +331,7 @@ namespace GitUI.CommandsDialogs
                 file.IsTracked = true;
                 file.Name = fileName;
                 file.IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName));
-                Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
+                Diff.ViewChangesAsync(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
             if (_buildReportTabPageExtension == null)

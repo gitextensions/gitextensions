@@ -175,16 +175,16 @@ namespace Gravatar
                 return null;
             }
 
-            return await DownloadImage(new Uri(imageUrl), imageFileName);
+            return await DownloadImageAsync(new Uri(imageUrl), imageFileName);
         }
 
         private Task<Image> LoadFromGravatarAsync(string imageFileName, string email, int imageSize, DefaultImageType defaultImageType)
         {
             var imageUrl = BuildGravatarUrl(email, imageSize, false, Rating.G, defaultImageType);
-            return DownloadImage(imageUrl, imageFileName);
+            return DownloadImageAsync(imageUrl, imageFileName);
         }
 
-        private async Task<Image> DownloadImage(Uri imageUrl, string imageFileName)
+        private async Task<Image> DownloadImageAsync(Uri imageUrl, string imageFileName)
         {
             try
             {

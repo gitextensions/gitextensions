@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             var selectedBranch = UICommands.GitModule.GetSelectedBranch();
             ExistingBranches = Module.GetRefs(false);
             comboBoxBranches.Text = Strings.GetLoadingData();
-            _branchesLoader.Load(
+            _branchesLoader.LoadAsync(
                 () => ExistingBranches.Where(r => r.Name != selectedBranch).ToList(),
                 list =>
                 {

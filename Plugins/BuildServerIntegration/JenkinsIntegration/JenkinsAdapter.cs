@@ -115,7 +115,7 @@ namespace JenkinsIntegration
             public long Timestamp = -1;
         }
 
-        private Task<ResponseInfo> GetBuildInfoTask(string projectUrl, bool fullInfo, CancellationToken cancellationToken)
+        private Task<ResponseInfo> GetBuildInfoTaskAsync(string projectUrl, bool fullInfo, CancellationToken cancellationToken)
         {
             return GetResponseAsync(FormatToGetJson(projectUrl, fullInfo), cancellationToken)
                 .ContinueWith(
@@ -198,11 +198,11 @@ namespace JenkinsIntegration
                     if (_LastBuildCache[projectUrl].Timestamp <= 0)
                     {
                         // This job must be updated, no need to to check the latest builds
-                        allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
+                        allBuildInfos.Add(GetBuildInfoTaskAsync(projectUrl, true, cancellationToken));
                     }
                     else
                     {
-                        latestBuildInfos.Add(GetBuildInfoTask(projectUrl, false, cancellationToken));
+                        latestBuildInfos.Add(GetBuildInfoTaskAsync(projectUrl, false, cancellationToken));
                     }
                 }
 
@@ -217,7 +217,7 @@ namespace JenkinsIntegration
                         if (info.Result.Timestamp > _LastBuildCache[info.Result.Url].Timestamp)
                         {
                             // The cache has at least one newer job, query the status
-                            allBuildInfos.Add(GetBuildInfoTask(info.Result.Url, true, cancellationToken));
+                            allBuildInfos.Add(GetBuildInfoTaskAsync(info.Result.Url, true, cancellationToken));
                         }
                     }
                 }

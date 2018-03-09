@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_Preview.Enabled = false;
             }
 
-            _ignoredFilesLoader.Load(() => Module.GetIgnoredFiles(GetCurrentPatterns()), UpdatePreviewPanel);
+            _ignoredFilesLoader.LoadAsync(() => Module.GetIgnoredFiles(GetCurrentPatterns()), UpdatePreviewPanel);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForModule(Module);
             this.Mask();
-            _remoteLoader.Load(
+            _remoteLoader.LoadAsync(
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
                 (IHostedRemote[] foreignHostedRemotes) =>
                 {

@@ -435,12 +435,12 @@ namespace GitUI.Editor
         {
             if (!isSubmodule)
             {
-                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
+                _async.LoadAsync(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
             }
             else if (status != null)
             {
-                _async.Load(() =>
+                _async.LoadAsync(() =>
                     {
                         if (status.Result == null)
                         {
@@ -452,7 +452,7 @@ namespace GitUI.Editor
             }
             else
             {
-                _async.Load(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
+                _async.LoadAsync(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
             }
         }
@@ -479,13 +479,13 @@ namespace GitUI.Editor
 
         public void ViewStagingPatch(Func<string> loadPatchText)
         {
-            ViewPatch(loadPatchText);
+            ViewPatchAsync(loadPatchText);
             Reset(true, true, true);
         }
 
-        public Task ViewPatch(Func<string> loadPatchText)
+        public Task ViewPatchAsync(Func<string> loadPatchText)
         {
-            return _async.Load(loadPatchText, ViewPatch);
+            return _async.LoadAsync(loadPatchText, ViewPatch);
         }
 
         public void ViewText(string fileName, string text)
@@ -549,7 +549,7 @@ namespace GitUI.Editor
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    _async.Load(getSubmoduleText, text => ViewText(fileName, text));
+                    _async.LoadAsync(getSubmoduleText, text => ViewText(fileName, text));
                 }
                 else
                 {
@@ -558,7 +558,7 @@ namespace GitUI.Editor
             }
             else if (IsImage(fileName))
             {
-                _async.Load(getImage,
+                _async.LoadAsync(getImage,
                             image =>
                             {
                                 ResetForImage();
@@ -586,7 +586,7 @@ namespace GitUI.Editor
             }
             else
             {
-                _async.Load(getFileText, text => ViewText(fileName, text));
+                _async.LoadAsync(getFileText, text => ViewText(fileName, text));
             }
         }
 

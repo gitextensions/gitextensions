@@ -235,7 +235,7 @@ namespace GitUI.Blame
             _fileName = fileName;
             _encoding = encoding;
 
-            _blameLoader.Load(() => _blame = Module.Blame(fileName, guid, encoding),
+            _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, guid, encoding),
                 () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
         }
 
