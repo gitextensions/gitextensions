@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
         private IEnumerable<Tuple<string, object>> GetAdditionalMainMenuItemsForTranslation()
         {
             var list = new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem };
-            return list.Select(menuItem => new Tuple<string, object>(menuItem.Name, menuItem));
+            return list.Select(menuItem => Tuple.Create(menuItem.Name, (object)menuItem));
         }
 
         private void SetDropDownItems(ToolStripMenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
