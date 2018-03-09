@@ -82,7 +82,7 @@ namespace GitCommands
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
                 {
                     if (Delay > 0)
                     {
@@ -137,7 +137,7 @@ namespace GitCommands
             _cancelledTokenSource?.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
                 {
                     if (Delay > 0)
                     {

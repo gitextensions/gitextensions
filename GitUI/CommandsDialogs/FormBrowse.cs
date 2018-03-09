@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.UICommandsSource = this;
             Repositories.LoadRepositoryHistoryAsync();
-            Task.Factory.StartNew(PluginLoader.Load)
+            Task.Run(() => PluginLoader.Load())
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += SetGitModule;
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
@@ -2575,7 +2575,7 @@ namespace GitUI.CommandsDialogs
             string thisModuleDir = Module.WorkingDir;
 
             // First task: Gather list of submodules on a background thread.
-            var updateTask = Task.Factory.StartNew(() =>
+            var updateTask = Task.Run(() =>
             {
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 GitModule threadModule = new GitModule(thisModuleDir);

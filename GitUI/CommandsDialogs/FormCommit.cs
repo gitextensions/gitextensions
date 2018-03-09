@@ -2813,7 +2813,8 @@ namespace GitUI.CommandsDialogs
                         process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
                         process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
                         process.Start();
-                    });
+                    },
+                    TaskScheduler.Default);
         }
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
@@ -3064,7 +3065,7 @@ namespace GitUI.CommandsDialogs
 
                 var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
-                Task.Factory.StartNew(() =>
+                Task.Run(() =>
                     {
                         gitProcess.WaitForExit();
                         gitProcess.Dispose();

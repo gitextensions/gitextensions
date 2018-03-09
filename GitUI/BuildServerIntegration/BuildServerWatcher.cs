@@ -286,7 +286,7 @@ namespace GitUI.BuildServerIntegration
 
         private Task<IBuildServerAdapter> GetBuildServerAdapterAsync()
         {
-            return Task<IBuildServerAdapter>.Factory.StartNew(() =>
+            return Task<IBuildServerAdapter>.Run(() =>
             {
                 if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
                 {

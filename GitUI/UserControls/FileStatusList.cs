@@ -709,7 +709,8 @@ namespace GitUI
                     process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
                     process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
                     process.Start();
-                });
+                },
+                TaskScheduler.Default);
         }
 
         void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)

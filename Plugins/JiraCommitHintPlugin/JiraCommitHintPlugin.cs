@@ -66,7 +66,8 @@ namespace JiraCommitHintPlugin
             GetMessageToCommitAsync(_jira, _query, _stringTemplate).ContinueWith(t =>
             {
                 MessageBox.Show(string.Join(Environment.NewLine, t.Result.Select(jt => jt.Text).ToArray()));
-            });
+            },
+            TaskScheduler.Default);
             return false;
         }
 
@@ -133,7 +134,8 @@ namespace JiraCommitHintPlugin
                 {
                     var preview = t.Result.FirstOrDefault();
                     MessageBox.Show(null, preview == null ? EmptyQueryResultMessage : preview.Text, EmptyQueryResultCaption);
-                });
+                },
+                TaskScheduler.Default);
             }
             catch (Exception ex)
             {

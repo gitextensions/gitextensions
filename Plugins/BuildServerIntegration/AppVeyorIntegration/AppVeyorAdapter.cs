@@ -142,7 +142,8 @@ namespace AppVeyorIntegration
                                         Projects.Add(projectObj.Name, projectObj);
                                     }
                                 }
-                            }).Wait();
+                            },
+                            TaskScheduler.Default).Wait();
                 }
             }
 
@@ -239,7 +240,8 @@ namespace AppVeyorIntegration
 
                                                 var commitResult = JObject.Parse(content);
                                                 commitSha1 = commitResult["parents"][1]["sha"].ToObject<string>();
-                                            });
+                                            },
+                                            TaskScheduler.Default);
                                         gitHubTask.Wait();
                                     }
                                     catch (Exception ex)
@@ -286,7 +288,9 @@ namespace AppVeyorIntegration
                             .Where(x => x != null)
                             .ToList();
                         },
-                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
+                        CancellationToken.None,
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
+                        TaskScheduler.Default);
                 return buildTask.Result.Where(b => b != null).ToList();
             }
             catch
@@ -315,7 +319,7 @@ namespace AppVeyorIntegration
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task<IDisposable>.Factory.StartNew(
+                Task<IDisposable>.Run(
                     () => scheduler.Schedule(() => ObserveBuilds(observer, cancellationToken))));
         }
 

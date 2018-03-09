@@ -144,7 +144,7 @@ namespace DeleteUnusedBranches
             imgLoading.Visible = true;
             lblStatus.Text = _deletingBranches.Text;
 
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 if (remoteBranches.Count > 0)
                 {

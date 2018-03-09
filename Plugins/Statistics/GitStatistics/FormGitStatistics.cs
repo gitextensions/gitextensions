@@ -169,7 +169,7 @@ namespace GitStatistics
             _lineCounter = new LineCounter();
             _lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            _loadThread = Task.Factory.StartNew(LoadLinesOfCode);
+            _loadThread = Task.Run(() => LoadLinesOfCode());
         }
 
         public void LoadLinesOfCode()

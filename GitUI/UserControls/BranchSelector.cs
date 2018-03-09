@@ -84,7 +84,7 @@ namespace GitUI.UserControls
             {
                 var branchName = SelectedBranchName;
                 var currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
-                Task.Factory.StartNew(() => Module.GetCommitCountString(currentCheckout, branchName))
+                Task.Run(() => Module.GetCommitCountString(currentCheckout, branchName))
                     .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }

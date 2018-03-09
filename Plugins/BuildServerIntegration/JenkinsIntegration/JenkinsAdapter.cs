@@ -162,7 +162,9 @@ namespace JenkinsIntegration
                             JobDescription = s
                         };
                     },
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
+                    TaskScheduler.Default);
         }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
@@ -181,7 +183,7 @@ namespace JenkinsIntegration
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task<IDisposable>.Factory.StartNew(
+                Task<IDisposable>.Run(
                     () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
         }
 

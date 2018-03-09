@@ -305,7 +305,8 @@ namespace GitUI.CommandsDialogs
                         process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
                         process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
                         process.Start();
-                    });
+                    },
+                    TaskScheduler.Default);
             }
             else
             {

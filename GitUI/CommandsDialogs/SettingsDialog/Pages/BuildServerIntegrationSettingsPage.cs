@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.Init(aPageHost);
 
             _populateBuildServerTypeTask =
-                Task.Factory.StartNew(() =>
+                Task.Run(() =>
                         {
                             var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
                             var buildServerTypes = exports.Select(export =>

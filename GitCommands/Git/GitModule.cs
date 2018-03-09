@@ -2597,7 +2597,7 @@ namespace GitCommands
                 if (item.IsSubmodule)
                 {
                     var localItem = item;
-                    localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
+                    localItem.SubmoduleStatus = Task.Run(() =>
                     {
                         var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
                         if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
@@ -2618,7 +2618,7 @@ namespace GitCommands
             {
                 if (item.IsSubmodule)
                 {
-                    item.SubmoduleStatus = Task.Factory.StartNew(() =>
+                    item.SubmoduleStatus = Task.Run(() =>
                     {
                         Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";

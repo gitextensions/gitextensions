@@ -22,7 +22,7 @@ namespace GitCommands.Repository
                 return _repositoryHistory;
             }
 
-            _repositoryHistory = Task.Factory.StartNew(() => LoadRepositoryHistory());
+            _repositoryHistory = Task.Run(() => LoadRepositoryHistory());
             return _repositoryHistory;
         }
 

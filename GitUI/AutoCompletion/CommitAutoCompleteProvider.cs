@@ -22,7 +22,7 @@ namespace GitUI.AutoCompletion
 
         public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(
+            return Task.Run(
                     () =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();

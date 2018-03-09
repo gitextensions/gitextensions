@@ -476,7 +476,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                Task.Factory.StartNew(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), branch))
+                Task.Run(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), branch))
                     .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }

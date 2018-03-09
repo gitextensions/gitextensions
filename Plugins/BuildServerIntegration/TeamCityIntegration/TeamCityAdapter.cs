@@ -135,7 +135,9 @@ namespace TeamCityIntegration
                             .ContinueWith(
                             task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
                                     select element.Attribute("id").Value,
-                           TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
+                            CancellationToken.None,
+                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
+                            TaskScheduler.Default));
                     }
                 }
             }
@@ -183,7 +185,7 @@ namespace TeamCityIntegration
             }
 
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task<IDisposable>.Factory.StartNew(
+                Task<IDisposable>.Run(
                     () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
         }
 

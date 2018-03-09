@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -223,7 +224,9 @@ namespace GitUI.CommandsDialogs
 
                         return null;
                     },
-                TaskContinuationOptions.ExecuteSynchronously);
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
         }
 
         private static Task<HttpWebResponse> GetWebResponseAsync(HttpWebRequest webRequest)
