@@ -7,10 +7,6 @@ namespace GitCommands
     {
         private readonly Dictionary<string, object> _byNameMap = new Dictionary<string, object>();
 
-        public SettingsCache()
-        {
-        }
-
         public void Dispose()
         {
             Dispose(true);
