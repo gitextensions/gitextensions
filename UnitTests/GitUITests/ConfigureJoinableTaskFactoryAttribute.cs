@@ -33,6 +33,7 @@ namespace GitUITests
 
         public void AfterTest(ITest test)
         {
+            ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
             ThreadHelper.JoinableTaskContext = null;
         }
     }
