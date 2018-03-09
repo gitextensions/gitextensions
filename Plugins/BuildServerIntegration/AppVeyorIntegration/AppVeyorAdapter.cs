@@ -312,7 +312,7 @@ namespace AppVeyorIntegration
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task<IDisposable>.Run(
+                Task.Run(
                     () => scheduler.Schedule(() => ObserveBuilds(observer, cancellationToken))));
         }
 

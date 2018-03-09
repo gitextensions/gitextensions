@@ -246,7 +246,7 @@ namespace GitUI.SpellChecker
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        var words = await _autoCompleteListTask.GetValueAsync().ConfigureAwait(true);
+                        var words = await _autoCompleteListTask.GetValueAsync();
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
                         _autoCompleteCancellationTokenSource.Token.ThrowIfCancellationRequested();
 

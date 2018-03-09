@@ -6,6 +6,8 @@ namespace GitCommands
 {
     public class GitItemStatus : IComparable<GitItemStatus>
     {
+        private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
+
         public GitItemStatus()
         {
             IsTracked = false;
@@ -91,7 +93,15 @@ namespace GitCommands
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
-        public JoinableTask<GitSubmoduleStatus> SubmoduleStatus { get; set; }
+        public Task<GitSubmoduleStatus> GetSubmoduleStatusAsync()
+        {
+            return _submoduleStatus?.JoinAsync();
+        }
+
+        internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus> status)
+        {
+            _submoduleStatus = status;
+        }
 
         public int CompareTo(GitItemStatus other)
         {

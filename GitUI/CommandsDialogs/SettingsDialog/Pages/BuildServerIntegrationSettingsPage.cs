@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await _populateBuildServerTypeTask.JoinAsync().ConfigureAwait(false);
+                    await _populateBuildServerTypeTask.JoinAsync();
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 

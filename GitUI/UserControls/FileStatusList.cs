@@ -329,11 +329,11 @@ namespace GitUI
         private string AppendItemSubmoduleStatus(string text, GitItemStatus item)
         {
             if (item.IsSubmodule &&
-                item.SubmoduleStatus != null &&
-                item.SubmoduleStatus.IsCompleted &&
-                item.SubmoduleStatus.Join() != null)
+                item.GetSubmoduleStatusAsync() != null &&
+                item.GetSubmoduleStatusAsync().IsCompleted &&
+                item.GetSubmoduleStatusAsync().CompletedResult() != null)
             {
-                text += item.SubmoduleStatus.Join().AddedAndRemovedString();
+                text += item.GetSubmoduleStatusAsync().CompletedResult().AddedAndRemovedString();
             }
 
             return text;
@@ -701,7 +701,7 @@ namespace GitUI
         {
             var submoduleName = SelectedItem.Name;
 
-            var status = await SelectedItem.SubmoduleStatus.Task.ConfigureAwait(false);
+            var status = await SelectedItem.GetSubmoduleStatusAsync().ConfigureAwait(false);
 
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
@@ -749,13 +749,13 @@ namespace GitUI
 
             if (gitItemStatus.IsChanged || gitItemStatus.IsConflict)
             {
-                if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null ||
-                    !gitItemStatus.SubmoduleStatus.IsCompleted)
+                if (!gitItemStatus.IsSubmodule || gitItemStatus.GetSubmoduleStatusAsync() == null ||
+                    !gitItemStatus.GetSubmoduleStatusAsync().IsCompleted)
                 {
                     return 2;
                 }
 
-                var status = gitItemStatus.SubmoduleStatus.Join();
+                var status = gitItemStatus.GetSubmoduleStatusAsync().CompletedResult();
                 if (status == null)
                 {
                     return 2;
@@ -927,14 +927,14 @@ namespace GitUI
 
                         var listItem = new ListViewItem(text, group);
                         listItem.ImageIndex = GetItemImageIndex(item);
-                        if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
+                        if (item.GetSubmoduleStatusAsync() != null && !item.GetSubmoduleStatusAsync().IsCompleted)
                         {
                             var capturedItem = item;
 
                             ThreadHelper.JoinableTaskFactory.RunAsync(
                                 async () =>
                                 {
-                                    await item.SubmoduleStatus.JoinAsync().ConfigureAwait(true);
+                                    await item.GetSubmoduleStatusAsync();
 
                                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 

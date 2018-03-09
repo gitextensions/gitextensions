@@ -66,7 +66,7 @@ namespace GitUI
                 return;
             }
 
-            var image = await _gravatarService.GetAvatarAsync(Email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType).ConfigureAwait(true);
+            var image = await _gravatarService.GetAvatarAsync(Email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
             RefreshImage(image);
         }
 

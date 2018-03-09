@@ -423,32 +423,33 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(GitItemStatus item)
         {
-            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.SubmoduleStatus);
+            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync);
         }
 
         public void ViewCurrentChanges(GitItemStatus item, bool isStaged)
         {
-            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.SubmoduleStatus);
+            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync);
         }
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
-            bool isSubmodule, JoinableTask<GitSubmoduleStatus> status)
+            bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync)
         {
             if (!isSubmodule)
             {
                 _async.LoadAsync(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
             }
-            else if (status != null)
+            else if (getStatusAsync() != null)
             {
                 _async.LoadAsync(() =>
                     {
-                        if (status.Join() == null)
+                        var status = ThreadHelper.JoinableTaskFactory.Run(() => getStatusAsync());
+                        if (status == null)
                         {
                             return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
                         }
 
-                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status.Join());
+                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status);
                     }, ViewPatch);
             }
             else

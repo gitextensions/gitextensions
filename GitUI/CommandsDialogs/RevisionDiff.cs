@@ -301,7 +301,7 @@ namespace GitUI.CommandsDialogs
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        var status = await DiffFiles.SelectedItem.SubmoduleStatus.Task.ConfigureAwait(false);
+                        var status = await DiffFiles.SelectedItem.GetSubmoduleStatusAsync().ConfigureAwait(false);
 
                         Process process = new Process();
                         process.StartInfo.FileName = Application.ExecutablePath;

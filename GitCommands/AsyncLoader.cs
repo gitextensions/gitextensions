@@ -90,7 +90,7 @@ namespace GitCommands
                 return;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
             if (!token.IsCancellationRequested)
             {

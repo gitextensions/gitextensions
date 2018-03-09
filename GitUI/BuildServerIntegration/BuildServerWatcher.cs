@@ -55,7 +55,7 @@ namespace GitUI.BuildServerIntegration
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    _buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
+                    _buildServerAdapter = await GetBuildServerAdapterAsync();
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -291,7 +291,7 @@ namespace GitUI.BuildServerIntegration
 
         private Task<IBuildServerAdapter> GetBuildServerAdapterAsync()
         {
-            return Task<IBuildServerAdapter>.Run(() =>
+            return Task.Run(() =>
             {
                 if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
                 {

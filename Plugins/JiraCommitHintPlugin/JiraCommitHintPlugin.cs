@@ -67,7 +67,7 @@ namespace JiraCommitHintPlugin
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    var message = await GetMessageToCommitAsync(_jira, _query, _stringTemplate).ConfigureAwait(false);
+                    var message = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     MessageBox.Show(string.Join(Environment.NewLine, message.Select(jt => jt.Text).ToArray()));
                 });
@@ -138,7 +138,7 @@ namespace JiraCommitHintPlugin
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        var message = await GetMessageToCommitAsync(localJira, localQuery, localStringTemplate).ConfigureAwait(false);
+                        var message = await GetMessageToCommitAsync(localJira, localQuery, localStringTemplate);
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                         var preview = message.FirstOrDefault();
                         MessageBox.Show(null, preview == null ? EmptyQueryResultMessage : preview.Text, EmptyQueryResultCaption);
@@ -216,7 +216,7 @@ namespace JiraCommitHintPlugin
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                var currentMessages = await GetMessageToCommitAsync(_jira, _query, _stringTemplate).ConfigureAwait(false);
+                var currentMessages = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 

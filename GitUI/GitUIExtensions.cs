@@ -56,9 +56,9 @@ namespace GitUI
                 }
             }
 
-            if (file.IsSubmodule && file.SubmoduleStatus != null)
+            if (file.IsSubmodule && file.GetSubmoduleStatusAsync() != null)
             {
-                return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Join());
+                return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, ThreadHelper.JoinableTaskFactory.Run(() => file.GetSubmoduleStatusAsync()));
             }
 
             PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,

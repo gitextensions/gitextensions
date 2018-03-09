@@ -1685,14 +1685,14 @@ namespace GitUI.CommandsDialogs
                     }
 
                     unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-                    unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
-                        (item.SubmoduleStatus.Join() == null ||
-                        !item.SubmoduleStatus.Join().IsDirty && unstagedItems.Contains(item)));
+                    unStagedFiles.RemoveAll(item => item.IsSubmodule && item.GetSubmoduleStatusAsync().IsCompleted &&
+                        (item.GetSubmoduleStatusAsync().CompletedResult() == null ||
+                        !item.GetSubmoduleStatusAsync().CompletedResult().IsDirty && unstagedItems.Contains(item)));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
-                        (item.SubmoduleStatus.Join() == null ||
-                        item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Join().IsDirty)))
+                        (ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync()) == null ||
+                        item.GetSubmoduleStatusAsync().IsCompleted && item.GetSubmoduleStatusAsync().CompletedResult().IsDirty)))
                     {
-                        item.SubmoduleStatus.Join().Status = SubmoduleStatus.Unknown;
+                        item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
                     }
 
                     Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unStagedFiles);
@@ -2813,7 +2813,7 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    var status = await Unstaged.SelectedItem.SubmoduleStatus.Task.ConfigureAwait(false);
+                    var status = await Unstaged.SelectedItem.GetSubmoduleStatusAsync().ConfigureAwait(false);
 
                     Process process = new Process();
                     process.StartInfo.FileName = Application.ExecutablePath;

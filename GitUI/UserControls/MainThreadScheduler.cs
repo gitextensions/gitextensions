@@ -16,7 +16,7 @@ namespace GitUI.UserControls
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await Task.Delay(normalizedTime).ConfigureAwait(false);
+                    await Task.Delay(normalizedTime);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     disposable.Disposable = new MainThreadDisposable(action(this, state));
                 });

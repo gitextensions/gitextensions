@@ -2600,7 +2600,7 @@ namespace GitCommands
                 if (item.IsSubmodule)
                 {
                     var localItem = item;
-                    localItem.SubmoduleStatus = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
@@ -2612,7 +2612,7 @@ namespace GitCommands
                         }
 
                         return submoduleStatus;
-                    });
+                    }));
                 }
             }
         }
@@ -2623,7 +2623,7 @@ namespace GitCommands
             {
                 if (item.IsSubmodule)
                 {
-                    item.SubmoduleStatus = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    item.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
@@ -2637,7 +2637,7 @@ namespace GitCommands
                         }
 
                         return submoduleStatus;
-                    });
+                    }));
                 }
             });
         }
