@@ -858,7 +858,7 @@ namespace GitUI.SpellChecker
             _autoCompleteListTask = new Task<IEnumerable<AutoCompleteWord>>(
                     () =>
                     {
-                        var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(_autoCompleteCancellationTokenSource)).ToArray();
+                        var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(_autoCompleteCancellationTokenSource.Token)).ToArray();
                         try
                         {
                             Task.WaitAll(subTasks, _autoCompleteCancellationTokenSource.Token);

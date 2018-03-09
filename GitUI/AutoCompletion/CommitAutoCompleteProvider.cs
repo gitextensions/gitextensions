@@ -20,10 +20,8 @@ namespace GitUI.AutoCompletion
             _module = module;
         }
 
-        public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationTokenSource cts)
+        public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
         {
-            var cancellationToken = cts.Token;
-
             return Task.Factory.StartNew(
                     () =>
                     {
