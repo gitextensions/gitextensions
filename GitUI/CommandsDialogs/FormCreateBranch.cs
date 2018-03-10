@@ -17,8 +17,8 @@ namespace GitUI.CommandsDialogs
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
-        public FormCreateBranch(GitUICommands aCommands, GitRevision revision)
-            : base(aCommands)
+        public FormCreateBranch(GitUICommands commands, GitRevision revision)
+            : base(commands)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
             CheckoutAfterCreation = true;
@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
             bool isOrphan = Orphan.Checked;
             ClearOrphan.Enabled = isOrphan;
 
-            chkbxCheckoutAfterCreate.Enabled = (isOrphan == false); // auto-checkout for orphan
+            chkbxCheckoutAfterCreate.Enabled = isOrphan == false; // auto-checkout for orphan
             if (isOrphan)
             {
                 chkbxCheckoutAfterCreate.Checked = true;

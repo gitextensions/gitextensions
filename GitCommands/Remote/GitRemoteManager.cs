@@ -68,12 +68,12 @@ namespace GitCommands.Remote
         [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
         public void ConfigureRemotes(string remoteName)
         {
-            var _module = GetModule();
-            var localConfig = _module.LocalConfigFile;
+            var module = GetModule();
+            var localConfig = module.LocalConfigFile;
 
-            foreach (var remoteHead in _module.GetRefs(true, true))
+            foreach (var remoteHead in module.GetRefs(true, true))
             {
-                foreach (var localHead in _module.GetRefs(true, true))
+                foreach (var localHead in module.GetRefs(true, true))
                 {
                     if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
@@ -104,10 +104,10 @@ namespace GitCommands.Remote
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            var _module = GetModule();
+            var module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
             {
-                var head = new GitRef(_module, string.Empty, setting);
+                var head = new GitRef(module, string.Empty, setting);
                 return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
             }
 
@@ -115,7 +115,7 @@ namespace GitCommands.Remote
                                    .Select(s => s.Split(':'))
                                    .Where(t => t.Length == 2)
                                    .Where(t => IsSettingForBranch(t[0], branch))
-                                   .Select(t => new GitRef(_module, string.Empty, t[1]))
+                                   .Select(t => new GitRef(module, string.Empty, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
             return remoteHead?.Name;
@@ -126,11 +126,11 @@ namespace GitCommands.Remote
         /// </summary>
         public string[] GetDisabledRemotes()
         {
-            var _module = GetModule();
-            return _module.LocalConfigFile.GetConfigSections()
-                                          .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
-                                          .Select(s => s.SubSection)
-                                          .ToArray();
+            var module = GetModule();
+            return module.LocalConfigFile.GetConfigSections()
+                                         .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
+                                         .Select(s => s.SubSection)
+                                         .ToArray();
         }
 
         /// <summary>

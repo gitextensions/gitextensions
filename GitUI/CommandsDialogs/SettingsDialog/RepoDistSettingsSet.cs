@@ -10,15 +10,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public readonly RepoDistSettings GlobalSettings;
 
         public RepoDistSettingsSet(
-            RepoDistSettings aEffectiveSettings,
-            RepoDistSettings aLocalSettings,
-            RepoDistSettings aPulledSettings,
-            RepoDistSettings aGlobalSettings)
+            RepoDistSettings effectiveSettings,
+            RepoDistSettings localSettings,
+            RepoDistSettings pulledSettings,
+            RepoDistSettings globalSettings)
         {
-            EffectiveSettings = aEffectiveSettings;
-            LocalSettings = aLocalSettings;
-            RepoDistSettings = aPulledSettings;
-            GlobalSettings = aGlobalSettings;
+            EffectiveSettings = effectiveSettings;
+            LocalSettings = localSettings;
+            RepoDistSettings = pulledSettings;
+            GlobalSettings = globalSettings;
         }
     }
 }

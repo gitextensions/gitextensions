@@ -2,11 +2,11 @@
 
 namespace GitCommands
 {
-    public class RemoteActionResult<R>
+    public class RemoteActionResult<TResult>
     {
         public bool HostKeyFail { get; set; }
         public bool AuthenticationFail { get; set; }
-        public R Result { get; set; }
+        public TResult Result { get; set; }
         public CmdResult CmdResult;
     }
 }

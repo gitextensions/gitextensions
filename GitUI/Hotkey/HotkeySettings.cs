@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Serialization;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.Hotkey
 {

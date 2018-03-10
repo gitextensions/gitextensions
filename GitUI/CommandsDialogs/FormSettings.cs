@@ -37,8 +37,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormSettings(GitUICommands aCommands, SettingsPageReference initalPage = null)
-            : base(aCommands)
+        public FormSettings(GitUICommands commands, SettingsPageReference initalPage = null)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.SuspendLayout();
 
             // if form is created for translation purpose
-            if (aCommands == null)
+            if (commands == null)
             {
                 return;
             }
@@ -87,9 +87,9 @@ namespace GitUI.CommandsDialogs
             var buildServerIntegrationSettingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this);
             settingsTreeView.AddSettingsPage(buildServerIntegrationSettingsPage, gitExtPageRef);
 
-            var _sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
-            checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
+            var sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef);
+            checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this), gitExtPageRef);
 

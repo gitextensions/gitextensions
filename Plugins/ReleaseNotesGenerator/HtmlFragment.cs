@@ -25,7 +25,7 @@ namespace ReleaseNotesGenerator
         ///    HtmlFragment html2 = HtmlFragment.FromClipboard();
         ///    Debug.Assert(html2.Fragment == html);
         /// </example>
-        static public HtmlFragment FromClipboard()
+        public static HtmlFragment FromClipboard()
         {
             string rawClipboardText = Clipboard.GetText(TextDataFormat.Html);
             var h = new HtmlFragment(rawClipboardText);

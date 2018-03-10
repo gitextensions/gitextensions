@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-
-using GitCommands;
-
-using GitUI.UserControls;
-
-using JetBrains.Annotations;
 using System.Windows.Threading;
+using GitCommands;
+using GitUI.UserControls;
+using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
     public partial class FormStatus : GitExtensionsForm
     {
-        public delegate void ProcessStart(FormStatus form);
-        public delegate void ProcessAbort(FormStatus form);
-
-        private readonly bool _UseDialogSettings = true;
-        private DispatcherFrameModalControler _ModalControler;
+        private readonly bool _useDialogSettings = true;
+        private DispatcherFrameModalControler _modalControler;
 
         public FormStatus() : this(true)
         {
@@ -29,17 +23,17 @@ namespace GitUI
         {
         }
 
-        public FormStatus(ConsoleOutputControl aConsoleOutput, bool useDialogSettings)
+        public FormStatus(ConsoleOutputControl consoleOutput, bool useDialogSettings)
             : base(true)
         {
-            _UseDialogSettings = useDialogSettings;
-            ConsoleOutput = aConsoleOutput ?? ConsoleOutputControl.CreateInstance();
+            _useDialogSettings = useDialogSettings;
+            ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
             InitializeComponent();
             Translate();
-            if (_UseDialogSettings)
+            if (_useDialogSettings)
             {
                 KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
             }
@@ -49,7 +43,7 @@ namespace GitUI
             }
         }
 
-        public FormStatus(ProcessStart process, ProcessAbort abort)
+        public FormStatus(Action<FormStatus> process, Action<FormStatus> abort)
             : this(new EditboxBasedConsoleOutputControl(), true)
         {
             ProcessCallback = process;
@@ -57,8 +51,8 @@ namespace GitUI
         }
 
         protected readonly ConsoleOutputControl ConsoleOutput; // Naming: protected stuff must be CLS-compliant here
-        public ProcessStart ProcessCallback;
-        public ProcessAbort AbortCallback;
+        public Action<FormStatus> ProcessCallback;
+        public Action<FormStatus> AbortCallback;
         private bool _errorOccurred;
         private bool _showOnError;
 
@@ -173,14 +167,14 @@ namespace GitUI
 
                 _errorOccurred = !isSuccess;
 
-                if (isSuccess && !_showOnError && (_UseDialogSettings && AppSettings.CloseProcessDialog))
+                if (isSuccess && !_showOnError && (_useDialogSettings && AppSettings.CloseProcessDialog))
                 {
                     Close();
                 }
             }
             finally
             {
-                _ModalControler?.EndModal(isSuccess);
+                _modalControler?.EndModal(isSuccess);
             }
         }
 
@@ -214,8 +208,8 @@ namespace GitUI
             KeepDialogOpen.Visible = false;
             Abort.Visible = false;
             _showOnError = true;
-            _ModalControler = new DispatcherFrameModalControler(this, owner);
-            _ModalControler.BeginModal();
+            _modalControler = new DispatcherFrameModalControler(this, owner);
+            _modalControler.BeginModal();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -231,7 +225,7 @@ namespace GitUI
                 return;
             }
 
-            if (_ModalControler != null)
+            if (_modalControler != null)
             {
                 return;
             }
@@ -297,7 +291,8 @@ namespace GitUI
             AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
 
             // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
-            if ((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!_errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
+            // Not checking for UseDialogSettings because checkbox is only visible with True
+            if ((!KeepDialogOpen.Checked /* keep off */) && Ok.Enabled /* done */ && (!_errorOccurred /* and successful */))
             {
                 Close();
             }
@@ -318,36 +313,36 @@ namespace GitUI
         }
     }
 
-    class DispatcherFrameModalControler
+    internal class DispatcherFrameModalControler
     {
-        private DispatcherFrame _DispatcherFrame = new DispatcherFrame();
-        private FormStatus _FormStatus;
-        private IWin32Window _Owner;
+        private DispatcherFrame _dispatcherFrame = new DispatcherFrame();
+        private FormStatus _formStatus;
+        private IWin32Window _owner;
 
-        public DispatcherFrameModalControler(FormStatus aFormStatus, IWin32Window aOwner)
+        public DispatcherFrameModalControler(FormStatus formStatus, IWin32Window owner)
         {
-            _FormStatus = aFormStatus;
-            _Owner = aOwner;
+            _formStatus = formStatus;
+            _owner = owner;
         }
 
         public void BeginModal()
         {
-            _FormStatus.Start();
-            Dispatcher.PushFrame(_DispatcherFrame);
+            _formStatus.Start();
+            Dispatcher.PushFrame(_dispatcherFrame);
         }
 
         public void EndModal(bool success)
         {
             if (!success)
             {
-                _FormStatus.ShowDialog(_Owner);
+                _formStatus.ShowDialog(_owner);
             }
             else
             {
-                _FormStatus.AfterClosed();
+                _formStatus.AfterClosed();
             }
 
-            _DispatcherFrame.Continue = false;
+            _dispatcherFrame.Continue = false;
         }
     }
 }

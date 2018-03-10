@@ -133,7 +133,7 @@ namespace GitStatistics.PieChart
                 ++intersections;
             }
 
-            return (intersections % 2 != 0);
+            return intersections % 2 != 0;
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace GitStatistics.PieChart
             var y1 = point1.Y;
             if ((x2 < point.X && x1 >= point.X) || (x2 >= point.X && x1 < point.X))
             {
-                var y = (y2 - y1) / (x2 - x1) * (point.X - x1) + y1;
+                var y = ((y2 - y1) / (x2 - x1) * (point.X - x1)) + y1;
                 return y > point.Y;
             }
 

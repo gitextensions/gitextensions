@@ -52,7 +52,7 @@ namespace JenkinsIntegration
 
         private HttpClient _httpClient;
 
-        private readonly Dictionary<string, JenkinsCacheInfo> _LastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
+        private readonly Dictionary<string, JenkinsCacheInfo> _lastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
         private readonly IList<string> _projectsUrls = new List<string>();
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
@@ -99,7 +99,7 @@ namespace JenkinsIntegration
             if (!_projectsUrls.Contains(projectUrl))
             {
                 _projectsUrls.Add(projectUrl);
-                _LastBuildCache[projectUrl] = new JenkinsCacheInfo();
+                _lastBuildCache[projectUrl] = new JenkinsCacheInfo();
             }
         }
 
@@ -195,7 +195,7 @@ namespace JenkinsIntegration
                 IList<Task<ResponseInfo>> latestBuildInfos = new List<Task<ResponseInfo>>();
                 foreach (var projectUrl in _projectsUrls)
                 {
-                    if (_LastBuildCache[projectUrl].Timestamp <= 0)
+                    if (_lastBuildCache[projectUrl].Timestamp <= 0)
                     {
                         // This job must be updated, no need to to check the latest builds
                         allBuildInfos.Add(GetBuildInfoTask(projectUrl, true, cancellationToken));
@@ -214,7 +214,7 @@ namespace JenkinsIntegration
                 {
                     if (!info.IsFaulted)
                     {
-                        if (info.Result.Timestamp > _LastBuildCache[info.Result.Url].Timestamp)
+                        if (info.Result.Timestamp > _lastBuildCache[info.Result.Url].Timestamp)
                         {
                             // The cache has at least one newer job, query the status
                             allBuildInfos.Add(GetBuildInfoTask(info.Result.Url, true, cancellationToken));
@@ -232,7 +232,7 @@ namespace JenkinsIntegration
                 {
                     if (build.IsFaulted)
                     {
-                        Debug.Assert(build.Exception != null);
+                        Debug.Assert(build.Exception != null, "build.Exception != null");
 
                         observer.OnError(build.Exception);
                         continue;
@@ -244,7 +244,7 @@ namespace JenkinsIntegration
                         continue;
                     }
 
-                    _LastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
+                    _lastBuildCache[build.Result.Url].Timestamp = build.Result.Timestamp;
 
                     // Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
                     // (for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
@@ -261,7 +261,7 @@ namespace JenkinsIntegration
                         if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
                         {
                             // Need to make a full requery next time
-                            _LastBuildCache[build.Result.Url].Timestamp = 0;
+                            _lastBuildCache[build.Result.Url].Timestamp = 0;
                         }
                     }
                 }
@@ -283,7 +283,7 @@ namespace JenkinsIntegration
             }
         }
 
-        private readonly string _JenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+        private readonly string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
         private static BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
@@ -303,12 +303,12 @@ namespace JenkinsIntegration
 
                 if (element["totalCount"] != null)
                 {
-                    int nbTests = element["totalCount"].ToObject<int>();
-                    if (nbTests != 0)
+                    int testCount = element["totalCount"].ToObject<int>();
+                    if (testCount != 0)
                     {
-                        int nbFailedTests = element["failCount"].ToObject<int>();
-                        int nbSkippedTests = element["skipCount"].ToObject<int>();
-                        testResults = $"{nbTests} tests ({nbFailedTests} failed, {nbSkippedTests} skipped)";
+                        int failedTestCount = element["failCount"].ToObject<int>();
+                        int skippedTestCount = element["skipCount"].ToObject<int>();
+                        testResults = $"{testCount} tests ({failedTestCount} failed, {skippedTestCount} skipped)";
                     }
                 }
             }
@@ -484,7 +484,7 @@ namespace JenkinsIntegration
                     if (buildsInfo)
                     {
                         depth = 2;
-                        buildTree += ",builds[" + _JenkinsTreeBuildInfo + "]";
+                        buildTree += ",builds[" + _jenkinsTreeBuildInfo + "]";
                     }
 
                     buildTree += "]";
@@ -502,7 +502,7 @@ namespace JenkinsIntegration
                 // Freestyle project
                 if (buildsInfo)
                 {
-                    buildTree += ",builds[" + _JenkinsTreeBuildInfo + "]";
+                    buildTree += ",builds[" + _jenkinsTreeBuildInfo + "]";
                 }
             }
 

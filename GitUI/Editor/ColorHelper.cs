@@ -53,7 +53,7 @@ namespace GitUI.Editor
         public static int GetColorBrightnessIndex(Color c)
         {
             // From: http://www.had2know.com/technology/color-contrast-calculator-web-design.html
-            return (299 * c.R + 587 * c.G + 114 * c.B) / 1000;
+            return ((299 * c.R) + (587 * c.G) + (114 * c.B)) / 1000;
         }
 
         public static int GetColorBrightnessDifference(Color a, Color b)

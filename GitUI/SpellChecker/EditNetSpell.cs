@@ -78,7 +78,7 @@ namespace GitUI.SpellChecker
                     return string.Empty;
                 }
 
-                return _IsWatermarkShowing ? string.Empty : TextBox.Text;
+                return _isWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
             {
@@ -147,18 +147,18 @@ namespace GitUI.SpellChecker
             }
         }
 
-        private bool _IsWatermarkShowing;
-        private string _WatermarkText = "";
+        private bool _isWatermarkShowing;
+        private string _watermarkText = "";
         [Category("Appearance")]
         [DefaultValue("")]
         public string WatermarkText
         {
-            get { return _WatermarkText; }
+            get { return _watermarkText; }
 
             set
             {
                 HideWatermark();
-                _WatermarkText = value;
+                _watermarkText = value;
                 ShowWatermark();
             }
         }
@@ -300,7 +300,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
 
             // Do not check spelling of watermark text
-            if (!_IsWatermarkShowing)
+            if (!_isWatermarkShowing)
             {
                 try
                 {
@@ -400,7 +400,7 @@ namespace GitUI.SpellChecker
             TextBox.Select(start, length);
         }
 
-        private ToolStripMenuItem AddContextMenuItem(String text, EventHandler eventHandler)
+        private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
         {
             ToolStripMenuItem menuItem = new ToolStripMenuItem(text, null, eventHandler);
             SpellCheckContextMenu.Items.Add(menuItem);
@@ -446,11 +446,11 @@ namespace GitUI.SpellChecker
                     }
 
                     AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick)
-                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                        .Enabled = _spelling.CurrentWord.Length > 0;
                     AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick)
-                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                        .Enabled = _spelling.CurrentWord.Length > 0;
                     AddContextMenuItem(_removeWordText.Text, RemoveWordClick)
-                        .Enabled = (_spelling.CurrentWord.Length > 0);
+                        .Enabled = _spelling.CurrentWord.Length > 0;
 
                     if (_spelling.Suggestions.Count > 0)
                     {
@@ -464,13 +464,13 @@ namespace GitUI.SpellChecker
             }
 
             AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick)
-                .Enabled = (TextBox.SelectedText.Length > 0);
+                .Enabled = TextBox.SelectedText.Length > 0;
             AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick)
-                .Enabled = (TextBox.SelectedText.Length > 0);
+                .Enabled = TextBox.SelectedText.Length > 0;
             AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick)
                 .Enabled = Clipboard.ContainsText();
             AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick)
-                .Enabled = (TextBox.SelectedText.Length > 0);
+                .Enabled = TextBox.SelectedText.Length > 0;
             AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
             /*AddContextMenuSeparator();
@@ -621,7 +621,7 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
-            if (!_IsWatermarkShowing)
+            if (!_isWatermarkShowing)
             {
                 OnTextChanged(e);
 
@@ -739,7 +739,7 @@ namespace GitUI.SpellChecker
         {
             if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
-                _IsWatermarkShowing = true;
+                _isWatermarkShowing = true;
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
                 TextBox.Text = WatermarkText;
@@ -748,10 +748,10 @@ namespace GitUI.SpellChecker
 
         private void HideWatermark()
         {
-            if (_IsWatermarkShowing && TextBoxFont != null)
+            if (_isWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
-                _IsWatermarkShowing = false;
+                _isWatermarkShowing = false;
                 TextBox.Text = string.Empty;
                 TextBox.ForeColor = SystemColors.WindowText;
             }
@@ -831,7 +831,7 @@ namespace GitUI.SpellChecker
             var lineLength = LineLength(afterLine);
             if (lineLength > 0)
             {
-                var bullet = addBullet ? " - " : String.Empty;
+                var bullet = addBullet ? " - " : string.Empty;
                 var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
                 var newLine = Environment.NewLine;
                 var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;

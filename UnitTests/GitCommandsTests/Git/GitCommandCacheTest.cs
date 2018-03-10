@@ -66,7 +66,7 @@ namespace GitCommandsTests.Git
         public void TestTryGetFails()
         {
             Assert.IsFalse(GitCommandCache.TryGet(null, out var output, out var error));
-            Assert.IsFalse(GitCommandCache.TryGet(String.Empty, out output, out error));
+            Assert.IsFalse(GitCommandCache.TryGet(string.Empty, out output, out error));
             Assert.IsNull(output);
             Assert.IsNull(error);
         }

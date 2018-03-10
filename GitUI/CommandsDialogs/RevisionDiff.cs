@@ -4,13 +4,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using ResourceManager;
-using System.Threading.Tasks;
 
 namespace GitUI.CommandsDialogs
 {
@@ -232,8 +232,9 @@ namespace GitUI.CommandsDialogs
                 Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
                 itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
             }
-            else // acts as parent
+            else
             {
+                // acts as parent
                 // if file is new to the parent, it has to be removed
                 var addedItems = selectedItems.Where(item => item.IsNew);
                 Module.RemoveFiles(addedItems.Select(item => item.Name), false);
@@ -273,7 +274,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            await DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            await DiffText.ViewChanges(items, DiffFiles.SelectedItem, string.Empty);
         }
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -317,7 +318,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
             {
-                DiffText.ViewPatch(String.Empty);
+                DiffText.ViewPatch(string.Empty);
             }
         }
 
@@ -454,14 +455,14 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            Func<string, IList<GitItemStatus>> findDiffFilesMatches = (string name) =>
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
             };
 
             GitItemStatus selectedItem;
-            using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
+            using (var searchWindow = new SearchWindow<GitItemStatus>(findDiffFilesMatches)
             {
                 Owner = FindForm()
             })
@@ -539,12 +540,14 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
             bool aIsLocal = selectedRevisions.Count == 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
             bool bIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
             bool multipleRevisionsSelected = selectedRevisions.Count == 2;
 
             bool localExists = false;
             bool bIsNormal = false; // B is assumed to be new or deleted (check from DiffFiles)
+#pragma warning restore SA1305 // Field names should not use Hungarian notation
 
             // enable *<->Local items only when (any) local file exists
             foreach (var item in DiffFiles.SelectedItems)
@@ -874,7 +877,7 @@ namespace GitUI.CommandsDialogs
         {
             var submodules = DiffFiles.SelectedItems.Where(it => it.IsSubmodule).Select(it => it.Name).Distinct();
 
-            FormProcess.ShowDialog((FindForm() as FormBrowse), GitCommandHelpers.SubmoduleUpdateCmd(submodules));
+            FormProcess.ShowDialog(FindForm() as FormBrowse, GitCommandHelpers.SubmoduleUpdateCmd(submodules));
             RefreshArtificial();
         }
 

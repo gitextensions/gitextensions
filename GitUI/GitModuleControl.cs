@@ -104,7 +104,7 @@ namespace GitUI
         }
 
         /// <summary>Searches up the <see cref="UserControl"/>'s parent tree until it finds a <see cref="IGitUICommandsSource"/>.</summary>
-        void SearchForUICommandsSource()
+        private void SearchForUICommandsSource()
         {
             if (!UICommandsSourceParentSearch)
             {

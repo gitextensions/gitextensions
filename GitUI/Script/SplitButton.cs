@@ -33,21 +33,21 @@ namespace GitUI.Script
 {
     public class SplitButton : Button
     {
-        PushButtonState _state;
+        private PushButtonState _state;
 
-        const int SplitSectionWidth = 18;
+        private const int SplitSectionWidth = 18;
 
-        static int BorderSize = SystemInformation.Border3DSize.Width * 2;
-        bool _skipNextOpen;
-        Rectangle _dropDownRectangle;
-        bool _showSplit;
+        private static int BorderSize = SystemInformation.Border3DSize.Width * 2;
+        private bool _skipNextOpen;
+        private Rectangle _dropDownRectangle;
+        private bool _showSplit;
 
-        bool _isSplitMenuVisible;
+        private bool _isSplitMenuVisible;
 
-        ContextMenuStrip _splitMenuStrip;
-        ContextMenu _splitMenu;
+        private ContextMenuStrip _splitMenuStrip;
+        private ContextMenu _splitMenu;
 
-        TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
+        private TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
 
         public SplitButton()
         {
@@ -246,7 +246,7 @@ namespace GitUI.Script
             }
         }
 
-        bool _isMouseEntered;
+        private bool _isMouseEntered;
 
         protected override void OnMouseEnter(EventArgs e)
         {
@@ -318,7 +318,7 @@ namespace GitUI.Script
             {
                 ShowContextMenuStrip();
             }
-            else if (_splitMenuStrip == null && _splitMenu == null || !_isSplitMenuVisible)
+            else if ((_splitMenuStrip == null && _splitMenu == null) || !_isSplitMenuVisible)
             {
                 SetButtonDrawState();
 
@@ -366,7 +366,7 @@ namespace GitUI.Script
                               bounds.Width - _dropDownRectangle.Width - internalBorder,
                               bounds.Height - (internalBorder * 2) + 2);
 
-            bool drawSplitLine = (State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles);
+            bool drawSplitLine = State == PushButtonState.Hot || State == PushButtonState.Pressed || !Application.RenderWithVisualStyles;
 
             if (RightToLeft == RightToLeft.Yes)
             {
@@ -448,10 +448,10 @@ namespace GitUI.Script
 
         private void PaintArrow(Graphics g, Rectangle dropDownRect)
         {
-            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + dropDownRect.Width / 2), Convert.ToInt32(dropDownRect.Top + dropDownRect.Height / 2));
+            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
 
             // if the width is odd - favor pushing it over one pixel right.
-            middle.X += (dropDownRect.Width % 2);
+            middle.X += dropDownRect.Width % 2;
 
             Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
@@ -479,7 +479,7 @@ namespace GitUI.Script
 
                 if (!string.IsNullOrEmpty(Text) && TextRenderer.MeasureText(Text, Font).Width + SplitSectionWidth > preferredSize.Width)
                 {
-                    return preferredSize + new Size(SplitSectionWidth + BorderSize * 2, 0);
+                    return preferredSize + new Size(SplitSectionWidth + (BorderSize * 2), 0);
                 }
             }
 
@@ -518,8 +518,8 @@ namespace GitUI.Script
             }
 
             // Pad the result
-            ret_size.Height += (Padding.Vertical + 6);
-            ret_size.Width += (Padding.Horizontal + 6);
+            ret_size.Height += Padding.Vertical + 6;
+            ret_size.Width += Padding.Horizontal + 6;
 
             // pad the splitButton arrow region
             if (_showSplit)
@@ -825,7 +825,7 @@ namespace GitUI.Script
             }
             else if (align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.MiddleRight)
             {
-                y = outer.Y + (outer.Height - inner.Height) / 2;
+                y = outer.Y + ((outer.Height - inner.Height) / 2);
             }
             else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.BottomLeft)
             {
@@ -859,12 +859,12 @@ namespace GitUI.Script
             }
         }
 
-        void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
+        private void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             _isSplitMenuVisible = true;
         }
 
-        void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        private void SplitMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             _isSplitMenuVisible = false;
 
@@ -872,11 +872,11 @@ namespace GitUI.Script
 
             if (e.CloseReason == ToolStripDropDownCloseReason.AppClicked)
             {
-                _skipNextOpen = (_dropDownRectangle.Contains(PointToClient(Cursor.Position))) && MouseButtons == MouseButtons.Left;
+                _skipNextOpen = _dropDownRectangle.Contains(PointToClient(Cursor.Position)) && MouseButtons == MouseButtons.Left;
             }
         }
 
-        void SplitMenu_Popup(object sender, EventArgs e)
+        private void SplitMenu_Popup(object sender, EventArgs e)
         {
             _isSplitMenuVisible = true;
         }

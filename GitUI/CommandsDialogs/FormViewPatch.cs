@@ -13,10 +13,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _patchFileFilterTitle =
             new TranslationString("Select patch file");
 
-        public FormViewPatch(GitUICommands aCommands)
-            : base(aCommands)
+        public FormViewPatch(GitUICommands commands)
+            : base(commands)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
 
             PatchManager = new PatchManager();
         }

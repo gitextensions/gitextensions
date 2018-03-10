@@ -54,7 +54,7 @@ namespace GitCommands.Git
 
         public override bool Equals(object obj)
         {
-            if (null == obj)
+            if (obj == null)
             {
                 return false;
             }
@@ -75,7 +75,7 @@ namespace GitCommands.Git
 
         public override int GetHashCode()
         {
-            return (_stash.GetHashCode());
+            return _stash.GetHashCode();
         }
     }
 }

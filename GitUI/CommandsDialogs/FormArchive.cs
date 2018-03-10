@@ -47,14 +47,14 @@ namespace GitUI.CommandsDialogs
                 if (_diffSelectedRevision == null)
                 {
                     const string defaultString = "...";
-                    labelDateCaption.Text = String.Format("{0}:", Strings.GetCommitDateText());
+                    labelDateCaption.Text = string.Format("{0}:", Strings.GetCommitDateText());
                     labelAuthor.Text = defaultString;
                     gbDiffRevision.Text = defaultString;
                     labelMessage.Text = defaultString;
                 }
                 else
                 {
-                    labelDateCaption.Text = String.Format("{0}: {1}", Strings.GetCommitDateText(), _diffSelectedRevision.CommitDate);
+                    labelDateCaption.Text = string.Format("{0}: {1}", Strings.GetCommitDateText(), _diffSelectedRevision.CommitDate);
                     labelAuthor.Text = _diffSelectedRevision.Author;
                     gbDiffRevision.Text = GitRevision.ToShortSha(_diffSelectedRevision.Guid);
                     labelMessage.Text = _diffSelectedRevision.Subject;
@@ -96,8 +96,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormArchive(GitUICommands aCommands)
-            : base(true, aCommands)
+        public FormArchive(GitUICommands commands)
+            : base(true, commands)
         {
             InitializeComponent();
             Translate();
@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision != null ? DiffSelectedRevision.Guid : String.Empty))
+            using (var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision != null ? DiffSelectedRevision.Guid : string.Empty))
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {

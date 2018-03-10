@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
-using System.Windows.Forms;
 using RestSharp.Authenticators;
 
 namespace Bitbucket
 {
-    class BitbucketResponse<T>
+    internal class BitbucketResponse<T>
     {
         public bool Success { get; set; }
         public IEnumerable<string> Messages { get; set; }
         public T Result { get; set; }
     }
 
-    abstract class BitbucketRequestBase<T>
+    internal abstract class BitbucketRequestBase<T>
     {
         protected Settings Settings { get; private set; }
 

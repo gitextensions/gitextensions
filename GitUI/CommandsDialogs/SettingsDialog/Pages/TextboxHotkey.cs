@@ -10,18 +10,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("None");
 
         #region Key
-        private Keys _KeyData;
+        private Keys _keyData;
 
         /// <summary>Gets or sets the KeyData</summary>
         public Keys KeyData
         {
-            get { return _KeyData; }
+            get { return _keyData; }
             set
             {
-                _KeyData = value;
+                _keyData = value;
 
                 // TODO: do not change text color on already assigned keys, which occur only once
-                ForeColor = (HotkeySettingsManager.IsUniqueKey(_KeyData)) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
+                ForeColor = HotkeySettingsManager.IsUniqueKey(_keyData) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
                 Text = value.ToText() ?? _hotkeyNotSet.Text;
             }
         }

@@ -200,13 +200,13 @@ namespace GitCommands
         {
             return (arguments.Contains("@") && arguments.Contains("://")) ||
                    (arguments.Contains("@") && arguments.Contains(":")) ||
-                   (arguments.Contains("ssh://")) ||
-                   (arguments.Contains("http://")) ||
-                   (arguments.Contains("git://")) ||
-                   (arguments.Contains("push")) ||
-                   (arguments.Contains("remote")) ||
-                   (arguments.Contains("fetch")) ||
-                   (arguments.Contains("pull"));
+                   arguments.Contains("ssh://") ||
+                   arguments.Contains("http://") ||
+                   arguments.Contains("git://") ||
+                   arguments.Contains("push") ||
+                   arguments.Contains("remote") ||
+                   arguments.Contains("fetch") ||
+                   arguments.Contains("pull");
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace GitCommands
 
             fixedUrl += "\"";
 
-            if (!String.IsNullOrEmpty(uri.UserInfo))
+            if (!string.IsNullOrEmpty(uri.UserInfo))
             {
                 fixedUrl += uri.UserInfo + "@";
             }
@@ -471,7 +471,7 @@ namespace GitCommands
 
         public static string SubmoduleUpdateCmd(IEnumerable<string> submodules)
         {
-            string submodulesQuoted = String.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
+            string submodulesQuoted = string.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
             return SubmoduleUpdateCommand(submodulesQuoted);
         }
 
@@ -723,7 +723,7 @@ namespace GitCommands
                 sprogressOption = "--progress ";
             }
 
-            var options = String.Concat(sforce, sprogressOption);
+            var options = string.Concat(sforce, sprogressOption);
 
             if (all)
             {
@@ -1133,19 +1133,21 @@ namespace GitCommands
             if (lastNewLinePos > 0)
             {
                 int ind = trimmedStatus.LastIndexOf('\0');
-                if (ind < lastNewLinePos) // Warning at end
+                if (ind < lastNewLinePos)
                 {
+                    // Warning at end
                     lastNewLinePos = trimmedStatus.IndexOfAny(nl, ind >= 0 ? ind : 0);
                     trimmedStatus = trimmedStatus.Substring(0, lastNewLinePos).Trim(nl);
                 }
-                else // Warning at beginning
+                else
                 {
+                    // Warning at beginning
                     trimmedStatus = trimmedStatus.Substring(lastNewLinePos).Trim(nl);
                 }
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = module.GetSubmodulesLocalPaths();
+            IList<string> submodules = module.GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1179,8 +1181,9 @@ namespace GitCommands
                 if (x != '?' && x != '!' && x != ' ')
                 {
                     GitItemStatus gitItemStatusX = null;
-                    if (x == 'R' || x == 'C') // Find renamed files...
+                    if (x == 'R' || x == 'C')
                     {
+                        // Find renamed files...
                         string nextfile = n + 1 < files.Length ? files[n + 1] : "";
                         gitItemStatusX = GitItemStatusFromCopyRename(fromDiff, nextfile, fileName, x, status);
                         n++;
@@ -1191,7 +1194,7 @@ namespace GitCommands
                     }
 
                     gitItemStatusX.IsStaged = true;
-                    if (Submodules.Contains(gitItemStatusX.Name))
+                    if (submodules.Contains(gitItemStatusX.Name))
                     {
                         gitItemStatusX.IsSubmodule = true;
                     }
@@ -1205,8 +1208,9 @@ namespace GitCommands
                 }
 
                 GitItemStatus gitItemStatusY;
-                if (y == 'R' || y == 'C') // Find renamed files...
+                if (y == 'R' || y == 'C')
                 {
+                    // Find renamed files...
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
                     gitItemStatusY = GitItemStatusFromCopyRename(false, nextfile, fileName, y, status);
                     n++;
@@ -1217,7 +1221,7 @@ namespace GitCommands
                 }
 
                 gitItemStatusY.IsStaged = false;
-                if (Submodules.Contains(gitItemStatusY.Name))
+                if (submodules.Contains(gitItemStatusY.Name))
                 {
                     gitItemStatusY.IsSubmodule = true;
                 }
@@ -1316,7 +1320,7 @@ namespace GitCommands
             gitItemStatus.IsDeleted = x == 'D';
             gitItemStatus.IsSkipWorktree = x == 'S';
             gitItemStatus.IsRenamed = false;
-            gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
+            gitItemStatus.IsTracked = (x != '?' && x != '!' && x != ' ') || !gitItemStatus.IsNew;
             gitItemStatus.IsIgnored = x == '!';
             gitItemStatus.IsConflict = x == 'U';
             return gitItemStatus;
@@ -1435,7 +1439,7 @@ namespace GitCommands
             return FindRenamesOpt() + findCopies;
         }
 
-        static class NativeMethods
+        private static class NativeMethods
         {
             [DllImport("kernel32.dll")]
             public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,

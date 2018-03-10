@@ -53,7 +53,9 @@ namespace GitUI.CommandsDialogs
 
     public sealed class ContextMenuDiffToolInfo
     {
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
         public ContextMenuDiffToolInfo(bool aIsLocal, bool bIsLocal, bool bIsNormal, bool localExists, bool multipleRevisionsSelected)
+#pragma warning restore SA1305 // Field names should not use Hungarian notation
         {
             AIsLocal = aIsLocal;
             BIsLocal = bIsLocal;
@@ -85,7 +87,7 @@ namespace GitUI.CommandsDialogs
         {
             return !selectionInfo.IsCombinedDiff && selectionInfo.IsSingleGitItemSelected &&
                    !(selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
-                     (selectionInfo.SelectedDiff.IsNew || selectionInfo.SelectedDiff.IsDeleted) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid) && selectionInfo.SingleFileExists;
+                     ((selectionInfo.SelectedDiff.IsNew || selectionInfo.SelectedDiff.IsDeleted) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid)) && selectionInfo.SingleFileExists;
         }
 
         public bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo)
@@ -121,16 +123,16 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnyItemSelected &&
-                   selectionInfo.SelectedRevisions.Count >= 1 && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
-                   selectionInfo.SelectedRevisions.Count >= 2 && selectionInfo.SelectedRevisions[1].Guid == GitRevision.UnstagedGuid;
+            return (selectionInfo.IsAnyItemSelected &&
+                   selectionInfo.SelectedRevisions.Count >= 1 && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid) ||
+                   (selectionInfo.SelectedRevisions.Count >= 2 && selectionInfo.SelectedRevisions[1].Guid == GitRevision.UnstagedGuid);
         }
 
         public bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnyItemSelected &&
-                   selectionInfo.SelectedRevisions.Count >= 1 && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid ||
-                   selectionInfo.SelectedRevisions.Count >= 2 && selectionInfo.SelectedRevisions[1].Guid == GitRevision.IndexGuid;
+            return (selectionInfo.IsAnyItemSelected &&
+                   selectionInfo.SelectedRevisions.Count >= 1 && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid) ||
+                   (selectionInfo.SelectedRevisions.Count >= 2 && selectionInfo.SelectedRevisions[1].Guid == GitRevision.IndexGuid);
         }
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)

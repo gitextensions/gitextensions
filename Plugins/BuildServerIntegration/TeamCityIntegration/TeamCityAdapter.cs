@@ -82,8 +82,8 @@ namespace TeamCityIntegration
             request.CookieContainer = cookieContainer;
 
             if (buildServerCredentials != null
-                && !String.IsNullOrEmpty(buildServerCredentials.Username)
-                && !String.IsNullOrEmpty(buildServerCredentials.Password))
+                && !string.IsNullOrEmpty(buildServerCredentials.Username)
+                && !string.IsNullOrEmpty(buildServerCredentials.Password))
             {
                 request.Credentials = new NetworkCredential(buildServerCredentials.Username, buildServerCredentials.Password);
             }
@@ -135,7 +135,7 @@ namespace TeamCityIntegration
                             .ContinueWith(
                             task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
                                     select element.Attribute("id").Value,
-                           TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
+                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
                     }
                 }
             }
@@ -293,7 +293,7 @@ namespace TeamCityIntegration
 
             if (task.IsFaulted)
             {
-                Debug.Assert(task.Exception != null);
+                Debug.Assert(task.Exception != null, "task.Exception != null");
 
                 observer.OnError(task.Exception);
                 return true;
@@ -363,8 +363,8 @@ namespace TeamCityIntegration
         private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
-            bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
-                                task.Result.StatusCode == HttpStatusCode.Unauthorized || task.Result.StatusCode == HttpStatusCode.Forbidden;
+            bool unauthorized = (task.Status == TaskStatus.RanToCompletion &&
+                                task.Result.StatusCode == HttpStatusCode.Unauthorized) || task.Result.StatusCode == HttpStatusCode.Forbidden;
 
             if (!retry)
             {

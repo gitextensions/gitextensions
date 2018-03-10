@@ -220,23 +220,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             switch (IconStyle.SelectedIndex)
             {
                 case 0:
-                    IconPreview.Image = (new Icon(GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32)).ToBitmap();
-                    IconPreviewSmall.Image = (new Icon(GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16)).ToBitmap();
+                    IconPreview.Image = new Icon(GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32).ToBitmap();
+                    IconPreviewSmall.Image = new Icon(GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16).ToBitmap();
                     break;
                 case 1:
                     icon = GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor());
-                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
-                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
+                    IconPreview.Image = new Icon(icon, 32, 32).ToBitmap();
+                    IconPreviewSmall.Image = new Icon(icon, 16, 16).ToBitmap();
                     break;
                 case 2:
                     icon = GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor());
-                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
-                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
+                    IconPreview.Image = new Icon(icon, 32, 32).ToBitmap();
+                    IconPreviewSmall.Image = new Icon(icon, 16, 16).ToBitmap();
                     break;
                 case 3:
                     icon = GitExtensionsForm.GetApplicationIcon("Cow", GetSelectedApplicationIconColor());
-                    IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
-                    IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
+                    IconPreview.Image = new Icon(icon, 32, 32).ToBitmap();
+                    IconPreviewSmall.Image = new Icon(icon, 16, 16).ToBitmap();
                     break;
             }
         }

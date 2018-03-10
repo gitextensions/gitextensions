@@ -14,10 +14,10 @@ namespace GitCommands.Repository
         public string ShortName { get; set; }
         public string DirName { get; set; }
 
-        public RecentRepoInfo(Repository aRepo, bool aMostRecent)
+        public RecentRepoInfo(Repository repo, bool mostRecent)
         {
-            Repo = aRepo;
-            MostRecent = aMostRecent;
+            Repo = repo;
+            MostRecent = mostRecent;
             try
             {
                 DirInfo = new DirectoryInfo(Repo.Path);
@@ -90,7 +90,7 @@ namespace GitCommands.Repository
             // rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
             {
-                bool mostRecent = mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None ||
+                bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
                 RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
                 if (ri.MostRecent)
@@ -332,9 +332,9 @@ namespace GitCommands.Repository
                     string lastDir = workingDir;
                     if (fistDir != null && path.Length - lastDir.Length - fistDir.Length - skipCount > 0)
                     {
-                        int middle = (path.Length - lastDir.Length) / 2 + (path.Length - lastDir.Length) % 2;
-                        int leftEnd = middle - skipCount / 2;
-                        int rightStart = middle + skipCount / 2 + skipCount % 2;
+                        int middle = ((path.Length - lastDir.Length) / 2) + ((path.Length - lastDir.Length) % 2);
+                        int leftEnd = middle - (skipCount / 2);
+                        int rightStart = middle + (skipCount / 2) + (skipCount % 2);
 
                         if (leftEnd == rightStart)
                         {

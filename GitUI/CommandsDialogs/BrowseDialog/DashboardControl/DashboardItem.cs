@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
-using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     return string.Empty;
                 },
-                UpdateBranchName);
+                    UpdateBranchName);
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
@@ -115,12 +115,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _branchNameLoader?.Cancel();
         }
 
-        void Title_Click(object sender, EventArgs e)
+        private void Title_Click(object sender, EventArgs e)
         {
             OnClick(e);
         }
 
-        void Title_MouseDown(object sender, MouseEventArgs e)
+        private void Title_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -152,7 +152,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             BackColor = SystemColors.Control;
         }
 
-        void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        private void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
         {
             if (!Visible)
             {

@@ -6,8 +6,8 @@ namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        private FormCommitDiff(GitUICommands aCommands)
-            : base(aCommands)
+        private FormCommitDiff(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -21,8 +21,8 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        public FormCommitDiff(GitUICommands aCommands, string revisionGuid)
-            : this(aCommands)
+        public FormCommitDiff(GitUICommands commands, string revisionGuid)
+            : this(commands)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,
@@ -35,7 +35,7 @@ namespace GitUI.HelperDialogs
 
                 DiffFiles.SetDiffs(new[] { revision });
 
-                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir; ;
+                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir;
             }
         }
 
@@ -49,12 +49,12 @@ namespace GitUI.HelperDialogs
             if (DiffFiles.SelectedItem != null && DiffFiles.Revision != null)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, String.Empty);
+                DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
                 Cursor.Current = Cursors.Default;
             }
         }
 
-        void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ViewSelectedDiff();
         }

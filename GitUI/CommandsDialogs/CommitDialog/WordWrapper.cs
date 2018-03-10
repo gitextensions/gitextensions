@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 newLines.AddRange(InternalWrapSingleLine(line, lineLimit));
             }
 
-            return String.Join(Environment.NewLine, newLines);
+            return string.Join(Environment.NewLine, newLines);
         }
 
         private static IEnumerable<string> InternalWrapSingleLine(string line, int lineLimit)
@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
         public static string WrapSingleLine(string text, int lineLimit)
         {
             var lines = InternalWrapSingleLine(text, lineLimit);
-            return String.Join(Environment.NewLine, lines);
+            return string.Join(Environment.NewLine, lines);
         }
 
         private class WrapperState
@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             public string GetLineAndReset()
             {
-                var line = String.Join(" ", _wordList);
+                var line = string.Join(" ", _wordList);
                 Reset();
                 return line;
             }

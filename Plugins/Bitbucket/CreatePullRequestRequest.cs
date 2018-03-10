@@ -4,7 +4,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class PullRequestInfo
+    internal class PullRequestInfo
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -15,7 +15,7 @@ namespace Bitbucket
         public IEnumerable<BitbucketUser> Reviewers { get; set; }
     }
 
-    class CreatePullRequestRequest : BitbucketRequestBase<JObject>
+    internal class CreatePullRequestRequest : BitbucketRequestBase<JObject>
     {
         private readonly PullRequestInfo _info;
 

@@ -11,8 +11,8 @@ namespace GitCommands.Settings
     {
         public GitModule Module { get; private set; }
 
-        public RepoDistSettings(RepoDistSettings aLowerPriority, GitExtSettingsCache aSettingsCache)
-            : base(aLowerPriority, aSettingsCache)
+        public RepoDistSettings(RepoDistSettings lowerPriority, GitExtSettingsCache settingsCache)
+            : base(lowerPriority, settingsCache)
         {
             BuildServer = new BuildServer(this);
             Detailed = new DetailedGroup(this);
@@ -20,32 +20,32 @@ namespace GitCommands.Settings
 
         #region CreateXXX
 
-        public static RepoDistSettings CreateEffective(GitModule aModule)
+        public static RepoDistSettings CreateEffective(GitModule module)
         {
-            return CreateLocal(aModule, CreateDistributed(aModule, CreateGlobal()));
+            return CreateLocal(module, CreateDistributed(module, CreateGlobal()));
         }
 
-        private static RepoDistSettings CreateLocal(GitModule aModule, RepoDistSettings aLowerPriority, bool allowCache = true)
+        private static RepoDistSettings CreateLocal(GitModule module, RepoDistSettings lowerPriority, bool allowCache = true)
         {
-            ////if (aModule.IsBareRepository()
-            return new RepoDistSettings(aLowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(aModule.GitCommonDirectory, AppSettings.SettingsFileName), allowCache));
+            ////if (module.IsBareRepository()
+            return new RepoDistSettings(lowerPriority,
+                GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), allowCache));
         }
 
-        public static RepoDistSettings CreateLocal(GitModule aModule, bool allowCache = true)
+        public static RepoDistSettings CreateLocal(GitModule module, bool allowCache = true)
         {
-            return CreateLocal(aModule, null, allowCache);
+            return CreateLocal(module, null, allowCache);
         }
 
-        private static RepoDistSettings CreateDistributed(GitModule aModule, RepoDistSettings aLowerPriority, bool allowCache = true)
+        private static RepoDistSettings CreateDistributed(GitModule module, RepoDistSettings lowerPriority, bool allowCache = true)
         {
-            return new RepoDistSettings(aLowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(aModule.WorkingDir, AppSettings.SettingsFileName), allowCache));
+            return new RepoDistSettings(lowerPriority,
+                GitExtSettingsCache.Create(Path.Combine(module.WorkingDir, AppSettings.SettingsFileName), allowCache));
         }
 
-        public static RepoDistSettings CreateDistributed(GitModule aModule, bool allowCache = true)
+        public static RepoDistSettings CreateDistributed(GitModule module, bool allowCache = true)
         {
-            return CreateDistributed(aModule, null, allowCache);
+            return CreateDistributed(module, null, allowCache);
         }
 
         public static RepoDistSettings CreateGlobal(bool allowCache = true)
@@ -60,9 +60,10 @@ namespace GitCommands.Settings
             bool isEffectiveLevel = LowerPriority != null && LowerPriority.LowerPriority != null;
             bool isDetachedOrGlobal = LowerPriority == null;
 
-            if (isDetachedOrGlobal || // there is no lower level
-                SettingsCache.HasValue(name)) // or the setting is assigned on this level
+            if (isDetachedOrGlobal || SettingsCache.HasValue(name))
             {
+                // there is no lower level
+                // or the setting is assigned on this level
                 SettingsCache.SetValue(name, value, encode);
             }
             else if (isEffectiveLevel)
@@ -87,8 +88,9 @@ namespace GitCommands.Settings
                     LowerPriority.LowerPriority.SetValue(name, value, encode);
                 }
             }
-            else// the settings is not assigned on this level, recurse to the lower level
+            else
             {
+                // the settings is not assigned on this level, recurse to the lower level
                 LowerPriority.SetValue(name, value, encode);
             }
         }

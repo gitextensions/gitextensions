@@ -1,12 +1,12 @@
-﻿using GitCommands;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Bitbucket
 {
-    class Settings
+    internal class Settings
     {
         private const string BitbucketHttpRegex =
             @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([\w\-]+?))\/(?<repo>([\w\-]+)).git";
@@ -23,7 +23,7 @@ namespace Bitbucket
                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
             };
 
-            var module = ((GitModule)gitModule);
+            var module = (GitModule)gitModule;
 
             var remotes = module.GetRemotes()
                 .Where(s => !string.IsNullOrWhiteSpace(s))

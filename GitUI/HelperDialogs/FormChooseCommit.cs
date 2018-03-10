@@ -14,23 +14,23 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        private FormChooseCommit(GitUICommands aCommands)
-            : base(aCommands)
+        private FormChooseCommit(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
         }
 
-        public FormChooseCommit(GitUICommands aCommands, string preselectCommit, bool showArtificial = false)
-            : this(aCommands)
+        public FormChooseCommit(GitUICommands commands, string preselectCommit, bool showArtificial = false)
+            : this(commands)
         {
             revisionGrid.MultiSelect = false;
             revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
 
-            if (!String.IsNullOrEmpty(preselectCommit))
+            if (!string.IsNullOrEmpty(preselectCommit))
             {
                 string guid = Module.RevParse(preselectCommit);
-                if (!String.IsNullOrEmpty(guid))
+                if (!string.IsNullOrEmpty(guid))
                 {
                     revisionGrid.SetInitialRevision(guid);
                 }
@@ -49,7 +49,7 @@ namespace GitUI.HelperDialogs
         private void btnOK_Click(object sender, EventArgs e)
         {
             var revisions = revisionGrid.GetSelectedRevisions();
-            if (1 == revisions.Count)
+            if (revisions.Count == 1)
             {
                 SelectedRevision = revisions[0];
                 DialogResult = DialogResult.OK;
@@ -81,7 +81,7 @@ namespace GitUI.HelperDialogs
         private void revisionGrid_SelectionChanged(object sender, EventArgs e)
         {
             var revisions = revisionGrid.GetSelectedRevisions();
-            if (1 != revisions.Count)
+            if (revisions.Count != 1)
             {
                 return;
             }

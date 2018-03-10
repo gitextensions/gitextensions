@@ -12,10 +12,10 @@ namespace GitUI.CommandsDialogs
         // closing the dialog via the X button
         public enum ActionEnum
         {
-            Cancel, Reset, ResetAndDelete
+            Cancel,
+            Reset,
+            ResetAndDelete
         }
-
-;
 
         public ActionEnum SelectedAction { get; private set; }
 
@@ -65,7 +65,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            SelectedAction = (cbDeleteNewFilesAndDirectories.Checked) ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
+            SelectedAction = cbDeleteNewFilesAndDirectories.Checked ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
             Close();
         }
     }

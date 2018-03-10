@@ -6,38 +6,38 @@ namespace GitCommands.Settings
 {
     public class GitExtSettingsCache : FileSettingsCache
     {
-        private readonly XmlSerializableDictionary<string, string> _EncodedNameMap = new XmlSerializableDictionary<string, string>();
+        private readonly XmlSerializableDictionary<string, string> _encodedNameMap = new XmlSerializableDictionary<string, string>();
 
-        public GitExtSettingsCache(string aSettingsFilePath, bool autoSave = true)
-            : base(aSettingsFilePath, autoSave)
+        public GitExtSettingsCache(string settingsFilePath, bool autoSave = true)
+            : base(settingsFilePath, autoSave)
         {
         }
 
-        public static GitExtSettingsCache FromCache(string aSettingsFilePath)
+        public static GitExtSettingsCache FromCache(string settingsFilePath)
         {
             Lazy<GitExtSettingsCache> createSettingsCache = new Lazy<GitExtSettingsCache>(() =>
                 {
-                    return new GitExtSettingsCache(aSettingsFilePath, true);
+                    return new GitExtSettingsCache(settingsFilePath, true);
                 });
 
-            return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
+            return FileSettingsCache.FromCache(settingsFilePath, createSettingsCache);
         }
 
-        public static GitExtSettingsCache Create(string aSettingsFilePath, bool allowCache = true)
+        public static GitExtSettingsCache Create(string settingsFilePath, bool allowCache = true)
         {
             if (allowCache)
             {
-                return FromCache(aSettingsFilePath);
+                return FromCache(settingsFilePath);
             }
             else
             {
-                return new GitExtSettingsCache(aSettingsFilePath, false);
+                return new GitExtSettingsCache(settingsFilePath, false);
             }
         }
 
         protected override void ClearImpl()
         {
-            _EncodedNameMap.Clear();
+            _encodedNameMap.Clear();
         }
 
         protected override void WriteSettings(string fileName)
@@ -48,22 +48,22 @@ namespace GitCommands.Settings
                 xtw.WriteStartDocument();
                 xtw.WriteStartElement("dictionary");
 
-                _EncodedNameMap.WriteXml(xtw);
+                _encodedNameMap.WriteXml(xtw);
                 xtw.WriteEndElement();
             }
         }
 
         protected override void ReadSettings(string fileName)
         {
-            XmlReaderSettings rSettings = new XmlReaderSettings
+            XmlReaderSettings readerSettings = new XmlReaderSettings
             {
                 IgnoreWhitespace = true,
                 CheckCharacters = false
             };
 
-            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))
+            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, readerSettings))
             {
-                _EncodedNameMap.ReadXml(xr);
+                _encodedNameMap.ReadXml(xr);
             }
         }
 
@@ -71,17 +71,17 @@ namespace GitCommands.Settings
         {
             if (value == null)
             {
-                _EncodedNameMap.Remove(key);
+                _encodedNameMap.Remove(key);
             }
             else
             {
-                _EncodedNameMap[key] = value;
+                _encodedNameMap[key] = value;
             }
         }
 
         protected override string GetValueImpl(string key)
         {
-            _EncodedNameMap.TryGetValue(key, out var value);
+            _encodedNameMap.TryGetValue(key, out var value);
             return value;
         }
     }

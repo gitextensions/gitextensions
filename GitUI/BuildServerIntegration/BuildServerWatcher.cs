@@ -92,7 +92,7 @@ namespace GitUI.BuildServerIntegration
 
                 _buildStatusCancellationToken = cancellationToken;
             },
-            TaskScheduler.FromCurrentSynchronizationContext());
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void CancelBuildStatusFetchOperation()

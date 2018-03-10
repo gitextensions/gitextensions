@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using ResourceManager;
-using System.Threading.Tasks;
 
 namespace GitUI
 {
@@ -515,7 +515,7 @@ namespace GitUI
         /// <returns>Region of document that matches the search string</returns>
         public TextRange FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
         {
-            Debug.Assert(!string.IsNullOrEmpty(LookFor));
+            Debug.Assert(!string.IsNullOrEmpty(LookFor), "!string.IsNullOrEmpty(LookFor)");
             loopedAround = false;
 
             int startAt = BeginOffset, endAt = EndOffset;
@@ -553,7 +553,7 @@ namespace GitUI
                 return true;
             }
 
-            if (!matchCase && a == Char.ToUpperInvariant(b))
+            if (!matchCase && a == char.ToUpperInvariant(b))
             {
                 return true;
             }
@@ -563,7 +563,7 @@ namespace GitUI
 
         private TextRange FindNextIn(int offset1, int offset2, bool searchBackward)
         {
-            Debug.Assert(offset2 >= offset1);
+            Debug.Assert(offset2 >= offset1, "offset2 >= offset1");
             offset2 -= LookFor.Length;
 
             // Search
@@ -574,7 +574,7 @@ namespace GitUI
                 {
                     if (MatchFirstCh(lookForCh, _document.GetCharAt(offset), MatchCase)
                         &&
-                        ((IsWholeWordMatch(offset)) ||
+                        (IsWholeWordMatch(offset) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                     {
                         return new TextRange(_document, offset, LookFor.Length);
@@ -587,7 +587,7 @@ namespace GitUI
                 {
                     if (MatchFirstCh(lookForCh, _document.GetCharAt(offset), MatchCase)
                         &&
-                        ((IsWholeWordMatch(offset)) ||
+                        (IsWholeWordMatch(offset) ||
                          (!MatchWholeWordOnly && IsPartWordMatch(offset))))
                     {
                         return new TextRange(_document, offset, LookFor.Length);
@@ -617,7 +617,7 @@ namespace GitUI
         private bool IsAlphaNumeric(int offset)
         {
             char c = _document.GetCharAt(offset);
-            return Char.IsLetterOrDigit(c) || c == '_';
+            return char.IsLetterOrDigit(c) || c == '_';
         }
 
         private bool IsPartWordMatch(int offset)
@@ -685,7 +685,7 @@ namespace GitUI
     {
         public static int InRange(int x, int lo, int hi)
         {
-            Debug.Assert(lo <= hi);
+            Debug.Assert(lo <= hi, "lo <= hi");
             return x < lo ? lo : (x > hi ? hi : x);
         }
 

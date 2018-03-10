@@ -61,8 +61,8 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public FormGitIgnore(GitUICommands aCommands, bool localExclude)
-            : base(aCommands)
+        public FormGitIgnore(GitUICommands commands, bool localExclude)
+            : base(commands)
         {
             _localExclude = localExclude;
             InitializeComponent();
@@ -193,7 +193,7 @@ namespace GitUI.CommandsDialogs
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-            var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
+            var defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
 
             var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
             var patternsToAdd = defaultIgnorePatterns

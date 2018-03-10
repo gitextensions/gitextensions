@@ -11,16 +11,16 @@ using ResourceManager;
 
 namespace Github3
 {
-    class GithubAPIInfo
+    internal class GithubAPIInfo
     {
         internal static string client_id = "ebc0e8947c206610d737";
         internal static string client_secret = "c993907df3f45145bf638842692b69c56d1ace4d";
     }
 
-    class GithubLoginInfo
+    internal class GithubLoginInfo
     {
         private static string _username;
-        public static string username
+        public static string Username
         {
             get
             {
@@ -142,22 +142,22 @@ namespace Github3
 
         public bool ConfigurationOk => true;
 
-        public bool GitModuleIsRelevantToMe(IGitModule aModule)
+        public bool GitModuleIsRelevantToMe(IGitModule module)
         {
-            return GetHostedRemotesForModule(aModule).Count > 0;
+            return GetHostedRemotesForModule(module).Count > 0;
         }
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule)
+        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
         {
             var repoInfos = new List<IHostedRemote>();
 
-            string[] remotes = aModule.GetRemotes(false);
+            string[] remotes = module.GetRemotes(false);
             foreach (string remote in remotes)
             {
-                var url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
                 {
                     continue;

@@ -67,7 +67,7 @@ namespace TranslationApp
                 return true;
             }
 
-            bool equal = (value == NeutralValue);
+            bool equal = value == NeutralValue;
             if (!equal && value.Contains("\n"))
             {
                 return value.Replace(Environment.NewLine, "\n") == NeutralValue.Replace(Environment.NewLine, "\n");

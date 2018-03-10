@@ -33,8 +33,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        private FormRebase(GitUICommands aCommands)
-            : base(aCommands)
+        private FormRebase(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -46,15 +46,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormRebase(GitUICommands aCommands, string defaultBranch)
-            : this(aCommands)
+        public FormRebase(GitUICommands commands, string defaultBranch)
+            : this(commands)
         {
             _defaultBranch = defaultBranch;
         }
 
-        public FormRebase(GitUICommands aCommands, string from, string to, string defaultBranch, bool interactive = false,
+        public FormRebase(GitUICommands commands, string from, string to, string defaultBranch, bool interactive = false,
             bool startRebaseImmediately = true)
-            : this(aCommands, defaultBranch)
+            : this(commands, defaultBranch)
         {
             txtFrom.Text = from;
             _defaultToBranch = to;
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs
 
             // Honor the rebase.autosquash configuration.
             var autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
-            chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
+            chkAutosquash.Checked = autosquashSetting.Trim().ToLower() == "true";
 
             chkStash.Checked = AppSettings.RebaseAutoStash;
             if (_startRebaseImmediately)
@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
-                chkStash.Enabled = Module.IsDirtyDir(); ;
+                chkStash.Enabled = Module.IsDirtyDir();
             }
 
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
@@ -231,7 +231,7 @@ namespace GitUI.CommandsDialogs
             AppSettings.RebaseAutoStash = chkStash.Checked;
 
             string rebaseCmd;
-            if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
+            if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,

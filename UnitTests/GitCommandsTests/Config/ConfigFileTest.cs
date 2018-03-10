@@ -20,17 +20,17 @@ namespace GitCommandsTests.Config
     [TestClass]
     public class ConfigFileTest
     {
-        private GitModule _Module;
+        private GitModule _module;
         private GitModule Module
         {
             get
             {
-                if (_Module == null)
+                if (_module == null)
                 {
-                    _Module = new GitModule(GetTempFolder());
+                    _module = new GitModule(GetTempFolder());
                 }
 
-                return _Module;
+                return _module;
             }
         }
 
@@ -116,7 +116,7 @@ namespace GitCommandsTests.Config
 
             byte[] expectedFileContent =
                 GitModule.SystemEncoding.GetBytes(
-                    String.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
+                    string.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
 
             Assert.IsTrue(File.Exists(GetConfigFileName()));
             byte[] fileContent = File.ReadAllBytes(GetConfigFileName());

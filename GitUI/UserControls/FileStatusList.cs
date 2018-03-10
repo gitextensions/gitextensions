@@ -25,9 +25,9 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private readonly TranslationString _UnsupportedMultiselectAction =
+        private readonly TranslationString _unsupportedMultiselectAction =
             new TranslationString("Operation not supported");
-        private readonly TranslationString _DiffWithParent =
+        private readonly TranslationString _diffWithParent =
             new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff =
             new TranslationString("Combined Diff");
@@ -340,7 +340,7 @@ namespace GitUI
             return text;
         }
 
-        void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
+        private void FileStatusListView_MouseDown(object sender, MouseEventArgs e)
         {
             // SELECT
             if (e.Button == MouseButtons.Right)
@@ -409,7 +409,7 @@ namespace GitUI
 
         private Rectangle _dragBoxFromMouseDown;
 
-        void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
+        private void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
         {
             ListView listView = sender as ListView;
 
@@ -465,10 +465,10 @@ namespace GitUI
                         text = gitItemStatus.Name;
                     }
 
-                    float fTextWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
+                    float textWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
 
                     // Use width-itemheight because the icon drawn in front of the text is the itemheight
-                    if (fTextWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
+                    if (textWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
                     {
                         if (!hoveredItem.ToolTipText.Equals(gitItemStatus.ToString()))
                         {
@@ -500,8 +500,8 @@ namespace GitUI
         {
             get
             {
-                return (FileStatusListView.Items.Cast<ListViewItem>().
-                    Select(selectedItem => selectedItem.Tag as GitItemStatus));
+                return FileStatusListView.Items.Cast<ListViewItem>().
+                    Select(selectedItem => selectedItem.Tag as GitItemStatus);
             }
         }
 
@@ -679,7 +679,7 @@ namespace GitUI
         public new event EventHandler DoubleClick;
         public new event KeyEventHandler KeyDown;
 
-        void FileStatusListView_DoubleClick(object sender, EventArgs e)
+        private void FileStatusListView_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
             {
@@ -712,7 +712,7 @@ namespace GitUI
                 });
         }
 
-        void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
+        private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             var cm = sender as ContextMenuStrip;
             if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
@@ -732,7 +732,7 @@ namespace GitUI
             }
         }
 
-        void FileStatusListView_SelectedIndexChanged()
+        private void FileStatusListView_SelectedIndexChanged()
         {
             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -872,9 +872,9 @@ namespace GitUI
             var previouslySelectedItems = new List<GitItemStatus>();
             if (updateCausedByFilter)
             {
-                foreach (ListViewItem Item in FileStatusListView.SelectedItems)
+                foreach (ListViewItem item in FileStatusListView.SelectedItems)
                 {
-                    previouslySelectedItems.Add(Item.Tag as GitItemStatus);
+                    previouslySelectedItems.Add(item.Tag as GitItemStatus);
                 }
 
                 DataSourceChanged?.Invoke(this, new EventArgs());
@@ -901,7 +901,7 @@ namespace GitUI
                     }
                     else
                     {
-                        groupName = _DiffWithParent.Text + " " + GetDescriptionForRevision(pair.Key.Guid);
+                        groupName = _diffWithParent.Text + " " + GetDescriptionForRevision(pair.Key.Guid);
                     }
 
                     group = new ListViewGroup(groupName);
@@ -1143,7 +1143,7 @@ namespace GitUI
             if (revisions.Count > 2)
             {
                 // Not a limitations, to keep compatibility with existing RevisionDiff
-                NoFiles.Text = _UnsupportedMultiselectAction.Text;
+                NoFiles.Text = _unsupportedMultiselectAction.Text;
             }
             else if (Revision != null)
             {
@@ -1215,7 +1215,7 @@ namespace GitUI
         #region Filtering
 
         private long _lastUserInputTime;
-        private string _ToolTipText = "";
+        private string _toolTipText = "";
 
         private static Regex RegexForFiltering(string value)
         {
@@ -1248,7 +1248,7 @@ namespace GitUI
                 {
                     if (NoUserInput(timerLastChanged))
                     {
-                        _ToolTipText = "";
+                        _toolTipText = "";
                         var fileCount = 0;
                         try
                         {
@@ -1256,7 +1256,7 @@ namespace GitUI
                         }
                         catch (ArgumentException ae)
                         {
-                            _ToolTipText = ae.Message;
+                            _toolTipText = ae.Message;
                         }
 
                         if (fileCount > 0)
@@ -1298,7 +1298,7 @@ namespace GitUI
 
         private void FilterComboBox_MouseEnter(object sender, EventArgs e)
         {
-            FilterToolTip.SetToolTip(FilterComboBox, _ToolTipText);
+            FilterToolTip.SetToolTip(FilterComboBox, _toolTipText);
         }
 
         private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)

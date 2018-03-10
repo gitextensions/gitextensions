@@ -17,7 +17,7 @@ namespace GravatarTests
     [TestFixture]
     public class DirectoryImageCacheTests
     {
-        const string FileName = "aa.jpg";
+        private const string FileName = "aa.jpg";
         private string _folderPath = @"C:\Users\user\AppData\Roaming\GitExtensions\GitExtensions\Images";
         private IFileSystem _fileSystem;
         private DirectoryBase _directory;

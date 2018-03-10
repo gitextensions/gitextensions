@@ -6,16 +6,16 @@ namespace GitUIPluginInterfaces
 {
     public class ChoiceSetting : ISetting
     {
-        public ChoiceSetting(string aName, IList<string> values, string aDefaultValue = null)
-            : this(aName, aName, values, aDefaultValue)
+        public ChoiceSetting(string name, IList<string> values, string defaultValue = null)
+            : this(name, name, values, defaultValue)
         {
         }
 
-        public ChoiceSetting(string aName, string aCaption, IList<string> values, string aDefaultValue = null)
+        public ChoiceSetting(string name, string caption, IList<string> values, string defaultValue = null)
         {
-            Name = aName;
-            Caption = aCaption;
-            DefaultValue = aDefaultValue;
+            Name = name;
+            Caption = caption;
+            DefaultValue = defaultValue;
             Values = values;
             if (DefaultValue == null && values.Any())
             {
@@ -36,8 +36,8 @@ namespace GitUIPluginInterfaces
 
         private class ComboBoxBinding : SettingControlBinding<ChoiceSetting, ComboBox>
         {
-            public ComboBoxBinding(ChoiceSetting aSetting, ComboBox aCustomControl)
-                : base(aSetting, aCustomControl)
+            public ComboBoxBinding(ChoiceSetting setting, ComboBox customControl)
+                : base(setting, customControl)
             {
             }
 

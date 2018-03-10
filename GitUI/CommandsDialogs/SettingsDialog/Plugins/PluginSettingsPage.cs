@@ -26,17 +26,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             }
         }
 
-        private void Init(IGitPlugin _gitPlugin)
+        private void Init(IGitPlugin gitPlugin)
         {
-            this._gitPlugin = _gitPlugin;
-            _settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Name);
+            _gitPlugin = gitPlugin;
+            _settingsCointainer = new GitPluginSettingsContainer(gitPlugin.Name);
             CreateSettingsControls();
             Translate();
         }
 
-        public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost aPageHost, IGitPlugin gitPlugin)
+        public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin)
         {
-            var result = SettingsPageBase.Create<PluginSettingsPage>(aPageHost);
+            var result = SettingsPageBase.Create<PluginSettingsPage>(pageHost);
             result.Init(gitPlugin);
             return result;
         }
@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public override SettingsPageReference PageReference => new SettingsPageReferenceByType(_gitPlugin.GetType());
 
-        protected override SettingsLayout CreateSettingsLayout()
+        protected override ISettingsLayout CreateSettingsLayout()
         {
             labelNoSettings.Visible = !GetSettings().Any();
 

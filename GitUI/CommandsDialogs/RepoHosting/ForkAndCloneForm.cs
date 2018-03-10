@@ -34,12 +34,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strCloneFolderCanNotBeEmpty = new TranslationString("Clone folder can not be empty");
         #endregion
 
-        readonly IRepositoryHostPlugin _gitHoster;
-        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private readonly IRepositoryHostPlugin _gitHoster;
+        private EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
@@ -81,7 +81,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             AsyncLoader.DoAsync(
                 () => _gitHoster.GetMyRepos(),
-
                 repos =>
                 {
                     _myReposLV.Items.Clear();
@@ -94,7 +93,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         _myReposLV.Items.Add(lvi);
                     }
                 },
-
                 ex =>
                 {
                     _myReposLV.Items.Clear();
@@ -326,7 +324,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
             }
 
-            _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+            _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Close();
         }

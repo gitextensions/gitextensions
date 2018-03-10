@@ -8,12 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.CommandsDialogs;
-using GitUI.Hotkey;
-using PatchApply;
 using GitCommands.Settings;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
+using GitUI.Hotkey;
+using PatchApply;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -111,7 +111,7 @@ namespace GitUI.Editor
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+        private void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
             UICommandsSource.GitUICommandsChanged += UICommandsSourceChanged;
             UICommandsSourceChanged(UICommandsSource, null);
@@ -125,7 +125,7 @@ namespace GitUI.Editor
 
         private bool RunTime()
         {
-            return (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv");
+            return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -165,24 +165,24 @@ namespace GitUI.Editor
             set { _internalFileViewer.ShowLineNumbers = value; }
         }
 
-        private Encoding _Encoding;
+        private Encoding _encoding;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public Encoding Encoding
         {
             get
             {
-                if (_Encoding == null)
+                if (_encoding == null)
                 {
-                    _Encoding = Module.FilesEncoding;
+                    _encoding = Module.FilesEncoding;
                 }
 
-                return _Encoding;
+                return _encoding;
             }
 
             set
             {
-                _Encoding = value;
+                _encoding = value;
             }
         }
 
@@ -229,28 +229,28 @@ namespace GitUI.Editor
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
-        void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            copyToolStripMenuItem.Enabled = (_internalFileViewer.GetSelectionLength() > 0);
+            copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
             ContextMenuOpening?.Invoke(sender, e);
         }
 
-        void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
+        private void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             OnMouseMove(e);
         }
 
-        void _internalFileViewer_MouseEnter(object sender, EventArgs e)
+        private void _internalFileViewer_MouseEnter(object sender, EventArgs e)
         {
             OnMouseEnter(e);
         }
 
-        void _internalFileViewer_MouseLeave(object sender, EventArgs e)
+        private void _internalFileViewer_MouseLeave(object sender, EventArgs e)
         {
             OnMouseLeave(e);
         }
 
-        void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
+        private void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             SelectedLineChanged?.Invoke(sender, e);
         }
@@ -283,7 +283,7 @@ namespace GitUI.Editor
             RequestDiffView?.Invoke(this, args);
         }
 
-        void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
+        private void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
         {
             ScrollPosChanged?.Invoke(sender, e);
         }
@@ -293,7 +293,7 @@ namespace GitUI.Editor
             _internalFileViewer.EnableScrollBars(enable);
         }
 
-        void TextEditor_TextChanged(object sender, EventArgs e)
+        private void TextEditor_TextChanged(object sender, EventArgs e)
         {
             if (_patchHighlighting)
             {
@@ -1082,7 +1082,7 @@ namespace GitUI.Editor
 
         public bool HasAnyPatches()
         {
-            return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
+            return _internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@");
         }
 
         public void SetFileLoader(GetNextFileFnc fileLoader)

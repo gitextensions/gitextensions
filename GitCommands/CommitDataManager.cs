@@ -204,7 +204,7 @@ namespace GitCommands
             string message = ProccessDiffNotes(startIndex, lines);
 
             // commit message is not reencoded by git when format is given
-            Debug.Assert(commitData.Guid == guid);
+            Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
             commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
         }
 
@@ -221,8 +221,8 @@ namespace GitCommands
             }
 
             CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
-                String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
-                String.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
+                string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
+                string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject);
             return data;
         }
@@ -247,11 +247,11 @@ namespace GitCommands
             }
 
             var message = new StringBuilder();
-            bool bNotesStart = false;
+            bool notesStart = false;
             for (int i = startIndex; i <= endIndex; i++)
             {
                 string line = lines[i];
-                if (bNotesStart)
+                if (notesStart)
                 {
                     line = "    " + line;
                 }
@@ -259,7 +259,7 @@ namespace GitCommands
                 message.AppendLine(line);
                 if (lines[i] == "Notes:")
                 {
-                    bNotesStart = true;
+                    notesStart = true;
                 }
             }
 

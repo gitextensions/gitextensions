@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
                 Hash = hash;
             }
 
-            public static LostObject TryParse(GitModule aModule, string raw)
+            public static LostObject TryParse(GitModule module, string raw)
             {
                 if (string.IsNullOrEmpty(raw))
                 {
@@ -75,20 +75,20 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var matchedGroups = patternMatch.Groups;
-                Debug.Assert(matchedGroups[4].Success);
+                Debug.Assert(matchedGroups[4].Success, "matchedGroups[4].Success");
                 var hash = matchedGroups[4].Value;
 
                 var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, hash);
 
                 if (result.ObjectType == LostObjectType.Commit)
                 {
-                    var commitLog = GetLostCommitLog(aModule, hash);
+                    var commitLog = GetLostCommitLog(module, hash);
                     var logPatternMatch = LogRegex.Match(commitLog);
                     if (logPatternMatch.Success)
                     {
-                        result.Author = aModule.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
+                        result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
                         string encodingName = logPatternMatch.Groups[2].Value;
-                        result.Subject = aModule.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
+                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                     }
                 }
@@ -96,14 +96,14 @@ namespace GitUI.CommandsDialogs
                 return result;
             }
 
-            private static string GetLostCommitLog(GitModule aModule, string hash)
+            private static string GetLostCommitLog(GitModule module, string hash)
             {
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
                 {
                     throw new ArgumentOutOfRangeException(nameof(hash), hash, "Hash must be a valid SHA-1 hash.");
                 }
 
-                return aModule.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
+                return module.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
             }
 
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)

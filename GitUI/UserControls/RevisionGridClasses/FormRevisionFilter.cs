@@ -64,12 +64,12 @@ namespace GitUI.RevisionGridClasses
 
         public bool FilterEnabled()
         {
-            return (AuthorCheck.Checked ||
+            return AuthorCheck.Checked ||
                     CommitterCheck.Checked ||
                     MessageCheck.Checked ||
                     SinceCheck.Checked ||
                     CheckUntil.Checked ||
-                    FileFilterCheck.Checked);
+                    FileFilterCheck.Checked;
         }
 
         public string GetRevisionFilter()
@@ -169,7 +169,7 @@ namespace GitUI.RevisionGridClasses
         {
             if (!AppSettings.BranchFilterEnabled || AppSettings.ShowCurrentBranchOnly)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             return BranchFilter.Text;

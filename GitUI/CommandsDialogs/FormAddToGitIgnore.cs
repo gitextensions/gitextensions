@@ -19,8 +19,8 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _ignoredFilesLoader;
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormAddToGitIgnore(GitUICommands aCommands, bool localExclude, params string[] filePatterns)
-            : base(aCommands)
+        public FormAddToGitIgnore(GitUICommands commands, bool localExclude, params string[] filePatterns)
+            : base(commands)
         {
             InitializeComponent();
             _localExclude = localExclude;

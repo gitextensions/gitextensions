@@ -5,29 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using ResourceManager;
-using GitCommands;
 
 namespace GitUI.Hotkey
 {
-    class HotkeySettingsManager
+    internal class HotkeySettingsManager
     {
         #region Serializer
-        private static XmlSerializer _Serializer;
+        private static XmlSerializer _serializer;
 
         /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
         private static XmlSerializer Serializer
         {
             get
             {
-                if (_Serializer == null)
+                if (_serializer == null)
                 {
-                    _Serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+                    _serializer = new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
                 }
 
-                return _Serializer;
+                return _serializer;
             }
         }
         #endregion
@@ -178,7 +178,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        private static string CalcDictionaryKey(String settingName, int commandCode)
+        private static string CalcDictionaryKey(string settingName, int commandCode)
         {
             return settingName + ":" + commandCode;
         }
@@ -342,7 +342,7 @@ namespace GitUI.Hotkey
 
             return curScripts.
                 Where(s => !s.Name.IsNullOrEmpty()).
-                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) })
+                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
             .ToArray();
         }
     }

@@ -2,8 +2,8 @@
 using System.Drawing;
 using System.Linq;
 using GitCommands;
-using ResourceManager;
 using GitUI.Editor;
+using ResourceManager;
 
 namespace GitUI.UserControls
 {
@@ -103,7 +103,7 @@ namespace GitUI.UserControls
         {
             labelMessage.Location = new Point(
                 labelMessage.Location.X,
-                (int)(_messageY + _messageHeight / 2.0 - labelMessage.Height / 2.0));
+                (int)(_messageY + (_messageHeight / 2.0) - (labelMessage.Height / 2.0)));
         }
 
         private void groupBox1_Resize(object sender, EventArgs e)

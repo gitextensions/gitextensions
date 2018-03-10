@@ -55,15 +55,15 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static bool CheckRefsRemoteSvn(GitModule aModule)
+        public static bool CheckRefsRemoteSvn(GitModule module)
         {
-            string svnremote = GetConfigSvnRemoteFetch(aModule);
+            string svnremote = GetConfigSvnRemoteFetch(module);
             return svnremote != null && svnremote.Trim().Contains(":refs/remote");
         }
 
-        public static string GetConfigSvnRemoteFetch(GitModule aModule)
+        public static string GetConfigSvnRemoteFetch(GitModule module)
         {
-            return aModule.RunGitCmd("config svn-remote.svn.fetch");
+            return module.RunGitCmd("config svn-remote.svn.fetch");
         }
 
         public static string RebaseCmd()
@@ -81,9 +81,9 @@ namespace GitCommands
             return SvnPrefix + " fetch";
         }
 
-        public static bool ValidSvnWorkingDir(GitModule aModule)
+        public static bool ValidSvnWorkingDir(GitModule module)
         {
-            return ValidSvnWorkingDir(aModule.WorkingDir);
+            return ValidSvnWorkingDir(module.WorkingDir);
         }
 
         public static bool ValidSvnWorkingDir(string dir)

@@ -619,11 +619,11 @@ namespace GitUI
             return StartCreateBranchDialog(null, null);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormClone(this, url, openedFromProtocolHandler, GitModuleChanged))
+                using (var form = new FormClone(this, url, openedFromProtocolHandler, gitModuleChanged))
                 {
                     form.ShowDialog(owner);
                 }
@@ -634,9 +634,9 @@ namespace GitUI
             return DoActionOnRepo(owner, false, false, PreClone, PostClone, action);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public bool StartCloneDialog(IWin32Window owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            return StartCloneDialog(owner, url, false, GitModuleChanged);
+            return StartCloneDialog(owner, url, false, gitModuleChanged);
         }
 
         public bool StartCloneDialog(IWin32Window owner, string url)
@@ -659,11 +659,11 @@ namespace GitUI
             return StartCloneDialog(null, null, false, null);
         }
 
-        public bool StartSvnCloneDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public bool StartSvnCloneDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormSvnClone(this, GitModuleChanged))
+                using (var form = new FormSvnClone(this, gitModuleChanged))
                 {
                     form.ShowDialog(owner);
                 }
@@ -816,9 +816,9 @@ namespace GitUI
             return StartSvnFetchDialog(null);
         }
 
-        public bool StartInitializeDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public bool StartInitializeDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            return StartInitializeDialog(owner, null, GitModuleChanged);
+            return StartInitializeDialog(owner, null, gitModuleChanged);
         }
 
         public bool StartInitializeDialog()
@@ -826,7 +826,7 @@ namespace GitUI
             return StartInitializeDialog((IWin32Window)null, null);
         }
 
-        public bool StartInitializeDialog(IWin32Window owner, string dir, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public bool StartInitializeDialog(IWin32Window owner, string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
             Func<bool> action = () =>
             {
@@ -835,7 +835,7 @@ namespace GitUI
                     dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
                 }
 
-                using (var frm = new FormInit(dir, GitModuleChanged))
+                using (var frm = new FormInit(dir, gitModuleChanged))
                 {
                     frm.ShowDialog(owner);
                 }
@@ -950,7 +950,7 @@ namespace GitUI
             {
                 using (var viewPatch = new FormViewPatch(this))
                 {
-                    if (!String.IsNullOrEmpty(patchFile))
+                    if (!string.IsNullOrEmpty(patchFile))
                     {
                         viewPatch.LoadPatch(patchFile);
                     }
@@ -1904,11 +1904,11 @@ namespace GitUI
             }
         }
 
-        public void StartCloneForkFromHoster(IWin32Window owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public void StartCloneForkFromHoster(IWin32Window owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
             WrapRepoHostingCall("View pull requests", gitHoster, gh =>
             {
-                using (var frm = new ForkAndCloneForm(gitHoster, GitModuleChanged))
+                using (var frm = new ForkAndCloneForm(gitHoster, gitModuleChanged))
                 {
                     frm.ShowDialog(owner);
                 }
@@ -2280,7 +2280,7 @@ namespace GitUI
         {
             // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
-            string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
+            string fileHistoryFileName = string.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             StartFileHistoryDialog(fileHistoryFileName);
@@ -2453,9 +2453,9 @@ namespace GitUI
 
             public event GitRemoteCommandCompletedEventHandler Completed;
 
-            internal GitRemoteCommand(GitModule aModule)
+            internal GitRemoteCommand(GitModule module)
             {
-                Module = aModule;
+                Module = module;
             }
 
             public void Execute()
@@ -2506,7 +2506,7 @@ namespace GitUI
             return (other != null) && Equals(other);
         }
 
-        bool Equals(GitUICommands other)
+        private bool Equals(GitUICommands other)
         {
             return Equals(Module, other.Module);
         }

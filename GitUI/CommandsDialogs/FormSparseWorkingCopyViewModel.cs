@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public bool GetCurrentSparseEnabledState()
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(_gitcommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), Boolean.TrueString);
+            return StringComparer.OrdinalIgnoreCase.Equals(_gitcommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), bool.TrueString);
         }
 
         /// <summary>
@@ -187,9 +187,9 @@ namespace GitUI.CommandsDialogs
             // Rules set
             if (IsRulesTextChanged)
             {
-                string sNewText = RulesText ?? "";
-                File.WriteAllBytes(GetPathToSparseCheckoutFile().FullName, GitModule.SystemEncoding.GetBytes(sNewText));
-                SetRulesTextAsOnDisk(sNewText); // Update if OK
+                string newText = RulesText ?? "";
+                File.WriteAllBytes(GetPathToSparseCheckoutFile().FullName, GitModule.SystemEncoding.GetBytes(newText));
+                SetRulesTextAsOnDisk(newText); // Update if OK
             }
 
             // Refresh WC (if chose to Save, run this regardless of the modifications)
@@ -227,7 +227,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void SaveChangesTurningOffSparseSpecialCase()
         {
-            if ((IsSparseCheckoutEnabled) || (IsSparseCheckoutEnabled == _isSparseCheckoutEnabledAsSaved))
+            if (IsSparseCheckoutEnabled || (IsSparseCheckoutEnabled == _isSparseCheckoutEnabledAsSaved))
             {
                 return; // Not turning off
             }

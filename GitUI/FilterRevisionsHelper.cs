@@ -113,12 +113,13 @@ namespace GitUI
             filterParams[3] = _diffContainsToolStripMenuItem.Checked;
             try
             {
-                _NO_TRANSLATE_revisionGrid.FormatQuickFilter(_NO_TRANSLATE_textBox.Text,
-                                               filterParams,
-                                               out revListArgs,
-                                               out inMemMessageFilter,
-                                               out inMemCommitterFilter,
-                                               out inMemAuthorFilter);
+                _NO_TRANSLATE_revisionGrid.FormatQuickFilter(
+                    _NO_TRANSLATE_textBox.Text,
+                    filterParams,
+                    out revListArgs,
+                    out inMemMessageFilter,
+                    out inMemCommitterFilter,
+                    out inMemAuthorFilter);
             }
             catch (InvalidOperationException ex)
             {
@@ -131,7 +132,7 @@ namespace GitUI
                 (_NO_TRANSLATE_revisionGrid.InMemMessageFilter == inMemMessageFilter) &&
                 (_NO_TRANSLATE_revisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
                 (_NO_TRANSLATE_revisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
-                (_NO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase))
+                _NO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase)
             {
                 return;
             }

@@ -13,9 +13,9 @@ namespace GitCommands
 
         public string WorkingDirectory { get; private set; }
 
-        public GitCommandsInstance(string aWorkingDirectory)
+        public GitCommandsInstance(string workingDirectory)
         {
-            WorkingDirectory = aWorkingDirectory;
+            WorkingDirectory = workingDirectory;
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -40,7 +40,7 @@ namespace GitCommands
                 // process used to execute external commands
                 var process = new Process();
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
-                startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
+                startInfo.CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine;
                 process.StartInfo = startInfo;
 
                 process.EnableRaisingEvents = true;

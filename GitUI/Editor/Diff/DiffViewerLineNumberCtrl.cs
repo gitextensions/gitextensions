@@ -7,9 +7,9 @@ using ICSharpCode.TextEditor;
 
 namespace GitUI.Editor.Diff
 {
-    class DiffViewerLineNumberCtrl : AbstractMargin
+    internal class DiffViewerLineNumberCtrl : AbstractMargin
     {
-        const int TextHorizontalMargin = 4;
+        private const int TextHorizontalMargin = 4;
 
         private int _maxValueOfLineNum;
         private bool _visible = true;
@@ -31,7 +31,7 @@ namespace GitUI.Editor.Diff
                 else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
-                    _lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin, 0);
+                    _lastSize = new Size(((int)size.Width * 2) + TextHorizontalMargin, 0);
                 }
 
                 return _lastSize;
@@ -49,9 +49,9 @@ namespace GitUI.Editor.Diff
             var fillBrush = textArea.Enabled ? BrushRegistry.GetBrush(lineNumberPainterColor.BackgroundColor) : SystemBrushes.InactiveBorder;
             var drawBrush = BrushRegistry.GetBrush(lineNumberPainterColor.Color);
 
-            for (var y = 0; y < (DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight + 1; ++y)
+            for (var y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)
             {
-                var ypos = drawingPosition.Y + fontHeight * y - textArea.TextView.VisibleLineDrawingRemainder;
+                var ypos = drawingPosition.Y + (fontHeight * y) - textArea.TextView.VisibleLineDrawingRemainder;
                 var backgroundRectangle = new Rectangle(drawingPosition.X, ypos, drawingPosition.Width, fontHeight);
                 if (!rect.IntersectsWith(backgroundRectangle))
                 {
@@ -107,7 +107,7 @@ namespace GitUI.Editor.Diff
                     g.DrawString(diffLine.RightLineNum.ToString(),
                         lineNumberPainterColor.GetFont(TextEditorProperties.FontContainer),
                         drawBrush,
-                        new Point(TextHorizontalMargin + totalWidth / 2, backgroundRectangle.Top));
+                        new Point(TextHorizontalMargin + (totalWidth / 2), backgroundRectangle.Top));
                 }
             }
         }

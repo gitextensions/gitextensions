@@ -9,9 +9,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
+#pragma warning disable SA1305 // Field names should not use Hungarian notation
+
 namespace GitUI.Editor.RichTextBoxExtension
 {
-    static class RichTextBoxXhtmlSupportExtension
+    internal static class RichTextBoxXhtmlSupportExtension
     {
         /// <summary>
         /// Maintains performance while updating.
@@ -283,9 +285,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             public int cbSize;
             public CFM dwMask;
             public CFE dwEffects;
-            public Int32 yHeight;
-            public Int32 yOffset;
-            public Int32 crTextColor;
+            public int yHeight;
+            public int yOffset;
+            public int crTextColor;
             public byte bCharSet;
             public byte bPitchAndFamily;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
@@ -294,7 +296,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             // CHARFORMAT2 from here onwards.
             public FW wWeight;
             public short sSpacing;
-            public Int32 crBackColor;
+            public int crBackColor;
             public uint lcid;
             public uint dwReserved;
             public short sStyle;
@@ -322,9 +324,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             internal const int WM_SETREDRAW = 11;
 
             // Defines for EM_SETCHARFORMAT/EM_GETCHARFORMAT
-            internal const Int32 SCF_SELECTION = 0x0001;
-            internal const Int32 SCF_WORD = 0x0002;
-            internal const Int32 SCF_ALL = 0x0004;
+            internal const int SCF_SELECTION = 0x0001;
+            internal const int SCF_WORD = 0x0002;
+            internal const int SCF_ALL = 0x0004;
 
             internal const int LF_FACESIZE = 32;
 
@@ -377,22 +379,22 @@ namespace GitUI.Editor.RichTextBoxExtension
         public static bool IsSuperScript(this RichTextBox rtb)
         {
             CHARFORMAT cf = rtb.GetCharFormat();
-            return ((cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT);
+            return (cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT;
         }
 
         public static bool IsSubScript(this RichTextBox rtb)
         {
             CHARFORMAT cf = rtb.GetCharFormat();
-            return ((cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT);
+            return (cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT;
         }
 
         public static bool IsLink(this RichTextBox rtb)
         {
             CHARFORMAT cf = rtb.GetCharFormat();
-            return ((cf.dwEffects & CFE.LINK) == CFE.LINK);
+            return (cf.dwEffects & CFE.LINK) == CFE.LINK;
         }
 
-        static void AddLink(this RichTextBox rtb, string text)
+        private static void AddLink(this RichTextBox rtb, string text)
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
@@ -408,7 +410,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.Select(position + length, 0);
         }
 
-        static void AddLink(this RichTextBox rtb, string text, string hyperlink)
+        private static void AddLink(this RichTextBox rtb, string text, string hyperlink)
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
@@ -456,7 +458,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -491,7 +493,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -526,7 +528,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -567,7 +569,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
         {
-            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
             NativeMethods.SendMessage(handleRef,
@@ -616,7 +618,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         // convert COLORREF to Color
         private static Color GetColor(int crColor)
         {
-            byte r = (byte)(crColor);
+            byte r = (byte)crColor;
             byte g = (byte)(crColor >> 8);
             byte b = (byte)(crColor >> 16);
 
@@ -627,8 +629,8 @@ namespace GitUI.Editor.RichTextBoxExtension
         private static int GetCOLORREF(int r, int g, int b)
         {
             int r2 = r;
-            int g2 = (g << 8);
-            int b2 = (b << 16);
+            int g2 = g << 8;
+            int b2 = b << 16;
 
             int result = r2 | g2 | b2;
 
@@ -757,7 +759,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             ctformatStates bnumbering = ctformatStates.nctNone;
             bool fontSet = false;
             string strFont = "";
-            Int32 crFont = 0;
+            int crFont = 0;
             Color color = new Color();
             int yHeight = 0;
 
@@ -1383,7 +1385,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             case "size":
                                 cs.cf.dwMask |= CFM.SIZE;
                                 yHeight = int.Parse(reader.Value);
-                                yHeight *= (20 * 5);
+                                yHeight *= 20 * 5;
                                 break;
                             case "color":
                                 cs.cf.dwMask |= CFM.COLOR;

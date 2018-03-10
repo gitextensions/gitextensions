@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private readonly RevisionGrid _RevisionGrid;
+        private readonly RevisionGrid _revisionGrid;
         private string _baseCommitDisplayStr;
         private string _headCommitDisplayStr;
         private GitRevision _baseRevision;
@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private readonly GitRevision _mergeBase;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
-        ToolTip _toolTipControl = new ToolTip();
+        private ToolTip _toolTipControl = new ToolTip();
 
         private readonly TranslationString _anotherBranchTooltip =
             new TranslationString("Select another branch");
@@ -28,10 +28,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _btnSwapTooltip =
             new TranslationString("Swap BASE and Compare commits");
 
-        public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
-            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
+        public FormDiff(GitUICommands commands, RevisionGrid revisionGrid, string baseCommitSha,
+            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(commands)
         {
-            _RevisionGrid = revisionGrid;
+            _revisionGrid = revisionGrid;
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
 
@@ -106,7 +106,7 @@ namespace GitUI.CommandsDialogs
                 items.Add(DiffFiles.SelectedItemParent);
             }
 
-            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, string.Empty);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)
@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                _RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
+                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, selectedItem.IsTracked);
             }
         }
 
@@ -192,14 +192,14 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            Func<string, IList<GitItemStatus>> findDiffFilesMatches = (string name) =>
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
             };
 
             GitItemStatus selectedItem;
-            using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
+            using (var searchWindow = new SearchWindow<GitItemStatus>(findDiffFilesMatches)
             {
                 Owner = this
             })

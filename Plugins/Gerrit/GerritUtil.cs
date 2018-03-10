@@ -14,32 +14,32 @@ namespace Gerrit
     {
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
-        public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
+        public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
         {
-            var fetchUrl = GetFetchUrl(aModule, remote);
+            var fetchUrl = GetFetchUrl(module, remote);
 
-            return RunGerritCommand(owner, aModule, command, fetchUrl, remote, stdIn);
+            return RunGerritCommand(owner, module, command, fetchUrl, remote, stdIn);
         }
 
-        public static Uri GetFetchUrl(IGitModule aModule, string remote)
+        public static Uri GetFetchUrl(IGitModule module, string remote)
         {
-            string remotes = aModule.RunGitCmd("remote show -n \"" + remote + "\"");
+            string remotes = module.RunGitCmd("remote show -n \"" + remote + "\"");
 
             string fetchUrlLine = remotes.Split('\n').Select(p => p.Trim()).First(p => p.StartsWith("Push"));
 
             return new Uri(fetchUrlLine.Split(new[] { ':' }, 2)[1].Trim());
         }
 
-        public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string command, [NotNull] Uri fetchUrl, [NotNull] string remote, byte[] stdIn)
+        public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string command, [NotNull] Uri fetchUrl, [NotNull] string remote, byte[] stdIn)
         {
             if (owner == null)
             {
                 throw new ArgumentNullException(nameof(owner));
             }
 
-            if (aModule == null)
+            if (module == null)
             {
-                throw new ArgumentNullException(nameof(aModule));
+                throw new ArgumentNullException(nameof(module));
             }
 
             if (command == null)
@@ -57,7 +57,7 @@ namespace Gerrit
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            StartAgent(owner, aModule, remote);
+            StartAgent(owner, module, remote);
 
             var sshCmd = SshPathLocatorInstance.Find(AppSettings.GitBinDir);
             if (GitCommandHelpers.Plink())
@@ -99,23 +99,23 @@ namespace Gerrit
             sb.Append(command);
             sb.Append("\"");
 
-            return aModule.RunCmd(
+            return module.RunCmd(
                 sshCmd,
                 sb.ToString(),
                 null,
                 stdIn);
         }
 
-        public static void StartAgent([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string remote)
+        public static void StartAgent([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string remote)
         {
             if (owner == null)
             {
                 throw new ArgumentNullException(nameof(owner));
             }
 
-            if (aModule == null)
+            if (module == null)
             {
-                throw new ArgumentNullException(nameof(aModule));
+                throw new ArgumentNullException(nameof(module));
             }
 
             if (remote == null)
@@ -131,7 +131,7 @@ namespace Gerrit
                 }
                 else
                 {
-                    aModule.StartPageantForRemote(remote);
+                    module.StartPageantForRemote(remote);
                 }
             }
         }

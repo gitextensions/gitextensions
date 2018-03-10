@@ -10,27 +10,27 @@ namespace GitCommands.Settings
 {
     public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
     {
-        public ConfigFileSettings(ConfigFileSettings aLowerPriority, ConfigFileSettingsCache aSettingsCache)
-            : base(aLowerPriority, aSettingsCache)
+        public ConfigFileSettings(ConfigFileSettings lowerPriority, ConfigFileSettingsCache settingsCache)
+            : base(lowerPriority, settingsCache)
         {
             core = new CorePath(this);
             mergetool = new MergeToolPath(this);
         }
 
-        public static ConfigFileSettings CreateEffective(GitModule aModule)
+        public static ConfigFileSettings CreateEffective(GitModule module)
         {
-            return CreateLocal(aModule, CreateGlobal(CreateSystemWide()));
+            return CreateLocal(module, CreateGlobal(CreateSystemWide()));
         }
 
-        public static ConfigFileSettings CreateLocal(GitModule aModule, bool allowCache = true)
+        public static ConfigFileSettings CreateLocal(GitModule module, bool allowCache = true)
         {
-            return CreateLocal(aModule, null, allowCache);
+            return CreateLocal(module, null, allowCache);
         }
 
-        private static ConfigFileSettings CreateLocal(GitModule aModule, ConfigFileSettings aLowerPriority, bool allowCache = true)
+        private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings lowerPriority, bool allowCache = true)
         {
-            return new ConfigFileSettings(aLowerPriority,
-                ConfigFileSettingsCache.Create(Path.Combine(aModule.GitCommonDirectory, "config"), true, allowCache));
+            return new ConfigFileSettings(lowerPriority,
+                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), true, allowCache));
         }
 
         public static ConfigFileSettings CreateGlobal(bool allowCache = true)
@@ -38,7 +38,7 @@ namespace GitCommands.Settings
             return CreateGlobal(null, allowCache);
         }
 
-        public static ConfigFileSettings CreateGlobal(ConfigFileSettings aLowerPriority, bool allowCache = true)
+        public static ConfigFileSettings CreateGlobal(ConfigFileSettings lowerPriority, bool allowCache = true)
         {
             string configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".config", "git", "config");
             if (!File.Exists(configPath))
@@ -46,7 +46,7 @@ namespace GitCommands.Settings
                 configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".gitconfig");
             }
 
-            return new ConfigFileSettings(aLowerPriority,
+            return new ConfigFileSettings(lowerPriority,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
         }
 

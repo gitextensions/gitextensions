@@ -19,9 +19,9 @@ namespace GitCommands.Settings
 
         public string SettingsFilePath { get; private set; }
 
-        public FileSettingsCache(string aSettingsFilePath, bool autoSave = true)
+        public FileSettingsCache(string settingsFilePath, bool autoSave = true)
         {
-            SettingsFilePath = aSettingsFilePath;
+            SettingsFilePath = settingsFilePath;
             _autoSave = autoSave;
 
             _saveTimer.Enabled = false;
@@ -45,13 +45,13 @@ namespace GitCommands.Settings
             FileChanged();
         }
 
-        void _fileWatcher_Created(object sender, FileSystemEventArgs e)
+        private void _fileWatcher_Created(object sender, FileSystemEventArgs e)
         {
             _lastFileRead = null;
             FileChanged();
         }
 
-        void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
+        private void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
         {
             FileChanged();
         }
@@ -85,10 +85,10 @@ namespace GitCommands.Settings
             base.Dispose(disposing);
         }
 
-        public static T FromCache<T>(string aSettingsFilePath, Lazy<T> createSettingsCache)
+        public static T FromCache<T>(string settingsFilePath, Lazy<T> createSettingsCache)
              where T : FileSettingsCache
         {
-            return WeakRefCache.Default.Get(aSettingsFilePath + ":" + typeof(T).FullName, createSettingsCache);
+            return WeakRefCache.Default.Get(settingsFilePath + ":" + typeof(T).FullName, createSettingsCache);
         }
 
         private void _fileWatcher_Changed(object sender, FileSystemEventArgs e)

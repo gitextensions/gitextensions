@@ -39,12 +39,12 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormFormatPatch(GitUICommands aCommands)
-            : base(aCommands)
+        public FormFormatPatch(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
-            if (aCommands != null)
+            if (commands != null)
             {
                 MailFrom.Text = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
             }

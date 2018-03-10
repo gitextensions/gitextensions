@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using System.Linq;
 using GitCommands.Utils;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -13,10 +13,11 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
 
-        public FormCleanupRepository(GitUICommands aCommands)
-            : base(aCommands)
+        public FormCleanupRepository(GitUICommands commands)
+            : base(commands)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             PreviewOutput.ReadOnly = true;
             checkBoxPathFilter_CheckedChanged(null, null);
         }

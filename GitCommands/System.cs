@@ -8,7 +8,7 @@ namespace System
     public static class StringExtensions
     {
         /// <summary>'\n'</summary>
-        static readonly char[] NewLineSeparator = new char[] { '\n' };
+        private static readonly char[] NewLineSeparator = new char[] { '\n' };
 
         public static string SkipStr(this string str, string toSkip)
         {
@@ -29,7 +29,7 @@ namespace System
             }
         }
 
-        public static String TakeUntilStr(this string str, String untilStr)
+        public static string TakeUntilStr(this string str, string untilStr)
         {
             if (str == null)
             {

@@ -22,8 +22,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormCheckoutRevision(GitUICommands aCommands)
-            : base(true, aCommands)
+        public FormCheckoutRevision(GitUICommands commands)
+            : base(true, commands)
         {
             InitializeComponent();
             Translate();

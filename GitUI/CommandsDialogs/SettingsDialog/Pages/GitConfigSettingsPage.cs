@@ -23,9 +23,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void Init(ISettingsPageHost aPageHost)
+        protected override void Init(ISettingsPageHost pageHost)
         {
-            base.Init(aPageHost);
+            base.Init(pageHost);
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
             string exeFile;
-            if (!String.IsNullOrEmpty(MergetoolPath.Text))
+            if (!string.IsNullOrEmpty(MergetoolPath.Text))
             {
                 exeFile = MergetoolPath.Text;
                 exeName = Path.GetFileName(exeFile);
@@ -187,7 +187,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exeFile = MergeToolsHelper.FindMergeToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalMergeTool.Text, out exeName);
             }
 
-            if (String.IsNullOrEmpty(exeFile))
+            if (string.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
                 MergetoolPath.SelectedText = "";
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
                 {
-                    MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
+                    MessageBox.Show(this, string.Format(_toolSuggestPathText.Text, exeName),
                         _mergeToolSuggestCaption.Text);
                 }
 
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), DifftoolPath.Text.Trim());
             string exeName;
             string exeFile;
-            if (!String.IsNullOrEmpty(DifftoolPath.Text))
+            if (!string.IsNullOrEmpty(DifftoolPath.Text))
             {
                 exeFile = DifftoolPath.Text;
                 exeName = Path.GetFileName(exeFile);
@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exeFile = MergeToolsHelper.FindDiffToolFullPath(ConfigFileSettingsSet, _NO_TRANSLATE_GlobalDiffTool.Text, out exeName);
             }
 
-            if (String.IsNullOrEmpty(exeFile))
+            if (string.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
                 DifftoolPath.SelectedText = "";
@@ -253,7 +253,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
                 {
-                    MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
+                    MessageBox.Show(this, string.Format(_toolSuggestPathText.Text, exeName),
                         _diffToolSuggestCaption.Text);
                 }
 

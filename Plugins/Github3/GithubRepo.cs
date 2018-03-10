@@ -19,7 +19,7 @@ namespace Github3
         public string Name => _repo.Name;
         public string Description => _repo.Description;
         public bool IsAFork => _repo.Fork;
-        public bool IsMine => Owner == GithubLoginInfo.username;
+        public bool IsMine => Owner == GithubLoginInfo.Username;
         public bool IsPrivate => _repo.Private;
         public int Forks => _repo.Forks;
         public string Homepage => _repo.Homepage;
@@ -98,7 +98,7 @@ namespace Github3
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
-            var pullrequest = _repo.CreatePullRequest(GithubLoginInfo.username + ":" + myBranch, remoteBranch, title, body);
+            var pullrequest = _repo.CreatePullRequest(GithubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
             if (pullrequest == null || pullrequest.Number == 0)
             {
                 throw new Exception("Failed to create pull request.");

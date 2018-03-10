@@ -99,7 +99,7 @@ namespace PatchApply
             return sb.ToString();
         }
 
-        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] FilePreabmle)
+        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreabmle)
         {
             StringBuilder sb = new StringBuilder();
             string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
@@ -128,7 +128,7 @@ namespace PatchApply
 
             string header = sb.ToString();
 
-            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
+            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
 
             if (selectedChunks == null)
             {
@@ -432,21 +432,21 @@ namespace PatchApply
 
     internal class Chunk
     {
-        private int _StartLine;
-        private List<SubChunk> _SubChunks = new List<SubChunk>();
-        private SubChunk _CurrentSubChunk = null;
+        private int _startLine;
+        private List<SubChunk> _subChunks = new List<SubChunk>();
+        private SubChunk _currentSubChunk = null;
 
         public SubChunk CurrentSubChunk
         {
             get
             {
-                if (_CurrentSubChunk == null)
+                if (_currentSubChunk == null)
                 {
-                    _CurrentSubChunk = new SubChunk();
-                    _SubChunks.Add(_CurrentSubChunk);
+                    _currentSubChunk = new SubChunk();
+                    _subChunks.Add(_currentSubChunk);
                 }
 
-                return _CurrentSubChunk;
+                return _currentSubChunk;
             }
         }
 
@@ -467,7 +467,7 @@ namespace PatchApply
             // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
             {
-                _CurrentSubChunk = null; // start new SubChunk
+                _currentSubChunk = null; // start new SubChunk
             }
 
             if (removed)
@@ -485,7 +485,7 @@ namespace PatchApply
             header = header.SkipStr("-");
             header = header.TakeUntilStr(",");
 
-            return int.TryParse(header, out _StartLine);
+            return int.TryParse(header, out _startLine);
         }
 
         public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
@@ -558,10 +558,10 @@ namespace PatchApply
             return result;
         }
 
-        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
+        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
-            result._StartLine = 0;
+            result._startLine = 0;
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
@@ -586,7 +586,7 @@ namespace PatchApply
             while (i < lines.Length)
             {
                 string line = lines[i];
-                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
+                string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreabmle)) : string.Empty;
                 PatchLine patchLine = new PatchLine()
                 {
                     Text = (reset ? "-" : "+") + preamble + line
@@ -608,7 +608,7 @@ namespace PatchApply
                         {
                             // if the last line is selected to be reset and there is no new line at the end of file
                             // then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
-                            PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(aLine => !aLine.Selected);
+                            PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(l => !l.Selected);
                             if (lastNotSelectedLine != null)
                             {
                                 lastNotSelectedLine.Selected = true;
@@ -640,7 +640,7 @@ namespace PatchApply
             int addedCount = 0;
             int removedCount = 0;
 
-            foreach (SubChunk subChunk in _SubChunks)
+            foreach (SubChunk subChunk in _subChunks)
             {
                 string subDiff = subChunkToPatch(subChunk, ref addedCount, ref removedCount, ref wereSelectedLines);
                 diff = diff.Combine("\n", subDiff);
@@ -651,7 +651,7 @@ namespace PatchApply
                 return null;
             }
 
-            diff = "@@ -" + _StartLine + "," + removedCount + " +" + _StartLine + "," + addedCount + " @@".Combine("\n", diff);
+            diff = "@@ -" + _startLine + "," + removedCount + " +" + _startLine + "," + addedCount + " @@".Combine("\n", diff);
 
             return diff;
         }
@@ -707,9 +707,9 @@ namespace PatchApply
             return selectedChunks;
         }
 
-        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
+        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
+            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
             ChunkList result = new ChunkList();
             result.Add(chunk);
             return result;

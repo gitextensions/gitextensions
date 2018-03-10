@@ -5,16 +5,16 @@ namespace GitUIPluginInterfaces
 {
     public class BoolSetting : ISetting
     {
-        public BoolSetting(string aName, bool aDefaultValue)
-            : this(aName, aName, aDefaultValue)
+        public BoolSetting(string name, bool defaultValue)
+            : this(name, name, defaultValue)
         {
         }
 
-        public BoolSetting(string aName, string aCaption, bool aDefaultValue)
+        public BoolSetting(string name, string caption, bool defaultValue)
         {
-            Name = aName;
-            Caption = aCaption;
-            DefaultValue = aDefaultValue;
+            Name = name;
+            Caption = caption;
+            DefaultValue = defaultValue;
         }
 
         public string Name { get; private set; }
@@ -41,8 +41,8 @@ namespace GitUIPluginInterfaces
 
         private class CheckBoxBinding : SettingControlBinding<BoolSetting, CheckBox>
         {
-            public CheckBoxBinding(BoolSetting aSetting, CheckBox aCustomControl)
-                : base(aSetting, aCustomControl)
+            public CheckBoxBinding(BoolSetting setting, CheckBox customControl)
+                : base(setting, customControl)
             {
             }
 

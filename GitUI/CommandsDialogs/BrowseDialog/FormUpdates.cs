@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
-using GitCommands.Config;
 using GitCommands;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -45,13 +45,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Close();
         }
 
-        public void SearchForUpdatesAndShow(IWin32Window aOwnerWindow, bool alwaysShow)
+        public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
         {
-            OwnerWindow = aOwnerWindow;
+            OwnerWindow = ownerWindow;
             new Thread(SearchForUpdates).Start();
             if (alwaysShow)
             {
-                ShowDialog(aOwnerWindow);
+                ShowDialog(ownerWindow);
             }
         }
 
@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        void CheckForNewerVersion(string releases)
+        private void CheckForNewerVersion(string releases)
         {
             var versions = ReleaseVersion.Parse(releases);
             var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var versions = availableVersions.Where(version =>
                     version.ReleaseType == ReleaseType.Major ||
                     version.ReleaseType == ReleaseType.HotFix ||
-                    checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate);
+                    (checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate));
 
             return versions.Where(version => version.Version.CompareTo(currentVersion) > 0);
         }

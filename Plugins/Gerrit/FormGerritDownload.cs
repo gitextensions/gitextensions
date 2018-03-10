@@ -189,7 +189,7 @@ namespace Gerrit
             string change = GerritUtil.RunGerritCommand(
                 this,
                 Module,
-                String.Format(
+                string.Format(
                     "gerrit query --format=JSON project:{0} --current-patch-set change:{1}",
                     projectName,
                     _NO_TRANSLATE_Change.Text),
