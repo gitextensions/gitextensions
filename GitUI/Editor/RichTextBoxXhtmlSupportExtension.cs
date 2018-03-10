@@ -1274,8 +1274,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                     break;
                 case XmlNodeType.Comment:
                     break;
-                default:
-                    break;
             }
         }
 
@@ -1519,8 +1517,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                             case XmlNodeType.ProcessingInstruction:
                                 break;
                             case XmlNodeType.Comment:
-                                break;
-                            default:
                                 break;
                         }
                     }
