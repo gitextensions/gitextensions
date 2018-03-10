@@ -1,4 +1,3 @@
-using System;
 using GitCommands;
 using JetBrains.Annotations;
 
