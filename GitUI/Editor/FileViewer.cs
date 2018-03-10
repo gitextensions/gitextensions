@@ -388,9 +388,9 @@ namespace GitUI.Editor
             ResetCurrentScrollPos();
         }
 
-        public void ViewFile(string fileName)
+        public Task ViewFile(string fileName)
         {
-            ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName),
+            return ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName),
                 () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
         }
 
@@ -459,7 +459,7 @@ namespace GitUI.Editor
             return _async.Load(loadPatchText, ViewPatch);
         }
 
-        public void ViewText(string fileName, string text)
+        public Task ViewText(string fileName, string text)
         {
             ResetForText(fileName);
 
@@ -469,7 +469,7 @@ namespace GitUI.Editor
                 _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
                 if (TextLoaded != null)
                     TextLoaded(this, null);
-                return;
+                return Task.CompletedTask;
             }
 
             _internalFileViewer.SetText(text);
@@ -477,20 +477,21 @@ namespace GitUI.Editor
                 TextLoaded(this, null);
 
             RestoreCurrentScrollPos();
+            return Task.CompletedTask;
         }
 
-        public void ViewGitItemRevision(string fileName, string guid)
+        public Task ViewGitItemRevision(string fileName, string guid)
         {
             if (guid == GitRevision.UnstagedGuid)
             {
                 //No blob exists for unstaged, present contents from file system
-                ViewFile(fileName);
+                return ViewFile(fileName);
             }
             else
             {
                 //Retrieve blob, same as GitItemStatus.TreeGuid
                 string blob = Module.GetFileBlobHash(fileName, guid);
-                ViewGitItem(fileName, blob);
+                return ViewGitItem(fileName, blob);
             }
         }
 
@@ -506,13 +507,13 @@ namespace GitUI.Editor
             }
         }
 
-        public void ViewGitItem(string fileName, string guid)
+        public Task ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
+            return ViewItem(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
                 () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
         }
 
-        private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
+        private Task ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
             FilePreamble = null;
 
@@ -522,16 +523,16 @@ namespace GitUI.Editor
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    _async.Load(getSubmoduleText, text => ViewText(fileName, text));
+                    return _async.Load(getSubmoduleText, text => ViewText(fileName, text));
                 }
                 else
                 {
-                    ViewText(null, "Directory: " + fileName);
+                    return ViewText(null, "Directory: " + fileName);
                 }
             }
             else if (IsImage(fileName))
             {
-                _async.Load(getImage,
+                return _async.Load(getImage,
                             image =>
                             {
                                 ResetForImage();
@@ -553,11 +554,11 @@ namespace GitUI.Editor
             //Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
-                ViewText(null, "Binary file: " + fileName);
+                return ViewText(null, "Binary file: " + fileName);
             }
             else
             {
-                _async.Load(getFileText, text => ViewText(fileName, text));
+                return _async.Load(getFileText, text => ViewText(fileName, text));
             }
         }
 

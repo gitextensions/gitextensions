@@ -75,7 +75,9 @@ namespace GitUI
         public static Task ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 0)
-                return Task.FromResult(string.Empty);
+            {
+                return Task.CompletedTask;
+            }
 
             var selectedRevision = revisions[0];
             string secondRevision = selectedRevision?.Guid;
@@ -87,11 +89,31 @@ namespace GitUI
 
         public static Task ViewChanges(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
         {
-            return diffViewer.ViewPatch(() =>
+            if (firstRevision == null)
             {
-                string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
-                return selectedPatch ?? defaultText;
-            });
+                // The previous commit does not exist, nothing to compare with
+                if (file.TreeGuid.IsNullOrEmpty())
+                {
+                    if (secondRevision.IsNullOrWhiteSpace())
+                    {
+                        throw new ArgumentException(nameof(secondRevision));
+                    }
+
+                    return diffViewer.ViewGitItemRevision(file.Name, secondRevision);
+                }
+                else
+                {
+                    return diffViewer.ViewGitItem(file.Name, file.TreeGuid);
+                }
+            }
+            else
+            {
+                return diffViewer.ViewPatch(() =>
+                {
+                    string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
+                    return selectedPatch ?? defaultText;
+                });
+            }
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)

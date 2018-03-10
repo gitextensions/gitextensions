@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs
         private bool GetNextPatchFile(bool searchBackward, bool loop, out int fileIndex, out Task loadFileContent)
         {
             fileIndex = -1;
-            loadFileContent = Task.FromResult<string>(null);
+            loadFileContent = Task.CompletedTask;
             var revisions = _revisionGrid.GetSelectedRevisions();
             if (revisions.Count == 0)
                 return false;
