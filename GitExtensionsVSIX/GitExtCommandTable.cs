@@ -10,7 +10,7 @@ namespace GitExtensionsVSIX
     /// <summary>
     /// Helper class that exposes all GUIDs used across VS Package.
     /// </summary>
-    internal sealed partial class PackageGuids
+    internal sealed class PackageGuids
     {
         public const string guidGitExtensionsPackageString = "14f45fb8-a093-48af-a2a2-a7bb404cb357";
         public const string guidGitExtensionsPackageCmdSetString = "8bd71b0f-f446-442d-a92a-bbefd8e60202";
@@ -22,7 +22,7 @@ namespace GitExtensionsVSIX
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
     /// </summary>
-    internal sealed partial class PackageIds
+    internal sealed class PackageIds
     {
         public const int gitExtMenu = 0x1000;
         public const int gitExtMenuGlobalGroup = 0x1010;
