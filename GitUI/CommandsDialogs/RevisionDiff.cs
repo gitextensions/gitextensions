@@ -24,6 +24,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Are you sure you want delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
         private readonly TranslationString _multipleDescription = new TranslationString("<multiple>");
+        private readonly TranslationString _selectedRevision = new TranslationString("Selected");
+        private readonly TranslationString _firstRevision = new TranslationString("First");
 
         private RevisionGrid _revisionGrid;
         private RevisionFileTree _revisionFileTree;
@@ -226,8 +228,8 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
-            // A is parent if one revision selected or parent, then selected
-            bool firstIsParent = _revisionDiffController.AisParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
+            // First (A) is parent if one revision selected or parent, then selected
+            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
@@ -533,19 +535,19 @@ namespace GitUI.CommandsDialogs
 
             RevisionDiffKind diffKind;
 
-            if (sender == aLocalToolStripMenuItem)
+            if (sender == firstToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffALocal;
             }
-            else if (sender == bLocalToolStripMenuItem)
+            else if (sender == selectedToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffBLocal;
             }
-            else if (sender == parentOfALocalToolStripMenuItem)
+            else if (sender == firstParentToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffAParentLocal;
             }
-            else if (sender == parentOfBLocalToolStripMenuItem)
+            else if (sender == selectedParentToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffBParentLocal;
             }
@@ -563,7 +565,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionDiffController.AisParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
+            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
             bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent, _fullPathResolver);
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
@@ -571,7 +573,7 @@ namespace GitUI.CommandsDialogs
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
             var revisions = _revisionGrid.GetSelectedRevisions();
 
-            // Parents A are only known if A was explicitly selected (there is no explicit search for parents to parents of a single selected revision)
+            // Parents to First (A) are only known if A was explicitly selected (there is no explicit search for parents to parents of a single selected revision)
             bool firstParentsValid = revisions != null && revisions.Count > 1;
 
             var selectionInfo = new ContextMenuDiffToolInfo(DiffFiles.Revision, selectedItemParentRevs,
@@ -589,33 +591,33 @@ namespace GitUI.CommandsDialogs
 
             if (DiffFiles.SelectedItemsWithParent.Count() > 0)
             {
-                bDiffCaptionMenuItem.Text = "B: (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
-                bDiffCaptionMenuItem.Visible = true;
-                MenuUtil.SetAsCaptionMenuItem(bDiffCaptionMenuItem, DiffContextMenu);
+                selectedDiffCaptionMenuItem.Text = _selectedRevision + ": (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                selectedDiffCaptionMenuItem.Visible = true;
+                MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
 
-                aDiffCaptionMenuItem.Text = "A:";
+                firstDiffCaptionMenuItem.Text = _firstRevision + ":";
                 var parentDesc = DescribeSelectedParentRevision(true);
                 if (parentDesc.IsNotNullOrWhitespace())
                 {
-                    aDiffCaptionMenuItem.Text += " (" + parentDesc + ")";
+                    firstDiffCaptionMenuItem.Text += " (" + parentDesc + ")";
                 }
 
-                aDiffCaptionMenuItem.Visible = true;
-                MenuUtil.SetAsCaptionMenuItem(aDiffCaptionMenuItem, DiffContextMenu);
+                firstDiffCaptionMenuItem.Visible = true;
+                MenuUtil.SetAsCaptionMenuItem(firstDiffCaptionMenuItem, DiffContextMenu);
             }
             else
             {
-                aDiffCaptionMenuItem.Visible = false;
-                bDiffCaptionMenuItem.Visible = false;
+                firstDiffCaptionMenuItem.Visible = false;
+                selectedDiffCaptionMenuItem.Visible = false;
             }
 
-            aBToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAB(selectionInfo);
-            aLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuALocal(selectionInfo);
-            bLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBLocal(selectionInfo);
-            parentOfALocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAParentLocal(selectionInfo);
-            parentOfBLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBParentLocal(selectionInfo);
-            parentOfALocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuAParentLocal(selectionInfo);
-            parentOfBLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuBParentLocal(selectionInfo);
+            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToSelected(selectionInfo);
+            firstToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToLocal(selectionInfo);
+            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
         private void resetFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -639,8 +641,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
-                TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                resetFileToSelectedToolStripMenuItem.Text = _selectedRevision + " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
             }
 
             var parentDesc = DescribeSelectedParentRevision(false);
@@ -651,8 +652,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 resetFileToParentToolStripMenuItem.Visible = true;
-                TranslateItem(resetFileToParentToolStripMenuItem.Name, resetFileToParentToolStripMenuItem);
-                resetFileToParentToolStripMenuItem.Text += " (" + parentDesc + ")";
+                resetFileToParentToolStripMenuItem.Text = _firstRevision + " (" + parentDesc + ")";
             }
         }
 

@@ -1184,7 +1184,7 @@ namespace GitUI
                     // Show combined (merge conflicts) only when A is only parent
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
                         Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1
-                        && _revisionDiffController.AisParent(Revision.ParentGuids, parentRevs.Select(i => i.Guid));
+                        && _revisionDiffController.IsFirstParent(Revision.ParentGuids, parentRevs.Select(i => i.Guid));
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);

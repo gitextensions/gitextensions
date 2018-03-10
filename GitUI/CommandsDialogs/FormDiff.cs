@@ -139,25 +139,25 @@ namespace GitUI.CommandsDialogs
 
             RevisionDiffKind diffKind;
 
-            if (sender == aLocalToolStripMenuItem)
+            if (sender == firstToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffALocal;
             }
-            else if (sender == bLocalToolStripMenuItem)
+            else if (sender == selectedToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffBLocal;
             }
-            else if (sender == parentOfALocalToolStripMenuItem)
+            else if (sender == firstParentToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffAParentLocal;
             }
-            else if (sender == parentOfBLocalToolStripMenuItem)
+            else if (sender == selectedParentToLocalToolStripMenuItem)
             {
                 diffKind = RevisionDiffKind.DiffBParentLocal;
             }
             else
             {
-                Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
+                Debug.Assert(sender == firstToSelectedToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
                 diffKind = RevisionDiffKind.DiffAB;
             }
 
@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionDiffController.AisParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
+            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
             bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent, _fullPathResolver);
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
@@ -283,13 +283,13 @@ namespace GitUI.CommandsDialogs
         {
             ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
 
-            aBToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAB(selectionInfo);
-            aLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuALocal(selectionInfo);
-            bLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBLocal(selectionInfo);
-            parentOfALocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAParentLocal(selectionInfo);
-            parentOfBLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBParentLocal(selectionInfo);
-            parentOfALocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuAParentLocal(selectionInfo);
-            parentOfBLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuBParentLocal(selectionInfo);
+            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToSelected(selectionInfo);
+            firstToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToLocal(selectionInfo);
+            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)

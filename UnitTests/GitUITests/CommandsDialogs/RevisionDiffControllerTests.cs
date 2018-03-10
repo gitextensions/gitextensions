@@ -149,11 +149,11 @@ namespace GitUITests.CommandsDialogs
         public void BrowseDiff_SuppressDiffToLocalWhenNoSelectedRevision()
         {
             var selectionInfo = new ContextMenuDiffToolInfo();
-            _controller.ShouldShowMenuAB(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuALocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuBLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuAParentLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuBParentLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeFalse();
         }
 
         [Test]
@@ -161,11 +161,11 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision("1234567890");
             var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, localExists: false);
-            _controller.ShouldShowMenuAB(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuALocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuBLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuAParentLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuBParentLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeFalse();
         }
 
         [Test]
@@ -173,11 +173,11 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision(GitRevision.UnstagedGuid);
             var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev);
-            _controller.ShouldShowMenuAB(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuALocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuBLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuAParentLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuBParentLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeTrue();
         }
 
         [Test]
@@ -185,11 +185,11 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision("1234567890");
             var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, selectedItemParentRevs: new string[] { GitRevision.UnstagedGuid });
-            _controller.ShouldShowMenuAB(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuALocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuBLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuAParentLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuBParentLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
+            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeTrue();
         }
 
         [TestCase(true, true)]
@@ -200,11 +200,11 @@ namespace GitUITests.CommandsDialogs
         {
             var rev = new GitRevision("1234567890");
             var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, allAreDeleted: d, allAreNew: n);
-            _controller.ShouldShowMenuAB(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuALocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuBLocal(selectionInfo).Should().Be(!d);
-            _controller.ShouldShowMenuAParentLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuBParentLocal(selectionInfo).Should().Be(!n);
+            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().Be(!d);
+            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().Be(!n);
         }
         #endregion
     }
