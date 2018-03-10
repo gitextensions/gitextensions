@@ -80,7 +80,7 @@ namespace TfsInterop
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).Cast<IBuildDefinition>().ToArray();
+                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
                 }
 
                 ConnectToTfsServer2015(hostname, teamCollection, projectName, buildDefinitionNameFilter);

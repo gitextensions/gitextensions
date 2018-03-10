@@ -74,7 +74,7 @@ namespace TfsInterop
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).Cast<IBuildDefinition>().ToArray();
+                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
                 }
             }
             catch (Exception ex)
