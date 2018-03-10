@@ -1787,6 +1787,11 @@ namespace GitUI
                                                return left.IsRemote.CompareTo(right.IsRemote);
                                            }
 
+                                           if (left.Selected != right.Selected)
+                                           {
+                                               return right.Selected.CompareTo(left.Selected);
+                                           }
+
                                            return left.Name.CompareTo(right.Name);
                                        });
 
