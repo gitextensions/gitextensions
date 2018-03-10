@@ -75,7 +75,7 @@ namespace Github3
 
                     GithubLoginInfo.OAuthToken = token;
 
-                    MessageBox.Show(Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
+                    MessageBox.Show(Owner, "Successfully retrieved OAuth token.", "Github Authorization");
                 }
             }
         }

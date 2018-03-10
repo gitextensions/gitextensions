@@ -51,7 +51,7 @@ namespace Gource
         public override bool Execute(GitUIBaseEventArgs eventArgs)
         {
             IGitModule gitUiCommands = eventArgs.GitModule;
-            var ownerForm = eventArgs.OwnerForm as IWin32Window;
+            var ownerForm = eventArgs.OwnerForm;
             if (!gitUiCommands.IsValidGitWorkingDir())
             {
                 MessageBox.Show(ownerForm, _currentDirectoryIsNotValidGit.Text);

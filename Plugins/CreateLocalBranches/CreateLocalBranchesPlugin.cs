@@ -16,7 +16,7 @@ namespace CreateLocalBranches
         {
             using (var frm = new CreateLocalBranchesForm(gitUiCommands))
             {
-                frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                frm.ShowDialog(gitUiCommands.OwnerForm);
             }
 
             return true;
