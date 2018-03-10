@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCurrentChangesInRevisionGraph.Checked = AppSettings.RevisionGraphShowWorkingDirChanges;
             chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
+            chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
             SmtpServer.Text = AppSettings.SmtpServer;
             SmtpServerPort.Text = AppSettings.SmtpPort.ToString();
             chkUseSSL.Checked = AppSettings.SmtpUseSsl;
@@ -57,6 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
+            AppSettings.ShowGitStatusForArtificialCommits = chkShowGitStatusForArtificialCommits.Checked;
             AppSettings.SmtpServer = SmtpServer.Text;
             if (int.TryParse(SmtpServerPort.Text, out var port))
             {

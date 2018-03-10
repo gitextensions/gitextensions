@@ -369,6 +369,12 @@ namespace GitCommands
             set => SetBool("showgitstatusinbrowsetoolbar", value);
         }
 
+        public static bool ShowGitStatusForArtificialCommits
+        {
+            get => GetBool("showgitstatusForArtificialCommits", true);
+            set => SetBool("showgitstatusForArtificialCommits", value);
+        }
+
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||
                                                                 CommitInfoShowContainedInBranchesRemote ||
                                                                 CommitInfoShowContainedInBranchesRemoteIfNoLocal;
