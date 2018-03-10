@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
         private void _NO_TRANSLATE_svnRepositoryComboBox_TextUpdate(object sender, EventArgs e)
         {
             var path = _NO_TRANSLATE_SvnFrom.Text;
-            path = path.TrimEnd(new[] { '\\', '/' });
+            path = path.TrimEnd('\\', '/');
 
             if (path.Contains("\\") || path.Contains("/"))
             {

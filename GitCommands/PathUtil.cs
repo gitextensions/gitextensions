@@ -106,7 +106,7 @@ namespace GitCommands
             if (repositoryUrl != null)
             {
                 const string standardRepositorySuffix = ".git";
-                string path = repositoryUrl.TrimEnd(new[] { '\\', '/' });
+                string path = repositoryUrl.TrimEnd('\\', '/');
 
                 if (path.EndsWith(standardRepositorySuffix))
                 {

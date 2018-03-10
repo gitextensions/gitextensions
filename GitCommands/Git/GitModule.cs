@@ -1385,7 +1385,7 @@ namespace GitCommands
             if (localPath.Contains("("))
             {
                 gitSubmodule.LocalPath = localPath.Substring(0, localPath.IndexOf("(")).TrimEnd();
-                gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
+                gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim('(', ')', ' ');
             }
             else
             {
@@ -3176,7 +3176,7 @@ namespace GitCommands
         public string[] GetFullTree(string id)
         {
             string tree = RunCacheableCmd(AppSettings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
-            return tree.Split(new[] { '\0', '\n' });
+            return tree.Split('\0', '\n');
         }
 
         public IEnumerable<IGitItem> GetTree(string id, bool full)
@@ -3239,7 +3239,7 @@ namespace GitCommands
                     if (line.StartsWith("\t"))
                     {
                         blameLine.LineText = line.Substring(1) // trim ONLY first tab
-                                                 .Trim(new[] { '\r' }); // trim \r, this is a workaround for a \r\n bug
+                                                 .Trim('\r'); // trim \r, this is a workaround for a \r\n bug
                         blameLine.LineText = ReEncodeStringFromLossless(blameLine.LineText, encoding);
                     }
                     else if (line.StartsWith("author-mail"))
@@ -3329,7 +3329,7 @@ namespace GitCommands
             {
                 // index
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
-                string[] s = blob.Split(new[] { ' ', '\t' });
+                string[] s = blob.Split(' ', '\t');
                 if (s.Length >= 2)
                 {
                     return s[1];
@@ -3338,7 +3338,7 @@ namespace GitCommands
             else
             {
                 string blob = RunGitCmd(string.Format("ls-tree -r {0} \"{1}\"", revision, fileName));
-                string[] s = blob.Split(new[] { ' ', '\t' });
+                string[] s = blob.Split(' ', '\t');
                 if (s.Length >= 3)
                 {
                     return s[2];

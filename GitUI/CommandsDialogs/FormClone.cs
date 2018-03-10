@@ -354,7 +354,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd('\\', '/');
             }
 
             destinationPath += "\\";
