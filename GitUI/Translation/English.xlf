@@ -8842,7 +8842,7 @@ When OpenSSH is used, command line dialogs are shown!
         <target />
       </trans-unit>
       <trans-unit id="_currentUnstagedChanges.Text">
-        <source>Current unstaged changes</source>
+        <source>Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="_dateText.Text">
