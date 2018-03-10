@@ -339,7 +339,7 @@ Current Branch:
         {
             var helpDisplayDialog = new SimpleHelpDisplayDialog();
             helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
-            helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
+            helpDisplayDialog.ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
         }
