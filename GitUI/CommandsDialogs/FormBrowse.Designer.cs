@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs
 {
@@ -441,7 +440,6 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripFileExplorer
             // 
-            this.toolStripFileExplorer.CheckOnClick = true;
             this.toolStripFileExplorer.Enabled = false;
             this.toolStripFileExplorer.Image = global::GitUI.Properties.Resources.Folder;
             this.toolStripFileExplorer.ImageTransparentColor = System.Drawing.Color.Gray;
@@ -825,7 +823,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.fileExplorerToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.fileExplorerToolStripMenuItem.Name = "fileExplorerToolStripMenuItem";
-            this.fileExplorerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.fileExplorerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
             | System.Windows.Forms.Keys.O)));
             this.fileExplorerToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.fileExplorerToolStripMenuItem.Text = "File Explorer";
@@ -1770,7 +1768,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripMenuItem setNextPullActionAsDefaultToolStripMenuItem;
         private ToolStripMenuItem fetchAllToolStripMenuItem;
-        private ToolStripMenuItem resetToolStripMenuItem;        
+        private ToolStripMenuItem resetToolStripMenuItem;
         private ToolStripMenuItem reportAnIssueToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator41;
         private ToolStripSeparator toolStripSeparator42;
