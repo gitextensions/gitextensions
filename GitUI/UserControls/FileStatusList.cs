@@ -388,7 +388,7 @@ namespace GitUI
                 FileStatusListView.ContextMenuStrip = value;
                 if (FileStatusListView.ContextMenuStrip != null)
                 {
-                    FileStatusListView.ContextMenuStrip.Opening += new CancelEventHandler(FileStatusListView_ContextMenu_Opening);
+                    FileStatusListView.ContextMenuStrip.Opening += FileStatusListView_ContextMenu_Opening;
                 }
             }
         }
