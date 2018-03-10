@@ -554,8 +554,8 @@ namespace NetSpell.SpellChecker.Dictionary
                 var prevWord = tempWord;
                 foreach (PhoneticRule rule in PhoneticRules)
                 {
-                    bool begining = tempWord.Length == word.Length ? true : false;
-                    bool ending = rule.ConditionCount == tempWord.Length ? true : false;
+                    bool begining = tempWord.Length == word.Length;
+                    bool ending = rule.ConditionCount == tempWord.Length;
 
                     if ((rule.BeginningOnly == begining || !rule.BeginningOnly)
                         && (rule.EndOnly == ending || !rule.EndOnly)
