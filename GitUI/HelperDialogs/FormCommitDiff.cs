@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -39,24 +40,34 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ViewSelectedDiff();
-        }
-
-        private void ViewSelectedDiff()
-        {
-            if (DiffFiles.SelectedItem != null && DiffFiles.Revision != null)
+            try
             {
-                Cursor.Current = Cursors.WaitCursor;
-                DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
-                Cursor.Current = Cursors.Default;
+                await ViewSelectedDiff();
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
-        private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        private async Task ViewSelectedDiff()
         {
-            ViewSelectedDiff();
+            if (DiffFiles.SelectedItem != null && DiffFiles.Revision != null)
+            {
+                await DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
+            }
+        }
+
+        private async void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                await ViewSelectedDiff();
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
     }
 }
