@@ -1414,7 +1414,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (Data == null)
                 {
-                    string name = Id.ToString();
+                    string name = Id;
                     if (name.Length > 8)
                     {
                         name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);

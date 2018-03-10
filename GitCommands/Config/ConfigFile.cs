@@ -515,7 +515,7 @@ namespace GitCommands.Config
                         case '"':
                             if (_quotedValue)
                             {
-                                _token.Append(_valueToken.ToString());
+                                _token.Append(_valueToken);
                             }
                             else
                             {

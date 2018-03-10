@@ -92,7 +92,7 @@ namespace GitCommands.Core
                 return ToString(ss.InlinedStructure(), indent);
             }
 
-            return indent + obj.ToString();
+            return indent + obj;
         }
     }
 }

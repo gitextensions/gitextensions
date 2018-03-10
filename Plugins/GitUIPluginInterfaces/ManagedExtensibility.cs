@@ -54,7 +54,7 @@ namespace GitUIPluginInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError("Failed to get exports, {0}", ex.ToString());
+                    Trace.TraceError("Failed to get exports, {0}", ex);
                 }
             }
 
