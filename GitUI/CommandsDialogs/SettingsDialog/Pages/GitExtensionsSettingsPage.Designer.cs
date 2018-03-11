@@ -316,7 +316,7 @@
             this.chkCheckForUncommittedChangesInCheckoutBranch.Location = new System.Drawing.Point(3, 95);
             this.chkCheckForUncommittedChangesInCheckoutBranch.Name = "chkCheckForUncommittedChangesInCheckoutBranch";
             this.chkCheckForUncommittedChangesInCheckoutBranch.Size = new System.Drawing.Size(303, 17);
-            this.chkCheckForUncommittedChangesInCheckoutBranch.TabIndex = 5;
+            this.chkCheckForUncommittedChangesInCheckoutBranch.TabIndex = 6;
             this.chkCheckForUncommittedChangesInCheckoutBranch.Text = "Check for uncommitted changes in checkout branch dialog";
             this.chkCheckForUncommittedChangesInCheckoutBranch.UseVisualStyleBackColor = true;
             // 
@@ -338,7 +338,7 @@
             this.chkShowGitStatusForArtificialCommits.Location = new System.Drawing.Point(3, 3);
             this.chkShowGitStatusForArtificialCommits.Name = "chkShowGitStatusForArtificialCommits";
             this.chkShowGitStatusForArtificialCommits.Size = new System.Drawing.Size(451, 17);
-            this.chkShowGitStatusForArtificialCommits.TabIndex = 1;
+            this.chkShowGitStatusForArtificialCommits.TabIndex = 2;
             this.chkShowGitStatusForArtificialCommits.Text = "Show number of changed files for artificial commits (restart required)";
             this.chkShowGitStatusForArtificialCommits.UseVisualStyleBackColor = true;
             // 
@@ -348,7 +348,7 @@
             this.chkShowStashCountInBrowseWindow.Location = new System.Drawing.Point(3, 72);
             this.chkShowStashCountInBrowseWindow.Name = "chkShowStashCountInBrowseWindow";
             this.chkShowStashCountInBrowseWindow.Size = new System.Drawing.Size(266, 17);
-            this.chkShowStashCountInBrowseWindow.TabIndex = 4;
+            this.chkShowStashCountInBrowseWindow.TabIndex = 5;
             this.chkShowStashCountInBrowseWindow.Text = "Show stash count on status bar in browse window";
             this.chkShowStashCountInBrowseWindow.UseVisualStyleBackColor = true;
             // 
@@ -358,7 +358,7 @@
             this.chkUseFastChecks.Location = new System.Drawing.Point(3, 49);
             this.chkUseFastChecks.Name = "chkUseFastChecks";
             this.chkUseFastChecks.Size = new System.Drawing.Size(274, 17);
-            this.chkUseFastChecks.TabIndex = 3;
+            this.chkUseFastChecks.TabIndex = 4;
             this.chkUseFastChecks.Text = "Use FileSystemWatcher to check if index is changed";
             this.chkUseFastChecks.UseVisualStyleBackColor = true;
             // 
@@ -368,7 +368,7 @@
             this.chkShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(3, 26);
             this.chkShowCurrentChangesInRevisionGraph.Name = "chkShowCurrentChangesInRevisionGraph";
             this.chkShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(337, 17);
-            this.chkShowCurrentChangesInRevisionGraph.TabIndex = 2;
+            this.chkShowCurrentChangesInRevisionGraph.TabIndex = 3;
             this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working directory changes as an artificial commit";
             this.chkShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 

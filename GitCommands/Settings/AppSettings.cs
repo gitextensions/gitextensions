@@ -371,8 +371,8 @@ namespace GitCommands
 
         public static bool ShowGitStatusForArtificialCommits
         {
-            get => GetBool("showgitstatusForArtificialCommits", true);
-            set => SetBool("showgitstatusForArtificialCommits", value);
+            get => GetBool("showgitstatusforartificialcommits", true);
+            set => SetBool("showgitstatusforartificialcommits", value);
         }
 
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||

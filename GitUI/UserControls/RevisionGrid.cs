@@ -1843,12 +1843,6 @@ namespace GitUI
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
                     }
 
-                    if (revision.IsArtificial)
-                    {
-                        drawRefArgs.RefsFont = new Font(drawRefArgs.RefsFont, FontStyle.Italic);
-                        rowFont = new Font(rowFont, FontStyle.Italic);
-                    }
-
                     if (IsCardLayout())
                     {
                         offset = baseOffset;
