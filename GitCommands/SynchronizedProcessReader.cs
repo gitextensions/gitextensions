@@ -16,9 +16,9 @@ namespace GitCommands
         private readonly Thread _stdOutputLoaderThread;
         private readonly Thread _stdErrLoaderThread;
 
-        public SynchronizedProcessReader(Process aProcess)
+        public SynchronizedProcessReader(Process process)
         {
-            Process = aProcess;
+            Process = process;
             _stdOutputLoaderThread = new Thread(_ => Output = ReadByte(Process.StandardOutput.BaseStream));
             _stdOutputLoaderThread.Start();
             _stdErrLoaderThread = new Thread(_ => Error = ReadByte(Process.StandardError.BaseStream));

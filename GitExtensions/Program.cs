@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensions
@@ -107,15 +107,16 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
+            GitUICommands commands = new GitUICommands(GetWorkingDir(args));
 
             if (args.Length <= 1)
             {
-                uCommands.StartBrowseDialog();
+                commands.StartBrowseDialog();
             }
-            else // if we are here args.Length > 1
+            else
             {
-                uCommands.RunCommand(args);
+                // if we are here args.Length > 1
+                commands.RunCommand(args);
             }
 
             AppSettings.SaveSettings();
@@ -190,7 +191,7 @@ namespace GitExtensions
                     // assume that if we are having this error and the installation is not a portable one then the folder will exist.
                     if (Directory.Exists(localSettingsPath))
                     {
-                        string messageContent = String.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
+                        string messageContent = string.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
 
                         if (DialogResult.Yes.Equals(MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2)))
                         {
@@ -199,7 +200,7 @@ namespace GitExtensions
                                 Directory.Delete(localSettingsPath, true); // deletes all application settings not just for this instance - but should work
 
                                 // Restart GitExtensions with the same arguments after old config is deleted?
-                                if (DialogResult.OK.Equals(MessageBox.Show(String.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
+                                if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
                                     System.Diagnostics.Process p = new System.Diagnostics.Process();
@@ -207,7 +208,7 @@ namespace GitExtensions
                                     if (args.Length > 1)
                                     {
                                         args[0] = "";
-                                        p.StartInfo.Arguments = String.Join(" ", args);
+                                        p.StartInfo.Arguments = string.Join(" ", args);
                                     }
 
                                     p.Start();
@@ -215,7 +216,7 @@ namespace GitExtensions
                             }
                             catch (IOException)
                             {
-                                MessageBox.Show(String.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(string.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                     }
@@ -223,15 +224,16 @@ namespace GitExtensions
                     // assuming that there is no localSettingsPath directory in existence we probably have a portable installation.
                     else
                     {
-                        string messageContent = String.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
+                        string messageContent = string.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
                         MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     exceptionHandled = true;
                 }
             }
-            finally // if we fail in this somehow at least this message might get somewhere
+            finally
             {
+                // if we fail in this somehow at least this message might get somewhere
                 if (!exceptionHandled)
                 {
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

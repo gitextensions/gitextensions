@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -11,7 +12,6 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
-using System.Linq;
 
 namespace GitCommands
 {
@@ -98,14 +98,14 @@ namespace GitCommands
             set => SetBool("RememberAmendCommitState", value);
         }
 
-        public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
+        public static void UsingContainer(RepoDistSettings settingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
                     var oldSC = SettingsContainer;
                     try
                     {
-                        SettingsContainer = aSettingsContainer;
+                        SettingsContainer = settingsContainer;
                         action();
                     }
                     finally
@@ -126,7 +126,7 @@ namespace GitCommands
             }
 
             string dir = ReadStringRegValue("InstallDir", string.Empty);
-            if (String.IsNullOrEmpty(dir))
+            if (string.IsNullOrEmpty(dir))
             {
                 return GetGitExtensionsDirectory();
             }
@@ -252,7 +252,7 @@ namespace GitCommands
         {
             get
             {
-                if (String.IsNullOrEmpty(GitCommandValue))
+                if (string.IsNullOrEmpty(GitCommandValue))
                 {
                     return "git";
                 }
@@ -1315,7 +1315,7 @@ namespace GitCommands
             set => SetBool("dashboardshowcurrentbranch", value);
         }
 
-        public static string ownScripts
+        public static string OwnScripts
         {
             get => GetString("ownScripts", "");
             set => SetString("ownScripts", value);
@@ -1407,13 +1407,13 @@ namespace GitCommands
 
         public static string CommitValidationRegEx
         {
-            get => GetString("CommitValidationRegEx", String.Empty);
+            get => GetString("CommitValidationRegEx", string.Empty);
             set => SetString("CommitValidationRegEx", value);
         }
 
         public static string CommitTemplates
         {
-            get => GetString("CommitTemplates", String.Empty);
+            get => GetString("CommitTemplates", string.Empty);
             set => SetString("CommitTemplates", value);
         }
 
@@ -1481,18 +1481,18 @@ namespace GitCommands
             return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
-        private static RegistryKey _VersionIndependentRegKey;
+        private static RegistryKey _versionIndependentRegKey;
 
         private static RegistryKey VersionIndependentRegKey
         {
             get
             {
-                if (_VersionIndependentRegKey == null)
+                if (_versionIndependentRegKey == null)
                 {
-                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                    _versionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 }
 
-                return _VersionIndependentRegKey;
+                return _versionIndependentRegKey;
             }
         }
 
@@ -1509,7 +1509,7 @@ namespace GitCommands
                 yield break;
             }
 
-            foreach (String name in oldSettings.GetValueNames())
+            foreach (string name in oldSettings.GetValueNames())
             {
                 object value = oldSettings.GetValue(name, null);
                 if (value != null)
@@ -1701,7 +1701,7 @@ namespace GitCommands
 
     public class AppSettingsPath : SettingsPath
     {
-        public AppSettingsPath(string aPathName) : base(null, aPathName)
+        public AppSettingsPath(string pathName) : base(null, pathName)
         {
         }
 

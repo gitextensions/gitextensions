@@ -84,8 +84,8 @@ namespace TeamCityIntegration
             request.CookieContainer = cookieContainer;
 
             if (buildServerCredentials != null
-                && !String.IsNullOrEmpty(buildServerCredentials.Username)
-                && !String.IsNullOrEmpty(buildServerCredentials.Password))
+                && !string.IsNullOrEmpty(buildServerCredentials.Username)
+                && !string.IsNullOrEmpty(buildServerCredentials.Password))
             {
                 request.Credentials = new NetworkCredential(buildServerCredentials.Username, buildServerCredentials.Password);
             }
@@ -295,7 +295,7 @@ namespace TeamCityIntegration
 
             if (task.IsFaulted)
             {
-                Debug.Assert(task.Exception != null);
+                Debug.Assert(task.Exception != null, "task.Exception != null");
 
                 observer.OnError(task.Exception);
                 return true;
@@ -370,8 +370,8 @@ namespace TeamCityIntegration
             }
 
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
-            bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
-                                task.CompletedResult().StatusCode == HttpStatusCode.Unauthorized || task.CompletedResult().StatusCode == HttpStatusCode.Forbidden;
+            bool unauthorized = (task.Status == TaskStatus.RanToCompletion &&
+                                task.CompletedResult().StatusCode == HttpStatusCode.Unauthorized) || task.CompletedResult().StatusCode == HttpStatusCode.Forbidden;
 
             if (!retry)
             {

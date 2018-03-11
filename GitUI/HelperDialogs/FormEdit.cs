@@ -7,7 +7,7 @@
         {
             InitializeComponent();
             Translate();
-            Viewer.ViewText("", text);
+            Viewer.ViewTextAsync("", text);
             Viewer.IsReadOnly = false;
         }
     }

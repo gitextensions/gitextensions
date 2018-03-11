@@ -30,8 +30,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        internal FormFileHistory(GitUICommands aCommands)
-            : base(aCommands)
+        internal FormFileHistory(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             _asyncLoader = new AsyncLoader();
@@ -63,8 +63,8 @@ namespace GitUI.CommandsDialogs
             _longShaProvider = new LongShaProvider(() => Module);
         }
 
-        public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
-            : this(aCommands)
+        public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision, bool filterByRevision)
+            : this(commands)
         {
             FileChanges.SetInitialRevision(revision?.Guid);
             Translate();
@@ -108,8 +108,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormFileHistory(GitUICommands aCommands, string fileName)
-            : this(aCommands, fileName, null, false)
+        public FormFileHistory(GitUICommands commands, string fileName)
+            : this(commands, fileName, null, false)
         {
         }
 
@@ -322,7 +322,7 @@ namespace GitUI.CommandsDialogs
                 var scrollpos = View.ScrollPos;
 
                 View.Encoding = Diff.Encoding;
-                View.ViewGitItemRevision(fileName, revision.Guid);
+                View.ViewGitItemRevisionAsync(fileName, revision.Guid);
                 View.ScrollPos = scrollpos;
             }
             else if (tabControl1.SelectedTab == DiffTab)
@@ -332,6 +332,10 @@ namespace GitUI.CommandsDialogs
                 file.Name = fileName;
                 file.IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName));
                 Diff.ViewChangesAsync(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
+            }
+            else if (tabControl1.SelectedTab == CommitInfoTabPage)
+            {
+                CommitDiff.SetRevision(revision.Guid, fileName);
             }
 
             if (_buildReportTabPageExtension == null)
@@ -356,15 +360,15 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var selectedRows = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
 
             string orgFileName = null;
-            if (selectedRows.Count > 0)
+            if (selectedRevisions.Count > 0)
             {
-                orgFileName = selectedRows[0].Name;
+                orgFileName = selectedRevisions[0].Name;
             }
 
-            FileChanges.OpenWithDifftool(FileName, orgFileName, RevisionDiffKind.DiffAB);
+            FileChanges.OpenWithDifftool(selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -454,11 +458,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void viewCommitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FileChanges.ViewSelectedRevisions();
-        }
-
         private void FileHistoryContextMenuOpening(object sender, CancelEventArgs e)
         {
             var selectedRevisions = FileChanges.GetSelectedRevisions();
@@ -468,8 +467,7 @@ namespace GitUI.CommandsDialogs
                 File.Exists(_fullPathResolver.Resolve(FileName));
             openWithDifftoolToolStripMenuItem.Enabled =
                 selectedRevisions.Count >= 1 && selectedRevisions.Count <= 2;
-            manipuleerCommitToolStripMenuItem.Enabled =
-                viewCommitToolStripMenuItem.Enabled =
+            manipulateCommitToolStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
             saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
         }
@@ -492,7 +490,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileName, string.Empty, RevisionDiffKind.DiffBLocal);
+            FileChanges.OpenWithDifftool(FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)

@@ -374,7 +374,7 @@ namespace NetSpell.SpellChecker.Dictionary
             TryCharacters = "";
 
             // the following is used to split a line by white space
-            Regex _spaceRegx = new Regex(@"[^\s]+", RegexOptions.Compiled);
+            Regex spaceRegx = new Regex(@"[^\s]+", RegexOptions.Compiled);
             MatchCollection partMatches;
 
             string currentSection = "";
@@ -425,7 +425,7 @@ namespace NetSpell.SpellChecker.Dictionary
                             case "[Suffix]": // MySpell suffix rules
 
                                 // split line by white space
-                                partMatches = _spaceRegx.Matches(tempLine);
+                                partMatches = spaceRegx.Matches(tempLine);
 
                                 // if 3 parts, then new rule
                                 if (partMatches.Count == 3)
@@ -481,7 +481,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 break;
                             case "[Phonetic]": // ASpell phonetic rules
                                 // split line by white space
-                                partMatches = _spaceRegx.Matches(tempLine);
+                                partMatches = spaceRegx.Matches(tempLine);
                                 if (partMatches.Count >= 2)
                                 {
                                     PhoneticRule rule = new PhoneticRule();
@@ -683,8 +683,8 @@ namespace NetSpell.SpellChecker.Dictionary
 #if FULL_PROFILE
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
 #endif
-            [NotifyParentProperty(true)]
-            public string DictionaryFolder { get; set; } = "";
+        [NotifyParentProperty(true)]
+        public string DictionaryFolder { get; set; } = "";
 
         /// <summary>
         ///     Set this to true to automatically create a user dictionary when

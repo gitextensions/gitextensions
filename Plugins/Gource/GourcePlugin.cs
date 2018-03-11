@@ -1,12 +1,12 @@
-﻿using GitUIPluginInterfaces;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
+using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 
 namespace Gource
@@ -36,16 +36,16 @@ namespace Gource
             Translate();
         }
 
-        private StringSetting _GourcePath = new StringSetting("Path to Gource", "");
-        private StringSetting _GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        private StringSetting _gourcePath = new StringSetting("Path to Gource", "");
+        private StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 
         public override IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
-            yield return _GourcePath;
-            yield return _GourceArguments;
+            yield return _gourcePath;
+            yield return _gourceArguments;
         }
 
         public override bool Execute(GitUIBaseEventArgs eventArgs)
@@ -58,7 +58,7 @@ namespace Gource
                 return false;
             }
 
-            var pathToGource = _GourcePath.ValueOrDefault(Settings);
+            var pathToGource = _gourcePath.ValueOrDefault(Settings);
 
             if (!string.IsNullOrEmpty(pathToGource))
             {
@@ -68,8 +68,8 @@ namespace Gource
                             string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        Settings.SetValue<string>(_GourcePath.Name, _GourcePath.DefaultValue, s => s);
-                        pathToGource = _GourcePath.DefaultValue;
+                        Settings.SetValue<string>(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
+                        pathToGource = _gourcePath.DefaultValue;
                     }
                 }
             }
@@ -110,11 +110,11 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, eventArgs, _GourceArguments.ValueOrDefault(Settings)))
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs, _gourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
-                Settings.SetValue<string>(_GourceArguments.Name, gourceStart.GourceArguments, s => s);
-                Settings.SetValue<string>(_GourcePath.Name, gourceStart.PathToGource, s => s);
+                Settings.SetValue<string>(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
+                Settings.SetValue<string>(_gourcePath.Name, gourceStart.PathToGource, s => s);
             }
 
             return true;
@@ -140,7 +140,7 @@ namespace Gource
                         Directory.CreateDirectory(directoryName);
                     }
 
-                    if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
+                    if (fileName == string.Empty || theEntry.Name.IndexOf(".ini") >= 0)
                     {
                         continue;
                     }
@@ -183,7 +183,7 @@ namespace Gource
             }
         }
 
-        public int DownloadFile(String remoteFilename, String localFilename)
+        public int DownloadFile(string remoteFilename, string localFilename)
         {
             // Function will return the number of bytes processed
             // to the caller. Initialize to 0 here.

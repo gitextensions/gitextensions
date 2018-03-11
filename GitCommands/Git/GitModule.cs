@@ -67,12 +67,12 @@ namespace GitCommands
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
     public struct ConflictData
     {
-        public ConflictData(ConflictedFileData _base, ConflictedFileData _local,
-            ConflictedFileData _remote)
+        public ConflictData(ConflictedFileData @base, ConflictedFileData local,
+            ConflictedFileData remote)
         {
-            Base = _base;
-            Local = _local;
-            Remote = _remote;
+            Base = @base;
+            Local = local;
+            Remote = remote;
         }
 
         public ConflictedFileData Base;
@@ -290,7 +290,7 @@ namespace GitCommands
                     const string controlStr = "ą"; // "a caudata"
                     string arguments = string.Format("config --get {0}", controlStr);
 
-                    String s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
+                    string s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
                     {
                         _systemEncoding = new UTF8Encoding(false);
@@ -395,7 +395,7 @@ namespace GitCommands
             return systemPath;
         }
 
-        private string _GitCommonDirectory;
+        private string _gitCommonDirectory;
 
         /// <summary>
         /// Returns git common directory
@@ -405,17 +405,17 @@ namespace GitCommands
         {
             get
             {
-                if (_GitCommonDirectory == null)
+                if (_gitCommonDirectory == null)
                 {
                     var commDir = RunGitCmdResult("rev-parse --git-common-dir");
-                    _GitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
-                    if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !Directory.Exists(_GitCommonDirectory))
+                    _gitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
+                    if (!commDir.ExitedSuccessfully || _gitCommonDirectory == ".git" || !Directory.Exists(_gitCommonDirectory))
                     {
-                        _GitCommonDirectory = GetGitDirectory();
+                        _gitCommonDirectory = GetGitDirectory();
                     }
                 }
 
-                return _GitCommonDirectory;
+                return _gitCommonDirectory;
             }
         }
 
@@ -752,13 +752,13 @@ namespace GitCommands
 
             side = GetSide(side);
 
-            string result = RunGitCmd(String.Format("checkout-index -f --stage={0} -- \"{1}\"", side, fileName));
+            string result = RunGitCmd(string.Format("checkout-index -f --stage={0} -- \"{1}\"", side, fileName));
             if (!result.IsNullOrEmpty())
             {
                 return false;
             }
 
-            result = RunGitCmd(String.Format("add -- \"{0}\"", fileName));
+            result = RunGitCmd(string.Format("add -- \"{0}\"", fileName));
             return result.IsNullOrEmpty();
         }
 
@@ -769,7 +769,7 @@ namespace GitCommands
 
             side = GetSide(side);
 
-            var result = RunGitCmd(String.Format("checkout-index --stage={0} --temp -- \"{1}\"", side, fileName));
+            var result = RunGitCmd(string.Format("checkout-index --stage={0} --temp -- \"{1}\"", side, fileName));
             if (result.IsNullOrEmpty())
             {
                 return false;
@@ -950,7 +950,7 @@ namespace GitCommands
                 string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
-                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out var stage) && stage >= 1 && stage <= 3)
+                if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out var stage) && stage >= 1 && stage <= 3)
                 {
                     var itemName = fileStage.Substring(2);
                     if (prevItemName != itemName && prevItemName != null)
@@ -1169,11 +1169,11 @@ namespace GitCommands
             }
 
             var message = new StringBuilder();
-            bool bNotesStart = false;
+            bool notesStart = false;
             for (int i = startIndex; i <= endIndex; i++)
             {
                 string line = lines[i];
-                if (bNotesStart)
+                if (notesStart)
                 {
                     line = "    " + line;
                 }
@@ -1181,7 +1181,7 @@ namespace GitCommands
                 message.AppendLine(line);
                 if (lines[i] == "Notes:")
                 {
-                    bNotesStart = true;
+                    notesStart = true;
                 }
             }
 
@@ -1827,8 +1827,8 @@ namespace GitCommands
                 sprogressOption = "--progress ";
             }
 
-            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
-            return String.Format("push {0}--all \"{1}\"", options, remote.Trim());
+            var options = string.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
+            return string.Format("push {0}--all \"{1}\"", options, remote.Trim());
         }
 
         /// <summary>Creates a 'git push' command using the specified parameters.</summary>
@@ -1850,7 +1850,7 @@ namespace GitCommands
             fromBranch = FormatBranchName(fromBranch);
             toBranch = GitCommandHelpers.GetFullBranchName(toBranch);
 
-            if (String.IsNullOrEmpty(fromBranch) && !String.IsNullOrEmpty(toBranch))
+            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
             {
                 fromBranch = "HEAD";
             }
@@ -1882,13 +1882,13 @@ namespace GitCommands
                 sprogressOption = "--progress ";
             }
 
-            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
-            if (!String.IsNullOrEmpty(toBranch) && !String.IsNullOrEmpty(fromBranch))
+            var options = string.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
+            if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
             {
-                return String.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
             }
 
-            return String.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
         }
 
         private ProcessStartInfo CreateGitStartInfo(string arguments)
@@ -2094,7 +2094,7 @@ namespace GitCommands
                 return str1 + str2;
             }
 
-            Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value);
+            Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
             return str1.Substring(0, str1.Length - 2) + m2.Groups[2].Value + "?=";
         }
 
@@ -2243,9 +2243,9 @@ namespace GitCommands
                         }
 
                         if (string.IsNullOrEmpty(line) ||
-                            !string.IsNullOrEmpty(patchFile.Author) &&
+                            (!string.IsNullOrEmpty(patchFile.Author) &&
                             !string.IsNullOrEmpty(patchFile.Date) &&
-                            !string.IsNullOrEmpty(patchFile.Subject))
+                            !string.IsNullOrEmpty(patchFile.Subject)))
                         {
                             break;
                         }
@@ -2428,7 +2428,7 @@ namespace GitCommands
             }
 
             var patchManager = new PatchManager();
-            var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
+            var arguments = string.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
             cacheResult = cacheResult &&
                 !secondRevision.IsArtificial() &&
                 !firstRevision.IsArtificial() &&
@@ -2708,7 +2708,7 @@ namespace GitCommands
                 args = string.Concat(DiffCommandWithStandardArgs, "-M -C --cached ", extraDiffArguments, " -- ", fileName.Quote(), " ", oldFileName.Quote());
             }
 
-            String result = RunGitCmd(args, LosslessEncoding);
+            string result = RunGitCmd(args, LosslessEncoding);
             var patchManager = new PatchManager();
             patchManager.LoadPatch(result, false, encoding);
 
@@ -2847,7 +2847,7 @@ namespace GitCommands
         {
             string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, branch));
             string merge = GetSetting(string.Format("branch.{0}.merge", branch));
-            if (String.IsNullOrEmpty(remote) || String.IsNullOrEmpty(merge))
+            if (string.IsNullOrEmpty(remote) || string.IsNullOrEmpty(merge))
             {
                 return "";
             }
@@ -3184,7 +3184,7 @@ namespace GitCommands
 
         public string[] GetFullTree(string id)
         {
-            string tree = RunCacheableCmd(AppSettings.GitCommand, String.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
+            string tree = RunCacheableCmd(AppSettings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
             return tree.Split(new char[] { '\0', '\n' });
         }
 
@@ -3294,8 +3294,9 @@ namespace GitCommands
                     {
                         blameHeader.FileName = ReEncodeFileNameFromLossless(line.Substring("filename".Length).Trim());
                     }
-                    else if (line.IndexOf(' ') == 40) // SHA1, create new line!
+                    else if (line.IndexOf(' ') == 40)
                     {
+                        // SHA1, create new line!
                         blameLine = new GitBlameLine();
                         var headerParams = line.Split(' ');
                         blameLine.CommitGuid = headerParams[0];
@@ -3326,14 +3327,16 @@ namespace GitCommands
 
         public string GetFileBlobHash(string fileName, string revision)
         {
-            if (revision == GitRevision.UnstagedGuid) // working directory changes
+            if (revision == GitRevision.UnstagedGuid)
             {
+                // working directory changes
                 Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
 
-            if (revision == GitRevision.IndexGuid) // index
+            if (revision == GitRevision.IndexGuid)
             {
+                // index
                 string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
                 string[] s = blob.Split(new char[] { ' ', '\t' });
                 if (s.Length >= 2)
@@ -3536,7 +3539,7 @@ namespace GitCommands
             }
 
             string fullBranchName = GitCommandHelpers.GetFullBranchName(branchName);
-            if (String.IsNullOrEmpty(RevParse(fullBranchName)))
+            if (string.IsNullOrEmpty(RevParse(fullBranchName)))
             {
                 fullBranchName = branchName;
             }
@@ -3694,10 +3697,12 @@ namespace GitCommands
                     }
                     else if (toEncodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        encoding = null; // no recoding is needed
+                        // no recoding is needed
+                        encoding = null;
                     }
-                    else if (CpEncodingPattern.IsMatch(toEncodingName)) // Encodings written as e.g. "cp1251", which is not a supported encoding string
+                    else if (CpEncodingPattern.IsMatch(toEncodingName))
                     {
+                        // Encodings written as e.g. "cp1251", which is not a supported encoding string
                         encoding = Encoding.GetEncoding(int.Parse(toEncodingName.Substring(2)));
                     }
                     else
@@ -3705,8 +3710,9 @@ namespace GitCommands
                         encoding = Encoding.GetEncoding(toEncodingName);
                     }
                 }
-                else// bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
+                else
                 {
+                    // bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
                     encoding = LogOutputEncoding;
                 }
             }
@@ -3780,7 +3786,7 @@ namespace GitCommands
             return (other != null) && Equals(other);
         }
 
-        bool Equals(GitModule other)
+        private bool Equals(GitModule other)
         {
             return
                 string.Equals(WorkingDir, other.WorkingDir) &&

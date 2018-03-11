@@ -18,18 +18,18 @@ namespace BackgroundFetch
         private IDisposable _cancellationToken;
         private IGitUICommands _currentGitUiCommands;
 
-        private StringSetting _GitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
-        private NumberSetting<int> _FetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
-        private BoolSetting _AutoRefresh = new BoolSetting("Refresh view after fetch", false);
-        private BoolSetting _FetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
+        private StringSetting _gitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
+        private NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
+        private BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", false);
+        private BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
 
         public override IEnumerable<ISetting> GetSettings()
         {
             // return all settings or introduce implementation based on reflection on GitPluginBase level
-            yield return _GitCommand;
-            yield return _FetchInterval;
-            yield return _AutoRefresh;
-            yield return _FetchAllSubmodules;
+            yield return _gitCommand;
+            yield return _fetchInterval;
+            yield return _autoRefresh;
+            yield return _fetchAllSubmodules;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -51,7 +51,7 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            int fetchInterval = _FetchInterval.ValueOrDefault(Settings);
+            int fetchInterval = _fetchInterval.ValueOrDefault(Settings);
 
             var gitModule = _currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
@@ -77,14 +77,14 @@ namespace BackgroundFetch
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
-                                      if (_FetchAllSubmodules.ValueOrDefault(Settings))
+                                      if (_fetchAllSubmodules.ValueOrDefault(Settings))
                                       {
                                           _currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
                                       }
 
-                                      var gitCmd = _GitCommand.ValueOrDefault(Settings).Trim();
+                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim();
                                       var msg = _currentGitUiCommands.GitCommand(gitCmd);
-                                      if (_AutoRefresh.ValueOrDefault(Settings))
+                                      if (_autoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {

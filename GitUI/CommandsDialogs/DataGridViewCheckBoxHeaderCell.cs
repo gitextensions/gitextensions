@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs
             base.Paint(graphics, clipBounds, cellBounds, rowIndex, dataGridViewElementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
 
             var glyphSize = CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.UncheckedNormal);
-            var relativeLocation = new Point(cellBounds.Width / 2 - glyphSize.Width / 2, cellBounds.Height / 2 - glyphSize.Height / 2);
+            var relativeLocation = new Point((cellBounds.Width / 2) - (glyphSize.Width / 2), (cellBounds.Height / 2) - (glyphSize.Height / 2));
             var absoluteLocation = new Point(cellBounds.Location.X + relativeLocation.X, cellBounds.Location.Y + relativeLocation.Y);
 
             _checkBoxArea = new Rectangle(relativeLocation, glyphSize);

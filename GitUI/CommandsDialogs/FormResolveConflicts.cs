@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.CommandsDialogs
 {
@@ -94,13 +94,13 @@ namespace GitUI.CommandsDialogs
 
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormResolveConflicts(GitUICommands aCommands)
-            : this(aCommands, true)
+        public FormResolveConflicts(GitUICommands commands)
+            : this(commands, true)
         {
         }
 
-        public FormResolveConflicts(GitUICommands aCommands, bool offerCommit)
-            : base(aCommands)
+        public FormResolveConflicts(GitUICommands commands, bool offerCommit)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -365,7 +365,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        enum ItemType
+        private enum ItemType
         {
             File,
             Directory,
@@ -732,9 +732,9 @@ namespace GitUI.CommandsDialogs
                 conflictDescription.Text = string.Format(_fileModifiedLocallyAndDelededRemotely.Text, localSide, remoteSide);
             }
 
-            baseFileName.Text = (baseFileExists ? item.Base.Filename : _noBase.Text);
-            localFileName.Text = (localFileExists ? item.Local.Filename : _deleted.Text);
-            remoteFileName.Text = (remoteFileExists ? item.Remote.Filename : _deleted.Text);
+            baseFileName.Text = baseFileExists ? item.Base.Filename : _noBase.Text;
+            localFileName.Text = localFileExists ? item.Local.Filename : _deleted.Text;
+            remoteFileName.Text = remoteFileExists ? item.Remote.Filename : _deleted.Text;
 
             var itemType = GetItemType(item.Filename);
             if (itemType == ItemType.Submodule)
@@ -845,18 +845,22 @@ namespace GitUI.CommandsDialogs
                                                                             caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // base
+
+                if (frm.KeepBase)
                 {
+                    // base
                     ChooseBaseOnConflict(item.Filename);
                 }
 
-                if (frm.KeepLocal) // local
+                if (frm.KeepLocal)
                 {
+                    // local
                     ChooseLocalOnConflict(item.Filename);
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
@@ -880,18 +884,22 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // delete
+
+                if (frm.KeepBase)
                 {
+                    // delete
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
 
-                if (frm.KeepLocal) // local
+                if (frm.KeepLocal)
                 {
+                    // local
                     ChooseLocalOnConflict(item.Filename);
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
@@ -917,18 +925,22 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // base
+
+                if (frm.KeepBase)
                 {
+                    // base
                     ChooseBaseOnConflict(item.Filename);
                 }
 
-                if (frm.KeepLocal) // delete
+                if (frm.KeepLocal)
                 {
+                    // delete
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     ChooseRemoteOnConflict(item.Filename);
                 }
             }
@@ -954,18 +966,22 @@ namespace GitUI.CommandsDialogs
                 caption))
             {
                 frm.ShowDialog(this);
-                if (frm.KeepBase) // base
+
+                if (frm.KeepBase)
                 {
+                    // base
                     ChooseBaseOnConflict(item.Filename);
                 }
 
-                if (frm.KeepLocal) // delete
+                if (frm.KeepLocal)
                 {
+                    // delete
                     ChooseLocalOnConflict(item.Filename);
                 }
 
-                if (frm.KeepRemote) // remote
+                if (frm.KeepRemote)
                 {
+                    // remote
                     Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
                 }
             }
@@ -1025,11 +1041,11 @@ namespace GitUI.CommandsDialogs
 
                 System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
-                int LastRow = hti.RowIndex;
+                int lastRow = hti.RowIndex;
                 ConflictedFiles.ClearSelection();
-                if (LastRow >= 0 && ConflictedFiles.Rows.Count > LastRow)
+                if (lastRow >= 0 && ConflictedFiles.Rows.Count > lastRow)
                 {
-                    ConflictedFiles.Rows[LastRow].Selected = true;
+                    ConflictedFiles.Rows[lastRow].Selected = true;
                 }
 
                 SetAvailableCommands(true);
@@ -1150,16 +1166,15 @@ namespace GitUI.CommandsDialogs
 
         private void StageFile(string filename)
         {
-            var processStart = new FormStatus.ProcessStart
-                (
-                    delegate(FormStatus form)
-                    {
-                        form.AddMessageLine(string.Format(_stageFilename.Text, filename));
-                        string output = Module.RunGitCmd("add -- \"" + filename + "\"");
-                        form.AddMessageLine(output);
-                        form.Done(string.IsNullOrEmpty(output));
-                    });
-            using (var process = new FormStatus(processStart, null) { Text = string.Format(_stageFilename.Text, filename) })
+            void ProcessStart(FormStatus form)
+            {
+                form.AddMessageLine(string.Format(_stageFilename.Text, filename));
+                string output = Module.RunGitCmd("add -- \"" + filename + "\"");
+                form.AddMessageLine(output);
+                form.Done(string.IsNullOrEmpty(output));
+            }
+
+            using (var process = new FormStatus(ProcessStart, null) { Text = string.Format(_stageFilename.Text, filename) })
             {
                 process.ShowDialogOnError(this);
             }

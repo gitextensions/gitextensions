@@ -1,9 +1,9 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class MenuUtil
+    internal class MenuUtil
     {
         private static CaptionCustomMenuRenderer customMenuRenderer = new CaptionCustomMenuRenderer();
         private static Font disabledFont;

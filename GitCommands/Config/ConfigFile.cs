@@ -14,10 +14,10 @@ namespace GitCommands.Config
 
         public bool Local { get; private set; }
 
-        public ConfigFile(string fileName, bool aLocal)
+        public ConfigFile(string fileName, bool local)
         {
             ConfigSections = new List<IConfigSection>();
-            Local = aLocal;
+            Local = local;
 
             FileName = fileName;
             try
@@ -189,7 +189,7 @@ namespace GitCommands.Config
 
         public string GetValue(string setting, string defaultValue)
         {
-            if (String.IsNullOrEmpty(setting))
+            if (string.IsNullOrEmpty(setting))
             {
                 throw new ArgumentNullException();
             }
@@ -325,9 +325,9 @@ namespace GitCommands.Config
                 _configFile = configFile;
             }
 
-            public void Parse(string aFileContent = null)
+            public void Parse(string fileContent = null)
             {
-                _fileContent = aFileContent ?? File.ReadAllText(FileName, ConfigFile.GetEncoding());
+                _fileContent = fileContent ?? File.ReadAllText(FileName, ConfigFile.GetEncoding());
 
                 ParsePart parseFunc = ReadUnknown;
 

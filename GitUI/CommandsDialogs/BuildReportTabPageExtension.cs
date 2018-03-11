@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs
         private TabPage _buildReportTabPage;
         private WebBrowserCtrl _buildReportWebBrowser;
         private GitRevision _selectedGitRevision;
-        private String _url;
+        private string _url;
 
         public BuildReportTabPageExtension(TabControl tabControl, string caption)
         {

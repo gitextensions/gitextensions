@@ -167,8 +167,8 @@ namespace GitUI.SpellChecker
                 // the Platform SDK appears to be incorrect on this matter.
                 // the hiword is the line number and the loword is the index
                 // of the character on this line
-                var lineNumber = ((res & 0xFFFF) >> 16);
-                var charIndex = (res & 0xFFFF);
+                var lineNumber = (res & 0xFFFF) >> 16;
+                var charIndex = res & 0xFFFF;
 
                 // Find the index of the first character on the line within
                 // the control:

@@ -81,7 +81,7 @@ namespace GitCommandsTests.Helpers
         public void TestCompareWithNonExistingFile()
         {
             Assert.IsFalse(new FileInfo("inexistentFile").Compare("anotherInexistentFile"));
-            Assert.IsFalse(new FileInfo(String.Format("inexistentFolder{0}inexistentFile", Path.PathSeparator)).Compare(String.Format("anotherInexistentFolder{0}anotherInexistentFile", Path.PathSeparator)));
+            Assert.IsFalse(new FileInfo(string.Format("inexistentFolder{0}inexistentFile", Path.PathSeparator)).Compare(string.Format("anotherInexistentFolder{0}anotherInexistentFile", Path.PathSeparator)));
         }
 
         [TestMethod]

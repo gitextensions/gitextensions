@@ -6,19 +6,19 @@ namespace GitUI.UserManual
 {
     public class SingleHtmlUserManual : IProvideUserManual
     {
-        private static string _Location;
+        private static string _location;
         public static string Location
         {
             get
             {
-                if (_Location == null)
+                if (_location == null)
                 {
                     var path = Path.Combine(AppSettings.GetInstallDir(), "help");
                     var uri = new System.Uri(path);
-                    _Location = uri.AbsolutePath;
+                    _location = uri.AbsolutePath;
                 }
 
-                return _Location;
+                return _location;
             }
         }
 

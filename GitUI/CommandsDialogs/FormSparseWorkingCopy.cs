@@ -20,15 +20,15 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         private IDisposable _disposable1;
 
-        public FormSparseWorkingCopy([CanBeNull] GitUICommands aCommands /* Translation tests set it to NULL */)
-            : base(aCommands)
+        public FormSparseWorkingCopy([CanBeNull] GitUICommands commands /* Translation tests set it to NULL */)
+            : base(commands)
         {
-            if (aCommands == null)
+            if (commands == null)
             {
                 return;
             }
 
-            var sparse = new FormSparseWorkingCopyViewModel(aCommands);
+            var sparse = new FormSparseWorkingCopyViewModel(commands);
             BindToViewModelGlobal(sparse);
             CreateView(sparse);
             Translate();
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (!args.Cancel)
                 {
-                    args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, (args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text)), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
+                    args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
                 }
             };
         }
@@ -184,10 +184,10 @@ namespace GitUI.CommandsDialogs
             sparse.PropertyChanged += delegate { separatorWhenDisabled.Visible = !sparse.IsSparseCheckoutEnabled; };
 
             // When enabled: a less bold link to disable
-            string sLabelBeforeLink = Globalized.Strings.SparseWorkingCopySupportIsEnabled.Text + ' ';
-            string sLabelWithLink = sLabelBeforeLink + Globalized.Strings.DisableForThisRepository.Text;
-            var labelWhenEnabled = new LinkLabel() { Text = sLabelWithLink, Dock = DockStyle.Bottom, AutoSize = true, Padding = new Padding(10, 10, 10, 5), FlatStyle = FlatStyle.System, UseCompatibleTextRendering = true };
-            labelWhenEnabled.Links.Add(new LinkLabel.Link(sLabelBeforeLink.Length, sLabelWithLink.Length - sLabelBeforeLink.Length));
+            string labelBeforeLink = Globalized.Strings.SparseWorkingCopySupportIsEnabled.Text + ' ';
+            string labelWithLink = labelBeforeLink + Globalized.Strings.DisableForThisRepository.Text;
+            var labelWhenEnabled = new LinkLabel() { Text = labelWithLink, Dock = DockStyle.Bottom, AutoSize = true, Padding = new Padding(10, 10, 10, 5), FlatStyle = FlatStyle.System, UseCompatibleTextRendering = true };
+            labelWhenEnabled.Links.Add(new LinkLabel.Link(labelBeforeLink.Length, labelWithLink.Length - labelBeforeLink.Length));
             labelWhenEnabled.LinkClicked += delegate { sparse.IsSparseCheckoutEnabled = false; };
             tooltip.SetToolTip(labelWhenEnabled, string.Format(Globalized.Strings.SetsTheGitPropertyToFalseForTheLocalRepository.Text, FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout));
             sparse.PropertyChanged += delegate { labelWhenEnabled.Visible = sparse.IsSparseCheckoutEnabled; };
@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs
                 FileInfo sparsefile = sparse.GetPathToSparseCheckoutFile();
                 if (sparsefile.Exists)
                 {
-                    editor.ViewFile(sparsefile.FullName);
+                    editor.ViewFileAsync(sparsefile.FullName);
                 }
             }
             catch (Exception ex)

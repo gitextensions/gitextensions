@@ -2,14 +2,14 @@
 
 namespace Github3
 {
-    class GithubHostedRemote : IHostedRemote
+    internal class GithubHostedRemote : IHostedRemote
     {
         private GithubRepo _repo;
-        public GithubHostedRemote(string Name, string Owner, string RemoteRepositoryName)
+        public GithubHostedRemote(string name, string owner, string remoteRepositoryName)
         {
-            this.Name = Name;
-            this.Owner = Owner;
-            this.RemoteRepositoryName = RemoteRepositoryName;
+            Name = name;
+            Owner = owner;
+            RemoteRepositoryName = remoteRepositoryName;
         }
 
         public IHostedRepository GetHostedRepository()
@@ -41,6 +41,6 @@ namespace Github3
 
         public string Data => Owner + "/" + RemoteRepositoryName;
         public string DisplayData => Data;
-        public bool IsOwnedByMe => GithubLoginInfo.username == Owner;
+        public bool IsOwnedByMe => GithubLoginInfo.Username == Owner;
     }
 }

@@ -22,8 +22,8 @@ namespace GitUI.CommandsDialogs
         private string _currentBranch;
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
 
-        public FormDeleteBranch(GitUICommands aCommands, string defaultBranch)
-            : base(aCommands)
+        public FormDeleteBranch(GitUICommands commands, string defaultBranch)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

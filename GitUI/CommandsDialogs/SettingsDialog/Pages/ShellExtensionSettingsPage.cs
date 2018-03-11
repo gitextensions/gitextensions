@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            String l_CascadeShellMenuItems = "";
+            string l_CascadeShellMenuItems = "";
 
             for (int i = 0; i < chlMenuEntries.Items.Count; i++)
             {

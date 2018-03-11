@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,7 +10,6 @@ using GitCommands.Config;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
-using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
             ////GitBinPath.Text = Settings.GitBinDir;
             PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(null, null);
@@ -335,7 +335,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private readonly string[] _AutoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
+        private readonly string[] _autoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
@@ -358,7 +358,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 CheckSettingsLogic.SolveMergeToolPathForKDiff();
             }
-            else if (_AutoConfigMergeTools.Any(tool => CommonLogic.IsMergeTool(tool)))
+            else if (_autoConfigMergeTools.Any(tool => CommonLogic.IsMergeTool(tool)))
             {
                 CheckSettingsLogic.AutoConfigMergeToolCmd();
 
@@ -405,7 +405,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
@@ -427,23 +427,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public bool CheckSettings()
         {
-            bool bValid = true;
+            bool isValid = true;
             try
             {
-                // once a check fails, we want bValid to stay false
-                bValid = CheckGitCmdValid();
-                bValid = CheckGlobalUserSettingsValid() && bValid;
-                bValid = CheckEditorTool() && bValid;
-                bValid = CheckMergeTool() && bValid;
-                bValid = CheckDiffToolConfiguration() && bValid;
-                bValid = CheckTranslationConfigSettings() && bValid;
+                // once a check fails, we want isValid to stay false
+                isValid = CheckGitCmdValid();
+                isValid = CheckGlobalUserSettingsValid() && isValid;
+                isValid = CheckEditorTool() && isValid;
+                isValid = CheckMergeTool() && isValid;
+                isValid = CheckDiffToolConfiguration() && isValid;
+                isValid = CheckTranslationConfigSettings() && isValid;
 
                 if (EnvUtils.RunningOnWindows())
                 {
-                    bValid = CheckGitExtensionsInstall() && bValid;
-                    bValid = CheckGitExtensionRegistrySettings() && bValid;
-                    bValid = CheckGitExe() && bValid;
-                    bValid = CheckSSHSettings() && bValid;
+                    isValid = CheckGitExtensionsInstall() && isValid;
+                    isValid = CheckGitExtensionRegistrySettings() && isValid;
+                    isValid = CheckGitExe() && isValid;
+                    isValid = CheckSSHSettings() && isValid;
                 }
             }
             catch (Exception ex)
@@ -451,16 +451,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MessageBox.Show(this, ex.Message);
             }
 
-            CheckAtStartup.Checked = IsCheckAtStartupChecked(bValid);
+            CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
 
-            return bValid;
+            return isValid;
         }
 
-        private static bool IsCheckAtStartupChecked(bool bValid)
+        private static bool IsCheckAtStartupChecked(bool isValid)
         {
             var retValue = AppSettings.CheckSettings;
 
-            if (bValid && retValue)
+            if (isValid && retValue)
             {
                 AppSettings.CheckSettings = false;
                 retValue = false;

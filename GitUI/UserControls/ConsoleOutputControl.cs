@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
-
-using GitCommands;
-
-using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {
@@ -29,7 +27,7 @@ namespace GitUI.UserControls
         [NotNull]
         public static ConsoleOutputControl CreateInstance()
         {
-            if ((ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment) && (AppSettings.UseConsoleEmulatorForCommands))
+            if (ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment && AppSettings.UseConsoleEmulatorForCommands)
             {
                 return new ConsoleEmulatorOutputControl();
             }

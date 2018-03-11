@@ -17,18 +17,18 @@ namespace GitFlow
         private readonly TranslationString _loading = new TranslationString("Loading...");
         private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
 
-        readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIBaseEventArgs _gitUiCommands;
 
-        Dictionary<string, List<string>> Branches { get; set; }
+        private Dictionary<string, List<string>> Branches { get; set; }
 
-        readonly AsyncLoader _task = new AsyncLoader();
+        private readonly AsyncLoader _task = new AsyncLoader();
 
         public bool IsRefreshNeeded { get; set; }
         private const string RefHeads = "refs/heads/";
 
         private string CurrentBranch { get; set; }
 
-        enum Branch
+        private enum Branch
         {
             feature,
             bugfix,
@@ -116,7 +116,11 @@ namespace GitFlow
             cbBranches.DataSource = new List<string> { _loading.Text };
             if (!Branches.ContainsKey(branchType))
             {
-                _task.LoadAsync(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
+                _task.LoadAsync(() => GetBranches(branchType), branches =>
+                {
+                    Branches.Add(branchType, branches);
+                    DisplayBranchDatas();
+                });
             }
             else
             {
@@ -162,7 +166,7 @@ namespace GitFlow
             btnFinish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             btnPublish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             btnPull.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
-            pnlPull.Enabled = (branchType != Branch.support.ToString("G"));
+            pnlPull.Enabled = branchType != Branch.support.ToString("G");
         }
 
         private void LoadBaseBranches()

@@ -9,13 +9,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public readonly ConfigFileSettings GlobalSettings;
 
         public ConfigFileSettingsSet(
-            ConfigFileSettings aEffectiveSettings,
-            ConfigFileSettings aLocalSettings,
-            ConfigFileSettings aGlobalSettings)
+            ConfigFileSettings effectiveSettings,
+            ConfigFileSettings localSettings,
+            ConfigFileSettings globalSettings)
         {
-            EffectiveSettings = aEffectiveSettings;
-            LocalSettings = aLocalSettings;
-            GlobalSettings = aGlobalSettings;
+            EffectiveSettings = effectiveSettings;
+            LocalSettings = localSettings;
+            GlobalSettings = globalSettings;
         }
     }
 }

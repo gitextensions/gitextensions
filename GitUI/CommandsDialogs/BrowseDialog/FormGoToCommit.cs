@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using GitCommands;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using ResourceManager;
+using GitCommands;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -14,17 +14,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// this will be used when Go() is called
         /// </summary>
-        string _selectedRevision;
+        private string _selectedRevision;
 
         // these two are used to prepare for _selectedRevision
-        IGitRef _selectedTag;
-        IGitRef _selectedBranch;
+        private IGitRef _selectedTag;
+        private IGitRef _selectedBranch;
 
         private readonly AsyncLoader _tagsLoader;
         private readonly AsyncLoader _branchesLoader;
 
-        public FormGoToCommit(GitUICommands aCommands)
-            : base(aCommands)
+        public FormGoToCommit(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

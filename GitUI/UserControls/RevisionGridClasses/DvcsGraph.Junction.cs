@@ -29,35 +29,35 @@ namespace GitUI.RevisionGridClasses
             public bool IsRelative;
             public bool HighLight;
 
-            public Junction(Node aNode, Node aParent)
+            public Junction(Node node, Node parent)
             {
                 _debugId = debugIdNext++;
 
-                AddNode(aNode);
-                if (aNode != aParent)
+                AddNode(node);
+                if (node != parent)
                 {
-                    aNode.Ancestors.Add(this);
-                    aParent.Descendants.Add(this);
-                    AddNode(aParent);
+                    node.Ancestors.Add(this);
+                    parent.Descendants.Add(this);
+                    AddNode(parent);
                 }
             }
 
-            private Junction(Junction aDescendant, Node aNode)
+            private Junction(Junction descendant, Node node)
             {
                 // Private constructor used by split. This junction will be a
                 // ancestor of an existing junction.
                 _debugId = debugIdNext++;
-                aNode.Ancestors.Remove(aDescendant);
-                AddNode(aNode);
+                node.Ancestors.Remove(descendant);
+                AddNode(node);
             }
 
             public Node Youngest => this[0];
 
             public Node Oldest => this[NodesCount - 1];
 
-            public Node ChildOf(Node aParent)
+            public Node ChildOf(Node parent)
             {
-                if (_nodeIndices.TryGetValue(aParent, out var childIndex))
+                if (_nodeIndices.TryGetValue(parent, out var childIndex))
                 {
                     if (childIndex > 0)
                     {
@@ -65,22 +65,22 @@ namespace GitUI.RevisionGridClasses
                     }
                     else
                     {
-                        throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
+                        throw new ArgumentException("Parent has no children:\n" + parent.ToString());
                     }
                 }
 
-                throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + aParent.ToString());
+                throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + parent.ToString());
             }
 
             public int NodesCount => _nodes.Count;
 
             public Node this[int index] => _nodes[index];
 
-            public void Add(Node aParent)
+            public void Add(Node parent)
             {
-                aParent.Descendants.Add(this);
+                parent.Descendants.Add(this);
                 Oldest.Ancestors.Add(this);
-                AddNode(aParent);
+                AddNode(parent);
             }
 
             public void Remove(Node node)
@@ -89,26 +89,26 @@ namespace GitUI.RevisionGridClasses
                 Oldest.Ancestors.Remove(this);
             }
 
-            public Junction Split(Node aNode)
+            public Junction Split(Node node)
             {
                 // The 'top' (Child->node) of the junction is retained by this.
                 // The 'bottom' (node->Parent) of the junction is returned.
-                if (!_nodeIndices.TryGetValue(aNode, out var index))
+                if (!_nodeIndices.TryGetValue(node, out var index))
                 {
                     return null;
                 }
 
-                var bottom = new Junction(this, aNode);
+                var bottom = new Junction(this, node);
 
-                // Add 1, since aNode was at the index
+                // Add 1, since node was at the index
                 index += 1;
                 while (index < NodesCount)
                 {
-                    Node node = this[index];
-                    RemoveNode(node);
-                    node.Ancestors.Remove(this);
-                    node.Descendants.Remove(this);
-                    bottom.Add(node);
+                    Node childNode = this[index];
+                    RemoveNode(childNode);
+                    childNode.Ancestors.Remove(this);
+                    childNode.Descendants.Remove(this);
+                    bottom.Add(childNode);
                 }
 
                 return bottom;

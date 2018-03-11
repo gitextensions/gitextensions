@@ -36,7 +36,7 @@ namespace GitUI
         }
 
         private IntPtr _previousHWnd = IntPtr.Zero;
-        private bool _GEControl;
+        private bool _gEControl;
 
         public bool PreFilterMessage(ref Message m)
         {
@@ -46,24 +46,24 @@ namespace GitUI
             {
                 // WM_MOUSEWHEEL, find the control at screen position m.LParam
                 Point pos = new Point(m.LParam.ToInt32());
-                IntPtr hWnd = NativeMethods.WindowFromPoint(pos);
-                if (hWnd != IntPtr.Zero && hWnd != m.HWnd && Control.FromHandle(hWnd) != null)
+                IntPtr hwnd = NativeMethods.WindowFromPoint(pos);
+                if (hwnd != IntPtr.Zero && hwnd != m.HWnd && Control.FromHandle(hwnd) != null)
                 {
-                    if (_previousHWnd != hWnd)
+                    if (_previousHWnd != hwnd)
                     {
-                        Control control = Control.FromHandle(hWnd);
+                        Control control = Control.FromHandle(hwnd);
                         while (control != null && !(control is GitExtensionsControl))
                         {
                             control = control.Parent;
                         }
 
-                        _previousHWnd = hWnd;
-                        _GEControl = control != null;
+                        _previousHWnd = hwnd;
+                        _gEControl = control != null;
                     }
 
-                    if (_GEControl)
+                    if (_gEControl)
                     {
-                        NativeMethods.SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
+                        NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
                         return true;
                     }
                 }

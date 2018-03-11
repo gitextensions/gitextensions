@@ -70,12 +70,12 @@ namespace GitCommands
         }
 
         // TODO: optimise?
-        internal static bool IsValidPath(string aPath)
+        internal static bool IsValidPath(string path)
         {
             FileInfo fi = null;
             try
             {
-                fi = new FileInfo(aPath);
+                fi = new FileInfo(path);
             }
             catch (ArgumentException)
             {

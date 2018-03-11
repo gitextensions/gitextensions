@@ -27,8 +27,8 @@ namespace GitUI.CommandsDialogs
         public string GitAttributesFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormGitAttributes(GitUICommands aCommands)
-            : base(aCommands)
+        public FormGitAttributes(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
                 var path = _fullPathResolver.Resolve(".gitattributes");
                 if (File.Exists(path))
                 {
-                    _NO_TRANSLATE_GitAttributesText.ViewFile(path);
+                    _NO_TRANSLATE_GitAttributesText.ViewFileAsync(path);
                 }
             }
             catch (Exception ex)

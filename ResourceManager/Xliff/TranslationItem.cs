@@ -52,10 +52,10 @@ namespace ResourceManager.Xliff
 
         public int CompareTo(TranslationItem other)
         {
-            int val = String.Compare(Name, other.Name, StringComparison.Ordinal);
+            int val = string.Compare(Name, other.Name, StringComparison.Ordinal);
             if (val == 0)
             {
-                val = String.Compare(Property, other.Property, StringComparison.Ordinal);
+                val = string.Compare(Property, other.Property, StringComparison.Ordinal);
             }
 
             return val;

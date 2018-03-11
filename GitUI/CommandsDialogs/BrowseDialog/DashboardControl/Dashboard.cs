@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
+        private void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
             var repository = e.Repository;
             if (repository != null)
@@ -96,18 +96,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             CommonActions.AddItem(createItem);
 
             DonateCategory.DisableContextMenu();
-            var GitHubItem = new DashboardItem(Resources.develop.ToBitmap(), _develop.Text);
-            GitHubItem.Click += GitHubItem_Click;
-            DonateCategory.AddItem(GitHubItem);
-            var DonateItem = new DashboardItem(Resources.dollar.ToBitmap(), _donate.Text);
-            DonateItem.Click += DonateItem_Click;
-            DonateCategory.AddItem(DonateItem);
-            var TranslateItem = new DashboardItem(Resources.EditItem, _translate.Text);
-            TranslateItem.Click += TranslateItem_Click;
-            DonateCategory.AddItem(TranslateItem);
-            var IssuesItem = new DashboardItem(Resources.bug, _issues.Text);
-            IssuesItem.Click += IssuesItem_Click;
-            DonateCategory.AddItem(IssuesItem);
+            var gitHubItem = new DashboardItem(Resources.develop.ToBitmap(), _develop.Text);
+            gitHubItem.Click += GitHubItem_Click;
+            DonateCategory.AddItem(gitHubItem);
+            var donateItem = new DashboardItem(Resources.dollar.ToBitmap(), _donate.Text);
+            donateItem.Click += DonateItem_Click;
+            DonateCategory.AddItem(donateItem);
+            var translateItem = new DashboardItem(Resources.EditItem, _translate.Text);
+            translateItem.Click += TranslateItem_Click;
+            DonateCategory.AddItem(translateItem);
+            var issuesItem = new DashboardItem(Resources.bug, _issues.Text);
+            issuesItem.Click += IssuesItem_Click;
+            DonateCategory.AddItem(issuesItem);
 
             //
             // create Show current branch menu item and add to Dashboard menu
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             pictureBox1.BringToFront();
         }
 
-        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
+        private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
         {
             bool newValue = !GitCommands.AppSettings.DashboardShowCurrentBranch;
             GitCommands.AppSettings.DashboardShowCurrentBranch = newValue;

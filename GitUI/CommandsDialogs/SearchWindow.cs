@@ -89,9 +89,9 @@ namespace GitUI.CommandsDialogs
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            string _selectedText = textBox1.Text;
+            string selectedText = textBox1.Text;
 
-            _backgroundLoader.LoadAsync(() => _getCandidates(_selectedText), SearchForCandidates);
+            _backgroundLoader.LoadAsync(() => _getCandidates(selectedText), SearchForCandidates);
         }
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)

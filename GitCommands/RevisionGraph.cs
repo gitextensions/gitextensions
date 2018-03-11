@@ -100,12 +100,12 @@ namespace GitCommands
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
-        public string RevisionFilter = String.Empty;
-        public string PathFilter = String.Empty;
-        public string BranchFilter = String.Empty;
+        public string RevisionFilter = string.Empty;
+        public string PathFilter = string.Empty;
+        public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        static char[] ShellGlobCharacters = new[] { '?', '*', '[' };
+        private static char[] ShellGlobCharacters = new[] { '?', '*', '[' };
 
         public void Execute()
         {
@@ -318,7 +318,7 @@ namespace GitCommands
 
         private string _previousFileName;
 
-        void FinishRevision()
+        private void FinishRevision()
         {
             if (_revision != null && _revision.Guid == null)
             {
@@ -349,7 +349,7 @@ namespace GitCommands
             }
         }
 
-        void DataReceived(string data)
+        private void DataReceived(string data)
         {
             if (data.StartsWith(CommitBegin))
             {
@@ -364,8 +364,8 @@ namespace GitCommands
                     data = GitModule.ReEncodeString(data, GitModule.LosslessEncoding, _module.LogOutputEncoding);
 
                     string[] lines = data.Split(new char[] { '\n' });
-                    Debug.Assert(lines.Length == 11);
-                    Debug.Assert(lines[0] == CommitBegin);
+                    Debug.Assert(lines.Length == 11, "lines.Length == 11");
+                    Debug.Assert(lines[0] == CommitBegin, "lines[0] == CommitBegin");
 
                     _revision = new GitRevision(null);
 

@@ -27,8 +27,8 @@ namespace GitUI.CommandsDialogs
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormMailMap(GitUICommands aCommands)
-            : base(aCommands)
+        public FormMailMap(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
                 var path = _fullPathResolver.Resolve(".mailmap");
                 if (File.Exists(path))
                 {
-                    _NO_TRANSLATE_MailMapText.ViewFile(path);
+                    _NO_TRANSLATE_MailMapText.ViewFileAsync(path);
                 }
             }
             catch (Exception ex)

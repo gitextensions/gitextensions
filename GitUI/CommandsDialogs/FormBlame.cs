@@ -10,14 +10,14 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        private FormBlame(GitUICommands aCommands)
-            : base(aCommands)
+        private FormBlame(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
         }
 
-        public FormBlame(GitUICommands aCommands, string fileName, GitRevision revision, int? initialLine = null) : this(aCommands)
+        public FormBlame(GitUICommands commands, string fileName, GitRevision revision, int? initialLine = null) : this(commands)
         {
             if (string.IsNullOrEmpty(fileName))
             {

@@ -18,8 +18,8 @@ namespace GitUI.CommandsDialogs
 
         /// <summary>Initializes <see cref="FormMergeBranch"/>.</summary>
         /// <param name="defaultBranch">Branch to merge into the current branch.</param>
-        public FormMergeBranch(GitUICommands aCommands, string defaultBranch)
-            : base(aCommands)
+        public FormMergeBranch(GitUICommands commands, string defaultBranch)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            if (aCommands != null)
+            if (commands != null)
             {
                 noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
                 addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 string merge = Module.GetRemoteBranch(selectedHead);
-                if (!String.IsNullOrEmpty(merge))
+                if (!string.IsNullOrEmpty(merge))
                 {
                     Branches.SetSelectedText(merge);
                 }

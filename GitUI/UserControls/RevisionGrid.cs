@@ -99,7 +99,7 @@ namespace GitUI
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
 
-        private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
+        private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
 
         private string _rebaseOnTopOf;
 
@@ -108,10 +108,10 @@ namespace GitUI
         /// </summary>
         private IEnumerable<IGitRef> LatestRefs
         {
-            get { return _LatestRefs; }
+            get { return _latestRefs; }
             set
             {
-                _LatestRefs = value;
+                _latestRefs = value;
                 AmbiguousRefs = null;
             }
         }
@@ -158,7 +158,7 @@ namespace GitUI
             Revisions.MouseDown += RevisionsMouseDown;
 
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
-            BranchFilter = String.Empty;
+            BranchFilter = string.Empty;
             SetShowBranches();
             QuickRevisionFilter = "";
             FixedRevisionFilter = "";
@@ -216,7 +216,7 @@ namespace GitUI
             }
         }
 
-        void Loading_Paint(object sender, PaintEventArgs e)
+        private void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
             if (Loading != null)
@@ -428,8 +428,9 @@ namespace GitUI
             }
 
             curIndex = curIndex >= 0 ? curIndex : 0;
-            if (e.KeyChar == 8 && _quickSearchString.Length > 1) // backspace
+            if (e.KeyChar == 8 && _quickSearchString.Length > 1)
             {
+                // backspace
                 RestartQuickSearchTimer();
 
                 _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
@@ -464,11 +465,11 @@ namespace GitUI
         private void RevisionsKeyDown(object sender, KeyEventArgs e)
         {
             // BrowserBack/BrowserForward keys and additional handling for Alt+Right/Left sent by some keyboards
-            if ((e.KeyCode == Keys.BrowserBack) || ((e.KeyCode == Keys.Left) && (e.Modifiers.HasFlag(Keys.Alt))))
+            if ((e.KeyCode == Keys.BrowserBack) || ((e.KeyCode == Keys.Left) && e.Modifiers.HasFlag(Keys.Alt)))
             {
                 NavigateBackward();
             }
-            else if ((e.KeyCode == Keys.BrowserForward) || ((e.KeyCode == Keys.Right) && (e.Modifiers.HasFlag(Keys.Alt))))
+            else if ((e.KeyCode == Keys.BrowserForward) || ((e.KeyCode == Keys.Right) && e.Modifiers.HasFlag(Keys.Alt)))
             {
                 NavigateForward();
             }
@@ -540,7 +541,7 @@ namespace GitUI
             {
                 dlg.Init(actionLabel, refs);
                 dlg.Location = PointToScreen(new Point(rect.Right, rect.Bottom));
-                if (DialogResult.OK != dlg.ShowDialog(this) || dlg.SelectedRef == null)
+                if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef == null)
                 {
                     return;
                 }
@@ -880,10 +881,10 @@ namespace GitUI
             return SetSelectedRevision(revision?.Guid);
         }
 
-        public void HighlightBranch(string aId)
+        public void HighlightBranch(string id)
         {
             RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
-            Revisions.HighlightBranch(aId);
+            Revisions.HighlightBranch(id);
         }
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
@@ -991,14 +992,14 @@ namespace GitUI
             return Revisions.GetRevisionChildren(revision);
         }
 
-        public bool IsValidRevisionIndex(int aIndex)
+        public bool IsValidRevisionIndex(int index)
         {
-            return aIndex >= 0 && aIndex < Revisions.RowCount;
+            return index >= 0 && index < Revisions.RowCount;
         }
 
-        public GitRevision GetRevision(int aRow)
+        public GitRevision GetRevision(int row)
         {
-            return Revisions.GetRowData(aRow);
+            return Revisions.GetRowData(row);
         }
 
         public GitRevision GetCurrentRevision()
@@ -1026,40 +1027,40 @@ namespace GitUI
 
         private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
         {
-            private RevisionGraphInMemFilter _fFilter1;
-            private RevisionGraphInMemFilter _fFilter2;
-            public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter aFilter1,
-                                              RevisionGraphInMemFilter aFilter2)
+            private RevisionGraphInMemFilter _filter1;
+            private RevisionGraphInMemFilter _filter2;
+            public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter filter1,
+                                              RevisionGraphInMemFilter filter2)
             {
-                _fFilter1 = aFilter1;
-                _fFilter2 = aFilter2;
+                _filter1 = filter1;
+                _filter2 = filter2;
             }
 
             public override bool PassThru(GitRevision rev)
             {
-                return _fFilter1.PassThru(rev) || _fFilter2.PassThru(rev);
+                return _filter1.PassThru(rev) || _filter2.PassThru(rev);
             }
         }
 
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
-            private readonly string _AuthorFilter;
-            private readonly Regex _AuthorFilterRegex;
-            private readonly string _CommitterFilter;
-            private readonly Regex _CommitterFilterRegex;
-            private readonly string _MessageFilter;
-            private readonly Regex _MessageFilterRegex;
-            private readonly string _ShaFilter;
-            private readonly Regex _ShaFilterRegex;
+            private readonly string _authorFilter;
+            private readonly Regex _authorFilterRegex;
+            private readonly string _committerFilter;
+            private readonly Regex _committerFilterRegex;
+            private readonly string _messageFilter;
+            private readonly Regex _messageFilterRegex;
+            private readonly string _shaFilter;
+            private readonly Regex _shaFilterRegex;
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex, ignoreCase);
-                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex, ignoreCase);
-                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex, ignoreCase);
-                if (!string.IsNullOrEmpty(_MessageFilter) && MessageFilterCouldBeSHA(_MessageFilter))
+                SetUpVars(authorFilter, ref _authorFilter, ref _authorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, ref _committerFilter, ref _committerFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, ref _messageFilter, ref _messageFilterRegex, ignoreCase);
+                if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
                 {
-                    SetUpVars(messageFilter, ref _ShaFilter, ref _ShaFilterRegex, false);
+                    SetUpVars(messageFilter, ref _shaFilter, ref _shaFilterRegex, false);
                 }
             }
 
@@ -1093,10 +1094,10 @@ namespace GitUI
 
             public override bool PassThru(GitRevision rev)
             {
-                return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
-                       CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
-                        _ShaFilter != null && CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
+                return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
+                       CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
+                       (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
+                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -1203,9 +1204,9 @@ namespace GitUI
                     Loading.Visible = false;
                     NoGit.Visible = true;
                     string dir = Module.WorkingDir;
-                    if (String.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
-                        Directory.GetDirectories(dir).Length == 0 &&
-                        Directory.GetFiles(dir).Length == 0)
+                    if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
+                        (Directory.GetDirectories(dir).Length == 0 &&
+                        Directory.GetFiles(dir).Length == 0))
                     {
                         CloneRepository.Show();
                     }
@@ -1626,7 +1627,7 @@ namespace GitUI
             drawRefArgs.Graphics = e.Graphics;
             drawRefArgs.CellBounds = e.CellBounds;
 
-            drawRefArgs.IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
+            drawRefArgs.IsRowSelected = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
 
             // Determine background colour for cell
             Brush cellBackgroundBrush;
@@ -1672,7 +1673,7 @@ namespace GitUI
             }
             else if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !Revisions.RowIsRelative(e.RowIndex))
             {
-                Debug.Assert(backColor != null);
+                Debug.Assert(backColor != null, "backColor != null");
                 foreColor = Color.Gray;
 
                 // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
@@ -1683,7 +1684,7 @@ namespace GitUI
             }
             else
             {
-                Debug.Assert(backColor != null);
+                Debug.Assert(backColor != null, "backColor != null");
                 foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
             }
 
@@ -1786,6 +1787,11 @@ namespace GitUI
                                                return left.IsRemote.CompareTo(right.IsRemote);
                                            }
 
+                                           if (left.Selected != right.Selected)
+                                           {
+                                               return right.Selected.CompareTo(left.Selected);
+                                           }
+
                                            return left.Name.CompareTo(right.Name);
                                        });
 
@@ -1805,7 +1811,7 @@ namespace GitUI
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
                             drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
-                            var superprojectRef = superprojectRefs.FirstOrDefault(spGitRef => gitRef.CompleteName == spGitRef.CompleteName);
+                            var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                             if (superprojectRef != null)
                             {
                                 superprojectRefs.Remove(superprojectRef);
@@ -1901,8 +1907,9 @@ namespace GitUI
                 }
                 else if (columnIndex == idColIndex)
                 {
-                    if (!revision.IsArtificial) // do not show artificial GUID
+                    if (!revision.IsArtificial)
                     {
+                        // do not show artificial GUID
                         var text = revision.Guid;
                         var rect = RevisionGridUtils.GetCellRectangle(e);
                         RevisionGridUtils.DrawColumnText(e.Graphics, text, _fontOfSHAColumn,
@@ -2023,8 +2030,9 @@ namespace GitUI
             int dateColIndex = DateDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            if (columnIndex == graphColIndex && !revision.IsArtificial) // Do not show artificial guid
+            if (columnIndex == graphColIndex && !revision.IsArtificial)
             {
+                // Do not show artificial guid
                 e.Value = revision.Guid;
             }
             else if (columnIndex == messageColIndex)
@@ -2079,7 +2087,7 @@ namespace GitUI
         }
 
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
-        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule aModule)
+        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule module)
         {
             // code taken from CommitInfo.cs
             CommitData commitData = _commitDataManager.CreateFromRevision(revision);
@@ -2134,14 +2142,14 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        enum ArrowType
+        private enum ArrowType
         {
             None,
             Filled,
             NotFilled
         }
 
-        static readonly float[] dashPattern = new float[] { 4, 4 };
+        private static readonly float[] dashPattern = new float[] { 4, 4 };
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
@@ -2214,13 +2222,13 @@ namespace GitUI
         {
             const float horShift = 4;
             const float verShift = 3;
-            float height = rowHeight - verShift * 2;
+            float height = rowHeight - (verShift * 2);
             float width = height / 2;
 
             var points = new[]
                                  {
                                      new PointF(x + horShift, y + verShift),
-                                     new PointF(x + horShift + width, y + verShift + height / 2),
+                                     new PointF(x + horShift + width, y + verShift + (height / 2)),
                                      new PointF(x + horShift, y + verShift + height),
                                      new PointF(x + horShift, y + verShift)
                                  };
@@ -2693,27 +2701,27 @@ namespace GitUI
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
-            openBuildReportToolStripMenuItem.Visible = (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url));
+            openBuildReportToolStripMenuItem.Visible = revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url);
 
             RefreshOwnScripts();
         }
 
-        private ISet<string> _AmbiguousRefs;
+        private ISet<string> _ambiguousRefs;
         private ISet<string> AmbiguousRefs
         {
             get
             {
-                if (_AmbiguousRefs == null)
+                if (_ambiguousRefs == null)
                 {
-                    _AmbiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
+                    _ambiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
                 }
 
-                return _AmbiguousRefs;
+                return _ambiguousRefs;
             }
 
             set
             {
-                _AmbiguousRefs = value;
+                _ambiguousRefs = value;
             }
         }
 
@@ -3231,7 +3239,7 @@ namespace GitUI
 
         #region Drag/drop patch files on revision grid
 
-        void Revisions_DragDrop(object sender, DragEventArgs e)
+        private void Revisions_DragDrop(object sender, DragEventArgs e)
         {
             var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
             if (fileNameArray != null)
@@ -3256,7 +3264,7 @@ namespace GitUI
             }
         }
 
-        static void Revisions_DragEnter(object sender, DragEventArgs e)
+        private static void Revisions_DragEnter(object sender, DragEventArgs e)
         {
             var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
             if (fileNameArray != null)
@@ -3812,27 +3820,27 @@ namespace GitUI
 
         private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            launchRebase("e");
+            LaunchRebase("e");
         }
 
         private void rewordCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            launchRebase("r");
+            LaunchRebase("r");
         }
 
-        private void launchRebase(string command)
+        private void LaunchRebase(string command)
         {
             if (LatestSelectedRevision == null)
             {
                 return;
             }
 
-            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.FirstParentGuid,
+            string rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.FirstParentGuid,
                 interactive: true, preserveMerges: false, autosquash: false, autostash: true);
 
             using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
             {
-                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", String.Format("sed -i -re '0,/pick/s//{0}/'", command));
+                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(this);
             }
 

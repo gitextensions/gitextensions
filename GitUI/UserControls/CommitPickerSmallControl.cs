@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitUI.HelperDialogs;
 using GitCommands;
+using GitUI.HelperDialogs;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls

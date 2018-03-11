@@ -50,15 +50,15 @@ namespace GitUI.Blame
 
         public event EventHandler<CommandEventArgs> CommandClick;
 
-        void BlameCommitter_MouseLeave(object sender, EventArgs e)
+        private void BlameCommitter_MouseLeave(object sender, EventArgs e)
         {
             blameTooltip.Hide(this);
         }
 
-        int _lastTooltipX = -100;
-        int _lastTooltipY = -100;
-        string _lastTooltip = "";
-        void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
+        private int _lastTooltipX = -100;
+        private int _lastTooltipY = -100;
+        private string _lastTooltip = "";
+        private void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
         {
             if (!BlameFile.Focused)
             {
@@ -93,9 +93,9 @@ namespace GitUI.Blame
             }
         }
 
-        GitBlameHeader _lastBlameHeader;
+        private GitBlameHeader _lastBlameHeader;
 
-        void BlameFile_MouseMove(object sender, MouseEventArgs e)
+        private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
             if (_blame == null)
             {
@@ -148,7 +148,7 @@ namespace GitUI.Blame
             }
         }
 
-        void SelectedLineChanged(object sender, SelectedLineEventArgs e)
+        private void SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             int selectedLine = e.SelectedLine;
             if (_blame == null || selectedLine >= _blame.Lines.Count)
@@ -167,9 +167,9 @@ namespace GitUI.Blame
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.CommitGuid);
         }
 
-        bool _bChangeScrollPosition;
+        private bool _bChangeScrollPosition;
 
-        void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
             if (!_bChangeScrollPosition)
             {
@@ -193,7 +193,7 @@ namespace GitUI.Blame
             BlameFile.ScrollPos = BlameCommitter.ScrollPos;
         }
 
-        void BlameFile_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameFile_ScrollPosChanged(object sender, EventArgs e)
         {
             if (_bChangeScrollPosition)
             {
@@ -268,8 +268,8 @@ namespace GitUI.Blame
                 }
             }
 
-            BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
-            BlameFile.ViewText(_fileName, blameFile.ToString());
+            BlameCommitter.ViewTextAsync("committer.txt", blameCommitter.ToString());
+            BlameFile.ViewTextAsync(_fileName, blameFile.ToString());
             if (line > 0)
             {
                 BlameFile.GoToLine(line - 1);

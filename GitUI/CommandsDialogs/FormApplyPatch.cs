@@ -36,11 +36,12 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormApplyPatch(GitUICommands aCommands)
-            : base(true, aCommands)
+        public FormApplyPatch(GitUICommands commands)
+            : base(true, commands)
         {
-            InitializeComponent(); Translate();
-            if (aCommands != null)
+            InitializeComponent();
+            Translate();
+            if (commands != null)
             {
                 EnableButtons();
             }
@@ -203,7 +204,7 @@ namespace GitUI.CommandsDialogs
         private void Resolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            FormProcess.ShowDialog(this, (GitCommandHelpers.ResolvedCmd()));
+            FormProcess.ShowDialog(this, GitCommandHelpers.ResolvedCmd());
             EnableButtons();
             Cursor.Current = Cursors.Default;
         }

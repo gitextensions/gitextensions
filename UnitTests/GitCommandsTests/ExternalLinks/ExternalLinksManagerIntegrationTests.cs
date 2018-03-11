@@ -12,7 +12,9 @@ namespace GitCommandsTests.ExternalLinks
     public class ExternalLinksManagerIntegrationTests
     {
         private GitModuleTestHelper _testHelper;
-        private string _level1, _level2, _level3;
+        private string _level1;
+        private string _level2;
+        private string _level3;
         private RepoDistSettings _userRoaming;
         private RepoDistSettings _repoDistributed;
         private RepoDistSettings _repoLocal;

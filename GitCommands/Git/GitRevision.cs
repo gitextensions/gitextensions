@@ -84,10 +84,10 @@ namespace GitCommands
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
 
-            return String.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
+            return string.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
         }
 
-        public static string ToShortSha(String sha)
+        public static string ToShortSha(string sha)
         {
             if (sha == null)
             {

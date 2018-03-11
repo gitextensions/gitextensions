@@ -4,7 +4,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class Repository
+    internal class Repository
     {
         public static Repository Parse(JObject json)
         {
@@ -24,7 +24,7 @@ namespace Bitbucket
         public string DisplayName => string.Format("{0}/{1}", ProjectName, RepoName);
     }
 
-    class GetRelatedRepoRequest : BitbucketRequestBase<List<Repository>>
+    internal class GetRelatedRepoRequest : BitbucketRequestBase<List<Repository>>
     {
         public GetRelatedRepoRequest(Settings settings) : base(settings)
         {

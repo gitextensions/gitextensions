@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class GetBranchesRequest : BitbucketRequestBase<JObject>
+    internal class GetBranchesRequest : BitbucketRequestBase<JObject>
     {
         private readonly Repository _repo;
 

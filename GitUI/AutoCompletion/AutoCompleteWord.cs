@@ -56,7 +56,7 @@ namespace GitUI.AutoCompletion
 
         public override int GetHashCode()
         {
-            return (Word != null ? Word.GetHashCode() : 0);
+            return Word != null ? Word.GetHashCode() : 0;
         }
     }
 }

@@ -4,7 +4,8 @@
     {
         public FormCommandlineHelp()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
     }
 }

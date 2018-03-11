@@ -79,8 +79,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormPush(GitUICommands aCommands)
-            : base(aCommands)
+        public FormPush(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
 
             // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             // they are reset to false
-            if (aCommands != null)
+            if (commands != null)
             {
                 _remoteManager = new GitRemoteManager(() => Module);
                 Init();
@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs
         {
             if (UserGitRemotes.Count < 1)
             {
-                if (DialogResult.Yes == MessageBox.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error))
+                if (MessageBox.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
                     OpenRemotesDialogAndRefreshList(null);
                     return UserGitRemotes.Count > 0;
@@ -290,7 +290,7 @@ namespace GitUI.CommandsDialogs
                 {
                     // Ask if this is really what the user wants
                     if (!AppSettings.DontConfirmPushNewBranch &&
-                        DialogResult.No == MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo))
+                        MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         return false;
                     }
@@ -522,7 +522,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
-                                    String.Format(_pullRepositoryCaption.Text, destination),
+                                    string.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
                                     _pullRepository.Text,
                                     "",
@@ -673,7 +673,7 @@ namespace GitUI.CommandsDialogs
             return _gitRefs.Where(r => r.IsHead);
         }
 
-        private IEnumerable<IGitRef> GetRemoteBranches(String remoteName)
+        private IEnumerable<IGitRef> GetRemoteBranches(string remoteName)
         {
             return _gitRefs.Where(r => r.IsRemote && r.Remote == remoteName);
         }
@@ -952,17 +952,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private static string TakeCommandOutput(string aProcessOutput)
+        private static string TakeCommandOutput(string processOutput)
         {
             // the command output consists of lines in the format:
             // fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
-            int firstTabIdx = aProcessOutput.IndexOf('\t');
+            int firstTabIdx = processOutput.IndexOf('\t');
             if (firstTabIdx < 40)
             {
                 return string.Empty;
             }
 
-            var cmdOutput = aProcessOutput.Substring(firstTabIdx - 40);
+            var cmdOutput = processOutput.Substring(firstTabIdx - 40);
             return cmdOutput;
         }
 
@@ -1017,7 +1017,7 @@ namespace GitUI.CommandsDialogs
             BranchGrid.Enabled = true;
         }
 
-        static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
+        private static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
             if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
             {
@@ -1084,7 +1084,7 @@ namespace GitUI.CommandsDialogs
 
         private void _NO_TRANSLATE_Branch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RemoteBranch.Enabled = (_NO_TRANSLATE_Branch.Text != AllRefs);
+            RemoteBranch.Enabled = _NO_TRANSLATE_Branch.Text != AllRefs;
         }
 
         /// <summary>

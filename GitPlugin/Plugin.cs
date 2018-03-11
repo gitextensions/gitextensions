@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.VisualStudio.CommandBars;
 using GitPluginShared;
 using GitPluginShared.Commands;
+using Microsoft.VisualStudio.CommandBars;
 
 namespace GitPlugin
 {

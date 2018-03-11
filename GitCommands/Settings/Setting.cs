@@ -8,11 +8,11 @@ namespace GitCommands.Settings
         public readonly T DefaultValue;
         public readonly string Name;
 
-        public Setting(string aName, SettingsPath aSettingsSource, T aDefaultValue)
+        public Setting(string name, SettingsPath settingsSource, T defaultValue)
         {
-            Name = aName;
-            SettingsSource = aSettingsSource;
-            DefaultValue = aDefaultValue;
+            Name = name;
+            SettingsSource = settingsSource;
+            DefaultValue = defaultValue;
         }
 
         public abstract T Value { get; set; }
@@ -33,9 +33,9 @@ namespace GitCommands.Settings
             }
         }
 
-        public virtual bool ValueIsEmpty(T aValue)
+        public virtual bool ValueIsEmpty(T value)
         {
-            return EqualityComparer<T>.Default.Equals(aValue, default);
+            return EqualityComparer<T>.Default.Equals(value, default);
         }
 
         public string FullPath => SettingsSource.PathFor(Name);

@@ -5,7 +5,7 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace GitCommandsTests.Patch
 {
     [TestClass]
-    class PatchTest
+    internal class PatchTest
     {
         [TestMethod]
         public void TestPatchConstructor()

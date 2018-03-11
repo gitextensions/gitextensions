@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
 using ConEmu.WinForms;
-
 using GitCommands;
 using GitCommands.Utils;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace GitUI.UserControls
 {
@@ -133,13 +131,13 @@ namespace GitUI.UserControls
     [CLSCompliant(false)]
     public class ConsoleCommandLineOutputProcessor
     {
-        private Action<TextEventArgs> _FireDataReceived;
+        private Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
         private string _lineChunk = null;
 
-        public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> FireDataReceived)
+        public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
         {
-            _FireDataReceived = FireDataReceived;
+            _fireDataReceived = fireDataReceived;
             _commandLineCharsInOutput = commandLineCharsInOutput;
             _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
         }
@@ -203,7 +201,7 @@ namespace GitUI.UserControls
                     }
                 }
 
-                _FireDataReceived(new TextEventArgs(outputLine));
+                _fireDataReceived(new TextEventArgs(outputLine));
             }
         }
 
@@ -211,7 +209,7 @@ namespace GitUI.UserControls
         {
             if (_lineChunk != null)
             {
-                _FireDataReceived(new TextEventArgs(_lineChunk));
+                _fireDataReceived(new TextEventArgs(_lineChunk));
                 _lineChunk = null;
             }
         }

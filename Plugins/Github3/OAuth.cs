@@ -34,15 +34,15 @@ namespace Github3
 
         public void web_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
-            checkAuth(e.Url.ToString());
+            CheckAuth(e.Url.ToString());
         }
 
         public void web_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            checkAuth(e.Url.ToString());
+            CheckAuth(e.Url.ToString());
         }
 
-        static private Dictionary<string, string> GetParams(string uri)
+        private static Dictionary<string, string> GetParams(string uri)
         {
             var matches = Regex.Matches(uri, @"[\?&](([^&=]+)=([^&=#]*))", RegexOptions.Compiled);
             return matches.Cast<Match>().ToDictionary(
@@ -50,7 +50,7 @@ namespace Github3
                 m => Uri.UnescapeDataString(m.Groups[3].Value));
         }
 
-        public void checkAuth(string url)
+        public void CheckAuth(string url)
         {
             if (_gotToken)
             {

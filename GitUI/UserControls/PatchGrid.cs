@@ -13,11 +13,12 @@ namespace GitUI
 
         public PatchGrid()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
             Patches.CellPainting += Patches_CellPainting;
         }
 
-        static void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        private static void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
         }
 
@@ -46,7 +47,7 @@ namespace GitUI
             if (patchFiles.Any())
             {
                 int rowsInView = Patches.DisplayedRowCount(false);
-                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, patchFiles.TakeWhile(pf => !pf.IsNext).Count() - rowsInView / 2);
+                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, patchFiles.TakeWhile(pf => !pf.IsNext).Count() - (rowsInView / 2));
             }
         }
 

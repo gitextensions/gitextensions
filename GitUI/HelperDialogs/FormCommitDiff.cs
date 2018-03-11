@@ -1,19 +1,14 @@
-using System;
-using System.Windows.Forms;
-using GitCommands;
+﻿using System;
 
 namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        private FormCommitDiff(GitUICommands aCommands)
-            : base(aCommands)
+        private FormCommitDiff(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
-            DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
-            DiffFiles.Focus();
-            DiffFiles.SetDiffs();
         }
 
         private FormCommitDiff()
@@ -21,42 +16,16 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        public FormCommitDiff(GitUICommands aCommands, string revisionGuid)
-            : this(aCommands)
+        public FormCommitDiff(GitUICommands commands, string revisionGuid)
+            : this(commands)
         {
-            // We cannot use the GitRevision from revision grid. When a filtered commit list
-            // is shown (file history/normal filter) the parent guids are not the 'real' parents,
-            // but the parents in the filtered list.
-            GitRevision revision = Module.GetRevision(revisionGuid);
-
-            if (revision != null)
-            {
-                commitInfo.Revision = revision;
-
-                DiffFiles.SetDiffs(new[] { revision });
-
-                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir; ;
-            }
+            CommitDiff.TextChanged += CommitDiff_TextChanged;
+            CommitDiff.SetRevision(revisionGuid, null);
         }
 
-        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
+        private void CommitDiff_TextChanged(object sender, EventArgs e)
         {
-            ViewSelectedDiff();
-        }
-
-        private void ViewSelectedDiff()
-        {
-            if (DiffFiles.SelectedItem != null && DiffFiles.Revision != null)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, String.Empty);
-                Cursor.Current = Cursors.Default;
-            }
-        }
-
-        void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
-        {
-            ViewSelectedDiff();
+            Text = CommitDiff.Text;
         }
     }
 }

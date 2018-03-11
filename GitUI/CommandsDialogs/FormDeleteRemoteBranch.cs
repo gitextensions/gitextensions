@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using GitUIPluginInterfaces;
-using System.IO;
 using GitUI.Script;
+using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -20,8 +20,8 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultRemoteBranch;
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
 
-        public FormDeleteRemoteBranch(GitUICommands aCommands, string defaultRemoteBranch)
-            : base(aCommands)
+        public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

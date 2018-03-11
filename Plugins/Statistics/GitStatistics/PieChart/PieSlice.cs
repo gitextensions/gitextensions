@@ -9,7 +9,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Object representing 3D pie.
     /// </summary>
-    public class PieSlice : Object, IDisposable
+    public class PieSlice : object, IDisposable
     {
         /// <summary>
         ///   Angle offset used to define reference angle for gradual shadow.
@@ -532,17 +532,17 @@ namespace GitStatistics.PieChart
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Right);
             }
 
-            if ((StartAngle <= 90) && (StartAngle + SweepAngle >= 90) || (StartAngle + SweepAngle >= 450))
+            if (((StartAngle <= 90) && (StartAngle + SweepAngle >= 90)) || (StartAngle + SweepAngle >= 450))
             {
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Bottom + SliceHeight);
             }
 
-            if ((StartAngle <= 180) && (StartAngle + SweepAngle >= 180) || (StartAngle + SweepAngle >= 540))
+            if (((StartAngle <= 180) && (StartAngle + SweepAngle >= 180)) || (StartAngle + SweepAngle >= 540))
             {
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Left);
             }
 
-            if ((StartAngle <= 270) && (StartAngle + SweepAngle >= 270) || (StartAngle + SweepAngle >= 630))
+            if (((StartAngle <= 270) && (StartAngle + SweepAngle >= 270)) || (StartAngle + SweepAngle >= 630))
             {
                 GraphicsUtil.IncludePointY(ref boundingRectangle, BoundingRectangle.Top);
             }
@@ -745,7 +745,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         protected virtual Brush CreateBrushForSide(Color color, double angle)
         {
-            var d = 1 - 0.8 * Math.Cos(angle * Math.PI / 180);
+            var d = 1 - (0.8 * Math.Cos(angle * Math.PI / 180));
             return
                 new SolidBrush(
                     ColorUtil.CreateColorWithCorrectedLightness(
@@ -922,8 +922,8 @@ namespace GitStatistics.PieChart
             CreateSurfaceBrushes(_surfaceColor, _shadowStyle);
 
             // calculates center and end points on periphery
-            var xCenter = xBoundingRect + widthBoundingRect / 2;
-            var yCenter = yBoundingRect + heightBoundingRect / 2;
+            var xCenter = xBoundingRect + (widthBoundingRect / 2);
+            var yCenter = yBoundingRect + (heightBoundingRect / 2);
             Center = new PointF(xCenter, yCenter);
             CenterBelow = new PointF(xCenter, yCenter + sliceHeight);
             PointStart = PeripheralPoint(xCenter, yCenter, widthBoundingRect / 2, heightBoundingRect / 2,
@@ -1123,24 +1123,24 @@ namespace GitStatistics.PieChart
             var angle = Math.Atan2(y, x);
             if (angle < 0)
             {
-                angle += (2 * Math.PI);
+                angle += 2 * Math.PI;
             }
 
             var angleDegrees = angle * 180 / Math.PI;
 
             // point is inside the pie slice only if between start and end angle
             if ((angleDegrees >= startAngle && angleDegrees <= (startAngle + sweepAngle)) ||
-                (startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle)))
+                ((startAngle + sweepAngle > 360) && ((angleDegrees + 360) <= (startAngle + sweepAngle))))
             {
                 // distance of the point from the ellipse centre
-                var r = Math.Sqrt(y * y + x * x);
+                var r = Math.Sqrt((y * y) + (x * x));
                 var a2 = a * a;
                 var b2 = b * b;
                 var cosFi = Math.Cos(angle);
                 var sinFi = Math.Sin(angle);
 
                 // distance of the ellipse perimeter point
-                var ellipseRadius = (b * a) / Math.Sqrt(b2 * cosFi * cosFi + a2 * sinFi * sinFi);
+                var ellipseRadius = (b * a) / Math.Sqrt((b2 * cosFi * cosFi) + (a2 * sinFi * sinFi));
                 return ellipseRadius > r;
             }
 

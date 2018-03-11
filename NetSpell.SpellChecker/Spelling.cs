@@ -1422,7 +1422,7 @@ namespace NetSpell.SpellChecker
                 }
 
                 // make sure word index can't be higher then word count
-                return Math.Max(0, Math.Min(_wordIndex, (WordCount - 1)));
+                return Math.Max(0, Math.Min(_wordIndex, WordCount - 1));
             }
             set
             {

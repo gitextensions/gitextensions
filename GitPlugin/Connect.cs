@@ -429,11 +429,11 @@ namespace GitPlugin
                 if (cultureInfo.TwoLetterISOLanguageName == "zh")
                 {
                     var parentCultureInfo = cultureInfo.Parent;
-                    resourceName = String.Concat(parentCultureInfo.Name, "Tools");
+                    resourceName = string.Concat(parentCultureInfo.Name, "Tools");
                 }
                 else
                 {
-                    resourceName = String.Concat(cultureInfo.TwoLetterISOLanguageName, "Tools");
+                    resourceName = string.Concat(cultureInfo.TwoLetterISOLanguageName, "Tools");
                 }
 
                 toolsMenuName = resourceManager.GetString(resourceName);

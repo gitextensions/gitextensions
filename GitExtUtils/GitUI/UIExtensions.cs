@@ -18,11 +18,11 @@ namespace GitUI
             }
         }
 
-        public static void SetNullableChecked(this CheckBox chx, bool? Checked)
+        public static void SetNullableChecked(this CheckBox chx, bool? @checked)
         {
-            if (Checked.HasValue)
+            if (@checked.HasValue)
             {
-                chx.CheckState = Checked.Value ? CheckState.Checked : CheckState.Unchecked;
+                chx.CheckState = @checked.Value ? CheckState.Checked : CheckState.Unchecked;
             }
             else
             {

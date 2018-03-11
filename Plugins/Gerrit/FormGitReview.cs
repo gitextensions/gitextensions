@@ -48,13 +48,13 @@ namespace Gerrit
             }
         }
 
-        public FormGitReview(IGitUICommands aUICommands)
+        public FormGitReview(IGitUICommands uiCommands)
             : base(true)
         {
             InitializeComponent();
             Translate();
 
-            UICommands = (GitUICommands)aUICommands;
+            UICommands = (GitUICommands)uiCommands;
             if (UICommands != null)
             {
                 LoadGitReview();
@@ -68,7 +68,7 @@ namespace Gerrit
             {
                 if (File.Exists(Module.WorkingDir + ".gitreview"))
                 {
-                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.WorkingDir + ".gitreview");
+                    _NO_TRANSLATE_GitReviewEdit.ViewFileAsync(Module.WorkingDir + ".gitreview");
                 }
             }
             catch (Exception ex)

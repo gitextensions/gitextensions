@@ -24,15 +24,17 @@ namespace GitCommands.Config
         {
             _configKeys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
 
-            if (name.Contains("\"")) // [section "subsection"] case sensitive
+            if (name.Contains("\""))
             {
+                // [section "subsection"] case sensitive
                 SectionName = name.Substring(0, name.IndexOf('\"')).Trim();
                 SubSection = name.Substring(name.IndexOf('\"') + 1, name.LastIndexOf('\"') - name.IndexOf('\"') - 1);
                 SubSectionCaseSensitive = true;
             }
             else if (!name.Contains("."))
             {
-                SectionName = name.Trim(); // [section] case sensitive
+                // [section] case sensitive
+                SectionName = name.Trim();
                 SubSectionCaseSensitive = true;
             }
             else
@@ -62,7 +64,8 @@ namespace GitCommands.Config
 
         public static string FixPath(string path)
         {
-            if (path.StartsWith("\\\\")) // for using unc paths -> these need to be backward slashes
+            // for using unc paths -> these need to be backward slashes
+            if (path.StartsWith("\\\\"))
             {
                 return path;
             }

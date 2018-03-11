@@ -56,7 +56,7 @@ namespace GitUI.UserControls
         SubSetLinkFocused = 128
     }
 
-    class ExListView : NativeListView
+    internal class ExListView : NativeListView
     {
         public ExListView()
         {
@@ -86,9 +86,9 @@ namespace GitUI.UserControls
             public const int WM_PAINT = 0x0F;
             public const int WM_REFLECT_NOTIFY = 0x204E;
             public const int LVM_FIRST = 0x1000;
-            public const int LVM_HITTEST = (LVM_FIRST + 18);
-            public const int LVM_SETGROUPINFO = (LVM_FIRST + 147);
-            public const int LVM_SUBITEMHITTEST = (LVM_FIRST + 57);
+            public const int LVM_HITTEST = LVM_FIRST + 18;
+            public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
+            public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
 
             #endregion Windows constants
 
@@ -156,7 +156,7 @@ namespace GitUI.UserControls
                 LVHT_ONITEMICON = 0x00000002,
                 LVHT_ONITEMLABEL = 0x00000004,
                 LVHT_ONITEMSTATEICON = 0x00000008,
-                LVHT_ONITEM = (LVHT_ONITEMICON | LVHT_ONITEMLABEL | LVHT_ONITEMSTATEICON),
+                LVHT_ONITEM = LVHT_ONITEMICON | LVHT_ONITEMLABEL | LVHT_ONITEMSTATEICON,
                 LVHT_ABOVE = 0x00000008,
                 LVHT_BELOW = 0x00000010,
                 LVHT_TORIGHT = 0x00000020,
@@ -263,8 +263,8 @@ namespace GitUI.UserControls
         private static int? GetGroupID(ListViewGroup lstvwgrp)
         {
             int? rtnval = null;
-            Type GrpTp = lstvwgrp.GetType();
-            PropertyInfo pi = GrpTp.GetProperty("ID", BindingFlags.NonPublic |
+            Type groupType = lstvwgrp.GetType();
+            PropertyInfo pi = groupType.GetProperty("ID", BindingFlags.NonPublic |
                                                       BindingFlags.Instance);
             if (pi != null)
             {
@@ -278,21 +278,21 @@ namespace GitUI.UserControls
             return rtnval;
         }
 
-        private void setGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
+        private void SetGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
         {
             if (lstvwgrp == null)
             {
                 return;
             }
 
-            int? GrpId = GetGroupID(lstvwgrp);
-            int gIndex = Groups.IndexOf(lstvwgrp);
+            int? groupId = GetGroupID(lstvwgrp);
+            int groupIndex = Groups.IndexOf(lstvwgrp);
             var group = new NativeMethods.LVGROUP();
             group.CbSize = Marshal.SizeOf(group);
             group.State = state;
             group.Mask = NativeMethods.ListViewGroupMask.State;
             var handleRef = new HandleRef(this, Handle);
-            group.IGroupId = GrpId ?? gIndex;
+            group.IGroupId = groupId ?? groupIndex;
             NativeMethods.SendMessage(handleRef,
                 NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
             NativeMethods.SendMessage(handleRef,
@@ -302,15 +302,16 @@ namespace GitUI.UserControls
 
         public void SetGroupState(ListViewGroupState state)
         {
-            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6) // Only Vista and forward
+            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6)
             {
+                // Only Vista and forward
                 // allows collapse of ListViewGroups
                 return;
             }
 
             foreach (ListViewGroup lvg in Groups)
             {
-                setGrpState(lvg, state);
+                SetGrpState(lvg, state);
             }
         }
     }

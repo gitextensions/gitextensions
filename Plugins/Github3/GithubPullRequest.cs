@@ -7,7 +7,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
-    class GithubPullRequest : IPullRequestInformation
+    internal class GithubPullRequest : IPullRequestInformation
     {
         private PullRequest _pullrequest;
 
@@ -45,31 +45,31 @@ namespace Github3
             }
         }
 
-        private IHostedRepository _BaseRepo;
+        private IHostedRepository _baseRepo;
         public IHostedRepository BaseRepo
         {
             get
             {
-                if (_BaseRepo == null)
+                if (_baseRepo == null)
                 {
-                    _BaseRepo = new GithubRepo(_pullrequest.Base.Repo);
+                    _baseRepo = new GithubRepo(_pullrequest.Base.Repo);
                 }
 
-                return _BaseRepo;
+                return _baseRepo;
             }
         }
 
-        private IHostedRepository _HeadRepo;
+        private IHostedRepository _headRepo;
         public IHostedRepository HeadRepo
         {
             get
             {
-                if (_HeadRepo == null)
+                if (_headRepo == null)
                 {
-                    _HeadRepo = new GithubRepo(_pullrequest.Head.Repo);
+                    _headRepo = new GithubRepo(_pullrequest.Head.Repo);
                 }
 
-                return _HeadRepo;
+                return _headRepo;
             }
         }
 
@@ -90,17 +90,17 @@ namespace Github3
             _pullrequest.Close();
         }
 
-        private IPullRequestDiscussion _Discussion;
+        private IPullRequestDiscussion _discussion;
         public IPullRequestDiscussion Discussion
         {
             get
             {
-                if (_Discussion == null)
+                if (_discussion == null)
                 {
-                    _Discussion = new GithubPullRequestDiscussion(_pullrequest);
+                    _discussion = new GithubPullRequestDiscussion(_pullrequest);
                 }
 
-                return _Discussion;
+                return _discussion;
             }
         }
     }

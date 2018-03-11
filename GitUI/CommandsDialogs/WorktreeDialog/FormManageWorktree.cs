@@ -1,9 +1,9 @@
-﻿using GitUI.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {
@@ -11,8 +11,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
     {
         private List<WorkTree> _worktrees;
 
-        public FormManageWorktree(GitUICommands aCommands)
-            : base(aCommands)
+        public FormManageWorktree(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Worktrees.AutoGenerateColumns = false;
@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// HEAD 1234abc1234abc1234abc1234abc1234abc1234a
         /// detached
         /// </summary>
-        class WorkTree
+        private class WorkTree
         {
             public string Path { get; set; }
             public HeadType Type { get; set; }
@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             public bool IsDeleted { get; set; }
         }
 
-        enum HeadType
+        private enum HeadType
         {
             Bare,
             Branch,

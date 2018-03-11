@@ -183,11 +183,11 @@ namespace GitUI.CommitInfo
                 _revision.Body = data.Body;
             }
 
-            ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
+            ThreadPool.QueueUserWorkItem(_ => LoadLinksForRevision(_revision));
 
             if (_sortedRefs == null)
             {
-                ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
+                ThreadPool.QueueUserWorkItem(_ => LoadSortedRefs());
             }
 
             data.ChildrenGuids = _children;
@@ -209,17 +209,17 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInBranches)
             {
-                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
+                ThreadPool.QueueUserWorkItem(_ => LoadBranchInfo(_revision.Guid));
             }
 
             if (AppSettings.ShowAnnotatedTagsMessages)
             {
-                ThreadPool.QueueUserWorkItem(_ => loadAnnotatedTagInfo(_revision));
+                ThreadPool.QueueUserWorkItem(_ => LoadAnnotatedTagInfo(_revision));
             }
 
             if (AppSettings.CommitInfoShowContainedInTags)
             {
-                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
+                ThreadPool.QueueUserWorkItem(_ => LoadTagInfo(_revision.Guid));
             }
         }
 
@@ -228,13 +228,13 @@ namespace GitUI.CommitInfo
             return _headerResize.Height;
         }
 
-        private void loadSortedRefs()
+        private void LoadSortedRefs()
         {
             _sortedRefs = Module.GetSortedRefs();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 
-        private void loadAnnotatedTagInfo(GitRevision revision)
+        private void LoadAnnotatedTagInfo(GitRevision revision)
         {
             _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
             this.InvokeAsync(UpdateRevisionInfo);
@@ -290,13 +290,13 @@ namespace GitUI.CommitInfo
             return result;
         }
 
-        private void loadTagInfo(string revision)
+        private void LoadTagInfo(string revision)
         {
             _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 
-        private void loadBranchInfo(string revision)
+        private void LoadBranchInfo(string revision)
         {
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
             bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
@@ -309,7 +309,7 @@ namespace GitUI.CommitInfo
             this.InvokeAsync(UpdateRevisionInfo);
         }
 
-        private void loadLinksForRevision(GitRevision revision)
+        private void LoadLinksForRevision(GitRevision revision)
         {
             if (revision == null)
             {
@@ -588,7 +588,7 @@ namespace GitUI.CommitInfo
             var tagString = tags
                 .Select(s => showBranchesAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
-            if (!String.IsNullOrEmpty(tagString))
+            if (!string.IsNullOrEmpty(tagString))
             {
                 return Environment.NewLine + WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
             }

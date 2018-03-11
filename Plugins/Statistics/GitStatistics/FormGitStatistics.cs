@@ -57,14 +57,14 @@ namespace GitStatistics
         private Task _loadThread;
         private readonly IGitModule _module;
 
-        public FormGitStatistics(IGitModule aModule, string codeFilePattern, bool countSubmodule)
+        public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodule)
         {
             if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
             {
                 throw new InvalidOperationException();
             }
 
-            _module = aModule;
+            _module = module;
             _codeFilePattern = codeFilePattern;
             _countSubmodule = countSubmodule;
             InitializeComponent();
@@ -114,7 +114,7 @@ namespace GitStatistics
 
                     var builder = new StringBuilder();
 
-                    var commitCountValues = new Decimal[commitsPerUser.Count];
+                    var commitCountValues = new decimal[commitsPerUser.Count];
                     var commitCountLabels = new string[commitsPerUser.Count];
                     var n = 0;
                     foreach (var keyValuePair in commitsPerUser)
@@ -160,7 +160,7 @@ namespace GitStatistics
             }
         }
 
-        bool _initializeLinesOfCodeDone;
+        private bool _initializeLinesOfCodeDone;
         private void InitializeLinesOfCode()
         {
             if (_initializeLinesOfCodeDone)
@@ -204,7 +204,7 @@ namespace GitStatistics
             _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
         }
 
-        void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
+        private void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
         {
             LineCounter lineCounter = (LineCounter)sender;
 
@@ -257,7 +257,7 @@ namespace GitStatistics
                     };
 
             TestCodeText.Text = string.Format(_linesOfTestCodeP.Text, lineCounter.NumberTestCodeLines, percent_t) + Environment.NewLine +
-                string.Format(_linesOfProductionCodeP.Text, (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines), percent_p);
+                string.Format(_linesOfProductionCodeP.Text, lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines, percent_p);
 
             string percentBlank = ((double)lineCounter.NumberBlankLines / lineCounter.NumberLines).ToString("P1");
             string percentComments = ((double)lineCounter.NumberCommentsLines / lineCounter.NumberLines).ToString("P1");

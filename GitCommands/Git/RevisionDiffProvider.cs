@@ -71,14 +71,14 @@ namespace GitCommands.Git
             // As empty (unstaged) and --cached (staged) are options (not revisions),
             // order must be preserved with -R
             if (firstRevision != secondRevision && (firstRevision.IsNullOrEmpty() ||
-                               firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty()))
+                               (firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty())))
             {
                 extra = "-R";
             }
 
             // Special case: Remove options comparing unstaged-staged
-            if (firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt ||
-                firstRevision == StagedOpt && secondRevision.IsNullOrEmpty())
+            if ((firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt) ||
+                (firstRevision == StagedOpt && secondRevision.IsNullOrEmpty()))
             {
                 firstRevision = secondRevision = string.Empty;
             }
@@ -87,7 +87,7 @@ namespace GitCommands.Git
             if (secondRevision == StagedOpt)
             {
                 extra += " " + StagedOpt;
-                secondRevision = String.Empty;
+                secondRevision = string.Empty;
             }
 
             if (fileName.IsNullOrWhiteSpace())

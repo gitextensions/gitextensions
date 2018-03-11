@@ -24,11 +24,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _initMsgBoxCaption =
             new TranslationString("Create new repository");
 
-        private readonly EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
-        public FormInit(string dir, EventHandler<GitModuleEventArgs> GitModuleChanged)
+        public FormInit(string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
             Translate();
 
@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs
 
             MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
 
-            _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+            _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             Repositories.AddMostRecentRepository(Directory.Text);
 

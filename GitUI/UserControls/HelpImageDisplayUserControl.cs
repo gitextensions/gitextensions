@@ -43,8 +43,9 @@ namespace GitUI.Help
                 _isExpanded = value;
                 UpdateIsExpandedState();
 
-                if (_isLoaded) // to avoid calling this when InitializeComponents is called
+                if (_isLoaded)
                 {
+                    // to avoid calling this when InitializeComponents is called
                     /*
                      * ...
                                 this.helpImageDisplayUserControl1.IsExpanded = false;                       // this before...

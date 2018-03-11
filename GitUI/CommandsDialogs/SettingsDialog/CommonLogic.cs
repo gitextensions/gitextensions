@@ -21,11 +21,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
         public readonly GitModule Module;
 
-        public CommonLogic(GitModule aModule)
+        public CommonLogic(GitModule module)
         {
-            Module = aModule;
+            Module = module;
 
-            if (aModule != null)
+            if (module != null)
             {
                 var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
                 var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);

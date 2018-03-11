@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.Win32;
 using System.ComponentModel;
+using Microsoft.Win32;
 
 namespace GitUI
 {
@@ -29,7 +29,7 @@ namespace GitUI
             }
         }
 
-        static bool TryGetBrowserEmulationMode(out UInt32 emulationMode)
+        private static bool TryGetBrowserEmulationMode(out uint emulationMode)
         {
             // https://msdn.microsoft.com/en-us/library/ee330730(v=vs.85).aspx#browser_emulation
             // http://stackoverflow.com/questions/28526826/web-browser-control-emulation-issue-feature-browser-emulation/28626667#28626667
@@ -43,10 +43,10 @@ namespace GitUI
                     System.Security.AccessControl.RegistryRights.QueryValues))
                 {
                     var version = ieKey.GetValue("svcVersion");
-                    if (null == version)
+                    if (version == null)
                     {
                         version = ieKey.GetValue("Version");
-                        if (null == version)
+                        if (version == null)
                         {
                             return false;
                         }

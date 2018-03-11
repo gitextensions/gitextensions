@@ -3,7 +3,7 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    class GetRepoRequest : BitbucketRequestBase<Repository>
+    internal class GetRepoRequest : BitbucketRequestBase<Repository>
     {
         private readonly string _projectKey;
         private readonly string _repoName;

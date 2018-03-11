@@ -29,7 +29,9 @@ namespace GitCommands.Statistics
 
         public struct DataPoint
         {
-            public int Commits, AddedLines, DeletedLines;
+            public int Commits;
+            public int AddedLines;
+            public int DeletedLines;
 
             public int ChangedLines => AddedLines + DeletedLines;
 
@@ -58,11 +60,11 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly IGitModule _Module;
+        private readonly IGitModule _module;
 
-        public ImpactLoader(IGitModule aModule)
+        public ImpactLoader(IGitModule module)
         {
-            _Module = aModule;
+            _module = module;
         }
 
         public void Dispose()
@@ -107,7 +109,11 @@ namespace GitCommands.Statistics
         public bool ShowSubmodules
         {
             get => _showSubmodules;
-            set { Stop(); _showSubmodules = value; }
+            set
+            {
+                Stop();
+                _showSubmodules = value;
+            }
         }
 
         private Task[] GetTasks(CancellationToken token)
@@ -117,14 +123,14 @@ namespace GitCommands.Statistics
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Run(() => LoadModuleInfo(command, _Module, token), token));
+            tasks.Add(Task.Run(() => LoadModuleInfo(command, _module, token), token));
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = _Module.GetSubmodulesLocalPaths();
+                IList<string> submodules = _module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
-                    IGitModule submodule = _Module.GetSubmodule(submoduleName);
+                    IGitModule submodule = _module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                     {
                         tasks.Add(Task.Run(() => LoadModuleInfo(command, submodule, token), token));

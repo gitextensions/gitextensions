@@ -47,7 +47,7 @@ namespace GitPluginShared
         {
             return commandBar.Controls
                 .Cast<CommandBarControl>()
-                .Where(control => (control.TooltipText.Trim().Equals(tooltipText)))
+                .Where(control => control.TooltipText.Trim().Equals(tooltipText))
                 .Cast<CommandBarButton>()
                 .FirstOrDefault();
         }
@@ -56,13 +56,13 @@ namespace GitPluginShared
         {
             try
             {
-                if ("" == name)
+                if (name == "")
                 {
                     return null;
                 }
 
                 OutputWindowPane result = FindOutputPane(app, name);
-                if (null != result)
+                if (result != null)
                 {
                     return result;
                 }
@@ -82,7 +82,7 @@ namespace GitPluginShared
         {
             try
             {
-                if ("" == name)
+                if (name == "")
                 {
                     return null;
                 }

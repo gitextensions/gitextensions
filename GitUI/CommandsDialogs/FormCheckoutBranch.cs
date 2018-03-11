@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetNonFastForwardBranch =
             new TranslationString("You are going to reset the “{0}” branch to a new location\n" +
                 "discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
-        readonly TranslationString _resetCaption = new TranslationString("Reset branch");
+        private readonly TranslationString _resetCaption = new TranslationString("Reset branch");
         #endregion
 
         private readonly string[] _containRevisons;
@@ -56,8 +56,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        internal FormCheckoutBranch(GitUICommands aCommands)
-            : base(aCommands)
+        internal FormCheckoutBranch(GitUICommands commands)
+            : base(commands)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
             InitializeComponent();
@@ -68,13 +68,13 @@ namespace GitUI.CommandsDialogs
             Shown += FormCheckoutBranch_Shown;
         }
 
-        public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote)
-            : this(aCommands, branch, remote, null)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote)
+            : this(commands, branch, remote, null)
         {
         }
 
-        public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote, string[] containRevisons)
-            : this(aCommands)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons)
+            : this(commands)
         {
             _isLoading = true;
 
@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel2.AutoSize = true;
             flowLayoutPanel2.Dock = DockStyle.Fill;
             localChangesGB.AutoSize = true;
-            localChangesGB.Height = flowLayoutPanel2.Height * 2 + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
+            localChangesGB.Height = (flowLayoutPanel2.Height * 2) + localChangesGB.Padding.Top + localChangesGB.Padding.Bottom;
             localChangesPanel.ColumnStyles[1].Width = Ok.Width + 10;
             var height = localChangesGB.Height + localChangesGB.Margin.Top + localChangesGB.Margin.Bottom;
             localChangesPanel.RowStyles[0].Height = height;
@@ -368,7 +368,7 @@ namespace GitUI.CommandsDialogs
                             eTaskDialogButtons.YesNo,
                             eSysIcons.Question,
                             eSysIcons.Question);
-                        messageBoxResult = (res == DialogResult.Yes);
+                        messageBoxResult = res == DialogResult.Yes;
                         if (cTaskDialog.VerificationChecked)
                         {
                             AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;

@@ -137,7 +137,7 @@ namespace PatchApply
                     string[] addrem = pos.Split('+', '-');
                     string[] oldLines = addrem[1].Split(',');
 
-                    lineNumber = Int32.Parse(oldLines[0]) - 1;
+                    lineNumber = int.Parse(oldLines[0]) - 1;
                     continue;
                 }
 

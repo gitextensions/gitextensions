@@ -11,8 +11,8 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormLog(GitUICommands aCommands)
-            : base(true, aCommands)
+        public FormLog(GitUICommands commands)
+            : base(true, commands)
         {
             InitializeComponent();
             Translate();
@@ -20,8 +20,8 @@ namespace GitUI.CommandsDialogs
             diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
         }
 
-        public FormLog(GitUICommands aCommands, GitRevision revision)
-            : this(aCommands)
+        public FormLog(GitUICommands commands, GitRevision revision)
+            : this(commands)
         {
             RevisionGrid.SetSelectedRevision(revision);
         }
@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, String.Empty);
+            diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, string.Empty);
             Cursor.Current = Cursors.Default;
         }
 

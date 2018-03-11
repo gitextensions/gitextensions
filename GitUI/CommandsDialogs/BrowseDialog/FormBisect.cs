@@ -21,8 +21,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
         }
 
-        private FormBisect(GitUICommands aCommands)
-            : base(aCommands)
+        private FormBisect(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

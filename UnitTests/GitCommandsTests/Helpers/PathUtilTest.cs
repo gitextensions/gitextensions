@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using GitCommands;
-using NUnit.Framework;
 using System.IO;
 using FluentAssertions;
+using GitCommands;
+using NUnit.Framework;
 
 namespace GitCommandsTests.Helpers
 {

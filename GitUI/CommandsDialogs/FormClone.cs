@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _openedFromProtocolHandler;
         private readonly string _url;
-        private EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private EventHandler<GitModuleEventArgs> _gitModuleChanged;
         private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 
@@ -37,10 +37,10 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
-            : base(aCommands)
+        public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
+            : base(commands)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
             Translate();
             _openedFromProtocolHandler = openedFromProtocolHandler;
@@ -140,18 +140,18 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool CanBeGitURL(string anURL)
+        private bool CanBeGitURL(string url)
         {
-            if (anURL == null)
+            if (url == null)
             {
                 return false;
             }
 
-            string anURLLowered = anURL.ToLowerInvariant();
+            string urlLowered = url.ToLowerInvariant();
 
-            return (anURLLowered.StartsWith("http") ||
-                anURLLowered.StartsWith("git") ||
-                anURLLowered.StartsWith("ssh"));
+            return urlLowered.StartsWith("http") ||
+                urlLowered.StartsWith("git") ||
+                urlLowered.StartsWith("ssh");
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
 
                 Repositories.AddMostRecentRepository(dirTo);
 
-                if (!String.IsNullOrEmpty(_puttySshKey))
+                if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);
                     clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
@@ -241,10 +241,10 @@ namespace GitUI.CommandsDialogs
                     GitUICommands uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && _GitModuleChanged != null &&
+                else if (ShowInTaskbar == false && _gitModuleChanged != null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    _GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                    _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
                 }
 
                 Close();

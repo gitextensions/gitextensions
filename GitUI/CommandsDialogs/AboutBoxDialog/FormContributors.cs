@@ -1,12 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public class FormContributors : GitExtensionsForm
     {
-        private readonly static string[] tabCaptions = new string[]
+        private static readonly string[] tabCaptions = new string[]
         {
             "The Coders", "The Translators", "The Designers"
         };
@@ -21,12 +21,12 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             Translate();
         }
 
-        private TextBox getNewTextBox()
+        private TextBox GetNewTextBox()
         {
             TextBox tb = new TextBox();
             tb.BackColor = Color.White;
             tb.Dock = DockStyle.Fill;
-            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
             tb.Margin = new System.Windows.Forms.Padding(0);
             tb.Multiline = true;
             tb.ReadOnly = true;
@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return tb;
         }
 
-        private TabPage getNewTabPage(TextBox tb, string caption)
+        private TabPage GetNewTabPage(TextBox tb, string caption)
         {
             TabPage tp = new TabPage();
             tp.Margin = new System.Windows.Forms.Padding(0);
@@ -44,11 +44,11 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             return tp;
         }
 
-        private TabControl getNewTabControl()
+        private TabControl GetNewTabControl()
         {
             TabControl tc = new TabControl();
             tc.Dock = DockStyle.Fill;
-            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
             tc.ItemSize = new Size(150, 26);
             tc.Margin = new Padding(0);
             tc.Padding = new Point(0, 0);
@@ -62,13 +62,13 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             SuspendLayout();
             Controls.Clear();
 
-            _tabControl = getNewTabControl();
+            _tabControl = GetNewTabControl();
             _tabControl.SuspendLayout();
 
             for (int i = 0; i < tabCaptions.Length; i++)
             {
-                _textboxes[i] = getNewTextBox();
-                _tabPages[i] = getNewTabPage(_textboxes[i], tabCaptions[i]);
+                _textboxes[i] = GetNewTextBox();
+                _tabPages[i] = GetNewTabPage(_textboxes[i], tabCaptions[i]);
                 _tabControl.Controls.Add(_tabPages[i]);
             }
 

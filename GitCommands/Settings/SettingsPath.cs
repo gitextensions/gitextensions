@@ -9,10 +9,10 @@ namespace GitCommands.Settings
         public readonly ISettingsSource Parent;
         public readonly string PathName;
 
-        public SettingsPath(ISettingsSource aParent, string aPathName)
+        public SettingsPath(ISettingsSource parent, string pathName)
         {
-            Parent = aParent;
-            PathName = aPathName;
+            Parent = parent;
+            PathName = pathName;
         }
 
         public virtual string PathFor(string subPath)

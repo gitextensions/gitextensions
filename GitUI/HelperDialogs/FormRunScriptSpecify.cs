@@ -27,13 +27,13 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public string ret { get; private set; }
+        public string Ret { get; private set; }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (branchesListView.SelectedItems.Count > 0)
             {
-                ret = branchesListView.SelectedItems[0].Text;
+                Ret = branchesListView.SelectedItems[0].Text;
                 Close();
             }
         }

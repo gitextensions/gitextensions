@@ -2,8 +2,8 @@
 {
     public class StringSetting : Setting<string>
     {
-        public StringSetting(string aName, SettingsPath settingsSource, string aDefaultValue)
-            : base(aName, settingsSource, aDefaultValue)
+        public StringSetting(string name, SettingsPath settingsSource, string defaultValue)
+            : base(name, settingsSource, defaultValue)
         {
         }
 
@@ -17,8 +17,8 @@
 
     public class BoolNullableSetting : Setting<bool?>
     {
-        public BoolNullableSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)
-            : base(aName, settingsSource, aDefaultValue)
+        public BoolNullableSetting(string name, SettingsPath settingsSource, bool defaultValue)
+            : base(name, settingsSource, defaultValue)
         {
         }
 
@@ -34,8 +34,8 @@
 
     public class IntNullableSetting : Setting<int?>
     {
-        public IntNullableSetting(string aName, SettingsPath settingsSource, int aDefaultValue)
-            : base(aName, settingsSource, aDefaultValue)
+        public IntNullableSetting(string name, SettingsPath settingsSource, int defaultValue)
+            : base(name, settingsSource, defaultValue)
         {
         }
 
@@ -51,8 +51,8 @@
 
     public class BoolSetting : Setting<bool>
     {
-        public BoolSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)
-            : base(aName, settingsSource, aDefaultValue)
+        public BoolSetting(string name, SettingsPath settingsSource, bool defaultValue)
+            : base(name, settingsSource, defaultValue)
         {
         }
 
@@ -66,8 +66,8 @@
 
     public class EnumSetting<T> : Setting<T> where T : struct
     {
-        public EnumSetting(string aName, SettingsPath settingsSource, T aDefaultValue)
-            : base(aName, settingsSource, aDefaultValue)
+        public EnumSetting(string name, SettingsPath settingsSource, T defaultValue)
+            : base(name, settingsSource, defaultValue)
         {
         }
 
@@ -81,8 +81,8 @@
 
     public class EnumNullableSetting<T> : Setting<T?> where T : struct
     {
-        public EnumNullableSetting(string aName, SettingsPath settingsSource)
-            : base(aName, settingsSource, null)
+        public EnumNullableSetting(string name, SettingsPath settingsSource)
+            : base(name, settingsSource, null)
         {
         }
 

@@ -63,7 +63,7 @@ namespace GitCommands.Repository
 
         public static bool PathIsUrl(string path)
         {
-            return !String.IsNullOrEmpty(path) &&
+            return !string.IsNullOrEmpty(path) &&
                 (path.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) ||
                  path.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) ||
                  path.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase));

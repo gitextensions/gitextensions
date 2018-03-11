@@ -1,6 +1,0 @@
-#Temporary file to satisfy Travis CI build (no longer needed when Mono is not built)
-
-language: perl 
-install: true
-
-script: "perl -e ''"

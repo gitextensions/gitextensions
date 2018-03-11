@@ -8,7 +8,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         public FormDashboardEditor()
             : base(true)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
         private void FormDashboardEditor_FormClosing(object sender, FormClosingEventArgs e)

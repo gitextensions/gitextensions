@@ -17,7 +17,7 @@ namespace ResourceManager.Xliff
                 return false;
             }
 
-            return text.Any(Char.IsLetter);
+            return text.Any(char.IsLetter);
         }
 
         public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
@@ -231,7 +231,7 @@ namespace ResourceManager.Xliff
 
             string ProvideDefaultValue() => "";
             string value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
-            if (!String.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
             {
                 if (propertyInfo.CanWrite)
                 {
@@ -304,7 +304,7 @@ namespace ResourceManager.Xliff
             return false;
         }
 
-        static readonly string[] UnTranslatableDLLs =
+        private static readonly string[] UnTranslatableDLLs =
         {
             "mscorlib",
             "Microsoft",
@@ -387,7 +387,7 @@ namespace ResourceManager.Xliff
                 obj = parameterConstructor.Invoke(parameters.ToArray());
             }
 
-            Debug.Assert(obj != null);
+            Debug.Assert(obj != null, "obj != null");
             return obj;
         }
     }

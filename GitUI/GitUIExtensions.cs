@@ -14,11 +14,11 @@ namespace GitUI
 {
     public static class GitUIExtensions
     {
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked = true)
+        public static void OpenWithDifftool(this RevisionGrid grid, IList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
         {
             // Note: Order in revisions is that first clicked is last in array
 
-            string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind,
+            string error = RevisionDiffInfoProvider.Get(revisions, diffKind,
                 out var extraDiffArgs, out var firstRevision, out var secondRevision);
 
             if (!string.IsNullOrEmpty(error))
@@ -39,7 +39,7 @@ namespace GitUI
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace();
+            var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace());
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
                     diffArgs, encoding, true, isTracked);
         }
@@ -81,7 +81,7 @@ namespace GitUI
         {
             if (revisions.Count == 0)
             {
-                return Task.FromResult(string.Empty);
+                return Task.CompletedTask;
             }
 
             var selectedRevision = revisions[0];
@@ -97,11 +97,31 @@ namespace GitUI
 
         public static Task ViewChangesAsync(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
         {
-            return diffViewer.ViewPatchAsync(() =>
+            if (firstRevision == null)
             {
-                string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
-                return selectedPatch ?? defaultText;
-            });
+                // The previous commit does not exist, nothing to compare with
+                if (file.TreeGuid.IsNullOrEmpty())
+                {
+                    if (secondRevision.IsNullOrWhiteSpace())
+                    {
+                        throw new ArgumentException(nameof(secondRevision));
+                    }
+
+                    return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
+                }
+                else
+                {
+                    return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid);
+                }
+            }
+            else
+            {
+                return diffViewer.ViewPatchAsync(() =>
+                {
+                    string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
+                    return selectedPatch ?? defaultText;
+                });
+            }
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)

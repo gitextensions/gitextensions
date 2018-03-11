@@ -1,8 +1,8 @@
-﻿using GitUIPluginInterfaces;
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Git.Tag
 {

@@ -18,16 +18,16 @@ namespace GitUI.UserControls.RevisionGridClasses
     {
         public event EventHandler<IndexChangedEventArgs> Changed;
 
-        private readonly IGitUICommandsSource _UICommandsSource;
+        private readonly IGitUICommandsSource _uICommandsSource;
 
-        private GitUICommands UICommands => _UICommandsSource.UICommands;
+        private GitUICommands UICommands => _uICommandsSource.UICommands;
 
         private GitModule Module => UICommands.Module;
 
-        public IndexWatcher(IGitUICommandsSource aUICommandsSource)
+        public IndexWatcher(IGitUICommandsSource uiCommandsSource)
         {
-            _UICommandsSource = aUICommandsSource;
-            _UICommandsSource.GitUICommandsChanged += UICommandsSource_GitUICommandsChanged;
+            _uICommandsSource = uiCommandsSource;
+            _uICommandsSource.GitUICommandsChanged += UICommandsSource_GitUICommandsChanged;
             GitIndexWatcher = new FileSystemWatcher();
             RefsWatcher = new FileSystemWatcher();
             SetFileSystemWatcher();
@@ -37,7 +37,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
-        void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             Clear();
         }

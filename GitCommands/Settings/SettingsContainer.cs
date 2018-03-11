@@ -3,15 +3,15 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class SettingsContainer<L, C> : ISettingsSource where L : SettingsContainer<L, C> where C : SettingsCache
+    public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
     {
-        public L LowerPriority { get; private set; }
-        public C SettingsCache { get; private set; }
+        public TLowerPriority LowerPriority { get; private set; }
+        public TCache SettingsCache { get; private set; }
 
-        public SettingsContainer(L aLowerPriority, C aSettingsCache)
+        public SettingsContainer(TLowerPriority lowerPriority, TCache settingsCache)
         {
-            LowerPriority = aLowerPriority;
-            SettingsCache = aSettingsCache;
+            LowerPriority = lowerPriority;
+            SettingsCache = settingsCache;
         }
 
         public void LockedAction(Action action)

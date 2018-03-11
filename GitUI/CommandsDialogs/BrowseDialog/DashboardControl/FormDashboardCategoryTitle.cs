@@ -15,7 +15,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public FormDashboardCategoryTitle()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
         public string GetTitle()

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using System.Linq;
-using System;
 
 namespace Bitbucket
 {
-    class PullRequest
+    internal class PullRequest
     {
         ////public string Ref { get; set; }
         public static PullRequest Parse(JObject json)
@@ -80,7 +80,7 @@ namespace Bitbucket
 
         public string DestDisplayName => string.Format("{0}/{1}", DestProjectName, DestRepo);
 
-        public string DisplayName => string.Format("#{0}: {1}, {2}", Id, Title, (ConvertFromUnixTimestamp(CreatedDate)).ToString("yyyy-MM-dd"));
+        public string DisplayName => string.Format("#{0}: {1}, {2}", Id, Title, ConvertFromUnixTimestamp(CreatedDate).ToString("yyyy-MM-dd"));
 
         public static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
@@ -89,7 +89,7 @@ namespace Bitbucket
         }
     }
 
-    class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
+    internal class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
     {
         private readonly string _projectKey;
         private readonly string _repoName;

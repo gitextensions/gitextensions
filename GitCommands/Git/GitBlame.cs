@@ -51,7 +51,7 @@ namespace GitCommands
         public Color GetColor()
         {
             int partLength = CommitGuid.Length / 3;
-            return Color.FromArgb(GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55 + 200, GenerateIntFromString(CommitGuid.Substring(partLength)) % 55 + 200);
+            return Color.FromArgb((GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength)) % 55) + 200);
 
             // return Color.White;
         }
@@ -93,12 +93,12 @@ namespace GitCommands
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
-            if (Object.ReferenceEquals(x, y))
+            if (object.ReferenceEquals(x, y))
             {
                 return true;
             }
 
-            if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
+            if (object.ReferenceEquals(x, null) || object.ReferenceEquals(y, null))
             {
                 return false;
             }

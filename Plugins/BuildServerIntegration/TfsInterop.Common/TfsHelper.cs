@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.TeamFoundation.Client;
+using System.Text.RegularExpressions;
 using Microsoft.TeamFoundation.Build.Client;
+using Microsoft.TeamFoundation.Client;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
-using System.Text.RegularExpressions;
 
 namespace TfsInterop
 {
@@ -74,7 +74,7 @@ namespace TfsInterop
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
+                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).Cast<IBuildDefinition>().ToArray();
                 }
             }
             catch (Exception ex)
@@ -86,9 +86,9 @@ namespace TfsInterop
         public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
             var result = new List<IBuild>();
-            foreach (var _buildDefinition in _buildDefinitions)
+            foreach (var buildDefinition in _buildDefinitions)
             {
-                var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
+                var buildSpec = _buildServer.CreateBuildDetailSpec(buildDefinition);
                 buildSpec.InformationTypes = null;
                 if (sinceDate.HasValue)
                 {

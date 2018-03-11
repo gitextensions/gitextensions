@@ -8,14 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.CommandsDialogs;
-using GitUI.Hotkey;
-using PatchApply;
 using GitCommands.Settings;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
+using GitUI.Hotkey;
+using PatchApply;
 using ResourceManager;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Editor
 {
@@ -112,7 +111,7 @@ namespace GitUI.Editor
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+        private void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
             UICommandsSource.GitUICommandsChanged += UICommandsSourceChanged;
             UICommandsSourceChanged(UICommandsSource, null);
@@ -126,7 +125,7 @@ namespace GitUI.Editor
 
         private bool RunTime()
         {
-            return (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv");
+            return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -166,24 +165,24 @@ namespace GitUI.Editor
             set { _internalFileViewer.ShowLineNumbers = value; }
         }
 
-        private Encoding _Encoding;
+        private Encoding _encoding;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public Encoding Encoding
         {
             get
             {
-                if (_Encoding == null)
+                if (_encoding == null)
                 {
-                    _Encoding = Module.FilesEncoding;
+                    _encoding = Module.FilesEncoding;
                 }
 
-                return _Encoding;
+                return _encoding;
             }
 
             set
             {
-                _Encoding = value;
+                _encoding = value;
             }
         }
 
@@ -230,28 +229,28 @@ namespace GitUI.Editor
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
-        void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            copyToolStripMenuItem.Enabled = (_internalFileViewer.GetSelectionLength() > 0);
+            copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
             ContextMenuOpening?.Invoke(sender, e);
         }
 
-        void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
+        private void _internalFileViewer_MouseMove(object sender, MouseEventArgs e)
         {
             OnMouseMove(e);
         }
 
-        void _internalFileViewer_MouseEnter(object sender, EventArgs e)
+        private void _internalFileViewer_MouseEnter(object sender, EventArgs e)
         {
             OnMouseEnter(e);
         }
 
-        void _internalFileViewer_MouseLeave(object sender, EventArgs e)
+        private void _internalFileViewer_MouseLeave(object sender, EventArgs e)
         {
             OnMouseLeave(e);
         }
 
-        void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
+        private void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             SelectedLineChanged?.Invoke(sender, e);
         }
@@ -284,7 +283,7 @@ namespace GitUI.Editor
             RequestDiffView?.Invoke(this, args);
         }
 
-        void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
+        private void _internalFileViewer_ScrollPosChanged(object sender, EventArgs e)
         {
             ScrollPosChanged?.Invoke(sender, e);
         }
@@ -294,7 +293,7 @@ namespace GitUI.Editor
             _internalFileViewer.EnableScrollBars(enable);
         }
 
-        void TextEditor_TextChanged(object sender, EventArgs e)
+        private void TextEditor_TextChanged(object sender, EventArgs e)
         {
             if (_patchHighlighting)
             {
@@ -410,9 +409,9 @@ namespace GitUI.Editor
             ResetCurrentScrollPos();
         }
 
-        public void ViewFile(string fileName)
+        public Task ViewFileAsync(string fileName)
         {
-            ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName),
+            return ViewItemAsync(fileName, () => GetImage(fileName), () => GetFileText(fileName),
                 () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
         }
 
@@ -490,7 +489,7 @@ namespace GitUI.Editor
             return _async.LoadAsync(loadPatchText, ViewPatch);
         }
 
-        public void ViewText(string fileName, string text)
+        public Task ViewTextAsync(string fileName, string text)
         {
             ResetForText(fileName);
 
@@ -499,27 +498,28 @@ namespace GitUI.Editor
             {
                 _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
                 TextLoaded?.Invoke(this, null);
-                return;
+                return Task.CompletedTask;
             }
 
             _internalFileViewer.SetText(text);
             TextLoaded?.Invoke(this, null);
 
             RestoreCurrentScrollPos();
+            return Task.CompletedTask;
         }
 
-        public void ViewGitItemRevision(string fileName, string guid)
+        public Task ViewGitItemRevisionAsync(string fileName, string guid)
         {
             if (guid == GitRevision.UnstagedGuid)
             {
                 // No blob exists for unstaged, present contents from file system
-                ViewFile(fileName);
+                return ViewFileAsync(fileName);
             }
             else
             {
                 // Retrieve blob, same as GitItemStatus.TreeGuid
                 string blob = Module.GetFileBlobHash(fileName, guid);
-                ViewGitItem(fileName, blob);
+                return ViewGitItemAsync(fileName, blob);
             }
         }
 
@@ -535,13 +535,13 @@ namespace GitUI.Editor
             }
         }
 
-        public void ViewGitItem(string fileName, string guid)
+        public Task ViewGitItemAsync(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
+            return ViewItemAsync(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
                 () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
         }
 
-        private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
+        private Task ViewItemAsync(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
             FilePreamble = null;
 
@@ -551,16 +551,16 @@ namespace GitUI.Editor
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    _async.LoadAsync(getSubmoduleText, text => ViewText(fileName, text));
+                    return _async.LoadAsync(getSubmoduleText, text => ViewTextAsync(fileName, text));
                 }
                 else
                 {
-                    ViewText(null, "Directory: " + fileName);
+                    return ViewTextAsync(null, "Directory: " + fileName);
                 }
             }
             else if (IsImage(fileName))
             {
-                _async.LoadAsync(getImage,
+                return _async.LoadAsync(getImage,
                             image =>
                             {
                                 ResetForImage();
@@ -584,11 +584,11 @@ namespace GitUI.Editor
             // Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
-                ViewText(null, "Binary file: " + fileName);
+                return ViewTextAsync(null, "Binary file: " + fileName);
             }
             else
             {
-                _async.LoadAsync(getFileText, text => ViewText(fileName, text));
+                return _async.LoadAsync(getFileText, text => ViewTextAsync(fileName, text));
             }
         }
 
@@ -1079,12 +1079,12 @@ namespace GitUI.Editor
 
         public void Clear()
         {
-            ViewText("", "");
+            ViewTextAsync("", "");
         }
 
         public bool HasAnyPatches()
         {
-            return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
+            return _internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@");
         }
 
         public void SetFileLoader(GetNextFileFnc fileLoader)

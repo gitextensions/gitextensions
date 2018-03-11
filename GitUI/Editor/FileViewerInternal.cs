@@ -46,17 +46,17 @@ namespace GitUI.Editor
         public new event EventHandler MouseEnter;
         public new event EventHandler MouseLeave;
 
-        void TextArea_MouseEnter(object sender, EventArgs e)
+        private void TextArea_MouseEnter(object sender, EventArgs e)
         {
             MouseEnter?.Invoke(sender, e);
         }
 
-        void TextArea_MouseLeave(object sender, EventArgs e)
+        private void TextArea_MouseLeave(object sender, EventArgs e)
         {
             MouseLeave?.Invoke(sender, e);
         }
 
-        void TextArea_MouseMove(object sender, MouseEventArgs e)
+        private void TextArea_MouseMove(object sender, MouseEventArgs e)
         {
             MouseMove?.Invoke(sender, e);
         }
@@ -99,17 +99,17 @@ namespace GitUI.Editor
 
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
-        void OnSelectedLineChanged(int selectedLine)
+        private void OnSelectedLineChanged(int selectedLine)
         {
             SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(selectedLine));
         }
 
-        void VScrollBar_ValueChanged(object sender, EventArgs e)
+        private void VScrollBar_ValueChanged(object sender, EventArgs e)
         {
             ScrollPosChanged?.Invoke(sender, e);
         }
 
-        void TextEditor_TextChanged(object sender, EventArgs e)
+        private void TextEditor_TextChanged(object sender, EventArgs e)
         {
             TextChanged?.Invoke(sender, e);
         }

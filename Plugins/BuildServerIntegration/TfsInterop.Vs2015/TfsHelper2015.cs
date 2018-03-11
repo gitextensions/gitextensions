@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.TeamFoundation.Build.WebApi;
-using TfsInterop.Interface;
-using BuildStatus = TfsInterop.Interface.BuildStatus;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.Services.Common;
-using Microsoft.TeamFoundation.Build.Client;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.VisualStudio.Services.WebApi;
 using System.Threading.Tasks;
 using GitUI;
+using Microsoft.TeamFoundation.Build.Client;
+using Microsoft.TeamFoundation.Build.WebApi;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.VisualStudio.Services.Common;
+using Microsoft.VisualStudio.Services.WebApi;
+using TfsInterop.Interface;
+using BuildStatus = TfsInterop.Interface.BuildStatus;
 
 namespace TfsInterop
 {
@@ -70,7 +70,7 @@ namespace TfsInterop
                 else
                 {
                     url = "http://" + _hostname + ":8080/tfs/" + teamCollection;
-                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (String.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + "Build/Build.aspx?artifactMoniker=";
+                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (string.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + "Build/Build.aspx?artifactMoniker=";
                 }
 
                 _tfsCollection = new TfsTeamProjectCollection(new Uri(url), new TfsClientCredentials());
@@ -83,7 +83,7 @@ namespace TfsInterop
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
+                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).Cast<IBuildDefinition>().ToArray();
                 }
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => ConnectToTfsServer2015Async(hostname, teamCollection, projectName, buildDefinitionNameFilter));
@@ -97,9 +97,9 @@ namespace TfsInterop
         public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
             var result = new List<IBuild>();
-            foreach (var _buildDefinition in _buildDefinitions)
+            foreach (var buildDefinition in _buildDefinitions)
             {
-                var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
+                var buildSpec = _buildServer.CreateBuildDetailSpec(buildDefinition);
                 buildSpec.InformationTypes = null;
                 if (sinceDate.HasValue)
                 {
@@ -264,7 +264,7 @@ namespace TfsInterop
                 else
                 {
                     url = "http://" + _hostname + ":8080/tfs/" + teamCollection;
-                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (String.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + projectName + "/_build?_a=summary&buildId=";
+                    _urlPrefix = "http://" + hostname + ":8080/tfs/" + (string.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + projectName + "/_build?_a=summary&buildId=";
                 }
 
                 VssConnection connection = new VssConnection(new Uri(url), new VssCredentials(true));
@@ -276,7 +276,7 @@ namespace TfsInterop
 
                 foreach (var def in definitions)
                 {
-                    if (string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || (buildDefinitionNameFilter.IsMatch(def.Name)))
+                    if (string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || buildDefinitionNameFilter.IsMatch(def.Name))
                     {
                         buildDefs.Add(def);
                     }
@@ -300,7 +300,7 @@ namespace TfsInterop
             {
                 return result;
             }
-            ////foreach (var _buildDefinition in _buildDefinitions)
+            ////foreach (var buildDefinition in _buildDefinitions)
             ////{
             Microsoft.TeamFoundation.Build.WebApi.BuildStatus statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.All;
             if (running.HasValue && running.Value)
@@ -308,7 +308,7 @@ namespace TfsInterop
                 statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress;
             }
 
-            ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { _buildDefinition.Id },
+            ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { buildDefinition.Id },
             ////                                       minFinishTime: sinceDate,
             ////                                       statusFilter: statusFilter));
             var builds = await _buildClient.GetBuildsAsync(project: _projectName,
@@ -352,7 +352,7 @@ namespace TfsInterop
                         Label = b.BuildNumber,
                         StartDate = b.StartTime.Value,
                         Status = ConvertStatus2015(b),
-                        IsFinished = (b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed),
+                        IsFinished = b.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed,
                         Description = GetStatus2015(b) + duration,
                         Revision = GetCommitFromSourceVersion(b.SourceVersion),
                         Url = _urlPrefix + id

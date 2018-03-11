@@ -5,16 +5,16 @@ namespace GitUIPluginInterfaces
 {
     public class StringSetting : ISetting
     {
-        public StringSetting(string aName, string aDefaultValue)
-            : this(aName, aName, aDefaultValue)
+        public StringSetting(string name, string defaultValue)
+            : this(name, name, defaultValue)
         {
         }
 
-        public StringSetting(string aName, string aCaption, string aDefaultValue)
+        public StringSetting(string name, string caption, string defaultValue)
         {
-            Name = aName;
-            Caption = aCaption;
-            DefaultValue = aDefaultValue;
+            Name = name;
+            Caption = caption;
+            DefaultValue = defaultValue;
         }
 
         public string Name { get; private set; }
@@ -29,8 +29,8 @@ namespace GitUIPluginInterfaces
 
         private class TextBoxBinding : SettingControlBinding<StringSetting, TextBox>
         {
-            public TextBoxBinding(StringSetting aSetting, TextBox aCustomControl)
-                : base(aSetting, aCustomControl)
+            public TextBoxBinding(StringSetting setting, TextBox customControl)
+                : base(setting, customControl)
             {
             }
 

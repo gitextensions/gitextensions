@@ -58,9 +58,9 @@ namespace GitImpact
             MouseWheel += ImpactControl_MouseWheel;
         }
 
-        public void Init(IGitModule Module)
+        public void Init(IGitModule module)
         {
-            _impactLoader = new ImpactLoader(Module);
+            _impactLoader = new ImpactLoader(module);
             _impactLoader.RespectMailmap = true; // respect the .mailmap file
             _impactLoader.Updated += OnImpactUpdate;
         }
@@ -85,7 +85,7 @@ namespace GitImpact
             _impactLoader?.Stop();
         }
 
-        void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
+        private void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
         {
             _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
 
@@ -93,7 +93,7 @@ namespace GitImpact
             Invalidate();
         }
 
-        void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
+        private void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
         {
             var commit = e.Commit;
 
@@ -206,7 +206,7 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                return Math.Max(0, _impact.Count * (BlockWidth + TransitionWidth) - TransitionWidth);
+                return Math.Max(0, (_impact.Count * (BlockWidth + TransitionWidth)) - TransitionWidth);
             }
         }
 
@@ -214,14 +214,14 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                int RightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
+                int rightValue = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - _scrollBar.Value);
 
                 _scrollBar.Minimum = 0;
                 _scrollBar.Maximum = (int)(Math.Max(0, GetGraphWidth() - ClientSize.Width) * 1.1);
                 _scrollBar.SmallChange = _scrollBar.Maximum / 22;
                 _scrollBar.LargeChange = _scrollBar.Maximum / 11;
 
-                _scrollBar.Value = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - RightValue);
+                _scrollBar.Value = Math.Max(0, _scrollBar.Maximum - _scrollBar.LargeChange - rightValue);
             }
         }
 
@@ -286,7 +286,7 @@ namespace GitImpact
                     foreach (var label in _lineLabels[author])
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString(), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y - sz.Height / 2);
+                        PointF pt = new PointF(label.Item1.X - (sz.Width / 2), label.Item1.Y - (sz.Height / 2));
                         g.DrawString(label.Item2.ToString(), font, brush, pt);
                     }
                 }
@@ -304,7 +304,7 @@ namespace GitImpact
                     foreach (var label in _weekLabels)
                     {
                         SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM yy"), font);
-                        PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y + sz.Height / 2);
+                        PointF pt = new PointF(label.Item1.X - (sz.Width / 2), label.Item1.Y + (sz.Height / 2));
                         g.DrawString(label.Item2.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
@@ -335,7 +335,7 @@ namespace GitImpact
                     int y = 0;
 
                     // Iterate through authors
-                    foreach (var pair in (from entry in week.Value orderby entry.Value.ChangedLines descending select entry))
+                    foreach (var pair in from entry in week.Value orderby entry.Value.ChangedLines descending select entry)
                     {
                         string author = pair.Key;
 
@@ -366,7 +366,7 @@ namespace GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add(Tuple.Create(new PointF(x + BlockWidth / 2, y), week.Key));
+                    _weekLabels.Add(Tuple.Create(new PointF(x + (BlockWidth / 2), y), week.Key));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;
@@ -399,7 +399,7 @@ namespace GitImpact
                         author_points.Value[i] = Tuple.Create(
                             new Rectangle(author_points.Value[i].Item1.Left, (int)(author_points.Value[i].Item1.Top * height_factor),
                                           author_points.Value[i].Item1.Width, Math.Max(1, (int)(author_points.Value[i].Item1.Height * height_factor))),
-                                          author_points.Value[i].Item2);
+                            author_points.Value[i].Item2);
 
                         // Add lines-changed-labels
                         if (!_lineLabels.ContainsKey(author))
@@ -409,8 +409,8 @@ namespace GitImpact
 
                         if (author_points.Value[i].Item1.Height > LinesFontSize * 1.5)
                         {
-                            _lineLabels[author].Add(Tuple.Create(new PointF(author_points.Value[i].Item1.Left + BlockWidth / 2,
-                                author_points.Value[i].Item1.Top + author_points.Value[i].Item1.Height / 2),
+                            _lineLabels[author].Add(Tuple.Create(new PointF(author_points.Value[i].Item1.Left + (BlockWidth / 2),
+                                author_points.Value[i].Item1.Top + (author_points.Value[i].Item1.Height / 2)),
                                 author_points.Value[i].Item2));
                         }
                     }
@@ -430,8 +430,8 @@ namespace GitImpact
                         if (i < author_points.Value.Count - 1)
                         {
                             _paths[author].AddBezier(author_points.Value[i].Item1.Right, author_points.Value[i].Item1.Top,
-                                                    author_points.Value[i].Item1.Right + TransitionWidth / 2, author_points.Value[i].Item1.Top,
-                                                    author_points.Value[i].Item1.Right + TransitionWidth / 2, author_points.Value[i + 1].Item1.Top,
+                                                    author_points.Value[i].Item1.Right + (TransitionWidth / 2), author_points.Value[i].Item1.Top,
+                                                    author_points.Value[i].Item1.Right + (TransitionWidth / 2), author_points.Value[i + 1].Item1.Top,
                                                     author_points.Value[i + 1].Item1.Left, author_points.Value[i + 1].Item1.Top);
                         }
                     }
@@ -451,8 +451,8 @@ namespace GitImpact
                         if (i > 0)
                         {
                             _paths[author].AddBezier(author_points.Value[i].Item1.Left, author_points.Value[i].Item1.Bottom,
-                                                    author_points.Value[i].Item1.Left - TransitionWidth / 2, author_points.Value[i].Item1.Bottom,
-                                                    author_points.Value[i].Item1.Left - TransitionWidth / 2, author_points.Value[i - 1].Item1.Bottom,
+                                                    author_points.Value[i].Item1.Left - (TransitionWidth / 2), author_points.Value[i].Item1.Bottom,
+                                                    author_points.Value[i].Item1.Left - (TransitionWidth / 2), author_points.Value[i - 1].Item1.Bottom,
                                                     author_points.Value[i - 1].Item1.Right, author_points.Value[i - 1].Item1.Bottom);
                         }
                     }

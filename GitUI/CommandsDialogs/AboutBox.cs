@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using GitUI.Properties;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs
 {

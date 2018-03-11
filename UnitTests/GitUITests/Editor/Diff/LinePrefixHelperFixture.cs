@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace GitUITests.Editor.Diff
 {
     [TestFixture]
-    class LinePrefixHelperFixture
+    internal class LinePrefixHelperFixture
     {
         [Test]
         public void CanFindAddedLines()

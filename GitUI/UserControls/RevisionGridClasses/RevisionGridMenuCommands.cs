@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.Hotkey;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Hotkey;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
@@ -18,11 +18,11 @@ namespace GitUI.UserControls.RevisionGridClasses
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
 
-        RevisionGrid _revisionGrid;
+        private RevisionGrid _revisionGrid;
 
         // must both be created only once
-        IEnumerable<MenuCommand> _navigateMenuCommands;
-        IEnumerable<MenuCommand> _viewMenuCommands;
+        private IEnumerable<MenuCommand> _navigateMenuCommands;
+        private IEnumerable<MenuCommand> _viewMenuCommands;
 
         public RevisionGridMenuCommands(RevisionGrid revisionGrid)
         {
@@ -51,8 +51,9 @@ namespace GitUI.UserControls.RevisionGridClasses
                 UpdateMenuCommandShortcutKeyDisplayString(_navigateMenuCommands, navigateMenuCommands2);
                 UpdateMenuCommandShortcutKeyDisplayString(_viewMenuCommands, viewMenuCommands2);
 
-                if (_revisionGrid != null) // null when TranslationApp is started
+                if (_revisionGrid != null)
                 {
+                    // null when TranslationApp is started
                     TriggerMenuChanged(); // trigger refresh
                 }
             }

@@ -65,7 +65,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public void SetLeftMargin(float value)
         {
-            Debug.Assert(value >= 0);
+            Debug.Assert(value >= 0, "value >= 0");
             _leftMargin = value;
             Invalidate();
         }
@@ -75,7 +75,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public void SetRightMargin(float value)
         {
-            Debug.Assert(value >= 0);
+            Debug.Assert(value >= 0, "value >= 0");
             _rightMargin = value;
             Invalidate();
         }
@@ -85,7 +85,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public void SetTopMargin(float value)
         {
-            Debug.Assert(value >= 0);
+            Debug.Assert(value >= 0, "value >= 0");
             _topMargin = value;
             Invalidate();
         }
@@ -95,7 +95,7 @@ namespace GitStatistics.PieChart
         /// </summary>
         public void SetBottomMargin(float value)
         {
-            Debug.Assert(value >= 0);
+            Debug.Assert(value >= 0, "value >= 0");
             _bottomMargin = value;
             Invalidate();
         }
@@ -259,7 +259,7 @@ namespace GitStatistics.PieChart
         {
             base.OnMouseEnter(e);
             _defaultToolTipAutoPopDelay = _toolTip.AutoPopDelay;
-            _toolTip.AutoPopDelay = Int16.MaxValue;
+            _toolTip.AutoPopDelay = short.MaxValue;
         }
 
         protected override void OnMouseLeave(EventArgs e)

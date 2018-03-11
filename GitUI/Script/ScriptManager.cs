@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -6,7 +7,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
-using System.Collections.Generic;
 
 namespace GitUI.Script
 {
@@ -18,7 +18,7 @@ namespace GitUI.Script
         {
             if (Scripts == null)
             {
-                DeserializeFromXml(AppSettings.ownScripts);
+                DeserializeFromXml(AppSettings.OwnScripts);
                 if (Scripts != null)
                 {
                     FixAmbiguousHotkeyCommandIdentifiers(Scripts);
@@ -156,17 +156,17 @@ namespace GitUI.Script
             openHashOnGitHub.Enabled = false;
             Scripts.Add(openHashOnGitHub);
 
-            ScriptInfo FetchAll = new ScriptInfo();
-            FetchAll.HotkeyCommandIdentifier = 9004;
-            FetchAll.Name = "Fetch All Submodules";
-            FetchAll.Command = "git";
-            FetchAll.Arguments = "submodule foreach --recursive git fetch --all";
-            FetchAll.RunInBackground = false;
-            FetchAll.AskConfirmation = false;
-            FetchAll.OnEvent = 0;
-            FetchAll.AddToRevisionGridContextMenu = true;
-            FetchAll.Enabled = false;
-            Scripts.Add(FetchAll);
+            ScriptInfo fetchAll = new ScriptInfo();
+            fetchAll.HotkeyCommandIdentifier = 9004;
+            fetchAll.Name = "Fetch All Submodules";
+            fetchAll.Command = "git";
+            fetchAll.Arguments = "submodule foreach --recursive git fetch --all";
+            fetchAll.RunInBackground = false;
+            fetchAll.AskConfirmation = false;
+            fetchAll.OnEvent = 0;
+            fetchAll.AddToRevisionGridContextMenu = true;
+            fetchAll.Enabled = false;
+            Scripts.Add(fetchAll);
         }
 
         internal static int NextHotkeyCommandIdentifier()

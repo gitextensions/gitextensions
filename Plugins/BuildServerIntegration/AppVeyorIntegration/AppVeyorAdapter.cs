@@ -59,7 +59,7 @@ namespace AppVeyorIntegration
         private HashSet<string> _fetchBuilds;
         private string _accountToken;
         private static readonly Dictionary<string, Project> Projects = new Dictionary<string, Project>();
-        private Func<string, bool> _IsCommitInRevisionGrid;
+        private Func<string, bool> _isCommitInRevisionGrid;
         private bool _shouldLoadTestResults;
         private bool _shouldDisplayGitHubPullRequestBuilds;
         private string _gitHubToken;
@@ -72,7 +72,7 @@ namespace AppVeyorIntegration
                 throw new InvalidOperationException("Already initialized");
             }
 
-            _IsCommitInRevisionGrid = isCommitInRevisionGrid;
+            _isCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
             var projectNamesSetting = config.GetString("AppVeyorProjectName", null);
@@ -167,7 +167,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        HttpClient GetHttpClient(string baseUrl, string accountToken)
+        private HttpClient GetHttpClient(string baseUrl, string accountToken)
         {
             var httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
             {
@@ -251,7 +251,7 @@ namespace AppVeyorIntegration
                                 commitSha1 = b["commitId"].ToObject<string>();
                             }
 
-                            if (commitSha1 == null || !_IsCommitInRevisionGrid(commitSha1))
+                            if (commitSha1 == null || !_isCommitInRevisionGrid(commitSha1))
                             {
                                 continue;
                             }
@@ -277,7 +277,7 @@ namespace AppVeyorIntegration
                                 Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                 BaseApiUrl = baseApiUrl,
                                 AppVeyorBuildReportUrl = baseApiUrl + "/build/" + version,
-                                PullRequestText = (pullRequestId != null ? " PR#" + pullRequestId.Value<string>() : string.Empty),
+                                PullRequestText = pullRequestId != null ? " PR#" + pullRequestId.Value<string>() : string.Empty,
                                 Duration = duration,
                                 TestsResultText = string.Empty
                             });
@@ -412,15 +412,15 @@ namespace AppVeyorIntegration
             }
 
             string testResults = string.Empty;
-            int nbTests = buildDescription["testsCount"].ToObject<int>();
-            if (nbTests != 0)
+            int testCount = buildDescription["testsCount"].ToObject<int>();
+            if (testCount != 0)
             {
-                int nbFailedTests = buildDescription["failedTestsCount"].ToObject<int>();
-                int nbSkippedTests = nbTests - buildDescription["passedTestsCount"].ToObject<int>();
-                testResults = " : " + nbTests + " tests";
-                if (nbFailedTests != 0 || nbSkippedTests != 0)
+                int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
+                int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
+                testResults = " : " + testCount + " tests";
+                if (failedTestCount != 0 || skippedTestCount != 0)
                 {
-                    testResults += string.Format(" ( {0} failed, {1} skipped )", nbFailedTests, nbSkippedTests);
+                    testResults += string.Format(" ( {0} failed, {1} skipped )", failedTestCount, skippedTestCount);
                 }
 
                 buildDetails.TestsResultText = " " + testResults;
@@ -552,7 +552,7 @@ namespace AppVeyorIntegration
 
         public void ChangeProgressCounter()
         {
-            _buildProgressCount = _buildProgressCount % 3 + 1;
+            _buildProgressCount = (_buildProgressCount % 3) + 1;
         }
 
         public void UpdateDescription()

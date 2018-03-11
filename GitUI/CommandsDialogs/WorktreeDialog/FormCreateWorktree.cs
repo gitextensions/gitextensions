@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {
@@ -19,8 +19,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         public string WorktreeDirectory => newWorktreeDirectory.Text;
         public bool OpenWorktree => openWorktreeCheckBox.Checked;
 
-        public FormCreateWorktree(GitUICommands aCommands)
-            : base(aCommands)
+        public FormCreateWorktree(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             _branchesLoader = new AsyncLoader();
@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             textBoxNewBranchName.Enabled = radioButtonCreateNewBranch.Checked;
             if (radioButtonCheckoutExistingBranch.Checked)
             {
-                createWorktreeButton.Enabled = (comboBoxBranches.SelectedItem != null);
+                createWorktreeButton.Enabled = comboBoxBranches.SelectedItem != null;
             }
             else
             {

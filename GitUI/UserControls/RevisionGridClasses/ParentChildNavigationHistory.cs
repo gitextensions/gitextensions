@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class ParentChildNavigationHistory
+    internal class ParentChildNavigationHistory
     {
-        enum NavigationDirection
+        private enum NavigationDirection
         {
             Parent,
             Child

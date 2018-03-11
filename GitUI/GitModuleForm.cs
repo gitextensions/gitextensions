@@ -46,15 +46,15 @@ namespace GitUI
         {
         }
 
-        public GitModuleForm(GitUICommands aCommands)
-            : this(true, aCommands)
+        public GitModuleForm(GitUICommands commands)
+            : this(true, commands)
         {
         }
 
-        public GitModuleForm(bool enablePositionRestore, GitUICommands aCommands)
+        public GitModuleForm(bool enablePositionRestore, GitUICommands commands)
             : base(enablePositionRestore)
         {
-            UICommands = aCommands;
+            UICommands = commands;
         }
 
         protected override bool ExecuteCommand(int command)

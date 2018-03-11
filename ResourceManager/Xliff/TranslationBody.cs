@@ -50,7 +50,7 @@ namespace ResourceManager.Xliff
             }
             else
             {
-                Debug.Assert(ti.Value == translationItem.Value);
+                Debug.Assert(ti.Value == translationItem.Value, "ti.Value == translationItem.Value");
             }
         }
 

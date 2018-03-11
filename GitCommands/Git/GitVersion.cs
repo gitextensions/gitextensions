@@ -96,7 +96,7 @@ namespace GitCommands
         {
             if (version == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             if (version.StartsWith(Prefix))
@@ -124,7 +124,7 @@ namespace GitCommands
 
             foreach (var number in numbers)
             {
-                if (Int32.TryParse(number, out var value))
+                if (int.TryParse(number, out var value))
                 {
                     yield return value;
                 }

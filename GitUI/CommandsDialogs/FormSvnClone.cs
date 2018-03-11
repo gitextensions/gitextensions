@@ -20,17 +20,17 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Authors file \"{0}\" does not exists. Continue without authors file?");
 
         private readonly TranslationString _questionContinueWithoutAuthorsCaption = new TranslationString("Authors file");
-        private readonly EventHandler<GitModuleEventArgs> _GitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
         private FormSvnClone()
             : this(null, null)
         {
         }
 
-        public FormSvnClone(GitUICommands aCommands, EventHandler<GitModuleEventArgs> GitModuleChanged)
-            : base(aCommands)
+        public FormSvnClone(GitUICommands commands, EventHandler<GitModuleEventArgs> gitModuleChanged)
+            : base(commands)
         {
-            _GitModuleChanged = GitModuleChanged;
+            _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
             Translate();
         }
@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
 
                 var authorsfile = _NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetauthorsfile = false;
-                if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
+                if (!string.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
                 {
                     return;
                 }
@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
 
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    _GitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                    _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(new GitModule(dirTo)));
                 }
 
                 Close();

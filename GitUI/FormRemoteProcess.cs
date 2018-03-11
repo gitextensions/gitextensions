@@ -57,7 +57,7 @@ namespace GitUI
             }
         }
 
-        private string _UrlTryingToConnect = string.Empty;
+        private string _urlTryingToConnect = string.Empty;
 
         /// <summary>
         /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
@@ -66,7 +66,7 @@ namespace GitUI
         /// </summary>
         public void SetUrlTryingToConnect(string url)
         {
-            _UrlTryingToConnect = url;
+            _urlTryingToConnect = url;
         }
 
         protected override void BeforeProcessStart()
@@ -102,8 +102,8 @@ namespace GitUI
                     if (FormPuttyError.AskForKey(this, out var loadedKey))
                     {
                         // To prevent future authentication errors, save this key for this remote.
-                        if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(Remote) &&
-                            String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
+                        if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
+                            string.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
                         {
                             Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey);
                         }
@@ -118,7 +118,7 @@ namespace GitUI
                 {
                     string remoteUrl;
 
-                    if (string.IsNullOrEmpty(_UrlTryingToConnect))
+                    if (string.IsNullOrEmpty(_urlTryingToConnect))
                     {
                         remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
@@ -128,7 +128,7 @@ namespace GitUI
                     }
                     else
                     {
-                        remoteUrl = _UrlTryingToConnect;
+                        remoteUrl = _urlTryingToConnect;
                     }
 
                     if (AskForCacheHostkey(this, Module, remoteUrl))
@@ -167,14 +167,14 @@ namespace GitUI
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         string remoteUrl;
-                        if (string.IsNullOrEmpty(_UrlTryingToConnect))
+                        if (string.IsNullOrEmpty(_urlTryingToConnect))
                         {
                             remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                             remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
                         }
                         else
                         {
-                            remoteUrl = _UrlTryingToConnect;
+                            remoteUrl = _urlTryingToConnect;
                         }
 
                         remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);

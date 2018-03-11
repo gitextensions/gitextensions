@@ -4,7 +4,7 @@ using ResourceManager;
 namespace ResourceManagerTests
 {
     [TestFixture]
-    class LinkFactoryFixture
+    internal class LinkFactoryFixture
     {
         [Test]
         public void ParseGoToBranchLink()

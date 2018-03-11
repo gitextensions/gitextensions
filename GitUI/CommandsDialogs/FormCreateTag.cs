@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Tag;
 using GitUI.Script;
 using ResourceManager;
-using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {
@@ -27,8 +27,8 @@ namespace GitUI.CommandsDialogs
         private static readonly string[] DropwdownTagOperation = { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
         private readonly IGitTagController _gitTagController;
 
-        public FormCreateTag(GitUICommands aCommands, GitRevision revision)
-            : base(aCommands)
+        public FormCreateTag(GitUICommands commands, GitRevision revision)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
@@ -40,9 +40,9 @@ namespace GitUI.CommandsDialogs
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
             }
 
-            if (aCommands != null)
+            if (commands != null)
             {
-                _gitTagController = new GitTagController(aCommands);
+                _gitTagController = new GitTagController(commands);
             }
         }
 
@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
         {
             textBoxTagName.Select();
             _currentRemote = Module.GetCurrentRemote();
-            if (String.IsNullOrEmpty(_currentRemote))
+            if (string.IsNullOrEmpty(_currentRemote))
             {
                 _currentRemote = "origin";
             }

@@ -9,10 +9,10 @@ namespace ResourceManager
         public string Description { get; protected set; }
         public string Name { get; protected set; }
 
-        protected void SetNameAndDescription(string aName)
+        protected void SetNameAndDescription(string name)
         {
-            Name = aName;
-            Description = aName;
+            Name = name;
+            Description = name;
         }
 
         // Store settings to use later

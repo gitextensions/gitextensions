@@ -13,8 +13,8 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private readonly TranslationString _remoteAndLocalPathRequired
             = new TranslationString("A remote path and local path are required");
 
-        public FormAddSubmodule(GitUICommands aCommands)
-            : base(aCommands)
+        public FormAddSubmodule(GitUICommands commands)
+            : base(commands)
         {
             InitializeComponent();
             Translate();

@@ -20,9 +20,9 @@ namespace AutoCompileSubmodules
             Translate();
         }
 
-        private BoolSetting _MsBuildEnabled = new BoolSetting("Enabled", false);
-        private StringSetting _MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
-        private StringSetting _MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        private BoolSetting _msBuildEnabled = new BoolSetting("Enabled", false);
+        private StringSetting _msBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
+        private StringSetting _msBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
 
         private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
         private static string FindMsBuild()
@@ -34,9 +34,9 @@ namespace AutoCompileSubmodules
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            yield return _MsBuildEnabled;
-            yield return _MsBuildPath;
-            yield return _MsBuildArguments;
+            yield return _msBuildEnabled;
+            yield return _msBuildPath;
+            yield return _msBuildArguments;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -59,7 +59,7 @@ namespace AutoCompileSubmodules
                 return false;
             }
 
-            var msbuildpath = _MsBuildPath.ValueOrDefault(Settings);
+            var msbuildpath = _msBuildPath.ValueOrDefault(Settings);
 
             var workingDir = new DirectoryInfo(e.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
@@ -92,7 +92,7 @@ namespace AutoCompileSubmodules
                 }
                 else
                 {
-                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + _MsBuildArguments.ValueOrDefault(Settings));
+                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + _msBuildArguments.ValueOrDefault(Settings));
                 }
             }
 
@@ -106,7 +106,7 @@ namespace AutoCompileSubmodules
         /// </summary>
         private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {
-            if (e.ActionDone && _MsBuildEnabled.ValueOrDefault(Settings))
+            if (e.ActionDone && _msBuildEnabled.ValueOrDefault(Settings))
             {
                 Execute(e);
             }

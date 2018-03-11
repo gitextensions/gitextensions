@@ -23,7 +23,11 @@ extern CComModule _Module;
 #include <atlcom.h>
 #include <atlconv.h>
 
+// warning C4091 in shlobj.h
+#pragma warning( push )
+#pragma warning( disable: 4091 )
 #include <shlobj.h>
+#pragma warning( pop )
 #include <comdef.h>
 
 //{{AFX_INSERT_LOCATION}}

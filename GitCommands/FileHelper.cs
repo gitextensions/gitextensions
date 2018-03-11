@@ -53,9 +53,9 @@ namespace GitCommands
             ".tiff",
         };
 
-        public static bool IsBinaryFile(GitModule aModule, string fileName)
+        public static bool IsBinaryFile(GitModule module, string fileName)
         {
-            var t = IsBinaryAccordingToGitAttributes(aModule, fileName);
+            var t = IsBinaryAccordingToGitAttributes(module, fileName);
             if (t.HasValue)
             {
                 return t.Value;
@@ -65,11 +65,11 @@ namespace GitCommands
         }
 
         /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
-        private static bool? IsBinaryAccordingToGitAttributes(GitModule aModule, string fileName)
+        private static bool? IsBinaryAccordingToGitAttributes(GitModule module, string fileName)
         {
             string[] diffvals = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
             string cmd = "check-attr -z diff text crlf eol -- " + fileName.Quote();
-            string result = aModule.RunGitCmd(cmd);
+            string result = module.RunGitCmd(cmd);
             var lines = result.Split(new[] { '\n', '\0' });
             var attributes = new Dictionary<string, string>();
             for (int i = 0; i < lines.Length - 2; i += 3)

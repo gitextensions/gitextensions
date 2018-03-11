@@ -54,12 +54,12 @@ namespace Gerrit
             _gitUiCommands = null;
         }
 
-        void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
+        private void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
         {
             UpdateGerritMenuItems(e);
         }
 
-        void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
+        private void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
         {
             UpdateGerritMenuItems(e);
         }
@@ -252,7 +252,7 @@ namespace Gerrit
             };
         }
 
-        void publishMenuItem_Click(object sender, EventArgs e)
+        private void publishMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new FormGerritPublish(_gitUiCommands))
             {
@@ -262,7 +262,7 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        void downloadMenuItem_Click(object sender, EventArgs e)
+        private void downloadMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new FormGerritDownload(_gitUiCommands))
             {
@@ -272,7 +272,7 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        void installCommitMsgMenuItem_Click(object sender, EventArgs e)
+        private void installCommitMsgMenuItem_Click(object sender, EventArgs e)
         {
             var result = MessageBox.Show(
                 _mainForm,
@@ -348,7 +348,7 @@ namespace Gerrit
             // The first line of the output contains the file we're receiving
             // in a format like "C0755 4248 commit-msg".
 
-            if (String.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content))
             {
                 return null;
             }
@@ -376,7 +376,7 @@ namespace Gerrit
 
             index = content.LastIndexOf((char)0);
 
-            Debug.Assert(index == content.Length - 1);
+            Debug.Assert(index == content.Length - 1, "index == content.Length - 1");
 
             if (index != -1)
             {
@@ -386,7 +386,7 @@ namespace Gerrit
             return content;
         }
 
-        void gitReviewMenuItem_Click(object sender, EventArgs e)
+        private void gitReviewMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new FormGitReview(_gitUiCommands))
             {

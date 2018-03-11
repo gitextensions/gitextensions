@@ -53,7 +53,7 @@ Current Branch:
 {cDefaultRemotePathFromUrl}");
         #endregion translation
 
-        private string _IconName = "bug";
+        private string _iconName = "bug";
 
         public ScriptsSettingsPage()
         {
@@ -111,7 +111,7 @@ Current Branch:
 
         private void SaveScripts()
         {
-            AppSettings.ownScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()
@@ -146,11 +146,11 @@ Current Branch:
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
             sbtn_icon.Image = ResizeForSplitButton(scriptInfo.GetIcon());
-            _IconName = scriptInfo.Icon;
+            _iconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
             {
-                if (item.ToString() == _IconName)
+                if (item.ToString() == _iconName)
                 {
                     item.Font = new Font(item.Font, FontStyle.Bold);
                 }
@@ -190,7 +190,7 @@ Current Branch:
                 selectedScriptInfo.IsPowerShell = scriptIsPowerShell.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
-                selectedScriptInfo.Icon = _IconName;
+                selectedScriptInfo.Icon = _iconName;
             }
         }
 
@@ -295,7 +295,7 @@ Current Branch:
             // set new image on button
             sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
 
-            _IconName = ((ToolStripMenuItem)sender).Text;
+            _iconName = ((ToolStripMenuItem)sender).Text;
 
             // store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
@@ -306,17 +306,17 @@ Current Branch:
             return ResizeBitmap(b, 12, 12);
         }
 
-        public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
+        public Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             if (b == null)
             {
                 return null;
             }
 
-            Bitmap result = new Bitmap(nWidth, nHeight);
+            Bitmap result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage((Image)result))
             {
-                g.DrawImage(b, 0, 0, nWidth, nHeight);
+                g.DrawImage(b, 0, 0, width, height);
             }
 
             return result;

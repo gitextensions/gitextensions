@@ -16,26 +16,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         #region Properties
 
         #region Settings
-        private HotkeySettings[] _Settings;
+        private HotkeySettings[] _settings;
         private HotkeySettings[] Settings
         {
-            get { return _Settings; }
+            get { return _settings; }
             set
             {
-                _Settings = value;
+                _settings = value;
                 UpdateCombobox(value);
             }
         }
         #endregion
 
         #region SelectedHotkeySettings
-        private HotkeySettings _SelectedHotkeySettings;
+        private HotkeySettings _selectedHotkeySettings;
         private HotkeySettings SelectedHotkeySettings
         {
-            get { return _SelectedHotkeySettings; }
+            get { return _selectedHotkeySettings; }
             set
             {
-                _SelectedHotkeySettings = value;
+                _selectedHotkeySettings = value;
                 UpdateListViewItems(value);
             }
         }
@@ -43,13 +43,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         #endregion
 
         #region SelectedHotkeyCommand
-        private HotkeyCommand _SelectedHotkeyCommand;
+        private HotkeyCommand _selectedHotkeyCommand;
         private HotkeyCommand SelectedHotkeyCommand
         {
-            get { return _SelectedHotkeyCommand; }
+            get { return _selectedHotkeyCommand; }
             set
             {
-                _SelectedHotkeyCommand = value;
+                _selectedHotkeyCommand = value;
                 UpdateTextBox(value);
             }
         }

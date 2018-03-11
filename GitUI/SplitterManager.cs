@@ -1,7 +1,7 @@
-﻿using GitUIPluginInterfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitUI
 {
@@ -106,13 +106,13 @@ namespace GitUI
                         {
                             if (Splitter.FixedPanel == FixedPanel.Panel1)
                             {
-                                SetSplitterDistance(Splitter.SplitterDistance + Splitter.SplitterDistance * scaleFactor);
+                                SetSplitterDistance(Splitter.SplitterDistance + (Splitter.SplitterDistance * scaleFactor));
                             }
 
                             if (Splitter.FixedPanel == FixedPanel.Panel2)
                             {
                                 int panel2Size = SplitterSize - Splitter.SplitterDistance;
-                                SetSplitterDistance(Splitter.SplitterDistance - panel2Size * scaleFactor);
+                                SetSplitterDistance(Splitter.SplitterDistance - (panel2Size * scaleFactor));
                             }
                         }
                     }
@@ -123,7 +123,7 @@ namespace GitUI
 
             private float CalculateScaleFactor()
             {
-                return 1F * Splitter.Font.Size / _latestFontSize.Value - 1;
+                return (1F * Splitter.Font.Size / _latestFontSize.Value) - 1;
             }
 
             public void SaveToSettings(ISettingsSource settings)

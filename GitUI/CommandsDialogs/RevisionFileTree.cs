@@ -93,9 +93,11 @@ See the changes in the commit form.");
 
                 foundNode = currentFoundNode;
 
-                if (i < pathParts.Length - 1) // if not the last path part...
+                // if not the last path part...
+                if (i < pathParts.Length - 1)
                 {
-                    foundNode.Expand(); // load more data
+                    // load more data
+                    foundNode.Expand();
                     currentNodes = currentFoundNode.Nodes;
                 }
             }
@@ -199,7 +201,7 @@ See the changes in the commit form.");
 
                 if (tvGitTree.SelectedNode == null)
                 {
-                    FileText.ViewText("", "");
+                    FileText.ViewTextAsync("", "");
                 }
             }
             finally
@@ -309,19 +311,19 @@ See the changes in the commit form.");
             {
                 case GitObjectType.Blob:
                     {
-                        FileText.ViewGitItem(gitItem.FileName, gitItem.Guid);
+                        FileText.ViewGitItemAsync(gitItem.FileName, gitItem.Guid);
                         break;
                     }
 
                 case GitObjectType.Commit:
                     {
-                        FileText.ViewText(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
+                        FileText.ViewTextAsync(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
                         break;
                     }
 
                 default:
                     {
-                        FileText.ViewText("", "");
+                        FileText.ViewTextAsync("", "");
                         break;
                     }
             }
@@ -619,7 +621,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            if (DialogResult.OK == MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel))
+            if (MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 var files = new List<string> { gitItem.FileName };
                 Module.CheckoutFiles(files, _revision.Guid, false);

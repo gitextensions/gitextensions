@@ -48,9 +48,10 @@ namespace GitUI
                 return string.Empty;
             }
 
+            // The win32 method PathCompactPathEx is only supported on Windows
             string truncatePathMethod = AppSettings.TruncatePathMethod;
             if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
-                EnvUtils.RunningOnWindows()) // The win32 method PathCompactPathEx is only supported on Windows
+                EnvUtils.RunningOnWindows())
             {
                 var result = new StringBuilder(length);
                 NativeMethods.PathCompactPathEx(result, path, length, 0);

@@ -8,8 +8,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
 using GitCommands.Remote;
+using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -108,13 +108,13 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormPull(GitUICommands aCommands, string defaultRemoteBranch, string defaultRemote)
-            : base(aCommands)
+        public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote)
+            : base(commands)
         {
             InitializeComponent();
             Translate();
 
-            if (aCommands == null)
+            if (commands == null)
             {
                 return;
             }
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
 
             // If this repo is shallow, show an option to Unshallow
             // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
-            bool isRepoShallow = File.Exists(aCommands.Module.ResolveGitInternalPath("shallow"));
+            bool isRepoShallow = File.Exists(commands.Module.ResolveGitInternalPath("shallow"));
             if (isRepoShallow)
             {
                 Unshallow.Visible = true;
@@ -343,7 +343,7 @@ namespace GitUI.CommandsDialogs
                     PSTaskDialog.eTaskDialogButtons.YesNo,
                     PSTaskDialog.eSysIcons.Question,
                     PSTaskDialog.eSysIcons.Question);
-                messageBoxResult = (res == DialogResult.Yes);
+                messageBoxResult = res == DialogResult.Yes;
                 if (PSTaskDialog.cTaskDialog.VerificationChecked)
                 {
                     AppSettings.AutoPopStashAfterPull = messageBoxResult;
@@ -538,7 +538,7 @@ namespace GitUI.CommandsDialogs
                 return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
             }
 
-            Debug.Assert(Merge.Checked || Rebase.Checked);
+            Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
             return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
             {

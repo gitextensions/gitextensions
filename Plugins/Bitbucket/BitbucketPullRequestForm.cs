@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using System.Windows.Forms;
-using GitUIPluginInterfaces;
 using System.Linq;
+using System.Text;
 using System.Threading;
-using ResourceManager;
+using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace Bitbucket
 {
@@ -166,12 +166,12 @@ namespace Bitbucket
             }
         }
 
-        Dictionary<Repository, IEnumerable<string>> _Branches = new Dictionary<Repository, IEnumerable<string>>();
+        private Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
-            if (_Branches.ContainsKey(selectedRepo))
+            if (_branches.ContainsKey(selectedRepo))
             {
-                return _Branches[selectedRepo];
+                return _branches[selectedRepo];
             }
 
             var list = new List<string>();
@@ -185,7 +185,7 @@ namespace Bitbucket
                 }
             }
 
-            _Branches.Add(selectedRepo, list);
+            _branches.Add(selectedRepo, list);
             return list;
         }
 
@@ -213,7 +213,7 @@ namespace Bitbucket
 
         private void RefreshDDLBranch(ComboBox branchComboBox, object selectedValue)
         {
-            List<string> branchNames = (GetBitbucketBranches((Repository)selectedValue)).ToList();
+            List<string> branchNames = GetBitbucketBranches((Repository)selectedValue).ToList();
             if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
             {
                 branchNames.Sort();

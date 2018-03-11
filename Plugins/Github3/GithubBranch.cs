@@ -3,7 +3,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
-    class GithubBranch : IHostedBranch
+    internal class GithubBranch : IHostedBranch
     {
         private Branch _branch;
 

@@ -154,8 +154,8 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        public FormBrowse(GitUICommands aCommands, string filter)
-            : base(true, aCommands)
+        public FormBrowse(GitUICommands commands, string filter)
+            : base(true, commands)
         {
             // Save value for commit info panel, may be changed
             _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
@@ -212,7 +212,7 @@ namespace GitUI.CommandsDialogs
                     if (status == GitStatusMonitorState.Stopped)
                     {
                         _toolStripGitStatus.Visible = false;
-                        _toolStripGitStatus.Text = String.Empty;
+                        _toolStripGitStatus.Text = string.Empty;
                     }
                     else if (status == GitStatusMonitorState.Running)
                     {
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
                 oldcommands.BrowseRepo = null;
                 UICommands.BrowseRepo = this;
             };
-            if (aCommands != null)
+            if (commands != null)
             {
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -330,8 +330,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormBrowse(GitUICommands aCommands, string filter, string selectCommit)
-            : this(aCommands, filter)
+        public FormBrowse(GitUICommands commands, string filter, string selectCommit)
+            : this(commands, filter)
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
             _diffTabPageTitleBase = DiffTabPage.Text;
         }
 
-        void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
+        private void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions);
         }
@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
+        private void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
         {
             bool indexChanged = e.IsIndexChanged;
             this.InvokeAsync(() =>
@@ -910,13 +910,15 @@ namespace GitUI.CommandsDialogs
                 { // w is bigger, so divide h by r
                     w = size;
                     h = (int)(size / r);
-                    x = 0; y = (size - h) / 2; // center the image
+                    x = 0;
+                    y = (size - h) / 2; // center the image
                 }
                 else
                 { // h is bigger, so multiply w by r
                     w = (int)(size * r);
                     h = size;
-                    y = 0; x = (size - w) / 2; // center the image
+                    y = 0;
+                    x = (size - w) / 2; // center the image
                 }
             }
 
@@ -1201,18 +1203,18 @@ namespace GitUI.CommandsDialogs
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
         {
-            bool bSilent = (ModifierKeys & Keys.Shift) != 0;
-            UICommands.StartPushDialog(this, bSilent);
+            bool isSilent = (ModifierKeys & Keys.Shift) != 0;
+            UICommands.StartPushDialog(this, isSilent);
         }
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
-            bool bSilent;
+            bool isSilent;
             if (sender == toolStripButtonPull || sender == pullToolStripMenuItem)
             {
                 if (Module.LastPullAction == AppSettings.PullAction.None)
                 {
-                    bSilent = (ModifierKeys & Keys.Shift) != 0;
+                    isSilent = (ModifierKeys & Keys.Shift) != 0;
                 }
                 else if (Module.LastPullAction == AppSettings.PullAction.FetchAll)
                 {
@@ -1221,18 +1223,18 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    bSilent = (sender == toolStripButtonPull);
+                    isSilent = sender == toolStripButtonPull;
                     Module.LastPullActionToFormPullAction();
                 }
             }
             else
             {
-                bSilent = sender != pullToolStripMenuItem1;
+                isSilent = sender != pullToolStripMenuItem1;
 
                 Module.LastPullActionToFormPullAction();
             }
 
-            UICommands.StartPullDialog(this, bSilent);
+            UICommands.StartPullDialog(this, isSilent);
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
@@ -1466,7 +1468,7 @@ namespace GitUI.CommandsDialogs
         private void RebaseToolStripMenuItemClick(object sender, EventArgs e)
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-            if (2 == revisions.Count)
+            if (revisions.Count == 2)
             {
                 string to = null;
                 string from = null;
@@ -1959,7 +1961,7 @@ namespace GitUI.CommandsDialogs
             return branchNames;
         }
 
-        void BranchSelectToolStripItem_Click(object sender, EventArgs e)
+        private void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
             UICommands.StartCheckoutBranch(this, toolStripItem.Text, false);
@@ -2467,7 +2469,7 @@ namespace GitUI.CommandsDialogs
             return CreateSubmoduleMenuItem(info, "{0}");
         }
 
-        DateTime _previousUpdateTime;
+        private DateTime _previousUpdateTime;
 
         private void LoadSubmodulesIntoDropDownMenu()
         {
@@ -2493,7 +2495,8 @@ namespace GitUI.CommandsDialogs
         {
             public readonly List<SubmoduleInfo> OurSubmodules = new List<SubmoduleInfo>();
             public readonly List<SubmoduleInfo> SuperSubmodules = new List<SubmoduleInfo>();
-            public SubmoduleInfo TopProject, Superproject;
+            public SubmoduleInfo TopProject;
+            public SubmoduleInfo Superproject;
             public string CurrentSubmoduleName;
         }
 
@@ -2795,8 +2798,9 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (_terminal == null) // Lazy-create on first opening the tab
+                if (_terminal == null)
                 {
+                    // Lazy-create on first opening the tab
                     tabpage.Controls.Clear();
                     tabpage.Controls.Add(
                         _terminal = new ConEmuControl()
@@ -2807,7 +2811,8 @@ namespace GitUI.CommandsDialogs
                         });
                 }
 
-                if (_terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
+                // If user has typed "exit" in there, restart the shell; otherwise just return
+                if (_terminal.IsConsoleEmulatorOpen)
                 {
                     return;
                 }
@@ -2846,9 +2851,9 @@ namespace GitUI.CommandsDialogs
                         break;
                     default:
                         // Choose the console: bash from git with fallback to cmd
-                        string sJustBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                        string sJustSh = "sh.exe"; // Fallback to SH
-                        exeList = new[] { sJustBash, sJustSh };
+                        string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                        string justSh = "sh.exe"; // Fallback to SH
+                        exeList = new[] { justBash, justSh };
                         break;
                 }
 

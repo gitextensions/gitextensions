@@ -40,14 +40,14 @@ namespace GitUI
                     }
                     catch (SystemException ex)
                     {
-                        string exInfo = "Exception info:\r\n";
+                        string exceptionInfo = "Exception info:\r\n";
 
                         var rtle = ex as ReflectionTypeLoadException;
                         if (rtle != null)
                         {
                             foreach (var el in rtle.LoaderExceptions)
                             {
-                                exInfo += el.Message + "\r\n";
+                                exceptionInfo += el.Message + "\r\n";
                             }
                         }
                         else
@@ -55,7 +55,8 @@ namespace GitUI
                             Action<Exception> getEx = null;
                             getEx = arg =>
                             {
-                                exInfo += arg.Message + "\r\n"; if (arg.InnerException != null)
+                                exceptionInfo += arg.Message + "\r\n";
+                                if (arg.InnerException != null)
                                 {
                                     getEx(arg.InnerException);
                                 }
@@ -63,7 +64,7 @@ namespace GitUI
                             getEx(ex);
                         }
 
-                        MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exInfo));
+                        MessageBox.Show(string.Format("Failed to load plugin {0} : \r\n{1}", pluginFile, exceptionInfo));
                         Trace.WriteLine(ex.Message);
                     }
                 }
