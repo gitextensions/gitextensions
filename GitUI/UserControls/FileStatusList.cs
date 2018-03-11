@@ -116,7 +116,7 @@ namespace GitUI
                     h => FileStatusListView.SelectedIndexChanged += h,
                     h => FileStatusListView.SelectedIndexChanged -= h)
                     .Where(x => _enableSelectedIndexChangeEvent)
-                    .Throttle(SelectedIndexChangeThrottleDuration)
+                    .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
                     .ObserveOn(MainThreadScheduler.Instance)
                     .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
             }

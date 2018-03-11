@@ -18,48 +18,9 @@ namespace GitUI.UserControls
                 {
                     await Task.Delay(normalizedTime);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    disposable.Disposable = new MainThreadDisposable(action(this, state));
+                    disposable.Disposable = action(this, state);
                 });
             return disposable;
-        }
-
-        private sealed class MainThreadDisposable : ICancelable, IDisposable
-        {
-            private readonly IDisposable _disposable;
-
-            public MainThreadDisposable(IDisposable disposable)
-            {
-                _disposable = disposable;
-            }
-
-            public bool IsDisposed
-            {
-                get;
-                private set;
-            }
-
-            public void Dispose()
-            {
-                if (IsDisposed)
-                {
-                    return;
-                }
-
-                if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
-                {
-                    ThreadHelper.JoinableTaskFactory.Run(
-                        async () =>
-                        {
-                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                            Dispose();
-                        });
-
-                    return;
-                }
-
-                _disposable.Dispose();
-                IsDisposed = true;
-            }
         }
     }
 }
