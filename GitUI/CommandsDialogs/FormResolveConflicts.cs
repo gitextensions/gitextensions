@@ -238,8 +238,8 @@ namespace GitUI.CommandsDialogs
             return (path ?? "").ToNativePath();
         }
 
-        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
-            {
+        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>
+        {
                 { ".doc",  "merge-doc.js" },
                 { ".docx", "merge-doc.js" },
                 { ".docm", "merge-doc.js" },

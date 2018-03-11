@@ -2780,7 +2780,7 @@ namespace GitUI.CommandsDialogs
                     // Lazy-create on first opening the tab
                     tabpage.Controls.Clear();
                     tabpage.Controls.Add(
-                        _terminal = new ConEmuControl()
+                        _terminal = new ConEmuControl
                         {
                             Dock = DockStyle.Fill,
                             AutoStartInfo = null,

@@ -510,7 +510,7 @@ namespace PatchApply
                 string line = lines[i];
                 if (inPatch)
                 {
-                    PatchLine patchLine = new PatchLine()
+                    PatchLine patchLine = new PatchLine
                     {
                         Text = line
                     };
@@ -588,7 +588,7 @@ namespace PatchApply
             {
                 string line = lines[i];
                 string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreabmle)) : string.Empty;
-                PatchLine patchLine = new PatchLine()
+                PatchLine patchLine = new PatchLine
                 {
                     Text = (reset ? "-" : "+") + preamble + line
                 };

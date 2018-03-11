@@ -2838,7 +2838,7 @@ namespace GitCommands
 
         public RemoteActionResult<IList<IGitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
         {
-            var result = new RemoteActionResult<IList<IGitRef>>()
+            var result = new RemoteActionResult<IList<IGitRef>>
             {
                 AuthenticationFail = false,
                 HostKeyFail = false,
