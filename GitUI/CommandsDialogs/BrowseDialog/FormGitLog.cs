@@ -11,10 +11,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private FormGitLog()
             : base(true)
         {
-            if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
-            {
-                throw new InvalidOperationException();
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             ShowInTaskbar = true;
             InitializeComponent();

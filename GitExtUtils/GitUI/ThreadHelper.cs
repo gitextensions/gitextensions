@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
@@ -6,6 +9,10 @@ namespace GitUI
 {
     public static class ThreadHelper
     {
+#pragma warning disable SA1139 // Use literal suffix notation instead of casting
+        private const int RPC_E_WRONG_THREAD = unchecked((int)0x8001010E);
+#pragma warning restore SA1139 // Use literal suffix notation instead of casting
+
         private static JoinableTaskContext _joinableTaskContext;
         private static JoinableTaskCollection _joinableTaskCollection;
         private static JoinableTaskFactory _joinableTaskFactory;
@@ -40,6 +47,24 @@ namespace GitUI
         }
 
         public static JoinableTaskFactory JoinableTaskFactory => _joinableTaskFactory;
+
+        public static void ThrowIfNotOnUIThread([CallerMemberName] string callerMemberName = "")
+        {
+            if (!JoinableTaskContext.IsOnMainThread)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on the UI thread.", callerMemberName);
+                throw new COMException(message, RPC_E_WRONG_THREAD);
+            }
+        }
+
+        public static void ThrowIfOnUIThread([CallerMemberName] string callerMemberName = "")
+        {
+            if (JoinableTaskContext.IsOnMainThread)
+            {
+                string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on a background thread.", callerMemberName);
+                throw new COMException(message, RPC_E_WRONG_THREAD);
+            }
+        }
 
         public static async Task JoinPendingOperationsAsync()
         {

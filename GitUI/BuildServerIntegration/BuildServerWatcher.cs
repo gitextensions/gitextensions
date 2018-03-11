@@ -45,7 +45,7 @@ namespace GitUI.BuildServerIntegration
 
         public void LaunchBuildServerInfoFetchOperation()
         {
-            Debug.Assert(ThreadHelper.JoinableTaskContext.IsOnMainThread, "Assertion failed: ThreadHelper.JoinableTaskContext.IsOnMainThread");
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             CancelBuildStatusFetchOperation();
 

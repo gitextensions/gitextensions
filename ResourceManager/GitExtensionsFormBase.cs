@@ -16,10 +16,7 @@ namespace ResourceManager
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
         {
-            if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
-            {
-                throw new InvalidOperationException();
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             SetFont();
 

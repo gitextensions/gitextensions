@@ -59,10 +59,7 @@ namespace GitStatistics
 
         public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodule)
         {
-            if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
-            {
-                throw new InvalidOperationException();
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             _module = module;
             _codeFilePattern = codeFilePattern;

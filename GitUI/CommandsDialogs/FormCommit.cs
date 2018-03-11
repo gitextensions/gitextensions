@@ -165,10 +165,7 @@ namespace GitUI.CommandsDialogs
         public FormCommit(GitUICommands commands, CommitKind commitKind, GitRevision editedCommit)
             : base(true, commands)
         {
-            if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
-            {
-                throw new InvalidOperationException($"{nameof(FormCommit)} may only be created on the main thread of the application");
-            }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             _unstagedLoader = new AsyncLoader();
 
