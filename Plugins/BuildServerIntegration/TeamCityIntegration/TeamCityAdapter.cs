@@ -363,8 +363,8 @@ namespace TeamCityIntegration
         private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
-            bool unauthorized = (task.Status == TaskStatus.RanToCompletion &&
-                                task.Result.StatusCode == HttpStatusCode.Unauthorized) || task.Result.StatusCode == HttpStatusCode.Forbidden;
+            bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
+                                (task.Result.StatusCode == HttpStatusCode.Unauthorized || task.Result.StatusCode == HttpStatusCode.Forbidden);
 
             if (!retry)
             {
