@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Remote;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUIPluginInterfaces;
@@ -33,11 +34,13 @@ namespace GitUI.BuildServerIntegration
         private IBuildServerAdapter _buildServerAdapter;
 
         private readonly object _buildServerCredentialsLock = new object();
+        private readonly IRepoNameExtractor _repoNameExtractor;
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
             _revisionGrid = revisionGrid;
             _revisions = revisions;
+            _repoNameExtractor = new RepoNameExtractor(() => Module);
             BuildStatusImageColumnIndex = -1;
             BuildStatusMessageColumnIndex = -1;
         }
@@ -202,46 +205,24 @@ namespace GitUI.BuildServerIntegration
         }
 
         /// <summary>
-        /// Get a "repo shortname" from the current repo URL
-        /// There is no official Git repo shortname, this is one possible definition:
-        ///  The filename without extension for the remote URL
-        /// This function could have been included in GitModule
-        /// </summary>
-        /// <returns>URL filename part if a remote exists and empty or null if no repo URL</returns>
-        private string GetRepoShortname()
-        {
-            // Extract "name of repo" from remote url
-            string remoteName = Module.GetCurrentRemote();
-            if (remoteName.IsNullOrWhiteSpace())
-            {
-                // No remote for the branch, for instance a submodule. Use first remote.
-                var remotes = Module.GetRemotes();
-                if (remotes.Length > 0)
-                {
-                    remoteName = remotes[0];
-                }
-            }
-
-            var remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
-            var repoName = Path.GetFileNameWithoutExtension(remoteUrl);
-
-            return repoName;
-        }
-
-        /// <summary>
         /// Replace variables for the project string with the current "repo shortname"
         /// </summary>
         /// <param name="projectNames">build server specific format, compatible with the variable format</param>
         /// <returns>projectNames with variables replaced</returns>
         public string ReplaceVariables(string projectNames)
         {
-            var repoName = GetRepoShortname();
-            if (repoName.IsNullOrWhiteSpace())
+            _repoNameExtractor.Get(out string repoProject, out string repoName);
+            if (repoProject.IsNotNullOrWhitespace())
             {
-                return projectNames;
+                projectNames = projectNames.Replace("{cRepoProject}", repoProject);
             }
 
-            return projectNames.Replace("{cRepoShortName}", repoName);
+            if (repoName.IsNotNullOrWhitespace())
+            {
+                projectNames = projectNames.Replace("{cRepoShortName}", repoName);
+            }
+
+            return projectNames;
         }
 
         private IBuildServerCredentials ShowBuildServerCredentialsForm(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)

@@ -81,6 +81,7 @@
     <Compile Include="ExternalLinks\ExternalLinksManagerIntegrationTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
+    <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
