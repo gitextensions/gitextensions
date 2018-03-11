@@ -1089,7 +1089,7 @@ namespace GitUI
             private static bool CheckCondition(string filter, Regex regex, string value)
             {
                 return string.IsNullOrEmpty(filter) ||
-                       ((regex != null) && (value != null) && regex.Match(value).Success);
+                       ((regex != null) && (value != null) && regex.IsMatch(value));
             }
 
             public override bool PassThru(GitRevision rev)
