@@ -178,7 +178,7 @@ namespace GitUI.CommandsDialogs
         {
             var parents = DiffFiles.SelectedItemParents
                 .Where(i => showUnstagedAndCombined ||
-                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid) || i.Guid == DiffFiles.CombinedDiff.Text)
+                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == DiffFiles.CombinedDiff.Text))
                 .Count();
             if (parents == 0)
             {
