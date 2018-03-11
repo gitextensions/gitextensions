@@ -193,8 +193,8 @@ namespace GitCommandsTests.Patch
 
         public class TestPatch
         {
-            public PatchApply.Patch Patch { get; private set; }
-            public StringBuilder PatchOutput { get; private set; }
+            public PatchApply.Patch Patch { get; }
+            public StringBuilder PatchOutput { get; }
 
             public TestPatch()
             {

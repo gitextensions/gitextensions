@@ -269,9 +269,8 @@ namespace GitCommands.Repository
                 string root = null;
                 string company = null;
                 string repository = null;
-                string workingDir = null;
+                var workingDir = dirInfo.Name;
 
-                workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
                 if (dirInfo != null)
                 {

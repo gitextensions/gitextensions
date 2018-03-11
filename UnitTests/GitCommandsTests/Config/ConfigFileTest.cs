@@ -810,7 +810,7 @@ namespace GitCommandsTests.Config
             ConfigFile cfg = new ConfigFile("", true);
             cfg.LoadFromString(configFileContent);
             IEnumerable<string> actual = cfg.GetValues("status.showUntrackedFiles");
-            IEnumerable<string> expected = new string[] { "yes", "no" };
+            IEnumerable<string> expected = new[] { "yes", "no" };
             Assert.True(expected.SequenceEqual(actual));
         }
 

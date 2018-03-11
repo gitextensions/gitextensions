@@ -23,7 +23,7 @@ namespace GitUI.RevisionGridClasses
                 IsLoading = isLoading;
             }
 
-            public bool IsLoading { get; private set; }
+            public bool IsLoading { get; }
         }
 
         #endregion
@@ -1206,7 +1206,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     finally
                     {
-                        ((IDisposable)brushLineColorPen)?.Dispose();
+                        brushLineColorPen?.Dispose();
                         ((IDisposable)brushLineColor)?.Dispose();
                     }
                 }
@@ -1414,7 +1414,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (Data == null)
                 {
-                    string name = Id.ToString();
+                    string name = Id;
                     if (name.Length > 8)
                     {
                         name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);

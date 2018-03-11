@@ -194,16 +194,13 @@ namespace GitUI.SpellChecker
         ///   area of the control.</returns>
         private static Point PosFromChar(TextBoxBase textBoxBase, int charIndex)
         {
-            unchecked
-            {
-                var xy =
-                    NativeMethods.SendMessageInt(
-                        textBoxBase.Handle,
-                        NativeMethods.EM_POSFROMCHAR,
-                        new IntPtr(charIndex),
-                        IntPtr.Zero).ToInt32();
-                return new Point(xy);
-            }
+            var xy =
+                NativeMethods.SendMessageInt(
+                    textBoxBase.Handle,
+                    NativeMethods.EM_POSFROMCHAR,
+                    new IntPtr(charIndex),
+                    IntPtr.Zero).ToInt32();
+            return new Point(xy);
         }
 
         private static int GetFirstVisibleLine(TextBoxBase txt)

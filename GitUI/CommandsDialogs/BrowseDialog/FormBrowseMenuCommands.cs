@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.CommandsDialogs
@@ -9,7 +10,7 @@ namespace GitUI.CommandsDialogs
         private GitUICommands UICommands => _formBrowse.UICommands;
 
         // must be created only once because of translation
-        private IEnumerable<MenuCommand> _navigateMenuCommands;
+        private IReadOnlyList<MenuCommand> _navigateMenuCommands;
 
         public FormBrowseMenuCommands(FormBrowse formBrowse)
         {
@@ -23,7 +24,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_navigateMenuCommands == null)
             {
-                _navigateMenuCommands = CreateNavigateMenuCommands();
+                _navigateMenuCommands = CreateNavigateMenuCommands().ToList();
             }
 
             return _navigateMenuCommands;

@@ -34,7 +34,7 @@ namespace GitUITests
                         obj.AddTranslationItems(tranlation);
                         obj.TranslateItems(tranlation);
                     }
-                    catch (System.Exception)
+                    catch (Exception)
                     {
                         Trace.WriteLine("Problem with class: " + type.FullName);
                         throw;

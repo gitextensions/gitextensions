@@ -170,8 +170,6 @@ namespace GitUI
                 ListViewItem currentItem = FileStatusListView.Items[curIdx];
                 var currentGroup = currentItem.Group;
 
-                int maxIdx = GitItemStatuses.Count() - 1;
-
                 if (searchBackward)
                 {
                     var nextItem = FindPrevItemInGroups(curIdx, currentGroup);
@@ -390,7 +388,7 @@ namespace GitUI
                 FileStatusListView.ContextMenuStrip = value;
                 if (FileStatusListView.ContextMenuStrip != null)
                 {
-                    FileStatusListView.ContextMenuStrip.Opening += new CancelEventHandler(FileStatusListView_ContextMenu_Opening);
+                    FileStatusListView.ContextMenuStrip.Opening += FileStatusListView_ContextMenu_Opening;
                 }
             }
         }
@@ -894,7 +892,7 @@ namespace GitUI
                 ListViewGroup group = null;
                 if (pair.Key != null)
                 {
-                    var groupName = "";
+                    string groupName;
                     if (pair.Key.Guid == CombinedDiff.Text)
                     {
                         groupName = CombinedDiff.Text;
@@ -1174,7 +1172,7 @@ namespace GitUI
                 {
                     if (!AppSettings.ShowDiffForAllParents)
                     {
-                        parentRevs = new GitRevision[] { parentRevs[0] };
+                        parentRevs = new[] { parentRevs[0] };
                     }
 
                     foreach (var rev in parentRevs)

@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion(Properties.Version)]
 [assembly: AssemblyFileVersion(Properties.Version)]
 
-partial class Properties
+internal static class Properties
 {
     public const string Version = "0.0.1";
 }

@@ -31,9 +31,9 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // createWorktreeButton
-            // 
+            //
             this.createWorktreeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.createWorktreeButton.AutoSize = true;
             this.createWorktreeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -47,18 +47,18 @@
             this.createWorktreeButton.Text = "Create the new worktree";
             this.createWorktreeButton.UseVisualStyleBackColor = true;
             this.createWorktreeButton.Click += new System.EventHandler(this.createWorktreeButton_Click);
-            // 
+            //
             // textBoxNewBranchName
-            // 
+            //
             this.textBoxNewBranchName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxNewBranchName.Location = new System.Drawing.Point(174, 34);
             this.textBoxNewBranchName.Name = "textBoxNewBranchName";
             this.textBoxNewBranchName.Size = new System.Drawing.Size(419, 21);
             this.textBoxNewBranchName.TabIndex = 11;
             this.textBoxNewBranchName.TextChanged += new System.EventHandler(this.UpdateWorktreePathAndValidateWorktreeOptions);
-            // 
+            //
             // radioButtonCreateNewBranch
-            // 
+            //
             this.radioButtonCreateNewBranch.AutoSize = true;
             this.radioButtonCreateNewBranch.Location = new System.Drawing.Point(3, 30);
             this.radioButtonCreateNewBranch.Name = "radioButtonCreateNewBranch";
@@ -68,9 +68,9 @@
             this.radioButtonCreateNewBranch.Text = "Create a new branch:\r\n (from current commit) ";
             this.radioButtonCreateNewBranch.UseVisualStyleBackColor = true;
             this.radioButtonCreateNewBranch.Click += new System.EventHandler(this.UpdateWorktreePathAndValidateWorktreeOptions);
-            // 
+            //
             // radioButtonCheckoutExistingBranch
-            // 
+            //
             this.radioButtonCheckoutExistingBranch.AutoSize = true;
             this.radioButtonCheckoutExistingBranch.Location = new System.Drawing.Point(3, 3);
             this.radioButtonCheckoutExistingBranch.Name = "radioButtonCheckoutExistingBranch";
@@ -80,9 +80,9 @@
             this.radioButtonCheckoutExistingBranch.Text = "Checkout an existing branch:";
             this.radioButtonCheckoutExistingBranch.UseVisualStyleBackColor = true;
             this.radioButtonCheckoutExistingBranch.Click += new System.EventHandler(this.UpdateWorktreePathAndValidateWorktreeOptions);
-            // 
+            //
             // openWorktreeCheckBox
-            // 
+            //
             this.openWorktreeCheckBox.AutoSize = true;
             this.openWorktreeCheckBox.Checked = true;
             this.openWorktreeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -93,9 +93,9 @@
             this.openWorktreeCheckBox.TabIndex = 9;
             this.openWorktreeCheckBox.Text = "Open the new worktree after the creation";
             this.openWorktreeCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // newWorktreeDirectory
-            // 
+            //
             this.newWorktreeDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.newWorktreeDirectory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.newWorktreeDirectory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
@@ -104,9 +104,9 @@
             this.newWorktreeDirectory.Size = new System.Drawing.Size(356, 21);
             this.newWorktreeDirectory.TabIndex = 7;
             this.newWorktreeDirectory.TextChanged += new System.EventHandler(this.ValidateWorktreeOptions);
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 98);
@@ -114,10 +114,10 @@
             this.label2.Size = new System.Drawing.Size(124, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "New worktree directory:";
-            // 
+            //
             // comboBoxBranches
-            // 
-            this.comboBoxBranches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.comboBoxBranches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxBranches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.comboBoxBranches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
@@ -128,22 +128,20 @@
             this.comboBoxBranches.Size = new System.Drawing.Size(419, 21);
             this.comboBoxBranches.TabIndex = 2;
             this.comboBoxBranches.SelectedIndexChanged += new System.EventHandler(this.UpdateWorktreePathAndValidateWorktreeOptions);
-            this.comboBoxBranches.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBranches_SelectionChangeCommitted);
-            this.comboBoxBranches.TextChanged += new System.EventHandler(this.comboBoxBranches_TextChanged);
             this.comboBoxBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxBranches_KeyUp);
-            // 
+            //
             // folderBrowserButton1
-            // 
+            //
             this.folderBrowserButton1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.folderBrowserButton1.Location = new System.Drawing.Point(495, 92);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.newWorktreeDirectory;
             this.folderBrowserButton1.Size = new System.Drawing.Size(110, 25);
             this.folderBrowserButton1.TabIndex = 8;
-            // 
+            //
             // groupBoxWhatToCheckout
-            // 
-            this.groupBoxWhatToCheckout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxWhatToCheckout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxWhatToCheckout.AutoSize = true;
             this.groupBoxWhatToCheckout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -155,9 +153,9 @@
             this.groupBoxWhatToCheckout.TabIndex = 12;
             this.groupBoxWhatToCheckout.TabStop = false;
             this.groupBoxWhatToCheckout.Text = "What to checkout: ";
-            // 
+            //
             // tableLayoutPanel2
-            // 
+            //
             this.tableLayoutPanel2.AutoSize = true;
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel2.ColumnCount = 2;
@@ -175,9 +173,9 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(596, 63);
             this.tableLayoutPanel2.TabIndex = 14;
-            // 
+            //
             // tableLayoutPanel1
-            // 
+            //
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -198,9 +196,9 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(608, 208);
             this.tableLayoutPanel1.TabIndex = 13;
-            // 
+            //
             // FormCreateWorktree
-            // 
+            //
             this.AcceptButton = this.createWorktreeButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;

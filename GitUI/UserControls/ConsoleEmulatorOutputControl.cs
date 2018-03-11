@@ -133,7 +133,7 @@ namespace GitUI.UserControls
     {
         private Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
-        private string _lineChunk = null;
+        private string _lineChunk;
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
         {

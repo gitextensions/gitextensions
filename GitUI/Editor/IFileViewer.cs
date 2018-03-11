@@ -11,7 +11,7 @@ namespace GitUI.Editor
             SelectedLine = selectedLine;
         }
 
-        public int SelectedLine { get; private set; }
+        public int SelectedLine { get; }
     }
 
     public interface IFileViewer

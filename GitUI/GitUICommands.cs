@@ -180,7 +180,7 @@ namespace GitUI
 
         public event GitUIEventHandler PostRegisterPlugin;
 
-        public ILockableNotifier RepoChangedNotifier { get; private set; }
+        public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion
@@ -908,8 +908,7 @@ namespace GitUI
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow)
         {
-            bool errorOccurred;
-            return StartPullDialog(owner, pullOnShow, out errorOccurred, false);
+            return StartPullDialog(owner, pullOnShow, out _, false);
         }
 
         public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
@@ -929,14 +928,12 @@ namespace GitUI
 
         public bool StartPullDialog(bool pullOnShow, string remoteBranch)
         {
-            bool errorOccurred;
-            return StartPullDialog(pullOnShow, remoteBranch, out errorOccurred);
+            return StartPullDialog(pullOnShow, remoteBranch, out _);
         }
 
         public bool StartPullDialog(IWin32Window owner)
         {
-            bool errorOccurred;
-            return StartPullDialog(owner, false, out errorOccurred, false);
+            return StartPullDialog(owner, false, out _, false);
         }
 
         public bool StartPullDialog()
@@ -1118,10 +1115,10 @@ namespace GitUI
                         Directory.Delete(path, true);
                     }
                 }
-                catch (System.IO.IOException)
+                catch (IOException)
                 {
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (UnauthorizedAccessException)
                 {
                 }
             }
@@ -1619,7 +1616,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
@@ -1751,8 +1748,7 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
         {
-            bool pushCompleted;
-            return StartPushDialog(owner, pushOnShow, out pushCompleted);
+            return StartPushDialog(owner, pushOnShow, out _);
         }
 
         public bool StartPushDialog(bool pushOnShow)
@@ -2083,7 +2079,7 @@ namespace GitUI
                 case "fileeditor":  // filename
                     if (!StartFileEditorDialog(args[2]))
                     {
-                        System.Environment.ExitCode = -1;
+                        Environment.ExitCode = -1;
                     }
 
                     return;
@@ -2239,7 +2235,7 @@ namespace GitUI
             {
                 if (File.Exists(args[2]))
                 {
-                    string path = File.ReadAllText(args[2]).Trim().Split(new char[] { '\n' }, 1).FirstOrDefault();
+                    string path = File.ReadAllText(args[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
                     if (Directory.Exists(path))
                     {
                         c = new GitUICommands(path);

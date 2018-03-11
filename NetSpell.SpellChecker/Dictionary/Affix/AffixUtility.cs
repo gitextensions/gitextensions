@@ -224,7 +224,6 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
             } // foreach char
 
             entry.ConditionCount = num;
-            return;
         }
 
         /// <summary>

@@ -10,10 +10,6 @@ namespace GitPluginShared.Commands
         private static string lastFile;
         private static string _lastUpdatedCaption;
 
-        public Commit()
-        {
-        }
-
         public override bool IsEnabled(EnvDTE80.DTE2 application)
         {
             bool enabled = base.IsEnabled(application);

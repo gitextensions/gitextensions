@@ -15,7 +15,7 @@ namespace GitUI.UserControls
             Translate();
         }
 
-        private bool _isLoaded = false;
+        private bool _isLoaded;
 
         private void GotoUserManualControl_Load(object sender, EventArgs e)
         {

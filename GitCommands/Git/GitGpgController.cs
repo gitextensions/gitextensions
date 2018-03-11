@@ -146,7 +146,7 @@ namespace GitCommands.Gpg
             TagStatus tagStatus = TagStatus.NoTag;
 
             /* No Tag present, exit */
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
+            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
             if (usefulTagRefs.Count == 0)
             {
                 return tagStatus;
@@ -228,7 +228,7 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
+            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
@@ -240,7 +240,7 @@ namespace GitCommands.Gpg
                 return null;
             }
 
-            string rawFlag = raw == true ? "--raw" : "";
+            string rawFlag = raw ? "--raw" : "";
 
             var module = GetModule();
             return module.RunGitCmd($"verify-tag {rawFlag} {tagName}");

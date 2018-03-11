@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class StringComboBoxAdapter : GitUIPluginInterfaces.ChoiceSetting
+    public class StringComboBoxAdapter : ChoiceSetting
     {
         public StringComboBoxAdapter(GitCommands.Settings.StringSetting setting, ComboBox comboBox)
             : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.DefaultValue)
@@ -193,7 +193,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class IntTextBoxAdapter : GitUIPluginInterfaces.NumberSetting<int>
+    public class IntTextBoxAdapter : NumberSetting<int>
     {
         public IntTextBoxAdapter(IntNullableSetting setting, TextBox control)
             : base(setting.FullPath, setting.DefaultValue.Value)

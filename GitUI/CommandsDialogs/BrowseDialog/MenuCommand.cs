@@ -28,28 +28,26 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 return new ToolStripSeparator();
             }
-            else
-            {
-                var toolStripMenuItem = new ToolStripMenuItem();
-                toolStripMenuItem.Name = menuCommand.Name;
-                toolStripMenuItem.Text = menuCommand.Text;
-                toolStripMenuItem.Image = menuCommand.Image;
-                toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
-                toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
-                toolStripMenuItem.Click += (obj, sender) =>
-                    {
-                        if (menuCommand.ExecuteAction != null)
-                        {
-                            menuCommand.ExecuteAction();
-                        }
-                        else
-                        {
-                            MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.");
-                        }
-                    };
 
-                return toolStripMenuItem;
-            }
+            var toolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem.Name = menuCommand.Name;
+            toolStripMenuItem.Text = menuCommand.Text;
+            toolStripMenuItem.Image = menuCommand.Image;
+            toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
+            toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
+            toolStripMenuItem.Click += (obj, sender) =>
+            {
+                if (menuCommand.ExecuteAction != null)
+                {
+                    menuCommand.ExecuteAction();
+                }
+                else
+                {
+                    MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.");
+                }
+            };
+
+            return toolStripMenuItem;
         }
 
         private IList<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();

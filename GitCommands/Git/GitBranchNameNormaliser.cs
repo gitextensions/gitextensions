@@ -96,7 +96,7 @@ namespace GitCommands.Git
 
             // rule #2 is not applicable
             // rule #6 runs as second last to ensure no consecutive '/' are left after previous normalisations
-            branchName = Rule06(branchName, options);
+            branchName = Rule06(branchName);
             branchName = Rule01(branchName, options);
 
             return branchName;
@@ -188,9 +188,8 @@ namespace GitCommands.Git
         /// Branch name begin or end with a slash '/' or contain multiple consecutive slashes.
         /// </summary>
         /// <param name="branchName">Name of the branch.</param>
-        /// <param name="options">The options.</param>
         /// <returns>Normalised branch name.</returns>
-        internal string Rule06(string branchName, GitBranchNameOptions options)
+        internal string Rule06(string branchName)
         {
             branchName = Regex.Replace(branchName, @"(\/{2,})", "/");
             if (branchName.StartsWith("/"))

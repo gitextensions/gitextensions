@@ -16,7 +16,7 @@ namespace GitUI.Editor.Diff
 
         public List<ISegment> GetLinesStartingWith(IDocument document, ref int beginIndex, string prefixStr, ref bool found)
         {
-            return GetLinesStartingWith(document, ref beginIndex, new string[] { prefixStr }, ref found);
+            return GetLinesStartingWith(document, ref beginIndex, new[] { prefixStr }, ref found);
         }
 
         public List<ISegment> GetLinesStartingWith(IDocument document, ref int beginIndex, string[] prefixStrs, ref bool found)
@@ -40,10 +40,8 @@ namespace GitUI.Editor.Diff
                     {
                         break;
                     }
-                    else
-                    {
-                        beginIndex++;
-                    }
+
+                    beginIndex++;
                 }
             }
 

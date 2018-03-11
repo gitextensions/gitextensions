@@ -428,7 +428,7 @@ namespace TranslationApp
 
         private TranslationItemWithCategory _translationItemWithCategoryInEditing;
 
-        private void translatedText_Enter(object sender, System.EventArgs e)
+        private void translatedText_Enter(object sender, EventArgs e)
         {
             if (_translationItemWithCategoryInEditing != null)
             {
@@ -443,7 +443,7 @@ namespace TranslationApp
             }
         }
 
-        private void translatedText_Leave(object sender, System.EventArgs e)
+        private void translatedText_Leave(object sender, EventArgs e)
         {
             ////Debug.Assert(_translationItemWithCategoryInEditing != null);
 

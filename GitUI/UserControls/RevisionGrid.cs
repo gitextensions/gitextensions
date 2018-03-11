@@ -94,7 +94,7 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
-        private GitRevision _baseCommitToCompare = null;
+        private GitRevision _baseCommitToCompare;
 
         // tracks status for the artificial commits while the revision graph is reloading
         private IList<GitItemStatus> _artificialStatus;
@@ -125,7 +125,7 @@ namespace GitUI
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
 
-            Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Resources.loadingpanel;
 
             Translate();
 
@@ -205,7 +205,7 @@ namespace GitUI
         {
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
                 var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
                 if (toolStripMenuItem != null)
                 {
@@ -366,7 +366,7 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision;
         }
 
-        private bool _isRefreshingRevisions = false;
+        private bool _isRefreshingRevisions;
         private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
@@ -1505,7 +1505,7 @@ namespace GitUI
 
             if (AppSettings.MaxRevisionGraphCommits > 0)
             {
-                revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
+                revListParams += string.Format("--max-count=\"{0}\" ", AppSettings.MaxRevisionGraphCommits);
             }
 
             return Module.ReadGitOutputLines(revListParams + initRevision).ToArray();
@@ -1918,7 +1918,7 @@ namespace GitUI
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
                 {
-                    BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision, foreBrush, rowFont);
+                    BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision);
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
                 {
@@ -2149,7 +2149,7 @@ namespace GitUI
             NotFilled
         }
 
-        private static readonly float[] dashPattern = new float[] { 4, 4 };
+        private static readonly float[] dashPattern = { 4, 4 };
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)

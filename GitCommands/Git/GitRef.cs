@@ -26,7 +26,7 @@ namespace GitCommands
         /// <summary>"^{}"</summary>
         public static readonly string TagDereferenceSuffix = "^{}";
 
-        public IGitModule Module { get; private set; }
+        public IGitModule Module { get; }
 
         public GitRef(IGitModule module, string guid, string completeName)
             : this(module, guid, completeName, string.Empty)
@@ -57,26 +57,26 @@ namespace GitCommands
             return new GitRef(module, guid, RefsHeadsPrefix + name);
         }
 
-        public string CompleteName { get; private set; }
+        public string CompleteName { get; }
         public bool Selected { get; set; }
         public bool SelectedHeadMergeSource { get; set; }
-        public bool IsTag { get; private set; }
-        public bool IsHead { get; private set; }
-        public bool IsRemote { get; private set; }
-        public bool IsBisect { get; private set; }
+        public bool IsTag { get; }
+        public bool IsHead { get; }
+        public bool IsRemote { get; }
+        public bool IsBisect { get; }
 
         /// <summary>
         /// True when Guid is a checksum of an object (e.g. commit) to which another object
         /// with Name (e.g. annotated tag) is applied.
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
-        public bool IsDereference { get; private set; }
+        public bool IsDereference { get; }
 
         public bool IsOther => !IsHead && !IsRemote && !IsTag;
 
         public string LocalName => IsRemote ? Name.Substring(Remote.Length + 1) : Name;
 
-        public string Remote { get; private set; }
+        public string Remote { get; }
 
         public string TrackingRemote
         {
@@ -149,7 +149,7 @@ namespace GitCommands
 
         #region IGitItem Members
 
-        public string Guid { get; private set; }
+        public string Guid { get; }
         public string Name { get; private set; }
 
         #endregion

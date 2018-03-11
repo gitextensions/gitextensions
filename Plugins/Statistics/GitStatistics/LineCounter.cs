@@ -9,11 +9,6 @@ namespace GitStatistics
     {
         public event EventHandler LinesOfCodeUpdated;
 
-        public LineCounter()
-        {
-            LinesOfCodePerExtension = new Dictionary<string, int>();
-        }
-
         public int NumberCommentsLines { get; private set; }
         public int NumberLines { get; private set; }
         public int NumberLinesInDesignerFiles { get; private set; }
@@ -21,7 +16,7 @@ namespace GitStatistics
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
 
-        public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
+        public Dictionary<string, int> LinesOfCodePerExtension { get; } = new Dictionary<string, int>();
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
         {

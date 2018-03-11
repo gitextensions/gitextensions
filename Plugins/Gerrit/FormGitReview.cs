@@ -127,13 +127,12 @@ namespace Gerrit
                         if (!SaveGitReview())
                         {
                             e.Cancel = true;
-                            return;
                         }
 
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;
-                        return;
+                        break;
                 }
             }
         }

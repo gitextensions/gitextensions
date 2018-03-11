@@ -18,12 +18,12 @@ namespace GitUIPluginInterfaces
             Arguments = arguments;
         }
 
-        public IGitUICommands GitUICommands { get; private set; }
+        public IGitUICommands GitUICommands { get; }
 
-        public IWin32Window OwnerForm { get; private set; }
+        public IWin32Window OwnerForm { get; }
 
         public IGitModule GitModule => GitUICommands.GitModule;
 
-        public string Arguments { get; private set; }
+        public string Arguments { get; }
     }
 }

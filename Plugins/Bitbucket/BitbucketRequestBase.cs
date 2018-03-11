@@ -19,7 +19,7 @@ namespace Bitbucket
 
     internal abstract class BitbucketRequestBase<T>
     {
-        protected Settings Settings { get; private set; }
+        protected Settings Settings { get; }
 
         protected BitbucketRequestBase(Settings settings)
         {
@@ -85,7 +85,7 @@ namespace Bitbucket
 
         private static BitbucketResponse<T> ParseErrorResponse(string jsonString)
         {
-            var json = new JObject();
+            JObject json;
             try
             {
                 System.Console.WriteLine(jsonString);

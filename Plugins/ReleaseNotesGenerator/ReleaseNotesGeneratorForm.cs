@@ -128,7 +128,7 @@ namespace ReleaseNotesGenerator
                 stringBuilder.AppendFormat("{0}{1}{2}{3}", logLine.Commit, colSeparatorFirstLine, message, Environment.NewLine);
             }
 
-            string result = headerText + Environment.NewLine + stringBuilder.ToString();
+            string result = headerText + Environment.NewLine + stringBuilder;
             return result;
         }
 

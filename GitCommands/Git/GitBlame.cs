@@ -14,8 +14,8 @@ namespace GitCommands
             Lines = new List<GitBlameLine>();
         }
 
-        public IList<GitBlameHeader> Headers { get; private set; }
-        public IList<GitBlameLine> Lines { get; private set; }
+        public IList<GitBlameHeader> Headers { get; }
+        public IList<GitBlameLine> Lines { get; }
 
         public GitBlameHeader FindHeaderForCommitGuid(string commitGuid)
         {
@@ -61,7 +61,7 @@ namespace GitCommands
             int number = 0;
             foreach (char c in text)
             {
-                number += (int)c;
+                number += c;
             }
 
             return number;
@@ -93,12 +93,12 @@ namespace GitCommands
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
-            if (object.ReferenceEquals(x, y))
+            if (ReferenceEquals(x, y))
             {
                 return true;
             }
 
-            if (object.ReferenceEquals(x, null) || object.ReferenceEquals(y, null))
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
             {
                 return false;
             }

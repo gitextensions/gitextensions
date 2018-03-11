@@ -27,7 +27,7 @@ namespace GitCommands
                         {
                             if (!hasSeenAtLeastOneWord || currentSurroundingText.ToString().Trim().Length > 0)
                             {
-                                sb.Append(currentSurroundingText.ToString());
+                                sb.Append(currentSurroundingText);
                             }
 
                             currentSurroundingText = new StringBuilder();
@@ -69,7 +69,7 @@ namespace GitCommands
                 }
             }
 
-            sb.Append(currentSurroundingText.ToString());
+            sb.Append(currentSurroundingText);
             return sb.ToString();
         }
 

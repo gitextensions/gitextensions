@@ -157,7 +157,7 @@ namespace GitCommands
             var treeGuid = lines[1];
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            string[] parentLines = lines[2].Split(new char[] { ' ' });
+            string[] parentLines = lines[2].Split(' ');
             ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
 
             var author = module.ReEncodeStringFromLossless(lines[3]);

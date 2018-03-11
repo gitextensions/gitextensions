@@ -29,12 +29,12 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Style used for shadow.
         /// </summary>
-        private readonly ShadowStyle _shadowStyle = ShadowStyle.NoShadow;
+        private readonly ShadowStyle _shadowStyle;
 
         /// <summary>
         ///   Color of the surface.
         /// </summary>
-        private readonly Color _surfaceColor = Color.Empty;
+        private readonly Color _surfaceColor;
 
         /// <summary>
         ///   <c>Brush</c> used to render slice ending cut side.
@@ -1163,13 +1163,13 @@ namespace GitStatistics.PieChart
                 EndPoint = endPoint;
             }
 
-            public float StartAngle { get; private set; }
+            public float StartAngle { get; }
 
-            public float EndAngle { get; private set; }
+            public float EndAngle { get; }
 
-            public PointF StartPoint { get; private set; }
+            public PointF StartPoint { get; }
 
-            public PointF EndPoint { get; private set; }
+            public PointF EndPoint { get; }
         }
 
         #endregion

@@ -19,9 +19,9 @@ namespace GitUI
 
         public FilterBranchHelper()
         {
-            _localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _localToolStripMenuItem = new ToolStripMenuItem();
+            _tagsToolStripMenuItem = new ToolStripMenuItem();
+            _remoteToolStripMenuItem = new ToolStripMenuItem();
 
             //
             // localToolStripMenuItem

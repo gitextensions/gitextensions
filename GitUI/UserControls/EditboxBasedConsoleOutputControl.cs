@@ -104,7 +104,7 @@ namespace GitUI.UserControls
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
-                    this.InvokeAsync(new Action(() =>
+                    this.InvokeAsync(() =>
                     {
                         if (_process == null)
                         {
@@ -129,7 +129,7 @@ namespace GitUI.UserControls
                         _process = null;
                         _timer.Stop(true);
                         FireProcessExited();
-                    }));
+                    });
                 };
 
                 process.Exited += (sender, args) =>

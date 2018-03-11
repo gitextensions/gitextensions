@@ -44,9 +44,9 @@ namespace GitUI.AutoCompletion
                                 foreach (Match match in matches)
                                 {
                                     // Skip first group since it always contains the entire matched string (regardless of capture groups)
-                                    foreach (Group @group in match.Groups.OfType<Group>().Skip(1))
+                                    foreach (Group group in match.Groups.OfType<Group>().Skip(1))
                                     {
-                                        foreach (Capture capture in @group.Captures)
+                                        foreach (Capture capture in group.Captures)
                                         {
                                             autoCompleteWords.Add(capture.Value);
                                         }
@@ -89,7 +89,7 @@ namespace GitUI.AutoCompletion
 
             using (var sr = new StreamReader(s))
             {
-                return sr.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                return sr.ReadToEnd().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 

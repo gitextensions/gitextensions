@@ -240,7 +240,7 @@ namespace GitExtensions
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                System.Environment.Exit(1);
+                Environment.Exit(1);
             }
         }
     }

@@ -312,7 +312,7 @@ namespace GitUI.CommandsDialogs
             // a special meaning, and can be dangerous if used inappropriately.
             if (_commitKind == CommitKind.Normal)
             {
-                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
+                CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
             }
 
             _splitterManager.SaveSplitters();
@@ -588,7 +588,8 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
                     _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
             }
@@ -677,7 +678,8 @@ namespace GitUI.CommandsDialogs
 
             if (_currentItemStaged)
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
                     _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
             }
@@ -1181,7 +1183,7 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
             {
-                var firstLine = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                var firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
                 if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine)
                 {
                     if (MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
@@ -1193,7 +1195,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
             {
-                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                 {
                     if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine)
@@ -1208,7 +1210,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.CommitValidationSecondLineMustBeEmpty)
             {
-                var lines = Message.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
                 if (lines.Length > 2)
                 {
                     if (lines[1].Length != 0)
@@ -1796,11 +1798,11 @@ namespace GitUI.CommandsDialogs
                                     Directory.Delete(path, true);
                                 }
                             }
-                            catch (System.IO.IOException)
+                            catch (IOException)
                             {
                                 filesInUse.Add(item.Name);
                             }
-                            catch (System.UnauthorizedAccessException)
+                            catch (UnauthorizedAccessException)
                             {
                             }
                         }
@@ -2052,7 +2054,7 @@ namespace GitUI.CommandsDialogs
 
             if (!prevMsgs.Contains(msg))
             {
-                prevMsgs = new string[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
+                prevMsgs = new[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
             }
 
             foreach (var localLastCommitMessage in prevMsgs)
@@ -2177,8 +2179,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
 
-            bool wereErrors;
-            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out wereErrors);
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out _);
 
             Initialize();
         }
@@ -2192,8 +2193,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
 
-            bool wereErrors;
-            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out wereErrors);
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out _);
 
             Initialize();
         }
@@ -2238,8 +2238,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FileStatusList list = sender as FileStatusList;
-            if (!SenderToFileStatusList(sender, out list))
+            if (!SenderToFileStatusList(sender, out var list))
             {
                 return;
             }
@@ -2384,9 +2383,10 @@ namespace GitUI.CommandsDialogs
         private void UpdateAuthorInfo()
         {
             GetUserSettings();
-            string author = "";
+
             string committer = string.Format("{0} {1} <{2}>", _commitCommitterInfo.Text, _userName, _userEmail);
 
+            string author;
             if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
             {
                 author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);
@@ -2723,11 +2723,11 @@ namespace GitUI.CommandsDialogs
             // Change the icon for commit button
             if (gpgSignCommitToolStripComboBox.SelectedIndex > 0)
             {
-                Commit.Image = GitUI.Properties.Resources.IconKey;
+                Commit.Image = Properties.Resources.IconKey;
             }
             else
             {
-                Commit.Image = GitUI.Properties.Resources.IconClean;
+                Commit.Image = Properties.Resources.IconClean;
             }
 
             toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
@@ -2864,10 +2864,10 @@ namespace GitUI.CommandsDialogs
                                 Directory.Delete(path, true);
                             }
                         }
-                        catch (System.IO.IOException)
+                        catch (IOException)
                         {
                         }
-                        catch (System.UnauthorizedAccessException)
+                        catch (UnauthorizedAccessException)
                         {
                         }
                     }
@@ -3009,7 +3009,6 @@ namespace GitUI.CommandsDialogs
             }
             catch
             {
-                return;
             }
         }
 

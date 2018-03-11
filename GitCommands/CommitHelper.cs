@@ -63,9 +63,9 @@ namespace GitCommands
 
         public static string GetCommitMessage(GitModule module)
         {
-            if (File.Exists(CommitHelper.GetCommitMessagePath(module)))
+            if (File.Exists(GetCommitMessagePath(module)))
             {
-                return File.ReadAllText(CommitHelper.GetCommitMessagePath(module), module.CommitEncoding);
+                return File.ReadAllText(GetCommitMessagePath(module), module.CommitEncoding);
             }
 
             return string.Empty;
@@ -89,9 +89,9 @@ namespace GitCommands
         public static bool GetAmendState(GitModule module)
         {
             bool amendState = false;
-            if (AppSettings.RememberAmendCommitState && File.Exists(CommitHelper.GetAmendPath(module)))
+            if (AppSettings.RememberAmendCommitState && File.Exists(GetAmendPath(module)))
             {
-                var amendSaveStateFilePath = CommitHelper.GetAmendPath(module);
+                var amendSaveStateFilePath = GetAmendPath(module);
                 bool.TryParse(File.ReadAllText(amendSaveStateFilePath), out amendState);
                 try
                 {

@@ -157,7 +157,7 @@ namespace GitUI
 
             int startIdx = -1;
             int currentIdx = -1;
-            TextRange range = null;
+            TextRange range;
             do
             {
                 Caret caret = _editor.ActiveTextAreaControl.Caret;

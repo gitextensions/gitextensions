@@ -37,7 +37,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public GitCommands.GitRevision SelectedRevision { get; private set; }
+        public GitRevision SelectedRevision { get; private set; }
         private Dictionary<string, string> _parents;
 
         protected override void OnLoad(EventArgs e)

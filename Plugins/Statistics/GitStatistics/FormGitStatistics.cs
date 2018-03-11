@@ -33,7 +33,6 @@ namespace GitStatistics
         private readonly bool _countSubmodule;
 
         protected Color[] DecentColors =
-            new[]
                 {
                     Color.Red,
                     Color.Yellow,
@@ -53,9 +52,6 @@ namespace GitStatistics
         public string DirectoriesToIgnore { get; set; }
         private readonly SynchronizationContext _syncContext;
         private LineCounter _lineCounter;
-#pragma warning disable 0414
-        private Task _loadThread;
-#pragma warning restore 0414
         private readonly IGitModule _module;
 
         public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodule)
@@ -169,7 +165,7 @@ namespace GitStatistics
             _lineCounter = new LineCounter();
             _lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            _loadThread = Task.Factory.StartNew(LoadLinesOfCode);
+            Task.Factory.StartNew(LoadLinesOfCode);
         }
 
         public void LoadLinesOfCode()

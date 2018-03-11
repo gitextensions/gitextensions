@@ -354,7 +354,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd('\\', '/');
             }
 
             destinationPath += "\\";
@@ -422,8 +422,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (branchList.AuthenticationFail)
             {
-                string loadedKey;
-                if (FormPuttyError.AskForKey(this, out loadedKey))
+                if (FormPuttyError.AskForKey(this, out _))
                 {
                     LoadBranches();
                 }

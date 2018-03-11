@@ -900,7 +900,7 @@ namespace GitUI.RevisionGridClasses
 
                 #region LaneRow Members
 
-                public int NodeLane { get; } = -1;
+                public int NodeLane { get; }
 
                 public Node Node { get; }
 

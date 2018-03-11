@@ -10,11 +10,7 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", new[]
-            {
-                Coders, Translators,
-                Designers, Other
-            })
+            _contributersList = string.Join(", ", Coders, Translators, Designers, Other)
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
@@ -77,8 +73,7 @@ namespace GitUI.CommandsDialogs
         {
             using (FormContributors formContributors = new FormContributors())
             {
-                formContributors.LoadContributors(Coders, Translators,
-                    Designers, Other);
+                formContributors.LoadContributors(Coders, Translators, Designers);
                 formContributors.ShowDialog(this);
             }
         }

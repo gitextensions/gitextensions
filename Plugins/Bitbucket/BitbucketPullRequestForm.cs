@@ -75,7 +75,7 @@ namespace Bitbucket
                         ddlRepositoryTarget.Enabled = true;
                     });
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
                 }
             });
@@ -99,9 +99,8 @@ namespace Bitbucket
                         lbxPullRequests.DisplayMember = "DisplayName";
                     });
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
-                    return;
                 }
             });
         }

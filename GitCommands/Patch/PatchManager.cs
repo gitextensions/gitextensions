@@ -19,7 +19,7 @@ namespace PatchApply
 
         public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
             if (selectedChunks == null)
             {
@@ -45,9 +45,9 @@ namespace PatchApply
             }
         }
 
-        public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
+        public static byte[] GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
         {
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out var header);
+            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
             if (selectedChunks == null)
             {
@@ -72,7 +72,7 @@ namespace PatchApply
 
         private static string CorrectHeaderForNewFile(string header)
         {
-            string[] headerLines = header.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
             {
@@ -167,7 +167,7 @@ namespace PatchApply
         public string GetMD5Hash(string input)
         {
             IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
-            var s = new System.Text.StringBuilder();
+            var s = new StringBuilder();
             foreach (byte b in bs)
             {
                 s.Append(b.ToString("x2").ToLower());
@@ -179,7 +179,7 @@ namespace PatchApply
         private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
         {
             var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            byte[] bs = System.Text.Encoding.UTF8.GetBytes(input);
+            byte[] bs = Encoding.UTF8.GetBytes(input);
             bs = x.ComputeHash(bs);
             return bs;
         }
@@ -244,8 +244,8 @@ namespace PatchApply
         public List<PatchLine> RemovedLines = new List<PatchLine>();
         public List<PatchLine> AddedLines = new List<PatchLine>();
         public List<PatchLine> PostContext = new List<PatchLine>();
-        public string WasNoNewLineAtTheEnd = null;
-        public string IsNoNewLineAtTheEnd = null;
+        public string WasNoNewLineAtTheEnd;
+        public string IsNoNewLineAtTheEnd;
 
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
@@ -434,7 +434,7 @@ namespace PatchApply
     {
         private int _startLine;
         private List<SubChunk> _subChunks = new List<SubChunk>();
-        private SubChunk _currentSubChunk = null;
+        private SubChunk _currentSubChunk;
 
         public SubChunk CurrentSubChunk
         {
@@ -580,7 +580,7 @@ namespace PatchApply
 
             int eolLength = eol.Length;
 
-            string[] lines = fileText.Split(new string[] { eol }, StringSplitOptions.None);
+            string[] lines = fileText.Split(new[] { eol }, StringSplitOptions.None);
             int i = 0;
 
             while (i < lines.Length)
@@ -659,7 +659,7 @@ namespace PatchApply
 
     internal class ChunkList : List<Chunk>
     {
-        public static ChunkList GetSelectedChunks(string text, int selectionPosition, int selectionLength, bool staged, out string header)
+        public static ChunkList GetSelectedChunks(string text, int selectionPosition, int selectionLength, out string header)
         {
             header = null;
 
@@ -680,7 +680,7 @@ namespace PatchApply
             header = text.Substring(0, patchPos);
             string diff = text.Substring(patchPos - 1);
 
-            string[] chunks = diff.Split(new string[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
             ChunkList selectedChunks = new ChunkList();
             int i = 0;
             int currentPos = patchPos - 1;

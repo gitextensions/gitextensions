@@ -409,8 +409,7 @@ namespace GitUI.CommandsDialogs
                 files.Add(item);
             }
 
-            bool err;
-            Module.StageFiles(files, out err);
+            Module.StageFiles(files, out _);
             RefreshArtificial();
         }
 
@@ -499,27 +498,27 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            GitUI.RevisionDiffKind diffKind;
+            RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffALocal;
+                diffKind = RevisionDiffKind.DiffALocal;
             }
             else if (sender == bLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+                diffKind = RevisionDiffKind.DiffBLocal;
             }
             else if (sender == parentOfALocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+                diffKind = RevisionDiffKind.DiffAParentLocal;
             }
             else if (sender == parentOfBLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+                diffKind = RevisionDiffKind.DiffBParentLocal;
             }
             else
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAB;
+                diffKind = RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)

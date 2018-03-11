@@ -94,12 +94,12 @@ namespace GitUI
                     Y = y;
                 }
 
-                public static implicit operator System.Drawing.Point(POINT p)
+                public static implicit operator Point(POINT p)
                 {
-                    return new System.Drawing.Point(p.X, p.Y);
+                    return new Point(p.X, p.Y);
                 }
 
-                public static implicit operator POINT(System.Drawing.Point p)
+                public static implicit operator POINT(Point p)
                 {
                     return new POINT(p.X, p.Y);
                 }

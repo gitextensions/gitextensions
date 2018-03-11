@@ -7,7 +7,7 @@ namespace GitUI
 {
     public class RepoHosts
     {
-        public static List<IRepositoryHostPlugin> GitHosters { get; private set; }
+        public static List<IRepositoryHostPlugin> GitHosters { get; }
         static RepoHosts()
         {
             GitHosters = new List<IRepositoryHostPlugin>();

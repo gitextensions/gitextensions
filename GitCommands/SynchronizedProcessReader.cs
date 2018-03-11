@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -9,7 +7,7 @@ namespace GitCommands
 {
     public class SynchronizedProcessReader
     {
-        public Process Process { get; private set; }
+        public Process Process { get; }
         public byte[] Output { get; private set; }
         public byte[] Error { get; private set; }
 

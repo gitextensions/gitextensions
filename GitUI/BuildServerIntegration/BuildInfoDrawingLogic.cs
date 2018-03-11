@@ -9,7 +9,7 @@ namespace GitUI.BuildServerIntegration
 {
     internal static class BuildInfoDrawingLogic
     {
-        public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
+        public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision)
         {
             if (revision.BuildStatus != null)
             {

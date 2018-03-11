@@ -314,7 +314,7 @@ Current Branch:
             }
 
             Bitmap result = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage((Image)result))
+            using (Graphics g = Graphics.FromImage(result))
             {
                 g.DrawImage(b, 0, 0, width, height);
             }
@@ -339,7 +339,7 @@ Current Branch:
         {
             var helpDisplayDialog = new SimpleHelpDisplayDialog();
             helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
-            helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
+            helpDisplayDialog.ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
         }

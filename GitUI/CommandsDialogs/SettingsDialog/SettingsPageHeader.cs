@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         void SetRepoDistSettings();
     }
 
-    public partial class SettingsPageHeader : GitExtensionsControl
+    public partial class SettingsPageHeader
     {
         private readonly SettingsPageWithHeader _page;
 

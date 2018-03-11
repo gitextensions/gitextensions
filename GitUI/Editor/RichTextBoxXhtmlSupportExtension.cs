@@ -649,7 +649,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetUrl(this LinkClickedEventArgs e)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 return "";
@@ -666,7 +666,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 url = "";
@@ -760,10 +760,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             bool fontSet = false;
             string strFont = "";
             int crFont = 0;
-            Color color = new Color();
             int yHeight = 0;
 
-            int i = 0;
+            int i;
             int pos = 0;
             int k = rtb.TextLength;
             char[] chtrim = { ' ', '\x0000' };
@@ -809,7 +808,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     int fsize = yHeight / (20 * 5);
 
                     // color object from COLORREF
-                    color = GetColor(crFont);
+                    var color = GetColor(crFont);
 
                     // add <font> tag
                     string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));
@@ -1195,7 +1194,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }
@@ -1274,8 +1273,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                 case XmlNodeType.ProcessingInstruction:
                     break;
                 case XmlNodeType.Comment:
-                    break;
-                default:
                     break;
             }
         }
@@ -1521,13 +1518,11 @@ namespace GitUI.Editor.RichTextBoxExtension
                                 break;
                             case XmlNodeType.Comment:
                                 break;
-                            default:
-                                break;
                         }
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }

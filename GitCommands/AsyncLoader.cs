@@ -233,7 +233,7 @@ namespace GitCommands
             Handled = true;
         }
 
-        public Exception Exception { get; private set; }
+        public Exception Exception { get; }
 
         public bool Handled { get; set; }
     }

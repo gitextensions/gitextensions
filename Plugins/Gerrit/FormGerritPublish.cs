@@ -153,8 +153,7 @@ namespace Gerrit
 
                 // Don't use the Gerrit change number as a topic branch.
 
-                int unused;
-                if (int.TryParse(branchName, out unused))
+                if (int.TryParse(branchName, out _))
                 {
                     branchName = null;
                 }

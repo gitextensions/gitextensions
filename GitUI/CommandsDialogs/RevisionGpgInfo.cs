@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
 
         private void ApplyLayout()
         {
-            var heightRowCommit = 0f;
+            float heightRowCommit;
             var heightRowTag = 0f;
 
             if (txtTagGpgInfo.Visible)

@@ -18,7 +18,7 @@ namespace GitUIPluginInterfaces
 
     public class GitRemoteCommandCompletedEventArgs : EventArgs
     {
-        public IGitRemoteCommand Command { get; private set; }
+        public IGitRemoteCommand Command { get; }
 
         public bool IsError { get; set; }
 

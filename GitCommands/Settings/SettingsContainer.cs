@@ -5,8 +5,8 @@ namespace GitCommands.Settings
 {
     public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
     {
-        public TLowerPriority LowerPriority { get; private set; }
-        public TCache SettingsCache { get; private set; }
+        public TLowerPriority LowerPriority { get; }
+        public TCache SettingsCache { get; }
 
         public SettingsContainer(TLowerPriority lowerPriority, TCache settingsCache)
         {
@@ -58,7 +58,7 @@ namespace GitCommands.Settings
 
         public virtual bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
-            if (SettingsCache.TryGetValue<T>(name, defaultValue, decode, out value))
+            if (SettingsCache.TryGetValue(name, defaultValue, decode, out value))
             {
                 return true;
             }

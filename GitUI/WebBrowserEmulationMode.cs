@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.Win32;
 
 namespace GitUI
@@ -37,7 +36,7 @@ namespace GitUI
             emulationMode = 11000; // Internet Explorer 11. Webpages containing standards-based !DOCTYPE directives are displayed in IE11 Standards mode.
             try
             {
-                int browserVersion = 0;
+                int browserVersion;
                 using (var ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
                     RegistryKeyPermissionCheck.ReadSubTree,
                     System.Security.AccessControl.RegistryRights.QueryValues))

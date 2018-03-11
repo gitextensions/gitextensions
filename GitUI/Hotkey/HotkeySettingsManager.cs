@@ -331,9 +331,8 @@ namespace GitUI.Hotkey
 
         public static HotkeyCommand[] LoadScriptHotkeys()
         {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
+            var curScripts = Script.ScriptManager.GetScripts();
 
-            HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
             /* define unusable int for identifying a shortcut for a custom script is pressed
              * all integers above 9000 represent a scripthotkey
              * these integers are never matched in the 'switch' routine on a form and
@@ -342,7 +341,7 @@ namespace GitUI.Hotkey
 
             return curScripts.
                 Where(s => !s.Name.IsNullOrEmpty()).
-                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
+                Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
             .ToArray();
         }
     }

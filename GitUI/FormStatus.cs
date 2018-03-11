@@ -11,7 +11,8 @@ namespace GitUI
 {
     public partial class FormStatus : GitExtensionsForm
     {
-        private readonly bool _useDialogSettings = true;
+        private readonly bool _useDialogSettings;
+
         private DispatcherFrameModalControler _modalControler;
 
         public FormStatus() : this(true)
@@ -35,7 +36,7 @@ namespace GitUI
             Translate();
             if (_useDialogSettings)
             {
-                KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
             }
             else
             {
@@ -158,11 +159,11 @@ namespace GitUI
 
                 if (isSuccess)
                 {
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
+                    picBoxSuccessFail.Image = Properties.Resources.success;
                 }
                 else
                 {
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+                    picBoxSuccessFail.Image = Properties.Resources.error;
                 }
 
                 _errorOccurred = !isSuccess;

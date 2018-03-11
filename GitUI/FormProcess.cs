@@ -61,7 +61,7 @@ namespace GitUI
 
         public static bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            return ShowDialog(owner, (string)null, arguments);
+            return ShowDialog(owner, null, arguments);
         }
 
         public static bool ShowDialog(GitModuleForm owner, string process, string arguments)
@@ -266,7 +266,7 @@ namespace GitUI
             // FormProcess
             //
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(565, 326);
             Name = "FormProcess";
             ResumeLayout(false);

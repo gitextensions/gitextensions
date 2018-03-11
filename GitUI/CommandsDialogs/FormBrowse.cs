@@ -865,7 +865,7 @@ namespace GitUI.CommandsDialogs
                     _pullButton.Click += PullToolStripMenuItemClick;
 
                     _toolbarButtonsCreated = true;
-                    ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
+                    ThumbnailToolBarButton[] buttons = { _commitButton, _pullButton, _pushButton };
 
                     // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
                     TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);
@@ -2143,7 +2143,7 @@ namespace GitUI.CommandsDialogs
             base.OnClosed(e);
         }
 
-        private void CommandsToolStripMenuItem_DropDownOpening(object sender, System.EventArgs e)
+        private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             // Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
@@ -2316,9 +2316,8 @@ namespace GitUI.CommandsDialogs
             }
 
             RefreshPullIcon();
-            bool pullCompelted;
 
-            UICommands.StartPullDialog(this, true, out pullCompelted, true);
+            UICommands.StartPullDialog(this, true, out _, true);
 
             // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)

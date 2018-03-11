@@ -122,7 +122,7 @@ namespace GitCommands
 
         public static bool IsFullSha1Hash(string id)
         {
-            return Regex.IsMatch(id, GitRevision.Sha1HashPattern);
+            return Regex.IsMatch(id, Sha1HashPattern);
         }
     }
 }

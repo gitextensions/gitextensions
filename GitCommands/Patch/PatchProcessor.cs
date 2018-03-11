@@ -8,7 +8,7 @@ namespace PatchApply
 {
     public class PatchProcessor
     {
-        public Encoding FilesContentEncoding { get; private set; }
+        public Encoding FilesContentEncoding { get; }
 
         public PatchProcessor(Encoding filesContentEncoding)
         {
@@ -319,8 +319,7 @@ namespace PatchApply
 
         private static bool IsStartOfANewPatch(string input)
         {
-            bool combinedDiff;
-            return IsStartOfANewPatch(input, out combinedDiff);
+            return IsStartOfANewPatch(input, out _);
         }
 
         private static bool SetPatchType(string input, Patch patch)

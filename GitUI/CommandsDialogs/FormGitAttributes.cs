@@ -110,8 +110,6 @@ namespace GitUI.CommandsDialogs
                     case DialogResult.No:
                         needToClose = true;
                         break;
-                    default:
-                        break;
                 }
             }
             else

@@ -24,7 +24,7 @@ namespace Gource
             Arguments.Text = GourceArguments;
         }
 
-        private GitUIBaseEventArgs GitUIArgs { get; set; }
+        private GitUIBaseEventArgs GitUIArgs { get; }
 
         public string PathToGource { get; set; }
 

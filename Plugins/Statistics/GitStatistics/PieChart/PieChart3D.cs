@@ -31,8 +31,7 @@ namespace GitStatistics.PieChart
         ///   Array of colors used for rendering.
         /// </summary>
         protected Color[] SliceColors =
-            new[]
-                {
+            {
                     Color.Red,
                     Color.Green,
                     Color.Blue,
@@ -50,7 +49,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Array of relative displacements from the common center.
         /// </summary>
-        protected float[] SliceRelativeDisplacements = new[] { 0F };
+        protected float[] SliceRelativeDisplacements = { 0F };
 
         /// <summary>
         ///   Slice relative height.
@@ -60,7 +59,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Array of values to be presented by the chart.
         /// </summary>
-        protected decimal[] Values = new decimal[] { };
+        protected decimal[] Values = { };
 
         /// <summary>
         ///   Initializes an empty instance of <c>PieChart3D</c>.

@@ -98,7 +98,7 @@ namespace Gerrit
 
                     if (trimmed[0] == '[')
                     {
-                        inHeader = trimmed.Trim(new[] { '[', ']' }).Equals("gerrit", StringComparison.OrdinalIgnoreCase);
+                        inHeader = trimmed.Trim('[', ']').Equals("gerrit", StringComparison.OrdinalIgnoreCase);
                     }
                     else if (inHeader)
                     {

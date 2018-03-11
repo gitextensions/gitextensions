@@ -16,8 +16,8 @@ namespace NetSpell.SpellChecker
     ///     The Spelling class encapsulates the functions necessary to check
     ///     the spelling of inputted text.
     /// </summary>
-    [ToolboxBitmap(typeof(NetSpell.SpellChecker.Spelling), "Spelling.bmp")]
-    public class Spelling : System.ComponentModel.Component
+    [ToolboxBitmap(typeof(Spelling), "Spelling.bmp")]
+    public class Spelling : Component
     {
         #region Global Regex
         // Regex are class scope and compiled to improve performance on reuse
@@ -32,7 +32,7 @@ namespace NetSpell.SpellChecker
         #endregion
 
         #region private variables
-        private System.ComponentModel.Container _components;
+        private Container _components;
         #endregion
 
         #region Events
@@ -91,7 +91,7 @@ namespace NetSpell.SpellChecker
         ///     This represents the delegate method prototype that
         ///     event receivers must implement
         /// </summary>
-        public delegate void EndOfTextEventHandler(object sender, System.EventArgs e);
+        public delegate void EndOfTextEventHandler(object sender, EventArgs e);
 
         /// <summary>
         ///     This represents the delegate method prototype that
@@ -133,7 +133,7 @@ namespace NetSpell.SpellChecker
         ///     This is the method that is responsible for notifying
         ///     receivers that the event occurred
         /// </summary>
-        protected virtual void OnEndOfText(System.EventArgs e)
+        protected virtual void OnEndOfText(EventArgs e)
         {
             EndOfText?.Invoke(this, e);
         }
@@ -180,7 +180,7 @@ namespace NetSpell.SpellChecker
         /// <summary>
         ///     Required for Windows.Forms Class Composition Designer support
         /// </summary>
-        public Spelling(System.ComponentModel.IContainer container)
+        public Spelling(IContainer container)
         {
             container.Add(this);
             InitializeComponent();
@@ -874,19 +874,18 @@ namespace NetSpell.SpellChecker
             if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
-                OnEndOfText(System.EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);    // raise event
                 return false;
             }
 
             Initialize();
 
-            string currentWord = "";
             bool misspelledWord = false;
 
             for (int i = startWordIndex; i <= endWordIndex; i++)
             {
                 WordIndex = i; // saving the current word index
-                currentWord = CurrentWord;
+                var currentWord = CurrentWord;
 
                 if (CheckString(currentWord))
                 {
@@ -918,7 +917,7 @@ namespace NetSpell.SpellChecker
 
             if (_wordIndex >= _words.Count - 1 && !misspelledWord)
             {
-                OnEndOfText(System.EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);    // raise event
             }
 
             return misspelledWord;

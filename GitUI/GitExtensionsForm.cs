@@ -32,7 +32,6 @@ namespace GitUI
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
         public GitExtensionsForm(bool enablePositionRestore)
-            : base()
         {
             _enablePositionRestore = enablePositionRestore;
 

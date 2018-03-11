@@ -22,11 +22,11 @@ namespace GitUI
 
         public FilterRevisionsHelper()
         {
-            _commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _commitToolStripMenuItem = new ToolStripMenuItem();
+            _committerToolStripMenuItem = new ToolStripMenuItem();
+            _authorToolStripMenuItem = new ToolStripMenuItem();
+            _diffContainsToolStripMenuItem = new ToolStripMenuItem();
+            _hashToolStripMenuItem = new ToolStripMenuItem();
 
             //
             // commitToolStripMenuItem1
