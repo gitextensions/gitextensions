@@ -874,7 +874,7 @@ namespace GitUI
                     previouslySelectedItems.Add(item.Tag as GitItemStatus);
                 }
 
-                DataSourceChanged?.Invoke(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, EventArgs.Empty);
             }
 
             FileStatusListView.BeginUpdate();
@@ -957,7 +957,7 @@ namespace GitUI
             if (updateCausedByFilter == false)
             {
                 FileStatusListView_SelectedIndexChanged();
-                DataSourceChanged?.Invoke(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, EventArgs.Empty);
                 if (SelectFirstItemOnSetItems)
                 {
                     SelectFirstVisibleItem();
