@@ -181,7 +181,6 @@ namespace GitUI
         public event GitUIEventHandler PostRegisterPlugin;
 
         public ILockableNotifier RepoChangedNotifier { get; }
-        public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion
 
@@ -2419,11 +2418,6 @@ namespace GitUI
         internal void RaisePostRegisterPlugin(IWin32Window owner)
         {
             InvokeEvent(owner, PostRegisterPlugin);
-        }
-
-        public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
-        {
-            BrowseRepo?.GoToRef(refName, showNoRevisionMsg);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()

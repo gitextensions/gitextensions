@@ -84,7 +84,6 @@
     <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
     <Compile Include="GitCmdResult.cs" />
     <Compile Include="GitUIPostActionEventArgs.cs" />
-    <Compile Include="IBrowseRepo.cs" />
     <Compile Include="IConfigFileSettings.cs" />
     <Compile Include="IConfigSection.cs" />
     <Compile Include="IGitCommand.cs" />
