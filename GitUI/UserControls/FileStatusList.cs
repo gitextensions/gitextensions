@@ -462,7 +462,11 @@ namespace GitUI
                         text = gitItemStatus.Name;
                     }
 
-                    float textWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
+                    float textWidth;
+                    using (var graphics = listView.CreateGraphics())
+                    {
+                        textWidth = graphics.MeasureString(text, listView.Font).Width + 17;
+                    }
 
                     // Use width-itemheight because the icon drawn in front of the text is the itemheight
                     if (textWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
