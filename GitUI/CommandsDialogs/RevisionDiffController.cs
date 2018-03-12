@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using GitCommands;
 
@@ -28,7 +27,6 @@ namespace GitUI.CommandsDialogs
         bool ShouldDisplayMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
 
-        bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent, IFullPathResolver fullPathResolver);
         bool IsFirstParent(IEnumerable<string> selectedParentRevs, IEnumerable<string> selectedItemParentRevs);
     }
 
@@ -226,26 +224,6 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         #region helpers
-        public bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent, IFullPathResolver fullPathResolver)
-        {
-            bool localExists = selectedItemsWithParent.Any(item => !item.Item.IsTracked);
-            if (!localExists)
-            {
-                // enable *<->Local items only when (any) local file exists
-                foreach (var item in selectedItemsWithParent)
-                {
-                    string filePath = fullPathResolver.Resolve(item.Item.Name);
-                    if (File.Exists(filePath))
-                    {
-                        localExists = true;
-                        break;
-                    }
-                }
-            }
-
-            return localExists;
-        }
-
         public bool IsFirstParent(IEnumerable<string> selectedParentRevs, IEnumerable<string> selectedItemParentRevs)
         {
             if (selectedParentRevs == null)

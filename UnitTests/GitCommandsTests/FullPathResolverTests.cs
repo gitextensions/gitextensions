@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using GitCommands;
@@ -43,6 +44,12 @@ namespace GitCommandsTests
         public void Resolve_should_return_full_path(string path)
         {
             _resolver.Resolve(path).Should().Be($"{_workingDir}\\{path}");
+        }
+
+        [Test]
+        public void AnyLocalExists_dummy()
+        {
+            _resolver.AnyLocalExists(new string[] { "non_existing_file.txt" }).Should().Be(false);
         }
     }
 }

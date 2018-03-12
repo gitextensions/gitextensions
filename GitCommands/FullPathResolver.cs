@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using GitUIPluginInterfaces;
 
@@ -17,6 +18,15 @@ namespace GitCommands
         /// <paramref name="path"/> if <paramref name="path"/> is rooted; otherwise resolved path from <see cref="IGitModule.WorkingDir"/>.
         /// </returns>
         string Resolve(string path);
+
+        /// <summary>
+        /// Finds if any of the provided strings to resolve exists as a file.
+        /// </summary>
+        /// <param name="names">List of names to resolve and check</param>
+        /// <returns>
+        /// True if at least one file exists.
+        /// </returns>
+        bool AnyLocalExists(IEnumerable<string> names);
     }
 
     public sealed class FullPathResolver : IFullPathResolver
@@ -52,6 +62,30 @@ namespace GitCommands
             var fullPath = Path.GetFullPath(Path.Combine(_getWorkingDir() ?? "", path));
             var uri = new Uri(fullPath);
             return uri.LocalPath;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Finds if any of the provided strings to resolve exists as a file.
+        /// </summary>
+        /// <param name="names">List of names to resolve and check</param>
+        /// <returns>
+        /// True if at least one file exists.
+        /// </returns>
+        public bool AnyLocalExists(IEnumerable<string> names)
+        {
+            bool localExists = false;
+            foreach (var name in names)
+            {
+                string filePath = Resolve(name);
+                if (File.Exists(filePath))
+                {
+                    localExists = true;
+                    break;
+                }
+            }
+
+            return localExists;
         }
     }
 }
