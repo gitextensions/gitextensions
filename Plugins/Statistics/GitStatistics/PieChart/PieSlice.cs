@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -970,7 +969,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
-            var peripherySurfaceBounds = new ArrayList();
+            var peripherySurfaceBounds = new List<PeripherySurfaceBounds>();
 
             // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees
@@ -1012,7 +1011,7 @@ namespace GitStatistics.PieChart
                 }
             }
 
-            return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+            return peripherySurfaceBounds;
         }
 
         /// <summary>
