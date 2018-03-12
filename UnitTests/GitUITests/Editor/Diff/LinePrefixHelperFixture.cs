@@ -93,7 +93,7 @@ namespace GitUITests.Editor.Diff
         {
             var doc = Substitute.For<IDocument>();
             doc.GetCharAt(Arg.Any<int>()).Returns(args => diffText[(int)args[0]]);
-            doc.TotalNumberOfLines.Returns(diffText.Split('\n').Count());
+            doc.TotalNumberOfLines.Returns(diffText.Split('\n').Length);
             doc.TextLength.Returns(diffText.Length);
             return doc;
         }

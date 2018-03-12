@@ -1367,8 +1367,8 @@ namespace GitUI.CommandsDialogs
             }
 
             if (canUseUnstageAll &&
-                Staged.GitItemStatuses.Count() > 10 &&
-                Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
+                Staged.GitItemStatuses.Count > 10 &&
+                Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count)
             {
                 UnstageAllToolStripMenuItemClick(null, null);
                 return;
@@ -1587,7 +1587,7 @@ namespace GitUI.CommandsDialogs
                 Cursor.Current = Cursors.WaitCursor;
                 Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = gitItemStatuses.Count() * 2;
+                toolStripProgressBar1.Maximum = gitItemStatuses.Count * 2;
                 toolStripProgressBar1.Value = 0;
 
                 var files = new List<GitItemStatus>();
