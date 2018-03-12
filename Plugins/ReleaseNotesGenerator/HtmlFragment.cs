@@ -185,12 +185,11 @@ namespace ReleaseNotesGenerator
             // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
-            string header =
-                "Version:0.9\r\n" +
-                "StartHTML:<<<<<<<1\r\n" +
-                "EndHTML:<<<<<<<2\r\n" +
-                "StartFragment:<<<<<<<3\r\n" +
-                "EndFragment:<<<<<<<4\r\n";
+            const string header = "Version:0.9\r\n" +
+                                  "StartHTML:<<<<<<<1\r\n" +
+                                  "EndHTML:<<<<<<<2\r\n" +
+                                  "StartFragment:<<<<<<<3\r\n" +
+                                  "EndFragment:<<<<<<<4\r\n";
 
             sb.Append(header);
 

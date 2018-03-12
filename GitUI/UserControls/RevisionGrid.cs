@@ -1996,7 +1996,7 @@ namespace GitUI
             return offset;
         }
 
-        private static readonly string MultilineMessageIndicator = "[...]";
+        private const string MultilineMessageIndicator = "[...]";
 
         private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

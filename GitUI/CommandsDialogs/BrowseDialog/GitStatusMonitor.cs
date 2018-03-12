@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// Minimum interval between subsequent updates
         /// </summary>
-        private static readonly int MinUpdateInterval = 3000;
+        private const int MinUpdateInterval = 3000;
 
         /// <summary>
         /// Update every 5min, just to make sure something didn't slip through the cracks.

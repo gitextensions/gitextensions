@@ -363,7 +363,8 @@ namespace ResourceManager.Xliff
 
         public static object CreateInstanceOfClass(Type type)
         {
-            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
             object obj = null;
 
             // try to find parameter less constructor first

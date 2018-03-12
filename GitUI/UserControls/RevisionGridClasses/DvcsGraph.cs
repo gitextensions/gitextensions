@@ -1025,7 +1025,7 @@ namespace GitUI.RevisionGridClasses
 
                 // Get the x,y value of the current item's upper left in the cache
                 int curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
-                int x = 0;
+                const int x = 0;
                 int y = curCacheRow * _rowHeight;
 
                 var laneRect = new Rectangle(0, y, Width, _rowHeight);

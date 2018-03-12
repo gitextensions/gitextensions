@@ -102,7 +102,7 @@ namespace PatchApply
         public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreabmle)
         {
             StringBuilder sb = new StringBuilder();
-            string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
+            const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
             sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
             sb.Append("\n");
             if (!reset)

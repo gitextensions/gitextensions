@@ -225,7 +225,7 @@ namespace GitCommands
 
         private static IEnumerable<string> ReadDataBlocks(StreamReader reader)
         {
-            int bufferSize = 4 * 1024;
+            const int bufferSize = 4 * 1024;
             char[] buffer = new char[bufferSize];
 
             StringBuilder incompleteBlock = new StringBuilder();

@@ -30,7 +30,7 @@ namespace GitCommands.Git
     public sealed class RevisionDiffProvider : IRevisionDiffProvider
     {
         // This is an instance class to not have static dependencies in GitModule
-        private static readonly string StagedOpt = "--cached";
+        private const string StagedOpt = "--cached";
 
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
