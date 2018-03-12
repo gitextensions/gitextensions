@@ -488,7 +488,7 @@ namespace GitUI
             }
             else
             {
-                return GitItemStatusesWithParents.SelectMany(pair => pair.Value).Count();
+                return GitItemStatusesWithParents.Sum(pair => pair.Value.Count);
             }
         }
 
