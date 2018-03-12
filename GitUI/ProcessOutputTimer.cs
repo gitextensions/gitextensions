@@ -7,6 +7,7 @@ namespace GitUI
     public sealed class ProcessOutputTimer : IDisposable
     {
         public delegate void DoOutputCallback(string text);
+
         private readonly Timer _timer;
         private readonly StringBuilder _textToAdd = new StringBuilder();
         private DoOutputCallback _doOutput;
@@ -19,10 +20,10 @@ namespace GitUI
             _timer.Tick += _timer_Elapsed;
         }
 
-        public void Start(int interval = 600)
+        public void Start(int intervalMillis = 600)
         {
             _timer.Stop();
-            _timer.Interval = interval;
+            _timer.Interval = intervalMillis;
             _timer.Enabled = true;
         }
 
