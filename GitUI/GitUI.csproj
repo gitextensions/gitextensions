@@ -782,12 +782,6 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.Designer.cs">
       <DependentUpon>SshSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.Designer.cs">
-      <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1444,9 +1438,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.resx">
       <DependentUpon>SshSettingsPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.resx">
-      <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.resx">
       <DependentUpon>PluginSettingsPage.cs</DependentUpon>
