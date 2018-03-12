@@ -8,7 +8,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Object representing 3D pie.
     /// </summary>
-    public class PieSlice : object, IDisposable
+    public class PieSlice : IDisposable
     {
         /// <summary>
         ///   Angle offset used to define reference angle for gradual shadow.
