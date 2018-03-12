@@ -21,7 +21,10 @@ namespace GitCommands.Repository
         [XmlIgnore]
         public int MaxCount
         {
-            get => _maxCount;
+            get
+            {
+                return _maxCount;
+            }
             set
             {
                 _maxCount = value;
@@ -34,10 +37,6 @@ namespace GitCommands.Repository
 
         public override void SetIcon()
         {
-            foreach (var recentRepository in Repositories)
-            {
-                recentRepository.RepositoryType = RepositoryType.History;
-            }
         }
 
         public void RemoveRecentRepository(string repo)
@@ -86,9 +85,8 @@ namespace GitCommands.Repository
                 break;
             }
 
-            var repository = new Repository(repo, null, null)
+            var repository = new Repository(repo)
             {
-                RepositoryType = RepositoryType.History,
                 Anchor = anchor
             };
             Repositories.Insert(0, repository);

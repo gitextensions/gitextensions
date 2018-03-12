@@ -133,7 +133,7 @@ namespace GitCommands.Repository
                     if (serializer.Deserialize(xmlReader) is BindingList<RepositoryCategory> repos)
                     {
                         repositories = new BindingList<RepositoryCategory>();
-                        foreach (var repositoryCategory in repos.Where(r => r.CategoryType == RepositoryCategoryType.Repositories))
+                        foreach (var repositoryCategory in repos)
                         {
                             repositoryCategory.SetIcon();
                             repositories.Add(repositoryCategory);

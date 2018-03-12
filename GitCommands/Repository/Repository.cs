@@ -3,8 +3,11 @@ using System.Xml.Serialization;
 
 namespace GitCommands.Repository
 {
+    [Serializable]
     public class Repository
     {
+        private string _path;
+
         public enum RepositoryAnchor
         {
             MostRecent,
@@ -12,48 +15,29 @@ namespace GitCommands.Repository
             None
         }
 
-        public Repository()
+        // required by XmlSerializer
+        private Repository()
         {
             Anchor = RepositoryAnchor.None;
         }
 
-        public Repository(string path, string description, string title)
+        public Repository(string path)
             : this()
         {
             Path = path;
-            Description = description;
-            Title = title;
-            RepositoryType = RepositoryType.Repository;
         }
 
-        public string Title { get; set; }
-        private string _path;
-        public string Path
-        {
-            get => _path ?? string.Empty;
-            set => _path = value;
-        }
-
-        public string Description { get; set; }
         public RepositoryAnchor Anchor { get; set; }
+
+        public string Category { get; set; }
 
         [XmlIgnore]
         public bool IsRemote => PathIsUrl(Path);
 
-        [XmlIgnore]
-        public RepositoryType RepositoryType { get; set; }
-
-        public void Assign(Repository source)
+        public string Path
         {
-            if (source == null)
-            {
-                return;
-            }
-
-            Path = source.Path;
-            Title = source.Title;
-            Description = source.Description;
-            RepositoryType = source.RepositoryType;
+            get => _path ?? string.Empty;
+            set => _path = value;
         }
 
         public override string ToString()
@@ -61,6 +45,7 @@ namespace GitCommands.Repository
             return Path + " (" + Anchor + ")";
         }
 
+        // TODO: doesn't belong here
         public static bool PathIsUrl(string path)
         {
             return !string.IsNullOrEmpty(path) &&

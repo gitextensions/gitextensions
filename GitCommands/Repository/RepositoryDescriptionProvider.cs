@@ -44,14 +44,15 @@ namespace GitCommands.Repository
             }
 
             string desc = ReadRepositoryDescription(repositoryDir);
-            if (desc.IsNullOrEmpty())
+            if (!string.IsNullOrWhiteSpace(desc))
             {
-                desc = Repositories.RepositoryHistory.Repositories
-                                        .Where(repo => repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
-                                        .Select(repo => repo.Title)
-                                        .FirstOrDefault();
+                return desc;
             }
 
+            desc = Repositories.RepositoryHistory.Repositories
+                                        .Where(repo => repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
+                                        .Select(repo => repo.Path)
+                                        .FirstOrDefault();
             return desc ?? dirInfo.Name;
         }
 

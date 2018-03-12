@@ -275,7 +275,7 @@ Inactive remote is completely invisible to git.");
 
             if (remotes.All(r => r.Path != newRemoteUrl))
             {
-                remotes.Add(new Repository(newRemoteUrl, null, null));
+                remotes.Add(new Repository(newRemoteUrl));
             }
         }
 

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -30,8 +29,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return;
             }
 
-            Bitmap icon = GetRepositoryIcon(repository);
-
             if (AppSettings.DashboardShowCurrentBranch)
             {
                 _branchNameLoader = new AsyncLoader();
@@ -44,10 +41,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     return string.Empty;
                 },
-                    UpdateBranchName);
+                UpdateBranchName);
             }
 
-            Initialize(icon, repository.Path, repository.Title, repository.Description);
+            Initialize(null, repository.Path, null, null);
         }
 
         public DashboardItem(Bitmap icon, string title)
@@ -157,21 +154,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!Visible)
             {
                 CancelBranchNameLoad();
-            }
-        }
-
-        private static Bitmap GetRepositoryIcon(Repository repository)
-        {
-            switch (repository.RepositoryType)
-            {
-                case RepositoryType.Repository:
-                    return Resources.Star;
-                case RepositoryType.RssFeed:
-                    return Resources.rss;
-                case RepositoryType.History:
-                    return Resources.history;
-                default:
-                    throw new ArgumentException("Repository type is not supported.", nameof(repository));
             }
         }
 

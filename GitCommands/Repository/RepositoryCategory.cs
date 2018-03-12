@@ -29,8 +29,6 @@ namespace GitCommands.Repository
 
         public string Description { get; set; }
 
-        public RepositoryCategoryType CategoryType { get; set; }
-
         public virtual void SetIcon()
         {
         }

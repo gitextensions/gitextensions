@@ -188,9 +188,7 @@
     <Compile Include="Patches\PatchFile.cs" />
     <Compile Include="Patches\PatchManager.cs" />
     <Compile Include="Repository\Repositories.cs" />
-    <Compile Include="Repository\RepositoryCategoryType.cs" />
     <Compile Include="Repository\RepositoryHistory.cs" />
-    <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
