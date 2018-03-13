@@ -680,7 +680,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
-        private void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
+        private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
         {
             settingButton.BackColor = Color.PaleGreen;
             settingButton.ForeColor = Color.DarkGreen;
@@ -688,7 +688,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             settingFixButton.Visible = false;
         }
 
-        private void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
+        private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
         {
             settingButton.BackColor = Color.LavenderBlush;
             settingButton.ForeColor = Color.Crimson;

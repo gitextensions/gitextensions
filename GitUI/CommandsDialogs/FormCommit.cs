@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
-        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly IFullPathResolver _fullPathResolver;
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace GitUI.CommandsDialogs
             Message.Text = _commitTemplate = string.Empty;
         }
 
-        private void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private static void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.Alt)
             {
@@ -2397,7 +2397,7 @@ namespace GitUI.CommandsDialogs
             _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
         }
 
-        private bool SenderToFileStatusList(object sender, out FileStatusList list)
+        private static bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             ContextMenuStrip menu = item?.Owner as ContextMenuStrip;
@@ -2599,7 +2599,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private List<string> _formattedLines = new List<string>();
+        private readonly List<string> _formattedLines = new List<string>();
 
         private bool DidFormattedLineChange(int lineNumber)
         {

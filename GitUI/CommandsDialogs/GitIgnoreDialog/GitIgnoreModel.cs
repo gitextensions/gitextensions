@@ -22,15 +22,12 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
         private readonly TranslationString _saveFileQuestion =
             new TranslationString("Save changes to .gitignore?");
 
-        private readonly IGitModule _module;
         private readonly IFullPathResolver _fullPathResolver;
 
         public GitIgnoreModel(IGitModule module)
         {
-            _module = module;
-
             Translator.Translate(this, AppSettings.CurrentTranslation);
-            _fullPathResolver = new FullPathResolver(() => _module.WorkingDir);
+            _fullPathResolver = new FullPathResolver(() => module.WorkingDir);
         }
 
         public string FormCaption => _editGitignoreTitle.Text;

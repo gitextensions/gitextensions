@@ -201,7 +201,7 @@ namespace GitUI
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
-        private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
         {
             foreach (var menuCommand in menuCommands)
             {
@@ -1022,8 +1022,9 @@ namespace GitUI
 
         private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
         {
-            private RevisionGraphInMemFilter _filter1;
-            private RevisionGraphInMemFilter _filter2;
+            private readonly RevisionGraphInMemFilter _filter1;
+            private readonly RevisionGraphInMemFilter _filter2;
+
             public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter filter1,
                                               RevisionGraphInMemFilter filter2)
             {
@@ -1050,30 +1051,27 @@ namespace GitUI
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                SetUpVars(authorFilter, ref _authorFilter, ref _authorFilterRegex, ignoreCase);
-                SetUpVars(committerFilter, ref _committerFilter, ref _committerFilterRegex, ignoreCase);
-                SetUpVars(messageFilter, ref _messageFilter, ref _messageFilterRegex, ignoreCase);
+                SetUpVars(authorFilter, out _authorFilter, out _authorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, out _committerFilter, out _committerFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, out _messageFilter, out _messageFilterRegex, ignoreCase);
                 if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
                 {
-                    SetUpVars(messageFilter, ref _shaFilter, ref _shaFilterRegex, false);
+                    SetUpVars(messageFilter, out _shaFilter, out _shaFilterRegex, false);
                 }
             }
 
             private static void SetUpVars(string filterValue,
-                                   ref string filterStr,
-                                   ref Regex filterRegEx,
+                                   out string filterStr,
+                                   out Regex filterRegEx,
                                    bool ignoreCase)
             {
-                RegexOptions opts = RegexOptions.None;
-                if (ignoreCase)
-                {
-                    opts = opts | RegexOptions.IgnoreCase;
-                }
-
                 filterStr = filterValue?.Trim() ?? string.Empty;
+
+                var options = ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
+
                 try
                 {
-                    filterRegEx = new Regex(filterStr, opts);
+                    filterRegEx = new Regex(filterStr, options);
                 }
                 catch (ArgumentException)
                 {
@@ -1306,7 +1304,7 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
+        private static SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
             if (gitModule.SuperprojectModule == null)
             {
@@ -1934,7 +1932,7 @@ namespace GitUI
                                                                _revisionHighlighting.AuthorEmailToHighlight);
         }
 
-        private bool ShouldRenderAlternateBackColor(int rowIndex)
+        private static bool ShouldRenderAlternateBackColor(int rowIndex)
         {
             return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
@@ -1995,7 +1993,7 @@ namespace GitUI
             return offset;
         }
 
-        private static readonly string MultilineMessageIndicator = "[...]";
+        private const string MultilineMessageIndicator = "[...]";
 
         private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -2130,7 +2128,7 @@ namespace GitUI
             return AppSettings.OtherTagColor;
         }
 
-        private float RoundToEven(float value)
+        private static float RoundToEven(float value)
         {
             int result = ((int)value / 2) * 2;
             return result < value ? result + 2 : result;
@@ -2207,12 +2205,12 @@ namespace GitUI
             return additionalOffset;
         }
 
-        private float GetArrowSize(float rowHeight)
+        private static float GetArrowSize(float rowHeight)
         {
             return rowHeight - 6;
         }
 
-        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
+        private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
             const float horShift = 4;
             const float verShift = 3;
@@ -2949,7 +2947,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private string TimeToString(DateTime time)
+        private static string TimeToString(DateTime time)
         {
             if (time == DateTime.MinValue || time == DateTime.MaxValue)
             {
@@ -3352,7 +3350,7 @@ namespace GitUI
             }
         }
 
-        private void ToggleRevisionGraph()
+        private static void ToggleRevisionGraph()
         {
             if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small)
             {
@@ -3797,7 +3795,7 @@ namespace GitUI
             OpenManual();
         }
 
-        private void OpenManual()
+        private static void OpenManual()
         {
             string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
             OsShellUtil.OpenUrlInDefaultBrowser(url);

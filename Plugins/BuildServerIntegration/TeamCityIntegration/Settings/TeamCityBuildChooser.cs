@@ -132,7 +132,7 @@ namespace TeamCityIntegration.Settings
             Close();
         }
 
-        private bool IsBuildSelected(TreeNode selectedNode)
+        private static bool IsBuildSelected(TreeNode selectedNode)
         {
             return selectedNode != null && selectedNode.Tag is Build;
         }

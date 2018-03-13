@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private IGitIgnoreDialogModel _dialogModel;
+        private readonly IGitIgnoreDialogModel _dialogModel;
 
         public FormGitIgnore(GitUICommands commands, bool localExclude)
             : base(commands)

@@ -324,7 +324,7 @@ namespace GitUI
             e.DrawDefault = true;
         }
 
-        private string AppendItemSubmoduleStatus(string text, GitItemStatus item)
+        private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
         {
             if (item.IsSubmodule &&
                 item.SubmoduleStatus != null &&

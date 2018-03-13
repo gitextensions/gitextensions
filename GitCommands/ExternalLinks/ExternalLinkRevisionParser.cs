@@ -93,7 +93,7 @@ namespace GitCommands.ExternalLinks
             return allMatches;
         }
 
-        private IEnumerable<ExternalLink> ParseRevision(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch)
+        private static IEnumerable<ExternalLink> ParseRevision(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch)
         {
             var links = new List<IEnumerable<ExternalLink>>();
 
@@ -121,7 +121,7 @@ namespace GitCommands.ExternalLinks
             return links.SelectMany(list => list);
         }
 
-        private IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
+        private static IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
             if (definition.SearchPattern.IsNullOrEmpty() || definition.SearchPatternRegex.Value == null || part == null)
             {

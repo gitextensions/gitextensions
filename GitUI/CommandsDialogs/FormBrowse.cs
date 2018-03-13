@@ -2400,7 +2400,7 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.Focus();
         }
 
-        private void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
+        private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
         {
             var control = sender as ToolStripSplitButton;
 
@@ -2849,8 +2849,8 @@ namespace GitUI.CommandsDialogs
                         break;
                     default:
                         // Choose the console: bash from git with fallback to cmd
-                        string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                        string justSh = "sh.exe"; // Fallback to SH
+                        const string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                        const string justSh = "sh.exe"; // Fallback to SH
                         exeList = new[] { justBash, justSh };
                         break;
                 }

@@ -283,7 +283,8 @@ namespace JenkinsIntegration
             }
         }
 
-        private readonly string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+        private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+
         private static BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
@@ -463,7 +464,7 @@ namespace JenkinsIntegration
                 TaskScheduler.Current);
         }
 
-        private string FormatToGetJson(string restServicePath, bool buildsInfo = false)
+        private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)
         {
             string buildTree = "lastBuild[timestamp]";
             int depth = 1;

@@ -39,7 +39,7 @@ namespace GitCommands.ExternalLinks
             return link;
         }
 
-        private void AddGroupsFromMatches(Match match, List<string> groups)
+        private static void AddGroupsFromMatches(Match match, List<string> groups)
         {
             if (match != null)
             {

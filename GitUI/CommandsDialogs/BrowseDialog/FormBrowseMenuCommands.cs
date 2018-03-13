@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs
 {
     internal class FormBrowseMenuCommands : MenuCommandsBase
     {
-        private FormBrowse _formBrowse;
+        private readonly FormBrowse _formBrowse;
         private GitUICommands UICommands => _formBrowse.UICommands;
 
         // must be created only once because of translation
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             return _navigateMenuCommands;
         }
 
-        private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
+        private static IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
             var resultList = new List<MenuCommand>();
 

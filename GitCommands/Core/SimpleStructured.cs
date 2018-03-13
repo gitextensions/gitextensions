@@ -70,7 +70,7 @@ namespace GitCommands.Core
             return ToString(obj, string.Empty);
         }
 
-        private string ToString(object obj, string indent)
+        private static string ToString(object obj, string indent)
         {
             if (obj == null)
             {

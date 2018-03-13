@@ -36,8 +36,8 @@ namespace Gource
             Translate();
         }
 
-        private StringSetting _gourcePath = new StringSetting("Path to Gource", "");
-        private StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        private readonly StringSetting _gourcePath = new StringSetting("Path to Gource", "");
+        private readonly StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 

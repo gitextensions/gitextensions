@@ -9,7 +9,7 @@ namespace Github3
 {
     internal class GithubPullRequest : IPullRequestInformation
     {
-        private PullRequest _pullrequest;
+        private readonly PullRequest _pullrequest;
 
         public GithubPullRequest(PullRequest pullrequest)
         {

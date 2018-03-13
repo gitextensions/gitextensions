@@ -209,7 +209,7 @@ namespace PatchApply
                                  (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
-        private void ValidateHeader(ref string input, Patch patch)
+        private static void ValidateHeader(ref string input, Patch patch)
         {
             //--- /dev/null
             // means there is no old file, so this should be a new file

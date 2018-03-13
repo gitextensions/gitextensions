@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs
     public partial class SearchWindow<T> : Form where T : class
     {
         private readonly Func<string, IList<T>> _getCandidates;
-        private AsyncLoader _backgroundLoader = new AsyncLoader();
+        private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
 
         public SearchWindow(Func<string, IList<T>> getCandidates)
         {

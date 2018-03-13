@@ -122,7 +122,7 @@ namespace GitUI.Editor
             base.DisposeUICommandsSource();
         }
 
-        private bool RunTime()
+        private static bool RunTime()
         {
             return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }
@@ -1188,7 +1188,7 @@ namespace GitUI.Editor
         private void applySelectedLines(int selectionStart, int selectionLength, bool reverse)
         {
             // Prepare git command
-            string args = "apply --3way --whitespace=nowarn";
+            const string args = "apply --3way --whitespace=nowarn";
 
             byte[] patch;
 

@@ -166,7 +166,7 @@ namespace GitCommands.Config
             return keyIndex;
         }
 
-        private int FindKeyIndex(string setting)
+        private static int FindKeyIndex(string setting)
         {
             return setting.LastIndexOf('.');
         }
@@ -309,7 +309,7 @@ namespace GitCommands.Config
         {
             private delegate ParsePart ParsePart(char c);
 
-            private ConfigFile _configFile;
+            private readonly ConfigFile _configFile;
             private string _fileContent;
             private IConfigSection _section;
             private string _key;
@@ -317,8 +317,8 @@ namespace GitCommands.Config
 
             // parsed char
             private int _pos;
-            private StringBuilder _token = new StringBuilder();
-            private StringBuilder _valueToken = new StringBuilder();
+            private readonly StringBuilder _token = new StringBuilder();
+            private readonly StringBuilder _valueToken = new StringBuilder();
 
             public ConfigFileParser(ConfigFile configFile)
             {

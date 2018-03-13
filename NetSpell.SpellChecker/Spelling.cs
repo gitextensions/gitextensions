@@ -21,12 +21,12 @@ namespace NetSpell.SpellChecker
     {
         #region Global Regex
         // Regex are class scope and compiled to improve performance on reuse
-        private Regex _digitRegex = new Regex(@"^\d", RegexOptions.Compiled);
-        private Regex _htmlRegex = new Regex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase & RegexOptions.Compiled);
+        private readonly Regex _digitRegex = new Regex(@"^\d", RegexOptions.Compiled);
+        private readonly Regex _htmlRegex = new Regex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase & RegexOptions.Compiled);
         private MatchCollection _htmlTags;
-        private Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
-        private Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
-        private Regex _wordEx = new Regex(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
+        private readonly Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
+        private readonly Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
+        private readonly Regex _wordEx = new Regex(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
         private MatchCollection _words;
 
         #endregion
@@ -1151,7 +1151,7 @@ namespace NetSpell.SpellChecker
         #region public properties
 
         private WordDictionary _dictionary;
-        private HashSet<string> _autoCompleteWords = new HashSet<string>();
+        private readonly HashSet<string> _autoCompleteWords = new HashSet<string>();
         private string _replacementWord = "";
         private StringBuilder _text = new StringBuilder();
         private int _wordIndex;

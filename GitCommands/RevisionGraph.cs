@@ -103,7 +103,7 @@ namespace GitCommands
         public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        private static char[] ShellGlobCharacters = { '?', '*', '[' };
+        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
 
         public void Execute()
         {
@@ -225,7 +225,7 @@ namespace GitCommands
 
         private static IEnumerable<string> ReadDataBlocks(StreamReader reader)
         {
-            int bufferSize = 4 * 1024;
+            const int bufferSize = 4 * 1024;
             char[] buffer = new char[bufferSize];
 
             StringBuilder incompleteBlock = new StringBuilder();

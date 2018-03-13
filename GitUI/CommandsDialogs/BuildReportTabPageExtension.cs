@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private string DetermineFavIconUrl(HtmlDocument htmlDocument)
+        private static string DetermineFavIconUrl(HtmlDocument htmlDocument)
         {
             var links = htmlDocument.GetElementsByTagName("link");
             var favIconLink =

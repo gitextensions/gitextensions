@@ -137,7 +137,7 @@ namespace TranslationApp
             return filteredItems;
         }
 
-        private IEnumerable<TranslationCategory> GetCategories(IDictionary<string, TranslationFile> translation)
+        private static IEnumerable<TranslationCategory> GetCategories(IDictionary<string, TranslationFile> translation)
         {
             return translation.SelectMany(pair => pair.Value.TranslationCategories);
         }

@@ -102,7 +102,7 @@ namespace PatchApply
         public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] filePreabmle)
         {
             StringBuilder sb = new StringBuilder();
-            string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
+            const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
             sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
             sb.Append("\n");
             if (!reset)
@@ -240,12 +240,12 @@ namespace PatchApply
 
     internal class SubChunk
     {
-        public List<PatchLine> PreContext = new List<PatchLine>();
-        public List<PatchLine> RemovedLines = new List<PatchLine>();
-        public List<PatchLine> AddedLines = new List<PatchLine>();
-        public List<PatchLine> PostContext = new List<PatchLine>();
-        public string WasNoNewLineAtTheEnd;
-        public string IsNoNewLineAtTheEnd;
+        public List<PatchLine> PreContext { get; } = new List<PatchLine>();
+        public List<PatchLine> RemovedLines { get; } = new List<PatchLine>();
+        public List<PatchLine> AddedLines { get; } = new List<PatchLine>();
+        public List<PatchLine> PostContext { get; } = new List<PatchLine>();
+        public string WasNoNewLineAtTheEnd { get; set; }
+        public string IsNoNewLineAtTheEnd { get; set; }
 
         public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
@@ -433,7 +433,7 @@ namespace PatchApply
     internal class Chunk
     {
         private int _startLine;
-        private List<SubChunk> _subChunks = new List<SubChunk>();
+        private readonly List<SubChunk> _subChunks = new List<SubChunk>();
         private SubChunk _currentSubChunk;
 
         public SubChunk CurrentSubChunk

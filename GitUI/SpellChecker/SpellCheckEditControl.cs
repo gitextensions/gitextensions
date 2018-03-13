@@ -15,8 +15,8 @@ namespace GitUI.SpellChecker
         public bool IsImeStartingComposition { get; private set; }
 
         private readonly RichTextBox _richTextBox;
-        public List<TextPos> IllFormedLines = new List<TextPos>();
-        public List<TextPos> Lines = new List<TextPos>();
+        public List<TextPos> IllFormedLines { get; } = new List<TextPos>();
+        public List<TextPos> Lines { get; } = new List<TextPos>();
         private Bitmap _bitmap;
         private Graphics _bufferGraphics;
         private int _lineHeight;

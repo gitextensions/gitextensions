@@ -186,7 +186,8 @@ namespace GitUIPluginInterfaces
 
     public static class FontParser
     {
-        private static readonly string InvariantCultureId = "_IC_";
+        private const string InvariantCultureId = "_IC_";
+
         public static string AsString(this Font value)
         {
             return string.Format(CultureInfo.InvariantCulture,

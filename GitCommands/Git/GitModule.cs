@@ -57,8 +57,8 @@ namespace GitCommands
             Filename = filename;
         }
 
-        public string Hash;
-        public string Filename;
+        public string Hash { get; }
+        public string Filename { get; }
     }
 
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
@@ -72,9 +72,9 @@ namespace GitCommands
             Remote = remote;
         }
 
-        public ConflictedFileData Base;
-        public ConflictedFileData Local;
-        public ConflictedFileData Remote;
+        public ConflictedFileData Base { get; }
+        public ConflictedFileData Local { get; }
+        public ConflictedFileData Remote { get; }
 
         public string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
     }
@@ -969,7 +969,7 @@ namespace GitCommands
 
         public IList<string> GetSortedRefs()
         {
-            string command = "for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/";
+            const string command = "for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/";
 
             var tree = RunGitCmd(command, SystemEncoding);
 
@@ -994,7 +994,7 @@ namespace GitCommands
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
 
-        private string GetSortedRefsCommand()
+        private static string GetSortedRefsCommand()
         {
             if (AppSettings.ShowSuperprojectRemoteBranches)
             {
@@ -2027,7 +2027,7 @@ namespace GitCommands
             return output.Combine(Environment.NewLine, error);
         }
 
-        private void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
+        private static void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
         {
             ////process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
@@ -2427,7 +2427,7 @@ namespace GitCommands
             return GetPatch(patchManager, fileName, oldFileName);
         }
 
-        private Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
+        private static Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
         {
             foreach (Patch p in patchManager.Patches)
             {
@@ -2952,8 +2952,8 @@ namespace GitCommands
 
         public ICollection<string> GetMergedRemoteBranches()
         {
-            string remoteBranchPrefixForMergedBranches = "remotes/";
-            string refsPrefix = "refs/";
+            const string remoteBranchPrefixForMergedBranches = "remotes/";
+            const string refsPrefix = "refs/";
 
             string[] mergedBranches = RunGitCmd(GitCommandHelpers.MergedBranches(includeRemote: true)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -3373,7 +3373,7 @@ namespace GitCommands
 
         public IEnumerable<string> GetPreviousCommitMessages(string revision, int count)
         {
-            string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
+            const string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
             string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
             string[] messages = output.Split(new[] { sep }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -3394,10 +3394,11 @@ namespace GitCommands
 
         public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.UnstagedGuid, string extraDiffArguments = "", bool isTracked = true)
         {
-            var output = "";
+            const string output = "";
 
             string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked));
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
+
             return output;
         }
 
@@ -3535,7 +3536,7 @@ namespace GitCommands
 
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
-            var arguments = "x";
+            const string arguments = "x";
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
             if (lines.Count() >= 2)

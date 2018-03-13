@@ -18,10 +18,10 @@ namespace BackgroundFetch
         private IDisposable _cancellationToken;
         private IGitUICommands _currentGitUiCommands;
 
-        private StringSetting _gitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
-        private NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
-        private BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", false);
-        private BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
+        private readonly StringSetting _gitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
+        private readonly NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
+        private readonly BoolSetting _autoRefresh = new BoolSetting("Refresh view after fetch", false);
+        private readonly BoolSetting _fetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
 
         public override IEnumerable<ISetting> GetSettings()
         {

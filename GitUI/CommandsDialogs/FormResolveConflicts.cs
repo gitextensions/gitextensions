@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
             return GetConflict().Filename;
         }
 
-        private string FixPath(string path)
+        private static string FixPath(string path)
         {
             return (path ?? "").ToNativePath();
         }

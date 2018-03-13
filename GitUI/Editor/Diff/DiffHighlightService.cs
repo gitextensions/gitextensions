@@ -9,8 +9,9 @@ namespace GitUI.Editor.Diff
 {
     public class DiffHighlightService
     {
+        public static DiffHighlightService Instance { get; } = new DiffHighlightService();
+
         protected readonly LinePrefixHelper LinePrefixHelper = new LinePrefixHelper(new LineSegmentGetter());
-        public static DiffHighlightService Instance = new DiffHighlightService();
 
         protected DiffHighlightService()
         {

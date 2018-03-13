@@ -89,7 +89,7 @@ namespace Gerrit
                 !HaveValidCommitMsgHook(e.GitModule);
         }
 
-        private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force = false)
+        private static bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force = false)
         {
             if (gitModule == null)
             {
@@ -397,7 +397,7 @@ namespace Gerrit
             return FindControl(form.Controls, predicate);
         }
 
-        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {
             foreach (Control control in controls)
