@@ -22,6 +22,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         #region difftool menu
+
         [Test]
         public void BrowseDiff_DifftoolMenu_Default()
         {
@@ -55,9 +56,11 @@ namespace GitUITests.CommandsDialogs
             var selectionInfo = new ContextMenuSelectionInfo(rev, isBareRepository: t);
             _controller.ShouldShowDifftoolMenus(selectionInfo).Should().BeTrue();
         }
+
         #endregion
 
         #region reset menu
+
         [Test]
         public void BrowseDiff_ResetMenu_Default()
         {
@@ -91,9 +94,11 @@ namespace GitUITests.CommandsDialogs
             var selectionInfo = new ContextMenuSelectionInfo(rev, isBareRepository: t);
             _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(!t);
         }
+
         #endregion
 
         #region main menu
+
         [Test]
         public void BrowseDiff_MainMenus_Default()
         {
@@ -148,69 +153,7 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowMenuStage(selectionInfo).Should().Be(t);
             _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
         }
-        #endregion
 
-        #region difftool
-        public void BrowseDiff_SuppressDiffToLocalWhenNoSelectedRevision()
-        {
-            var selectionInfo = new ContextMenuDiffToolInfo();
-            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeFalse();
-        }
-
-        [Test]
-        public void BrowseDiff_SuppressDiffToLocalWhenNoLocalExists()
-        {
-            var rev = new GitRevision("1234567890");
-            var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, localExists: false);
-            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeFalse();
-        }
-
-        [Test]
-        public void BrowseDiff_ShowContextDiffToolForUnstaged()
-        {
-            var rev = new GitRevision(GitRevision.UnstagedGuid);
-            var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev);
-            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeTrue();
-        }
-
-        [Test]
-        public void BrowseDiff_ShowContextDiffToolForUnstagedParent()
-        {
-            var rev = new GitRevision("1234567890");
-            var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, selectedItemParentRevs: new string[] { GitRevision.UnstagedGuid });
-            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().BeTrue();
-        }
-
-        [TestCase(true, true)]
-        [TestCase(true, false)]
-        [TestCase(false, true)]
-        [TestCase(false, false)]
-        public void BrowseDiff_ShowContextDiffToolForDeletedAndNew(bool d, bool n)
-        {
-            var rev = new GitRevision("1234567890");
-            var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, allAreDeleted: d, allAreNew: n);
-            _controller.ShouldShowMenuFirstToSelected(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuFirstToLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuSelectedToLocal(selectionInfo).Should().Be(!d);
-            _controller.ShouldShowMenuFirstParentToLocal(selectionInfo).Should().BeTrue();
-            _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().Be(!n);
-        }
         #endregion
     }
 }

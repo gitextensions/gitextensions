@@ -33,6 +33,7 @@ namespace GitUI.CommandsDialogs
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
+        private readonly IRevisionDiffContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -46,6 +47,7 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
+            _revisionDiffContextMenuController = new RevisionDiffContextMenuController();
         }
 
         public void ForceRefreshRevisions()
@@ -614,13 +616,13 @@ namespace GitUI.CommandsDialogs
                 selectedDiffCaptionMenuItem.Visible = false;
             }
 
-            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToSelected(selectionInfo);
-            firstToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToLocal(selectionInfo);
-            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
+            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
+            firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
+            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
         private void resetFileToolStripMenuItem_Click(object sender, EventArgs e)

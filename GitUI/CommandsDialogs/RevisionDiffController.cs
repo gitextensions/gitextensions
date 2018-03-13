@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using GitCommands;
 using GitCommands.Git;
 
@@ -22,14 +21,6 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo);
-
-        bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuFirstToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldDisplayMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
     }
 
     public sealed class ContextMenuSelectionInfo
@@ -108,7 +99,6 @@ namespace GitUI.CommandsDialogs
 
         // The enabling of menu items is related to how the actions have been implemented
 
-        #region Menu dropdowns
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.IsAnyItemSelected && !selectionInfo.IsAnyCombinedDiff && selectionInfo.IsAnyTracked;
@@ -118,7 +108,6 @@ namespace GitUI.CommandsDialogs
         {
             return selectionInfo.IsAnyItemSelected && !selectionInfo.IsBareRepository && selectionInfo.IsAnyTracked;
         }
-        #endregion
 
         #region Main menu items
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
@@ -176,64 +165,6 @@ namespace GitUI.CommandsDialogs
         }
         #endregion
 
-        #region difftool submenu
-        public bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null;
-        }
-
-        public bool ShouldShowMenuFirstToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
-
-                // First (A) exists (Can only determine that A does not exist if A is parent and B is new)
-                && (!selectionInfo.FirstIsParent || !selectionInfo.AllAreNew)
-
-                // First (A) is not local
-                && (selectionInfo.SelectedItemParentRevs == null || !selectionInfo.SelectedItemParentRevs.Contains(GitRevision.UnstagedGuid));
-        }
-
-        public bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
-
-                // Selected (B) exists
-                && !selectionInfo.AllAreDeleted
-
-                // Selected (B) is not local
-                && selectionInfo.SelectedRevision.Guid != GitRevision.UnstagedGuid;
-        }
-
-        public bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
-                && ShouldDisplayMenuFirstParentToLocal(selectionInfo);
-        }
-
-        public bool ShouldShowMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            return selectionInfo.SelectedRevision != null && selectionInfo.LocalExists
-                && ShouldDisplayMenuSelectedParentToLocal(selectionInfo)
-
-                // Selected (B) parent exists
-                && !selectionInfo.AllAreNew;
-        }
-
-        public bool ShouldDisplayMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            // First (A) parents may not be known, then hide this option
-            return selectionInfo.FirstParentsValid;
-        }
-
-        public bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo)
-        {
-            // Do not be visable if same as ShouldShowMenuALocal()
-            return !selectionInfo.FirstIsParent;
-        }
-        #endregion
-
-        #region helpers
-
         public bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents)
         {
             return _revisionTester.IsFirstParent(revision, selectedItemParents);
@@ -243,6 +174,5 @@ namespace GitUI.CommandsDialogs
         {
             return _revisionTester.LocalRevisionExists(selectedItems);
         }
-        #endregion
     }
 }

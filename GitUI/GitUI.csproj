@@ -150,6 +150,7 @@
     <Compile Include="CommandsDialogs\RevisionDiff.Designer.cs">
       <DependentUpon>RevisionDiff.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\RevisionDiffContextMenuController.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffController.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTree.cs">
       <SubType>UserControl</SubType>

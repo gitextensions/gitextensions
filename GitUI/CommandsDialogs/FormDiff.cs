@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -20,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
         private readonly IGitRevisionTester _revisionTester;
-        private IRevisionDiffController _revisionDiffController;
+        private IRevisionDiffContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
@@ -74,7 +73,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffController = new RevisionDiffController(_revisionTester);
+            _revisionDiffContextMenuController = new RevisionDiffContextMenuController();
             base.OnRuntimeLoad(e);
         }
 
@@ -287,13 +286,13 @@ namespace GitUI.CommandsDialogs
         {
             ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
 
-            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToSelected(selectionInfo);
-            firstToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstToLocal(selectionInfo);
-            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
-            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
-            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
+            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
+            firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
+            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)
