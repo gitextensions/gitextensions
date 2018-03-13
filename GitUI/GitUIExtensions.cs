@@ -221,17 +221,12 @@ namespace GitUI
 
         public static void InvokeSync(this Control control, Action action)
         {
-            InvokeSync(control, _ => action(), null);
-        }
-
-        public static void InvokeSync(this Control control, SendOrPostCallback action, object state)
-        {
             ThreadHelper.JoinableTaskFactory.Run(
                 async () =>
                 {
                     try
                     {
-                        await InvokeAsync(control, action, state);
+                        await InvokeAsync(control, action);
                     }
                     catch (Exception e)
                     {

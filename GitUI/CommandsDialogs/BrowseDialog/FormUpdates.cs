@@ -85,13 +85,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception ex)
             {
-                this.InvokeSync(state =>
+                this.InvokeSync(() =>
                     {
                         if (Visible)
                         {
                             ExceptionUtils.ShowException(this, ex, string.Empty, true);
                         }
-                    }, null);
+                    });
                 Done();
             }
         }
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Done()
         {
-            this.InvokeSync(o =>
+            this.InvokeSync(() =>
             {
                 progressBar1.Visible = false;
 
@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     UpdateLabel.Text = _noUpdatesFound.Text;
                 }
-            }, this);
+            });
         }
 
         private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
