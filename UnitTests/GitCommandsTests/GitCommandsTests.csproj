@@ -83,6 +83,7 @@
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
+    <Compile Include="GitRevisionTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensionsTests.cs" />
