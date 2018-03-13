@@ -19,10 +19,7 @@ namespace Bitbucket
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
-        private Settings _settings;
-        private readonly BitbucketPlugin _plugin;
-        private readonly GitUIBaseEventArgs _gitUiCommands;
-        private readonly ISettingsSource _settingsContainer;
+        private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
         private readonly List<string> _bitbucketUsers = new List<string>();
 
@@ -31,11 +28,7 @@ namespace Bitbucket
             InitializeComponent();
             Translate();
 
-            _plugin = plugin;
-            _settingsContainer = settings;
-            _gitUiCommands = gitUiCommands;
-
-            _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer, _plugin);
+            _settings = Settings.Parse(gitUiCommands.GitModule, settings, plugin);
             if (_settings == null)
             {
                 MessageBox.Show(_yourRepositoryIsNotInBitbucket.Text);
