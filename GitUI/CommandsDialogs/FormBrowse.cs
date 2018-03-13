@@ -347,7 +347,7 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            this.InvokeAsyncDoNotUseInNewCode(RefreshRevisions);
+            this.InvokeAsync(RefreshRevisions).FileAndForget();
         }
 
         private void RefreshRevisions()
@@ -444,12 +444,13 @@ namespace GitUI.CommandsDialogs
         private void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
         {
             bool indexChanged = e.IsIndexChanged;
-            this.InvokeAsyncDoNotUseInNewCode(() =>
+            this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
                                           ? Resources.arrow_refresh_dirty
                                           : Resources.arrow_refresh;
-            });
+            })
+                .FileAndForget();
         }
 
         private bool _pluginsLoaded;

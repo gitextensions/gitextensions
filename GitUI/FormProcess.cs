@@ -192,7 +192,7 @@ namespace GitUI
 
         private void OnExit(int exitcode)
         {
-            this.InvokeAsyncDoNotUseInNewCode(() =>
+            this.InvokeAsync(() =>
             {
                 bool isError;
                 try
@@ -210,7 +210,7 @@ namespace GitUI
                 }
 
                 Done(!isError);
-            });
+            }).FileAndForget();
         }
 
         protected virtual void DataReceived(object sender, TextEventArgs e)

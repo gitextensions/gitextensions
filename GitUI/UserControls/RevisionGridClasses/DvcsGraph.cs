@@ -539,11 +539,12 @@ namespace GitUI.RevisionGridClasses
         {
             // We have to post this since the thread owns a lock on GraphData that we'll
             // need in order to re-draw the graph.
-            this.InvokeAsyncDoNotUseInNewCode(() =>
+            this.InvokeAsync(() =>
                 {
                     ClearDrawCache();
                     Invalidate();
-                });
+                })
+                .FileAndForget();
         }
 
         public void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
