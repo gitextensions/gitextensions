@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using GitCommands;
+using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
 {
     public interface IRevisionDiffController
     {
+        bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents);
+        bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent);
+
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo);
@@ -28,9 +31,6 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldDisplayMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
-
-        bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent);
-        bool IsFirstParent(IEnumerable<string> selectedParentRevs, IEnumerable<string> selectedItemParentRevs);
     }
 
     public sealed class ContextMenuSelectionInfo
@@ -102,10 +102,13 @@ namespace GitUI.CommandsDialogs
     {
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFileSystem _fileSystem;
+        private readonly IGitRevisionTester _revisionTester;
 
-        public RevisionDiffController(IFullPathResolver fullPathResolver, IFileSystem fileSystem)
+
+        public RevisionDiffController(IFullPathResolver fullPathResolver, IGitRevisionTester revisionTester, IFileSystem fileSystem)
         {
             _fullPathResolver = fullPathResolver;
+            _revisionTester = revisionTester;
             _fileSystem = fileSystem;
         }
 
@@ -237,25 +240,9 @@ namespace GitUI.CommandsDialogs
 
         #region helpers
 
-        public bool IsFirstParent(IEnumerable<string> selectedParentRevs, IEnumerable<string> selectedItemParentRevs)
+        public bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents)
         {
-            if (selectedParentRevs == null)
-            {
-                return false;
-            }
-
-            var parents = selectedParentRevs as List<string> ?? selectedParentRevs.ToList();
-
-            // TODO: the logic looks very odd....
-            foreach (var item in selectedItemParentRevs)
-            {
-                if (!parents.Contains(item))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return _revisionTester.IsFirstParent(revision, selectedItemParents);
         }
 
         public bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent)

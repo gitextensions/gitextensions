@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -26,10 +27,8 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private readonly TranslationString _diffWithParent =
-            new TranslationString("Diff with:");
-        public readonly TranslationString CombinedDiff =
-            new TranslationString("Combined Diff");
+        private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
+        public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
 
         private IDisposable _selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
@@ -38,9 +37,9 @@ namespace GitUI
         private ToolStripItem _openSubmoduleMenuItem;
         private bool _alwaysRevisionGroups = false;
 
-        public DescribeRevisionDelegate DescribeRevision;
+        private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
-        private RevisionDiffController _revisionDiffController;
+        public DescribeRevisionDelegate DescribeRevision;
 
         public FileStatusList()
         {
@@ -81,7 +80,7 @@ namespace GitUI
 
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _revisionDiffController = new RevisionDiffController(_fullPathResolver);
+            _revisionTester = new GitRevisionTester();
         }
 
         public bool AlwaysRevisionGroups
@@ -1183,8 +1182,8 @@ namespace GitUI
 
                     // Show combined (merge conflicts) only when A is only parent
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
-                        Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1
-                        && _revisionDiffController.IsFirstParent(Revision.ParentGuids, parentRevs.Select(i => i.Guid));
+                                        Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1 &&
+                                        _revisionTester.IsFirstParent(Revision, parentRevs);
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);

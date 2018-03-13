@@ -24,7 +24,7 @@ namespace GitUITests.CommandsDialogs
 
             _fullPathResolver = Substitute.For<IFullPathResolver>();
 
-            _controller = new RevisionDiffController(_fullPathResolver, _fileSystem);
+            _controller = new RevisionDiffController(_fullPathResolver, TODO, _fileSystem);
         }
 
         #region difftool menu

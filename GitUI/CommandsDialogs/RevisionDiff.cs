@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
             // First (A) is parent if one revision selected or parent, then selected
-            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
+            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
@@ -565,7 +565,7 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
+            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
             bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent);
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
@@ -589,7 +589,7 @@ namespace GitUI.CommandsDialogs
         {
             ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
 
-            if (DiffFiles.SelectedItemsWithParent.Count() > 0)
+            if (DiffFiles.SelectedItemsWithParent.Any())
             {
                 selectedDiffCaptionMenuItem.Text = _selectedRevision + ": (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
                 selectedDiffCaptionMenuItem.Visible = true;
