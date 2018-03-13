@@ -81,7 +81,7 @@ namespace GitUI
 
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _revisionDiffController = new RevisionDiffController();
+            _revisionDiffController = new RevisionDiffController(_fullPathResolver);
         }
 
         public bool AlwaysRevisionGroups

@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffController = new RevisionDiffController();
+            _revisionDiffController = new RevisionDiffController(_fullPathResolver);
             base.OnRuntimeLoad(e);
         }
 
@@ -262,7 +262,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
-            bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent, _fullPathResolver);
+            bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent);
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
