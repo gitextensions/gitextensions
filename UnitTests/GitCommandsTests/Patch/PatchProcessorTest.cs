@@ -41,9 +41,9 @@ namespace GitCommandsTests.PatchApply
             var manager = new PatchManager();
             TestPatch expectedPatch = CreateSmallPatchExample();
 
-            manager.LoadPatch(expectedPatch.PatchOutput.ToString(), Encoding.UTF8);
+            var patches = manager.LoadPatch(expectedPatch.PatchOutput.ToString(), Encoding.UTF8);
 
-            Patch createdPatch = manager.Patches.First();
+            Patch createdPatch = patches.First();
 
             Assert.AreEqual(expectedPatch.Patch.PatchHeader, createdPatch.PatchHeader);
             Assert.AreEqual(expectedPatch.Patch.FileNameA, createdPatch.FileNameA);
@@ -58,9 +58,9 @@ namespace GitCommandsTests.PatchApply
             var manager = new PatchManager();
             TestPatch expectedPatch = CreateSmallPatchExample(true);
 
-            manager.LoadPatch(expectedPatch.PatchOutput.ToString(), Encoding.UTF8);
+            var patches = manager.LoadPatch(expectedPatch.PatchOutput.ToString(), Encoding.UTF8);
 
-            Patch createdPatch = manager.Patches.First();
+            Patch createdPatch = patches.First();
 
             Assert.AreEqual(expectedPatch.Patch.PatchHeader, createdPatch.PatchHeader, "header");
             Assert.AreEqual(expectedPatch.Patch.FileNameB, createdPatch.FileNameA, "fileA");
@@ -73,69 +73,68 @@ namespace GitCommandsTests.PatchApply
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
             var manager = new PatchManager();
-            manager.LoadPatch(_bigPatch, Encoding.UTF8);
+            var patches = manager.LoadPatch(_bigPatch, Encoding.UTF8);
 
-            Assert.AreEqual(17, manager.Patches.Count);
+            Assert.AreEqual(17, patches.Count);
         }
 
         [Test]
         public void TestCorrectlyLoadsTheRightFilenamesInAPatchFile()
         {
             var manager = new PatchManager();
-            manager.LoadPatch(_bigPatch, Encoding.UTF8);
+            var patches = manager.LoadPatch(_bigPatch, Encoding.UTF8);
 
-            Assert.AreEqual(17, manager.Patches.Select(p => p.FileNameA).Distinct().Count());
-            Assert.AreEqual(17, manager.Patches.Select(p => p.FileNameB).Distinct().Count());
+            Assert.AreEqual(17, patches.Select(p => p.FileNameA).Distinct().Count());
+            Assert.AreEqual(17, patches.Select(p => p.FileNameB).Distinct().Count());
         }
 
         [Test]
         public void TestCorrectlyLoadsBinaryPatch()
         {
             var manager = new PatchManager();
-            manager.LoadPatch(_bigBinPatch, Encoding.UTF8);
+            var patches = manager.LoadPatch(_bigBinPatch, Encoding.UTF8);
 
-            Assert.AreEqual(248, manager.Patches.Count(p => p.File == Patch.FileType.Binary));
+            Assert.AreEqual(248, patches.Count(p => p.File == Patch.FileType.Binary));
         }
 
         [Test]
         public void TestCorrectlyLoadsOneNewFile()
         {
             var manager = new PatchManager();
-            manager.LoadPatch(_bigPatch, Encoding.UTF8);
+            var patches = manager.LoadPatch(_bigPatch, Encoding.UTF8);
 
-            Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.NewFile));
+            Assert.AreEqual(1, patches.Count(p => p.Type == Patch.PatchType.NewFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsOneDeleteFile()
         {
             var manager = new PatchManager();
-            manager.LoadPatch(_bigPatch, Encoding.UTF8);
+            var patches = manager.LoadPatch(_bigPatch, Encoding.UTF8);
 
-            Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.DeleteFile));
+            Assert.AreEqual(1, patches.Count(p => p.Type == Patch.PatchType.DeleteFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsChangeFiles()
         {
             var manager = new PatchManager();
-            var testSmallPatch = CreateSmallPatchExample();
 
-            manager.LoadPatch(_bigPatch, Encoding.UTF8);
-            Assert.AreEqual(15, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
+            var bigPatches = manager.LoadPatch(_bigPatch, Encoding.UTF8);
+            Assert.AreEqual(15, bigPatches.Count(p => p.Type == Patch.PatchType.ChangeFile));
 
-            manager.LoadPatch(testSmallPatch.PatchOutput.ToString(), Encoding.UTF8);
-            Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
+            var smallPatches = manager.LoadPatch(CreateSmallPatchExample().PatchOutput.ToString(), Encoding.UTF8);
+            Assert.AreEqual(1, smallPatches.Count(p => p.Type == Patch.PatchType.ChangeFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsRebaseDiff()
         {
             var manager = new PatchManager();
-            manager.LoadPatch(_rebaseDiff, Encoding.UTF8);
+            var patches = manager.LoadPatch(_rebaseDiff, Encoding.UTF8);
 
-            Assert.AreEqual(13, manager.Patches.Count);
-            Assert.AreEqual(3, manager.Patches.Count(p => p.CombinedDiff));
+            Assert.AreEqual(13, patches.Count);
+            Assert.AreEqual(3, patches.Count(p => p.CombinedDiff));
         }
 
         private static TestPatch CreateSmallPatchExample(bool reverse = false)

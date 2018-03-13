@@ -2417,23 +2417,24 @@ namespace GitCommands
                 ? RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding)
                 : RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
 
-            patchManager.LoadPatch(patch, encoding);
+            var patches = patchManager.LoadPatch(patch, encoding);
 
-            return GetPatch(patchManager, fileName, oldFileName);
+            return GetPatch(patches, fileName, oldFileName);
         }
 
-        private static Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
+        private static Patch GetPatch(IReadOnlyList<Patch> patches, string fileName, string oldFileName)
         {
-            foreach (Patch p in patchManager.Patches)
+            foreach (Patch p in patches)
             {
-                if (fileName == p.FileNameB &&
-                    (fileName == p.FileNameA || oldFileName == p.FileNameA))
+                if (fileName == p.FileNameB && (fileName == p.FileNameA || oldFileName == p.FileNameA))
                 {
                     return p;
                 }
             }
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+            return patches.Count != 0
+                ? patches[patches.Count - 1]
+                : null;
         }
 
         public string GetStatusText(bool untracked)
@@ -2683,9 +2684,9 @@ namespace GitCommands
 
             string result = RunGitCmd(args, LosslessEncoding);
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(result, encoding);
+            var patches = patchManager.LoadPatch(result, encoding);
 
-            return GetPatch(patchManager, fileName, oldFileName);
+            return GetPatch(patches, fileName, oldFileName);
         }
 
         private string GetFileContents(string path)
@@ -3947,8 +3948,8 @@ namespace GitCommands
                 return "";
             }
 
-            patchManager.LoadPatch(patch, encoding);
-            return GetPatch(patchManager, filePath, filePath).Text;
+            var patches = patchManager.LoadPatch(patch, encoding);
+            return GetPatch(patches, filePath, filePath).Text;
         }
 
         public bool HasLfsSupport()

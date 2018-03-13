@@ -71,9 +71,11 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                PatchManager.LoadPatchFile(PatchFileNameEdit.Text, Module.FilesEncoding);
+                var patches = PatchManager.LoadPatchFile(
+                    PatchFileNameEdit.Text,
+                    Module.FilesEncoding);
 
-                GridChangedFiles.DataSource = PatchManager.Patches;
+                GridChangedFiles.DataSource = patches;
             }
             catch
             {

@@ -13,9 +13,6 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        [NotNull, ItemNotNull]
-        public List<Patch> Patches { get; private set; } = new List<Patch>();
-
         [CanBeNull]
         public static byte[] GetResetUnstagedLinesAsPatch([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding)
         {
@@ -184,17 +181,19 @@ namespace PatchApply
         }
 
         // TODO encoding for each file in patch should be obtained separately from .gitattributes
-        public void LoadPatch(string text, Encoding filesContentEncoding)
+        [NotNull, ItemNotNull]
+        public IReadOnlyList<Patch> LoadPatch([NotNull] string text, [NotNull] Encoding filesContentEncoding)
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            Patches = patchProcessor.CreatePatchesFromString(text).ToList();
+            return patchProcessor.CreatePatchesFromString(text).ToList();
         }
 
-        public void LoadPatchFile(string path, Encoding filesContentEncoding)
+        [NotNull, ItemNotNull]
+        public IReadOnlyList<Patch> LoadPatchFile([NotNull] string path, [NotNull] Encoding filesContentEncoding)
         {
             var text = File.ReadAllText(path, GitModule.LosslessEncoding);
-            LoadPatch(text, filesContentEncoding);
+            return LoadPatch(text, filesContentEncoding);
         }
     }
 
