@@ -87,9 +87,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
             if (AppSettings.Dictionary.Equals("none", StringComparison.InvariantCultureIgnoreCase))
+            {
                 Dictionary.SelectedIndex = 0;
+            }
             else
-                Dictionary.Text = AppSettings.Dictionary;
+            {
+                string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
+                if (File.Exists(dictionaryFile))
+                {
+                    Dictionary.Items.Add(AppSettings.Dictionary);
+                    Dictionary.Text = AppSettings.Dictionary;
+                }
+                else
+                {
+                    Dictionary.SelectedIndex = 0;
+                }
+            }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
 
@@ -125,6 +138,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             try
             {
+                string currentDictionary = Dictionary.Text;
+
                 Dictionary.Items.Clear();
                 Dictionary.Items.Add(_noDictFile.Text);
                 foreach (
@@ -134,6 +149,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     var file = new FileInfo(fileName);
                     Dictionary.Items.Add(file.Name.Replace(".dic", ""));
                 }
+
+                Dictionary.Text = currentDictionary;
             }
             catch
             {
