@@ -43,29 +43,29 @@ namespace NetSpell.SpellChecker
         /// <remarks>
         ///     Use this event to update the parent text
         /// </remarks>
-        public event DeletedWordEventHandler DeletedWord;
+        public event EventHandler<SpellingEventArgs> DeletedWord;
 
         /// <summary>
         ///     This event is fired when word is detected two times in a row
         /// </summary>
-        public event DoubledWordEventHandler DoubledWord;
+        public event EventHandler<SpellingEventArgs> DoubledWord;
 
         /// <summary>
         ///     This event is fired when the spell checker reaches the end of
         ///     the text in the Text property
         /// </summary>
-        public event EndOfTextEventHandler EndOfText;
+        public event EventHandler EndOfText;
 
         /// <summary>
         ///     This event is fired when a word is skipped
         /// </summary>
-        public event IgnoredWordEventHandler IgnoredWord;
+        public event EventHandler<SpellingEventArgs> IgnoredWord;
 
         /// <summary>
         ///     This event is fired when the spell checker finds a word that
         ///     is not in the dictionaries
         /// </summary>
-        public event MisspelledWordEventHandler MisspelledWord;
+        public event EventHandler<SpellingEventArgs> MisspelledWord;
 
         /// <summary>
         ///     This event is fired when a word is replace
@@ -73,43 +73,7 @@ namespace NetSpell.SpellChecker
         /// <remarks>
         ///     Use this event to update the parent text
         /// </remarks>
-        public event ReplacedWordEventHandler ReplacedWord;
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void DeletedWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void DoubledWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void EndOfTextEventHandler(object sender, EventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void IgnoredWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void MisspelledWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void ReplacedWordEventHandler(object sender, ReplaceWordEventArgs e);
+        public event EventHandler<ReplaceWordEventArgs> ReplacedWord;
 
         /// <summary>
         ///     This is the method that is responsible for notifying

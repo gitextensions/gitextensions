@@ -44,141 +44,141 @@ namespace GitUI
 
         #region IGitUICommands Members
 
-        public event GitUIEventHandler PreBrowse;
-        public event GitUIEventHandler PostBrowse;
+        public event EventHandler<GitUIBaseEventArgs> PreBrowse;
+        public event EventHandler<GitUIBaseEventArgs> PostBrowse;
 
-        public event GitUIEventHandler PreDeleteBranch;
-        public event GitUIPostActionEventHandler PostDeleteBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreDeleteBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostDeleteBranch;
 
-        public event GitUIEventHandler PreDeleteRemoteBranch;
-        public event GitUIPostActionEventHandler PostDeleteRemoteBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreDeleteRemoteBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostDeleteRemoteBranch;
 
-        public event GitUIEventHandler PreCheckoutRevision;
-        public event GitUIPostActionEventHandler PostCheckoutRevision;
+        public event EventHandler<GitUIBaseEventArgs> PreCheckoutRevision;
+        public event EventHandler<GitUIPostActionEventArgs> PostCheckoutRevision;
 
-        public event GitUIEventHandler PreCheckoutBranch;
-        public event GitUIPostActionEventHandler PostCheckoutBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreCheckoutBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostCheckoutBranch;
 
-        public event GitUIEventHandler PreFileHistory;
-        public event GitUIPostActionEventHandler PostFileHistory;
+        public event EventHandler<GitUIBaseEventArgs> PreFileHistory;
+        public event EventHandler<GitUIPostActionEventArgs> PostFileHistory;
 
-        public event GitUIEventHandler PreCompareRevisions;
-        public event GitUIPostActionEventHandler PostCompareRevisions;
+        public event EventHandler<GitUIBaseEventArgs> PreCompareRevisions;
+        public event EventHandler<GitUIPostActionEventArgs> PostCompareRevisions;
 
-        public event GitUIEventHandler PreAddFiles;
-        public event GitUIPostActionEventHandler PostAddFiles;
+        public event EventHandler<GitUIBaseEventArgs> PreAddFiles;
+        public event EventHandler<GitUIPostActionEventArgs> PostAddFiles;
 
-        public event GitUIEventHandler PreCreateBranch;
-        public event GitUIPostActionEventHandler PostCreateBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreCreateBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostCreateBranch;
 
-        public event GitUIEventHandler PreClone;
-        public event GitUIPostActionEventHandler PostClone;
+        public event EventHandler<GitUIBaseEventArgs> PreClone;
+        public event EventHandler<GitUIPostActionEventArgs> PostClone;
 
-        public event GitUIEventHandler PreSvnClone;
-        public event GitUIPostActionEventHandler PostSvnClone;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnClone;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnClone;
 
-        public event GitUIEventHandler PreCommit;
-        public event GitUIPostActionEventHandler PostCommit;
+        public event EventHandler<GitUIBaseEventArgs> PreCommit;
+        public event EventHandler<GitUIPostActionEventArgs> PostCommit;
 
-        public event GitUIEventHandler PreSvnDcommit;
-        public event GitUIPostActionEventHandler PostSvnDcommit;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnDcommit;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnDcommit;
 
-        public event GitUIEventHandler PreSvnRebase;
-        public event GitUIPostActionEventHandler PostSvnRebase;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnRebase;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnRebase;
 
-        public event GitUIEventHandler PreSvnFetch;
-        public event GitUIPostActionEventHandler PostSvnFetch;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnFetch;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnFetch;
 
-        public event GitUIEventHandler PreInitialize;
-        public event GitUIPostActionEventHandler PostInitialize;
+        public event EventHandler<GitUIBaseEventArgs> PreInitialize;
+        public event EventHandler<GitUIPostActionEventArgs> PostInitialize;
 
-        public event GitUIEventHandler PrePush;
-        public event GitUIPostActionEventHandler PostPush;
+        public event EventHandler<GitUIBaseEventArgs> PrePush;
+        public event EventHandler<GitUIPostActionEventArgs> PostPush;
 
-        public event GitUIEventHandler PrePull;
-        public event GitUIPostActionEventHandler PostPull;
+        public event EventHandler<GitUIBaseEventArgs> PrePull;
+        public event EventHandler<GitUIPostActionEventArgs> PostPull;
 
-        public event GitUIEventHandler PreViewPatch;
-        public event GitUIPostActionEventHandler PostViewPatch;
+        public event EventHandler<GitUIBaseEventArgs> PreViewPatch;
+        public event EventHandler<GitUIPostActionEventArgs> PostViewPatch;
 
-        public event GitUIEventHandler PreApplyPatch;
-        public event GitUIPostActionEventHandler PostApplyPatch;
+        public event EventHandler<GitUIBaseEventArgs> PreApplyPatch;
+        public event EventHandler<GitUIPostActionEventArgs> PostApplyPatch;
 
-        public event GitUIEventHandler PreFormatPatch;
-        public event GitUIPostActionEventHandler PostFormatPatch;
+        public event EventHandler<GitUIBaseEventArgs> PreFormatPatch;
+        public event EventHandler<GitUIPostActionEventArgs> PostFormatPatch;
 
-        public event GitUIEventHandler PreStash;
-        public event GitUIPostActionEventHandler PostStash;
+        public event EventHandler<GitUIBaseEventArgs> PreStash;
+        public event EventHandler<GitUIPostActionEventArgs> PostStash;
 
-        public event GitUIEventHandler PreResolveConflicts;
-        public event GitUIPostActionEventHandler PostResolveConflicts;
+        public event EventHandler<GitUIBaseEventArgs> PreResolveConflicts;
+        public event EventHandler<GitUIPostActionEventArgs> PostResolveConflicts;
 
-        public event GitUIEventHandler PreCherryPick;
-        public event GitUIPostActionEventHandler PostCherryPick;
+        public event EventHandler<GitUIBaseEventArgs> PreCherryPick;
+        public event EventHandler<GitUIPostActionEventArgs> PostCherryPick;
 
-        public event GitUIEventHandler PreRevertCommit;
-        public event GitUIPostActionEventHandler PostRevertCommit;
+        public event EventHandler<GitUIBaseEventArgs> PreRevertCommit;
+        public event EventHandler<GitUIPostActionEventArgs> PostRevertCommit;
 
-        public event GitUIEventHandler PreMergeBranch;
-        public event GitUIPostActionEventHandler PostMergeBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreMergeBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostMergeBranch;
 
-        public event GitUIEventHandler PreCreateTag;
-        public event GitUIPostActionEventHandler PostCreateTag;
+        public event EventHandler<GitUIBaseEventArgs> PreCreateTag;
+        public event EventHandler<GitUIPostActionEventArgs> PostCreateTag;
 
-        public event GitUIEventHandler PreDeleteTag;
-        public event GitUIPostActionEventHandler PostDeleteTag;
+        public event EventHandler<GitUIBaseEventArgs> PreDeleteTag;
+        public event EventHandler<GitUIPostActionEventArgs> PostDeleteTag;
 
-        public event GitUIEventHandler PreEditGitIgnore;
-        public event GitUIPostActionEventHandler PostEditGitIgnore;
+        public event EventHandler<GitUIBaseEventArgs> PreEditGitIgnore;
+        public event EventHandler<GitUIPostActionEventArgs> PostEditGitIgnore;
 
-        public event GitUIEventHandler PreSettings;
-        public event GitUIPostActionEventHandler PostSettings;
+        public event EventHandler<GitUIBaseEventArgs> PreSettings;
+        public event EventHandler<GitUIPostActionEventArgs> PostSettings;
 
-        public event GitUIEventHandler PreArchive;
-        public event GitUIPostActionEventHandler PostArchive;
+        public event EventHandler<GitUIBaseEventArgs> PreArchive;
+        public event EventHandler<GitUIPostActionEventArgs> PostArchive;
 
-        public event GitUIEventHandler PreMailMap;
-        public event GitUIPostActionEventHandler PostMailMap;
+        public event EventHandler<GitUIBaseEventArgs> PreMailMap;
+        public event EventHandler<GitUIPostActionEventArgs> PostMailMap;
 
-        public event GitUIEventHandler PreVerifyDatabase;
-        public event GitUIPostActionEventHandler PostVerifyDatabase;
+        public event EventHandler<GitUIBaseEventArgs> PreVerifyDatabase;
+        public event EventHandler<GitUIPostActionEventArgs> PostVerifyDatabase;
 
-        public event GitUIEventHandler PreRemotes;
-        public event GitUIPostActionEventHandler PostRemotes;
+        public event EventHandler<GitUIBaseEventArgs> PreRemotes;
+        public event EventHandler<GitUIPostActionEventArgs> PostRemotes;
 
-        public event GitUIEventHandler PreRebase;
-        public event GitUIPostActionEventHandler PostRebase;
+        public event EventHandler<GitUIBaseEventArgs> PreRebase;
+        public event EventHandler<GitUIPostActionEventArgs> PostRebase;
 
-        public event GitUIEventHandler PreRename;
-        public event GitUIPostActionEventHandler PostRename;
+        public event EventHandler<GitUIBaseEventArgs> PreRename;
+        public event EventHandler<GitUIPostActionEventArgs> PostRename;
 
-        public event GitUIEventHandler PreSubmodulesEdit;
-        public event GitUIPostActionEventHandler PostSubmodulesEdit;
+        public event EventHandler<GitUIBaseEventArgs> PreSubmodulesEdit;
+        public event EventHandler<GitUIPostActionEventArgs> PostSubmodulesEdit;
 
-        public event GitUIEventHandler PreUpdateSubmodules;
-        public event GitUIPostActionEventHandler PostUpdateSubmodules;
+        public event EventHandler<GitUIBaseEventArgs> PreUpdateSubmodules;
+        public event EventHandler<GitUIPostActionEventArgs> PostUpdateSubmodules;
 
-        public event GitUIEventHandler PreSyncSubmodules;
-        public event GitUIPostActionEventHandler PostSyncSubmodules;
+        public event EventHandler<GitUIBaseEventArgs> PreSyncSubmodules;
+        public event EventHandler<GitUIPostActionEventArgs> PostSyncSubmodules;
 
-        public event GitUIEventHandler PreBlame;
-        public event GitUIPostActionEventHandler PostBlame;
+        public event EventHandler<GitUIBaseEventArgs> PreBlame;
+        public event EventHandler<GitUIPostActionEventArgs> PostBlame;
 
-        public event GitUIEventHandler PreEditGitAttributes;
-        public event GitUIPostActionEventHandler PostEditGitAttributes;
+        public event EventHandler<GitUIBaseEventArgs> PreEditGitAttributes;
+        public event EventHandler<GitUIPostActionEventArgs> PostEditGitAttributes;
 
-        public event GitUIEventHandler PreBrowseInitialize;
-        public event GitUIEventHandler PostBrowseInitialize;
+        public event EventHandler<GitUIBaseEventArgs> PreBrowseInitialize;
+        public event EventHandler<GitUIBaseEventArgs> PostBrowseInitialize;
 
-        public event GitUIEventHandler PreSparseWorkingCopy;
-        public event GitUIPostActionEventHandler PostSparseWorkingCopy;
+        public event EventHandler<GitUIBaseEventArgs> PreSparseWorkingCopy;
+        public event EventHandler<GitUIPostActionEventArgs> PostSparseWorkingCopy;
 
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
-        public event GitUIEventHandler PostRepositoryChanged;
+        public event EventHandler<GitUIBaseEventArgs> PostRepositoryChanged;
 
-        public event GitUIEventHandler PostRegisterPlugin;
+        public event EventHandler<GitUIBaseEventArgs> PostRegisterPlugin;
 
         public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo BrowseRepo { get; set; }
@@ -410,7 +410,7 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
-        public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
+        public void InvokeEventOnClose(Form form, EventHandler<GitUIBaseEventArgs> ev)
         {
             form.FormClosed += (object o, FormClosedEventArgs ea) =>
             {
@@ -419,7 +419,7 @@ namespace GitUI
         }
 
         public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir,
-            GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<Form> provideForm)
+            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<Form> provideForm)
         {
             if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
             {
@@ -462,7 +462,7 @@ namespace GitUI
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
         /// <returns>true if action was successfully done, false otherwise</returns>
         public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo,
-            GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
+            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<bool> action)
         {
             bool actionDone = false;
             RepoChangedNotifier.Lock();
@@ -1813,7 +1813,7 @@ namespace GitUI
             return StartEditGitAttributesDialog(null);
         }
 
-        private bool InvokeEvent(IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
+        private bool InvokeEvent(IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
         {
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
         }
@@ -1822,7 +1822,7 @@ namespace GitUI
 
         public IGitModule GitModule => Module;
 
-        private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, GitUIPostActionEventHandler gitUIEventHandler)
+        private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
         {
             if (gitUIEventHandler != null)
             {
@@ -1831,7 +1831,7 @@ namespace GitUI
             }
         }
 
-        internal bool InvokeEvent(object sender, IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
+        internal bool InvokeEvent(object sender, IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
         {
             try
             {
@@ -2447,7 +2447,7 @@ namespace GitUI
 
             public readonly GitModule Module;
 
-            public event GitRemoteCommandCompletedEventHandler Completed;
+            public event EventHandler<GitRemoteCommandCompletedEventArgs> Completed;
 
             internal GitRemoteCommand(GitModule module)
             {

@@ -331,6 +331,6 @@ namespace GitStatistics.PieChart
             base.OnMouseDown(e);
         }
 
-        public event SliceSelectedHandler SliceSelected;
+        public event EventHandler<SliceSelectedArgs> SliceSelected;
     }
 }
