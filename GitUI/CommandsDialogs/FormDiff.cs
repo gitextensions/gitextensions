@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -263,7 +262,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision.ParentGuids, DiffFiles.SelectedItemParents.Select(i => i.Guid));
-            bool localExists = DiffFiles.SelectedItemsWithParent.Any(item => !item.Item.IsTracked) && _fullPathResolver.AnyLocalExists(DiffFiles.SelectedItemsWithParent.Select(it => it.Item.Name));
+            bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent, _fullPathResolver);
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
