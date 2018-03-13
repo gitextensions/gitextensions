@@ -92,7 +92,7 @@ namespace System.Linq
 
         public static string Join(this IEnumerable<string> source, string separator)
         {
-            return string.Join(separator, source.ToArray());
+            return string.Join(separator, source);
         }
 
         //
@@ -143,44 +143,6 @@ namespace System.Linq
             public int Compare(T x, T y)
             {
                 return _comparer(x, y);
-            }
-        }
-
-        //
-        // Summary:
-        //     Transforms each element of an array into a new form by incorporating the
-        //     element's index.
-        //
-        // Parameters:
-        //   source:
-        //     A sequence of values to invoke a transform function on.
-        //
-        //   transformer:
-        //     A transform function to apply to each source element; the second parameter
-        //     of the function represents the index of the source element.
-        //
-        // Type parameters:
-        //   TSource:
-        //     The type of the elements of source.
-        //
-        // Exceptions:
-        //   System.ArgumentNullException:
-        //     source or selector is null.
-        public static void Select<TSource>(this TSource[] source, Func<TSource, int, TSource> transformer)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (transformer == null)
-            {
-                throw new ArgumentNullException(nameof(transformer));
-            }
-
-            for (int i = 0; i < source.Length; i++)
-            {
-                source[i] = transformer(source[i], i);
             }
         }
 

@@ -12,11 +12,9 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        public string DirToPatch { get; set; }
-
         public List<Patch> Patches { get; set; } = new List<Patch>();
 
-        public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
+        public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
         {
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
@@ -184,30 +182,17 @@ namespace PatchApply
         }
 
         // TODO encoding for each file in patch should be obtained separately from .gitattributes
-        public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
+        public void LoadPatch(string text, Encoding filesContentEncoding)
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
             Patches = patchProcessor.CreatePatchesFromString(text).ToList();
-
-            if (!applyPatch)
-            {
-                return;
-            }
-
-            foreach (Patch patchApply in Patches)
-            {
-                if (patchApply.Apply)
-                {
-                    patchApply.ApplyPatch(filesContentEncoding);
-                }
-            }
         }
 
-        public void LoadPatchFile(string path, bool applyPatch, Encoding filesContentEncoding)
+        public void LoadPatchFile(string path, Encoding filesContentEncoding)
         {
             var text = File.ReadAllText(path, GitModule.LosslessEncoding);
-            LoadPatch(text, applyPatch, filesContentEncoding);
+            LoadPatch(text, filesContentEncoding);
         }
     }
 

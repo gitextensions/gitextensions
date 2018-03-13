@@ -1190,8 +1190,7 @@ namespace GitUI.Editor
             {
                 patch = PatchManager.GetResetUnstagedLinesAsPatch(
                     Module, GetText(),
-                    selectionStart, selectionLength,
-                    false, Encoding);
+                    selectionStart, selectionLength, Encoding);
             }
             else
             {

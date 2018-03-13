@@ -685,8 +685,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(),
-                    SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
-                    _currentItemStaged, SelectedDiff.Encoding);
+                    SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding);
             }
 
             if (patch != null && patch.Length > 0)

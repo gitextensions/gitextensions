@@ -25,11 +25,10 @@ namespace GitUI.CommandsDialogs
         public void LoadPatch(string patch)
         {
             PatchFileNameEdit.Text = patch;
-            LoadButton_Click(null, null);
+            LoadPatchFile();
         }
 
         public PatchManager PatchManager { get; set; }
-        public Patch CurrentPatch { get; set; }
 
         private void GridChangedFiles_SelectionChanged(object sender, EventArgs e)
         {
@@ -39,7 +38,6 @@ namespace GitUI.CommandsDialogs
             }
 
             var patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
-            CurrentPatch = patch;
 
             if (patch == null)
             {
@@ -58,21 +56,21 @@ namespace GitUI.CommandsDialogs
                 Title = _patchFileFilterTitle.Text
             })
             {
-                return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+                return dialog.ShowDialog(this) == DialogResult.OK ? dialog.FileName : PatchFileNameEdit.Text;
             }
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)
         {
             PatchFileNameEdit.Text = SelectPatchFile(@".");
-            LoadButton_Click(sender, e);
+            LoadPatchFile();
         }
 
-        private void LoadButton_Click(object sender, EventArgs e)
+        private void LoadPatchFile()
         {
             try
             {
-                PatchManager.LoadPatchFile(PatchFileNameEdit.Text, false, Module.FilesEncoding);
+                PatchManager.LoadPatchFile(PatchFileNameEdit.Text, Module.FilesEncoding);
 
                 GridChangedFiles.DataSource = PatchManager.Patches;
             }
