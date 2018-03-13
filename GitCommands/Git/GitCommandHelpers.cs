@@ -161,6 +161,7 @@ namespace GitCommands
             };
         }
 
+        [NotNull]
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             SetEnvironmentVariable();

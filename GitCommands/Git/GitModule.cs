@@ -479,7 +479,8 @@ namespace GitCommands
             }
         }
 
-        public static string FindGitWorkingDir(string startDir)
+        [NotNull]
+        public static string FindGitWorkingDir([CanBeNull] string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
             {
@@ -498,10 +499,12 @@ namespace GitCommands
                 dir = PathUtil.GetDirectoryName(dir);
             }
             while (!string.IsNullOrEmpty(dir));
+
             return startDir;
         }
 
-        private static Process StartProccess(string fileName, string arguments, string workingDir, bool showConsole)
+        [NotNull]
+        private static Process StartProccess([NotNull] string fileName, [NotNull] string arguments, [NotNull] string workingDir, bool showConsole)
         {
             GitCommandHelpers.SetEnvironmentVariable();
 
@@ -536,6 +539,7 @@ namespace GitCommands
             return startProcess;
         }
 
+        [NotNull]
         public string StripAnsiCodes(string input)
         {
             // The following does return the original string if no ansi codes are found
@@ -580,6 +584,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, console window is hidden
         /// </summary>
+        [CanBeNull]
         public static Process RunExternalCmdDetached(string fileName, string arguments, string workingDir)
         {
             try
@@ -597,6 +602,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, console window is hidden
         /// </summary>
+        [CanBeNull]
         public Process RunExternalCmdDetached(string cmd, string arguments)
         {
             return RunExternalCmdDetached(cmd, arguments, WorkingDir);
@@ -605,6 +611,7 @@ namespace GitCommands
         /// <summary>
         /// Run git command, console window is hidden, redirect output
         /// </summary>
+        [NotNull]
         public Process RunGitCmdDetached(string arguments, Encoding encoding = null)
         {
             if (encoding == null)
@@ -618,6 +625,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, cache results, console window is hidden, wait for exit, redirect output
         /// </summary>
+        [NotNull]
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCacheableCmd(string cmd, string arguments = "", Encoding encoding = null)
         {
@@ -3805,6 +3813,7 @@ namespace GitCommands
         /// diff part is raw data in file's original encoding
         /// s should be encoded in LosslessEncoding
         /// </summary>
+        [ContractAnnotation("s:null=>null")]
         public string ReEncodeShowString(string s)
         {
             if (s.IsNullOrEmpty())

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace PatchApply
 {
     public class PatchProcessor
     {
+        [NotNull]
         public Encoding FilesContentEncoding { get; }
 
-        public PatchProcessor(Encoding filesContentEncoding)
+        public PatchProcessor([NotNull] Encoding filesContentEncoding)
         {
             FilesContentEncoding = filesContentEncoding;
         }
@@ -30,7 +32,8 @@ namespace PatchApply
         /// </summary>
         /// <param name="lines">patch lines</param>
         /// <param name="lineIndex">start index</param>
-        public Patch CreatePatchFromString(string[] lines, ref int lineIndex)
+        [CanBeNull]
+        private Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, ref int lineIndex)
         {
             if (lineIndex >= lines.Length)
             {
@@ -87,8 +90,9 @@ namespace PatchApply
                     continue;
                 }
 
-                if (SetPatchType(input, patch))
+                if (TryGetPatchType(input, out var patchType))
                 {
+                    patch.Type = patchType;
                 }
                 else if (IsUnlistedBinaryFileDelete(input))
                 {
@@ -168,7 +172,8 @@ namespace PatchApply
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
-        public IEnumerable<Patch> CreatePatchesFromString(string patchText)
+        [NotNull, ItemNotNull, Pure]
+        public IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText)
         {
             string[] lines = patchText.Split('\n');
             int i = 0;
@@ -197,7 +202,7 @@ namespace PatchApply
             return input.StartsWith("index ");
         }
 
-        public static bool IsCombinedDiff(string diff)
+        public static bool IsCombinedDiff([CanBeNull] string diff)
         {
             return !string.IsNullOrWhiteSpace(diff) &&
                                  (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
@@ -305,7 +310,7 @@ namespace PatchApply
             }
         }
 
-        private static bool IsStartOfANewPatch(string input, out bool combinedDiff)
+        private static bool IsStartOfANewPatch([NotNull] string input, out bool combinedDiff)
         {
             combinedDiff = IsCombinedDiff(input);
             return input.StartsWith("diff --git ") || combinedDiff;
@@ -316,22 +321,23 @@ namespace PatchApply
             return IsStartOfANewPatch(input, out _);
         }
 
-        private static bool SetPatchType(string input, Patch patch)
+        private static bool TryGetPatchType(string input, out Patch.PatchType type)
         {
             if (input.StartsWith("new file mode "))
             {
-                patch.Type = Patch.PatchType.NewFile;
+                type = Patch.PatchType.NewFile;
             }
             else if (input.StartsWith("deleted file mode "))
             {
-                patch.Type = Patch.PatchType.DeleteFile;
+                type = Patch.PatchType.DeleteFile;
             }
             else if (input.StartsWith("old mode "))
             {
-                patch.Type = Patch.PatchType.ChangeFileMode;
+                type = Patch.PatchType.ChangeFileMode;
             }
             else
             {
+                type = 0;
                 return false;
             }
 

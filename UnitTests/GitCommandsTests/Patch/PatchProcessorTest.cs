@@ -8,13 +8,13 @@ using PatchApply;
 namespace GitCommandsTests.PatchApply
 {
     [TestFixture]
-    public sealed class PatchManagerTest
+    public sealed class PatchProcessorTest
     {
         private readonly string _bigPatch;
         private readonly string _bigBinPatch;
         private readonly string _rebaseDiff;
 
-        public PatchManagerTest()
+        public PatchProcessorTest()
         {
             _bigPatch = LoadPatch("big.patch");
             _bigBinPatch = LoadPatch("bigBin.patch");
@@ -145,7 +145,9 @@ namespace GitCommandsTests.PatchApply
                 Patch =
                 {
                     Type = Patch.PatchType.ChangeFile,
-                    PatchHeader = reverse ? "diff --git b/thisisatestb.txt a/thisisatesta.txt" : "diff --git a/thisisatesta.txt b/thisisatestb.txt",
+                    PatchHeader = reverse
+                        ? "diff --git b/thisisatestb.txt a/thisisatesta.txt"
+                        : "diff --git a/thisisatesta.txt b/thisisatestb.txt",
                     PatchIndex = "index 5e4dce2..5eb1e6f 100644",
                     FileNameA = "thisisatesta.txt",
                     FileNameB = "thisisatestb.txt"

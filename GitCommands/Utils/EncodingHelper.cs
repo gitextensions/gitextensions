@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -9,7 +10,9 @@ namespace GitCommands
     /// </summary>
     public static class EncodingHelper
     {
-        public static string GetString(byte[] output, byte[] error, Encoding encoding)
+        [NotNull]
+        [Pure]
+        public static string GetString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] Encoding encoding)
         {
             if (encoding == null)
             {
@@ -36,14 +39,18 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static byte[] ConvertTo(Encoding encoding, string s)
+        [NotNull]
+        [Pure]
+        public static byte[] ConvertTo([NotNull] Encoding encoding, [NotNull] string s)
         {
             byte[] unicodeBytes = Encoding.Unicode.GetBytes(s);
 
             return Encoding.Convert(Encoding.Unicode, encoding, unicodeBytes);
         }
 
-        public static string DecodeString(byte[] output, byte[] error, ref Encoding encoding)
+        [NotNull]
+        [Pure]
+        public static string DecodeString([CanBeNull] byte[] output, [CanBeNull] byte[] error, [NotNull] ref Encoding encoding)
         {
             if (encoding == null)
             {

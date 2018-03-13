@@ -47,22 +47,23 @@ namespace GitUI.CommandsDialogs
             ChangesList.ViewPatch(patch);
         }
 
-        private string SelectPatchFile(string initialDirectory)
-        {
-            using (var dialog = new OpenFileDialog
-            {
-                Filter = _patchFileFilterString.Text + "|*.patch",
-                InitialDirectory = initialDirectory,
-                Title = _patchFileFilterTitle.Text
-            })
-            {
-                return dialog.ShowDialog(this) == DialogResult.OK ? dialog.FileName : PatchFileNameEdit.Text;
-            }
-        }
-
         private void BrowsePatch_Click(object sender, EventArgs e)
         {
-            PatchFileNameEdit.Text = SelectPatchFile(@".");
+            var dialog = new OpenFileDialog
+            {
+                Filter = _patchFileFilterString.Text + "|*.patch",
+                InitialDirectory = @".",
+                Title = _patchFileFilterTitle.Text
+            };
+
+            using (dialog)
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    PatchFileNameEdit.Text = dialog.FileName;
+                }
+            }
+
             LoadPatchFile();
         }
 

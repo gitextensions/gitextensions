@@ -114,7 +114,7 @@
     <Compile Include="Git\GitTreeParserTests.cs" />
     <Compile Include="AsyncLoaderTests.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
-    <Compile Include="Patch\PatchManagerTest.cs" />
+    <Compile Include="Patch\PatchProcessorTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
