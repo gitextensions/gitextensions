@@ -131,7 +131,13 @@ namespace GitCommands.Settings
                     return;
                 }
 
-                var tmpFile = SettingsFilePath + ".tmp";
+                int currentProcessId;
+                using (var currentProcess = Process.GetCurrentProcess())
+                {
+                    currentProcessId = currentProcess.Id;
+                }
+
+                var tmpFile = SettingsFilePath + currentProcessId + ".tmp";
                 WriteSettings(tmpFile);
 
                 if (File.Exists(SettingsFilePath))
