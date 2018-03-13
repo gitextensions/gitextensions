@@ -7,8 +7,25 @@ namespace GitCommands.Git
 {
     public interface IGitRevisionTester
     {
-        bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents);
-        bool LocalRevisionExists(IEnumerable<GitItemStatus> selectedItemsWithParent);
+        /// <summary>
+        /// Finds if all of the first selected are parents to the selected revision
+        /// </summary>
+        /// <param name="firstSelected">The first selected revisions (A)</param>
+        /// <param name="selectedRevision">The currently (last) selected revision (B)</param>
+        /// <returns>
+        /// True if one of the first selected is parent
+        /// </returns>
+        bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision);
+
+        /// <summary>
+        /// Finds if any of the git items exists as a file.
+        /// </summary>
+        /// <param name="selectedItemsWithParent">List of items to resolve and check</param>
+        /// <returns>
+        /// True if at least one file exists.
+        /// </returns>
+        bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItemsWithParent);
+
         bool Matches(GitRevision revision, string criteria);
     }
 
@@ -17,28 +34,31 @@ namespace GitCommands.Git
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFileSystem _fileSystem;
 
-        public GitRevisionTester(IFullPathResolver fullPathResolver, IFileSystem fileSystem)
+        public GitRevisionTester(IFullPathResolver fullPathResolver, IFileSystem fileSystem = null)
         {
             _fullPathResolver = fullPathResolver;
-            _fileSystem = fileSystem;
+            _fileSystem = fileSystem ?? new FileSystem();
         }
 
-        public GitRevisionTester(IFullPathResolver fullPathResolver)
-            : this(fullPathResolver, new FileSystem())
+        /// <inheritdoc />
+        /// <summary>
+        /// Finds if all of the first selected are parents to the selected revision
+        /// </summary>
+        /// <param name="firstSelected">The first selected revisions (A)</param>
+        /// <param name="selectedRevision">The currently (last) selected revision (B)</param>
+        /// <returns>
+        /// True if one of the first selected is parent
+        /// </returns>
+        public bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision)
         {
-        }
-
-        public bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents)
-        {
-            if (revision?.ParentGuids == null)
+            if (selectedRevision?.ParentGuids == null)
             {
                 return false;
             }
 
-            // TODO: the logic looks very odd....
-            foreach (var item in selectedItemParents.Select(r => r.Guid))
+            foreach (var item in firstSelected.Select(r => r.Guid))
             {
-                if (!revision.ParentGuids.Contains(item, StringComparer.Ordinal))
+                if (!selectedRevision.ParentGuids.Contains(item, StringComparer.Ordinal))
                 {
                     return false;
                 }
@@ -47,7 +67,15 @@ namespace GitCommands.Git
             return true;
         }
 
-        public bool LocalRevisionExists(IEnumerable<GitItemStatus> selectedItemsWithParent)
+        /// <inheritdoc />
+        /// <summary>
+        /// Finds if any of the git items exists as a file.
+        /// </summary>
+        /// <param name="selectedItemsWithParent">List of items to resolve and check</param>
+        /// <returns>
+        /// True if at least one file exists.
+        /// </returns>
+        public bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItemsWithParent)
         {
             if (selectedItemsWithParent == null)
             {
@@ -61,10 +89,9 @@ namespace GitCommands.Git
                 return true;
             }
 
-            // enable *<->Local items only when (any) local file exists
             foreach (var item in items)
             {
-                string filePath = _fullPathResolver.Resolve(item.Name);
+                string filePath = _fullPathResolver?.Resolve(item.Name);
                 if (_fileSystem.File.Exists(filePath))
                 {
                     return true;

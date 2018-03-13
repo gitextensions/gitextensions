@@ -6,8 +6,8 @@ namespace GitUI.CommandsDialogs
 {
     public interface IRevisionDiffController
     {
-        bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents);
-        bool LocalRevisionExists(IEnumerable<GitItemStatus> selectedItems);
+        bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision);
+        bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItems);
 
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo);
@@ -57,35 +57,6 @@ namespace GitUI.CommandsDialogs
         public bool SingleFileExists { get; }
         public bool IsAnyTracked { get; }
         public bool IsAnySubmodule { get; }
-    }
-
-    public sealed class ContextMenuDiffToolInfo
-    {
-        public ContextMenuDiffToolInfo(
-            GitRevision selectedRevision = null,
-            IEnumerable<string> selectedItemParentRevs = null,
-            bool allAreNew = false,
-            bool allAreDeleted = false,
-            bool firstIsParent = false,
-            bool firstParentsValid = true,
-            bool localExists = true)
-        {
-            SelectedRevision = selectedRevision;
-            SelectedItemParentRevs = selectedItemParentRevs;
-            AllAreNew = allAreNew;
-            AllAreDeleted = allAreDeleted;
-            FirstIsParent = firstIsParent;
-            FirstParentsValid = firstParentsValid;
-            LocalExists = localExists;
-        }
-
-        public GitRevision SelectedRevision { get; }
-        public IEnumerable<string> SelectedItemParentRevs { get; }
-        public bool AllAreNew { get; }
-        public bool AllAreDeleted { get; }
-        public bool FirstIsParent { get; }
-        public bool FirstParentsValid { get; }
-        public bool LocalExists { get; }
     }
 
     public sealed class RevisionDiffController : IRevisionDiffController
@@ -165,14 +136,14 @@ namespace GitUI.CommandsDialogs
         }
         #endregion
 
-        public bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents)
+        public bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision)
         {
-            return _revisionTester.IsFirstParent(revision, selectedItemParents);
+            return _revisionTester.AllFirstAreParentsToSelected(firstSelected, selectedRevision);
         }
 
-        public bool LocalRevisionExists(IEnumerable<GitItemStatus> selectedItems)
+        public bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItems)
         {
-            return _revisionTester.LocalRevisionExists(selectedItems);
+            return _revisionTester.AnyLocalFileExists(selectedItems);
         }
     }
 }

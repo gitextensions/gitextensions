@@ -31,7 +31,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void IsFirstParent_should_return_false_if_parents_null()
         {
-            _tester.IsFirstParent(null, null).Should().BeFalse();
+            _tester.AllFirstAreParentsToSelected(null, null).Should().BeFalse();
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void LocalExists_should_should_return_false_if_items_null()
         {
-            _tester.LocalRevisionExists(null).Should().BeFalse();
+            _tester.AnyLocalFileExists(null).Should().BeFalse();
         }
 
         [Test]

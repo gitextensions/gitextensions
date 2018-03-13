@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GitCommands;
 
 namespace GitUI.CommandsDialogs
 {
-    public interface IRevisionDiffContextMenuController
+    public interface IFileStatusListContextMenuController
     {
         bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuFirstToLocal(ContextMenuDiffToolInfo selectionInfo);
@@ -14,7 +15,36 @@ namespace GitUI.CommandsDialogs
         bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo);
     }
 
-    public class RevisionDiffContextMenuController : IRevisionDiffContextMenuController
+    public sealed class ContextMenuDiffToolInfo
+    {
+        public ContextMenuDiffToolInfo(
+            GitRevision selectedRevision = null,
+            IEnumerable<string> selectedItemParentRevs = null,
+            bool allAreNew = false,
+            bool allAreDeleted = false,
+            bool firstIsParent = false,
+            bool firstParentsValid = true,
+            bool localExists = true)
+        {
+            SelectedRevision = selectedRevision;
+            SelectedItemParentRevs = selectedItemParentRevs;
+            AllAreNew = allAreNew;
+            AllAreDeleted = allAreDeleted;
+            FirstIsParent = firstIsParent;
+            FirstParentsValid = firstParentsValid;
+            LocalExists = localExists;
+        }
+
+        public GitRevision SelectedRevision { get; }
+        public IEnumerable<string> SelectedItemParentRevs { get; }
+        public bool AllAreNew { get; }
+        public bool AllAreDeleted { get; }
+        public bool FirstIsParent { get; }
+        public bool FirstParentsValid { get; }
+        public bool LocalExists { get; }
+    }
+
+    public class FileStatusListContextMenuController : IFileStatusListContextMenuController
     {
         public bool ShouldShowMenuFirstToSelected(ContextMenuDiffToolInfo selectionInfo)
         {

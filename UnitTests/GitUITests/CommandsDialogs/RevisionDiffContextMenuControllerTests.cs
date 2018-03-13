@@ -8,12 +8,12 @@ namespace GitUITests.CommandsDialogs
     [TestFixture]
     public class RevisionDiffContextMenuControllerTests
     {
-        private RevisionDiffContextMenuController _revisionDiffContextMenuController;
+        private FileStatusListContextMenuController _revisionDiffContextMenuController;
 
         [SetUp]
         public void Setup()
         {
-            _revisionDiffContextMenuController = new RevisionDiffContextMenuController();
+            _revisionDiffContextMenuController = new FileStatusListContextMenuController();
         }
 
         public void BrowseDiff_SuppressDiffToLocalWhenNoSelectedRevision()

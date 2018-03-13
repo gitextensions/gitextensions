@@ -1180,10 +1180,10 @@ namespace GitUI
                         dictionary.Add(rev, Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid));
                     }
 
-                    // Show combined (merge conflicts) only when A is only parent
+                    // Show combined (merge conflicts) only when all first (A) are parents to selected (B)
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
                                         Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1 &&
-                                        _revisionTester.IsFirstParent(Revision, parentRevs);
+                                        _revisionTester.AllFirstAreParentsToSelected(parentRevs, Revision);
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);

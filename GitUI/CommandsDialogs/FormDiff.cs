@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
         private readonly IGitRevisionTester _revisionTester;
-        private IRevisionDiffContextMenuController _revisionDiffContextMenuController;
+        private IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffContextMenuController = new RevisionDiffContextMenuController();
+            _revisionDiffContextMenuController = new FileStatusListContextMenuController();
             base.OnRuntimeLoad(e);
         }
 
@@ -264,8 +264,8 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionTester.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
-            bool localExists = _revisionTester.LocalRevisionExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
+            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);

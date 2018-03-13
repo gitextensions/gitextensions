@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
-        private readonly IRevisionDiffContextMenuController _revisionDiffContextMenuController;
+        private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
-            _revisionDiffContextMenuController = new RevisionDiffContextMenuController();
+            _revisionDiffContextMenuController = new FileStatusListContextMenuController();
         }
 
         public void ForceRefreshRevisions()
@@ -233,8 +233,8 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
-            // First (A) is parent if one revision selected or parent, then selected
-            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
+            // First (A) is parent if one revision selected or if parent, then selected
+            bool firstIsParent = _revisionDiffController.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
@@ -570,8 +570,8 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
-            bool localExists = _revisionDiffController.LocalRevisionExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
+            bool firstIsParent = _revisionDiffController.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool localExists = _revisionDiffController.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
