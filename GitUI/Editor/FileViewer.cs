@@ -666,29 +666,17 @@ namespace GitUI.Editor
                 path = _fullPathResolver.Resolve(fileName);
             }
 
-            if (File.Exists(path))
-            {
-                // StreamReader disposes of 'fileStream'.
-                // see: https://msdn.microsoft.com/library/ms182334.aspx
-                var fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                try
-                {
-                    using (var reader = new StreamReader(fileStream, Module.FilesEncoding))
-                    {
-                        fileStream = null;
-                        var content = reader.ReadToEnd();
-                        FilePreamble = reader.CurrentEncoding.GetPreamble();
-                        return content;
-                    }
-                }
-                finally
-                {
-                    fileStream?.Dispose();
-                }
-            }
-            else
+            if (!File.Exists(path))
             {
                 return null;
+            }
+
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(stream, Module.FilesEncoding))
+            {
+                var content = reader.ReadToEnd();
+                FilePreamble = reader.CurrentEncoding.GetPreamble();
+                return content;
             }
         }
 

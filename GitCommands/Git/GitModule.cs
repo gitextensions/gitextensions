@@ -633,14 +633,12 @@ namespace GitCommands
             }
 
             byte[] cmdout, cmderr;
-            if (GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
+            if (!GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
             {
-                return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
+                GitCommandHelpers.RunCmdByte(cmd, arguments, WorkingDir, null, out cmdout, out cmderr);
+
+                GitCommandCache.Add(arguments, cmdout, cmderr);
             }
-
-            GitCommandHelpers.RunCmdByte(cmd, arguments, WorkingDir, null, out cmdout, out cmderr);
-
-            GitCommandCache.Add(arguments, cmdout, cmderr);
 
             return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
         }
