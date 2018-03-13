@@ -208,15 +208,8 @@ namespace PatchApply
 
         public void LoadPatchFile(bool applyPatch, Encoding filesContentEncoding)
         {
-            using (var re = new StreamReader(PatchFileName, GitModule.LosslessEncoding))
-            {
-                LoadPatchStream(re, applyPatch, filesContentEncoding);
-            }
-        }
-
-        private void LoadPatchStream(TextReader reader, bool applyPatch, Encoding filesContentEncoding)
-        {
-            LoadPatch(reader.ReadToEnd(), applyPatch, filesContentEncoding);
+            var text = File.ReadAllText(PatchFileName, GitModule.LosslessEncoding);
+            LoadPatch(text, applyPatch, filesContentEncoding);
         }
     }
 
