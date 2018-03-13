@@ -539,7 +539,7 @@ namespace GitUI.RevisionGridClasses
         {
             // We have to post this since the thread owns a lock on GraphData that we'll
             // need in order to re-draw the graph.
-            this.InvokeAsync(() =>
+            this.InvokeAsyncDoNotUseInNewCode(() =>
                 {
                     ClearDrawCache();
                     Invalidate();
@@ -651,7 +651,7 @@ namespace GitUI.RevisionGridClasses
                     // Update the row (if needed)
                     if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
                     {
-                        ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o => UpdateRow((int)o), curCount));
+                        this.InvokeAsyncDoNotUseInNewCode(o => UpdateRow((int)o), curCount);
                     }
 
                     int count = 0;
@@ -662,7 +662,7 @@ namespace GitUI.RevisionGridClasses
 
                     if (curCount == count)
                     {
-                        this.InvokeAsync(UpdateColumnWidth);
+                        this.InvokeAsyncDoNotUseInNewCode(UpdateColumnWidth);
                     }
 
                     curCount = _graphData.CachedCount;

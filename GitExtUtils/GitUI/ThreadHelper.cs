@@ -2,7 +2,9 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
@@ -64,6 +66,28 @@ namespace GitUI
                 string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on a background thread.", callerMemberName);
                 throw new COMException(message, RPC_E_WRONG_THREAD);
             }
+        }
+
+        public static void FileAndForget(this JoinableTask joinableTask, Func<Exception, bool> fileOnlyIf = null)
+        {
+            joinableTask.Task.FileAndForget(fileOnlyIf);
+        }
+
+        public static void FileAndForget(this Task task, Func<Exception, bool> fileOnlyIf = null)
+        {
+            JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        await task.ConfigureAwait(false);
+                    }
+                    catch (Exception ex) when (fileOnlyIf?.Invoke(ex) ?? true)
+                    {
+                        await JoinableTaskFactory.SwitchToMainThreadAsync();
+                        Application.OnThreadException(ex);
+                    }
+                });
         }
 
         public static async Task JoinPendingOperationsAsync()

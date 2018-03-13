@@ -104,7 +104,7 @@ namespace GitUI.UserControls
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
-                    this.InvokeAsync(new Action(() =>
+                    this.InvokeAsyncDoNotUseInNewCode(new Action(() =>
                     {
                         if (_process == null)
                         {

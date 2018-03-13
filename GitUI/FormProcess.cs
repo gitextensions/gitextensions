@@ -192,7 +192,7 @@ namespace GitUI
 
         private void OnExit(int exitcode)
         {
-            this.InvokeAsync(() =>
+            this.InvokeAsyncDoNotUseInNewCode(() =>
             {
                 bool isError;
                 try

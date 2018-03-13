@@ -1355,7 +1355,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o =>
+            this.InvokeAsyncDoNotUseInNewCode(o =>
                                   {
                                       Error.Visible = true;
                                       ////Error.BringToFront();
@@ -1363,13 +1363,13 @@ namespace GitUI
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
                                       Loading.Visible = false;
-                                  }, this));
+                                  }, this);
 
             DisposeRevisionGraphCommand();
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(() =>
+            this.InvokeAsyncDoNotUseInNewCode(() =>
                 {
                     throw new AggregateException(e.Exception);
-                }));
+                });
             e.Handled = true;
         }
 
@@ -1422,7 +1422,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o =>
+                this.InvokeAsyncDoNotUseInNewCode(o =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1430,12 +1430,12 @@ namespace GitUI
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                           _isRefreshingRevisions = false;
-                                      }, this));
+                                      }, this);
             }
             else
             {
                 // This has to happen on the UI thread
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => this.InvokeAsync(o =>
+                this.InvokeAsyncDoNotUseInNewCode(o =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1445,7 +1445,7 @@ namespace GitUI
                                           {
                                               BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                           }
-                                      }, this));
+                                      }, this);
             }
 
             DisposeRevisionGraphCommand();
@@ -2099,7 +2099,7 @@ namespace GitUI
             }
 
             // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
-            this.InvokeAsync(() =>
+            this.InvokeAsyncDoNotUseInNewCode(() =>
             {
                 if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
                 {

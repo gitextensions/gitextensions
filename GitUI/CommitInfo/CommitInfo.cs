@@ -231,13 +231,13 @@ namespace GitUI.CommitInfo
         private void LoadSortedRefs()
         {
             _sortedRefs = Module.GetSortedRefs();
-            this.InvokeAsync(UpdateRevisionInfo);
+            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
         }
 
         private void LoadAnnotatedTagInfo(GitRevision revision)
         {
             _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
-            this.InvokeAsync(UpdateRevisionInfo);
+            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
         }
 
         private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
@@ -293,7 +293,7 @@ namespace GitUI.CommitInfo
         private void LoadTagInfo(string revision)
         {
             _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
-            this.InvokeAsync(UpdateRevisionInfo);
+            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
         }
 
         private void LoadBranchInfo(string revision)
@@ -306,7 +306,7 @@ namespace GitUI.CommitInfo
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
-            this.InvokeAsync(UpdateRevisionInfo);
+            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
         }
 
         private void LoadLinksForRevision(GitRevision revision)
@@ -317,7 +317,7 @@ namespace GitUI.CommitInfo
             }
 
             _linksInfo = GetLinksForRevision(revision);
-            this.InvokeAsync(UpdateRevisionInfo);
+            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
         }
 
         private class ItemTpComparer : IComparer<string>
