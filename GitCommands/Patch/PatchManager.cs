@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
@@ -483,12 +484,24 @@ namespace PatchApply
             }
         }
 
-        public bool ParseHeader(string header)
+        /// <summary>
+        /// Parses a header line, setting the start index.
+        /// </summary>
+        /// <remarks>
+        /// An example header line is:
+        /// <code>
+        ///  -116,12 +117,15 @@ private string LoadFile(string fileName, Encoding filesContentEncoding)
+        /// </code>
+        /// In which case the start line is <c>116</c>.
+        /// </remarks>
+        public void ParseHeader(string header)
         {
-            header = header.SkipStr("-");
-            header = header.TakeUntilStr(",");
+            var match = Regex.Match(header, @".*-(\d+),");
 
-            return int.TryParse(header, out _startLine);
+            if (match.Success)
+            {
+                _startLine = int.Parse(match.Groups[1].Value);
+            }
         }
 
         public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
