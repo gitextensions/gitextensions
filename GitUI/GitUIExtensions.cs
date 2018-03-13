@@ -214,21 +214,25 @@ namespace GitUI
             action();
         }
 
-        /// <summary>
-        /// Use <see cref="InvokeAsync"/> instead. If the result of <see cref="InvokeAsync"/> is not awaited, use
-        /// <see cref="ThreadHelper.FileAndForget(Task, Func{Exception, bool})"/> to ignore it.
-        /// </summary>
-        public static void InvokeAsyncDoNotUseInNewCode(this Control control, Action action)
+        public static async Task InvokeAsync<T>(this Control control, Action<T> action, T state)
         {
-            InvokeAsyncDoNotUseInNewCode(control, _ => action(), null);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            if (control.IsDisposed)
+            {
+                return;
+            }
+
+            action(state);
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
         /// <summary>
-        /// Use <see cref="InvokeAsync"/> instead. If the result of <see cref="InvokeAsync"/> is not awaited, use
+        /// Use <see cref="InvokeAsync(Control, Action)"/> instead. If the result of
+        /// <see cref="InvokeAsync(Control, Action)"/> is not awaited, use
         /// <see cref="ThreadHelper.FileAndForget(Task, Func{Exception, bool})"/> to ignore it.
         /// </summary>
-        public static async void InvokeAsyncDoNotUseInNewCode(this Control control, SendOrPostCallback action, object state)
+        public static async void InvokeAsyncDoNotUseInNewCode(this Control control, Action action)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
@@ -245,7 +249,7 @@ namespace GitUI
                 return;
             }
 
-            action(state);
+            action();
         }
 
         public static void InvokeSync(this Control control, Action action)

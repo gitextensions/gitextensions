@@ -651,7 +651,7 @@ namespace GitUI.RevisionGridClasses
                     // Update the row (if needed)
                     if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
                     {
-                        this.InvokeAsyncDoNotUseInNewCode(o => UpdateRow((int)o), curCount);
+                        this.InvokeAsync(o => UpdateRow(o), curCount).FileAndForget();
                     }
 
                     int count = 0;
@@ -662,7 +662,7 @@ namespace GitUI.RevisionGridClasses
 
                     if (curCount == count)
                     {
-                        this.InvokeAsyncDoNotUseInNewCode(UpdateColumnWidth);
+                        this.InvokeAsync(UpdateColumnWidth).FileAndForget();
                     }
 
                     curCount = _graphData.CachedCount;

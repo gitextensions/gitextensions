@@ -1355,7 +1355,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeAsyncDoNotUseInNewCode(o =>
+            this.InvokeAsync(() =>
                                   {
                                       Error.Visible = true;
                                       ////Error.BringToFront();
@@ -1363,13 +1363,15 @@ namespace GitUI
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
                                       Loading.Visible = false;
-                                  }, this);
+                                  })
+                .FileAndForget();
 
             DisposeRevisionGraphCommand();
-            this.InvokeAsyncDoNotUseInNewCode(() =>
+            this.InvokeAsync(() =>
                 {
                     throw new AggregateException(e.Exception);
-                });
+                })
+                .FileAndForget();
             e.Handled = true;
         }
 
@@ -1422,7 +1424,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeAsyncDoNotUseInNewCode(o =>
+                this.InvokeAsync(() =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1430,12 +1432,13 @@ namespace GitUI
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                           _isRefreshingRevisions = false;
-                                      }, this);
+                                      })
+                    .FileAndForget();
             }
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeAsyncDoNotUseInNewCode(o =>
+                this.InvokeAsync(() =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1445,7 +1448,8 @@ namespace GitUI
                                           {
                                               BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                           }
-                                      }, this);
+                                      })
+                    .FileAndForget();
             }
 
             DisposeRevisionGraphCommand();
