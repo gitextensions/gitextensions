@@ -199,12 +199,7 @@ namespace GitUI
             ProcessCallback(this);
         }
 
-        public void ShowDialogOnError()
-        {
-            ShowDialogOnError(null);
-        }
-
-        public void ShowDialogOnError(IWin32Window owner)
+        public void ShowDialogOnError(IWin32Window owner = null)
         {
             KeepDialogOpen.Visible = false;
             Abort.Visible = false;

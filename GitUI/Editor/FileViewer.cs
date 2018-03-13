@@ -716,12 +716,7 @@ namespace GitUI.Editor
             _patchHighlighting = true;
         }
 
-        private void Reset(bool diff, bool text)
-        {
-            Reset(diff, text, false);
-        }
-
-        private void Reset(bool diff, bool text, bool staging_diff)
+        private void Reset(bool diff, bool text, bool staging_diff = false)
         {
             _patchHighlighting = diff;
             SetVisibilityDiffContextMenu(diff, staging_diff);

@@ -157,12 +157,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormCommit(GitUICommands commands)
-            : this(commands, CommitKind.Normal, null)
-        {
-        }
-
-        public FormCommit(GitUICommands commands, CommitKind commitKind, GitRevision editedCommit)
+        public FormCommit(GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
             : base(true, commands)
         {
             _taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -514,11 +509,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public void ShowDialogWhenChanges()
-        {
-            ShowDialogWhenChanges(null);
-        }
-
         private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool doAsync)
         {
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
@@ -538,7 +528,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void ShowDialogWhenChanges(IWin32Window owner)
+        public void ShowDialogWhenChanges(IWin32Window owner = null)
         {
             ComputeUnstagedFiles((allChangedFiles) =>
                 {
@@ -733,7 +723,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _initialized;
 
-        private void Initialize(bool loadUnstaged)
+        private void Initialize(bool loadUnstaged = true)
         {
             _initialized = true;
 
@@ -760,11 +750,6 @@ namespace GitUI.CommandsDialogs
             Message.TextBoxFont = AppSettings.CommitFont;
 
             Cursor.Current = Cursors.Default;
-        }
-
-        private void Initialize()
-        {
-            Initialize(true);
         }
 
         private void UpdateMergeHead()

@@ -67,12 +67,7 @@ namespace GitUI.CommandsDialogs
             Shown += FormCheckoutBranch_Shown;
         }
 
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote)
-            : this(commands, branch, remote, null)
-        {
-        }
-
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons = null)
             : this(commands)
         {
             _isLoading = true;
