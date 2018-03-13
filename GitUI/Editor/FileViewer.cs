@@ -671,22 +671,12 @@ namespace GitUI.Editor
                 return null;
             }
 
-            // StreamReader disposes of 'fileStream'.
-            // see: https://msdn.microsoft.com/library/ms182334.aspx
-            var fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            try
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(stream, Module.FilesEncoding))
             {
-                using (var reader = new StreamReader(fileStream, Module.FilesEncoding))
-                {
-                    fileStream = null;
-                    var content = reader.ReadToEnd();
-                    FilePreamble = reader.CurrentEncoding.GetPreamble();
-                    return content;
-                }
-            }
-            finally
-            {
-                fileStream?.Dispose();
+                var content = reader.ReadToEnd();
+                FilePreamble = reader.CurrentEncoding.GetPreamble();
+                return content;
             }
         }
 
