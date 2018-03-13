@@ -196,7 +196,7 @@ namespace PatchApply
         }
     }
 
-    internal class PatchLine
+    internal sealed class PatchLine
     {
         public string Text { get; private set; }
         public bool Selected { get; set; }
@@ -218,7 +218,7 @@ namespace PatchApply
         }
     }
 
-    internal class SubChunk
+    internal sealed class SubChunk
     {
         public List<PatchLine> PreContext { get; } = new List<PatchLine>();
         public List<PatchLine> RemovedLines { get; } = new List<PatchLine>();
@@ -410,13 +410,13 @@ namespace PatchApply
 
     internal delegate string SubChunkToPatchFnc(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines);
 
-    internal class Chunk
+    internal sealed class Chunk
     {
         private int _startLine;
         private readonly List<SubChunk> _subChunks = new List<SubChunk>();
         private SubChunk _currentSubChunk;
 
-        public SubChunk CurrentSubChunk
+        private SubChunk CurrentSubChunk
         {
             get
             {
@@ -430,7 +430,7 @@ namespace PatchApply
             }
         }
 
-        public void AddContextLine(PatchLine line, bool preContext)
+        private void AddContextLine(PatchLine line, bool preContext)
         {
             if (preContext)
             {
@@ -442,7 +442,7 @@ namespace PatchApply
             }
         }
 
-        public void AddDiffLine(PatchLine line, bool removed)
+        private void AddDiffLine(PatchLine line, bool removed)
         {
             // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
@@ -470,7 +470,7 @@ namespace PatchApply
         /// </code>
         /// In which case the start line is <c>116</c>.
         /// </remarks>
-        public void ParseHeader(string header)
+        private void ParseHeader(string header)
         {
             var match = Regex.Match(header, @".*-(\d+),");
 
@@ -728,7 +728,7 @@ namespace PatchApply
             return ToPatch(SubChunkToPatch);
         }
 
-        protected string ToPatch(SubChunkToPatchFnc subChunkToPatch)
+        private string ToPatch(SubChunkToPatchFnc subChunkToPatch)
         {
             string result = null;
 

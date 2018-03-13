@@ -46,7 +46,7 @@ namespace GitUI
                     diffArgs, encoding, true, isTracked);
         }
 
-        public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
+        private static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
         {
             if (!file.IsTracked)
             {
@@ -176,7 +176,7 @@ namespace GitUI
             return null;
         }
 
-        public class MaskPanel : PictureBox
+        private class MaskPanel : PictureBox
         {
             public MaskPanel()
             {
@@ -191,7 +191,7 @@ namespace GitUI
             return tree.Nodes.AllNodes();
         }
 
-        public static IEnumerable<TreeNode> AllNodes(this TreeNodeCollection nodes)
+        private static IEnumerable<TreeNode> AllNodes(this TreeNodeCollection nodes)
         {
             foreach (TreeNode node in nodes)
             {
