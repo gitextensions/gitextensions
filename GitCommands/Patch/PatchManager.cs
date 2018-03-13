@@ -12,8 +12,6 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        public string PatchFileName { get; set; }
-
         public string DirToPatch { get; set; }
 
         public List<Patch> Patches { get; set; } = new List<Patch>();
@@ -206,9 +204,9 @@ namespace PatchApply
             }
         }
 
-        public void LoadPatchFile(bool applyPatch, Encoding filesContentEncoding)
+        public void LoadPatchFile(string path, bool applyPatch, Encoding filesContentEncoding)
         {
-            var text = File.ReadAllText(PatchFileName, GitModule.LosslessEncoding);
+            var text = File.ReadAllText(path, GitModule.LosslessEncoding);
             LoadPatch(text, applyPatch, filesContentEncoding);
         }
     }
