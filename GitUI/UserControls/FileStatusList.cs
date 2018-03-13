@@ -80,7 +80,7 @@ namespace GitUI
 
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _revisionTester = new GitRevisionTester();
+            _revisionTester = new GitRevisionTester(_fullPathResolver);
         }
 
         public bool AlwaysRevisionGroups

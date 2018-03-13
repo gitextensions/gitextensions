@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO.Abstractions;
 using System.Linq;
 using GitCommands;
 using GitCommands.Git;
@@ -9,7 +8,7 @@ namespace GitUI.CommandsDialogs
     public interface IRevisionDiffController
     {
         bool IsFirstParent(GitRevision revision, IEnumerable<GitRevision> selectedItemParents);
-        bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent);
+        bool LocalRevisionExists(IEnumerable<GitItemStatus> selectedItems);
 
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo);
@@ -100,16 +99,11 @@ namespace GitUI.CommandsDialogs
 
     public sealed class RevisionDiffController : IRevisionDiffController
     {
-        private readonly IFullPathResolver _fullPathResolver;
-        private readonly IFileSystem _fileSystem;
         private readonly IGitRevisionTester _revisionTester;
 
-
-        public RevisionDiffController(IFullPathResolver fullPathResolver, IGitRevisionTester revisionTester, IFileSystem fileSystem)
+        public RevisionDiffController(IGitRevisionTester revisionTester)
         {
-            _fullPathResolver = fullPathResolver;
             _revisionTester = revisionTester;
-            _fileSystem = fileSystem;
         }
 
         // The enabling of menu items is related to how the actions have been implemented
@@ -245,31 +239,9 @@ namespace GitUI.CommandsDialogs
             return _revisionTester.IsFirstParent(revision, selectedItemParents);
         }
 
-        public bool LocalExists(IEnumerable<GitItemStatusWithParent> selectedItemsWithParent)
+        public bool LocalRevisionExists(IEnumerable<GitItemStatus> selectedItems)
         {
-            if (selectedItemsWithParent == null)
-            {
-                return false;
-            }
-
-            var items = selectedItemsWithParent as List<GitItemStatusWithParent> ?? selectedItemsWithParent.ToList();
-            bool localExists = items.Any(item => !item.Item.IsTracked);
-            if (localExists)
-            {
-                return true;
-            }
-
-            // enable *<->Local items only when (any) local file exists
-            foreach (var item in items)
-            {
-                string filePath = _fullPathResolver.Resolve(item.Item.Name);
-                if (_fileSystem.File.Exists(filePath))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _revisionTester.LocalRevisionExists(selectedItems);
         }
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.IO.Abstractions;
+using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
@@ -10,12 +11,63 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class GitRevisionTesterTests
     {
-        private IGitRevisionTester _tester;
+        private FileBase _file;
+        private IFileSystem _fileSystem;
+        private IFullPathResolver _fullPathResolver;
+        private GitRevisionTester _tester;
 
         [SetUp]
         public void Setup()
         {
-            _tester = new GitRevisionTester();
+            _file = Substitute.For<FileBase>();
+            _fileSystem = Substitute.For<IFileSystem>();
+            _fileSystem.File.Returns(_file);
+
+            _fullPathResolver = Substitute.For<IFullPathResolver>();
+
+            _tester = new GitRevisionTester(_fullPathResolver, _fileSystem);
+        }
+
+        [Test]
+        public void IsFirstParent_should_return_false_if_parents_null()
+        {
+            _tester.IsFirstParent(null, null).Should().BeFalse();
+        }
+
+        [Test]
+        public void IsFirstParent_should_return_false_if_no_parents_contains_any_of_selected_items()
+        {
+            Assert.Inconclusive();
+        }
+
+        [Test]
+        public void IsFirstParent_should_return_true_if_all_parents_contains_all_of_selected_items()
+        {
+            Assert.Inconclusive();
+        }
+
+        [Test]
+        public void LocalExists_should_should_return_false_if_items_null()
+        {
+            _tester.LocalRevisionExists(null).Should().BeFalse();
+        }
+
+        [Test]
+        public void LocalExists_should_return_true_if_no_items_tracked()
+        {
+            Assert.Inconclusive();
+        }
+
+        [Test]
+        public void LocalExists_should_return_true_if_file_exists()
+        {
+            Assert.Inconclusive();
+        }
+
+        [Test]
+        public void LocalExists_should_return_false_if_none_of_locally_tracked_items_have_files()
+        {
+            Assert.Inconclusive();
         }
 
         [Test]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -58,7 +59,7 @@ namespace GitUI.CommandsDialogs
             _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
-            _revisionTester = new GitRevisionTester();
+            _revisionTester = new GitRevisionTester(_fullPathResolver);
 
             lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
             lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
@@ -73,7 +74,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffController = new RevisionDiffController(_fullPathResolver);
+            _revisionDiffController = new RevisionDiffController(_revisionTester);
             base.OnRuntimeLoad(e);
         }
 
@@ -265,7 +266,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             bool firstIsParent = _revisionTester.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
-            bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent);
+            bool localExists = _revisionTester.LocalRevisionExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);

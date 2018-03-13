@@ -1,6 +1,6 @@
-﻿using System.IO.Abstractions;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.CommandsDialogs;
 using NSubstitute;
 using NUnit.Framework;
@@ -10,21 +10,15 @@ namespace GitUITests.CommandsDialogs
     [TestFixture]
     public class RevisionDiffControllerTests
     {
-        private FileBase _file;
-        private IFileSystem _fileSystem;
-        private IFullPathResolver _fullPathResolver;
+        private IGitRevisionTester _tester;
         private RevisionDiffController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _file = Substitute.For<FileBase>();
-            _fileSystem = Substitute.For<IFileSystem>();
-            _fileSystem.File.Returns(_file);
+            _tester = Substitute.For<IGitRevisionTester>();
 
-            _fullPathResolver = Substitute.For<IFullPathResolver>();
-
-            _controller = new RevisionDiffController(_fullPathResolver, TODO, _fileSystem);
+            _controller = new RevisionDiffController(_tester);
         }
 
         #region difftool menu
@@ -218,47 +212,5 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowMenuSelectedParentToLocal(selectionInfo).Should().Be(!n);
         }
         #endregion
-
-        [Test]
-        public void IsFirstParent_should_return_false_if_parents_null()
-        {
-            _controller.IsFirstParent(null, null).Should().BeFalse();
-        }
-
-        [Test]
-        public void IsFirstParent_should_return_false_if_no_parents_contains_any_of_selected_items()
-        {
-            Assert.Inconclusive();
-        }
-
-        [Test]
-        public void IsFirstParent_should_return_true_if_all_parents_contains_all_of_selected_items()
-        {
-            Assert.Inconclusive();
-        }
-
-        [Test]
-        public void LocalExists_should_should_return_false_if_items_null()
-        {
-            _controller.LocalExists(null).Should().BeFalse();
-        }
-
-        [Test]
-        public void LocalExists_should_return_true_if_no_items_tracked()
-        {
-            Assert.Inconclusive();
-        }
-
-        [Test]
-        public void LocalExists_should_return_true_if_file_exists()
-        {
-            Assert.Inconclusive();
-        }
-
-        [Test]
-        public void LocalExists_should_return_false_if_none_of_locally_tracked_items_have_files()
-        {
-            Assert.Inconclusive();
-        }
     }
 }

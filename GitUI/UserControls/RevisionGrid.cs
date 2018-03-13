@@ -70,7 +70,7 @@ namespace GitUI
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly ICommitDataManager _commitDataManager;
-        private readonly IGitRevisionTester _gitRevisionTester = new GitRevisionTester();
+        private readonly IGitRevisionTester _gitRevisionTester = new GitRevisionTester(/* TODO: this is not particular nice */null);
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;

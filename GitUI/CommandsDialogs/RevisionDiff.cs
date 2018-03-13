@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -34,6 +35,7 @@ namespace GitUI.CommandsDialogs
         private IRevisionDiffController _revisionDiffController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+        private readonly IGitRevisionTester _gitRevisionTester;
 
         public RevisionDiff()
         {
@@ -43,6 +45,7 @@ namespace GitUI.CommandsDialogs
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
+            _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
         }
 
         public void ForceRefreshRevisions()
@@ -135,7 +138,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffController = new RevisionDiffController(_fullPathResolver);
+            _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
             DiffFiles.FilterVisible = true;
             DiffFiles.DescribeRevision = DescribeRevision;
@@ -566,7 +569,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             bool firstIsParent = _revisionDiffController.IsFirstParent(DiffFiles.Revision, DiffFiles.SelectedItemParents);
-            bool localExists = _revisionDiffController.LocalExists(DiffFiles.SelectedItemsWithParent);
+            bool localExists = _revisionDiffController.LocalRevisionExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
