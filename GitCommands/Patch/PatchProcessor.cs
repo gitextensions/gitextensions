@@ -241,7 +241,7 @@ namespace PatchApply
             else if (input.StartsWith("--- "))
             {
                 // old file name
-                input = GitModule.UnquoteFileName(input);
+                input = GitModule.UnescapeOctalCodePoints(input);
                 Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
 
                 if (regexMatch.Success)
@@ -264,7 +264,7 @@ namespace PatchApply
             else if (input.StartsWith("+++ "))
             {
                 // new file name
-                input = GitModule.UnquoteFileName(input);
+                input = GitModule.UnescapeOctalCodePoints(input);
                 Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
 
                 if (regexMatch.Success)

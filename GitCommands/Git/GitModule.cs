@@ -3676,64 +3676,52 @@ namespace GitCommands
             return false;
         }
 
-        public static string UnquoteFileName(string fileName)
+        private static readonly Regex _escapedOctalCodePointRegex = new Regex(@"(\\([0-7]{3}))+", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Unescapes any octal code points embedded within <paramref name="s"/>.
+        /// </summary>
+        /// <remarks>
+        /// If no portions of <paramref name="s"/> contain escaped data, then <paramref name="s"/> is returned.
+        /// </remarks>
+        /// <example>
+        /// <code>UnescapeOctalCodePoints(@"\353\221\220\353\213\244") == "두다"</code>
+        /// </example>
+        /// <param name="s">The string to unescape.</param>
+        /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present.</returns>
+        [ContractAnnotation("s:null=>null")]
+        public static string UnescapeOctalCodePoints(string s)
         {
-            if (fileName.IsNullOrWhiteSpace())
+            if (s == null)
             {
-                return fileName;
+                return null;
             }
 
-            char[] chars = fileName.ToCharArray();
-            var blist = new List<byte>();
-            int i = 0;
-            StringBuilder sb = new StringBuilder();
-            while (i < chars.Length)
-            {
-                char c = chars[i];
-                if (c == '\\')
+            return _escapedOctalCodePointRegex.Replace(
+                s,
+                match =>
                 {
-                    // there should be 3 digits
-                    if (chars.Length >= i + 3)
+                    try
                     {
-                        string octNumber = "" + chars[i + 1] + chars[i + 2] + chars[i + 3];
-
-                        try
-                        {
-                            int code = Convert.ToInt32(octNumber, 8);
-                            blist.Add((byte)code);
-                            i += 4;
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        return SystemEncoding.GetString(
+                            match.Groups[2]
+                                .Captures.Cast<Capture>()
+                                .Select(c => Convert.ToByte(c.Value, 8))
+                                .ToArray());
                     }
-                }
-                else
-                {
-                    if (blist.Count > 0)
+                    catch (OverflowException)
                     {
-                        sb.Append(SystemEncoding.GetString(blist.ToArray()));
-                        blist.Clear();
+                        // Octal values greater than 377 overflow a single byte.
+                        // These should not be present in the input string.
+                        return "";
                     }
-
-                    sb.Append(c);
-                    i++;
-                }
-            }
-
-            if (blist.Count > 0)
-            {
-                sb.Append(SystemEncoding.GetString(blist.ToArray()));
-                blist.Clear();
-            }
-
-            return sb.ToString();
+                });
         }
 
         public static string ReEncodeFileNameFromLossless(string fileName)
         {
             fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
-            return UnquoteFileName(fileName);
+            return UnescapeOctalCodePoints(fileName);
         }
 
         public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
