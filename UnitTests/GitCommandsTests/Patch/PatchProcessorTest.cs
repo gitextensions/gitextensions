@@ -118,7 +118,7 @@ namespace GitCommandsTests.PatchApply
             var patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, Encoding.UTF8).ToList();
 
             Assert.AreEqual(13, patches.Count);
-            Assert.AreEqual(3, patches.Count(p => p.CombinedDiff));
+            Assert.AreEqual(3, patches.Count(p => p.IsCombinedDiff));
         }
 
         private static TestPatch CreateSmallPatchExample(bool reverse = false)

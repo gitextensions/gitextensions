@@ -31,7 +31,7 @@ namespace PatchApply
         public FileType File { get; set; }
         public string FileNameA { get; set; }
         public string FileNameB { get; set; }
-        public bool CombinedDiff { get; set; }
+        public bool IsCombinedDiff { get; set; }
 
         public PatchType Type { get; set; }
 

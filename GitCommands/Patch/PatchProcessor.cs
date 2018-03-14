@@ -65,43 +65,43 @@ namespace PatchApply
                 return null;
             }
 
-            string input = lines[lineIndex];
+            string header = lines[lineIndex];
 
-            if (!IsStartOfANewPatch(input, out var combinedDiff))
+            if (!IsStartOfANewPatch(header, out var isCombinedDiff))
             {
                 return null;
             }
 
-            input = GitModule.ReEncodeFileNameFromLossless(input);
+            header = GitModule.ReEncodeFileNameFromLossless(header);
 
             var state = PatchProcessorState.InHeader;
 
             string fileNameA, fileNameB;
 
-            if (!combinedDiff)
+            if (!isCombinedDiff)
             {
                 // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
-                Match match = Regex.Match(input, " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
+                Match match = Regex.Match(header, " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
 
                 fileNameA = match.Groups[1].Value.Trim();
                 fileNameB = match.Groups[2].Value.Trim();
             }
             else
             {
-                Match match = Regex.Match(input, "--cc [\\\"]?(.*)[\\\"]?");
+                Match match = Regex.Match(header, "--cc [\\\"]?(.*)[\\\"]?");
 
                 fileNameA = match.Groups[1].Value.Trim();
                 fileNameB = null;
             }
 
             var patch = new Patch();
-            patch.PatchHeader = input;
+            patch.PatchHeader = header;
             patch.Type = Patch.PatchType.ChangeFile;
-            patch.CombinedDiff = combinedDiff;
+            patch.IsCombinedDiff = isCombinedDiff;
             patch.FileNameA = fileNameA;
             patch.FileNameB = fileNameB;
 
-            patch.AppendText(input);
+            patch.AppendText(header);
             if (lineIndex < lines.Length - 1)
             {
                 patch.AppendText("\n");
@@ -110,104 +110,104 @@ namespace PatchApply
             int i = lineIndex + 1;
             for (; i < lines.Length; i++)
             {
-                input = lines[i];
+                var line = lines[i];
 
-                if (IsStartOfANewPatch(input))
+                if (IsStartOfANewPatch(line))
                 {
                     lineIndex = i - 1;
                     return patch;
                 }
 
-                if (IsChunkHeader(input))
+                if (IsChunkHeader(line))
                 {
                     state = PatchProcessorState.InBody;
                     break;
                 }
 
                 // header lines are encoded in GitModule.SystemEncoding
-                input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
-                if (IsIndexLine(input))
+                line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);
+                if (IsIndexLine(line))
                 {
-                    patch.PatchIndex = input;
+                    patch.PatchIndex = line;
                     if (i < lines.Length - 1)
                     {
-                        input += "\n";
+                        line += "\n";
                     }
 
-                    patch.AppendText(input);
+                    patch.AppendText(line);
                     continue;
                 }
 
-                if (TryGetPatchType(input, out var patchType))
+                if (TryGetPatchType(line, out var patchType))
                 {
                     patch.Type = patchType;
                 }
-                else if (IsUnlistedBinaryFileDelete(input))
+                else if (IsUnlistedBinaryFileDelete(line))
                 {
                     if (patch.Type != Patch.PatchType.DeleteFile)
                     {
-                        throw new FormatException("Change not parsed correct: " + input);
+                        throw new FormatException("Change not parsed correct: " + line);
                     }
 
                     patch.File = Patch.FileType.Binary;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
-                else if (IsUnlistedBinaryNewFile(input))
+                else if (IsUnlistedBinaryNewFile(line))
                 {
                     if (patch.Type != Patch.PatchType.NewFile)
                     {
-                        throw new FormatException("Change not parsed correct: " + input);
+                        throw new FormatException("Change not parsed correct: " + line);
                     }
 
                     patch.File = Patch.FileType.Binary;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
-                else if (IsBinaryPatch(input))
+                else if (IsBinaryPatch(line))
                 {
                     patch.File = Patch.FileType.Binary;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
 
-                ValidateHeader(ref input, patch);
+                ValidateHeader(ref line, patch);
                 if (i < lines.Length - 1)
                 {
-                    input += "\n";
+                    line += "\n";
                 }
 
-                patch.AppendText(input);
+                patch.AppendText(line);
             }
 
             // process patch body
             for (; i < lines.Length; i++)
             {
-                input = lines[i];
+                var line = lines[i];
 
-                if (IsStartOfANewPatch(input, out combinedDiff))
+                if (IsStartOfANewPatch(line, out isCombinedDiff))
                 {
                     lineIndex = i - 1;
                     return patch;
                 }
 
-                if (state == PatchProcessorState.InBody && input.StartsWithAny(new[] { " ", "-", "+", "@" }))
+                if (state == PatchProcessorState.InBody && line.StartsWithAny(new[] { " ", "-", "+", "@" }))
                 {
                     // diff content
-                    input = GitModule.ReEncodeStringFromLossless(input, filesContentEncoding);
+                    line = GitModule.ReEncodeStringFromLossless(line, filesContentEncoding);
                 }
                 else
                 {
                     // warnings, messages ...
-                    input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
+                    line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);
                 }
 
                 if (i < lines.Length - 1)
                 {
-                    input += "\n";
+                    line += "\n";
                 }
 
-                patch.AppendText(input);
+                patch.AppendText(line);
             }
 
             lineIndex = i - 1;
@@ -311,10 +311,10 @@ namespace PatchApply
             return input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ");
         }
 
-        private static bool IsStartOfANewPatch([NotNull] string input, out bool combinedDiff)
+        private static bool IsStartOfANewPatch([NotNull] string input, out bool isCombinedDiff)
         {
-            combinedDiff = IsCombinedDiff(input);
-            return input.StartsWith("diff --git ") || combinedDiff;
+            isCombinedDiff = IsCombinedDiff(input);
+            return input.StartsWith("diff --git ") || isCombinedDiff;
         }
 
         private static bool IsStartOfANewPatch(string input)
