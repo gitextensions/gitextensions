@@ -1,56 +1,63 @@
-using System.Text;
+﻿using System;
 using JetBrains.Annotations;
 
 namespace PatchApply
 {
-    public class Patch
+    public sealed class Patch
     {
-        private StringBuilder _textBuilder;
-
-        public Patch()
-        {
-            File = FileType.Text;
-        }
-
-        public enum PatchType
-        {
-            NewFile,
-            DeleteFile,
-            ChangeFile,
-            ChangeFileMode
-        }
-
-        public enum FileType
-        {
-            Binary,
-            Text
-        }
-
-        public string PatchHeader { get; set; }
-        public string PatchIndex { get; set; }
-        public FileType File { get; set; }
-        public string FileNameA { get; set; }
-        public string FileNameB { get; set; }
-        public bool IsCombinedDiff { get; set; }
-
-        public PatchType Type { get; set; }
+        [NotNull]
+        public string Header { get; }
 
         [CanBeNull]
-        public string Text => _textBuilder?.ToString();
+        public string Index { get; }
 
-        public void AppendText(string text)
-        {
-            GetTextBuilder().Append(text);
-        }
+        public PatchFileType FileType { get; }
 
-        public void AppendTextLine(string line)
-        {
-            GetTextBuilder().Append(line).Append('\n');
-        }
+        [NotNull]
+        public string FileNameA { get; }
 
-        private StringBuilder GetTextBuilder()
+        [CanBeNull]
+        public string FileNameB { get; }
+
+        public bool IsCombinedDiff { get; }
+
+        public PatchChangeType ChangeType { get; }
+
+        [CanBeNull]
+        public string Text { get; }
+
+        public Patch(
+            [NotNull] string header,
+            [CanBeNull] string index,
+            PatchFileType fileType,
+            [NotNull] string fileNameA,
+            [CanBeNull] string fileNameB,
+            bool isCombinedDiff,
+            PatchChangeType changeType,
+            [CanBeNull] string text)
         {
-            return _textBuilder ?? (_textBuilder = new StringBuilder());
+            Header = header ?? throw new ArgumentNullException(nameof(header));
+            Index = index;
+            FileType = fileType;
+            FileNameA = fileNameA ?? throw new ArgumentNullException(nameof(fileNameA));
+            FileNameB = fileNameB;
+            IsCombinedDiff = isCombinedDiff;
+            ChangeType = changeType;
+            Text = text;
         }
+    }
+
+    public enum PatchChangeType
+    {
+        NewFile,
+        DeleteFile,
+        ChangeFile,
+        ChangeFileMode
+    }
+
+    public enum PatchFileType
+    {
+        Binary,
+        Text
     }
 }

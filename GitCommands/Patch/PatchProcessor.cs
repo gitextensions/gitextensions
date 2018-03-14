@@ -41,7 +41,7 @@ namespace PatchApply
             // skip email header
             for (; i < lines.Length; i++)
             {
-                if (IsStartOfANewPatch(lines[i]))
+                if (IsStartOfANewPatch(lines[i], out _))
                 {
                     break;
                 }
@@ -83,6 +83,11 @@ namespace PatchApply
                 // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
                 Match match = Regex.Match(header, " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
 
+                if (!match.Success)
+                {
+                    throw new FormatException("Invalid patch header: " + header);
+                }
+
                 fileNameA = match.Groups[1].Value.Trim();
                 fileNameB = match.Groups[2].Value.Trim();
             }
@@ -90,105 +95,170 @@ namespace PatchApply
             {
                 Match match = Regex.Match(header, "--cc [\\\"]?(.*)[\\\"]?");
 
+                if (!match.Success)
+                {
+                    throw new FormatException("Invalid patch header: " + header);
+                }
+
                 fileNameA = match.Groups[1].Value.Trim();
                 fileNameB = null;
             }
 
-            var patch = new Patch();
-            patch.PatchHeader = header;
-            patch.Type = Patch.PatchType.ChangeFile;
-            patch.IsCombinedDiff = isCombinedDiff;
-            patch.FileNameA = fileNameA;
-            patch.FileNameB = fileNameB;
+            string index = null;
+            var changeType = PatchChangeType.ChangeFile;
+            var fileType = PatchFileType.Text;
+            var patchText = new StringBuilder();
 
-            patch.AppendText(header);
+            patchText.Append(header);
             if (lineIndex < lines.Length - 1)
             {
-                patch.AppendText("\n");
+                patchText.Append("\n");
             }
 
-            int i = lineIndex + 1;
+            var done = false;
+            var i = lineIndex + 1;
+
             for (; i < lines.Length; i++)
             {
                 var line = lines[i];
 
-                if (IsStartOfANewPatch(line))
+                if (IsStartOfANewPatch(line, out _))
                 {
                     lineIndex = i - 1;
-                    return patch;
+                    done = true;
+                    break;
                 }
 
-                if (IsChunkHeader(line))
+                if (line.StartsWith("@@"))
                 {
+                    // Starting a new chunk
                     state = PatchProcessorState.InBody;
                     break;
                 }
 
                 // header lines are encoded in GitModule.SystemEncoding
                 line = GitModule.ReEncodeStringFromLossless(line, GitModule.SystemEncoding);
-                if (IsIndexLine(line))
+
+                if (line.StartsWith("index "))
                 {
-                    patch.PatchIndex = line;
+                    // Index line
+                    index = line;
+                    patchText.Append(line);
                     if (i < lines.Length - 1)
                     {
-                        line += "\n";
+                        patchText.Append("\n");
                     }
 
-                    patch.AppendText(line);
                     continue;
                 }
 
-                if (TryGetPatchType(line, out var patchType))
+                if (line.StartsWith("new file mode "))
                 {
-                    patch.Type = patchType;
+                    changeType = PatchChangeType.NewFile;
                 }
-                else if (IsUnlistedBinaryFileDelete(line))
+                else if (line.StartsWith("deleted file mode "))
                 {
-                    if (patch.Type != Patch.PatchType.DeleteFile)
+                    changeType = PatchChangeType.DeleteFile;
+                }
+                else if (line.StartsWith("old mode "))
+                {
+                    changeType = PatchChangeType.ChangeFileMode;
+                }
+                else if (line.StartsWith("Binary files a/") && line.EndsWith(" and /dev/null differ"))
+                {
+                    // Unlisted binary file deletion
+                    if (changeType != PatchChangeType.DeleteFile)
                     {
-                        throw new FormatException("Change not parsed correct: " + line);
+                        throw new FormatException("Change not parsed correctly: " + line);
                     }
 
-                    patch.File = Patch.FileType.Binary;
+                    fileType = PatchFileType.Binary;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
-                else if (IsUnlistedBinaryNewFile(line))
+                else if (line.StartsWith("Binary files /dev/null and b/") && line.EndsWith(" differ"))
                 {
-                    if (patch.Type != Patch.PatchType.NewFile)
+                    // Unlisted binary file addition
+                    if (changeType != PatchChangeType.NewFile)
                     {
-                        throw new FormatException("Change not parsed correct: " + line);
+                        throw new FormatException("Change not parsed correctly: " + line);
                     }
 
-                    patch.File = Patch.FileType.Binary;
+                    fileType = PatchFileType.Binary;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
-                else if (IsBinaryPatch(line))
+                else if (line.StartsWith("GIT binary patch"))
                 {
-                    patch.File = Patch.FileType.Binary;
+                    fileType = PatchFileType.Binary;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
 
-                ValidateHeader(ref line, patch);
+                if (line.StartsWith("--- /dev/null"))
+                {
+                    // there is no old file, so this should be a new file
+                    if (changeType != PatchChangeType.NewFile)
+                    {
+                        throw new FormatException("Change not parsed correctly: " + line);
+                    }
+                }
+                else if (line.StartsWith("--- "))
+                {
+                    // old file name
+                    line = GitModule.UnescapeOctalCodePoints(line);
+                    Match regexMatch = Regex.Match(line, "[-]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
+
+                    if (regexMatch.Success)
+                    {
+                        fileNameA = regexMatch.Groups[1].Value.Trim();
+                    }
+                    else
+                    {
+                        throw new FormatException("Old filename not parsed correctly: " + line);
+                    }
+                }
+                else if (line.StartsWith("+++ /dev/null"))
+                {
+                    // there is no new file, so this should be a deleted file
+                    if (changeType != PatchChangeType.DeleteFile)
+                    {
+                        throw new FormatException("Change not parsed correctly: " + line);
+                    }
+                }
+                else if (line.StartsWith("+++ "))
+                {
+                    // new file name
+                    line = GitModule.UnescapeOctalCodePoints(line);
+                    Match regexMatch = Regex.Match(line, "[+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
+
+                    if (regexMatch.Success)
+                    {
+                        fileNameB = regexMatch.Groups[1].Value.Trim();
+                    }
+                    else
+                    {
+                        throw new FormatException("New filename not parsed correctly: " + line);
+                    }
+                }
+
+                patchText.Append(line);
+
                 if (i < lines.Length - 1)
                 {
-                    line += "\n";
+                    patchText.Append("\n");
                 }
-
-                patch.AppendText(line);
             }
 
             // process patch body
-            for (; i < lines.Length; i++)
+            for (; !done && i < lines.Length; i++)
             {
                 var line = lines[i];
 
-                if (IsStartOfANewPatch(line, out isCombinedDiff))
+                if (IsStartOfANewPatch(line, out _))
                 {
                     lineIndex = i - 1;
-                    return patch;
+                    break;
                 }
 
                 if (state == PatchProcessorState.InBody && line.StartsWithAny(new[] { " ", "-", "+", "@" }))
@@ -207,16 +277,12 @@ namespace PatchApply
                     line += "\n";
                 }
 
-                patch.AppendText(line);
+                patchText.Append(line);
             }
 
             lineIndex = i - 1;
-            return patch;
-        }
 
-        private static bool IsIndexLine([NotNull] string input)
-        {
-            return input.StartsWith("index ");
+            return new Patch(header, index, fileType, fileNameA, fileNameB, isCombinedDiff, changeType, patchText.ToString());
         }
 
         [ContractAnnotation("diff:null=>false")]
@@ -225,111 +291,13 @@ namespace PatchApply
             // diff --combined describe.c
             // diff --cc describe.c
             return !string.IsNullOrWhiteSpace(diff) &&
-                                 (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
-        }
-
-        private static void ValidateHeader(ref string input, Patch patch)
-        {
-            if (input.StartsWith("--- /dev/null"))
-            {
-                // there is no old file, so this should be a new file
-                if (patch.Type != Patch.PatchType.NewFile)
-                {
-                    throw new FormatException("Change not parsed correct: " + input);
-                }
-            }
-            else if (input.StartsWith("--- "))
-            {
-                // old file name
-                input = GitModule.UnescapeOctalCodePoints(input);
-                Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
-
-                if (regexMatch.Success)
-                {
-                    patch.FileNameA = regexMatch.Groups[1].Value.Trim();
-                }
-                else
-                {
-                    throw new FormatException("Old filename not parsed correct: " + input);
-                }
-            }
-            else if (input.StartsWith("+++ /dev/null"))
-            {
-                // there is no new file, so this should be a deleted file
-                if (patch.Type != Patch.PatchType.DeleteFile)
-                {
-                    throw new FormatException("Change not parsed correct: " + input);
-                }
-            }
-            else if (input.StartsWith("+++ "))
-            {
-                // new file name
-                input = GitModule.UnescapeOctalCodePoints(input);
-                Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
-
-                if (regexMatch.Success)
-                {
-                    patch.FileNameB = regexMatch.Groups[1].Value.Trim();
-                }
-                else
-                {
-                    throw new FormatException("New filename not parsed correct: " + input);
-                }
-            }
-        }
-
-        private static bool IsChunkHeader(string input)
-        {
-            return input.StartsWith("@@");
-        }
-
-        private static bool IsBinaryPatch(string input)
-        {
-            return input.StartsWith("GIT binary patch");
-        }
-
-        private static bool IsUnlistedBinaryFileDelete(string input)
-        {
-            return input.StartsWith("Binary files a/") && input.EndsWith(" and /dev/null differ");
-        }
-
-        private static bool IsUnlistedBinaryNewFile(string input)
-        {
-            return input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ");
+                   (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
         private static bool IsStartOfANewPatch([NotNull] string input, out bool isCombinedDiff)
         {
             isCombinedDiff = IsCombinedDiff(input);
             return isCombinedDiff || input.StartsWith("diff --git ");
-        }
-
-        private static bool IsStartOfANewPatch(string input)
-        {
-            return IsStartOfANewPatch(input, out _);
-        }
-
-        private static bool TryGetPatchType(string input, out Patch.PatchType type)
-        {
-            if (input.StartsWith("new file mode "))
-            {
-                type = Patch.PatchType.NewFile;
-            }
-            else if (input.StartsWith("deleted file mode "))
-            {
-                type = Patch.PatchType.DeleteFile;
-            }
-            else if (input.StartsWith("old mode "))
-            {
-                type = Patch.PatchType.ChangeFileMode;
-            }
-            else
-            {
-                type = 0;
-                return false;
-            }
-
-            return true;
         }
     }
 }

@@ -34,30 +34,30 @@ namespace GitCommandsTests.PatchApply
         {
             TestPatch expectedPatch = CreateSmallPatchExample();
 
-            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput.ToString(), Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, Encoding.UTF8);
 
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(expectedPatch.Patch.PatchHeader, createdPatch.PatchHeader);
+            Assert.AreEqual(expectedPatch.Patch.Header, createdPatch.Header);
             Assert.AreEqual(expectedPatch.Patch.FileNameA, createdPatch.FileNameA);
-            Assert.AreEqual(expectedPatch.Patch.PatchIndex, createdPatch.PatchIndex);
-            Assert.AreEqual(expectedPatch.Patch.Type, createdPatch.Type);
+            Assert.AreEqual(expectedPatch.Patch.Index, createdPatch.Index);
+            Assert.AreEqual(expectedPatch.Patch.ChangeType, createdPatch.ChangeType);
             Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
         [Test]
         public void TestCorrectlyLoadReversePatch()
         {
-            TestPatch expectedPatch = CreateSmallPatchExample(true);
+            TestPatch expectedPatch = CreateSmallPatchExample(reverse: true);
 
-            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput.ToString(), Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, Encoding.UTF8);
 
             Patch createdPatch = patches.First();
 
-            Assert.AreEqual(expectedPatch.Patch.PatchHeader, createdPatch.PatchHeader, "header");
+            Assert.AreEqual(expectedPatch.Patch.Header, createdPatch.Header, "header");
             Assert.AreEqual(expectedPatch.Patch.FileNameB, createdPatch.FileNameA, "fileA");
-            Assert.AreEqual(expectedPatch.Patch.PatchIndex, createdPatch.PatchIndex);
-            Assert.AreEqual(expectedPatch.Patch.Type, createdPatch.Type);
+            Assert.AreEqual(expectedPatch.Patch.Index, createdPatch.Index);
+            Assert.AreEqual(expectedPatch.Patch.ChangeType, createdPatch.ChangeType);
             Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
@@ -83,7 +83,7 @@ namespace GitCommandsTests.PatchApply
         {
             var patches = PatchProcessor.CreatePatchesFromString(_bigBinPatch, Encoding.UTF8);
 
-            Assert.AreEqual(248, patches.Count(p => p.File == Patch.FileType.Binary));
+            Assert.AreEqual(248, patches.Count(p => p.FileType == PatchFileType.Binary));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace GitCommandsTests.PatchApply
         {
             var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
 
-            Assert.AreEqual(1, patches.Count(p => p.Type == Patch.PatchType.NewFile));
+            Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.NewFile));
         }
 
         [Test]
@@ -99,17 +99,17 @@ namespace GitCommandsTests.PatchApply
         {
             var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
 
-            Assert.AreEqual(1, patches.Count(p => p.Type == Patch.PatchType.DeleteFile));
+            Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.DeleteFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsChangeFiles()
         {
             var bigPatches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
-            Assert.AreEqual(15, bigPatches.Count(p => p.Type == Patch.PatchType.ChangeFile));
+            Assert.AreEqual(15, bigPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
 
-            var smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput.ToString(), Encoding.UTF8);
-            Assert.AreEqual(1, smallPatches.Count(p => p.Type == Patch.PatchType.ChangeFile));
+            var smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput, Encoding.UTF8);
+            Assert.AreEqual(1, smallPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
         }
 
         [Test]
@@ -123,61 +123,63 @@ namespace GitCommandsTests.PatchApply
 
         private static TestPatch CreateSmallPatchExample(bool reverse = false)
         {
-            var testPatch = new TestPatch
-            {
-                Patch =
-                {
-                    Type = Patch.PatchType.ChangeFile,
-                    PatchHeader = reverse
-                        ? "diff --git b/thisisatestb.txt a/thisisatesta.txt"
-                        : "diff --git a/thisisatesta.txt b/thisisatestb.txt",
-                    PatchIndex = "index 5e4dce2..5eb1e6f 100644",
-                    FileNameA = "thisisatesta.txt",
-                    FileNameB = "thisisatestb.txt"
-                }
-            };
+            var header = reverse
+                ? "diff --git a/thisisatestb.txt b/thisisatesta.txt"
+                : "diff --git a/thisisatesta.txt b/thisisatestb.txt";
+            const string index = "index 5e4dce2..5eb1e6f 100644";
+            const string fileNameA = "thisisatesta.txt";
+            const string fileNameB = "thisisatestb.txt";
 
-            testPatch.AppendHeaderLine(testPatch.Patch.PatchHeader);
-            testPatch.AppendHeaderLine(testPatch.Patch.PatchIndex);
+            var patchText = new StringBuilder();
+            var patchOutput = new StringBuilder();
+
+            AppendHeaderLine(header);
+            AppendHeaderLine(index);
 
             if (reverse)
             {
-                testPatch.AppendHeaderLine("--- b/" + testPatch.Patch.FileNameB);
-                testPatch.AppendHeaderLine("+++ a/" + testPatch.Patch.FileNameA);
+                AppendHeaderLine("--- b/" + fileNameB);
+                AppendHeaderLine("+++ a/" + fileNameA);
             }
             else
             {
-                testPatch.AppendHeaderLine("--- a/" + testPatch.Patch.FileNameA);
-                testPatch.AppendHeaderLine("+++ b/" + testPatch.Patch.FileNameB);
+                AppendHeaderLine("--- a/" + fileNameA);
+                AppendHeaderLine("+++ b/" + fileNameB);
             }
 
-            var fileEncoding = Encoding.UTF8;
+            AppendDiffLine("@@ -1,2 +1,2 @@");
+            AppendDiffLine(" iiiiii");
+            AppendDiffLine("-ąśdkjaldskjlaksd");
+            AppendDiffLine("+changed again€");
 
-            testPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
-            testPatch.AppendDiffLine(" iiiiii", fileEncoding);
-            testPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);
-            testPatch.AppendDiffLine("+changed again€", fileEncoding);
+            var patch = new Patch(header, index, PatchFileType.Text, fileNameA, fileNameB, false, PatchChangeType.ChangeFile, patchText.ToString());
 
-            return testPatch;
+            return new TestPatch(patch, patchOutput.ToString());
+
+            void AppendHeaderLine(string line)
+            {
+                patchText.Append(line).Append("\n");
+                patchOutput.Append(GitModule.ReEncodeString(line, GitModule.SystemEncoding, GitModule.LosslessEncoding));
+                patchOutput.Append("\n");
+            }
+
+            void AppendDiffLine(string line)
+            {
+                patchText.Append(line).Append("\n");
+                patchOutput.Append(GitModule.ReEncodeString(line, Encoding.UTF8, GitModule.LosslessEncoding));
+                patchOutput.Append("\n");
+            }
         }
 
         private sealed class TestPatch
         {
-            public Patch Patch { get; } = new Patch();
-            public StringBuilder PatchOutput { get; } = new StringBuilder();
+            public Patch Patch { get; }
+            public string PatchOutput { get; }
 
-            public void AppendHeaderLine(string line)
+            public TestPatch(Patch patch, string patchOutput)
             {
-                Patch.AppendTextLine(line);
-                PatchOutput.Append(GitModule.ReEncodeString(line, GitModule.SystemEncoding, GitModule.LosslessEncoding));
-                PatchOutput.Append("\n");
-            }
-
-            public void AppendDiffLine(string line, Encoding fileEncoding)
-            {
-                Patch.AppendTextLine(line);
-                PatchOutput.Append(GitModule.ReEncodeString(line, fileEncoding, GitModule.LosslessEncoding));
-                PatchOutput.Append("\n");
+                Patch = patch;
+                PatchOutput = patchOutput;
             }
         }
     }

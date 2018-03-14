@@ -9,33 +9,16 @@ namespace GitCommandsTests.PatchApply
         [Test]
         public void TestPatchConstructor()
         {
-            Patch patch = new Patch();
+            var patch = new Patch("header", "index", PatchFileType.Text, "A", "B", true, PatchChangeType.NewFile, "text");
 
-            Assert.IsNotNull(patch);
-        }
-
-        [Test]
-        public void TestAppendText()
-        {
-            Patch patch = new Patch();
-            patch.AppendText("text1");
-            patch.AppendText("text2");
-
-            Assert.AreEqual("text1text2", patch.Text);
-        }
-
-        [Test]
-        public void TestAppendTextLine()
-        {
-            Patch patch = new Patch();
-
-            patch.AppendTextLine("text1");
-            patch.AppendTextLine("text2");
-            patch.AppendTextLine("text3");
-
-            var expected = "text1\ntext2\ntext3\n";
-
-            Assert.AreEqual(expected, patch.Text);
+            Assert.AreEqual("header", patch.Header);
+            Assert.AreEqual("index", patch.Index);
+            Assert.AreEqual(PatchFileType.Text, patch.FileType);
+            Assert.AreEqual("A", patch.FileNameA);
+            Assert.AreEqual("B", patch.FileNameB);
+            Assert.IsTrue(patch.IsCombinedDiff);
+            Assert.AreEqual(PatchChangeType.NewFile, patch.ChangeType);
+            Assert.AreEqual("text", patch.Text);
         }
     }
 }
