@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,14 +15,14 @@ namespace PatchApply
         [CanBeNull]
         public static byte[] GetResetUnstagedLinesAsPatch([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding)
         {
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
+            var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
             if (selectedChunks == null)
             {
                 return null;
             }
 
-            string body = selectedChunks.ToResetUnstagedLinesPatch();
+            string body = ToResetUnstagedLinesPatch(selectedChunks);
 
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
@@ -45,7 +44,7 @@ namespace PatchApply
         [CanBeNull]
         public static byte[] GetSelectedLinesAsPatch([NotNull] string text, int selectionPosition, int selectionLength, bool staged, [NotNull] Encoding fileContentEncoding, bool isNewFile)
         {
-            ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
+            var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
             if (selectedChunks == null)
             {
@@ -58,7 +57,7 @@ namespace PatchApply
                 header = CorrectHeaderForNewFile(header);
             }
 
-            string body = selectedChunks.ToStagePatch(staged, false);
+            string body = ToStagePatch(selectedChunks, staged, isWholeFile: false);
 
             if (header == null || body == null)
             {
@@ -128,9 +127,9 @@ namespace PatchApply
 
             string header = sb.ToString();
 
-            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
+            var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
 
-            string body = selectedChunks.ToStagePatch(false, true);
+            string body = ToStagePatch(selectedChunks, staged: false, isWholeFile: true);
 
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
@@ -158,6 +157,111 @@ namespace PatchApply
             hb.CopyTo(result, 0);
             bb.CopyTo(result, hb.Length);
             return result;
+        }
+
+        [CanBeNull, ItemNotNull]
+        private static IReadOnlyList<Chunk> GetSelectedChunks([NotNull] string text, int selectionPosition, int selectionLength, [CanBeNull] out string header)
+        {
+            header = null;
+
+            // When there is no patch, return nothing
+            if (string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
+
+            // TODO: handling submodules
+            // Divide diff into header and patch
+            int patchPos = text.IndexOf("@@", StringComparison.Ordinal);
+            if (patchPos < 1)
+            {
+                return null;
+            }
+
+            header = text.Substring(0, patchPos);
+            string diff = text.Substring(patchPos - 1);
+
+            string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
+            var selectedChunks = new List<Chunk>();
+            int i = 0;
+            int currentPos = patchPos - 1;
+
+            while (i < chunks.Length && currentPos <= selectionPosition + selectionLength)
+            {
+                string chunkStr = chunks[i];
+                currentPos += 3;
+
+                // if selection intersects with chunsk
+                if (currentPos + chunkStr.Length >= selectionPosition)
+                {
+                    Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
+                    if (chunk != null)
+                    {
+                        selectedChunks.Add(chunk);
+                    }
+                }
+
+                currentPos += chunkStr.Length;
+                i++;
+            }
+
+            return selectedChunks;
+        }
+
+        [NotNull]
+        private static IReadOnlyList<Chunk> FromNewFile([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreabmle, [NotNull] Encoding fileContentEncoding)
+        {
+            return new List<Chunk>
+            {
+                Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding)
+            };
+        }
+
+        [CanBeNull]
+        private static string ToResetUnstagedLinesPatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks)
+        {
+            string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
+            {
+                return subChunk.ToResetUnstagedLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
+            }
+
+            return ToPatch(chunks, SubChunkToPatch);
+        }
+
+        [CanBeNull]
+        private static string ToStagePatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks, bool staged, bool isWholeFile)
+        {
+            string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
+            {
+                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged, isWholeFile);
+            }
+
+            return ToPatch(chunks, SubChunkToPatch);
+        }
+
+        [CanBeNull]
+        private static string ToPatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks, [NotNull, InstantHandle] SubChunkToPatchFnc subChunkToPatch)
+        {
+            var result = new StringBuilder();
+
+            foreach (Chunk chunk in chunks)
+            {
+                if (result.Length != 0)
+                {
+                    result.Append('\n');
+                }
+
+                chunk.ToPatch(subChunkToPatch, result);
+            }
+
+            if (result.Length == 0)
+            {
+                return null;
+            }
+
+            result.Append($"\n--\n{Application.ProductName} {AppSettings.ProductVersion}");
+
+            return result.ToString();
         }
     }
 
@@ -609,120 +713,6 @@ namespace PatchApply
                 str.Append($"@@ -{_startLine},{removedCount} +{_startLine},{addedCount} @@\n");
                 str.Append(diff);
             }
-        }
-    }
-
-    internal class ChunkList : List<Chunk>
-    {
-        [CanBeNull]
-        public static ChunkList GetSelectedChunks([NotNull] string text, int selectionPosition, int selectionLength, [CanBeNull] out string header)
-        {
-            header = null;
-
-            // When there is no patch, return nothing
-            if (string.IsNullOrEmpty(text))
-            {
-                return null;
-            }
-
-            // TODO: handling submodules
-            // Divide diff into header and patch
-            int patchPos = text.IndexOf("@@", StringComparison.Ordinal);
-            if (patchPos < 1)
-            {
-                return null;
-            }
-
-            header = text.Substring(0, patchPos);
-            string diff = text.Substring(patchPos - 1);
-
-            string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
-            ChunkList selectedChunks = new ChunkList();
-            int i = 0;
-            int currentPos = patchPos - 1;
-
-            while (i < chunks.Length && currentPos <= selectionPosition + selectionLength)
-            {
-                string chunkStr = chunks[i];
-                currentPos += 3;
-
-                // if selection intersects with chunsk
-                if (currentPos + chunkStr.Length >= selectionPosition)
-                {
-                    Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
-                    if (chunk != null)
-                    {
-                        selectedChunks.Add(chunk);
-                    }
-                }
-
-                currentPos += chunkStr.Length;
-                i++;
-            }
-
-            return selectedChunks;
-        }
-
-        [NotNull]
-        public static ChunkList FromNewFile([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreabmle, [NotNull] Encoding fileContentEncoding)
-        {
-            return new ChunkList
-            {
-                Chunk.FromNewFile(
-                    module,
-                    text,
-                    selectionPosition,
-                    selectionLength,
-                    reset,
-                    filePreabmle,
-                    fileContentEncoding)
-            };
-        }
-
-        [CanBeNull]
-        public string ToResetUnstagedLinesPatch()
-        {
-            string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
-            {
-                return subChunk.ToResetUnstagedLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
-            }
-
-            return ToPatch(SubChunkToPatch);
-        }
-
-        [CanBeNull]
-        public string ToStagePatch(bool staged, bool isWholeFile)
-        {
-            string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
-            {
-                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged, isWholeFile);
-            }
-
-            return ToPatch(SubChunkToPatch);
-        }
-
-        [CanBeNull]
-        private string ToPatch([NotNull, InstantHandle] SubChunkToPatchFnc subChunkToPatch)
-        {
-            var result = new StringBuilder();
-
-            foreach (Chunk chunk in this)
-            {
-                if (result.Length != 0)
-                {
-                    result.Append('\n');
-                }
-
-                chunk.ToPatch(subChunkToPatch, result);
-            }
-
-            if (result.Length == 0)
-            {
-                return null;
-            }
-
-            result.Append($"\n--\n{Application.ProductName} {AppSettings.ProductVersion}");
-            return result.ToString();
         }
     }
 }
