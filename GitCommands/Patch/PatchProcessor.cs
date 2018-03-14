@@ -66,18 +66,40 @@ namespace PatchApply
             }
 
             string input = lines[lineIndex];
+
             if (!IsStartOfANewPatch(input, out var combinedDiff))
             {
                 return null;
             }
 
-            PatchProcessorState state = PatchProcessorState.InHeader;
-            Patch patch = new Patch();
             input = GitModule.ReEncodeFileNameFromLossless(input);
+
+            var state = PatchProcessorState.InHeader;
+
+            string fileNameA, fileNameB;
+
+            if (!combinedDiff)
+            {
+                Match match = Regex.Match(input, " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
+
+                fileNameA = match.Groups[1].Value.Trim();
+                fileNameB = match.Groups[2].Value.Trim();
+            }
+            else
+            {
+                Match match = Regex.Match(input, "--cc [\\\"]?(.*)[\\\"]?");
+
+                fileNameA = match.Groups[1].Value.Trim();
+                fileNameB = null;
+            }
+
+            var patch = new Patch();
             patch.PatchHeader = input;
             patch.Type = Patch.PatchType.ChangeFile;
             patch.CombinedDiff = combinedDiff;
-            ExtractPatchFilenames(patch);
+            patch.FileNameA = fileNameA;
+            patch.FileNameB = fileNameB;
+
             patch.AppendText(input);
             if (lineIndex < lines.Length - 1)
             {
@@ -284,25 +306,6 @@ namespace PatchApply
         private static bool IsUnlistedBinaryNewFile(string input)
         {
             return input.StartsWith("Binary files /dev/null and b/") && input.EndsWith(" differ");
-        }
-
-        private static void ExtractPatchFilenames(Patch patch)
-        {
-            if (!patch.CombinedDiff)
-            {
-                Match match = Regex.Match(patch.PatchHeader,
-                                          " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
-
-                patch.FileNameA = match.Groups[1].Value.Trim();
-                patch.FileNameB = match.Groups[2].Value.Trim();
-            }
-            else
-            {
-                Match match = Regex.Match(patch.PatchHeader,
-                                          "--cc [\\\"]?(.*)[\\\"]?");
-
-                patch.FileNameA = match.Groups[1].Value.Trim();
-            }
         }
 
         private static bool IsStartOfANewPatch([NotNull] string input, out bool combinedDiff)
