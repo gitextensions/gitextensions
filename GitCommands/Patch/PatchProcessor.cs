@@ -230,19 +230,17 @@ namespace PatchApply
 
         private static void ValidateHeader(ref string input, Patch patch)
         {
-            // --- /dev/null
-            // means there is no old file, so this should be a new file
-            if (IsOldFileMissing(input))
+            if (input.StartsWith("--- /dev/null"))
             {
+                // there is no old file, so this should be a new file
                 if (patch.Type != Patch.PatchType.NewFile)
                 {
                     throw new FormatException("Change not parsed correct: " + input);
                 }
             }
-
-            // line starts with --- means, old file name
             else if (input.StartsWith("--- "))
             {
+                // old file name
                 input = GitModule.UnquoteFileName(input);
                 Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
 
@@ -255,18 +253,17 @@ namespace PatchApply
                     throw new FormatException("Old filename not parsed correct: " + input);
                 }
             }
-            else if (IsNewFileMissing(input))
+            else if (input.StartsWith("+++ /dev/null"))
             {
+                // there is no new file, so this should be a deleted file
                 if (patch.Type != Patch.PatchType.DeleteFile)
                 {
                     throw new FormatException("Change not parsed correct: " + input);
                 }
             }
-
-            // line starts with +++ means, new file name
-            // we expect a new file now!
             else if (input.StartsWith("+++ "))
             {
+                // new file name
                 input = GitModule.UnquoteFileName(input);
                 Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[abiwco12]/(.*)[\\\"]?");
 
@@ -284,16 +281,6 @@ namespace PatchApply
         private static bool IsChunkHeader(string input)
         {
             return input.StartsWith("@@");
-        }
-
-        private static bool IsNewFileMissing(string input)
-        {
-            return input.StartsWith("+++ /dev/null");
-        }
-
-        private static bool IsOldFileMissing(string input)
-        {
-            return input.StartsWith("--- /dev/null");
         }
 
         private static bool IsBinaryPatch(string input)
