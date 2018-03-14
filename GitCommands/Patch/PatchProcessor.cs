@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Settings;
 using JetBrains.Annotations;
 
 namespace PatchApply
@@ -17,11 +18,18 @@ namespace PatchApply
         }
 
         /// <summary>
-        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
-        /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
-        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
-        /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
+        /// Parses a patch file into individual <see cref="Patch"/> objects.
         /// </summary>
+        /// <remarks>
+        /// The diff part of a patch is printed verbatim.
+        /// <para />
+        /// Everything else (header, warnings, ...) is printed in git encoding (<see cref="GitModule.SystemEncoding"/>).
+        /// <para />
+        /// Since a patch may contain the diff of more than one file, it would be nice to obtain the encoding for each file
+        /// from <c>.gitattributes</c>. For now, one encoding is used for every file in the repo (<see cref="ConfigFileSettings.FilesEncoding"/>).
+        /// <para />
+        /// File paths can be quoted (see <c>core.quotepath</c>). They are unquoted by <see cref="GitModule.ReEncodeFileNameFromLossless"/>.
+        /// </remarks>
         [NotNull, ItemNotNull, Pure]
         public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, [NotNull] Encoding filesContentEncoding)
         {
@@ -49,14 +57,6 @@ namespace PatchApply
             }
         }
 
-        /// <summary>
-        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
-        /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
-        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
-        /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
-        /// </summary>
-        /// <param name="lines">patch lines</param>
-        /// <param name="lineIndex">start index</param>
         [CanBeNull]
         private static Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Encoding filesContentEncoding, ref int lineIndex)
         {
@@ -80,6 +80,7 @@ namespace PatchApply
 
             if (!combinedDiff)
             {
+                // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
                 Match match = Regex.Match(input, " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
 
                 fileNameA = match.Groups[1].Value.Trim();
@@ -221,13 +222,15 @@ namespace PatchApply
         [ContractAnnotation("diff:null=>false")]
         public static bool IsCombinedDiff([CanBeNull] string diff)
         {
+            // diff --combined describe.c
+            // diff --cc describe.c
             return !string.IsNullOrWhiteSpace(diff) &&
                                  (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
         private static void ValidateHeader(ref string input, Patch patch)
         {
-            //--- /dev/null
+            // --- /dev/null
             // means there is no old file, so this should be a new file
             if (IsOldFileMissing(input))
             {
