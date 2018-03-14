@@ -1,4 +1,5 @@
 using System.Text;
+using JetBrains.Annotations;
 
 namespace PatchApply
 {
@@ -34,6 +35,7 @@ namespace PatchApply
 
         public PatchType Type { get; set; }
 
+        [CanBeNull]
         public string Text => _textBuilder?.ToString();
 
         public void AppendText(string text)

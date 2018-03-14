@@ -2384,7 +2384,12 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked = true)
+        [CanBeNull]
+        public Patch GetSingleDiff(
+            [CanBeNull] string firstRevision, [CanBeNull] string secondRevision,
+            [CanBeNull] string fileName, [CanBeNull] string oldFileName,
+            [NotNull] string extraDiffArguments, [NotNull] Encoding encoding,
+            bool cacheResult, bool isTracked = true)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -2421,7 +2426,8 @@ namespace GitCommands
             return GetPatch(patches, fileName, oldFileName);
         }
 
-        private static Patch GetPatch(IReadOnlyList<Patch> patches, string fileName, string oldFileName)
+        [CanBeNull]
+        private static Patch GetPatch([NotNull, ItemNotNull] IReadOnlyList<Patch> patches, [CanBeNull] string fileName, [CanBeNull] string oldFileName)
         {
             foreach (Patch p in patches)
             {

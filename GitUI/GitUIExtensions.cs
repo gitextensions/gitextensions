@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -36,16 +37,27 @@ namespace GitUI
             }
         }
 
-        private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
-            string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
+        [CanBeNull]
+        private static PatchApply.Patch GetItemPatch(
+            [NotNull] GitModule module,
+            [NotNull] GitItemStatus file,
+            [CanBeNull] string firstRevision,
+            [CanBeNull] string secondRevision,
+            [NotNull] string diffArgs,
+            [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
             var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace());
-            return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding, true, isTracked);
+
+            return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
 
-        private static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
+        [NotNull]
+        private static string GetSelectedPatch(
+            [NotNull] this FileViewer diffViewer,
+            [CanBeNull] string firstRevision,
+            [CanBeNull] string secondRevision,
+            [NotNull] GitItemStatus file)
         {
             if (!file.IsTracked)
             {
@@ -96,7 +108,12 @@ namespace GitUI
             return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText);
         }
 
-        public static Task ViewChangesAsync(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
+        public static Task ViewChangesAsync(
+            this FileViewer diffViewer,
+            [CanBeNull] string firstRevision,
+            string secondRevision,
+            [NotNull] GitItemStatus file,
+            [NotNull] string defaultText)
         {
             if (firstRevision == null)
             {

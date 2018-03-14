@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitUI.Editor
 {
@@ -29,7 +30,7 @@ namespace GitUI.Editor
         void Find();
 
         string GetText();
-        void SetText(string text, bool isDiff = false);
+        void SetText([NotNull] string text, bool isDiff = false);
         void SetHighlighting(string syntax);
         void SetHighlightingForFile(string filename);
         void HighlightLine(int line, Color color);

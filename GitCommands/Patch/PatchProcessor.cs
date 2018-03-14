@@ -23,7 +23,7 @@ namespace PatchApply
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
         [NotNull, ItemNotNull, Pure]
-        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
+        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, [NotNull] Encoding filesContentEncoding)
         {
             // TODO encoding for each file in patch should be obtained separately from .gitattributes
 
@@ -191,11 +191,12 @@ namespace PatchApply
             return patch;
         }
 
-        private static bool IsIndexLine(string input)
+        private static bool IsIndexLine([NotNull] string input)
         {
             return input.StartsWith("index ");
         }
 
+        [ContractAnnotation("diff:null=>false")]
         public static bool IsCombinedDiff([CanBeNull] string diff)
         {
             return !string.IsNullOrWhiteSpace(diff) &&
