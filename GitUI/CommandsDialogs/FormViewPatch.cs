@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 using PatchApply;
 using ResourceManager;
 
@@ -67,9 +71,8 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var patches = PatchManager.LoadPatchFile(
-                    PatchFileNameEdit.Text,
-                    Module.FilesEncoding);
+                var text = System.IO.File.ReadAllText(PatchFileNameEdit.Text, GitModule.LosslessEncoding);
+                var patches = PatchProcessor.CreatePatchesFromString(text, Module.FilesEncoding).ToList();
 
                 GridChangedFiles.DataSource = patches;
             }

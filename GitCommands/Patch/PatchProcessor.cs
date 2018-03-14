@@ -167,6 +167,8 @@ namespace PatchApply
         [NotNull, ItemNotNull, Pure]
         public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
         {
+            // TODO encoding for each file in patch should be obtained separately from .gitattributes
+
             string[] lines = patchText.Split('\n');
             int i = 0;
 

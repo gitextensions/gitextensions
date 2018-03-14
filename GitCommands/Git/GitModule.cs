@@ -2416,7 +2416,7 @@ namespace GitCommands
                 ? RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding)
                 : RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
 
-            var patches = PatchManager.LoadPatch(patch, encoding);
+            var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
             return GetPatch(patches, fileName, oldFileName);
         }
@@ -2682,7 +2682,7 @@ namespace GitCommands
             }
 
             string result = RunGitCmd(args, LosslessEncoding);
-            var patches = PatchManager.LoadPatch(result, encoding);
+            var patches = PatchProcessor.CreatePatchesFromString(result, encoding).ToList();
 
             return GetPatch(patches, fileName, oldFileName);
         }
@@ -3945,7 +3945,7 @@ namespace GitCommands
                 return "";
             }
 
-            var patches = PatchManager.LoadPatch(patch, encoding);
+            var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
             return GetPatch(patches, filePath, filePath).Text;
         }
 

@@ -159,40 +159,6 @@ namespace PatchApply
             bb.CopyTo(result, hb.Length);
             return result;
         }
-
-        public string GetMD5Hash(string input)
-        {
-            IEnumerable<byte> bs = GetUTF8EncodedBytes(input);
-            var s = new StringBuilder();
-            foreach (byte b in bs)
-            {
-                s.Append(b.ToString("x2").ToLower());
-            }
-
-            return s.ToString();
-        }
-
-        private static IEnumerable<byte> GetUTF8EncodedBytes(string input)
-        {
-            var x = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            byte[] bs = Encoding.UTF8.GetBytes(input);
-            bs = x.ComputeHash(bs);
-            return bs;
-        }
-
-        // TODO encoding for each file in patch should be obtained separately from .gitattributes
-        [NotNull, ItemNotNull]
-        public static IReadOnlyList<Patch> LoadPatch([NotNull] string text, [NotNull] Encoding filesContentEncoding)
-        {
-            return PatchProcessor.CreatePatchesFromString(text, filesContentEncoding).ToList();
-        }
-
-        [NotNull, ItemNotNull]
-        public static IReadOnlyList<Patch> LoadPatchFile([NotNull] string path, [NotNull] Encoding filesContentEncoding)
-        {
-            var text = File.ReadAllText(path, GitModule.LosslessEncoding);
-            return LoadPatch(text, filesContentEncoding);
-        }
     }
 
     internal sealed class PatchLine
