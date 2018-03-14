@@ -36,10 +36,11 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static byte[] ConvertTo(Encoding encoding, string filename)
+        public static byte[] ConvertTo(Encoding encoding, string s)
         {
-            byte[] bytesunicode = Encoding.Unicode.GetBytes(filename);
-            return Encoding.Convert(Encoding.Unicode, encoding, bytesunicode);
+            byte[] unicodeBytes = Encoding.Unicode.GetBytes(s);
+
+            return Encoding.Convert(Encoding.Unicode, encoding, unicodeBytes);
         }
 
         public static string DecodeString(byte[] output, byte[] error, ref Encoding encoding)

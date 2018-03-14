@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,18 +145,17 @@ namespace GitUI
 
         public static void Mask(this Control control)
         {
-            if (control.FindMaskPanel() == null)
+            if (FindMaskPanel(control) == null)
             {
-                MaskPanel panel = new MaskPanel();
+                var panel = new MaskPanel { Dock = DockStyle.Fill };
                 control.Controls.Add(panel);
-                panel.Dock = DockStyle.Fill;
                 panel.BringToFront();
             }
         }
 
         public static void UnMask(this Control control)
         {
-            MaskPanel panel = control.FindMaskPanel();
+            MaskPanel panel = FindMaskPanel(control);
             if (panel != null)
             {
                 control.Controls.Remove(panel);
@@ -163,17 +163,9 @@ namespace GitUI
             }
         }
 
-        private static MaskPanel FindMaskPanel(this Control control)
+        private static MaskPanel FindMaskPanel(Control control)
         {
-            foreach (var c in control.Controls)
-            {
-                if (c is MaskPanel)
-                {
-                    return c as MaskPanel;
-                }
-            }
-
-            return null;
+            return control.Controls.Cast<Control>().OfType<MaskPanel>().FirstOrDefault();
         }
 
         private class MaskPanel : PictureBox
