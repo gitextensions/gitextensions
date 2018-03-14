@@ -9,14 +9,6 @@ namespace PatchApply
 {
     public class PatchProcessor
     {
-        [NotNull]
-        public Encoding FilesContentEncoding { get; }
-
-        public PatchProcessor([NotNull] Encoding filesContentEncoding)
-        {
-            FilesContentEncoding = filesContentEncoding;
-        }
-
         private enum PatchProcessorState
         {
             InHeader,
@@ -33,7 +25,7 @@ namespace PatchApply
         /// <param name="lines">patch lines</param>
         /// <param name="lineIndex">start index</param>
         [CanBeNull]
-        private Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, ref int lineIndex)
+        private Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Encoding filesContentEncoding, ref int lineIndex)
         {
             if (lineIndex >= lines.Length)
             {
@@ -146,7 +138,7 @@ namespace PatchApply
                 if (state == PatchProcessorState.InBody && input.StartsWithAny(new[] { " ", "-", "+", "@" }))
                 {
                     // diff content
-                    input = GitModule.ReEncodeStringFromLossless(input, FilesContentEncoding);
+                    input = GitModule.ReEncodeStringFromLossless(input, filesContentEncoding);
                 }
                 else
                 {
@@ -173,7 +165,7 @@ namespace PatchApply
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
         [NotNull, ItemNotNull, Pure]
-        public IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText)
+        public IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
         {
             string[] lines = patchText.Split('\n');
             int i = 0;
@@ -189,7 +181,7 @@ namespace PatchApply
 
             for (; i < lines.Length; i++)
             {
-                Patch patch = CreatePatchFromString(lines, ref i);
+                Patch patch = CreatePatchFromString(lines, filesContentEncoding, ref i);
                 if (patch != null)
                 {
                     yield return patch;

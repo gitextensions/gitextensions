@@ -184,9 +184,7 @@ namespace PatchApply
         [NotNull, ItemNotNull]
         public IReadOnlyList<Patch> LoadPatch([NotNull] string text, [NotNull] Encoding filesContentEncoding)
         {
-            PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
-
-            return patchProcessor.CreatePatchesFromString(text).ToList();
+            return new PatchProcessor().CreatePatchesFromString(text, filesContentEncoding).ToList();
         }
 
         [NotNull, ItemNotNull]
