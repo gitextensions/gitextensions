@@ -314,7 +314,7 @@ namespace PatchApply
         private static bool IsStartOfANewPatch([NotNull] string input, out bool isCombinedDiff)
         {
             isCombinedDiff = IsCombinedDiff(input);
-            return input.StartsWith("diff --git ") || isCombinedDiff;
+            return isCombinedDiff || input.StartsWith("diff --git ");
         }
 
         private static bool IsStartOfANewPatch(string input)
