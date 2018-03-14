@@ -22,6 +22,39 @@ namespace PatchApply
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
+        [NotNull, ItemNotNull, Pure]
+        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
+        {
+            // TODO encoding for each file in patch should be obtained separately from .gitattributes
+
+            string[] lines = patchText.Split('\n');
+            int i = 0;
+
+            // skip email header
+            for (; i < lines.Length; i++)
+            {
+                if (IsStartOfANewPatch(lines[i]))
+                {
+                    break;
+                }
+            }
+
+            for (; i < lines.Length; i++)
+            {
+                Patch patch = CreatePatchFromString(lines, filesContentEncoding, ref i);
+                if (patch != null)
+                {
+                    yield return patch;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
+        /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
+        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
+        /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
+        /// </summary>
         /// <param name="lines">patch lines</param>
         /// <param name="lineIndex">start index</param>
         [CanBeNull]
@@ -156,39 +189,6 @@ namespace PatchApply
 
             lineIndex = i - 1;
             return patch;
-        }
-
-        /// <summary>
-        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
-        /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
-        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
-        /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
-        /// </summary>
-        [NotNull, ItemNotNull, Pure]
-        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
-        {
-            // TODO encoding for each file in patch should be obtained separately from .gitattributes
-
-            string[] lines = patchText.Split('\n');
-            int i = 0;
-
-            // skip email header
-            for (; i < lines.Length; i++)
-            {
-                if (IsStartOfANewPatch(lines[i]))
-                {
-                    break;
-                }
-            }
-
-            for (; i < lines.Length; i++)
-            {
-                Patch patch = CreatePatchFromString(lines, filesContentEncoding, ref i);
-                if (patch != null)
-                {
-                    yield return patch;
-                }
-            }
         }
 
         private static bool IsIndexLine(string input)
