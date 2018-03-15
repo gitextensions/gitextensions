@@ -139,7 +139,8 @@ namespace GitUI.Help
         /// </summary>
         public string IsOnHoverShowImage2NoticeText
         {
-            get { return labelHoverText.Text; } set { labelHoverText.Text = value; }
+            get => labelHoverText.Text;
+            set => labelHoverText.Text = value;
         }
 
         private bool _isHover;

@@ -60,8 +60,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         [Category("Appearance")]
         public string Title
         {
-            get { return _NO_TRANSLATE_Caption.Text; }
-            set { _NO_TRANSLATE_Caption.Text = value; }
+            get => _NO_TRANSLATE_Caption.Text;
+            set => _NO_TRANSLATE_Caption.Text = value;
         }
 
         public void DisableContextMenu()

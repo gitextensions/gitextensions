@@ -392,14 +392,8 @@ namespace GitUI
 
         public override ContextMenu ContextMenu
         {
-            get
-            {
-                return FileStatusListView.ContextMenu;
-            }
-            set
-            {
-                FileStatusListView.ContextMenu = value;
-            }
+            get => FileStatusListView.ContextMenu;
+            set => FileStatusListView.ContextMenu = value;
         }
 
         private Rectangle _dragBoxFromMouseDown;
@@ -570,13 +564,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public GitRevision SelectedItemParent
-        {
-            get
-            {
-                return SelectedItemParents.FirstOrDefault();
-            }
-        }
+        public GitRevision SelectedItemParent => SelectedItemParents.FirstOrDefault();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]

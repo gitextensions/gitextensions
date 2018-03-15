@@ -315,8 +315,8 @@ namespace GitUI
         [DefaultValue(true)]
         public bool MultiSelect
         {
-            get { return Revisions.MultiSelect; }
-            set { Revisions.MultiSelect = value; }
+            get => Revisions.MultiSelect;
+            set => Revisions.MultiSelect = value;
         }
 
         [Description("Show uncommited changes in revision grid if enabled in settings.")]
@@ -925,14 +925,8 @@ namespace GitUI
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
-            get
-            {
-                return Revisions.RevisionGraphDrawStyle;
-            }
-            set
-            {
-                Revisions.RevisionGraphDrawStyle = value;
-            }
+            get => Revisions.RevisionGraphDrawStyle;
+            set => Revisions.RevisionGraphDrawStyle = value;
         }
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
