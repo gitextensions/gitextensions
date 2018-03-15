@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -15,17 +16,20 @@ namespace GitCommands
         /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
         /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
-        CommitData CreateFromFormatedData(string data);
+        [NotNull]
+        CommitData CreateFromFormatedData([NotNull] string data);
 
         /// <summary>
         /// Creates a <see cref="CommitData"/> object from <paramref name="revision"/>.
         /// </summary>
         /// <param name="revision">The commit to return data for.</param>
-        CommitData CreateFromRevision(GitRevision revision);
+        [NotNull]
+        CommitData CreateFromRevision([NotNull] GitRevision revision);
 
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
+        [CanBeNull]
         CommitData GetCommitData(string sha1, ref string error);
 
         /// <summary>
@@ -202,9 +206,11 @@ namespace GitCommands
                 revision.Body ?? revision.Subject);
         }
 
+        [NotNull]
         private IGitModule GetModule()
         {
             var module = _getModule();
+
             if (module == null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
@@ -213,7 +219,8 @@ namespace GitCommands
             return module;
         }
 
-        private static string ProccessDiffNotes(int startIndex, string[] lines)
+        [NotNull]
+        private static string ProccessDiffNotes(int startIndex, [NotNull, ItemNotNull] string[] lines)
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")

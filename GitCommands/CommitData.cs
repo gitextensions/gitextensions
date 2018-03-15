@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -32,6 +33,7 @@ namespace GitCommands
 
         // TODO mutable properties need review
 
+        [CanBeNull, ItemNotNull]
         public List<string> ChildrenGuids { get; set; }
         public string Body { get; set; }
     }
