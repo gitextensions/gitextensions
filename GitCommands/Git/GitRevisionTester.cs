@@ -51,7 +51,7 @@ namespace GitCommands.Git
         /// </returns>
         public bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision)
         {
-            if (selectedRevision?.ParentGuids == null)
+            if (selectedRevision?.ParentGuids == null || firstSelected == null)
             {
                 return false;
             }
@@ -91,7 +91,7 @@ namespace GitCommands.Git
 
             foreach (var item in items)
             {
-                string filePath = _fullPathResolver?.Resolve(item.Name);
+                string filePath = _fullPathResolver.Resolve(item.Name);
                 if (_fileSystem.File.Exists(filePath))
                 {
                     return true;

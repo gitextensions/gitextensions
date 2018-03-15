@@ -59,6 +59,7 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _revisionTester = new GitRevisionTester(_fullPathResolver);
+            _revisionDiffContextMenuController = new FileStatusListContextMenuController();
 
             lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
             lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
@@ -69,12 +70,6 @@ namespace GitUI.CommandsDialogs
 
             Load += (sender, args) => PopulateDiffFiles();
             DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
-        }
-
-        protected override void OnRuntimeLoad(EventArgs e)
-        {
-            _revisionDiffContextMenuController = new FileStatusListContextMenuController();
-            base.OnRuntimeLoad(e);
         }
 
         private void DiffTextOnExtraDiffArgumentsChanged(object sender, EventArgs eventArgs)

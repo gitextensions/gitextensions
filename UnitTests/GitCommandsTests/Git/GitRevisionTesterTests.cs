@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Collections.Generic;
+using System.IO.Abstractions;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
@@ -29,21 +30,31 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void IsFirstParent_should_return_false_if_parents_null()
+        public void AllFirstAreParentsToSelected_should_return_false_if_parents_null()
         {
             _tester.AllFirstAreParentsToSelected(null, null).Should().BeFalse();
         }
 
         [Test]
-        public void IsFirstParent_should_return_false_if_no_parents_contains_any_of_selected_items()
+        public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
         {
-            Assert.Inconclusive();
+            IEnumerable<GitRevision> firstSelected = new List<GitRevision> { new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD") };
+            GitRevision selectedRevision = new GitRevision(GitRevision.UnstagedGuid)
+            {
+                ParentGuids = new[] { GitRevision.IndexGuid }
+            };
+            _tester.AllFirstAreParentsToSelected(firstSelected, selectedRevision).Should().BeFalse();
         }
 
         [Test]
-        public void IsFirstParent_should_return_true_if_all_parents_contains_all_of_selected_items()
+        public void AllFirstAreParentsToSelected_should_return_true_if_all_parents_contains_all_of_selected_items()
         {
-            Assert.Inconclusive();
+            IEnumerable<GitRevision> firstSelected2 = new List<GitRevision> { new GitRevision("Parent1"), new GitRevision("Parent2") };
+            GitRevision selectedRevision2 = new GitRevision("HEAD")
+            {
+                ParentGuids = new[] { "Parent1", "Parent2" }
+            };
+            _tester.AllFirstAreParentsToSelected(firstSelected2, selectedRevision2).Should().BeTrue();
         }
 
         [Test]
@@ -55,7 +66,8 @@ namespace GitCommandsTests.Git
         [Test]
         public void LocalExists_should_return_true_if_no_items_tracked()
         {
-            Assert.Inconclusive();
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus> { new GitItemStatus() { IsTracked = false } };
+            _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeTrue();
         }
 
         [Test]
