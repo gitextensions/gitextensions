@@ -40,9 +40,9 @@ namespace GitCommands
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
         /// <summary>
-        /// Updates the <see cref="CommitData.Body"/> property of <paramref name="data"/>.
+        /// Updates the <see cref="CommitData.Body"/> property of <paramref name="commitData"/>.
         /// </summary>
-        void UpdateCommitMessage(CommitData data, string sha1, ref string error);
+        void UpdateCommitMessage(CommitData commitData, string sha1, ref string error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -58,7 +58,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void UpdateCommitMessage(CommitData data, string sha1, ref string error)
+        public void UpdateCommitMessage(CommitData commitData, string sha1, ref string error)
         {
             if (sha1 == null)
             {
@@ -92,7 +92,7 @@ namespace GitCommands
                 return;
             }
 
-            UpdateBodyInCommitData(data, info);
+            UpdateBodyInCommitData(commitData, info);
         }
 
         /// <inheritdoc />
