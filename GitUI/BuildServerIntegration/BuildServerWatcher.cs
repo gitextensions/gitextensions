@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Remote;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUIPluginInterfaces;
@@ -33,11 +34,13 @@ namespace GitUI.BuildServerIntegration
         private IBuildServerAdapter _buildServerAdapter;
 
         private readonly object _buildServerCredentialsLock = new object();
+        private readonly IRepoNameExtractor _repoNameExtractor;
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
             _revisionGrid = revisionGrid;
             _revisions = revisions;
+            _repoNameExtractor = new RepoNameExtractor(() => Module);
             BuildStatusImageColumnIndex = -1;
             BuildStatusMessageColumnIndex = -1;
         }
@@ -48,7 +51,6 @@ namespace GitUI.BuildServerIntegration
 
             DisposeBuildServerAdapter();
 
-            // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
             {
                 if (_revisions.IsDisposed)
@@ -66,10 +68,13 @@ namespace GitUI.BuildServerIntegration
                 }
 
                 var scheduler = NewThreadScheduler.Default;
+
+                // Run this first as it (may) force start queries
+                var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
+
                 var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
                 var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
                 var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
-                var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
 
                 var cancellationToken = new CompositeDisposable
                 {
@@ -199,6 +204,27 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
+        /// <summary>
+        /// Replace variables for the project string with the current "repo shortname"
+        /// </summary>
+        /// <param name="projectNames">build server specific format, compatible with the variable format</param>
+        /// <returns>projectNames with variables replaced</returns>
+        public string ReplaceVariables(string projectNames)
+        {
+            _repoNameExtractor.Get(out string repoProject, out string repoName);
+            if (repoProject.IsNotNullOrWhitespace())
+            {
+                projectNames = projectNames.Replace("{cRepoProject}", repoProject);
+            }
+
+            if (repoName.IsNotNullOrWhitespace())
+            {
+                projectNames = projectNames.Replace("{cRepoShortName}", repoName);
+            }
+
+            return projectNames;
+        }
+
         private IBuildServerCredentials ShowBuildServerCredentialsForm(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
         {
             if (_revisionGrid.InvokeRequired)
@@ -314,6 +340,7 @@ namespace GitUI.BuildServerIntegration
                         }
 
                         var buildServerAdapter = export.Value;
+
                         buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
                         return buildServerAdapter;
                     }
