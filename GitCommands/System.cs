@@ -209,9 +209,8 @@ namespace System
         }
 
         /// <summary>
-        /// Shortens this string, that it will be no longer than the specified <paramref name="maxLength"/>.
-        /// If this string is longer than the specified <paramref name="maxLength"/>, it'll be truncated to the length of <paramref name="maxLength"/>-3
-        /// and the "..." will be appended to the end of the resulting string.
+        /// Shortens <paramref name="str"/> if necessary, so that the resulting string has fewer than <paramref name="maxLength"/> characters.
+        /// If shortened, ellipsis are appended to the truncated string.
         /// </summary>
         [NotNull]
         public static string ShortenTo([CanBeNull] this string str, int maxLength)
@@ -225,10 +224,13 @@ namespace System
             {
                 return str;
             }
-            else
+
+            if (maxLength < 3)
             {
-                return str.Substring(0, maxLength - 3) + "...";
+                return str.Substring(0, maxLength);
             }
+
+            return str.Substring(0, maxLength - 3) + "...";
         }
     }
 
