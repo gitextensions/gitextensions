@@ -41,12 +41,14 @@ namespace GitUI.CommandsDialogs
                 var imageList = new ImageList();
                 tabControl1.ImageList = imageList;
                 imageList.ColorDepth = ColorDepth.Depth8Bit;
+                imageList.Images.Add(Properties.Resources.IconCommit);
                 imageList.Images.Add(Properties.Resources.IconViewFile);
                 imageList.Images.Add(Properties.Resources.IconDiff);
                 imageList.Images.Add(Properties.Resources.IconBlame);
                 tabControl1.TabPages[0].ImageIndex = 0;
                 tabControl1.TabPages[1].ImageIndex = 1;
                 tabControl1.TabPages[2].ImageIndex = 2;
+                tabControl1.TabPages[3].ImageIndex = 3;
             }
 
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
