@@ -1420,9 +1420,10 @@ namespace GitUI
             return StartRebaseDialog(owner, onto, interactive: false);
         }
 
-        public bool ContinueRebase(IWin32Window owner)
+        public bool StartTheContinueRebaseDialog(IWin32Window owner)
         {
-            return StartRebaseDialog(owner, onto: null, interactive: false);
+            return StartRebaseDialog(owner, onto: null,
+                interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartInteractiveRebase(IWin32Window owner, string onto)

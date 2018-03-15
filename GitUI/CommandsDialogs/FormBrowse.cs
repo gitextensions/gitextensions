@@ -1029,7 +1029,7 @@ namespace GitUI.CommandsDialogs
         {
             if (Module.InTheMiddleOfRebase())
             {
-                UICommands.ContinueRebase(this);
+                UICommands.StartTheContinueRebaseDialog(this);
             }
             else
             {
