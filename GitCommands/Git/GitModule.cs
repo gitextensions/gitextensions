@@ -1338,12 +1338,6 @@ namespace GitCommands
             return submodule?.SubSection.Trim();
         }
 
-        public string GetSubmoduleRemotePath(string name)
-        {
-            var configFile = GetSubmoduleConfigFile();
-            return configFile.GetPathValue(string.Format("submodule.{0}.url", name)).Trim();
-        }
-
         public string GetSubmoduleFullPath(string localPath)
         {
             if (localPath == null)
