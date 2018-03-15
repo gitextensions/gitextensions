@@ -10,22 +10,26 @@ namespace GitCommands
     public interface ICommitDataManager
     {
         /// <summary>
-        /// Creates a <see cref="CommitData"/> object from <paramref name="revision"/>.
+        /// Converts a <see cref="GitRevision"/> object into a <see cref="CommitData"/>.
         /// </summary>
-        /// <param name="revision">The commit to return data for.</param>
+        /// <remarks>
+        /// The <see cref="GitRevision"/> object contains all required fields, so no additional
+        /// data lookup is required to populate the returned <see cref="CommitData"/> object.
+        /// </remarks>
+        /// <param name="revision">The <see cref="GitRevision"/> to convert from.</param>
         [NotNull]
         CommitData CreateFromRevision([NotNull] GitRevision revision);
 
         /// <summary>
-        /// Gets the commit info for submodule.
+        /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
         /// </summary>
         [ContractAnnotation("=>null,error:notnull")]
-        CommitData GetCommitData(string sha1, out string error);
+        CommitData GetCommitData([NotNull] string sha1, out string error);
 
         /// <summary>
-        /// Updates the <see cref="CommitData.Body"/> property of <paramref name="commitData"/>.
+        /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
         /// </summary>
-        void UpdateCommitMessage(CommitData commitData, [CanBeNull] out string error);
+        void UpdateBody([NotNull] CommitData commitData, [CanBeNull] out string error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -41,7 +45,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void UpdateCommitMessage(CommitData commitData, out string error)
+        public void UpdateBody(CommitData commitData, out string error)
         {
             if (!TryGetCommitLog(commitData.Guid, ShortLogFormat, out error, out var data))
             {

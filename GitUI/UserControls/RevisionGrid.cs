@@ -2080,7 +2080,7 @@ namespace GitUI
 
             if (revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(commitData, out _);
+                _commitDataManager.UpdateBody(commitData, out _);
                 revision.Body = commitData.Body;
             }
 

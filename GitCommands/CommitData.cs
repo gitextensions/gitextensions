@@ -35,6 +35,10 @@ namespace GitCommands
 
         [CanBeNull, ItemNotNull]
         public List<string> ChildrenGuids { get; set; }
+
+        /// <summary>
+        /// Gets and sets the commit message.
+        /// </summary>
         public string Body { get; set; }
     }
 }

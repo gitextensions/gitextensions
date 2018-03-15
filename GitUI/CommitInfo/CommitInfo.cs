@@ -172,7 +172,7 @@ namespace GitUI.CommitInfo
             CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(data, out _);
+                _commitDataManager.UpdateBody(data, out _);
                 _revision.Body = data.Body;
             }
 
