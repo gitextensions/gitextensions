@@ -2006,6 +2006,7 @@ namespace GitUI.CommandsDialogs
             FocusCommitInfo = 4,
             FocusFileTree = 5,
             FocusDiff = 6,
+            FocusFilter = 18,
             Commit = 7,
             AddNotes = 8,
             FindFileInSelectedCommit = 9,
@@ -2023,6 +2024,12 @@ namespace GitUI.CommandsDialogs
         {
             Module.EditNotes(RevisionGrid.GetSelectedRevisions().Count > 0 ? RevisionGrid.GetSelectedRevisions()[0].Guid : string.Empty);
             FillCommitInfo();
+        }
+
+        private void FocusFilter()
+        {
+            ToolStripControlHost filterToFocus = toolStripRevisionFilterTextBox.Focused ? (ToolStripControlHost)toolStripBranchFilterComboBox : (ToolStripControlHost)toolStripRevisionFilterTextBox;
+            filterToFocus.Focus();
         }
 
         private void FindFileInSelectedCommit()
@@ -2050,6 +2057,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfoTabPage; break;
                 case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = TreeTabPage; fileTree.Focus(); break;
                 case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = DiffTabPage; revisionDiff.Focus(); break;
+                case Commands.FocusFilter: FocusFilter(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;

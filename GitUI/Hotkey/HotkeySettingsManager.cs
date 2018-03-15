@@ -272,6 +272,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Commands.FocusCommitInfo, Keys.Control | Keys.D2),
                     Hk(FormBrowse.Commands.FocusFileTree, Keys.Control | Keys.D3),
                     Hk(FormBrowse.Commands.FocusDiff, Keys.Control | Keys.D4),
+                    Hk(FormBrowse.Commands.FocusFilter, Keys.Control | Keys.E),
                     Hk(FormBrowse.Commands.Commit, Keys.Control | Keys.Space),
                     Hk(FormBrowse.Commands.AddNotes, Keys.Control | Keys.Shift | Keys.N),
                     Hk(FormBrowse.Commands.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
