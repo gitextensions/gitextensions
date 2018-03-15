@@ -1391,6 +1391,26 @@ namespace GitCommands
 
             GitSubmoduleInfo ParseSubmoduleInfo(string submodule)
             {
+                // Parse an output line from `git submodule status`. Lines have one of the following forms:
+                //
+                //  6f213088cf4343efe4c570d87659b5f87fc05a4b Externals/Git.hub (heads/master)
+                // -ed1dbf01e32ffe6c0b84210183cc2ff6ca448717 Externals/NBug (heads/master)
+                // +0daff15503915230aa9436c0fee6a95d5bf3273f Externals/conemu-inside (heads/master)
+                // U6868f2b4a39fc894c44711c8903407da596acbf5 GitExtensionsDoc (heads/master)
+                //
+                // The first character of each line is a prefix with the following meanings:
+                //
+                // - ' ' if the submodule is initialised and has no changes
+                // - '-' if the submodule is not initialized
+                // - '+' if the currently checked out submodule commit does not match the SHA-1 found in the index of the containing repository
+                // - 'U' if the submodule has merge conflicts
+                //
+                // Then we have:
+                //
+                // - the SHA-1 of the currently checked out commit of the submodule
+                // - the submodule path
+                // - the output of git describe for the SHA-1
+
                 var gitSubmodule =
                     new GitSubmoduleInfo(this)
                     {
