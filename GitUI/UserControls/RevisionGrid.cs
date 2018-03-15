@@ -2080,7 +2080,7 @@ namespace GitUI
             string error = "";
             if (revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(commitData, revision.Guid, ref error);
+                _commitDataManager.UpdateCommitMessage(commitData, ref error);
                 revision.Body = commitData.Body;
             }
 

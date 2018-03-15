@@ -42,7 +42,7 @@ namespace GitCommands
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> property of <paramref name="commitData"/>.
         /// </summary>
-        void UpdateCommitMessage(CommitData commitData, string sha1, ref string error);
+        void UpdateCommitMessage(CommitData commitData, ref string error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -58,23 +58,18 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void UpdateCommitMessage(CommitData commitData, string sha1, ref string error)
+        public void UpdateCommitMessage(CommitData commitData, ref string error)
         {
-            if (sha1 == null)
-            {
-                throw new ArgumentNullException(nameof(sha1));
-            }
-
             var module = GetModule();
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
+                "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", commitData.Guid);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
-            if (GitModule.IsGitErrorMessage(info) || !info.Contains(sha1))
+            if (GitModule.IsGitErrorMessage(info) || !info.Contains(commitData.Guid))
             {
-                error = "Cannot find commit " + sha1;
+                error = "Cannot find commit " + commitData.Guid;
                 return;
             }
 
