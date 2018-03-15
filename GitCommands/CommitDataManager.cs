@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces;
@@ -60,44 +59,18 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateCommitMessage(CommitData commitData, out string error)
         {
-            var module = GetModule();
-
-            // Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", commitData.Guid);
-            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
-
-            if (GitModule.IsGitErrorMessage(info) || !info.Contains(commitData.Guid))
+            if (TryGetCommitLog(commitData.Guid, ShortLogFormat, out error, out var info))
             {
-                error = "Cannot find commit " + commitData.Guid;
-                return;
+                UpdateBodyInCommitData(commitData, info);
             }
-
-            UpdateBodyInCommitData(commitData, info);
         }
 
         /// <inheritdoc />
         public CommitData GetCommitData(string sha1, out string error)
         {
-            if (sha1 == null)
-            {
-                throw new ArgumentNullException(nameof(sha1));
-            }
-
-            var module = GetModule();
-
-            // Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + LogFormat + "\" {0}", sha1);
-            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
-
-            if (GitModule.IsGitErrorMessage(info) || !info.Contains(sha1))
-            {
-                error = "Cannot find commit " + sha1;
-                return null;
-            }
-
-            return CreateFromFormatedData(info);
+            return TryGetCommitLog(sha1, LogFormat, out error, out var info)
+                ? CreateFromFormatedData(info)
+                : null;
         }
 
         /// <inheritdoc />
@@ -217,6 +190,25 @@ namespace GitCommands
             }
 
             return module;
+        }
+
+        [ContractAnnotation("=>false,error:notnull,data:null")]
+        [ContractAnnotation("=>true,error:null,data:notnull")]
+        private bool TryGetCommitLog([NotNull] string commitId, [NotNull] string format, out string error, out string data)
+        {
+            var arguments = $"log -1 --pretty=\"format:{format}\" {commitId}";
+
+            // Do not cache this command, since notes can be added
+            data = GetModule().RunGitCmd(arguments, GitModule.LosslessEncoding);
+
+            if (GitModule.IsGitErrorMessage(data) || !data.Contains(commitId))
+            {
+                error = "Cannot find commit " + commitId;
+                return false;
+            }
+
+            error = null;
+            return true;
         }
 
         [NotNull]
