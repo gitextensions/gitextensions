@@ -441,9 +441,14 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// This is a faster function to get the names of all submodules then the
-        /// GetSubmodules() function. The command @git submodule is very slow.
+        /// Gets the local paths of any submodules of this git module.
         /// </summary>
+        /// <remarks>
+        /// This method obtains its results by parsing the <c>.gitmodules</c> file.
+        /// <para />
+        /// This approach is a faster than <see cref="GetSubmodulesInfo"/> which
+        /// invokes the <c>git submodule</c> command.
+        /// </remarks>
         public IList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var configFile = GetSubmoduleConfigFile();
