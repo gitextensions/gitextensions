@@ -10,18 +10,17 @@ namespace GitCommands
     public interface ICommitDataManager
     {
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
+        /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
         /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
+        /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
         CommitData CreateFromFormatedData(string data);
 
         /// <summary>
-        /// Creates a CommitData object from Git revision.
+        /// Creates a <see cref="CommitData"/> object from <paramref name="revision"/>.
         /// </summary>
-        /// <param name="revision">Git commit.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        /// <param name="revision">The commit to return data for.</param>
         CommitData CreateFromRevision(GitRevision revision);
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace GitCommands
         void UpdateBodyInCommitData(CommitData commitData, string data);
 
         /// <summary>
-        /// Gets the commit info for submodule.
+        /// Updates the <see cref="CommitData.Body"/> property of <paramref name="data"/>.
         /// </summary>
         void UpdateCommitMessage(CommitData data, string sha1, ref string error);
     }
@@ -54,9 +53,7 @@ namespace GitCommands
             _getModule = getModule;
         }
 
-        /// <summary>
-        /// Gets the commit info for submodule.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateCommitMessage(CommitData data, string sha1, ref string error)
         {
             if (sha1 == null)
@@ -94,9 +91,7 @@ namespace GitCommands
             UpdateBodyInCommitData(data, info);
         }
 
-        /// <summary>
-        /// Gets the commit info for submodule.
-        /// </summary>
+        /// <inheritdoc />
         public CommitData GetCommitData(string sha1, ref string error)
         {
             if (sha1 == null)
@@ -134,12 +129,7 @@ namespace GitCommands
             return CreateFromFormatedData(info);
         }
 
-        /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
-        /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        /// <inheritdoc />
         public CommitData CreateFromFormatedData(string data)
         {
             if (data == null)
@@ -175,11 +165,7 @@ namespace GitCommands
             return new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);
         }
 
-        /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
-        /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <inheritdoc />
         public void UpdateBodyInCommitData(CommitData commitData, string data)
         {
             if (data == null)
@@ -202,11 +188,7 @@ namespace GitCommands
             commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
         }
 
-        /// <summary>
-        /// Creates a CommitData object from Git revision.
-        /// </summary>
-        /// <param name="revision">Git commit.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        /// <inheritdoc />
         public CommitData CreateFromRevision(GitRevision revision)
         {
             if (revision == null)
