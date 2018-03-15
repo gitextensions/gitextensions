@@ -110,6 +110,31 @@ namespace GitCommands
 
             var module = GetModule();
 
+            // $ git log --pretty="format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N" -1
+            // 4bc1049fc3b9191dbd390e1ae6885aedd1a4e34b
+            // a59c21f0b2e6f43ae89b76a216f9f6124fc359f8
+            // 8e3873685d89f8cb543657d1b9e66e516cae7e1d dfd353d3b02d24a0d98855f6a1848c51d9ba4d6b
+            // RussKie <RussKie@users.noreply.github.com>
+            // 1521115435
+            // GitHub <noreply@github.com>
+            // 1521115435
+            //
+            // Merge pull request #4615 from drewnoakes/modernise-3
+            //
+            // New language features
+            // Notes:
+
+            // commit id
+            // tree id
+            // parent ids (separated by spaces)
+            // author
+            // authored date (unix time)
+            // committer
+            // committed date (unix time)
+            // encoding (may be blank)
+            // diff notes
+            // ...
+
             var lines = data.Split('\n');
 
             var guid = lines[0];
@@ -118,16 +143,12 @@ namespace GitCommands
             var treeGuid = lines[1];
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            string[] parentLines = lines[2].Split(' ');
             var parentGuids = lines[2].Split(' ');
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
-
             var committer = module.ReEncodeStringFromLossless(lines[5]);
             var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
-
-            string commitEncoding = lines[7];
-
+            var commitEncoding = lines[7];
             var message = ProccessDiffNotes(startIndex: 8, lines);
 
             // commit message is not reencoded by git when format is given
@@ -144,19 +165,31 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(data));
             }
 
-            var module = GetModule();
+            // $ git log --pretty="format:%H%n%e%n%B%nNotes:%n%-N" -1
+            // 8c601c9bb040e575af75c9eee6e14441e2a1b207
+            //
+            // Remove redundant parameter
+            //
+            // The sha1 parameter must match CommitData.Guid.
+            // There's no point passing it. It only creates opportunity for bugs.
+            //
+            // Notes:
 
-            var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+            // commit id
+            // encoding
+            // commit message
+            // ...
+
+            var lines = data.Split('\n');
 
             var guid = lines[0];
-
-            string commitEncoding = lines[1];
-
+            var commitEncoding = lines[1];
             var message = ProccessDiffNotes(startIndex: 2, lines);
 
-            // commit message is not reencoded by git when format is given
             Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
-            commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
+
+            // commit message is not reencoded by git when format is given
+            commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
         }
 
         /// <inheritdoc />
