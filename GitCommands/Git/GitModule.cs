@@ -1366,30 +1366,6 @@ namespace GitCommands
             return GetSubmodule(submoduleName);
         }
 
-        private GitSubmoduleInfo GetSubmoduleInfo(string submodule)
-        {
-            var gitSubmodule =
-                new GitSubmoduleInfo(this)
-                {
-                    Initialized = submodule[0] != '-',
-                    UpToDate = submodule[0] != '+',
-                    CurrentCommitGuid = submodule.Substring(1, 40).Trim()
-                };
-
-            var localPath = submodule.Substring(42).Trim();
-            if (localPath.Contains("("))
-            {
-                gitSubmodule.LocalPath = localPath.Substring(0, localPath.IndexOf("(")).TrimEnd();
-                gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim('(', ')', ' ');
-            }
-            else
-            {
-                gitSubmodule.LocalPath = localPath;
-            }
-
-            return gitSubmodule;
-        }
-
         public IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo()
         {
             var submodules = ReadGitOutputLines("submodule status");
@@ -1411,6 +1387,30 @@ namespace GitCommands
                 lastLine = submodule;
 
                 yield return GetSubmoduleInfo(submodule);
+            }
+
+            GitSubmoduleInfo GetSubmoduleInfo(string submodule)
+            {
+                var gitSubmodule =
+                    new GitSubmoduleInfo(this)
+                    {
+                        Initialized = submodule[0] != '-',
+                        UpToDate = submodule[0] != '+',
+                        CurrentCommitGuid = submodule.Substring(1, 40).Trim()
+                    };
+
+                var localPath = submodule.Substring(42).Trim();
+                if (localPath.Contains("("))
+                {
+                    gitSubmodule.LocalPath = localPath.Substring(0, localPath.IndexOf("(")).TrimEnd();
+                    gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim('(', ')', ' ');
+                }
+                else
+                {
+                    gitSubmodule.LocalPath = localPath;
+                }
+
+                return gitSubmodule;
             }
         }
 
