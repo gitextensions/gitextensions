@@ -40,39 +40,6 @@ namespace GitCommands
             }
         }
 
-        public static bool operator ==(GitSubmoduleInfo a, GitSubmoduleInfo b)
-        {
-            // If both are null, or both are same instance, return true.
-            if (ReferenceEquals(a, b))
-            {
-                return true;
-            }
-
-            // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
-            {
-                return false;
-            }
-
-            // Return true if the fields match:
-            return a.LocalPath == b.LocalPath;
-        }
-
-        public static bool operator !=(GitSubmoduleInfo a, GitSubmoduleInfo b)
-        {
-            return !(a == b);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is GitSubmoduleInfo info && this == info;
-        }
-
-        public override int GetHashCode()
-        {
-            return LocalPath != null ? LocalPath.GetHashCode() : 0;
-        }
-
         public override string ToString()
         {
             if (string.IsNullOrEmpty(Branch))
