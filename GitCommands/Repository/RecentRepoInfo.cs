@@ -282,7 +282,7 @@ namespace GitCommands.Repository
 
                 if (dirInfo != null)
                 {
-                    while (dirInfo.Parent != null && dirInfo.Parent.Parent != null)
+                    while (dirInfo.Parent?.Parent != null)
                     {
                         dirInfo = dirInfo.Parent;
                         addDots = true;

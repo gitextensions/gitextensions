@@ -79,8 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
                 {
-                    var ihr = _pullReqTargetsCB.Items[i] as IHostedRemote;
-                    if (ihr != null && ihr.Name == _chooseRemote)
+                    if (_pullReqTargetsCB.Items[i] is IHostedRemote ihr && ihr.Name == _chooseRemote)
                     {
                         _pullReqTargetsCB.SelectedIndex = i;
                         break;

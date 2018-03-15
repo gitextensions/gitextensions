@@ -569,7 +569,7 @@ namespace TeamCityIntegration
         public List<Build> GetProjectBuilds(string projectId)
         {
             var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
-            return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build
             {
                 Id = (string)e.Attribute("id"),
                 Name = (string)e.Attribute("name"),

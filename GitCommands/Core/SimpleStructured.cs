@@ -79,15 +79,13 @@ namespace GitCommands.Core
 
             if (!(obj is string))
             {
-                IEnumerable eo = obj as IEnumerable;
-                if (eo != null)
+                if (obj is IEnumerable eo)
                 {
                     return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
                 }
             }
 
-            SimpleStructured ss = obj as SimpleStructured;
-            if (ss != null)
+            if (obj is SimpleStructured ss)
             {
                 return ToString(ss.InlinedStructure(), indent);
             }

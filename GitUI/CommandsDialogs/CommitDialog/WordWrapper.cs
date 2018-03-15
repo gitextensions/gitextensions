@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
-    public class WordWrapper
+    public static class WordWrapper
     {
         public static string Wrap(string text, int lineLimit)
         {

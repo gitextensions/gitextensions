@@ -16,11 +16,13 @@ namespace GitUITests.UserControls
             string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
             string outputData = "output data";
             string received = string.Empty;
-            Action<TextEventArgs> fireDataReceived = (e) =>
+
+            void FireDataReceived(TextEventArgs e)
             {
                 received += e.Text;
-            };
-            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, fireDataReceived);
+            }
+
+            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, FireDataReceived);
 
             string chunk1 = cmd.Substring(0, 10);
             string chunk2 = cmd.Substring(10, cmd.Length - 10) + Environment.NewLine + outputData;
@@ -36,11 +38,13 @@ namespace GitUITests.UserControls
             string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
             string outputData = "output data";
             string received = string.Empty;
-            Action<TextEventArgs> fireDataReceived = (e) =>
+
+            void FireDataReceived(TextEventArgs e)
             {
                 received += e.Text;
-            };
-            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, fireDataReceived);
+            }
+
+            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, FireDataReceived);
 
             string chunk1 = cmd.Substring(0, 10);
             string chunk2 = cmd.Substring(10, cmd.Length - 10) + Environment.NewLine + outputData;
@@ -65,11 +69,13 @@ namespace GitUITests.UserControls
             outputData.Add("Receiving: 100%\nReceived data\n");
 
             List<string> received = new List<string>();
-            Action<TextEventArgs> fireDataReceived = (e) =>
+
+            void FireDataReceived(TextEventArgs e)
             {
                 received.Add(e.Text);
-            };
-            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, fireDataReceived);
+            }
+
+            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, FireDataReceived);
 
             foreach (string chunk in outputData)
             {
@@ -103,11 +109,13 @@ namespace GitUITests.UserControls
             outputData.Add("Receiving: 100%\nReceived\r\ndata\n");
 
             List<string> received = new List<string>();
-            Action<TextEventArgs> fireDataReceived = (e) =>
+
+            void FireDataReceived(TextEventArgs e)
             {
                 received.Add(e.Text);
-            };
-            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, fireDataReceived);
+            }
+
+            var filter = new ConsoleCommandLineOutputProcessor(cmd.Length, FireDataReceived);
 
             foreach (string chunk in outputData)
             {

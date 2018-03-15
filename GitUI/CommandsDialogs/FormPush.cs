@@ -724,9 +724,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PushToRemote.Checked)
                 {
-                    var branch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
-
-                    if (branch != null)
+                    if (_NO_TRANSLATE_Branch.SelectedItem is GitRef branch)
                     {
                         if (_selectedRemote != null)
                         {

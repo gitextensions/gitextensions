@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs
 
             var settingsPage = e.SettingsPage;
 
-            if (settingsPage != null && settingsPage.GuiControl != null)
+            if (settingsPage?.GuiControl != null)
             {
                 panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;

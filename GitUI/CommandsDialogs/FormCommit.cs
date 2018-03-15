@@ -511,20 +511,23 @@ namespace GitUI.CommandsDialogs
 
         private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool doAsync)
         {
-            Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
+            IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
+            {
+                return Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     !showAssumeUnchangedFilesToolStripMenuItem.Checked,
                     !showSkipWorktreeFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
+            }
 
             if (doAsync)
             {
-                _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
+                _unstagedLoader.Load(GetAllChangedFilesWithSubmodulesStatus, onComputed);
             }
             else
             {
                 _unstagedLoader.Cancel();
-                onComputed(getAllChangedFilesWithSubmodulesStatus());
+                onComputed(GetAllChangedFilesWithSubmodulesStatus());
             }
         }
 
@@ -617,26 +620,26 @@ namespace GitUI.CommandsDialogs
             int selectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
             int scrollPosition = SelectedDiff.ScrollPos;
             string selectedFileName = _currentItem.Name;
-            Action stageAreaLoaded = null;
-            stageAreaLoaded = () =>
+
+            void StageAreaLoaded()
             {
-                EventHandler textLoaded = null;
-                textLoaded = (a, b) =>
+                void TextLoaded(object a, EventArgs b)
+                {
+                    if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
                     {
-                        if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
-                        {
-                            SelectedDiff.GoToLine(selectedDifflineToSelect);
-                            SelectedDiff.ScrollPos = scrollPosition;
-                        }
+                        SelectedDiff.GoToLine(selectedDifflineToSelect);
+                        SelectedDiff.ScrollPos = scrollPosition;
+                    }
 
-                        SelectedDiff.TextLoaded -= textLoaded;
-                        _selectedDiffReloaded = true;
-                    };
-                SelectedDiff.TextLoaded += textLoaded;
-                OnStageAreaLoaded -= stageAreaLoaded;
-            };
+                    SelectedDiff.TextLoaded -= TextLoaded;
+                    _selectedDiffReloaded = true;
+                }
 
-            OnStageAreaLoaded += stageAreaLoaded;
+                SelectedDiff.TextLoaded += TextLoaded;
+                OnStageAreaLoaded -= StageAreaLoaded;
+            }
+
+            OnStageAreaLoaded += StageAreaLoaded;
         }
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1268,17 +1271,16 @@ namespace GitUI.CommandsDialogs
                 lastSelection = _currentSelection;
             }
 
-            Action stageAreaLoaded = null;
-            stageAreaLoaded = () =>
+            void StageAreaLoaded()
             {
                 _currentFilesList = Unstaged;
                 RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                 Unstaged.Focus();
 
-                OnStageAreaLoaded -= stageAreaLoaded;
-            };
+                OnStageAreaLoaded -= StageAreaLoaded;
+            }
 
-            OnStageAreaLoaded += stageAreaLoaded;
+            OnStageAreaLoaded += StageAreaLoaded;
 
             if (IsMergeCommit)
             {
@@ -2798,15 +2800,22 @@ namespace GitUI.CommandsDialogs
         private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var submoduleName = Unstaged.SelectedItem.Name;
+
             Unstaged.SelectedItem.SubmoduleStatus.ContinueWith(
-                    (t) =>
+                t =>
+                {
+                    var process = new Process
                     {
-                        Process process = new Process();
-                        process.StartInfo.FileName = Application.ExecutablePath;
-                        process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
-                        process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
-                        process.Start();
-                    });
+                        StartInfo =
+                        {
+                            FileName = Application.ExecutablePath,
+                            Arguments = "browse -commit=" + t.Result.Commit,
+                            WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
+                        }
+                    };
+
+                    process.Start();
+                });
         }
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)

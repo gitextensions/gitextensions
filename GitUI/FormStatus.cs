@@ -82,38 +82,39 @@ namespace GitUI
         public void SetProgress(string text)
         {
             // This has to happen on the UI thread
-            SendOrPostCallback method = o =>
+            BeginInvoke((SendOrPostCallback)Method, this);
+
+            void Method(object o)
+            {
+                int index = text.LastIndexOf('%');
+                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                 {
-                    int index = text.LastIndexOf('%');
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
+                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
                     {
-                        if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                        {
-                            ProgressBar.Style = ProgressBarStyle.Blocks;
-                        }
-
-                        ProgressBar.Value = Math.Min(100, progressValue);
-
-                        if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                        {
-                            try
-                            {
-                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                            }
-                            catch (InvalidOperationException)
-                            {
-                            }
-                        }
+                        ProgressBar.Style = ProgressBarStyle.Blocks;
                     }
 
-                    // Show last progress message in the title, unless it's showin in the control body already
-                    if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    ProgressBar.Value = Math.Min(100, progressValue);
+
+                    if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                     {
-                        Text = text;
+                        try
+                        {
+                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        }
+                        catch (InvalidOperationException)
+                        {
+                        }
                     }
-                };
-            BeginInvoke(method, this);
+                }
+
+                // Show last progress message in the title, unless it's showin in the control body already
+                if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                {
+                    Text = text;
+                }
+            }
         }
 
         /// <summary>

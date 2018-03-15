@@ -221,15 +221,18 @@ namespace PatchApply
 
     internal class PatchLine
     {
-        public string Text { get; set; }
+        public string Text { get; private set; }
         public bool Selected { get; set; }
+
+        public PatchLine(string text, bool selected = false)
+        {
+            Text = text;
+            Selected = selected;
+        }
 
         public PatchLine Clone()
         {
-            var c = new PatchLine();
-            c.Text = Text;
-            c.Selected = Selected;
-            return c;
+            return new PatchLine(Text, Selected);
         }
 
         public void SetOperation(string operationMark)
@@ -509,10 +512,7 @@ namespace PatchApply
                 string line = lines[i];
                 if (inPatch)
                 {
-                    PatchLine patchLine = new PatchLine()
-                    {
-                        Text = line
-                    };
+                    var patchLine = new PatchLine(line);
 
                     // do not refactor, there are no break points condition in VS Experss
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
@@ -560,8 +560,8 @@ namespace PatchApply
 
         public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk result = new Chunk();
-            result._startLine = 0;
+            Chunk result = new Chunk { _startLine = 0 };
+
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
             string eol;
@@ -587,12 +587,9 @@ namespace PatchApply
             {
                 string line = lines[i];
                 string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreabmle)) : string.Empty;
-                PatchLine patchLine = new PatchLine()
-                {
-                    Text = (reset ? "-" : "+") + preamble + line
-                };
+                var patchLine = new PatchLine((reset ? "-" : "+") + preamble + line);
 
-                // do not refactor, there are no breakpoints condition in VS Experss
+                // do not refactor, there are no breakpoints condition in VS Express
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
                 {
                     patchLine.Selected = true;
@@ -709,10 +706,17 @@ namespace PatchApply
 
         public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] filePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
-            ChunkList result = new ChunkList();
-            result.Add(chunk);
-            return result;
+            return new ChunkList
+            {
+                Chunk.FromNewFile(
+                    module,
+                    text,
+                    selectionPosition,
+                    selectionLength,
+                    reset,
+                    filePreabmle,
+                    fileContentEncoding)
+            };
         }
 
         public string ToResetUnstagedLinesPatch()

@@ -18,9 +18,9 @@ namespace GitUI.Script
             {
                 FileName = filename,
                 Arguments = psarguments,
-                WorkingDirectory = workingDir
+                WorkingDirectory = workingDir,
+                UseShellExecute = false
             };
-            startInfo.UseShellExecute = false;
 
             var startProcess = Process.Start(startInfo);
 

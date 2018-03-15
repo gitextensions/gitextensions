@@ -108,65 +108,70 @@ namespace GitUI.Script
 
         private static void AddDefaultScripts()
         {
-            ScriptInfo fetchAfterCommitScript = new ScriptInfo();
-            fetchAfterCommitScript.HotkeyCommandIdentifier = 9000;
-            fetchAfterCommitScript.Name = "Fetch changes after commit";
-            fetchAfterCommitScript.Command = "git";
-            fetchAfterCommitScript.Arguments = "fetch";
-            fetchAfterCommitScript.RunInBackground = false;
-            fetchAfterCommitScript.AskConfirmation = true;
-            fetchAfterCommitScript.OnEvent = ScriptEvent.AfterCommit;
-            fetchAfterCommitScript.AddToRevisionGridContextMenu = false;
-            fetchAfterCommitScript.Enabled = false;
-            Scripts.Add(fetchAfterCommitScript);
+            Scripts.Add(new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9000,
+                Name = "Fetch changes after commit",
+                Command = "git",
+                Arguments = "fetch",
+                RunInBackground = false,
+                AskConfirmation = true,
+                OnEvent = ScriptEvent.AfterCommit,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            });
 
-            ScriptInfo updateSubmodulesAfterPullScript = new ScriptInfo();
-            updateSubmodulesAfterPullScript.HotkeyCommandIdentifier = 9001;
-            updateSubmodulesAfterPullScript.Name = "Update submodules after pull";
-            updateSubmodulesAfterPullScript.Command = "git";
-            updateSubmodulesAfterPullScript.Arguments = "submodule update --init --recursive";
-            updateSubmodulesAfterPullScript.RunInBackground = false;
-            updateSubmodulesAfterPullScript.AskConfirmation = true;
-            updateSubmodulesAfterPullScript.OnEvent = ScriptEvent.AfterPull;
-            updateSubmodulesAfterPullScript.AddToRevisionGridContextMenu = false;
-            updateSubmodulesAfterPullScript.Enabled = false;
-            Scripts.Add(updateSubmodulesAfterPullScript);
+            Scripts.Add(new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9001,
+                Name = "Update submodules after pull",
+                Command = "git",
+                Arguments = "submodule update --init --recursive",
+                RunInBackground = false,
+                AskConfirmation = true,
+                OnEvent = ScriptEvent.AfterPull,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            });
 
-            ScriptInfo userMenuScript = new ScriptInfo();
-            userMenuScript.HotkeyCommandIdentifier = 9002;
-            userMenuScript.Name = "Example";
-            userMenuScript.Command = "c:\\windows\\system32\\calc.exe";
-            userMenuScript.Arguments = "";
-            userMenuScript.RunInBackground = false;
-            userMenuScript.AskConfirmation = false;
-            userMenuScript.OnEvent = ScriptEvent.ShowInUserMenuBar;
-            userMenuScript.AddToRevisionGridContextMenu = false;
-            userMenuScript.Enabled = false;
-            Scripts.Add(userMenuScript);
+            Scripts.Add(new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9002,
+                Name = "Example",
+                Command = "c:\\windows\\system32\\calc.exe",
+                Arguments = "",
+                RunInBackground = false,
+                AskConfirmation = false,
+                OnEvent = ScriptEvent.ShowInUserMenuBar,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            });
 
-            ScriptInfo openHashOnGitHub = new ScriptInfo();
-            openHashOnGitHub.HotkeyCommandIdentifier = 9003;
-            openHashOnGitHub.Name = "Open on GitHub";
-            openHashOnGitHub.Command = "{openurl}";
-            openHashOnGitHub.Arguments = "https://github.com{cDefaultRemotePathFromUrl}/commit/{sHash}";
-            openHashOnGitHub.RunInBackground = false;
-            openHashOnGitHub.AskConfirmation = false;
-            openHashOnGitHub.OnEvent = 0;
-            openHashOnGitHub.AddToRevisionGridContextMenu = true;
-            openHashOnGitHub.Enabled = false;
-            Scripts.Add(openHashOnGitHub);
+            Scripts.Add(new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9003,
+                Name = "Open on GitHub",
+                Command = "{openurl}",
+                Arguments = "https://github.com{cDefaultRemotePathFromUrl}/commit/{sHash}",
+                RunInBackground = false,
+                AskConfirmation = false,
+                OnEvent = 0,
+                AddToRevisionGridContextMenu = true,
+                Enabled = false
+            });
 
-            ScriptInfo fetchAll = new ScriptInfo();
-            fetchAll.HotkeyCommandIdentifier = 9004;
-            fetchAll.Name = "Fetch All Submodules";
-            fetchAll.Command = "git";
-            fetchAll.Arguments = "submodule foreach --recursive git fetch --all";
-            fetchAll.RunInBackground = false;
-            fetchAll.AskConfirmation = false;
-            fetchAll.OnEvent = 0;
-            fetchAll.AddToRevisionGridContextMenu = true;
-            fetchAll.Enabled = false;
-            Scripts.Add(fetchAll);
+            Scripts.Add(new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9004,
+                Name = "Fetch All Submodules",
+                Command = "git",
+                Arguments = "submodule foreach --recursive git fetch --all",
+                RunInBackground = false,
+                AskConfirmation = false,
+                OnEvent = 0,
+                AddToRevisionGridContextMenu = true,
+                Enabled = false
+            });
         }
 
         internal static int NextHotkeyCommandIdentifier()
@@ -188,15 +193,15 @@ namespace GitUI.Script
                 {
                     string[] parameters = scripts[i].Split(new[] { paramSeparator }, StringSplitOptions.None);
 
-                    ScriptInfo scriptInfo = new ScriptInfo();
-                    scriptInfo.Name = parameters[0];
-                    scriptInfo.Command = parameters[1];
-                    scriptInfo.Arguments = parameters[2];
-                    scriptInfo.AddToRevisionGridContextMenu = parameters[3].Equals("yes");
-                    scriptInfo.Enabled = true;
-                    scriptInfo.RunInBackground = false;
-
-                    Scripts.Add(scriptInfo);
+                    Scripts.Add(new ScriptInfo
+                    {
+                        Name = parameters[0],
+                        Command = parameters[1],
+                        Arguments = parameters[2],
+                        AddToRevisionGridContextMenu = parameters[3] == "yes",
+                        Enabled = true,
+                        RunInBackground = false
+                    });
                 }
             }
         }

@@ -210,9 +210,12 @@ namespace GitUI.CommandsDialogs
                         mail.Attachments.Add(attacheMent);
                     }
 
-                    var smtpClient = new SmtpClient(AppSettings.SmtpServer);
-                    smtpClient.Port = AppSettings.SmtpPort;
-                    smtpClient.EnableSsl = AppSettings.SmtpUseSsl;
+                    var smtpClient = new SmtpClient(AppSettings.SmtpServer)
+                    {
+                        Port = AppSettings.SmtpPort,
+                        EnableSsl = AppSettings.SmtpUseSsl
+                    };
+
                     using (var credentials = new SmtpCredentials())
                     {
                         credentials.login.Text = from;
@@ -226,8 +229,8 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    ServicePointManager.ServerCertificateValidationCallback =
-                        (sender, certificate, chain, errors) => true;
+                    ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
                     smtpClient.Send(mail);
                 }
             }

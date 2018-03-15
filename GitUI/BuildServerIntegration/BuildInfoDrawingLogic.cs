@@ -89,7 +89,7 @@ namespace GitUI.BuildServerIntegration
 
         private static string GetBuildStatusMessageText(GitRevision revision)
         {
-            if (revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Description))
+            if (string.IsNullOrEmpty(revision.BuildStatus?.Description))
             {
                 return string.Empty;
             }

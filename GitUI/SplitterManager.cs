@@ -19,7 +19,7 @@ namespace GitUI
 
         public void AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
         {
-            var data = new SplitterData()
+            var data = new SplitterData
             {
                 Splitter = splitter,
                 SettingName = settingName,

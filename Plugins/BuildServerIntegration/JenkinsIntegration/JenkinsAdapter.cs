@@ -73,9 +73,11 @@ namespace JenkinsIntegration
                                      ? new Uri(hostName, UriKind.Absolute)
                                      : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
-                _httpClient = new HttpClient(new HttpClientHandler() { UseDefaultCredentials = true });
-                _httpClient.Timeout = TimeSpan.FromMinutes(2);
-                _httpClient.BaseAddress = baseAdress;
+                _httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
+                {
+                    Timeout = TimeSpan.FromMinutes(2),
+                    BaseAddress = baseAdress
+                };
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
@@ -276,7 +278,7 @@ namespace JenkinsIntegration
             catch (Exception ex)
             {
                 // Cancelling a subtask is similar to cancelling this task
-                if (ex.InnerException == null || !(ex.InnerException is OperationCanceledException))
+                if (!(ex.InnerException is OperationCanceledException))
                 {
                     observer.OnError(ex);
                 }

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GitUI.UserControls
 {
-    internal class RevisionGridUtils
+    internal static class RevisionGridUtils
     {
         public static Rectangle GetCellRectangle(DataGridViewCellPaintingEventArgs e)
         {

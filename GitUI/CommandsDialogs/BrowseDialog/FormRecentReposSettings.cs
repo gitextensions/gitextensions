@@ -94,14 +94,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
-            RecentRepoSplitter splitter = new RecentRepoSplitter();
-            splitter.MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
-            splitter.ShorteningStrategy = GetShorteningStrategy();
-            splitter.SortLessRecentRepos = sortLessRecentRepos.Checked;
-            splitter.SortMostRecentRepos = sortMostRecentRepos.Checked;
-            splitter.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
-            splitter.MeasureFont = MostRecentLB.Font;
-            splitter.Graphics = MostRecentLB.CreateGraphics();
+            var splitter = new RecentRepoSplitter
+            {
+                MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
+                ShorteningStrategy = GetShorteningStrategy(),
+                SortLessRecentRepos = sortLessRecentRepos.Checked,
+                SortMostRecentRepos = sortMostRecentRepos.Checked,
+                RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
+                MeasureFont = MostRecentLB.Font,
+                Graphics = MostRecentLB.CreateGraphics()
+            };
+
             try
             {
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);

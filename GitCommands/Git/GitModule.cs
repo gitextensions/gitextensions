@@ -1206,11 +1206,11 @@ namespace GitCommands
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
-                CommitterEmail = ReEncodeStringFromLossless(lines[7])
+                CommitterEmail = ReEncodeStringFromLossless(lines[7]),
+                AuthorDate = DateTimeUtils.ParseUnixTime(lines[5]),
+                CommitDate = DateTimeUtils.ParseUnixTime(lines[8]),
+                MessageEncoding = lines[9]
             };
-            revision.AuthorDate = DateTimeUtils.ParseUnixTime(lines[5]);
-            revision.CommitDate = DateTimeUtils.ParseUnixTime(lines[8]);
-            revision.MessageEncoding = lines[9];
             if (shortFormat)
             {
                 revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
@@ -1309,12 +1309,14 @@ namespace GitCommands
 
             string revisions = RunGitCmd("rev-list --parents --no-walk " + startRev + ".." + endRev);
             string[] revisionsTab = revisions.Split('\n');
-            Func<string, bool> ex = (string parents) =>
-                {
-                    string[] tab = parents.Split(' ');
-                    return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
-                };
-            return revisionsTab.Any(ex);
+
+            bool IsTwoSha1Hashes(string parents)
+            {
+                string[] tab = parents.Split(' ');
+                return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
+            }
+
+            return revisionsTab.Any(IsTwoSha1Hashes);
         }
 
         public ConfigFile GetSubmoduleConfigFile()
@@ -2116,14 +2118,14 @@ namespace GitCommands
                         string error = string.Empty;
                         CommitData data = _commitDataManager.GetCommitData(parts[1], ref error);
 
-                        PatchFile nextCommitPatch = new PatchFile();
-                        nextCommitPatch.Author = string.IsNullOrEmpty(error) ? data.Author : error;
-                        nextCommitPatch.Subject = string.IsNullOrEmpty(error) ? data.Body : error;
-                        nextCommitPatch.Name = parts[0];
-                        nextCommitPatch.Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error;
-                        nextCommitPatch.IsNext = patchFiles.Count == 0;
-
-                        patchFiles.Add(nextCommitPatch);
+                        patchFiles.Add(new PatchFile
+                        {
+                            Author = string.IsNullOrEmpty(error) ? data.Author : error,
+                            Subject = string.IsNullOrEmpty(error) ? data.Body : error,
+                            Name = parts[0],
+                            Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error,
+                            IsNext = patchFiles.Count == 0
+                        });
                     }
                 }
             }
@@ -2836,7 +2838,7 @@ namespace GitCommands
 
         public RemoteActionResult<IList<IGitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
         {
-            var result = new RemoteActionResult<IList<IGitRef>>()
+            var result = new RemoteActionResult<IList<IGitRef>>
             {
                 AuthenticationFail = false,
                 HostKeyFail = false,
@@ -3239,9 +3241,11 @@ namespace GitCommands
                     }
                     else if (line.StartsWith("author"))
                     {
-                        blameHeader = new GitBlameHeader();
-                        blameHeader.CommitGuid = blameLine.CommitGuid;
-                        blameHeader.Author = ReEncodeStringFromLossless(line.Substring("author".Length).Trim());
+                        blameHeader = new GitBlameHeader
+                        {
+                            CommitGuid = blameLine.CommitGuid,
+                            Author = ReEncodeStringFromLossless(line.Substring("author".Length).Trim())
+                        };
                         blame.Headers.Add(blameHeader);
                     }
                     else if (line.StartsWith("committer-mail"))
@@ -3757,8 +3761,7 @@ namespace GitCommands
                 return true;
             }
 
-            GitModule other = obj as GitModule;
-            return (other != null) && Equals(other);
+            return obj is GitModule other && Equals(other);
         }
 
         private bool Equals(GitModule other)

@@ -34,8 +34,7 @@ namespace GitUI.HelperDialogs
             int index = 0;
             foreach (object item in Branches.Items)
             {
-                var branch = item as IGitRef;
-                if (branch != null && branch.Name == name)
+                if (item is IGitRef branch && branch.Name == name)
                 {
                     Branches.SetItemChecked(index, true);
                     return;

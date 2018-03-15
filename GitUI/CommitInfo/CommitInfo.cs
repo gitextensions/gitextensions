@@ -130,14 +130,8 @@ namespace GitUI.CommitInfo
         [Browsable(false)]
         public GitRevision Revision
         {
-            get
-            {
-                return _revision;
-            }
-            set
-            {
-                SetRevisionWithChildren(value, null);
-            }
+            get => _revision;
+            set => SetRevisionWithChildren(value, null);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

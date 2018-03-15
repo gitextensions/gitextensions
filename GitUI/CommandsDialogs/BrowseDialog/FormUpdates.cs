@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return null;
             }
 
-            var version = new ReleaseVersion()
+            var version = new ReleaseVersion
             {
                 Version = ver,
                 ReleaseType = ReleaseType.Major,
