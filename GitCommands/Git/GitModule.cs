@@ -451,19 +451,17 @@ namespace GitCommands
         /// </remarks>
         public IList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
-            var configFile = GetSubmoduleConfigFile();
-            var submodules = configFile.ConfigSections.Select(configSection => configSection.GetValue("path").Trim()).ToList();
+            var submodules = GetSubmodulePaths(this);
+
             if (recursive)
             {
                 for (int i = 0; i < submodules.Count; i++)
                 {
                     var submodule = GetSubmodule(submodules[i]);
-                    var submoduleConfigFile = submodule.GetSubmoduleConfigFile();
-                    var subsubmodules = submoduleConfigFile.ConfigSections.Select(configSection => configSection.GetValue("path").Trim()).ToList();
-                    for (int j = 0; j < subsubmodules.Count; j++)
-                    {
-                        subsubmodules[j] = submodules[i] + '/' + subsubmodules[j];
-                    }
+
+                    var subsubmodules = GetSubmodulePaths(submodule)
+                        .Select(p => Path.Combine(submodules[i], p))
+                        .ToList();
 
                     submodules.InsertRange(i + 1, subsubmodules);
                     i += subsubmodules.Count;
@@ -471,6 +469,15 @@ namespace GitCommands
             }
 
             return submodules;
+
+            List<string> GetSubmodulePaths(GitModule module)
+            {
+                var configFile = module.GetSubmoduleConfigFile();
+
+                return configFile.ConfigSections
+                    .Select(section => section.GetValue("path").Trim())
+                    .ToList();
+            }
         }
 
         public static string FindGitWorkingDir(string startDir)
