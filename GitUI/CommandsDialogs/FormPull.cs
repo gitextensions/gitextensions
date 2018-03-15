@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs
             // Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && Module.InTheMiddleOfRebase())
             {
-                UICommands.ContinueRebase(owner);
+                UICommands.StartTheContinueRebaseDialog(owner);
             }
             else if (Module.InTheMiddleOfAction())
             {
