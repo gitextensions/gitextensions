@@ -1386,10 +1386,10 @@ namespace GitCommands
 
                 lastLine = submodule;
 
-                yield return GetSubmoduleInfo(submodule);
+                yield return ParseSubmoduleInfo(submodule);
             }
 
-            GitSubmoduleInfo GetSubmoduleInfo(string submodule)
+            GitSubmoduleInfo ParseSubmoduleInfo(string submodule)
             {
                 var gitSubmodule =
                     new GitSubmoduleInfo(this)
