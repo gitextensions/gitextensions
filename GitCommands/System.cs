@@ -171,7 +171,7 @@ namespace System
             {
                 if (!shouldRemoveLine(line))
                 {
-                    sb.Append(line + '\n');
+                    sb.Append(line).Append('\n');
                 }
             }
 
