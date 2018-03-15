@@ -93,7 +93,7 @@ namespace Gerrit
         {
             if (gitModule == null)
             {
-                throw new ArgumentNullException("gitDirectory");
+                throw new ArgumentNullException(nameof(gitModule));
             }
 
             string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
