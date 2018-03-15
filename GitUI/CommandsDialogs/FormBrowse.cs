@@ -2361,8 +2361,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
-                string error = "";
-                CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
+                CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit != null)
                 {
                     RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid));

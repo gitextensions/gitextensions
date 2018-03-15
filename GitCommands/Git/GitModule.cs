@@ -2093,15 +2093,14 @@ namespace GitCommands
 
                     if (parts.Length >= 3)
                     {
-                        string error = string.Empty;
-                        CommitData data = _commitDataManager.GetCommitData(parts[1], ref error);
+                        CommitData data = _commitDataManager.GetCommitData(parts[1], out var error);
 
                         patchFiles.Add(new PatchFile
                         {
-                            Author = string.IsNullOrEmpty(error) ? data.Author : error,
-                            Subject = string.IsNullOrEmpty(error) ? data.Body : error,
+                            Author = error ?? data.Author,
+                            Subject = error ?? data.Body,
                             Name = parts[0],
-                            Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error,
+                            Date = error ?? data.CommitDate.LocalDateTime.ToString(),
                             IsNext = patchFiles.Count == 0
                         });
                     }
@@ -3419,10 +3418,9 @@ namespace GitCommands
                 return SubmoduleStatus.Rewind;
             }
 
-            string error = "";
             if (loaddata)
             {
-                olddata = _commitDataManager.GetCommitData(oldCommit, ref error);
+                olddata = _commitDataManager.GetCommitData(oldCommit, out _);
             }
 
             if (olddata == null)
@@ -3432,7 +3430,7 @@ namespace GitCommands
 
             if (loaddata)
             {
-                data = _commitDataManager.GetCommitData(commit, ref error);
+                data = _commitDataManager.GetCommitData(commit, out _);
             }
 
             if (data == null)

@@ -29,8 +29,8 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
-        [CanBeNull]
-        CommitData GetCommitData(string sha1, ref string error);
+        [ContractAnnotation("=>null,error:notnull")]
+        CommitData GetCommitData(string sha1, out string error);
 
         /// <summary>
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
@@ -42,7 +42,7 @@ namespace GitCommands
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> property of <paramref name="commitData"/>.
         /// </summary>
-        void UpdateCommitMessage(CommitData commitData, ref string error);
+        void UpdateCommitMessage(CommitData commitData, [CanBeNull] out string error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
@@ -58,7 +58,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void UpdateCommitMessage(CommitData commitData, ref string error)
+        public void UpdateCommitMessage(CommitData commitData, out string error)
         {
             var module = GetModule();
 
@@ -77,7 +77,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData GetCommitData(string sha1, ref string error)
+        public CommitData GetCommitData(string sha1, out string error)
         {
             if (sha1 == null)
             {
