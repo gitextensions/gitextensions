@@ -1,5 +1,4 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -45,9 +44,10 @@ namespace GitCommands
 
     public sealed class CommitDataManager : ICommitDataManager
     {
-        private readonly Func<IGitModule> _getModule;
         private const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
+
+        private readonly Func<IGitModule> _getModule;
 
         public CommitDataManager(Func<IGitModule> getModule)
         {
@@ -59,11 +59,12 @@ namespace GitCommands
         /// </summary>
         public void UpdateCommitMessage(CommitData data, string sha1, ref string error)
         {
-            var module = GetModule();
             if (sha1 == null)
             {
                 throw new ArgumentNullException(nameof(sha1));
             }
+
+            var module = GetModule();
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -98,11 +99,12 @@ namespace GitCommands
         /// </summary>
         public CommitData GetCommitData(string sha1, ref string error)
         {
-            var module = GetModule();
             if (sha1 == null)
             {
                 throw new ArgumentNullException(nameof(sha1));
             }
+
+            var module = GetModule();
 
             // Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
@@ -129,9 +131,7 @@ namespace GitCommands
                 return null;
             }
 
-            CommitData commitInformation = CreateFromFormatedData(info);
-
-            return commitInformation;
+            return CreateFromFormatedData(info);
         }
 
         /// <summary>
@@ -158,8 +158,7 @@ namespace GitCommands
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
             string[] parentLines = lines[2].Split(' ');
-            ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
-
+            var parentGuids = lines[2].Split(' ');
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
 
@@ -168,16 +167,12 @@ namespace GitCommands
 
             string commitEncoding = lines[7];
 
-            const int startIndex = 8;
-            string message = ProccessDiffNotes(startIndex, lines);
+            var message = ProccessDiffNotes(startIndex: 8, lines);
 
             // commit message is not reencoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
-            var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
-                committer, commitDate, body);
-
-            return commitInformation;
+            return new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);
         }
 
         /// <summary>
@@ -200,8 +195,7 @@ namespace GitCommands
 
             string commitEncoding = lines[1];
 
-            const int startIndex = 2;
-            string message = ProccessDiffNotes(startIndex, lines);
+            var message = ProccessDiffNotes(startIndex: 2, lines);
 
             // commit message is not reencoded by git when format is given
             Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
@@ -220,11 +214,10 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
+            return new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject);
-            return data;
         }
 
         private IGitModule GetModule()
@@ -248,16 +241,19 @@ namespace GitCommands
 
             var message = new StringBuilder();
             bool notesStart = false;
+
             for (int i = startIndex; i <= endIndex; i++)
             {
                 string line = lines[i];
+
                 if (notesStart)
                 {
-                    line = "    " + line;
+                    message.Append("    ");
                 }
 
                 message.AppendLine(line);
-                if (lines[i] == "Notes:")
+
+                if (line == "Notes:")
                 {
                     notesStart = true;
                 }
