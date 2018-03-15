@@ -4,11 +4,11 @@
     {
         string Branch { get; }
         string CurrentCommitGuid { get; }
-        bool Initialized { get; }
+        bool IsInitialized { get; }
         string LocalPath { get; }
         string Name { get; }
         string RemotePath { get; }
         string Status { get; }
-        bool UpToDate { get; }
+        bool IsUpToDate { get; }
     }
 }

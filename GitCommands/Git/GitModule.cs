@@ -1372,6 +1372,8 @@ namespace GitCommands
 
             string lastLine = null;
 
+            var configFile = GetSubmoduleConfigFile();
+
             foreach (var submodule in submodules)
             {
                 if (submodule.Length < 43)
@@ -1389,7 +1391,7 @@ namespace GitCommands
                 yield return ParseSubmoduleInfo(submodule);
             }
 
-            GitSubmoduleInfo ParseSubmoduleInfo(string submodule)
+            GitSubmoduleInfo ParseSubmoduleInfo(string status)
             {
                 // Parse an output line from `git submodule status`. Lines have one of the following forms:
                 //
@@ -1411,26 +1413,29 @@ namespace GitCommands
                 // - the submodule path
                 // - the output of git describe for the SHA-1
 
-                var gitSubmodule =
-                    new GitSubmoduleInfo(this)
-                    {
-                        Initialized = submodule[0] != '-',
-                        UpToDate = submodule[0] != '+',
-                        CurrentCommitGuid = submodule.Substring(1, 40).Trim()
-                    };
+                var match = Regex.Match(status, @"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$");
 
-                var localPath = submodule.Substring(42).Trim();
-                if (localPath.Contains("("))
+                if (!match.Success)
                 {
-                    gitSubmodule.LocalPath = localPath.Substring(0, localPath.IndexOf("(")).TrimEnd();
-                    gitSubmodule.Branch = localPath.Substring(localPath.IndexOf("(")).Trim('(', ')', ' ');
-                }
-                else
-                {
-                    gitSubmodule.LocalPath = localPath;
+                    throw new FormatException("Invalid git submodule status line: " + status);
                 }
 
-                return gitSubmodule;
+                var code = match.Groups[1].Value[0];
+                var currentCommitGuid = match.Groups[2].Value;
+                var localPath = match.Groups[3].Value;
+                var branch = match.Groups[4].Value;
+
+                var configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
+
+                Trace.Assert(configSection != null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
+
+                var name = configSection.SubSection.Trim();
+                var remotePath = configFile.GetPathValue($"submodule.{name}.url").Trim();
+
+                return new GitSubmoduleInfo(
+                    name, localPath, remotePath, currentCommitGuid, branch,
+                    isInitialized: code != '-',
+                    isUpToDate: code != '+');
             }
         }
 

@@ -1,37 +1,40 @@
-﻿using GitUIPluginInterfaces;
+﻿using System;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public sealed class GitSubmoduleInfo : IGitSubmoduleInfo
     {
-        private readonly GitModule _module;
-        public string LocalPath { get; set; }
+        [NotNull] public string Name { get; }
+        [NotNull] public string LocalPath { get; }
+        [NotNull] public string RemotePath { get; }
+        [NotNull] public string CurrentCommitGuid { get; }
+        [NotNull] public string Branch { get; }
+        public bool IsInitialized { get; }
+        public bool IsUpToDate { get; }
 
-        public GitSubmoduleInfo(GitModule module)
+        public GitSubmoduleInfo([NotNull] string name, [NotNull] string localPath, [NotNull] string remotePath, [NotNull] string currentCommitGuid, [NotNull] string branch, bool isInitialized, bool isUpToDate)
         {
-            _module = module;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            LocalPath = localPath ?? throw new ArgumentNullException(nameof(localPath));
+            RemotePath = remotePath ?? throw new ArgumentNullException(nameof(remotePath));
+            CurrentCommitGuid = currentCommitGuid ?? throw new ArgumentNullException(nameof(currentCommitGuid));
+            Branch = branch ?? throw new ArgumentNullException(nameof(branch));
+            IsInitialized = isInitialized;
+            IsUpToDate = isUpToDate;
         }
-
-        public string Name => _module.GetSubmoduleNameByPath(LocalPath);
-
-        public string RemotePath => _module.GetSubmoduleRemotePath(Name);
-
-        public string CurrentCommitGuid { get; set; }
-        public string Branch { get; set; }
-
-        public bool Initialized { get; set; }
-        public bool UpToDate { get; set; }
 
         public string Status
         {
             get
             {
-                if (!Initialized)
+                if (!IsInitialized)
                 {
                     return "Not initialized";
                 }
 
-                if (!UpToDate)
+                if (!IsUpToDate)
                 {
                     return "Modified";
                 }
