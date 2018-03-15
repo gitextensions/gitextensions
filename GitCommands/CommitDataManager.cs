@@ -10,15 +10,6 @@ namespace GitCommands
     public interface ICommitDataManager
     {
         /// <summary>
-        /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
-        /// </summary>
-        /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
-        /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
-        [NotNull]
-        CommitData CreateFromFormatedData([NotNull] string data);
-
-        /// <summary>
         /// Creates a <see cref="CommitData"/> object from <paramref name="revision"/>.
         /// </summary>
         /// <param name="revision">The commit to return data for.</param>
@@ -30,13 +21,6 @@ namespace GitCommands
         /// </summary>
         [ContractAnnotation("=>null,error:notnull")]
         CommitData GetCommitData(string sha1, out string error);
-
-        /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
-        /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
-        void UpdateBodyInCommitData(CommitData commitData, string data);
 
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> property of <paramref name="commitData"/>.
@@ -59,22 +43,54 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateCommitMessage(CommitData commitData, out string error)
         {
-            if (TryGetCommitLog(commitData.Guid, ShortLogFormat, out error, out var info))
+            if (!TryGetCommitLog(commitData.Guid, ShortLogFormat, out error, out var data))
             {
-                UpdateBodyInCommitData(commitData, info);
+                return;
             }
+
+            // $ git log --pretty="format:%H%n%e%n%B%nNotes:%n%-N" -1
+            // 8c601c9bb040e575af75c9eee6e14441e2a1b207
+            //
+            // Remove redundant parameter
+            //
+            // The sha1 parameter must match CommitData.Guid.
+            // There's no point passing it. It only creates opportunity for bugs.
+            //
+            // Notes:
+
+            // commit id
+            // encoding
+            // commit message
+            // ...
+
+            var lines = data.Split('\n');
+
+            var guid = lines[0];
+            var commitEncoding = lines[1];
+            var message = ProcessDiffNotes(startIndex: 2, lines);
+
+            Debug.Assert(commitData.Guid == guid, "Guid in response doesn't match that of request");
+
+            // Commit message is not reencoded by git when format is given
+            commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
         }
 
         /// <inheritdoc />
         public CommitData GetCommitData(string sha1, out string error)
         {
             return TryGetCommitLog(sha1, LogFormat, out error, out var info)
-                ? CreateFromFormatedData(info)
+                ? CreateFromFormattedData(info)
                 : null;
         }
 
-        /// <inheritdoc />
-        public CommitData CreateFromFormatedData(string data)
+        /// <summary>
+        /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
+        /// </summary>
+        /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
+        /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
+        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        [NotNull]
+        public CommitData CreateFromFormattedData([NotNull] string data)
         {
             if (data == null)
             {
@@ -122,47 +138,12 @@ namespace GitCommands
             var committer = module.ReEncodeStringFromLossless(lines[5]);
             var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
             var commitEncoding = lines[7];
-            var message = ProccessDiffNotes(startIndex: 8, lines);
+            var message = ProcessDiffNotes(startIndex: 8, lines);
 
             // commit message is not reencoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
             return new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);
-        }
-
-        /// <inheritdoc />
-        public void UpdateBodyInCommitData(CommitData commitData, string data)
-        {
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            // $ git log --pretty="format:%H%n%e%n%B%nNotes:%n%-N" -1
-            // 8c601c9bb040e575af75c9eee6e14441e2a1b207
-            //
-            // Remove redundant parameter
-            //
-            // The sha1 parameter must match CommitData.Guid.
-            // There's no point passing it. It only creates opportunity for bugs.
-            //
-            // Notes:
-
-            // commit id
-            // encoding
-            // commit message
-            // ...
-
-            var lines = data.Split('\n');
-
-            var guid = lines[0];
-            var commitEncoding = lines[1];
-            var message = ProccessDiffNotes(startIndex: 2, lines);
-
-            Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
-
-            // commit message is not reencoded by git when format is given
-            commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
         }
 
         /// <inheritdoc />
@@ -212,7 +193,7 @@ namespace GitCommands
         }
 
         [NotNull]
-        private static string ProccessDiffNotes(int startIndex, [NotNull, ItemNotNull] string[] lines)
+        private static string ProcessDiffNotes(int startIndex, [NotNull, ItemNotNull] string[] lines)
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
