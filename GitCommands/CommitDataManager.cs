@@ -72,23 +72,9 @@ namespace GitCommands
                 "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
-            if (info.Trim().StartsWith("fatal"))
+            if (info.Trim().StartsWith("fatal") || !info.Contains(sha1))
             {
                 error = "Cannot find commit " + sha1;
-                return;
-            }
-
-            int index = info.IndexOf(sha1) + sha1.Length;
-
-            if (index < 0)
-            {
-                error = "Cannot find commit " + sha1;
-                return;
-            }
-
-            if (index >= info.Length)
-            {
-                error = info;
                 return;
             }
 
@@ -110,23 +96,9 @@ namespace GitCommands
                 "log -1 --pretty=\"format:" + LogFormat + "\" {0}", sha1);
             var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
-            if (info.Trim().StartsWith("fatal"))
+            if (info.Trim().StartsWith("fatal") || !info.Contains(sha1))
             {
                 error = "Cannot find commit " + sha1;
-                return null;
-            }
-
-            int index = info.IndexOf(sha1) + sha1.Length;
-
-            if (index < 0)
-            {
-                error = "Cannot find commit " + sha1;
-                return null;
-            }
-
-            if (index >= info.Length)
-            {
-                error = info;
                 return null;
             }
 
