@@ -102,8 +102,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             if (!_commitTemplates[line].Name.IsNullOrEmpty())
             {
-                comboBoxText = _commitTemplates[line].Name.Substring(0, _commitTemplates[line].Name.Length > _maxShownCharsForName ? (_maxShownCharsForName - 3) : _commitTemplates[line].Name.Length);
-                comboBoxText += _commitTemplates[line].Name.Length > _maxShownCharsForName ? "..." : "";
+                comboBoxText = _commitTemplates[line].Name.ShortenTo(_maxShownCharsForName);
             }
             else
             {
