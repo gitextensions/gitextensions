@@ -3035,7 +3035,8 @@ namespace GitCommands
             }
 
             string info = RunGitCmd("branch " + args);
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+
+            if (IsGitErrorMessage(info))
             {
                 return new List<string>();
             }
@@ -3066,7 +3067,7 @@ namespace GitCommands
         {
             string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
 
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+            if (IsGitErrorMessage(info))
             {
                 return new List<string>();
             }
@@ -3089,7 +3090,7 @@ namespace GitCommands
 
             string info = RunGitCmd("tag -l -n10 " + tag, SystemEncoding);
 
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+            if (IsGitErrorMessage(info))
             {
                 return null;
             }
@@ -3836,6 +3837,16 @@ namespace GitCommands
         public bool StopTrackingFile(string filename)
         {
             return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
+        }
+
+        /// <summary>
+        /// Determines whether a git command's output indicates an error occurred.
+        /// </summary>
+        /// <param name="gitOutput">The output from the git command, to inspect.</param>
+        /// <returns><c>true</c> if the command detailed an error, otherwise <c>false</c>.</returns>
+        public static bool IsGitErrorMessage(string gitOutput)
+        {
+            return Regex.IsMatch(gitOutput, @"^\s*(error:|fatal)");
         }
     }
 }
