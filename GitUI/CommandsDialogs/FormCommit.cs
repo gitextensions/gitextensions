@@ -326,18 +326,18 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            AddToGitIgnore,
-            DeleteSelectedFiles,
-            FocusUnstagedFiles,
-            FocusSelectedDiff,
-            FocusStagedFiles,
-            FocusCommitMessage,
-            ResetSelectedFiles,
-            StageSelectedFile,
-            UnStageSelectedFile,
-            ShowHistory,
-            ToggleSelectionFilter,
-            StageAll,
+            AddToGitIgnore = 0,
+            DeleteSelectedFiles = 1,
+            FocusUnstagedFiles = 2,
+            FocusSelectedDiff = 3,
+            FocusStagedFiles = 4,
+            FocusCommitMessage = 6,
+            ResetSelectedFiles = 7,
+            StageSelectedFile = 8,
+            UnStageSelectedFile = 9,
+            ShowHistory = 10,
+            ToggleSelectionFilter = 11,
+            StageAll = 12
         }
 
         private bool AddToGitIgnore()

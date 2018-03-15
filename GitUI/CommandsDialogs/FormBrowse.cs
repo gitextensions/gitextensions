@@ -1999,24 +1999,24 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            GitBash,
-            GitGui,
-            GitGitK,
-            FocusRevisionGrid,
-            FocusCommitInfo,
-            FocusFileTree,
-            FocusDiff,
-            Commit,
-            AddNotes,
-            FindFileInSelectedCommit,
-            CheckoutBranch,
-            QuickFetch,
-            QuickPull,
-            QuickPush,
-            RotateApplicationIcon,
-            CloseRepository,
-            Stash,
-            StashPop
+            GitBash = 0,
+            GitGui = 1,
+            GitGitK = 2,
+            FocusRevisionGrid = 3,
+            FocusCommitInfo = 4,
+            FocusFileTree = 5,
+            FocusDiff = 6,
+            Commit = 7,
+            AddNotes = 8,
+            FindFileInSelectedCommit = 9,
+            CheckoutBranch = 10,
+            QuickFetch = 11,
+            QuickPull = 12,
+            QuickPush = 13,
+            RotateApplicationIcon = 14,
+            CloseRepository = 15,
+            Stash = 16,
+            StashPop = 17
         }
 
         private void AddNotes()
