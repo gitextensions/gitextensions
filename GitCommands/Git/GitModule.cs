@@ -1331,13 +1331,6 @@ namespace GitCommands
             return submodulePath;
         }
 
-        public string GetSubmoduleNameByPath(string localPath)
-        {
-            var configFile = GetSubmoduleConfigFile();
-            var submodule = configFile.ConfigSections.FirstOrDefault(configSection => configSection.GetValue("path").Trim() == localPath);
-            return submodule?.SubSection.Trim();
-        }
-
         public string GetSubmoduleFullPath(string localPath)
         {
             if (localPath == null)
