@@ -19,8 +19,6 @@ namespace GitUI.UserControls.ToolStripClasses
 
         internal static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
 
-        public Image DefaultIcon => IconClean;
-
         public Image GetCommitIcon(IList<GitItemStatus> allChangedFiles)
         {
             var stagedCount = allChangedFiles.Count(status => status.IsStaged);
@@ -58,7 +56,6 @@ namespace GitUI.UserControls.ToolStripClasses
 
     internal interface ICommitIconProvider
     {
-        Image DefaultIcon { get; }
         Image GetCommitIcon(IList<GitItemStatus> allChangedFiles);
     }
 }
