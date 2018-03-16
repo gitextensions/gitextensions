@@ -295,24 +295,23 @@ namespace GitCommands.Repository
                     }
                 }
 
-                bool ShortenPathWithCompany(int skipCount)
+                void ShortenPathWithCompany(int skipCount)
                 {
-                    bool result = false;
                     string c = null;
                     string r = null;
+
                     if (company?.Length > skipCount)
                     {
                         c = company.Substring(0, company.Length - skipCount);
-                        result = true;
                     }
 
                     if (repository?.Length > skipCount)
                     {
                         r = repository.Substring(skipCount, repository.Length - skipCount);
-                        result = true;
                     }
 
                     repoInfo.Caption = MakePath(root, c);
+
                     if (addDots)
                     {
                         repoInfo.Caption = MakePath(repoInfo.Caption, "..");
@@ -320,8 +319,6 @@ namespace GitCommands.Repository
 
                     repoInfo.Caption = MakePath(repoInfo.Caption, r);
                     repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
-
-                    return result && addDots;
                 }
 
                 bool ShortenPath(int skipCount)
