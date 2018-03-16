@@ -15,11 +15,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return "color,graph,diff,icon";
-        }
-
         private static int GetIconStyleIndex(string text)
         {
             switch (text.ToLowerInvariant())

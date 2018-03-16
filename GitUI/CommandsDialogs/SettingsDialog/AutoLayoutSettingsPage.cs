@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Settings;
@@ -9,13 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public abstract partial class AutoLayoutSettingsPage : RepoDistSettingsPage, ISettingsLayout
     {
-        internal readonly IList<string> _autoGenKeywords = new List<string>();
         private ISettingsLayout _settingsLayout;
-
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return string.Join(",", _autoGenKeywords);
-        }
 
         protected override ISettingsSource GetCurrentSettings()
         {
@@ -71,11 +64,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             throw new NotImplementedException();
         }
 
-        public void AddKeyword(string keyword)
-        {
-            _autoGenKeywords.Add(keyword);
-        }
-
         public void AddSettingsLayout(ISettingsLayout layout)
         {
             GetSettingsLayout().AddSettingsLayout(layout);
@@ -87,7 +75,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         void AddSettingControl(ISettingControlBinding controlBinding);
         void AddSettingsLayout(ISettingsLayout layout);
         Control GetControl();
-        void AddKeyword(string keyword);
         void AddControlBinding(ISettingControlBinding controlBinding);
     }
 
@@ -105,14 +92,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             ParentLayout.AddControlBinding(aControlBinding);
         }
 
-        public void AddKeyword(string keyword)
-        {
-            ParentLayout.AddKeyword(keyword);
-        }
-
         public void AddSettingControl(ISettingControlBinding aControlBinding)
         {
-            AddKeyword(aControlBinding.GetSetting().Caption);
             AddControlBinding(aControlBinding);
             AddSettingControlImpl(aControlBinding);
         }

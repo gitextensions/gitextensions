@@ -21,11 +21,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             label18.ForeColor = ColorHelper.GetForeColorForBackColor(label18.BackColor);
         }
 
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return "plink,putty,openssh,pageant";
-        }
-
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(SshSettingsPage));

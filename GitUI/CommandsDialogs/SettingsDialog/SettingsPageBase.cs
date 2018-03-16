@@ -167,11 +167,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return texts;
         }
 
-        protected virtual string GetCommaSeparatedKeywordList()
-        {
-            return "";
-        }
-
         public virtual bool IsInstantSavePage => false;
 
         public virtual SettingsPageReference PageReference => new SettingsPageReferenceByType(GetType());
