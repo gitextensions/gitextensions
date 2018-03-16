@@ -1999,30 +1999,37 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            GitBash,
-            GitGui,
-            GitGitK,
-            FocusRevisionGrid,
-            FocusCommitInfo,
-            FocusFileTree,
-            FocusDiff,
-            Commit,
-            AddNotes,
-            FindFileInSelectedCommit,
-            CheckoutBranch,
-            QuickFetch,
-            QuickPull,
-            QuickPush,
-            RotateApplicationIcon,
-            CloseRepository,
-            Stash,
-            StashPop
+            GitBash = 0,
+            GitGui = 1,
+            GitGitK = 2,
+            FocusRevisionGrid = 3,
+            FocusCommitInfo = 4,
+            FocusFileTree = 5,
+            FocusDiff = 6,
+            FocusFilter = 18,
+            Commit = 7,
+            AddNotes = 8,
+            FindFileInSelectedCommit = 9,
+            CheckoutBranch = 10,
+            QuickFetch = 11,
+            QuickPull = 12,
+            QuickPush = 13,
+            RotateApplicationIcon = 14,
+            CloseRepository = 15,
+            Stash = 16,
+            StashPop = 17
         }
 
         private void AddNotes()
         {
             Module.EditNotes(RevisionGrid.GetSelectedRevisions().Count > 0 ? RevisionGrid.GetSelectedRevisions()[0].Guid : string.Empty);
             FillCommitInfo();
+        }
+
+        private void FocusFilter()
+        {
+            ToolStripControlHost filterToFocus = toolStripRevisionFilterTextBox.Focused ? (ToolStripControlHost)toolStripBranchFilterComboBox : (ToolStripControlHost)toolStripRevisionFilterTextBox;
+            filterToFocus.Focus();
         }
 
         private void FindFileInSelectedCommit()
@@ -2050,6 +2057,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfoTabPage; break;
                 case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = TreeTabPage; fileTree.Focus(); break;
                 case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = DiffTabPage; revisionDiff.Focus(); break;
+                case Commands.FocusFilter: FocusFilter(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;

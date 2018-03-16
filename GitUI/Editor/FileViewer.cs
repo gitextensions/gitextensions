@@ -1026,14 +1026,14 @@ namespace GitUI.Editor
 
         internal enum Commands
         {
-            Find,
-            GoToLine,
-            IncreaseNumberOfVisibleLines,
-            DecreaseNumberOfVisibleLines,
-            ShowEntireFile,
-            TreatFileAsText,
-            NextChange,
-            PreviousChange
+            Find = 0,
+            GoToLine = 1,
+            IncreaseNumberOfVisibleLines = 2,
+            DecreaseNumberOfVisibleLines = 3,
+            ShowEntireFile = 4,
+            TreatFileAsText = 5,
+            NextChange = 6,
+            PreviousChange = 7
         }
 
         protected override bool ExecuteCommand(int cmd)

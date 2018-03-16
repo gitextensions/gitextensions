@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            DeleteSelectedFiles,
+            DeleteSelectedFiles = 0
         }
 
         protected override bool ExecuteCommand(int cmd)

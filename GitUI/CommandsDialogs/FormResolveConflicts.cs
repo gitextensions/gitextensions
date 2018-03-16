@@ -1204,11 +1204,11 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            Merge,
-            Rescan,
-            ChooseRemote,
-            ChooseLocal,
-            ChooseBase
+            Merge = 0,
+            Rescan = 1,
+            ChooseRemote = 2,
+            ChooseLocal = 3,
+            ChooseBase = 4
         }
 
         protected override bool ExecuteCommand(int cmd)
