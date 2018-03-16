@@ -90,7 +90,7 @@ namespace GitUI.SpellChecker
 
             var formatRange = GetFormatRange(charRange, canvasHdc, rect, rectPage);
 
-            NativeMethods.SendMessage(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange).ToInt32();
+            NativeMethods.SendMessage(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange);
 
             canvas.ReleaseHdc(canvasHdc);
             canvas.Dispose();
