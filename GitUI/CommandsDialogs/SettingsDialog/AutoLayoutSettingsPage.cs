@@ -152,32 +152,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class GroupBoxSettingsLayout : TableSettingsLayout
-    {
-        protected GroupBox groupBox;
-
-        public GroupBoxSettingsLayout(ISettingsLayout parentLayout, string groupBoxCaption)
-            : base(parentLayout, AutoLayoutSettingsPage.CreateDefaultTableLayoutPanel())
-        {
-            CreateGroupBox(groupBoxCaption);
-        }
-
-        private void CreateGroupBox(string groupBoxCaption)
-        {
-            var gbox = new GroupBox();
-            groupBox = gbox;
-            groupBox.Text = groupBoxCaption;
-            groupBox.AutoSize = true;
-            groupBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            groupBox.Controls.Add(Panel);
-        }
-
-        public override Control GetControl()
-        {
-            return groupBox;
-        }
-    }
-
     public static class SettingsLayoutExt
     {
         public static void AddSetting(this ISettingsLayout layout, ISetting setting)
