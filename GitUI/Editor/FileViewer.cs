@@ -476,12 +476,6 @@ namespace GitUI.Editor
             RestoreCurrentScrollPos();
         }
 
-        public void ViewStagingPatch(Func<string> loadPatchText)
-        {
-            ViewPatch(loadPatchText);
-            Reset(true, true, true);
-        }
-
         public Task ViewPatch(Func<string> loadPatchText)
         {
             return _async.Load(loadPatchText, ViewPatch);
