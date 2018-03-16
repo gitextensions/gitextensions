@@ -1326,9 +1326,8 @@ namespace GitCommands
                 return null;
             }
 
-            string submodulePath = WorkingDir.Substring(SuperprojectModule.WorkingDir.Length);
-            submodulePath = PathUtil.GetDirectoryName(submodulePath.ToPosixPath());
-            return submodulePath;
+            return PathUtil.GetDirectoryName(
+                WorkingDir.Substring(SuperprojectModule.WorkingDir.Length).ToPosixPath());
         }
 
         public string GetSubmoduleFullPath(string localPath)
