@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using GitCommands;
 using NUnit.Framework;
 using ResourceManager;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitCommandsHelperTest
     {
-        [TestMethod]
+        [Test]
         public void CanGetRelativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
@@ -35,7 +33,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-730)));
         }
 
-        [TestMethod]
+        [Test]
         public void CanGetRelativeNegativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
@@ -58,7 +56,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("-2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(730)));
         }
 
-        [TestMethod]
+        [Test]
         public void TestFetchArguments()
         {
             GitModule module = new GitModule(null);
@@ -103,7 +101,7 @@ namespace GitCommandsTests.Git
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetAllChangedFilesFromString()
         {
             GitModule module = new GitModule(null);
@@ -144,7 +142,7 @@ namespace GitCommandsTests.Git
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetFullBranchNameTest()
         {
             Assert.AreEqual(null, GitCommandHelpers.GetFullBranchName(null));
@@ -158,7 +156,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("refs/tags/my-tag", GitCommandHelpers.GetFullBranchName("refs/tags/my-tag"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_Incompatible()
         {
             // Test urls that are incompatible and need to be changed
@@ -182,7 +180,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(expectUrl, outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_Compatible()
         {
             // Test urls that are already compatible, these shouldn't be changed
@@ -199,7 +197,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_NoPlink()
         {
             // Test urls that are no valid uris, these should be ignored
@@ -246,7 +244,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_Invalid()
         {
             // Test urls that are no valid uris, these should be ignored
@@ -261,7 +259,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void GetSubmoduleNamesFromDiffTest()
         {
             GitModule testModule = new GitModule("D:\\Test\\SuperProject");

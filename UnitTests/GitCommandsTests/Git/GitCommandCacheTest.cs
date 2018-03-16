@@ -1,22 +1,19 @@
 using System.Linq;
 using GitCommands;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestCleanup = NUnit.Framework.TearDownAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitCommandCacheTest
     {
-        [TestCleanup]
+        [TearDown]
         public void Cleanup()
         {
             GitCommandCache.CleanCache();
         }
 
-        [TestMethod]
+        [Test]
         public void TestAdd()
         {
             byte[] output = { 11, 12 };
@@ -28,14 +25,14 @@ namespace GitCommandsTests.Git
             Assert.IsTrue(expectedCachedCommand.SequenceEqual(GitCommandCache.CachedCommands()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddCannotCache()
         {
             GitCommandCache.Add(null, null, null);
             Assert.IsFalse(GitCommandCache.CachedCommands().Any());
         }
 
-        [TestMethod]
+        [Test]
         public void TestTryGet()
         {
             byte[] originalOutput = { 11, 12 };
@@ -48,7 +45,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(cachedError, originalError);
         }
 
-        [TestMethod]
+        [Test]
         public void TestClean()
         {
             byte[] output = { 11, 12 };
@@ -61,7 +58,7 @@ namespace GitCommandsTests.Git
             Assert.IsFalse(GitCommandCache.CachedCommands().Any());
         }
 
-        [TestMethod]
+        [Test]
         public void TestTryGetFails()
         {
             Assert.IsFalse(GitCommandCache.TryGet(null, out var output, out var error));

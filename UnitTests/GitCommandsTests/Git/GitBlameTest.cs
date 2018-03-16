@@ -1,15 +1,13 @@
 using System;
 using GitCommands;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitBlameTest
     {
-        [TestMethod]
+        [Test]
         public void TestConstructor()
         {
             GitBlame blame = new GitBlame();
@@ -18,7 +16,7 @@ namespace GitCommandsTests.Git
             Assert.IsNotNull(blame.Lines);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFindHeaderForCommitGuid()
         {
             GitBlame blame = new GitBlame();

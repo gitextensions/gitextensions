@@ -1,12 +1,9 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestCleanup = NUnit.Framework.TearDownAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Helpers
 {
-    [TestClass]
+    [TestFixture]
     public class FileInfoExtensionsTest
     {
         private const string File1Name = "c05706a2-1419-4f90-b2fc-0c1619086ea6";
@@ -48,7 +45,7 @@ namespace GitCommandsTests.Helpers
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestCompare()
         {
             FillFilePaths();
@@ -64,7 +61,7 @@ namespace GitCommandsTests.Helpers
             Assert.IsFalse(file1Info.Compare(file3Info));
         }
 
-        [TestMethod]
+        [Test]
         public void TestChecksum()
         {
             FillFilePaths();
@@ -76,20 +73,20 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual(file1CheckSum, file2CheckSum);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCompareWithNonExistingFile()
         {
             Assert.IsFalse(new FileInfo("inexistentFile").Compare("anotherInexistentFile"));
             Assert.IsFalse(new FileInfo(string.Format("inexistentFolder{0}inexistentFile", Path.PathSeparator)).Compare(string.Format("anotherInexistentFolder{0}anotherInexistentFile", Path.PathSeparator)));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCompareWithNullFileInfo()
         {
             Assert.IsFalse(new FileInfo("inexistentFile").Compare(new FileInfo("anotherInexistentFile")));
         }
 
-        [TestCleanup]
+        [TearDown]
         public void Cleanup()
         {
             if (File.Exists(_file1Path))
