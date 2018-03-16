@@ -50,6 +50,14 @@ namespace GitExtensions
                 }
             }
 
+            // NOTE we perform the rest of the application's startup in another method to defer
+            // the JIT processing more types than required to configure NBug.
+            // In this way, there's more chance we can handle startup exceptions correctly.
+            RunApplication();
+        }
+
+        private static void RunApplication()
+        {
             string[] args = Environment.GetCommandLineArgs();
 
             // This form created for obtain UI synchronization context only
