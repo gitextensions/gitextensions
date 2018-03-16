@@ -69,11 +69,6 @@ namespace GitUI.UserControls
             return UserManual.UserManual.UrlFor(ManualSectionSubfolder, ManualSectionAnchorName);
         }
 
-        private void labelHelpIcon_Click(object sender, EventArgs e)
-        {
-            OpenManual();
-        }
-
         private void linkLabelHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OpenManual();
