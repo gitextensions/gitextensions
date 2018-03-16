@@ -162,7 +162,6 @@
     </Compile>
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
-    <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="CommitHelper.cs" />
