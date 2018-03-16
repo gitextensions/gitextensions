@@ -1326,6 +1326,8 @@ namespace GitCommands
                 return null;
             }
 
+            Debug.Assert(WorkingDir.StartsWith(SuperprojectModule.WorkingDir), "Submodule working dir should start with super-project's working dir");
+
             return PathUtil.GetDirectoryName(
                 WorkingDir.Substring(SuperprojectModule.WorkingDir.Length).ToPosixPath());
         }
