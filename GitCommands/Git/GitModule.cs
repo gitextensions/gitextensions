@@ -106,8 +106,6 @@ namespace GitCommands
             _commitDataManager = new CommitDataManager(() => this);
         }
 
-        #region IGitCommands
-
         /// <summary>
         /// Gets the directory which contains the git repository.
         /// </summary>
@@ -126,8 +124,6 @@ namespace GitCommands
         public Version AppVersion => AppSettings.AppVersion;
 
         public string GravatarCacheDir => AppSettings.GravatarCachePath;
-
-        #endregion
 
         private bool _superprojectInit;
         private GitModule _superprojectModule;
