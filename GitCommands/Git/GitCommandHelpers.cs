@@ -441,23 +441,6 @@ namespace GitCommands
             return "refs/heads/" + branch;
         }
 
-        public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
-        {
-            StringBuilder cmd = new StringBuilder("branch");
-            cmd.Append(force ? " -D" : " -d");
-
-            if (remoteBranch)
-            {
-                cmd.Append(" -r");
-            }
-
-            cmd.Append(" \"");
-            cmd.Append(branchName);
-            cmd.Append("\"");
-
-            return cmd.ToString();
-        }
-
         public static string DeleteTagCmd(string tagName)
         {
             return "tag -d \"" + tagName + "\"";
