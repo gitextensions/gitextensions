@@ -10,7 +10,6 @@
         public override string Value
         {
             get => SettingsSource.GetString(Name, null);
-
             set => SettingsSource.SetString(Name, value);
         }
     }
@@ -25,7 +24,6 @@
         public override bool? Value
         {
             get => SettingsSource.GetBool(Name);
-
             set => SettingsSource.SetBool(Name, value);
         }
 
@@ -42,7 +40,6 @@
         public override int? Value
         {
             get => SettingsSource.GetInt(Name);
-
             set => SettingsSource.SetInt(Name, value);
         }
 
@@ -59,7 +56,6 @@
         public override bool Value
         {
             get => SettingsSource.GetBool(Name, DefaultValue);
-
             set => SettingsSource.SetBool(Name, value);
         }
     }
@@ -74,7 +70,6 @@
         public override T Value
         {
             get => SettingsSource.GetEnum(Name, DefaultValue);
-
             set => SettingsSource.SetEnum(Name, value);
         }
     }
@@ -89,7 +84,6 @@
         public override T? Value
         {
             get => SettingsSource.GetNullableEnum<T>(Name);
-
             set => SettingsSource.SetNullableEnum(Name, value);
         }
     }
