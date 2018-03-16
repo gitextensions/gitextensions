@@ -1512,11 +1512,6 @@ namespace GitCommands
             SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
         }
 
-        public static string PrefixedName(string prefix, string name)
-        {
-            return prefix == null ? name : prefix + '_' + name;
-        }
-
         public static bool? GetBool(string name)
         {
             return SettingsContainer.GetBool(name);
