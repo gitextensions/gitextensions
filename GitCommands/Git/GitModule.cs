@@ -1355,28 +1355,28 @@ namespace GitCommands
 
         public IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo()
         {
-            var submodules = ReadGitOutputLines("submodule status");
+            var lines = ReadGitOutputLines("submodule status");
 
             string lastLine = null;
 
             var configFile = GetSubmoduleConfigFile();
 
-            foreach (var submodule in submodules)
+            foreach (var line in lines)
             {
-                if (submodule == lastLine)
+                if (line == lastLine)
                 {
                     continue;
                 }
 
-                lastLine = submodule;
+                lastLine = line;
 
-                if (TryParseSubmoduleInfo(submodule, out var info))
+                if (TryParseSubmoduleInfo(line, out var info))
                 {
                     yield return info;
                 }
             }
 
-            bool TryParseSubmoduleInfo(string status, out GitSubmoduleInfo info)
+            bool TryParseSubmoduleInfo(string s, out GitSubmoduleInfo info)
             {
                 // Parse an output line from `git submodule status`. Lines have one of the following forms:
                 //
@@ -1398,7 +1398,7 @@ namespace GitCommands
                 // - the submodule path
                 // - the output of git describe for the SHA-1
 
-                var match = Regex.Match(status, @"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$");
+                var match = Regex.Match(s, @"^([ -+U])([0-9a-f]{40}) (.+) \((.+)\)$");
 
                 if (!match.Success)
                 {
