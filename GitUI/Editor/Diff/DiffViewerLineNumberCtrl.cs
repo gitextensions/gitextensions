@@ -131,26 +131,6 @@ namespace GitUI.Editor.Diff
             DiffLines.Clear();
         }
 
-        public string GetLineDesc(int lineNumInDiffFile)
-        {
-            if (!DiffLines.TryGetValue(lineNumInDiffFile, out var line))
-            {
-                return null;
-            }
-
-            if (line.LeftLineNum != DiffLineNum.NotApplicableLineNum)
-            {
-                return "L" + line.LeftLineNum;
-            }
-
-            if (line.RightLineNum != DiffLineNum.NotApplicableLineNum)
-            {
-                return "R" + line.RightLineNum;
-            }
-
-            return null;
-        }
-
         public void SetVisibility(bool visible)
         {
             _visible = visible;
