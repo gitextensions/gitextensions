@@ -1363,11 +1363,6 @@ namespace GitCommands
 
             foreach (var submodule in submodules)
             {
-                if (submodule.Length < 43)
-                {
-                    continue;
-                }
-
                 if (submodule.Equals(lastLine))
                 {
                     continue;
@@ -1375,10 +1370,13 @@ namespace GitCommands
 
                 lastLine = submodule;
 
-                yield return ParseSubmoduleInfo(submodule);
+                if (TryParseSubmoduleInfo(submodule, out var info))
+                {
+                    yield return info;
+                }
             }
 
-            GitSubmoduleInfo ParseSubmoduleInfo(string status)
+            bool TryParseSubmoduleInfo(string status, out GitSubmoduleInfo info)
             {
                 // Parse an output line from `git submodule status`. Lines have one of the following forms:
                 //
@@ -1404,7 +1402,8 @@ namespace GitCommands
 
                 if (!match.Success)
                 {
-                    throw new FormatException("Invalid git submodule status line: " + status);
+                    info = null;
+                    return false;
                 }
 
                 var code = match.Groups[1].Value[0];
@@ -1419,10 +1418,11 @@ namespace GitCommands
                 var name = configSection.SubSection.Trim();
                 var remotePath = configFile.GetPathValue($"submodule.{name}.url").Trim();
 
-                return new GitSubmoduleInfo(
+                info = new GitSubmoduleInfo(
                     name, localPath, remotePath, currentCommitGuid, branch,
                     isInitialized: code != '-',
                     isUpToDate: code != '+');
+                return true;
             }
         }
 
