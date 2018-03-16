@@ -6,8 +6,6 @@ using GitUI.UserControls;
 
 namespace GitUI
 {
-    internal delegate void DataCallback(string text);
-
     /// <param name="isError">if command finished with error</param>
     /// <param name="form">this form</param>
     /// <returns>if handled</returns>
