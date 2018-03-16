@@ -214,23 +214,6 @@ namespace GitCommands
             return EffectiveSettings;
         }
 
-        private RepoDistSettings _distributedSettings;
-        public RepoDistSettings DistributedSettings
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    if (_distributedSettings == null)
-                    {
-                        _distributedSettings = new RepoDistSettings(null, EffectiveSettings.LowerPriority.SettingsCache);
-                    }
-                }
-
-                return _distributedSettings;
-            }
-        }
-
         private RepoDistSettings _localSettings;
         public RepoDistSettings LocalSettings
         {
