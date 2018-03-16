@@ -154,20 +154,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public static class SettingsLayoutExt
     {
-        public static void AddSetting(this ISettingsLayout layout, ISetting setting)
-        {
-            layout.AddSettingControl(setting.CreateControlBinding());
-        }
-
-        public static void AddBoolSetting(this ISettingsLayout layout, string caption, BoolNullableSetting setting)
-        {
-            layout.AddSetting(new BoolNullableISettingAdapter(caption, setting));
-        }
-
-        public static void AddStringSetting(this ISettingsLayout layout, string caption, GitCommands.Settings.StringSetting setting)
-        {
-            layout.AddSetting(new StringISettingAdapter(caption, setting));
-        }
     }
 
     public class BoolNullableISettingAdapter : GitUIPluginInterfaces.BoolSetting
