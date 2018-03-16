@@ -21,7 +21,6 @@ namespace Bitbucket
 
         private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
-        private readonly List<string> _bitbucketUsers = new List<string>();
 
         public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
         {
@@ -179,17 +178,6 @@ namespace Bitbucket
 
             _branches.Add(selectedRepo, list);
             return list;
-        }
-
-        private void ReviewersDataGridEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            if (e.Control is DataGridViewTextBoxEditingControl cellEdit)
-            {
-                cellEdit.AutoCompleteCustomSource = new AutoCompleteStringCollection();
-                cellEdit.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                cellEdit.AutoCompleteSource = AutoCompleteSource.CustomSource;
-                cellEdit.AutoCompleteCustomSource.AddRange(_bitbucketUsers.ToArray());
-            }
         }
 
         private void DdlRepositorySourceSelectedValueChanged(object sender, EventArgs e)
