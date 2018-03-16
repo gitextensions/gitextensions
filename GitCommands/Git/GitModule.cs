@@ -1335,7 +1335,7 @@ namespace GitCommands
         {
             if (localPath == null)
             {
-                Debug.Assert(true, "No path for submodule - incorrectly parsed status?");
+                Debug.Fail("No path for submodule - incorrectly parsed status?");
                 return "";
             }
 
