@@ -104,8 +104,6 @@
     <Compile Include="Git\GitDirectoryResolverTests.cs" />
     <Compile Include="Git\Tag\GitTagControllerTest.cs" />
     <Compile Include="Git\GitTreeParserTests.cs" />
-    <Compile Include="Helpers\FileInfoExtensions.cs" />
-    <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
     <Compile Include="Patch\PatchManagerTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
