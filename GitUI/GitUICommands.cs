@@ -485,17 +485,6 @@ namespace GitUI
             return actionDone;
         }
 
-        public void DoActionOnRepo(Action action)
-        {
-            bool Fnc()
-            {
-                action();
-                return true;
-            }
-
-            DoActionOnRepo(null, false, false, null, null, Fnc);
-        }
-
         public bool DoActionOnRepo(Func<bool> action)
         {
             return DoActionOnRepo(null, false, true, null, null, action);
