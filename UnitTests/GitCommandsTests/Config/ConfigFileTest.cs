@@ -80,7 +80,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestWithInvalidFileName()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -194,12 +195,14 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetPathValueNoneExisting()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
 
-            { // PERFORM TEST
+            // PERFORM TEST
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
@@ -221,7 +224,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetPathValueFileNonExisting()
         {
-            { // PERFORM TEST
+            // PERFORM TEST
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
@@ -243,7 +247,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetPathValueWithUncPath1()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine(@"[path]");
@@ -276,7 +281,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetPathValueWithUncPath2()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine(@"[path]");
@@ -309,7 +315,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestHasValue()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -322,7 +329,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestHasConfigSection()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -336,7 +344,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestGetValue()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -414,7 +423,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestRemoveConfigSection()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -436,7 +446,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestWithHiddenFile()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
 
@@ -445,7 +456,8 @@ namespace GitCommandsTests.Config
                 configFile.Attributes = FileAttributes.Hidden;
             }
 
-            { // PERFORM TEST
+            // PERFORM TEST
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "section1.key1", "value1");
                 CheckValueIsEqual(configFile, "section2.subsection.key2", "value2");
@@ -465,7 +477,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void RandomTestCase1()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[merge]");
@@ -510,7 +523,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void RandomTestCase2()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[core]");
@@ -564,7 +578,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void NewLineTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[bugtraq]");
@@ -615,7 +630,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void CommentsTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("# issue tracker configuration");
@@ -649,7 +665,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void EscapedSectionTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("# issue tracker configuration");
@@ -670,7 +687,8 @@ namespace GitCommandsTests.Config
         [Test]
         public void SpacesInSubSectionTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[section \"sub section\"]");

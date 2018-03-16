@@ -124,7 +124,8 @@ namespace GitUI.CommandsDialogs
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
                 if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
-                {// orphan AND orphan creation success AND clear
+                {
+                    // orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
                 }

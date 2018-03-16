@@ -31,7 +31,8 @@ namespace ResourceManager.Xliff
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.SetField))
             {
                 if (fieldInfo.IsPublic && !fieldInfo.IsInitOnly)
-                {// if public AND modifiable (NOT readonly)
+                {
+                    // if public AND modifiable (NOT readonly)
                     Trace.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, fieldInfo.Name, fieldInfo.GetValue(obj)), "Translation");
                     continue;
                 }
