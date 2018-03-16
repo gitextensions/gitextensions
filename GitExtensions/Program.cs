@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,9 +44,9 @@ namespace GitExtensions
                 // is this exception caused by the configuration?
                 if (tie.InnerException != null
                     && tie.InnerException.GetType()
-                        .IsSubclassOf(typeof(System.Configuration.ConfigurationException)))
+                        .IsSubclassOf(typeof(ConfigurationException)))
                 {
-                    HandleConfigurationException((System.Configuration.ConfigurationException)tie.InnerException);
+                    HandleConfigurationException((ConfigurationException)tie.InnerException);
                 }
             }
 
@@ -176,7 +177,7 @@ namespace GitExtensions
         /// <summary>
         /// Used in the rare event that the configuration file for the application is corrupted
         /// </summary>
-        private static void HandleConfigurationException(System.Configuration.ConfigurationException ce)
+        private static void HandleConfigurationException(ConfigurationException ce)
         {
             bool exceptionHandled = false;
             try
