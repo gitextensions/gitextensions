@@ -45,24 +45,12 @@ namespace GitCommands.Utils
 
         public static bool RunningOnUnix()
         {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Unix:
-                    return true;
-                default:
-                    return false;
-            }
+            return Environment.OSVersion.Platform == PlatformID.Unix;
         }
 
         public static bool RunningOnMacOSX()
         {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.MacOSX:
-                    return true;
-                default:
-                    return false;
-            }
+            return Environment.OSVersion.Platform == PlatformID.MacOSX;
         }
 
         public static bool IsNet4FullOrHigher()
