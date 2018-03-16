@@ -257,20 +257,5 @@ namespace GitUI
         {
             return dialogResult.Trim('\r', '\n') == "Aborted";
         }
-
-        private void InitializeComponent()
-        {
-            SuspendLayout();
-
-            //
-            // FormProcess
-            //
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new System.Drawing.Size(565, 326);
-            Name = "FormProcess";
-            ResumeLayout(false);
-            PerformLayout();
-        }
     }
 }
