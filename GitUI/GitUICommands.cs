@@ -410,14 +410,6 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
-        public void InvokeEventOnClose(Form form, EventHandler<GitUIBaseEventArgs> ev)
-        {
-            form.FormClosed += (object o, FormClosedEventArgs ea) =>
-            {
-                InvokeEvent(form == null ? null : form.Owner, ev);
-            };
-        }
-
         public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir,
             EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<Form> provideForm)
         {
