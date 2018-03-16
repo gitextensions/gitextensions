@@ -1363,7 +1363,7 @@ namespace GitCommands
 
             foreach (var submodule in submodules)
             {
-                if (submodule.Equals(lastLine))
+                if (submodule == lastLine)
                 {
                     continue;
                 }
