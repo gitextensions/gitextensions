@@ -40,14 +40,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         /// <summary>
-        /// might return an empty or invalid revision
-        /// </summary>
-        public string GetSelectedRevision()
-        {
-            return _selectedRevision;
-        }
-
-        /// <summary>
         /// returns null if revision does not exist (could not be revparsed)
         /// </summary>
         public string ValidateAndGetSelectedRevision()
