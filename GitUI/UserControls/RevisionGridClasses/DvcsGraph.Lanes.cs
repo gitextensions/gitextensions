@@ -804,10 +804,6 @@ namespace GitUI.RevisionGridClasses
                 private int _index;
                 private Node _node;
 
-                public LaneJunctionDetail()
-                {
-                }
-
                 public LaneJunctionDetail(Node n)
                 {
                     _node = n;

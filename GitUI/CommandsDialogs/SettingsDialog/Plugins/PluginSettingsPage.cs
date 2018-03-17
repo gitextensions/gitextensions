@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
             foreach (var setting in settings)
             {
-                this.AddSetting(setting);
+                AddSettingControl(setting.CreateControlBinding());
             }
         }
 

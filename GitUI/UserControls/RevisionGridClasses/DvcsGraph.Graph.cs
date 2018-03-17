@@ -334,6 +334,7 @@ namespace GitUI.RevisionGridClasses
                 return _lanes.CacheTo(idx);
             }
 
+#if false
             // TopoSorting is an easy way to detect if something has gone wrong with the graph
 
             public Node[] TopoSortedNodes()
@@ -434,6 +435,7 @@ namespace GitUI.RevisionGridClasses
 
                 return l.ToArray();
             }
+#endif
 
             private bool GetNode(string id, out Node node)
             {

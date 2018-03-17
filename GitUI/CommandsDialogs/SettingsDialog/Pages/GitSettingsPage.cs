@@ -17,11 +17,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return "path,home,environment,variable,msys,cygwin,download,git,command,linux,tools";
-        }
-
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(GitSettingsPage));

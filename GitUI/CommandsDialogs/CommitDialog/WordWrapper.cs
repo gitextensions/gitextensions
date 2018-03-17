@@ -6,18 +6,6 @@ namespace GitUI.CommandsDialogs.CommitDialog
 {
     public static class WordWrapper
     {
-        public static string Wrap(string text, int lineLimit)
-        {
-            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            var newLines = new List<string>();
-            foreach (var line in lines)
-            {
-                newLines.AddRange(InternalWrapSingleLine(line, lineLimit));
-            }
-
-            return string.Join(Environment.NewLine, newLines);
-        }
-
         private static IEnumerable<string> InternalWrapSingleLine(string line, int lineLimit)
         {
             var wrapper = new WrapperState(lineLimit);

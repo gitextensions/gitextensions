@@ -261,18 +261,6 @@ namespace GitCommands
             }
         }
 
-        public static int UserMenuLocationX
-        {
-            get => GetInt("usermenulocationx", -1);
-            set => SetInt("usermenulocationx", value);
-        }
-
-        public static int UserMenuLocationY
-        {
-            get => GetInt("usermenulocationy", -1);
-            set => SetInt("usermenulocationy", value);
-        }
-
         public static bool StashKeepIndex
         {
             get => GetBool("stashkeepindex", false);
@@ -1522,11 +1510,6 @@ namespace GitCommands
         private static void ImportFromRegistry()
         {
             SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
-        }
-
-        public static string PrefixedName(string prefix, string name)
-        {
-            return prefix == null ? name : prefix + '_' + name;
         }
 
         public static bool? GetBool(string name)

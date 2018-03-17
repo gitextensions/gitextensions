@@ -9,8 +9,6 @@ namespace GitCommands.Settings
     /// </summary>
     public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
-        public GitModule Module { get; private set; }
-
         public RepoDistSettings(RepoDistSettings lowerPriority, GitExtSettingsCache settingsCache)
             : base(lowerPriority, settingsCache)
         {

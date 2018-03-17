@@ -214,23 +214,6 @@ namespace GitCommands
             return EffectiveSettings;
         }
 
-        private RepoDistSettings _distributedSettings;
-        public RepoDistSettings DistributedSettings
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    if (_distributedSettings == null)
-                    {
-                        _distributedSettings = new RepoDistSettings(null, EffectiveSettings.LowerPriority.SettingsCache);
-                    }
-                }
-
-                return _distributedSettings;
-            }
-        }
-
         private RepoDistSettings _localSettings;
         public RepoDistSettings LocalSettings
         {
@@ -1674,11 +1657,6 @@ namespace GitCommands
             }
 
             return GetSetting(string.Format("remote.{0}.puttykeyfile", remote));
-        }
-
-        public static bool PathIsUrl(string path)
-        {
-            return path.Contains(Path.DirectorySeparatorChar) || path.Contains(AppSettings.PosixPathSeparator.ToString());
         }
 
         public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)

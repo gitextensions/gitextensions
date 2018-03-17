@@ -137,7 +137,6 @@
     <Compile Include="CommandsDialogs\BuildReportTabPageExtension.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
-    <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
     <Compile Include="CommandsDialogs\FormBrowseController.cs" />

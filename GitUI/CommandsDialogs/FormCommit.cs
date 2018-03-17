@@ -1504,33 +1504,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!Staged.SelectedItems.Any() || Module.IsBareRepository())
-            {
-                // Do not show if no item selected
-                e.Cancel = true;
-            }
-            else
-            {
-                bool isFile = false;
-                foreach (GitItemStatus item in Staged.SelectedItems)
-                {
-                    if (!item.IsSubmodule)
-                    {
-                        isFile = true;
-                    }
-                }
-
-                stagedToolStripSeparator14.Visible = isFile;
-                stagedEditFileToolStripMenuItem11.Visible = isFile;
-                stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
-                stagedOpenToolStripMenuItem7.Visible = isFile;
-                stagedToolStripSeparator17.Visible = isFile;
-                stagedOpenWithToolStripMenuItem8.Visible = isFile;
-            }
-        }
-
         private void Unstaged_DoubleClick(object sender, EventArgs e)
         {
             _currentFilesList = Unstaged;

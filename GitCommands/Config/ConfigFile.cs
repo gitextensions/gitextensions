@@ -277,12 +277,6 @@ namespace GitCommands.Config
             ConfigSections.Remove(configSection);
         }
 
-        public void RemoveConfigSections(string configSectionName)
-        {
-            var toRemove = GetConfigSections(configSectionName).ToArray();
-            toRemove.ForEach(section => ConfigSections.Remove(section));
-        }
-
         public IConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);

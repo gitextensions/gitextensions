@@ -32,11 +32,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }
 
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return "graph,visual studio,author,image,font,lang,language,spell,spelling";
-        }
-
         private static int GetTruncatePathMethodIndex(string text)
         {
             switch (text.ToLowerInvariant())
