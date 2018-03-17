@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldDisplayMenuSelectedParentToLocal(ContextMenuDiffToolInfo selectionInfo)
         {
-            // Do not be visable if same as ShouldShowMenuALocal()
+            // Not visible if same revision as ShouldShowMenuFirstToLocal()
             return !selectionInfo.FirstIsParent;
         }
     }

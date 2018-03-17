@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
             // First (A) is parent if one revision selected or if parent, then selected
-            bool firstIsParent = _revisionDiffController.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
 
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
@@ -448,9 +448,10 @@ namespace GitUI.CommandsDialogs
             var files = new List<GitItemStatus>();
 
             // IsStaged is set by default, so that cannot be trusted, must be limited when selecting
-            foreach (var item in DiffFiles.SelectedItems)
+            var workDirFiles = DiffFiles.SelectedItemsWithParent.Where(it => it.ParentRevision.Guid == GitRevision.IndexGuid);
+            foreach (var item in workDirFiles)
             {
-                files.Add(item);
+                files.Add(item.Item);
             }
 
             Module.StageFiles(files, out _);
@@ -571,15 +572,15 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool firstIsParent = _revisionDiffController.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
-            bool localExists = _revisionDiffController.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
+            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool localExists = _gitRevisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
             IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
             var revisions = _revisionGrid.GetSelectedRevisions();
 
-            // Parents to First (A) are only known if A was explicitly selected (there is no explicit search for parents to parents of a single selected revision)
+            // Parents to First (A) are only known if A is explicitly selected (there is no explicit search for parents to parents of a single selected revision)
             bool firstParentsValid = revisions != null && revisions.Count > 1;
 
             var selectionInfo = new ContextMenuDiffToolInfo(DiffFiles.Revision, selectedItemParentRevs,

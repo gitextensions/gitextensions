@@ -6,9 +6,6 @@ namespace GitUI.CommandsDialogs
 {
     public interface IRevisionDiffController
     {
-        bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision);
-        bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItems);
-
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo);
@@ -135,15 +132,5 @@ namespace GitUI.CommandsDialogs
             return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule;
         }
         #endregion
-
-        public bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision)
-        {
-            return _revisionTester.AllFirstAreParentsToSelected(firstSelected, selectedRevision);
-        }
-
-        public bool AnyLocalFileExists(IEnumerable<GitItemStatus> selectedItems)
-        {
-            return _revisionTester.AnyLocalFileExists(selectedItems);
-        }
     }
 }
