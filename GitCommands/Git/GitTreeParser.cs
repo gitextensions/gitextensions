@@ -1,13 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
     public interface IGitTreeParser
     {
-        IEnumerable<IGitItem> Parse(string tree);
-        GitItem ParseSingle(string rawItem);
+        [NotNull]
+        [ItemNotNull]
+        IEnumerable<IGitItem> Parse([CanBeNull] string tree);
+
+        [CanBeNull]
+        GitItem ParseSingle([CanBeNull] string rawItem);
     }
 
     public sealed class GitTreeParser : IGitTreeParser
