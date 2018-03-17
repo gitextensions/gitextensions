@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -145,7 +146,11 @@ namespace GitUI.CommandsDialogs
 
         private void Apply_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PatchFile.Text) && string.IsNullOrEmpty(PatchDir.Text))
+            var patchFile = PatchFile.Text;
+            var dirText = PatchDir.Text;
+            var ignoreWhiteSpace = IgnoreWhitespace.Checked;
+
+            if (string.IsNullOrEmpty(patchFile) && string.IsNullOrEmpty(dirText))
             {
                 MessageBox.Show(this, _noFileSelectedText.Text);
                 return;
@@ -155,25 +160,17 @@ namespace GitUI.CommandsDialogs
             {
                 if (PatchFileMode.Checked)
                 {
-                    if (IgnoreWhitespace.Checked)
-                    {
-                        FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text));
-                    }
-                    else
-                    {
-                        FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmd(PatchFile.Text));
-                    }
+                    var arguments = IsDiffFile(patchFile)
+                        ? GitCommandHelpers.ApplyDiffPatchCmd(ignoreWhiteSpace, patchFile)
+                        : GitCommandHelpers.ApplyMailboxPatchCmd(ignoreWhiteSpace, patchFile);
+
+                    FormProcess.ShowDialog(this, arguments);
                 }
                 else
                 {
-                    if (IgnoreWhitespace.Checked)
-                    {
-                        Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
-                    }
-                    else
-                    {
-                        Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
-                    }
+                    var arguments = GitCommandHelpers.ApplyMailboxPatchCmd(ignoreWhiteSpace);
+
+                    Module.ApplyPatch(dirText, arguments);
                 }
 
                 UICommands.RepoChangedNotifier.Notify();
@@ -184,6 +181,26 @@ namespace GitUI.CommandsDialogs
                 {
                     Close();
                 }
+            }
+        }
+
+        // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
+        // only looks at start, as all we want is to tell from automail format
+        // returns false on any problem, never throws
+        private static bool IsDiffFile(string path)
+        {
+            try
+            {
+                using (var sr = new StreamReader(path))
+                {
+                    string line = sr.ReadLine();
+
+                    return line != null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
+                }
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

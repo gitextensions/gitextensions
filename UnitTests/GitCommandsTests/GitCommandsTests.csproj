@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppTitleGeneratorTests.cs" />
+    <Compile Include="ArgumentBuilderExtensionsTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="ExternalLinks\ExternalLinksManagerIntegrationTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
+    <Compile Include="ArgumentBuilderTests.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />

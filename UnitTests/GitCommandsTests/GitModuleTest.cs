@@ -140,6 +140,9 @@ namespace GitCommandsTests
         public void PushCmd()
         {
             Assert.AreEqual(
+                "push --progress \"remote\" from-branch",
+                _gitModule.PushCmd("remote", "from-branch", null, ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
                 "push --progress \"remote\" from-branch:refs/heads/to-branch",
                 _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0));
             Assert.AreEqual(

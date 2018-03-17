@@ -571,16 +571,18 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "rebase -i --autosquash --preserve-merges --autostash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autostash: true));
-        }
 
-        [Test]
-        public void RebaseRangeCmd()
-        {
             // TODO quote 'onto'?
 
             Assert.AreEqual(
                 "rebase \"from\" \"branch\" --onto onto",
-                GitCommandHelpers.RebaseRangeCmd("from", "branch", "onto", interactive: false, preserveMerges: false, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: false, "from", "onto"));
+
+            Assert.Throws<ArgumentException>(
+                () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: null, onto: "onto"));
+
+            Assert.Throws<ArgumentException>(
+                () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: "from", onto: null));
         }
 
         [Test]
@@ -671,6 +673,31 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "merge --no-ff --strategy=strategy --squash --no-commit --allow-unrelated-histories -m \"message\" --log=1 branch",
                 GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: true, noCommit: true, allowUnrelatedHistories: true, message: "message", log: 1, strategy: "strategy"));
+        }
+
+        [Test]
+        public void ApplyDiffPatchCmd()
+        {
+            Assert.AreEqual(
+                "apply \"hello/world.patch\"",
+                GitCommandHelpers.ApplyDiffPatchCmd(false, "hello\\world.patch"));
+            Assert.AreEqual(
+                "apply --ignore-whitespace \"hello/world.patch\"",
+                GitCommandHelpers.ApplyDiffPatchCmd(true, "hello\\world.patch"));
+        }
+
+        [Test]
+        public void ApplyMailboxPatchCmd()
+        {
+            Assert.AreEqual(
+                "am --3way --signoff \"hello/world.patch\"",
+                GitCommandHelpers.ApplyMailboxPatchCmd(false, "hello\\world.patch"));
+            Assert.AreEqual(
+                "am --3way --signoff --ignore-whitespace \"hello/world.patch\"",
+                GitCommandHelpers.ApplyMailboxPatchCmd(true, "hello\\world.patch"));
+            Assert.AreEqual(
+                "am --3way --signoff --ignore-whitespace",
+                GitCommandHelpers.ApplyMailboxPatchCmd(true));
         }
     }
 }
