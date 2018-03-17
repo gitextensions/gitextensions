@@ -2321,13 +2321,12 @@ namespace GitUI
                 return;
             }
 
-            using (var frm = new FormCreateTag(UICommands, LatestSelectedRevision))
-            {
-                if (frm.ShowDialog(this) == DialogResult.OK)
+            UICommands.DoActionOnRepo(() =>
                 {
-                    RefreshRevisions();
-                }
-            }
+                    var frm = new FormCreateTag(UICommands, LatestSelectedRevision);
+
+                    return frm.ShowDialog(this) == DialogResult.OK;
+                });
         }
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
