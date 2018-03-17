@@ -901,14 +901,16 @@ namespace GitUI.CommandsDialogs
 
                 // set dimensions accordingly to fit inside size^2 square
                 if (r > 1)
-                { // w is bigger, so divide h by r
+                {
+                    // w is bigger, so divide h by r
                     w = size;
                     h = (int)(size / r);
                     x = 0;
                     y = (size - h) / 2; // center the image
                 }
                 else
-                { // h is bigger, so multiply w by r
+                {
+                    // h is bigger, so multiply w by r
                     w = (int)(size * r);
                     h = size;
                     y = 0;

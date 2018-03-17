@@ -45,7 +45,8 @@ namespace GitUI.CommandsDialogs
             _toolTipControl.SetToolTip(btnSwap, _btnSwapTooltip.Text);
 
             if (!IsUICommandsInitialized)
-            {// UICommands is not initialized in translation unit test.
+            {
+                // UICommands is not initialized in translation unit test.
                 return;
             }
 

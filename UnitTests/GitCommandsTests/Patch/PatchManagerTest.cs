@@ -4,19 +4,17 @@ using System.Text;
 using GitCommands;
 using NUnit.Framework;
 using PatchApply;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Patch
 {
-    [TestClass]
+    [TestFixture]
     public class PatchManagerTest
     {
         private readonly string _bigPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/big.patch");
         private readonly string _bigBinPatchFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/bigBin.patch");
         private readonly string _rebaseDiffFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"Patch/testdata/rebase.diff");
 
-        [TestMethod]
+        [Test]
         public void TestPatchManagerInstanceNotNull()
         {
             PatchManager manager = NewManager();
@@ -74,7 +72,7 @@ namespace GitCommandsTests.Patch
             return testPatch;
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadPatch()
         {
             PatchManager manager = NewManager();
@@ -92,7 +90,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadReversePatch()
         {
             PatchManager manager = NewManager();
@@ -110,7 +108,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(expectedPatch.Patch.Text, createdPatch.Text);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
             PatchManager manager = NewManager();
@@ -120,7 +118,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(17, manager.Patches.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsTheRightFilenamesInAPatchFile()
         {
             PatchManager manager = NewManager();
@@ -131,7 +129,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(17, manager.Patches.Select(p => p.FileNameB).Distinct().Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsBinaryPatch()
         {
             PatchManager manager = NewManager();
@@ -141,7 +139,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(248, manager.Patches.Count(p => p.File == PatchApply.Patch.FileType.Binary));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsOneNewFile()
         {
             PatchManager manager = NewManager();
@@ -151,7 +149,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == PatchApply.Patch.PatchType.NewFile));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsOneDeleteFile()
         {
             PatchManager manager = NewManager();
@@ -161,7 +159,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == PatchApply.Patch.PatchType.DeleteFile));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsChangeFiles()
         {
             PatchManager manager = NewManager();
@@ -175,7 +173,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == PatchApply.Patch.PatchType.ChangeFile));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCorrectlyLoadsRebaseDiff()
         {
             PatchManager manager = NewManager();

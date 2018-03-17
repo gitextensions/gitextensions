@@ -1,13 +1,11 @@
 ﻿using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Patch
 {
-    [TestClass]
+    [TestFixture]
     internal class PatchTest
     {
-        [TestMethod]
+        [Test]
         public void TestPatchConstructor()
         {
             PatchApply.Patch patch = new PatchApply.Patch();
@@ -15,7 +13,7 @@ namespace GitCommandsTests.Patch
             Assert.IsNotNull(patch);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAppendText()
         {
             PatchApply.Patch patch = new PatchApply.Patch();
@@ -25,7 +23,7 @@ namespace GitCommandsTests.Patch
             Assert.AreEqual("text1text2", patch.Text);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAppendTextLine()
         {
             PatchApply.Patch patch = new PatchApply.Patch();

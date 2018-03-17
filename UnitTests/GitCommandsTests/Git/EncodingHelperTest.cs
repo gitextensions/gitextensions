@@ -2,23 +2,21 @@
 using System.Text;
 using GitCommands;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class EncodingHelperTest
     {
         #region Unit tests of single methods
 
-        [TestMethod]
+        [Test]
         public void GetStringEncodingNull()
         {
             Assert.Throws<ArgumentNullException>(() => EncodingHelper.GetString(new byte[] { 0x30 }, new byte[] { 0x31 }, null));
         }
 
-        [TestMethod]
+        [Test]
         public void GetStringTestSingleLineOutput()
         {
             string asciiString = "abcdefghijklmnop";
@@ -29,7 +27,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(asciiString, getString);
         }
 
-        [TestMethod]
+        [Test]
         public void GetStringTestSingleLineError()
         {
             string asciiString = "abcdefghijklmnop";
@@ -40,7 +38,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(asciiString, getString);
         }
 
-        [TestMethod]
+        [Test]
         public void GetStringTestOutputAndError()
         {
             string asciiString = "abcdefghijklmnop";
@@ -52,7 +50,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), getString);
         }
 
-        [TestMethod]
+        [Test]
         public void GetStringTestUtf8()
         {
             byte[] testBytes = new byte[4];
@@ -67,13 +65,13 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(utf8String, getString);
         }
 
-        [TestMethod]
+        [Test]
         public void ConvertToTestEncodingNull()
         {
             Assert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null, "abcd"));
         }
 
-        [TestMethod]
+        [Test]
         public void ConvertToTestUtf8()
         {
             string unicodeString = "\u30a2\u30c3";
@@ -88,7 +86,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(convertedBytes[5], 0x83);
         }
 
-        [TestMethod]
+        [Test]
         public void ConvertToTestUtf16()
         {
             string unicodeString = "\u30a2\u30c3";
@@ -101,14 +99,14 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(convertedBytes[3], 0x30);
         }
 
-        [TestMethod]
+        [Test]
         public void DecodeStringTestEncodingNull()
         {
             Encoding enc = null;
             Assert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString(new byte[] { 0x30 }, new byte[] { 0x31 }, ref enc));
         }
 
-        [TestMethod]
+        [Test]
         public void DecodeStringTestSingleLineOutput()
         {
             string asciiString = "abcdefghijklmnop";
@@ -121,7 +119,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(asciiString, decodedString);
         }
 
-        [TestMethod]
+        [Test]
         public void DecodeStringTestSingleLineError()
         {
             string asciiString = "abcdefghijklmnop";
@@ -134,7 +132,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(asciiString, decodedString);
         }
 
-        [TestMethod]
+        [Test]
         public void DecodeStringTestOutputAndError()
         {
             string asciiString = "abcdefghijklmnop";
@@ -148,7 +146,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), decodedString);
         }
 
-        [TestMethod]
+        [Test]
         public void DecodeStringTestUtf8()
         {
             byte[] testBytes = new byte[4];

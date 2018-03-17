@@ -147,12 +147,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             foreach (Control child in control.Controls)
             {
                 if (!child.Visible || child is NumericUpDown)
-                {// skip: invisible; some input controls
+                {
+                    // skip: invisible; some input controls
                     continue;
                 }
 
                 if (child.Enabled && !string.IsNullOrWhiteSpace(child.Text))
-                {// enabled AND not whitespace -> add
+                {
+                    // enabled AND not whitespace -> add
                     // also searches text boxes and comboboxes
                     // TODO(optional): search through the drop down list of comboboxes
                     // TODO(optional): convert numeric dropdown values to text
