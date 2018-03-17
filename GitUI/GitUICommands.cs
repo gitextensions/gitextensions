@@ -74,20 +74,8 @@ namespace GitUI
         public event EventHandler<GitUIBaseEventArgs> PreClone;
         public event EventHandler<GitUIPostActionEventArgs> PostClone;
 
-        public event EventHandler<GitUIBaseEventArgs> PreSvnClone;
-        public event EventHandler<GitUIPostActionEventArgs> PostSvnClone;
-
         public event EventHandler<GitUIBaseEventArgs> PreCommit;
         public event EventHandler<GitUIPostActionEventArgs> PostCommit;
-
-        public event EventHandler<GitUIBaseEventArgs> PreSvnDcommit;
-        public event EventHandler<GitUIPostActionEventArgs> PostSvnDcommit;
-
-        public event EventHandler<GitUIBaseEventArgs> PreSvnRebase;
-        public event EventHandler<GitUIPostActionEventArgs> PostSvnRebase;
-
-        public event EventHandler<GitUIBaseEventArgs> PreSvnFetch;
-        public event EventHandler<GitUIPostActionEventArgs> PostSvnFetch;
 
         public event EventHandler<GitUIBaseEventArgs> PreInitialize;
         public event EventHandler<GitUIPostActionEventArgs> PostInitialize;
@@ -200,28 +188,6 @@ namespace GitUI
             if (!Module.IsValidGitWorkingDir())
             {
                 MessageBoxes.NotValidGitDirectory(owner as IWin32Window);
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool RequiredValidGitSvnWorikingDir(object owner)
-        {
-            if (!RequiresValidWorkingDir(owner))
-            {
-                return false;
-            }
-
-            if (!GitSvnCommandHelpers.ValidSvnWorkingDir(Module))
-            {
-                MessageBoxes.NotValidGitSVNDirectory(owner as IWin32Window);
-                return false;
-            }
-
-            if (!GitSvnCommandHelpers.CheckRefsRemoteSvn(Module))
-            {
-                MessageBoxes.UnableGetSVNInformation(owner as IWin32Window);
                 return false;
             }
 
@@ -614,26 +580,6 @@ namespace GitUI
             return StartCloneDialog(null, null);
         }
 
-        public bool StartSvnCloneDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> gitModuleChanged)
-        {
-            bool Action()
-            {
-                using (var form = new FormSvnClone(this, gitModuleChanged))
-                {
-                    form.ShowDialog(owner);
-                }
-
-                return true;
-            }
-
-            return DoActionOnRepo(owner, false, false, PreSvnClone, PostSvnClone, Action);
-        }
-
-        public bool StartSvnCloneDialog()
-        {
-            return StartSvnCloneDialog(null, null);
-        }
-
         public void StartCleanupRepositoryDialog(IWin32Window owner = null, string path = null)
         {
             using (var form = new FormCleanupRepository(this))
@@ -703,67 +649,6 @@ namespace GitUI
         public bool StartCommitDialog()
         {
             return StartCommitDialog(null);
-        }
-
-        public bool StartSvnDcommitDialog(IWin32Window owner)
-        {
-            if (!RequiredValidGitSvnWorikingDir(owner))
-            {
-                return false;
-            }
-
-            bool Action()
-            {
-                return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
-            }
-
-            return DoActionOnRepo(owner, true, true, PreSvnDcommit, PostSvnDcommit, Action);
-        }
-
-        public bool StartSvnDcommitDialog()
-        {
-            return StartSvnDcommitDialog(null);
-        }
-
-        public bool StartSvnRebaseDialog(IWin32Window owner)
-        {
-            if (!RequiredValidGitSvnWorikingDir(owner))
-            {
-                return false;
-            }
-
-            bool Action()
-            {
-                FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
-                return true;
-            }
-
-            return DoActionOnRepo(owner, true, true, PreSvnRebase, PostSvnRebase, Action);
-        }
-
-        public bool StartSvnRebaseDialog()
-        {
-            return StartSvnRebaseDialog(null);
-        }
-
-        public bool StartSvnFetchDialog(IWin32Window owner)
-        {
-            if (!RequiredValidGitSvnWorikingDir(owner))
-            {
-                return false;
-            }
-
-            bool Action()
-            {
-                return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.FetchCmd());
-            }
-
-            return DoActionOnRepo(owner, true, true, PreSvnFetch, PostSvnFetch, Action);
-        }
-
-        public bool StartSvnFetchDialog()
-        {
-            return StartSvnFetchDialog(null);
         }
 
         public bool StartInitializeDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> gitModuleChanged)

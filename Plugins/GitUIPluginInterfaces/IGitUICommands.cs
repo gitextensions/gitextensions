@@ -38,10 +38,6 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIPostActionEventArgs> PostRevertCommit;
         event EventHandler<GitUIPostActionEventArgs> PostSettings;
         event EventHandler<GitUIPostActionEventArgs> PostStash;
-        event EventHandler<GitUIPostActionEventArgs> PostSvnClone;
-        event EventHandler<GitUIPostActionEventArgs> PostSvnDcommit;
-        event EventHandler<GitUIPostActionEventArgs> PostSvnFetch;
-        event EventHandler<GitUIPostActionEventArgs> PostSvnRebase;
         event EventHandler<GitUIPostActionEventArgs> PostSubmodulesEdit;
         event EventHandler<GitUIPostActionEventArgs> PostSyncSubmodules;
         event EventHandler<GitUIPostActionEventArgs> PostUpdateSubmodules;
@@ -81,10 +77,6 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIBaseEventArgs> PreRevertCommit;
         event EventHandler<GitUIBaseEventArgs> PreSettings;
         event EventHandler<GitUIBaseEventArgs> PreStash;
-        event EventHandler<GitUIBaseEventArgs> PreSvnClone;
-        event EventHandler<GitUIBaseEventArgs> PreSvnDcommit;
-        event EventHandler<GitUIBaseEventArgs> PreSvnFetch;
-        event EventHandler<GitUIBaseEventArgs> PreSvnRebase;
         event EventHandler<GitUIBaseEventArgs> PreSubmodulesEdit;
         event EventHandler<GitUIBaseEventArgs> PreSyncSubmodules;
         event EventHandler<GitUIBaseEventArgs> PreUpdateSubmodules;
@@ -144,10 +136,6 @@ namespace GitUIPluginInterfaces
         bool StartSettingsDialog();
         bool StartSettingsDialog(IGitPlugin gitPlugin);
         bool StartStashDialog();
-        bool StartSvnCloneDialog();
-        bool StartSvnDcommitDialog();
-        bool StartSvnFetchDialog();
-        bool StartSvnRebaseDialog();
         bool StartSubmodulesDialog();
         bool StartSyncSubmodulesDialog();
         bool StartUpdateSubmodulesDialog();

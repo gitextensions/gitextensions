@@ -77,7 +77,6 @@ namespace GitUI.CommandsDialogs
             this.clearRecentRepositoriesListMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cloneSVNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,10 +139,6 @@ namespace GitUI.CommandsDialogs
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
-            this.SvnFetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SvnRebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SvnDcommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator46 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator41 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator42 = new System.Windows.Forms.ToolStripSeparator();
@@ -709,7 +704,6 @@ namespace GitUI.CommandsDialogs
             this.recentToolStripMenuItem,
             this.toolStripSeparator12,
             this.cloneToolStripMenuItem,
-            this.cloneSVNToolStripMenuItem,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -775,14 +769,6 @@ namespace GitUI.CommandsDialogs
             this.cloneToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.cloneToolStripMenuItem.Text = "Clone repository...";
             this.cloneToolStripMenuItem.Click += new System.EventHandler(this.CloneToolStripMenuItemClick);
-            // 
-            // cloneSVNToolStripMenuItem
-            // 
-            this.cloneSVNToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCloneRepoSvn;
-            this.cloneSVNToolStripMenuItem.Name = "cloneSVNToolStripMenuItem";
-            this.cloneSVNToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.cloneSVNToolStripMenuItem.Text = "Clone SVN repository...";
-            this.cloneSVNToolStripMenuItem.Click += new System.EventHandler(this.CloneSvnToolStripMenuItemClick);
             // 
             // toolStripMenuItem1
             // 
@@ -1078,11 +1064,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator22,
             this.formatPatchToolStripMenuItem,
             this.applyPatchToolStripMenuItem,
-            this.patchToolStripMenuItem,
-            this.toolStripSeparator24,
-            this.SvnFetchToolStripMenuItem,
-            this.SvnRebaseToolStripMenuItem,
-            this.SvnDcommitToolStripMenuItem});
+            this.patchToolStripMenuItem
+            });
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
             this.commandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.commandsToolStripMenuItem.Text = "Commands";
@@ -1291,32 +1274,6 @@ namespace GitUI.CommandsDialogs
             this.patchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.patchToolStripMenuItem.Text = "View patch file...";
             this.patchToolStripMenuItem.Click += new System.EventHandler(this.PatchToolStripMenuItemClick);
-            // 
-            // toolStripSeparator24
-            // 
-            this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(210, 6);
-            // 
-            // SvnFetchToolStripMenuItem
-            // 
-            this.SvnFetchToolStripMenuItem.Name = "SvnFetchToolStripMenuItem";
-            this.SvnFetchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.SvnFetchToolStripMenuItem.Text = "SVN Fetch";
-            this.SvnFetchToolStripMenuItem.Click += new System.EventHandler(this.SvnFetchToolStripMenuItem_Click);
-            // 
-            // SvnRebaseToolStripMenuItem
-            // 
-            this.SvnRebaseToolStripMenuItem.Name = "SvnRebaseToolStripMenuItem";
-            this.SvnRebaseToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.SvnRebaseToolStripMenuItem.Text = "SVN Rebase";
-            this.SvnRebaseToolStripMenuItem.Click += new System.EventHandler(this.SvnRebaseToolStripMenuItem_Click);
-            // 
-            // SvnDcommitToolStripMenuItem
-            // 
-            this.SvnDcommitToolStripMenuItem.Name = "SvnDcommitToolStripMenuItem";
-            this.SvnDcommitToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.SvnDcommitToolStripMenuItem.Text = "SVN DCommit";
-            this.SvnDcommitToolStripMenuItem.Click += new System.EventHandler(this.SvnDcommitToolStripMenuItem_Click);
             // 
             // toolStripSeparator46
             // 
@@ -1773,11 +1730,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
         private ToolStripSeparator toolStripSeparator23;
-        private ToolStripMenuItem cloneSVNToolStripMenuItem;
-        private ToolStripMenuItem SvnRebaseToolStripMenuItem;
-        private ToolStripMenuItem SvnDcommitToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator24;
-        private ToolStripMenuItem SvnFetchToolStripMenuItem;
         private ToolStripSplitButton toolStripButtonLevelUp;
         private ToolStripSplitButton toolStripButtonPull;
         private ToolStripMenuItem mergeToolStripMenuItem;

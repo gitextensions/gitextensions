@@ -508,12 +508,6 @@
     <Compile Include="HelperDialogs\FormSelectMultipleBranches.Designer.cs">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\FormSvnClone.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\FormSvnClone.Designer.cs">
-      <DependentUpon>FormSvnClone.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\FormVerify.LostObject.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
@@ -1290,9 +1284,6 @@
     <EmbeddedResource Include="HelperDialogs\FormSelectMultipleBranches.resx">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\FormSvnClone.resx">
-      <DependentUpon>FormSvnClone.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormViewPatch.resx">
       <DependentUpon>FormViewPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1755,7 +1746,6 @@
     <None Include="Resources\Icons\IconClean.png" />
     <None Include="Resources\Icons\IconCloneRepoGit.png" />
     <None Include="Resources\Icons\IconCloneRepoGithub.png" />
-    <None Include="Resources\Icons\IconCloneRepoSvn.png" />
     <None Include="Resources\Icons\IconCommit.png" />
     <None Include="Resources\Icons\IconCopyToClipboard.png" />
     <None Include="Resources\Icons\IconDiff.png" />
