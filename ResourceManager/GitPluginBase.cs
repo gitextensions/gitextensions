@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 
@@ -22,7 +23,7 @@ namespace ResourceManager
 
         public virtual IEnumerable<ISetting> GetSettings()
         {
-            return new List<ISetting>();
+            return Enumerable.Empty<ISetting>();
         }
 
         public virtual void Register(IGitUICommands gitUiCommands)

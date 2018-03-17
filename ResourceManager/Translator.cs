@@ -56,7 +56,7 @@ namespace ResourceManager
                 string translationDir = GetTranslationDir();
                 if (!Directory.Exists(translationDir))
                 {
-                    return new string[0];
+                    return Array.Empty<string>();
                 }
 
                 foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))

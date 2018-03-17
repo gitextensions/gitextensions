@@ -134,7 +134,7 @@ namespace GitUITests.UserControls
             currentModule.SetSetting(SettingKeyString.UserEmail, ExpectedAuthorEmail2);
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
-            var action = sut.ProcessRevisionSelectionChange(currentModule, new GitRevision[0]);
+            var action = sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());
 
             action.Should().Be(AuthorEmailBasedRevisionHighlighting.SelectionChangeAction.RefreshUserInterface);
         }
@@ -147,7 +147,7 @@ namespace GitUITests.UserControls
             currentModule.SetSetting(SettingKeyString.UserEmail, ExpectedAuthorEmail2);
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
-            sut.ProcessRevisionSelectionChange(currentModule, new GitRevision[0]);
+            sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());
 
             sut.AuthorEmailToHighlight.Should().Be(ExpectedAuthorEmail2);
         }

@@ -29,7 +29,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         /// <returns>The new repo, owne by me.</returns>
         IHostedRepository Fork();
 
-        List<IPullRequestInformation> GetPullRequests();
+        IReadOnlyList<IPullRequestInformation> GetPullRequests();
 
         /// <returns>Pull request number</returns>
         int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);

@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<Tuple<string, object>> GetAdditionalMainMenuItemsForTranslation()
         {
-            var list = new List<ToolStripMenuItem> { _navigateToolStripMenuItem, _viewToolStripMenuItem };
+            var list = new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem };
             return list.Select(menuItem => new Tuple<string, object>(menuItem.Name, menuItem));
         }
 
@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_navigateMenuCommands == null && _viewMenuCommands == null)
             {
-                return new List<MenuCommand>();
+                return Enumerable.Empty<MenuCommand>();
             }
             else if (_navigateMenuCommands != null && _viewMenuCommands != null)
             {

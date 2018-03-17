@@ -19,7 +19,7 @@ namespace GitFlow
 
         private readonly GitUIBaseEventArgs _gitUiCommands;
 
-        private Dictionary<string, List<string>> Branches { get; }
+        private Dictionary<string, IReadOnlyList<string>> Branches { get; } = new Dictionary<string, IReadOnlyList<string>>();
 
         private readonly AsyncLoader _task = new AsyncLoader();
 
@@ -50,8 +50,6 @@ namespace GitFlow
             Translate();
 
             _gitUiCommands = gitUiCommands;
-
-            Branches = new Dictionary<string, List<string>>();
 
             lblPrefixManage.Text = string.Empty;
             ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
@@ -128,15 +126,17 @@ namespace GitFlow
             }
         }
 
-        private List<string> GetBranches(string typeBranch)
+        private IReadOnlyList<string> GetBranches(string typeBranch)
         {
             var result = _gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
+
             if (result.ExitCode != 0)
             {
-                return new List<string>();
+                return Array.Empty<string>();
             }
 
             string[] references = result.StdOutput.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
@@ -155,7 +155,7 @@ namespace GitFlow
             var isThereABranch = branches.Any();
 
             cbManageType.Enabled = true;
-            cbBranches.DataSource = isThereABranch ? branches : new List<string> { string.Format(_noBranchExist.Text, branchType) };
+            cbBranches.DataSource = isThereABranch ? branches : new[] { string.Format(_noBranchExist.Text, branchType) };
             cbBranches.Enabled = isThereABranch;
             if (isThereABranch && CurrentBranch != null)
             {
