@@ -18,8 +18,6 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-
-            PatchManager = new PatchManager();
         }
 
         public void LoadPatch(string patch)
@@ -27,8 +25,6 @@ namespace GitUI.CommandsDialogs
             PatchFileNameEdit.Text = patch;
             LoadPatchFile();
         }
-
-        public PatchManager PatchManager { get; set; }
 
         private void GridChangedFiles_SelectionChanged(object sender, EventArgs e)
         {

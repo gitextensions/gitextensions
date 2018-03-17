@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 
 namespace PatchApply
 {
-    public class PatchManager
+    public static class PatchManager
     {
         [CanBeNull]
         public static byte[] GetResetUnstagedLinesAsPatch([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding)
@@ -182,13 +182,13 @@ namespace PatchApply
 
         // TODO encoding for each file in patch should be obtained separately from .gitattributes
         [NotNull, ItemNotNull]
-        public IReadOnlyList<Patch> LoadPatch([NotNull] string text, [NotNull] Encoding filesContentEncoding)
+        public static IReadOnlyList<Patch> LoadPatch([NotNull] string text, [NotNull] Encoding filesContentEncoding)
         {
-            return new PatchProcessor().CreatePatchesFromString(text, filesContentEncoding).ToList();
+            return PatchProcessor.CreatePatchesFromString(text, filesContentEncoding).ToList();
         }
 
         [NotNull, ItemNotNull]
-        public IReadOnlyList<Patch> LoadPatchFile([NotNull] string path, [NotNull] Encoding filesContentEncoding)
+        public static IReadOnlyList<Patch> LoadPatchFile([NotNull] string path, [NotNull] Encoding filesContentEncoding)
         {
             var text = File.ReadAllText(path, GitModule.LosslessEncoding);
             return LoadPatch(text, filesContentEncoding);

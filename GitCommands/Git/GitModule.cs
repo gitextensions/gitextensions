@@ -2405,7 +2405,6 @@ namespace GitCommands
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
             }
 
-            var patchManager = new PatchManager();
             var arguments = string.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
             cacheResult = cacheResult &&
                 !secondRevision.IsArtificial() &&
@@ -2417,7 +2416,7 @@ namespace GitCommands
                 ? RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding)
                 : RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
 
-            var patches = patchManager.LoadPatch(patch, encoding);
+            var patches = PatchManager.LoadPatch(patch, encoding);
 
             return GetPatch(patches, fileName, oldFileName);
         }
@@ -2683,8 +2682,7 @@ namespace GitCommands
             }
 
             string result = RunGitCmd(args, LosslessEncoding);
-            var patchManager = new PatchManager();
-            var patches = patchManager.LoadPatch(result, encoding);
+            var patches = PatchManager.LoadPatch(result, encoding);
 
             return GetPatch(patches, fileName, oldFileName);
         }
@@ -3940,7 +3938,6 @@ namespace GitCommands
                 filePath,
                 AppSettings.OmitUninterestingDiff ? "--cc" : "-c -p");
 
-            var patchManager = new PatchManager();
             var patch = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
 
             if (string.IsNullOrWhiteSpace(patch))
@@ -3948,7 +3945,7 @@ namespace GitCommands
                 return "";
             }
 
-            var patches = patchManager.LoadPatch(patch, encoding);
+            var patches = PatchManager.LoadPatch(patch, encoding);
             return GetPatch(patches, filePath, filePath).Text;
         }
 

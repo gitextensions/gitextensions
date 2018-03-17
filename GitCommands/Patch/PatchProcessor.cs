@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 
 namespace PatchApply
 {
-    public class PatchProcessor
+    public static class PatchProcessor
     {
         private enum PatchProcessorState
         {
@@ -25,7 +25,7 @@ namespace PatchApply
         /// <param name="lines">patch lines</param>
         /// <param name="lineIndex">start index</param>
         [CanBeNull]
-        private Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Encoding filesContentEncoding, ref int lineIndex)
+        private static Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Encoding filesContentEncoding, ref int lineIndex)
         {
             if (lineIndex >= lines.Length)
             {
@@ -165,7 +165,7 @@ namespace PatchApply
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
         [NotNull, ItemNotNull, Pure]
-        public IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
+        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, Encoding filesContentEncoding)
         {
             string[] lines = patchText.Split('\n');
             int i = 0;
