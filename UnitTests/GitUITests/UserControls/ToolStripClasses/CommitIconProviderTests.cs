@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System;
+using GitCommands;
 using GitUI.UserControls.ToolStripClasses;
 using NUnit.Framework;
 
@@ -31,7 +32,7 @@ namespace GitUITests.UserControls.ToolStripClasses
         [Test]
         public void ReturnsIconCleanWhenThereIsNoChangedFiles()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(new GitItemStatus[0]);
+            var commitIcon = _commitIconProvider.GetCommitIcon(Array.Empty<GitItemStatus>());
 
             Assert.AreEqual(CommitIconProvider.IconClean, commitIcon);
         }

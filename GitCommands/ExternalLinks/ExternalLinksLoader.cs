@@ -72,7 +72,7 @@ namespace GitCommands.ExternalLinks
         {
             if (string.IsNullOrWhiteSpace(xmlString))
             {
-                return new List<ExternalLinkDefinition>();
+                return Array.Empty<ExternalLinkDefinition>();
             }
 
             try
@@ -91,7 +91,7 @@ namespace GitCommands.ExternalLinks
                 Debug.WriteLine(ex.Message);
             }
 
-            return new List<ExternalLinkDefinition>();
+            return Array.Empty<ExternalLinkDefinition>();
         }
     }
 }

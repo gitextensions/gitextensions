@@ -2119,11 +2119,9 @@ namespace GitCommands
 
             int.TryParse(nextFile, out var next);
 
-            var files = new string[0];
-            if (Directory.Exists(GetRebaseDir()))
-            {
-                files = Directory.GetFiles(GetRebaseDir());
-            }
+            var files = Directory.Exists(GetRebaseDir())
+                ? Directory.GetFiles(GetRebaseDir())
+                : Array.Empty<string>();
 
             foreach (var fullFileName in files)
             {
@@ -3037,7 +3035,7 @@ namespace GitCommands
             string info = RunGitCmd("branch " + args);
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
             {
-                return new List<string>();
+                return Enumerable.Empty<string>();
             }
 
             string[] result = info.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
@@ -3068,7 +3066,7 @@ namespace GitCommands
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
             {
-                return new List<string>();
+                return Enumerable.Empty<string>();
             }
 
             return info.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);

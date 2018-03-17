@@ -225,7 +225,7 @@ namespace GitCommands.Config
 
             if (configSection == null)
             {
-                return new List<string>();
+                return Array.Empty<string>();
             }
 
             return configSection.GetValues(keyName);

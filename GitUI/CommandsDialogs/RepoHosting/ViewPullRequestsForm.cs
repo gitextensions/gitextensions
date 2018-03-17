@@ -52,8 +52,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        private List<IHostedRemote> _hostedRemotes;
-        private List<IPullRequestInformation> _pullRequestsInfo;
+        private IReadOnlyList<IHostedRemote> _hostedRemotes;
+        private IReadOnlyList<IPullRequestInformation> _pullRequestsInfo;
         private IPullRequestInformation _currentPullRequestInfo;
 
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                        _strError.Text));
         }
 
-        private void SetPullRequestsData(List<IPullRequestInformation> infos)
+        private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)
         {
             if (_isFirstLoad)
             {

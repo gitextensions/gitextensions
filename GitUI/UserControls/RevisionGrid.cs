@@ -1440,7 +1440,7 @@ namespace GitUI
         private void SelectInitialRevision()
         {
             string filtredCurrentCheckout = _filtredCurrentCheckout;
-            string[] lastSelectedRows = LastSelectedRows ?? new string[0];
+            string[] lastSelectedRows = LastSelectedRows ?? Array.Empty<string>();
 
             // filter out all unavailable commits from LastSelectedRows.
             lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();

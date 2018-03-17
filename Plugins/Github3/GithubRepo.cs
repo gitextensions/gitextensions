@@ -83,22 +83,24 @@ namespace Github3
             return new GithubRepo(_repo.CreateFork());
         }
 
-        public List<IPullRequestInformation> GetPullRequests()
+        public IReadOnlyList<IPullRequestInformation> GetPullRequests()
         {
             var pullRequests = _repo?.GetPullRequests();
+
             if (pullRequests != null)
             {
                 return pullRequests
-                    .Select(pr => (IPullRequestInformation)new GithubPullRequest(pr))
+                    .Select(pr => new GithubPullRequest(pr))
                     .ToList();
             }
 
-            return new List<IPullRequestInformation>();
+            return Array.Empty<IPullRequestInformation>();
         }
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
             var pullrequest = _repo.CreatePullRequest(GithubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
+
             if (pullrequest == null || pullrequest.Number == 0)
             {
                 throw new Exception("Failed to create pull request.");
