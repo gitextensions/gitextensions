@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs
             this.Ok.Location = new System.Drawing.Point(317, 11);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 25);
-            this.Ok.TabIndex = 6;
+            this.Ok.TabIndex = 2;
             this.Ok.Text = "Create tag";
             this.Ok.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Ok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -90,10 +90,10 @@ namespace GitUI.CommandsDialogs
             this.annotate.Location = new System.Drawing.Point(103, 3);
             this.annotate.Name = "annotate";
             this.annotate.Size = new System.Drawing.Size(150, 19);
-            this.annotate.TabIndex = 3;
             this.annotate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.annotate.Items.AddRange(DropwdownTagOperation);
             this.annotate.SelectedIndex = 0;
+            this.annotate.TabIndex = 0;
             this.annotate.SelectedIndexChanged += new System.EventHandler(this.AnnotateDropDownChanged);
             // 
             // keyIdLbl
@@ -102,17 +102,19 @@ namespace GitUI.CommandsDialogs
             this.keyIdLbl.Location = new System.Drawing.Point(270, 6);
             this.keyIdLbl.Name = "keyIdLbl";
             this.keyIdLbl.Size = new System.Drawing.Size(60, 19);
+            this.keyIdLbl.TabIndex = 1;
             this.keyIdLbl.Text = "Specific Key Id:";
             this.keyIdLbl.Enabled = false;
-            //
+            // 
             // textBoxGpgKey
-            //
+            // 
             this.textBoxGpgKey.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left));
             this.textBoxGpgKey.Location = new System.Drawing.Point(370, 3);
             this.textBoxGpgKey.Name = "textBoxGpgKey";
             this.textBoxGpgKey.Size = new System.Drawing.Size(60, 80);
             this.textBoxGpgKey.Enabled = false;
             this.textBoxGpgKey.MaxLength = 8;
+            this.textBoxGpgKey.TabIndex = 2;
             // 
             // pushTag
             // 
@@ -121,7 +123,7 @@ namespace GitUI.CommandsDialogs
             this.pushTag.Location = new System.Drawing.Point(313, 46);
             this.pushTag.Name = "pushTag";
             this.pushTag.Size = new System.Drawing.Size(109, 19);
-            this.pushTag.TabIndex = 2;
+            this.pushTag.TabIndex = 3;
             this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
             // 
@@ -135,7 +137,7 @@ namespace GitUI.CommandsDialogs
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(322, 75);
-            this.tagMessage.TabIndex = 5;
+            this.tagMessage.TabIndex = 4;
             this.tagMessage.TextBoxFont = new System.Drawing.Font("Segoe UI", 9F);
             // 
             // label2
@@ -144,7 +146,7 @@ namespace GitUI.CommandsDialogs
             this.label2.Location = new System.Drawing.Point(3, 28);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 15);
-            this.label2.TabIndex = 4;
+            this.label2.TabIndex = 3;
             this.label2.Text = "Message";
             // 
             // ForceTag
@@ -173,7 +175,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(434, 222);
-            this.tableLayoutPanel1.TabIndex = 7;
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
@@ -184,7 +186,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(50, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(428, 30);
-            this.flowLayoutPanel1.TabIndex = 2;
+            this.flowLayoutPanel1.TabIndex = 0;
             // 
             // label3
             // 
@@ -193,7 +195,7 @@ namespace GitUI.CommandsDialogs
             this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(140, 15);
-            this.label3.TabIndex = 1;
+            this.label3.TabIndex = 0;
             this.label3.Text = "Create tag at this revision";
             // 
             // commitPickerSmallControl1
@@ -203,7 +205,7 @@ namespace GitUI.CommandsDialogs
             this.commitPickerSmallControl1.MinimumSize = new System.Drawing.Size(100, 26);
             this.commitPickerSmallControl1.Name = "commitPickerSmallControl1";
             this.commitPickerSmallControl1.Size = new System.Drawing.Size(207, 26);
-            this.commitPickerSmallControl1.TabIndex = 0;
+            this.commitPickerSmallControl1.TabIndex = 1;
             // 
             // panel1
             // 
@@ -216,7 +218,7 @@ namespace GitUI.CommandsDialogs
             this.panel1.Location = new System.Drawing.Point(3, 39);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(428, 69);
-            this.panel1.TabIndex = 3;
+            this.panel1.TabIndex = 1;
             // 
             // panel2
             // 
@@ -230,7 +232,7 @@ namespace GitUI.CommandsDialogs
             this.panel2.Location = new System.Drawing.Point(3, 114);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(428, 105);
-            this.panel2.TabIndex = 4;
+            this.panel2.TabIndex = 2;
             // 
             // FormCreateTag
             // 
