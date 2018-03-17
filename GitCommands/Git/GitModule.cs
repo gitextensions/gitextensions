@@ -3311,18 +3311,6 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static void StreamCopy(Stream input, Stream output)
-        {
-            int read;
-            var buffer = new byte[2048];
-            do
-            {
-                read = input.Read(buffer, 0, buffer.Length);
-                output.Write(buffer, 0, read);
-            }
-            while (read > 0);
-        }
-
         public Stream GetFileStream(string blob)
         {
             try
@@ -3331,7 +3319,7 @@ namespace GitCommands
 
                 using (var process = RunGitCmdDetached("cat-file blob " + blob))
                 {
-                    StreamCopy(process.StandardOutput.BaseStream, newStream);
+                    process.StandardOutput.BaseStream.CopyTo(newStream);
                     newStream.Position = 0;
 
                     process.WaitForExit();
