@@ -25,7 +25,6 @@ namespace GitCommandsTests.Git
             _fileSystem.File.Returns(_file);
 
             _fullPathResolver = Substitute.For<IFullPathResolver>();
-
             _tester = new GitRevisionTester(_fullPathResolver, _fileSystem);
         }
 
@@ -64,22 +63,44 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void LocalExists_should_return_true_if_no_items_tracked()
+        public void LocalExists_should_return_true_if_any_items_not_tracked()
         {
-            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus> { new GitItemStatus() { IsTracked = false } };
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
+            {
+                new GitItemStatus() { IsTracked = true },
+                new GitItemStatus() { IsTracked = false }
+            };
             _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeTrue();
         }
 
         [Test]
         public void LocalExists_should_return_true_if_file_exists()
         {
-            Assert.Inconclusive();
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
+            {
+                new GitItemStatus() { IsTracked = true, Name = "file1" },
+                new GitItemStatus() { IsTracked = true, Name = "file2" }
+            };
+            _fullPathResolver.Resolve("file1").Returns("file1");
+            _fullPathResolver.Resolve("file2").Returns("file2");
+            _file.Exists("file1").Returns(false);
+            _file.Exists("file2").Returns(true);
+            _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeTrue();
         }
 
         [Test]
         public void LocalExists_should_return_false_if_none_of_locally_tracked_items_have_files()
         {
-            Assert.Inconclusive();
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
+            {
+                new GitItemStatus() { IsTracked = true, Name = "file1" },
+                new GitItemStatus() { IsTracked = true, Name = "file2" }
+            };
+            _fullPathResolver.Resolve("file1").Returns("file1");
+            _fullPathResolver.Resolve("file2").Returns("file2");
+            _file.Exists("file1").Returns(false);
+            _file.Exists("file2").Returns(false);
+            _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeFalse();
         }
 
         [Test]
