@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -17,7 +18,9 @@ namespace GitCommands.Git
 
     public sealed class GitTreeParser : IGitTreeParser
     {
-        internal static readonly int MinimumStringLength = 53;
+        private static readonly Regex _treeLineRegex = new Regex(
+            @"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$",
+            RegexOptions.Compiled);
 
         public IEnumerable<IGitItem> Parse(string tree)
         {
@@ -26,25 +29,45 @@ namespace GitCommands.Git
                 return Enumerable.Empty<IGitItem>();
             }
 
+            // $ git ls-tree HEAD
+            // 100644 blob ff17eaee6b8952e5736637424bc4348a69c40227    .editorconfig
+            // 100644 blob bf29d31ff93be092ce746849e8db0984d4a83231    .gitattributes
+            // 040000 tree 7469e02057cf5e5eb86f1edc6061d6f816e20ff7    .github
+            // 100644 blob 770e60816f1d6338c15af91e3ce5b7ccd38b0e3f    .gitignore
+            // 040000 tree c8f09c5438fca1477e79814c99ffcec58e06a83c    GitExtensions
+            // 160000 commit 6868f2b4a39fc894c44711c8903407da596acbf5  GitExtensionsDoc
+            // 100644 blob 7e4eb9dc6a1531a6ee37d8efa6bf570e4bf61146    README.md
+            // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
+
+            // Split on \0 too, as GitModule.GetTree uses `ls-tree -z` which uses null terminators
             var items = tree.Split('\0', '\n');
+
             return items.Select(ParseSingle).Where(item => item != null);
         }
 
         public GitItem ParseSingle(string rawItem)
         {
-            if (rawItem == null || rawItem.Length <= MinimumStringLength)
+            if (rawItem == null)
             {
                 return null;
             }
 
-            var guidStart = rawItem.IndexOf(' ', 7);
-            var mode = rawItem.Substring(0, 6);
-            var itemType = rawItem.Substring(7, guidStart - 7);
-            var guid = rawItem.Substring(guidStart + 1, 40);
-            var name = rawItem.Substring(guidStart + 42).Trim();
+            var match = _treeLineRegex.Match(rawItem);
 
-            var item = new GitItem(mode, itemType, guid, name);
-            return item;
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            // TODO would be more compact to save mode as an Int32
+            // TODO should parse GitObjectType here
+
+            var mode = match.Groups["mode"].Value;
+            var itemType = match.Groups["type"].Value;
+            var guid = match.Groups["objectid"].Value;
+            var name = match.Groups["name"].Value;
+
+            return new GitItem(mode, itemType, guid, name);
         }
     }
 }

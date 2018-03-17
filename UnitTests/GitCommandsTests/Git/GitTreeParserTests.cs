@@ -28,6 +28,7 @@ namespace GitCommandsTests.Git
             var items = _parser.Parse(GetLsTreeOutput()).ToList();
 
             items.Count.Should().Be(10);
+
             var item = (GitItem)items[3];
             item.Guid.Should().Be("46cccae116d2e5a1a2f818b0b31adde4ab3800a9");
             item.Mode.Should().Be("100644");
@@ -41,17 +42,18 @@ namespace GitCommandsTests.Git
             item.ObjectType.Should().Be(GitObjectType.Tree);
         }
 
-        [Test]
-        public void ParseSingle_should_return_null_for_null()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("Hello World")]
+        [TestCase("ZZZZZZ blob 0000000000000000000000000000000000000000    README.md")]
+        [TestCase("100644 blob 000000000000000000000000000000000000000    README.md")]
+        [TestCase("100644 blob 00000000000000000000000000000000000000000    README.md")]
+        [TestCase("100644 ZZZZ 00000000000000000000000000000000000000000    README.md")]
+        [TestCase("1006444 blob 0000000000000000000000000000000000000000    README.md")]
+        [TestCase("10064 blob 0000000000000000000000000000000000000000    README.md")]
+        public void ParseSingle_should_return_null_if_input_invalid(string s)
         {
-            _parser.ParseSingle(null).Should().BeNull();
-        }
-
-        [Test]
-        public void ParseSingle_should_return_null_if_input_shorter_than_required()
-        {
-            _parser.ParseSingle("").Should().BeNull();
-            _parser.ParseSingle(new string('c', GitTreeParser.MinimumStringLength - 1)).Should().BeNull();
+            _parser.ParseSingle(s).Should().BeNull();
         }
 
         [Test]
