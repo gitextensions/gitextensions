@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,12 +44,20 @@ namespace GitExtensions
                 // is this exception caused by the configuration?
                 if (tie.InnerException != null
                     && tie.InnerException.GetType()
-                        .IsSubclassOf(typeof(System.Configuration.ConfigurationException)))
+                        .IsSubclassOf(typeof(ConfigurationException)))
                 {
-                    HandleConfigurationException((System.Configuration.ConfigurationException)tie.InnerException);
+                    HandleConfigurationException((ConfigurationException)tie.InnerException);
                 }
             }
 
+            // NOTE we perform the rest of the application's startup in another method to defer
+            // the JIT processing more types than required to configure NBug.
+            // In this way, there's more chance we can handle startup exceptions correctly.
+            RunApplication();
+        }
+
+        private static void RunApplication()
+        {
             string[] args = Environment.GetCommandLineArgs();
 
             // This form created for obtain UI synchronization context only
@@ -176,7 +185,7 @@ namespace GitExtensions
         /// <summary>
         /// Used in the rare event that the configuration file for the application is corrupted
         /// </summary>
-        private static void HandleConfigurationException(System.Configuration.ConfigurationException ce)
+        private static void HandleConfigurationException(ConfigurationException ce)
         {
             bool exceptionHandled = false;
             try
