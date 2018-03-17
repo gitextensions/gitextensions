@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git
@@ -59,15 +59,14 @@ namespace GitCommands.Git
                 return null;
             }
 
-            // TODO would be more compact to save mode as an Int32
-            // TODO should parse GitObjectType here
-
-            var mode = match.Groups["mode"].Value;
-            var itemType = match.Groups["type"].Value;
+            var mode = int.Parse(match.Groups["mode"].Value);
+            var typeName = match.Groups["type"].Value;
             var guid = match.Groups["objectid"].Value;
             var name = match.Groups["name"].Value;
 
-            return new GitItem(mode, itemType, guid, name);
+            Enum.TryParse(typeName, ignoreCase: true, out GitObjectType type);
+
+            return new GitItem(mode, type, guid, name);
         }
     }
 }

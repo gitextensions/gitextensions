@@ -30,12 +30,12 @@ namespace GitCommandsTests.Git
             items.Count.Should().Be(10);
 
             items[3].Guid.Should().Be("46cccae116d2e5a1a2f818b0b31adde4ab3800a9");
-            items[3].Mode.Should().Be("100644");
+            items[3].Mode.Should().Be(100644);
             items[3].Name.Should().Be(".gitignore");
             items[3].ObjectType.Should().Be(GitObjectType.Blob);
 
             items[8].Guid.Should().Be("58d57013ed2ef925fc1b3f6fe72ead258c522e75");
-            items[8].Mode.Should().Be("040000");
+            items[8].Mode.Should().Be(040000);
             items[8].Name.Should().Be("Bin");
             items[8].ObjectType.Should().Be(GitObjectType.Tree);
         }
@@ -61,7 +61,7 @@ namespace GitCommandsTests.Git
             var item = _parser.ParseSingle(s);
 
             item.Guid.Should().Be("25d7b5d771e84982a3dfd8bd537531d8fb45d491");
-            item.Mode.Should().Be("100644");
+            item.Mode.Should().Be(100644);
             item.Name.Should().Be(".editorconfig");
             item.ObjectType.Should().Be(GitObjectType.Blob);
         }

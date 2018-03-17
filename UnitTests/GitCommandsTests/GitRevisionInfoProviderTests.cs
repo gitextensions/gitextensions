@@ -71,9 +71,9 @@ namespace GitCommandsTests
         public void LoadChildren_should_return_shallow_tree_for_GitItem_with_updated_FileName()
         {
             var guid = Guid.NewGuid().ToString("N");
-            var item = new GitItem("", "", guid, "folder");
+            var item = new GitItem(0, GitObjectType.Tree, guid, "folder");
 
-            var items = new[] { Substitute.For<IGitItem>(), new GitItem("", "", "", "file2"), new GitItem("", "", "", "file3") };
+            var items = new[] { Substitute.For<IGitItem>(), new GitItem(0, GitObjectType.Blob, "", "file2"), new GitItem(0, GitObjectType.Blob, "", "file3") };
             _module.GetTree(guid, false).Returns(items);
 
             var children = _provider.LoadChildren(item);
