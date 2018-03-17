@@ -35,6 +35,9 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
+            annotate.Items.AddRange(DropwdownTagOperation);
+            annotate.SelectedIndex = 0;
+
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
