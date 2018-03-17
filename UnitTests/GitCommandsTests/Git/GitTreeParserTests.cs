@@ -29,17 +29,15 @@ namespace GitCommandsTests.Git
 
             items.Count.Should().Be(10);
 
-            var item = (GitItem)items[3];
-            item.Guid.Should().Be("46cccae116d2e5a1a2f818b0b31adde4ab3800a9");
-            item.Mode.Should().Be("100644");
-            item.Name.Should().Be(".gitignore");
-            item.ObjectType.Should().Be(GitObjectType.Blob);
+            items[3].Guid.Should().Be("46cccae116d2e5a1a2f818b0b31adde4ab3800a9");
+            items[3].Mode.Should().Be("100644");
+            items[3].Name.Should().Be(".gitignore");
+            items[3].ObjectType.Should().Be(GitObjectType.Blob);
 
-            item = (GitItem)items[8];
-            item.Guid.Should().Be("58d57013ed2ef925fc1b3f6fe72ead258c522e75");
-            item.Mode.Should().Be("040000");
-            item.Name.Should().Be("Bin");
-            item.ObjectType.Should().Be(GitObjectType.Tree);
+            items[8].Guid.Should().Be("58d57013ed2ef925fc1b3f6fe72ead258c522e75");
+            items[8].Mode.Should().Be("040000");
+            items[8].Name.Should().Be("Bin");
+            items[8].ObjectType.Should().Be(GitObjectType.Tree);
         }
 
         [TestCase(null)]

@@ -10,7 +10,7 @@ namespace GitCommands.Git
     {
         [NotNull]
         [ItemNotNull]
-        IEnumerable<IGitItem> Parse([CanBeNull] string tree);
+        IEnumerable<GitItem> Parse([CanBeNull] string tree);
 
         [CanBeNull]
         GitItem ParseSingle([CanBeNull] string rawItem);
@@ -22,11 +22,11 @@ namespace GitCommands.Git
             @"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$",
             RegexOptions.Compiled);
 
-        public IEnumerable<IGitItem> Parse(string tree)
+        public IEnumerable<GitItem> Parse(string tree)
         {
             if (string.IsNullOrWhiteSpace(tree))
             {
-                return Enumerable.Empty<IGitItem>();
+                return Enumerable.Empty<GitItem>();
             }
 
             // $ git ls-tree HEAD
