@@ -628,8 +628,6 @@ namespace GitUI.CommandsDialogs
                 mergeBranchToolStripMenuItem.Enabled = !bareRepository;
                 rebaseToolStripMenuItem.Enabled = !bareRepository;
                 applyPatchToolStripMenuItem.Enabled = !bareRepository;
-                SvnRebaseToolStripMenuItem.Enabled = !bareRepository;
-                SvnDcommitToolStripMenuItem.Enabled = !bareRepository;
             }
 
             stashChangesToolStripMenuItem.Enabled = !bareRepository;
@@ -2169,26 +2167,6 @@ namespace GitUI.CommandsDialogs
             deleteTagToolStripMenuItem.Enabled =
             archiveToolStripMenuItem.Enabled =
               enabled;
-        }
-
-        private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartSvnCloneDialog(this, SetGitModule);
-        }
-
-        private void SvnRebaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartSvnRebaseDialog(this);
-        }
-
-        private void SvnDcommitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartSvnDcommitDialog(this);
-        }
-
-        private void SvnFetchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartSvnFetchDialog(this);
         }
 
         public override void AddTranslationItems(ITranslation translation)

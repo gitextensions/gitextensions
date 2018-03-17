@@ -18,7 +18,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     {
         private readonly TranslationString _cloneFork = new TranslationString("Clone {0} repository");
         private readonly TranslationString _cloneRepository = new TranslationString("Clone repository");
-        private readonly TranslationString _cloneSvnRepository = new TranslationString("Clone SVN repository");
         private readonly TranslationString _createRepository = new TranslationString("Create new repository");
         private readonly TranslationString _develop = new TranslationString("Develop");
         private readonly TranslationString _donate = new TranslationString("Donate");
@@ -78,10 +77,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var cloneItem = new DashboardItem(Resources.IconCloneRepoGit, _cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
-
-            var cloneSvnItem = new DashboardItem(Resources.IconCloneRepoSvn, _cloneSvnRepository.Text);
-            cloneSvnItem.Click += cloneSvnItem_Click;
-            CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
@@ -330,11 +325,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void cloneItem_Click(object sender, EventArgs e)
         {
             UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
-        }
-
-        private void cloneSvnItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartSvnCloneDialog(this, OnModuleChanged);
         }
 
         private void createItem_Click(object sender, EventArgs e)
