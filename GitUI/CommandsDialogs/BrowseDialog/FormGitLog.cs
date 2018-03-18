@@ -118,13 +118,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         #region Single instance static members
+
         private static FormGitLog instance;
 
         public static void ShowOrActivate(IWin32Window owner)
         {
             if (instance == null)
             {
-                (instance = new FormGitLog()).Show();
+                (instance = new FormGitLog()).Show(owner);
             }
             else if (instance.WindowState == FormWindowState.Minimized)
             {
@@ -135,6 +136,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 instance.Activate();
             }
         }
+
         #endregion
     }
 }
