@@ -357,6 +357,12 @@ namespace GitCommands
             set => SetBool("showgitstatusinbrowsetoolbar", value);
         }
 
+        public static bool ShowGitStatusForArtificialCommits
+        {
+            get => GetBool("showgitstatusforartificialcommits", true);
+            set => SetBool("showgitstatusforartificialcommits", value);
+        }
+
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||
                                                                 CommitInfoShowContainedInBranchesRemote ||
                                                                 CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -603,7 +609,7 @@ namespace GitCommands
 
         public static bool RevisionGraphShowWorkingDirChanges
         {
-            get => GetBool("revisiongraphshowworkingdirchanges", false);
+            get => GetBool("revisiongraphshowworkingdirchanges", true);
             set => SetBool("revisiongraphshowworkingdirchanges", value);
         }
 

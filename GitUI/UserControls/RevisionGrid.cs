@@ -1877,12 +1877,24 @@ namespace GitUI
                         e.Graphics.DrawString(timeText, rowFont, foreBrush,
                                               new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
                     }
+
+                    if (revision.IsArtificial)
+                    {
+                        // Get offset for "count" text
+                        SizeF textSize = drawRefArgs.Graphics.MeasureString(text, rowFont);
+
+                        offset += 1 + textSize.Width;
+                        offset = DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.BranchColor, ArrowType.None, false, true);
+                    }
                 }
                 else if (columnIndex == authorColIndex)
                 {
-                    var text = (string)e.FormattedValue;
-                    e.Graphics.DrawString(text, rowFont, foreBrush,
-                                          new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    if (!revision.IsArtificial)
+                    {
+                        var text = (string)e.FormattedValue;
+                        e.Graphics.DrawString(text, rowFont, foreBrush,
+                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
                 }
                 else if (columnIndex == dateColIndex)
                 {
@@ -2023,7 +2035,14 @@ namespace GitUI
             }
             else if (columnIndex == messageColIndex)
             {
-                e.Value = revision.SubjectCount + revision.Subject;
+                if (revision.IsArtificial)
+                {
+                    e.Value = revision.SubjectCount;
+                }
+                else
+                {
+                    e.Value = revision.Subject;
+                }
             }
             else if (columnIndex == authorColIndex)
             {

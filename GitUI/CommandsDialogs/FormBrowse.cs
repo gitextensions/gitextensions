@@ -193,7 +193,11 @@ namespace GitUI.CommandsDialogs
 
             Translate();
 
-            if (AppSettings.ShowGitStatusInBrowseToolbar)
+            // Activation of the control requires restart of Browse, limit also deactivation for consistency
+            bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
+            bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
+
+            if (countToolbar || countArtificial)
             {
                 _toolStripGitStatus = new ToolStripMenuItem
                 {
@@ -225,7 +229,7 @@ namespace GitUI.CommandsDialogs
                     var status = e.ItemStatuses.ToList();
                     _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
 
-                    if (status.Count == 0)
+                    if (status.Count == 0 || !countToolbar)
                     {
                         _toolStripGitStatus.Text = _commitButtonText.Text;
                     }
@@ -234,7 +238,10 @@ namespace GitUI.CommandsDialogs
                         _toolStripGitStatus.Text = string.Format(_commitButtonText + " ({0})", status.Count.ToString());
                     }
 
-                    RevisionGrid.UpdateArtificialCommitCount(status);
+                    if (countArtificial)
+                    {
+                        RevisionGrid.UpdateArtificialCommitCount(status);
+                    }
 
                     // The diff filelist is not updated, as the selected diff is unset
                     ////_revisionDiff.RefreshArtificial();
