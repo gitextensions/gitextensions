@@ -49,10 +49,38 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private static void RefreshListBox(ListBox log, string[] items)
         {
-            var selectLastIndex = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
-            log.DataSource = items;
-            if (selectLastIndex && log.Items.Count > 0)
+            var isLastIndexSeleted = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
+            var lastIndex = -1;
+            if (!isLastIndexSeleted)
+            {
+                lastIndex = log.SelectedIndex;
+            }
+
+            try
+            {
+                log.BeginUpdate();
+                log.DataSource = items;
+            }
+            finally
+            {
+                log.EndUpdate();
+            }
+
+            if (log.Items.Count < 1)
+            {
+                return;
+            }
+
+            // select the very last item first, then select the previously selected item, if any
+            log.SelectedIndex = log.Items.Count - 1;
+            if (isLastIndexSeleted)
+            {
                 log.SelectedIndex = log.Items.Count - 1;
+            }
+            else if (lastIndex >= 0)
+            {
+                log.SelectedIndex = lastIndex;
+            }
         }
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -62,9 +90,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             byte[] cmdout, cmderr;
             if (GitCommandCache.TryGet(command, out cmdout, out cmderr))
             {
-                commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
                 Encoding encoding = GitModule.SystemEncoding;
-                commandCacheOutput.Text += EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
+                commandCacheOutput.Text =
+                    command +
+                    "\n-------------------------------------\n\n" +
+                    EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
             }
             else
             {
@@ -112,17 +142,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         #region Single instance static members
+
         private static FormGitLog instance;
 
         public static void ShowOrActivate(IWin32Window owner)
         {
             if (instance == null)
-                (instance = new FormGitLog()).Show();
+            {
+                (instance = new FormGitLog()).Show(owner);
+            }
             else if (instance.WindowState == FormWindowState.Minimized)
                 instance.WindowState = FormWindowState.Normal;
             else
                 instance.Activate();
         }
+
         #endregion
     }
 }
