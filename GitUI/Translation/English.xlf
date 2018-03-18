@@ -3976,11 +3976,11 @@ in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="aBToolStripMenuItem.Text">
-        <source>A &lt;--&gt; B</source>
+        <source>BASE -&gt; Compare</source>
         <target />
       </trans-unit>
       <trans-unit id="aLocalToolStripMenuItem.Text">
-        <source>A &lt;--&gt; Working directory</source>
+        <source>BASE -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="anotherBranchTooltip.Text">
@@ -3992,7 +3992,7 @@ in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
-        <source>B &lt;--&gt; Working directory</source>
+        <source>Compare -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="baseCommitGroup.Text">
@@ -4040,11 +4040,11 @@ in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
-        <source>A's parent &lt;--&gt; Working directory</source>
+        <source>Parent to BASE -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
-        <source>B's parent &lt;--&gt; Working directory</source>
+        <source>Parent to Compare -&gt; Working directory</source>
         <target />
       </trans-unit>
     </body>
@@ -7727,11 +7727,11 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="_diffParentWithSelection.Text">
-        <source>Diff (A: parent --&gt; B: selection)</source>
+        <source>Diff (A: parent -&gt; B: selection)</source>
         <target />
       </trans-unit>
       <trans-unit id="_diffTwoSelected.Text">
-        <source>Diff (A: first --&gt; B: second)</source>
+        <source>Diff (A: first -&gt; B: second)</source>
         <target />
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -7743,15 +7743,15 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="aBToolStripMenuItem.Text">
-        <source>A &lt;--&gt; B</source>
+        <source>First -&gt; Selected</source>
         <target />
       </trans-unit>
       <trans-unit id="aLocalToolStripMenuItem.Text">
-        <source>A &lt;--&gt; Working directory</source>
+        <source>First -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
-        <source>B &lt;--&gt; Working directory</source>
+        <source>Selected -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -7815,11 +7815,11 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
-        <source>A's parent &lt;--&gt; Working directory</source>
+        <source>Parent to first -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
-        <source>B's parent &lt;--&gt; Working directory</source>
+        <source>Parent to selected -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
@@ -7843,7 +7843,7 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>Save (B) as...</source>
+        <source>Save selected as...</source>
         <target />
       </trans-unit>
       <trans-unit id="saveToolStripMenuItem.Text">

@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;
@@ -25,21 +27,22 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private readonly TranslationString _unsupportedMultiselectAction =
-            new TranslationString("Operation not supported");
-        private readonly TranslationString _diffWithParent =
-            new TranslationString("Diff with:");
-        public readonly TranslationString CombinedDiff =
-            new TranslationString("Combined Diff");
+        private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
+        public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
+
+        // Artificial commit for the combined diff, similar to GitRevision.UnstagedGuid
+        public readonly string CombinedDiffGuid = "2222222222222222222222222222222222222222";
 
         private IDisposable _selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         private bool _filterVisible;
         private ToolStripItem _openSubmoduleMenuItem;
+        private bool _alwaysRevisionGroups = false;
 
-        public DescribeRevisionDelegate DescribeRevision;
+        private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
+        public DescribeRevisionDelegate DescribeRevision;
 
         public FileStatusList()
         {
@@ -49,7 +52,6 @@ namespace GitUI
             FilterVisible = false;
 
             SelectFirstItemOnSetItems = true;
-            _noDiffFilesChangesDefaultText = NoFiles.Text;
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
             if (_images == null)
@@ -81,6 +83,15 @@ namespace GitUI
 
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _revisionTester = new GitRevisionTester(_fullPathResolver);
+        }
+
+        public bool AlwaysRevisionGroups
+        {
+            set
+            {
+                _alwaysRevisionGroups = value;
+            }
         }
 
         private void CreateOpenSubmoduleMenuItem()
@@ -124,8 +135,6 @@ namespace GitUI
         }
 
         private static ImageList _images;
-
-        private readonly string _noDiffFilesChangesDefaultText;
 
         public void SetNoFilesText(string text)
         {
@@ -869,7 +878,7 @@ namespace GitUI
             }
 
             FileStatusListView.BeginUpdate();
-            FileStatusListView.ShowGroups = GitItemStatusesWithParents.Count > 1;
+            FileStatusListView.ShowGroups = GitItemStatusesWithParents.Count > 1 || _alwaysRevisionGroups;
             FileStatusListView.Groups.Clear();
             FileStatusListView.Items.Clear();
 
@@ -883,7 +892,7 @@ namespace GitUI
                 if (pair.Key != null)
                 {
                     string groupName;
-                    if (pair.Key.Guid == CombinedDiff.Text)
+                    if (pair.Key.Guid == CombinedDiffGuid)
                     {
                         groupName = CombinedDiff.Text;
                     }
@@ -1133,13 +1142,7 @@ namespace GitUI
             }
 
             var dictionary = new GitItemsWithParents();
-            NoFiles.Text = _noDiffFilesChangesDefaultText; // Temporary
-            if (revisions.Count > 2)
-            {
-                // Not a limitations, to keep compatibility with existing RevisionDiff
-                NoFiles.Text = _unsupportedMultiselectAction.Text;
-            }
-            else if (Revision != null)
+            if (Revision != null)
             {
                 GitRevision[] parentRevs;
                 if (revisions.Count == 1)
@@ -1176,17 +1179,17 @@ namespace GitUI
                         dictionary.Add(rev, Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid));
                     }
 
-                    // Show combined (merge conflicts) only when A is only parent
+                    // Show combined (merge conflicts) only when all first (A) are parents to selected (B)
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
-                        Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1
-                        && revisions.Count == 1;
+                                        Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1 &&
+                                        _revisionTester.AllFirstAreParentsToSelected(parentRevs, Revision);
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);
                         if (conflicts.Any())
                         {
-                            // Create a mock commit
-                            var rev = new GitRevision(CombinedDiff.Text);
+                            // Create an artificial commit
+                            var rev = new GitRevision(CombinedDiffGuid);
                             dictionary.Add(rev, conflicts);
                         }
                     }

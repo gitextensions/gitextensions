@@ -49,11 +49,11 @@
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.parentOfALocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.parentOfBLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.firstToSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.firstToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectedToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.firstParentToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectedParentToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -328,56 +328,57 @@
             this.findInDiffToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(211, 148);
+            this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.diffContextToolStripMenuItem_Opening);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
             this.openWithDifftoolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aBToolStripMenuItem,
-            this.aLocalToolStripMenuItem,
-            this.bLocalToolStripMenuItem,
-            this.parentOfALocalToolStripMenuItem,
-            this.parentOfBLocalToolStripMenuItem});
+            this.firstToSelectedToolStripMenuItem,
+            this.firstToLocalToolStripMenuItem,
+            this.selectedToLocalToolStripMenuItem,
+            this.firstParentToLocalToolStripMenuItem,
+            this.selectedParentToLocalToolStripMenuItem});
             this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
-            this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.openWithDifftoolToolStripMenuItem_DropDownOpening);
+            this.openWithDifftoolToolStripMenuItem.DropDownOpening += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_DropDownOpening);
             // 
-            // aBToolStripMenuItem
+            // firstToSelectedToolStripMenuItem
             // 
-            this.aBToolStripMenuItem.Name = "aBToolStripMenuItem";
-            this.aBToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.aBToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.aBToolStripMenuItem.Text = "A <--> B";
-            this.aBToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.firstToSelectedToolStripMenuItem.Name = "firstToSelectedToolStripMenuItem";
+            this.firstToSelectedToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.firstToSelectedToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.firstToSelectedToolStripMenuItem.Text = "BASE -> Compare";
+            this.firstToSelectedToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
-            // aLocalToolStripMenuItem
+            // firstToLocalToolStripMenuItem
             // 
-            this.aLocalToolStripMenuItem.Name = "aLocalToolStripMenuItem";
-            this.aLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.aLocalToolStripMenuItem.Text = "A <--> Working directory";
-            this.aLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.firstToLocalToolStripMenuItem.Name = "firstToLocalToolStripMenuItem";
+            this.firstToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.firstToLocalToolStripMenuItem.Text = "BASE -> Working directory";
+            this.firstToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
-            // bLocalToolStripMenuItem
+            // selectedToLocalToolStripMenuItem
             // 
-            this.bLocalToolStripMenuItem.Name = "bLocalToolStripMenuItem";
-            this.bLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.bLocalToolStripMenuItem.Text = "B <--> Working directory";
-            this.bLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.selectedToLocalToolStripMenuItem.Name = "selectedToLocalToolStripMenuItem";
+            this.selectedToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.selectedToLocalToolStripMenuItem.Text = "Compare -> Working directory";
+            this.selectedToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
-            // parentOfALocalToolStripMenuItem
+            // firstParentToLocalToolStripMenuItem
             // 
-            this.parentOfALocalToolStripMenuItem.Name = "parentOfALocalToolStripMenuItem";
-            this.parentOfALocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.parentOfALocalToolStripMenuItem.Text = "A\'s parent <--> Working directory";
-            this.parentOfALocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.firstParentToLocalToolStripMenuItem.Name = "firstParentToLocalToolStripMenuItem";
+            this.firstParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.firstParentToLocalToolStripMenuItem.Text = "Parent to BASE -> Working directory";
+            this.firstParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
-            // parentOfBLocalToolStripMenuItem
+            // selectedParentToLocalToolStripMenuItem
             // 
-            this.parentOfBLocalToolStripMenuItem.Name = "parentOfBLocalToolStripMenuItem";
-            this.parentOfBLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.parentOfBLocalToolStripMenuItem.Text = "B\'s parent <--> Working directory";
-            this.parentOfBLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
+            this.selectedParentToLocalToolStripMenuItem.Name = "selectedParentToLocalToolStripMenuItem";
+            this.selectedParentToLocalToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.selectedParentToLocalToolStripMenuItem.Text = "Parent to Compare -> Working directory";
+            this.selectedParentToLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // toolStripSeparator32
             // 
@@ -474,11 +475,11 @@
         private System.Windows.Forms.ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aBToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aLocalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bLocalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem parentOfALocalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem parentOfBLocalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem firstToSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem firstToLocalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectedToLocalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem firstParentToLocalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectedParentToLocalToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator32;
         private System.Windows.Forms.ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderToolStripMenuItem;

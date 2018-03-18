@@ -70,7 +70,8 @@ namespace GitUI
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly ICommitDataManager _commitDataManager;
-        private readonly IGitRevisionTester _gitRevisionTester = new GitRevisionTester();
+        private readonly IFullPathResolver _fullPathResolver;
+        private readonly IGitRevisionTester _gitRevisionTester;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
@@ -133,6 +134,8 @@ namespace GitUI
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarCache.Invalidated += (s, e) => Revisions.Invalidate();
             _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
 
             _commitDataManager = new CommitDataManager(() => Module);
 
