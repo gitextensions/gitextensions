@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs
         {
             var parents = DiffFiles.SelectedItemParents
                 .Where(i => showUnstagedAndCombined ||
-                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == DiffFiles.CombinedDiff.Text))
+                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == DiffFiles.CombinedDiffGuid))
                 .Distinct()
                 .Count();
             if (parents == 0)
@@ -238,7 +238,7 @@ namespace GitUI.CommandsDialogs
             bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
 
             // Combined diff is a display only diff, no manipulations
-            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
+            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiffGuid);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
 
@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (DiffFiles.SelectedItemParent?.Guid == DiffFiles.CombinedDiff.Text)
+            if (DiffFiles.SelectedItemParent?.Guid == DiffFiles.CombinedDiffGuid)
             {
                 var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
                     DiffText.GetExtraDiffArguments(), DiffText.Encoding);
