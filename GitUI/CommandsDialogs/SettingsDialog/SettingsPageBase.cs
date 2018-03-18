@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        private IList<string> _childrenText;
+        private IReadOnlyList<string> _childrenText;
 
         /// <summary>
         /// override to provide search keywords
@@ -135,33 +135,40 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return _childrenText ?? (_childrenText = GetChildrenText(this));
         }
 
-        /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
-        private static IList<string> GetChildrenText(Control control)
+        /// <summary>
+        /// Gets the <see cref="Control.Text"/> values of <paramref name="control"/>
+        /// and all its descendants.
+        /// </summary>
+        private static IReadOnlyList<string> GetChildrenText(Control control)
         {
-            if (control.HasChildren == false)
-            {
-                return new string[0];
-            }
+            var texts = new List<string>();
 
-            List<string> texts = new List<string>();
-            foreach (Control child in control.Controls)
+            var queue = new Queue<Control>();
+            queue.Enqueue(control);
+
+            while (queue.Count != 0)
             {
-                if (!child.Visible || child is NumericUpDown)
+                var next = queue.Dequeue();
+
+                if (!next.Visible || next is NumericUpDown)
                 {
                     // skip: invisible; some input controls
                     continue;
                 }
 
-                if (child.Enabled && !string.IsNullOrWhiteSpace(child.Text))
+                if (next.Enabled && !string.IsNullOrWhiteSpace(next.Text))
                 {
                     // enabled AND not whitespace -> add
                     // also searches text boxes and comboboxes
                     // TODO(optional): search through the drop down list of comboboxes
                     // TODO(optional): convert numeric dropdown values to text
-                    texts.Add(child.Text.Trim().ToLowerInvariant());
+                    texts.Add(next.Text.Trim().ToLowerInvariant());
                 }
 
-                texts.AddRange(GetChildrenText(child)); // recurse
+                foreach (Control child in next.Controls)
+                {
+                    queue.Enqueue(child);
+                }
             }
 
             return texts;
