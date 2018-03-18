@@ -2323,9 +2323,10 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
                 {
-                    var frm = new FormCreateTag(UICommands, LatestSelectedRevision);
-
-                    return frm.ShowDialog(this) == DialogResult.OK;
+                    using (var frm = new FormCreateTag(UICommands, LatestSelectedRevision))
+                    {
+                        return frm.ShowDialog(this) == DialogResult.OK;
+                    }
                 });
         }
 
