@@ -239,7 +239,7 @@ namespace GitFlow
         private void btnPull_Click(object sender, EventArgs e)
         {
             var branchType = cbType.SelectedValue.ToString();
-            RunCommand(string.Format("flow {0} pull {1} {2}" + branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
+            RunCommand(string.Format("flow {0} pull {1} {2}", branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
