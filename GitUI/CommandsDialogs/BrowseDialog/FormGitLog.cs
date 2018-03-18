@@ -66,9 +66,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (GitCommandCache.TryGet(command, out var cmdout, out var cmderr))
             {
-                commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
                 Encoding encoding = GitModule.SystemEncoding;
-                commandCacheOutput.Text += EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
+                commandCacheOutput.Text =
+                    command +
+                    "\n-------------------------------------\n\n" +
+                    EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
             }
             else
             {
