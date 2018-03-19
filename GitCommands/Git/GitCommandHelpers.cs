@@ -64,6 +64,8 @@ namespace GitCommands
 
         public static void SetEnvironmentVariable(bool reload = false)
         {
+            // PATH variable
+
             if (!string.IsNullOrEmpty(AppSettings.GitBinDir))
             {
                 // Ensure the git binary dir is on the path
@@ -79,34 +81,35 @@ namespace GitCommands
                 }
             }
 
-            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
-            {
-                Environment.SetEnvironmentVariable(
-                    "HOME",
-                    AppSettings.CustomHomeDir);
-                return;
-            }
-
-            if (AppSettings.UserProfileHomeDir)
-            {
-                Environment.SetEnvironmentVariable(
-                    "HOME",
-                    Environment.GetEnvironmentVariable("USERPROFILE"));
-                return;
-            }
+            // HOME variable
 
             if (reload)
             {
-                Environment.SetEnvironmentVariable(
-                    "HOME",
-                    UserHomeDir);
+                // Assign the HOME variable of the user/machine to this process
+                Environment.SetEnvironmentVariable("HOME", UserHomeDir);
+            }
+            else if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+            {
+                // Assign the HOME variable specified in settings
+                Environment.SetEnvironmentVariable("HOME", AppSettings.CustomHomeDir);
+            }
+            else if (AppSettings.UserProfileHomeDir)
+            {
+                // Assign the USERPROFILE variable's value to the HOME variable
+                Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("USERPROFILE"));
+            }
+            else
+            {
+                // Assign a default HOME variable
+                Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
             }
 
-            // Default!
-            Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
+            // TERM variable
 
             // to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
+
+            // SSH_ASKPASS variable
 
             if (EnvUtils.RunningOnWindows())
             {
