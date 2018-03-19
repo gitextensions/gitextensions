@@ -96,8 +96,7 @@ namespace GitUI
                 {
                     if (secondRevision.IsNullOrWhiteSpace())
                     {
-                        // Revision unexpectedly is not set, just return for 2.51 update
-                        return Task.CompletedTask;
+                        throw new ArgumentException(nameof(secondRevision));
                     }
 
                     return diffViewer.ViewGitItemRevision(file.Name, secondRevision);
