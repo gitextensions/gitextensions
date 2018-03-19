@@ -58,10 +58,24 @@ namespace GitCommands
     {
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
+        #region Environment variables
+
+        /// <summary>
+        /// The <c>USER</c> environment variable's value for the user/machine.
+        /// </summary>
+        [CanBeNull]
         private static readonly string UserHomeDir
             = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
+        /// <summary>
+        /// Sets <c>PATH</c>, <c>HOME</c>, <c>TERM</c> and <c>SSH_ASKPASS</c> environment variables
+        /// for the current process.
+        /// </summary>
+        /// <param name="resetHome">
+        /// Whether the process's <c>HOME</c> var should be reset to the equivalent value
+        /// assigned to the user or machine.
+        /// </param>
         public static void SetEnvironmentVariables(bool resetHome = false)
         {
             // PATH variable
@@ -126,11 +140,17 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// Gets the value of the current process's <c>HOME</c> environment variable.
+        /// </summary>
+        /// <returns>The variable's value, or an empty string if it is not present.</returns>
+        [NotNull]
         public static string GetHomeDir()
         {
             return Environment.GetEnvironmentVariable("HOME") ?? "";
         }
 
+        [CanBeNull]
         public static string GetDefaultHomeDir()
         {
             // Use the HOME property from the user or machine, as captured at startup
@@ -154,6 +174,8 @@ namespace GitCommands
 
             return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
+
+        #endregion
 
         public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
