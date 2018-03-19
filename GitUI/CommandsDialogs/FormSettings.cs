@@ -253,7 +253,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // TODO: to which settings page does this belong?
-            GitCommandHelpers.SetEnvironmentVariable(true);
+            GitCommandHelpers.SetEnvironmentVariables(true);
 
             // TODO: this method has a generic sounding name but only saves some specific settings
             AppSettings.SaveSettings();

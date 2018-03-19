@@ -62,7 +62,7 @@ namespace GitCommands
             = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
-        public static void SetEnvironmentVariable(bool reload = false)
+        public static void SetEnvironmentVariables(bool reload = false)
         {
             // PATH variable
 
@@ -175,7 +175,7 @@ namespace GitCommands
 
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
-            SetEnvironmentVariable();
+            SetEnvironmentVariables();
 
             var executionStartTimestamp = DateTime.Now;
 
@@ -300,7 +300,7 @@ namespace GitCommands
         /// </summary>
         public static IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string workDir, string stdInput)
         {
-            SetEnvironmentVariable();
+            SetEnvironmentVariables();
             arguments = arguments.Replace("$QUOTE$", "\\\"");
             return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
         }
@@ -332,7 +332,7 @@ namespace GitCommands
         {
             try
             {
-                SetEnvironmentVariable();
+                SetEnvironmentVariables();
 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
