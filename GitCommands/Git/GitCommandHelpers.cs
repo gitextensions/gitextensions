@@ -56,6 +56,7 @@ namespace GitCommands
 
     public static class GitCommandHelpers
     {
+        private static readonly IEnvironmentAbstraction Env = new EnvironmentAbstraction();
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         #region Environment variables
@@ -65,8 +66,8 @@ namespace GitCommands
         /// </summary>
         [CanBeNull]
         private static readonly string UserHomeDir
-            = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
-           ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
+            = Env.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
+           ?? Env.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
         /// <summary>
         /// Sets <c>PATH</c>, <c>HOME</c>, <c>TERM</c> and <c>SSH_ASKPASS</c> environment variables
@@ -79,25 +80,25 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(AppSettings.GitBinDir))
             {
                 // Ensure the git binary dir is on the path
-                string path = Environment.GetEnvironmentVariable("PATH");
+                string path = Env.GetEnvironmentVariable("PATH");
 
                 if (path == null)
                 {
-                    Environment.SetEnvironmentVariable("PATH", AppSettings.GitBinDir);
+                    Env.SetEnvironmentVariable("PATH", AppSettings.GitBinDir);
                 }
                 else if (!path.Contains(AppSettings.GitBinDir))
                 {
-                    Environment.SetEnvironmentVariable("PATH", $"{path}{Path.PathSeparator}{AppSettings.GitBinDir}");
+                    Env.SetEnvironmentVariable("PATH", $"{path}{Path.PathSeparator}{AppSettings.GitBinDir}");
                 }
             }
 
             // HOME variable
-            Environment.SetEnvironmentVariable("HOME", ComputeHomeLocation());
+            Env.SetEnvironmentVariable("HOME", ComputeHomeLocation());
 
             // TERM variable
 
             // to prevent from leaking processes see issue #1092 for details
-            Environment.SetEnvironmentVariable("TERM", "msys");
+            Env.SetEnvironmentVariable("TERM", "msys");
 
             // SSH_ASKPASS variable
 
@@ -107,12 +108,12 @@ namespace GitCommands
 
                 if (File.Exists(sshAskPass))
                 {
-                    Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
+                    Env.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
                 }
             }
-            else if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_ASKPASS")))
+            else if (string.IsNullOrEmpty(Env.GetEnvironmentVariable("SSH_ASKPASS")))
             {
-                Environment.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
+                Env.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
             }
         }
 
@@ -124,7 +125,7 @@ namespace GitCommands
             }
             else if (AppSettings.UserProfileHomeDir)
             {
-                return Environment.GetEnvironmentVariable("USERPROFILE");
+                return Env.GetEnvironmentVariable("USERPROFILE");
             }
             else
             {
@@ -139,7 +140,7 @@ namespace GitCommands
         [NotNull]
         public static string GetHomeDir()
         {
-            return Environment.GetEnvironmentVariable("HOME") ?? "";
+            return Env.GetEnvironmentVariable("HOME") ?? "";
         }
 
         [CanBeNull]
@@ -154,17 +155,17 @@ namespace GitCommands
             if (EnvUtils.RunningOnWindows())
             {
                 // Use the Windows default home directory
-                var homeDrive = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                var homeDrive = Env.GetEnvironmentVariable("HOMEDRIVE");
 
                 if (!string.IsNullOrEmpty(homeDrive))
                 {
-                    return homeDrive + Environment.GetEnvironmentVariable("HOMEPATH");
+                    return homeDrive + Env.GetEnvironmentVariable("HOMEPATH");
                 }
 
-                return Environment.GetEnvironmentVariable("USERPROFILE");
+                return Env.GetEnvironmentVariable("USERPROFILE");
             }
 
-            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            return Env.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
         #endregion

@@ -18,6 +18,9 @@ namespace GitCommands
 
         /// <inheritdoc cref="Environment.GetFolderPath(Environment.SpecialFolder)" />
         string GetFolderPath(Environment.SpecialFolder folder);
+
+        /// <inheritdoc cref="Environment.SetEnvironmentVariable(string,string)" />
+        void SetEnvironmentVariable(string variable, string value);
     }
 
     public sealed class EnvironmentAbstraction : IEnvironmentAbstraction
@@ -50,6 +53,12 @@ namespace GitCommands
         public string GetFolderPath(Environment.SpecialFolder folder)
         {
             return Environment.GetFolderPath(folder);
+        }
+
+        /// <inheritdoc />
+        public void SetEnvironmentVariable(string variable, string value)
+        {
+            Environment.SetEnvironmentVariable(variable, value);
         }
     }
 }
