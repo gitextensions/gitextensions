@@ -69,15 +69,15 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(AppSettings.GitBinDir))
             {
                 // Ensure the git binary dir is on the path
-                string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
+                string path = Environment.GetEnvironmentVariable("PATH");
 
                 if (path == null)
                 {
-                    Environment.SetEnvironmentVariable("PATH", AppSettings.GitBinDir, EnvironmentVariableTarget.Process);
+                    Environment.SetEnvironmentVariable("PATH", AppSettings.GitBinDir);
                 }
                 else if (!path.Contains(AppSettings.GitBinDir))
                 {
-                    Environment.SetEnvironmentVariable("PATH", $"{path};{AppSettings.GitBinDir}", EnvironmentVariableTarget.Process);
+                    Environment.SetEnvironmentVariable("PATH", $"{path};{AppSettings.GitBinDir}");
                 }
             }
 
