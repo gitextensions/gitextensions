@@ -62,7 +62,7 @@ namespace GitCommands
             = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
-        public static void SetEnvironmentVariables(bool reload = false)
+        public static void SetEnvironmentVariables(bool resetHome = false)
         {
             // PATH variable
 
@@ -83,7 +83,7 @@ namespace GitCommands
 
             // HOME variable
 
-            if (reload)
+            if (resetHome)
             {
                 // Assign the HOME variable of the user/machine to this process
                 Environment.SetEnvironmentVariable("HOME", UserHomeDir);
