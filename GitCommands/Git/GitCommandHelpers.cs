@@ -72,11 +72,7 @@ namespace GitCommands
         /// Sets <c>PATH</c>, <c>HOME</c>, <c>TERM</c> and <c>SSH_ASKPASS</c> environment variables
         /// for the current process.
         /// </summary>
-        /// <param name="resetHome">
-        /// Whether the process's <c>HOME</c> var should be reset to the equivalent value
-        /// assigned to the user or machine.
-        /// </param>
-        public static void SetEnvironmentVariables(bool resetHome = false)
+        public static void SetEnvironmentVariables()
         {
             // PATH variable
 
@@ -97,12 +93,7 @@ namespace GitCommands
 
             // HOME variable
 
-            if (resetHome)
-            {
-                // Assign the HOME variable of the user/machine to this process
-                Environment.SetEnvironmentVariable("HOME", UserHomeDir);
-            }
-            else if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
             {
                 // Assign the HOME variable specified in settings
                 Environment.SetEnvironmentVariable("HOME", AppSettings.CustomHomeDir);
@@ -138,6 +129,15 @@ namespace GitCommands
             {
                 Environment.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
             }
+        }
+
+        /// <summary>
+        /// Reverts the process's <c>HOME</c> environment variable to the equivalent user/machine value.
+        /// </summary>
+        public static void ResetHomeEnvironmentVariable()
+        {
+            // Assign the HOME variable of the user/machine to this process
+            Environment.SetEnvironmentVariable("HOME", UserHomeDir);
         }
 
         /// <summary>
