@@ -331,13 +331,13 @@ namespace GitUI.CommandsDialogs
             FocusUnstagedFiles = 2,
             FocusSelectedDiff = 3,
             FocusStagedFiles = 4,
-            FocusCommitMessage = 6,
-            ResetSelectedFiles = 7,
-            StageSelectedFile = 8,
-            UnStageSelectedFile = 9,
-            ShowHistory = 10,
-            ToggleSelectionFilter = 11,
-            StageAll = 12
+            FocusCommitMessage = 5,
+            ResetSelectedFiles = 6,
+            StageSelectedFile = 7,
+            UnStageSelectedFile = 8,
+            ShowHistory = 9,
+            ToggleSelectionFilter = 10,
+            StageAll = 11
         }
 
         private bool AddToGitIgnore()
