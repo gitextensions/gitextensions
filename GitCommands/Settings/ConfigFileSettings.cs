@@ -40,10 +40,10 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateGlobal(ConfigFileSettings lowerPriority, bool allowCache = true)
         {
-            string configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".config", "git", "config");
+            string configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config", "git", "config");
             if (!File.Exists(configPath))
             {
-                configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".gitconfig");
+                configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
             }
 
             return new ConfigFileSettings(lowerPriority,

@@ -74,7 +74,7 @@ namespace GitUI.UserControls
         {
             try
             {
-                GitCommandHelpers.SetEnvironmentVariables();
+                EnvironmentConfiguration.SetEnvironmentVariables();
 
                 bool ssh = GitCommandHelpers.UseSsh(arguments);
 

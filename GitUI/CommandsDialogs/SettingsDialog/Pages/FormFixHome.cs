@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public static void CheckHomePath()
         {
-            GitCommandHelpers.SetEnvironmentVariables();
+            EnvironmentConfiguration.SetEnvironmentVariables();
 
             if (IsFixHome())
             {
@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             LoadSettings();
 
-            defaultHome.Text = string.Format(defaultHome.Text + " ({0})", GitCommandHelpers.GetDefaultHomeDir());
+            defaultHome.Text = string.Format(defaultHome.Text + " ({0})", EnvironmentConfiguration.GetDefaultHomeDir());
             userprofileHome.Text = string.Format(userprofileHome.Text + " ({0})", Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
@@ -223,7 +223,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.UserProfileHomeDir = userprofileHome.Checked;
 
-            GitCommandHelpers.SetEnvironmentVariables();
+            EnvironmentConfiguration.SetEnvironmentVariables();
             string path = Environment.GetEnvironmentVariable("HOME");
             if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
             {

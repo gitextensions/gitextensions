@@ -54,12 +54,9 @@ namespace GitCommands
         All = 5
     }
 
-    public static class GitCommandHelpers
+    public static class EnvironmentConfiguration
     {
         private static readonly IEnvironmentAbstraction Env = new EnvironmentAbstraction();
-        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
-
-        #region Environment variables
 
         /// <summary>
         /// The <c>USER</c> environment variable's value for the user/machine.
@@ -167,8 +164,11 @@ namespace GitCommands
 
             return Env.GetFolderPath(Environment.SpecialFolder.Personal);
         }
+    }
 
-        #endregion
+    public static class GitCommandHelpers
+    {
+        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
@@ -190,7 +190,7 @@ namespace GitCommands
 
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
-            SetEnvironmentVariables();
+            EnvironmentConfiguration.SetEnvironmentVariables();
 
             var executionStartTimestamp = DateTime.Now;
 
@@ -315,7 +315,7 @@ namespace GitCommands
         /// </summary>
         public static IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string workDir, string stdInput)
         {
-            SetEnvironmentVariables();
+            EnvironmentConfiguration.SetEnvironmentVariables();
             arguments = arguments.Replace("$QUOTE$", "\\\"");
             return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
         }
@@ -347,7 +347,7 @@ namespace GitCommands
         {
             try
             {
-                SetEnvironmentVariables();
+                EnvironmentConfiguration.SetEnvironmentVariables();
 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 

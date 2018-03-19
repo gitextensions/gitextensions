@@ -10,7 +10,7 @@ namespace GitUI.Script
         {
             const string filename = "powershell.exe";
             var psarguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
-            GitCommandHelpers.SetEnvironmentVariables();
+            EnvironmentConfiguration.SetEnvironmentVariables();
 
             var executionStartTimestamp = DateTime.Now;
 
