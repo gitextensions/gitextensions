@@ -133,6 +133,7 @@ namespace GitCommands
 
         public static string GetDefaultHomeDir()
         {
+            // Use the HOME property from the user or machine, as captured at startup
             if (!string.IsNullOrEmpty(UserHomeDir))
             {
                 return UserHomeDir;
@@ -140,25 +141,18 @@ namespace GitCommands
 
             if (EnvUtils.RunningOnWindows())
             {
-                return WindowsDefaultHomeDir;
-            }
+                // Use the Windows default home directory
+                var homeDrive = Environment.GetEnvironmentVariable("HOMEDRIVE");
 
-            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        }
-
-        private static string WindowsDefaultHomeDir
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
+                if (!string.IsNullOrEmpty(homeDrive))
                 {
-                    string homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
-                    homePath += Environment.GetEnvironmentVariable("HOMEPATH");
-                    return homePath;
+                    return homeDrive + Environment.GetEnvironmentVariable("HOMEPATH");
                 }
 
                 return Environment.GetEnvironmentVariable("USERPROFILE");
             }
+
+            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
         public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
