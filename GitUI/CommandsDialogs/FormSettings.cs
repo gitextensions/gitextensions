@@ -252,9 +252,6 @@ namespace GitUI.CommandsDialogs
                 FormFixHome.CheckHomePath();
             }
 
-            // TODO: to which settings page does this belong?
-            GitCommandHelpers.ResetHomeEnvironmentVariable();
-
             // TODO: this method has a generic sounding name but only saves some specific settings
             AppSettings.SaveSettings();
 

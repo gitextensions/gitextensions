@@ -92,22 +92,7 @@ namespace GitCommands
             }
 
             // HOME variable
-
-            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
-            {
-                // Assign the HOME variable specified in settings
-                Environment.SetEnvironmentVariable("HOME", AppSettings.CustomHomeDir);
-            }
-            else if (AppSettings.UserProfileHomeDir)
-            {
-                // Assign the USERPROFILE variable's value to the HOME variable
-                Environment.SetEnvironmentVariable("HOME", Environment.GetEnvironmentVariable("USERPROFILE"));
-            }
-            else
-            {
-                // Assign a default HOME variable
-                Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
-            }
+            Environment.SetEnvironmentVariable("HOME", ComputeHomeLocation());
 
             // TERM variable
 
@@ -131,13 +116,20 @@ namespace GitCommands
             }
         }
 
-        /// <summary>
-        /// Reverts the process's <c>HOME</c> environment variable to the equivalent user/machine value.
-        /// </summary>
-        public static void ResetHomeEnvironmentVariable()
+        private static string ComputeHomeLocation()
         {
-            // Assign the HOME variable of the user/machine to this process
-            Environment.SetEnvironmentVariable("HOME", UserHomeDir);
+            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+            {
+                return AppSettings.CustomHomeDir;
+            }
+            else if (AppSettings.UserProfileHomeDir)
+            {
+                return Environment.GetEnvironmentVariable("USERPROFILE");
+            }
+            else
+            {
+                return GetDefaultHomeDir();
+            }
         }
 
         /// <summary>

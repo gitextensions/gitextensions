@@ -223,8 +223,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.UserProfileHomeDir = userprofileHome.Checked;
 
-            GitCommandHelpers.ResetHomeEnvironmentVariable();
-
+            GitCommandHelpers.SetEnvironmentVariables();
             string path = Environment.GetEnvironmentVariable("HOME");
             if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
             {
