@@ -98,9 +98,11 @@ namespace GitCommands
 
             // to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
-            string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
+
             if (EnvUtils.RunningOnWindows())
             {
+                string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
+
                 if (File.Exists(sshAskPass))
                 {
                     Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
