@@ -58,6 +58,10 @@ namespace GitCommands
     {
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
+        private static readonly string UserHomeDir
+            = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
+           ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
+
         public static void SetEnvironmentVariable(bool reload = false)
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
@@ -386,8 +390,6 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
-        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
         public static GitVersion VersionInUse
         {
