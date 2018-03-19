@@ -87,7 +87,7 @@ namespace GitCommands
                 }
                 else if (!path.Contains(AppSettings.GitBinDir))
                 {
-                    Environment.SetEnvironmentVariable("PATH", $"{path};{AppSettings.GitBinDir}");
+                    Environment.SetEnvironmentVariable("PATH", $"{path}{Path.PathSeparator}{AppSettings.GitBinDir}");
                 }
             }
 
