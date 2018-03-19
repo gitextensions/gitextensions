@@ -2093,15 +2093,14 @@ namespace GitCommands
 
                     if (parts.Length >= 3)
                     {
-                        string error = string.Empty;
-                        CommitData data = _commitDataManager.GetCommitData(parts[1], ref error);
+                        CommitData data = _commitDataManager.GetCommitData(parts[1], out var error);
 
                         patchFiles.Add(new PatchFile
                         {
-                            Author = string.IsNullOrEmpty(error) ? data.Author : error,
-                            Subject = string.IsNullOrEmpty(error) ? data.Body : error,
+                            Author = error ?? data.Author,
+                            Subject = error ?? data.Body,
                             Name = parts[0],
-                            Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error,
+                            Date = error ?? data.CommitDate.LocalDateTime.ToString(),
                             IsNext = patchFiles.Count == 0
                         });
                     }
@@ -3033,7 +3032,8 @@ namespace GitCommands
             }
 
             string info = RunGitCmd("branch " + args);
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+
+            if (IsGitErrorMessage(info))
             {
                 return Enumerable.Empty<string>();
             }
@@ -3064,7 +3064,7 @@ namespace GitCommands
         {
             string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
 
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+            if (IsGitErrorMessage(info))
             {
                 return Enumerable.Empty<string>();
             }
@@ -3087,7 +3087,7 @@ namespace GitCommands
 
             string info = RunGitCmd("tag -l -n10 " + tag, SystemEncoding);
 
-            if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
+            if (IsGitErrorMessage(info))
             {
                 return null;
             }
@@ -3404,10 +3404,9 @@ namespace GitCommands
                 return SubmoduleStatus.Rewind;
             }
 
-            string error = "";
             if (loaddata)
             {
-                olddata = _commitDataManager.GetCommitData(oldCommit, ref error);
+                olddata = _commitDataManager.GetCommitData(oldCommit, out _);
             }
 
             if (olddata == null)
@@ -3417,7 +3416,7 @@ namespace GitCommands
 
             if (loaddata)
             {
-                data = _commitDataManager.GetCommitData(commit, ref error);
+                data = _commitDataManager.GetCommitData(commit, out _);
             }
 
             if (data == null)
@@ -3822,6 +3821,16 @@ namespace GitCommands
         public bool StopTrackingFile(string filename)
         {
             return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
+        }
+
+        /// <summary>
+        /// Determines whether a git command's output indicates an error occurred.
+        /// </summary>
+        /// <param name="gitOutput">The output from the git command, to inspect.</param>
+        /// <returns><c>true</c> if the command detailed an error, otherwise <c>false</c>.</returns>
+        public static bool IsGitErrorMessage(string gitOutput)
+        {
+            return Regex.IsMatch(gitOutput, @"^\s*(error:|fatal)");
         }
     }
 }

@@ -169,11 +169,10 @@ namespace GitUI.CommitInfo
 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
-            string error = "";
             CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(data, _revision.Guid, ref error);
+                _commitDataManager.UpdateBody(data, out _);
                 _revision.Body = data.Body;
             }
 

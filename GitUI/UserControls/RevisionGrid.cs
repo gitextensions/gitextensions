@@ -2099,10 +2099,10 @@ namespace GitUI
         {
             // code taken from CommitInfo.cs
             CommitData commitData = _commitDataManager.CreateFromRevision(revision);
-            string error = "";
+
             if (revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(commitData, revision.Guid, ref error);
+                _commitDataManager.UpdateBody(commitData, out _);
                 revision.Body = commitData.Body;
             }
 

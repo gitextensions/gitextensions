@@ -1,146 +1,100 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public interface ICommitDataManager
     {
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
+        /// Converts a <see cref="GitRevision"/> object into a <see cref="CommitData"/>.
         /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
-        CommitData CreateFromFormatedData(string data);
+        /// <remarks>
+        /// The <see cref="GitRevision"/> object contains all required fields, so no additional
+        /// data lookup is required to populate the returned <see cref="CommitData"/> object.
+        /// </remarks>
+        /// <param name="revision">The <see cref="GitRevision"/> to convert from.</param>
+        [NotNull]
+        CommitData CreateFromRevision([NotNull] GitRevision revision);
 
         /// <summary>
-        /// Creates a CommitData object from Git revision.
+        /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
         /// </summary>
-        /// <param name="revision">Git commit.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
-        CommitData CreateFromRevision(GitRevision revision);
+        [ContractAnnotation("=>null,error:notnull")]
+        CommitData GetCommitData([NotNull] string sha1, out string error);
 
         /// <summary>
-        /// Gets the commit info for submodule.
+        /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
         /// </summary>
-        CommitData GetCommitData(string sha1, ref string error);
-
-        /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
-        /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
-        void UpdateBodyInCommitData(CommitData commitData, string data);
-
-        /// <summary>
-        /// Gets the commit info for submodule.
-        /// </summary>
-        void UpdateCommitMessage(CommitData data, string sha1, ref string error);
+        void UpdateBody([NotNull] CommitData commitData, [CanBeNull] out string error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
     {
-        private readonly Func<IGitModule> _getModule;
         private const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
+
+        private readonly Func<IGitModule> _getModule;
 
         public CommitDataManager(Func<IGitModule> getModule)
         {
             _getModule = getModule;
         }
 
-        /// <summary>
-        /// Gets the commit info for submodule.
-        /// </summary>
-        public void UpdateCommitMessage(CommitData data, string sha1, ref string error)
+        /// <inheritdoc />
+        public void UpdateBody(CommitData commitData, out string error)
         {
-            var module = GetModule();
-            if (sha1 == null)
+            if (!TryGetCommitLog(commitData.Guid, ShortLogFormat, out error, out var data))
             {
-                throw new ArgumentNullException(nameof(sha1));
-            }
-
-            // Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
-            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
-
-            if (info.Trim().StartsWith("fatal"))
-            {
-                error = "Cannot find commit " + sha1;
                 return;
             }
 
-            int index = info.IndexOf(sha1) + sha1.Length;
+            // $ git log --pretty="format:%H%n%e%n%B%nNotes:%n%-N" -1
+            // 8c601c9bb040e575af75c9eee6e14441e2a1b207
+            //
+            // Remove redundant parameter
+            //
+            // The sha1 parameter must match CommitData.Guid.
+            // There's no point passing it. It only creates opportunity for bugs.
+            //
+            // Notes:
 
-            if (index < 0)
-            {
-                error = "Cannot find commit " + sha1;
-                return;
-            }
+            // commit id
+            // encoding
+            // commit message
+            // ...
 
-            if (index >= info.Length)
-            {
-                error = info;
-                return;
-            }
+            var lines = data.Split('\n');
 
-            UpdateBodyInCommitData(data, info);
+            var guid = lines[0];
+            var commitEncoding = lines[1];
+            var message = ProcessDiffNotes(startIndex: 2, lines);
+
+            Debug.Assert(commitData.Guid == guid, "Guid in response doesn't match that of request");
+
+            // Commit message is not reencoded by git when format is given
+            commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
+        }
+
+        /// <inheritdoc />
+        public CommitData GetCommitData(string sha1, out string error)
+        {
+            return TryGetCommitLog(sha1, LogFormat, out error, out var info)
+                ? CreateFromFormattedData(info)
+                : null;
         }
 
         /// <summary>
-        /// Gets the commit info for submodule.
+        /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
         /// </summary>
-        public CommitData GetCommitData(string sha1, ref string error)
-        {
-            var module = GetModule();
-            if (sha1 == null)
-            {
-                throw new ArgumentNullException(nameof(sha1));
-            }
-
-            // Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                "log -1 --pretty=\"format:" + LogFormat + "\" {0}", sha1);
-            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
-
-            if (info.Trim().StartsWith("fatal"))
-            {
-                error = "Cannot find commit " + sha1;
-                return null;
-            }
-
-            int index = info.IndexOf(sha1) + sha1.Length;
-
-            if (index < 0)
-            {
-                error = "Cannot find commit " + sha1;
-                return null;
-            }
-
-            if (index >= info.Length)
-            {
-                error = info;
-                return null;
-            }
-
-            CommitData commitInformation = CreateFromFormatedData(info);
-
-            return commitInformation;
-        }
-
-        /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
-        /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
+        /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
+        /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
-        public CommitData CreateFromFormatedData(string data)
+        [NotNull]
+        public CommitData CreateFromFormattedData([NotNull] string data)
         {
             if (data == null)
             {
@@ -148,6 +102,31 @@ namespace GitCommands
             }
 
             var module = GetModule();
+
+            // $ git log --pretty="format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N" -1
+            // 4bc1049fc3b9191dbd390e1ae6885aedd1a4e34b
+            // a59c21f0b2e6f43ae89b76a216f9f6124fc359f8
+            // 8e3873685d89f8cb543657d1b9e66e516cae7e1d dfd353d3b02d24a0d98855f6a1848c51d9ba4d6b
+            // RussKie <RussKie@users.noreply.github.com>
+            // 1521115435
+            // GitHub <noreply@github.com>
+            // 1521115435
+            //
+            // Merge pull request #4615 from drewnoakes/modernise-3
+            //
+            // New language features
+            // Notes:
+
+            // commit id
+            // tree id
+            // parent ids (separated by spaces)
+            // author
+            // authored date (unix time)
+            // committer
+            // committed date (unix time)
+            // encoding (may be blank)
+            // diff notes
+            // ...
 
             var lines = data.Split('\n');
 
@@ -157,62 +136,21 @@ namespace GitCommands
             var treeGuid = lines[1];
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            string[] parentLines = lines[2].Split(' ');
-            ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
-
+            var parentGuids = lines[2].Split(' ');
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
-
             var committer = module.ReEncodeStringFromLossless(lines[5]);
             var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
-
-            string commitEncoding = lines[7];
-
-            const int startIndex = 8;
-            string message = ProccessDiffNotes(startIndex, lines);
+            var commitEncoding = lines[7];
+            var message = ProcessDiffNotes(startIndex: 8, lines);
 
             // commit message is not reencoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
-            var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
-                committer, commitDate, body);
-
-            return commitInformation;
+            return new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);
         }
 
-        /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
-        /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
-        public void UpdateBodyInCommitData(CommitData commitData, string data)
-        {
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            var module = GetModule();
-
-            var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-
-            var guid = lines[0];
-
-            string commitEncoding = lines[1];
-
-            const int startIndex = 2;
-            string message = ProccessDiffNotes(startIndex, lines);
-
-            // commit message is not reencoded by git when format is given
-            Debug.Assert(commitData.Guid == guid, "commitData.Guid == guid");
-            commitData.Body = module.ReEncodeCommitMessage(message, commitEncoding);
-        }
-
-        /// <summary>
-        /// Creates a CommitData object from Git revision.
-        /// </summary>
-        /// <param name="revision">Git commit.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        /// <inheritdoc />
         public CommitData CreateFromRevision(GitRevision revision)
         {
             if (revision == null)
@@ -220,16 +158,17 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
+            return new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject);
-            return data;
         }
 
+        [NotNull]
         private IGitModule GetModule()
         {
             var module = _getModule();
+
             if (module == null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
@@ -238,7 +177,27 @@ namespace GitCommands
             return module;
         }
 
-        private static string ProccessDiffNotes(int startIndex, string[] lines)
+        [ContractAnnotation("=>false,error:notnull,data:null")]
+        [ContractAnnotation("=>true,error:null,data:notnull")]
+        private bool TryGetCommitLog([NotNull] string commitId, [NotNull] string format, out string error, out string data)
+        {
+            var arguments = $"log -1 --pretty=\"format:{format}\" {commitId}";
+
+            // Do not cache this command, since notes can be added
+            data = GetModule().RunGitCmd(arguments, GitModule.LosslessEncoding);
+
+            if (GitModule.IsGitErrorMessage(data) || !data.Contains(commitId))
+            {
+                error = "Cannot find commit " + commitId;
+                return false;
+            }
+
+            error = null;
+            return true;
+        }
+
+        [NotNull]
+        private static string ProcessDiffNotes(int startIndex, [NotNull, ItemNotNull] string[] lines)
         {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
@@ -248,16 +207,19 @@ namespace GitCommands
 
             var message = new StringBuilder();
             bool notesStart = false;
+
             for (int i = startIndex; i <= endIndex; i++)
             {
                 string line = lines[i];
+
                 if (notesStart)
                 {
-                    line = "    " + line;
+                    message.Append("    ");
                 }
 
                 message.AppendLine(line);
-                if (lines[i] == "Notes:")
+
+                if (line == "Notes:")
                 {
                     notesStart = true;
                 }
