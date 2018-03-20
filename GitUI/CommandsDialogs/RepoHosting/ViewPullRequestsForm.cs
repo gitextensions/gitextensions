@@ -425,27 +425,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
-        private void _postComment_Click(object sender, EventArgs e)
-        {
-            string text = _postCommentText.Text;
-            if (_currentPullRequestInfo == null || text == null || text.Trim().Length == 0)
-            {
-                return;
-            }
-
-            try
-            {
-                _currentPullRequestInfo.Discussion.Post(text);
-                _postCommentText.Text = "";
-                _currentPullRequestInfo.Discussion.ForceReload();
-                LoadDiscussion(_currentPullRequestInfo.Discussion);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message, _strError.Text);
-            }
-        }
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>

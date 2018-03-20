@@ -65,17 +65,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             LoadSettings();
         }
-
-        private void InitializeComponent()
-        {
-            SuspendLayout();
-
-            //
-            // RepoDistSettingsPage
-            //
-            Name = "RepoDistSettingsPage";
-            Size = new System.Drawing.Size(951, 518);
-            ResumeLayout(false);
-        }
     }
 }

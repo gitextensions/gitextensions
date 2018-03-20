@@ -54,7 +54,6 @@ namespace GitUI
 
         private TextEditorControl Editor
         {
-            get { return _editor; }
             set
             {
                 _editor = value;

@@ -714,20 +714,6 @@ namespace GitUI.RevisionGridClasses
                     {
                         return EdgeList.Count(e => e.End == lane);
                     }
-
-                    public bool IsActive(int lane)
-                    {
-                        if (lane >= CountNext())
-                        {
-                            return false;
-                        }
-
-                        return _countEnd[lane] > 0;
-                    }
-
-                    private void Remove(int start, int end)
-                    {
-                    }
                 }
 
                 #endregion

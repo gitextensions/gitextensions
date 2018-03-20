@@ -9,8 +9,6 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class GitBlameHeaderTest
     {
-        private const string _testGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
-
         [Test]
         public void TestConstructor()
         {
