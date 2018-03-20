@@ -29,10 +29,6 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        private void FormCheckoutLoad(object sender, EventArgs e)
-        {
-        }
-
         public void SetRevision(string commitHash)
         {
             commitPickerSmallControl1.SetSelectedCommitHash(commitHash);

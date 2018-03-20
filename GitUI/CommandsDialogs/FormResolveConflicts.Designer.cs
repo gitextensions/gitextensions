@@ -433,7 +433,6 @@ namespace GitUI.CommandsDialogs
             this.conflictDescription.Size = new System.Drawing.Size(64, 16);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
-            this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
             // 
             // pictureBox1
             // 

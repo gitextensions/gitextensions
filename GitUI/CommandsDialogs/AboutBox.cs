@@ -30,10 +30,6 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void labelVersion_Click(object sender, EventArgs e)
-        {
-        }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(FormDonate.DonationUrl);
