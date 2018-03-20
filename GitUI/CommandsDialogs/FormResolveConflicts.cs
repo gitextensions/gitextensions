@@ -1175,10 +1175,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void conflictDescription_Click(object sender, EventArgs e)
-        {
-        }
-
         private void merge_Click(object sender, EventArgs e)
         {
             OpenMergetool_Click(sender, e);

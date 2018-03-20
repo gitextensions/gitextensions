@@ -1764,11 +1764,6 @@ namespace GitUI
             return StartBlameDialog(null, fileName, null, initialLine);
         }
 
-        private bool StartBlameDialog(string fileName, GitRevision revision)
-        {
-            return StartBlameDialog(null, fileName, revision);
-        }
-
         private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster,
                                                 Action<IRepositoryHostPlugin> call)
         {

@@ -9,8 +9,6 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class GitBlameHeaderTest
     {
-        private const string _testGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
-
         [Test]
         public void TestConstructor()
         {
@@ -58,9 +56,9 @@ namespace GitCommandsTests.Git
             StringBuilder expectedHeader = new StringBuilder();
 
             expectedHeader.AppendLine("Author: Author");
-            expectedHeader.AppendLine("AuthorTime: " + authorTime.ToString());
+            expectedHeader.AppendLine("AuthorTime: " + authorTime);
             expectedHeader.AppendLine("Committer: committer");
-            expectedHeader.AppendLine("CommitterTime: " + committerTime.ToString());
+            expectedHeader.AppendLine("CommitterTime: " + committerTime);
             expectedHeader.AppendLine("Summary: test summary");
             expectedHeader.AppendLine();
             expectedHeader.Append("FileName: fileName.txt");

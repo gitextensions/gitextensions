@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     }
                     else
                     {
-                        submodulesList = " [" + sub.Count.ToString() + " submodules]";
+                        submodulesList = " [" + sub.Count + " submodules]";
                     }
                 }
 

@@ -14,8 +14,6 @@ namespace GitUI.RevisionGridClasses
 
             public delegate void GraphUpdatedHandler(object sender);
 
-            private delegate bool Visit(Node n);
-
             #endregion
 
             public readonly List<Node> AddedNodes = new List<Node>();

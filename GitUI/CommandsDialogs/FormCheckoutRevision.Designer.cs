@@ -135,7 +135,6 @@
             this.Name = "FormCheckoutRevision";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Checkout revision";
-            this.Load += new System.EventHandler(this.FormCheckoutLoad);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);

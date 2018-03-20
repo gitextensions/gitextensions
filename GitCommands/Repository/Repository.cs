@@ -58,7 +58,7 @@ namespace GitCommands.Repository
 
         public override string ToString()
         {
-            return Path + " (" + Anchor.ToString() + ")";
+            return Path + " (" + Anchor + ")";
         }
 
         public static bool PathIsUrl(string path)

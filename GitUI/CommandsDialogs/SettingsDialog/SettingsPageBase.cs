@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -39,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _pageHost = pageHost;
         }
 
-        public static T Create<T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
+        public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
         {
             T result = new T();
 

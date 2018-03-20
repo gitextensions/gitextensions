@@ -245,10 +245,6 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
         }
 
-        private void PatchDirMode_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
         private void SolveMergeconflicts_Click(object sender, EventArgs e)
         {
             Mergetool_Click(sender, e);
