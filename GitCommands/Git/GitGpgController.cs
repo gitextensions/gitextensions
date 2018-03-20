@@ -230,7 +230,7 @@ namespace GitCommands.Gpg
             return module.RunGitCmd($"verify-tag {rawFlag} {tagName}");
         }
 
-        private string EvaluateTagVerifyMessage(IList<IGitRef> usefulTagRefs)
+        private string EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
         {
             if (usefulTagRefs.Count == 0)
             {

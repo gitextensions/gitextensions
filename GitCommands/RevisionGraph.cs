@@ -273,7 +273,7 @@ namespace GitCommands
             Exited?.Invoke(this, EventArgs.Empty);
         }
 
-        private IList<IGitRef> GetRefs()
+        private IReadOnlyList<IGitRef> GetRefs()
         {
             var result = _module.GetRefs(true);
             bool validWorkingDir = _module.IsValidGitWorkingDir();

@@ -19,8 +19,8 @@ using ResourceManager;
 namespace GitUI
 {
     // Parents is used as the "first selected" (not always the parent) for GitItemStatus
-    using IGitItemsWithParents = IDictionary<GitRevision, IList<GitItemStatus>>;
-    using GitItemsWithParents = Dictionary<GitRevision, IList<GitItemStatus>>;
+    using IGitItemsWithParents = IDictionary<GitRevision, IReadOnlyList<GitItemStatus>>;
+    using GitItemsWithParents = Dictionary<GitRevision, IReadOnlyList<GitItemStatus>>;
 
     public delegate string DescribeRevisionDelegate(string sha1);
 
@@ -1117,7 +1117,7 @@ namespace GitUI
             }
         }
 
-        public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IList<GitItemStatus> items = null)
+        public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IReadOnlyList<GitItemStatus> items = null)
         {
             Revision = selectedRev;
 

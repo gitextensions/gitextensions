@@ -76,7 +76,7 @@ namespace GitCommands.Settings
             return GetString(setting, string.Empty);
         }
 
-        public IList<string> GetValues(string setting)
+        public IReadOnlyList<string> GetValues(string setting)
         {
             return SettingsCache.GetValues(setting);
         }
@@ -97,7 +97,7 @@ namespace GitCommands.Settings
             SetValue(setting, ConfigSection.FixPath(value));
         }
 
-        public IList<IConfigSection> GetConfigSections()
+        public IReadOnlyList<IConfigSection> GetConfigSections()
         {
             return SettingsCache.GetConfigSections();
         }

@@ -13,7 +13,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Retrieves configuration sections the .git/config file.
         /// </summary>
-        IList<IConfigSection> GetConfigSections();
+        IReadOnlyList<IConfigSection> GetConfigSections();
 
         /// <summary>
         /// Removes the specific configuration section from the .git/config file.

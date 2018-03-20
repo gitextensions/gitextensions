@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        public IList<IGitRef> ExistingBranches { get; set; }
+        public IReadOnlyList<IGitRef> ExistingBranches { get; set; }
 
         private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {

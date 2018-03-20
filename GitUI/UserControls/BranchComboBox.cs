@@ -21,8 +21,8 @@ namespace GitUI
             branches.DisplayMember = "Name";
         }
 
-        private IList<IGitRef> _branchesToSelect;
-        public IList<IGitRef> BranchesToSelect
+        private IReadOnlyList<IGitRef> _branchesToSelect;
+        public IReadOnlyList<IGitRef> BranchesToSelect
         {
             get
             {
@@ -76,7 +76,7 @@ namespace GitUI
 
         private void selectMultipleBranchesButton_Click(object sender, EventArgs e)
         {
-            using (FormSelectMultipleBranches formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
+            using (var formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
             {
                 foreach (var branch in GetSelectedBranches())
                 {

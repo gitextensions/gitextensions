@@ -14,12 +14,12 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        IList<ExternalLinkDefinition> Load(RepoDistSettings settings);
+        IReadOnlyList<ExternalLinkDefinition> Load(RepoDistSettings settings);
 
         /// <summary>
         /// Saves the provided external link definitions to the settings.
         /// </summary>
-        void Save(RepoDistSettings settings, IList<ExternalLinkDefinition> definitions);
+        void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions);
     }
 
     public sealed class ExternalLinksLoader : IExternalLinksLoader
@@ -29,7 +29,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        public IList<ExternalLinkDefinition> Load(RepoDistSettings settings)
+        public IReadOnlyList<ExternalLinkDefinition> Load(RepoDistSettings settings)
         {
             var cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
             var xml = cachedSettings.GetString(SettingName, null);
@@ -39,7 +39,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Saves the provided external link definitions to the settings.
         /// </summary>
-        public void Save(RepoDistSettings settings, IList<ExternalLinkDefinition> definitions)
+        public void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace GitCommands.ExternalLinks
         }
 
         // TODO: refactor and outsource to the centralised SettingsSerialiser implementations.
-        private static IList<ExternalLinkDefinition> LoadFromXmlString(string xmlString)
+        private static IReadOnlyList<ExternalLinkDefinition> LoadFromXmlString(string xmlString)
         {
             if (string.IsNullOrWhiteSpace(xmlString))
             {

@@ -223,7 +223,7 @@ namespace GitUI.CommitInfo
 
         private void LoadSortedRefs()
         {
-            _sortedRefs = Module.GetSortedRefs();
+            _sortedRefs = Module.GetSortedRefs().ToList();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 

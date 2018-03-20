@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
         private string _selectedBranch;
         private GitRemote _selectedRemote;
         private string _selectedRemoteBranchName;
-        private IList<IGitRef> _gitRefs;
+        private IReadOnlyList<IGitRef> _gitRefs;
         private readonly IGitRemoteManager _remoteManager;
 
         public bool ErrorOccurred { get; private set; }
@@ -906,7 +906,7 @@ namespace GitUI.CommandsDialogs
             Cursor = Cursors.AppStarting;
             try
             {
-                IList<IGitRef> remoteHeads;
+                IReadOnlyList<IGitRef> remoteHeads;
                 if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
                 {
                     EnsurePageant(remote);
@@ -959,7 +959,7 @@ namespace GitUI.CommandsDialogs
             return cmdOutput;
         }
 
-        private void ProcessHeads(string remote, IList<IGitRef> remoteHeads)
+        private void ProcessHeads(string remote, IReadOnlyList<IGitRef> remoteHeads)
         {
             IList<IGitRef> localHeads = GetLocalBranches().ToList();
             var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
