@@ -71,9 +71,9 @@ namespace GitCommands
         {
             StringBuilder toStringValue = new StringBuilder();
             toStringValue.AppendLine("Author: " + Author);
-            toStringValue.AppendLine("AuthorTime: " + AuthorTime.ToString());
+            toStringValue.AppendLine("AuthorTime: " + AuthorTime);
             toStringValue.AppendLine("Committer: " + Committer);
-            toStringValue.AppendLine("CommitterTime: " + CommitterTime.ToString());
+            toStringValue.AppendLine("CommitterTime: " + CommitterTime);
             toStringValue.AppendLine("Summary: " + Summary);
             toStringValue.AppendLine();
             toStringValue.AppendLine("FileName: " + FileName);

@@ -56,9 +56,9 @@ namespace GitCommandsTests.Git
             StringBuilder expectedHeader = new StringBuilder();
 
             expectedHeader.AppendLine("Author: Author");
-            expectedHeader.AppendLine("AuthorTime: " + authorTime.ToString());
+            expectedHeader.AppendLine("AuthorTime: " + authorTime);
             expectedHeader.AppendLine("Committer: committer");
-            expectedHeader.AppendLine("CommitterTime: " + committerTime.ToString());
+            expectedHeader.AppendLine("CommitterTime: " + committerTime);
             expectedHeader.AppendLine("Summary: test summary");
             expectedHeader.AppendLine();
             expectedHeader.Append("FileName: fileName.txt");
