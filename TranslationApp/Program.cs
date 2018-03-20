@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
+using GitUI;
 using ResourceManager;
 
 namespace TranslationApp
@@ -54,50 +55,51 @@ namespace TranslationApp
 
         private static void UpdateAllTranslations()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            var neutralItems = TranslationHelpers.LoadNeutralItems();
-            string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
-            TranslationHelpers.SaveTranslation(null, neutralItems, filename);
-
-            var translationsNames = Translator.GetAllTranslations();
-            foreach (var name in translationsNames)
+            using (new WaitCursorScope())
             {
-                var translation = Translator.GetTranslation(name);
-                var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
-                TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
-            }
+                var neutralItems = TranslationHelpers.LoadNeutralItems();
+                string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
+                TranslationHelpers.SaveTranslation(null, neutralItems, filename);
 
-            Cursor.Current = Cursors.Default;
+                var translationsNames = Translator.GetAllTranslations();
+                foreach (var name in translationsNames)
+                {
+                    var translation = Translator.GetTranslation(name);
+                    var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                    filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
+                    TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
+                }
+            }
         }
 
         private static void ShowStatus()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            var neutralItems = TranslationHelpers.LoadNeutralItems();
-
-            var translationsNames = Translator.GetAllTranslations();
-            var list = new List<KeyValuePair<string, int>>();
-            foreach (var name in translationsNames)
+            using (new WaitCursorScope())
             {
-                var translation = Translator.GetTranslation(name);
-                var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                int translatedCount = translateItems
-                    .Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
-                list.Add(new KeyValuePair<string, int>(name, translatedCount));
-            }
+                var neutralItems = TranslationHelpers.LoadNeutralItems();
 
-            using (var stream = File.CreateText("statistic.csv"))
-            {
-                stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
-                foreach (var (language, translatedItems) in list.OrderByDescending(item => item.Value))
+                var translationsNames = Translator.GetAllTranslations();
+                var list = new List<KeyValuePair<string, int>>();
+                foreach (var name in translationsNames)
                 {
-                    stream.WriteLine("{0};{1:F}%;{2};{3}", language, 100.0f * translatedItems / neutralItems.Count, translatedItems,
-                        neutralItems.Count);
+                    var translation = Translator.GetTranslation(name);
+                    var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                    int translatedCount = translateItems
+                        .Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
+                    list.Add(new KeyValuePair<string, int>(name, translatedCount));
+                }
+
+                using (var stream = File.CreateText("statistic.csv"))
+                {
+                    stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
+                    foreach (var (language, translatedItems) in list.OrderByDescending(item => item.Value))
+                    {
+                        stream.WriteLine(
+                            "{0};{1:F}%;{2};{3}", language, 100.0f * translatedItems / neutralItems.Count, translatedItems,
+                            neutralItems.Count);
+                    }
                 }
             }
-
-            Cursor.Current = Cursors.Default;
         }
     }
 }

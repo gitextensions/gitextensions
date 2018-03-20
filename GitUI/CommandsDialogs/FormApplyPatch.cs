@@ -151,40 +151,40 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-            if (PatchFileMode.Checked)
+            using (new WaitCursorScope())
             {
-                if (IgnoreWhitespace.Checked)
+                if (PatchFileMode.Checked)
                 {
-                    FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text));
+                    if (IgnoreWhitespace.Checked)
+                    {
+                        FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text));
+                    }
+                    else
+                    {
+                        FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmd(PatchFile.Text));
+                    }
                 }
                 else
                 {
-                    FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmd(PatchFile.Text));
+                    if (IgnoreWhitespace.Checked)
+                    {
+                        Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
+                    }
+                    else
+                    {
+                        Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
+                    }
                 }
-            }
-            else
-            {
-                if (IgnoreWhitespace.Checked)
+
+                UICommands.RepoChangedNotifier.Notify();
+
+                EnableButtons();
+
+                if (!Module.InTheMiddleOfAction() && !Module.InTheMiddleOfPatch())
                 {
-                    Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
-                }
-                else
-                {
-                    Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
+                    Close();
                 }
             }
-
-            UICommands.RepoChangedNotifier.Notify();
-
-            EnableButtons();
-
-            if (!Module.InTheMiddleOfAction() && !Module.InTheMiddleOfPatch())
-            {
-                Close();
-            }
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -195,26 +195,29 @@ namespace GitUI.CommandsDialogs
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            FormProcess.ShowDialog(this, GitCommandHelpers.SkipCmd());
-            EnableButtons();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                FormProcess.ShowDialog(this, GitCommandHelpers.SkipCmd());
+                EnableButtons();
+            }
         }
 
         private void Resolved_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            FormProcess.ShowDialog(this, GitCommandHelpers.ResolvedCmd());
-            EnableButtons();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResolvedCmd());
+                EnableButtons();
+            }
         }
 
         private void Abort_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            FormProcess.ShowDialog(this, GitCommandHelpers.AbortCmd());
-            EnableButtons();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                FormProcess.ShowDialog(this, GitCommandHelpers.AbortCmd());
+                EnableButtons();
+            }
         }
 
         private void AddFiles_Click(object sender, EventArgs e)

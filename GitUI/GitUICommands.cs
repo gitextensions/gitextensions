@@ -907,35 +907,34 @@ namespace GitUI
                 return false;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Reset all changes.
-            Module.ResetFile(fileName);
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+            using (new WaitCursorScope())
             {
-                try
+                // Reset all changes.
+                Module.ResetFile(fileName);
+
+                // Also delete new files, if requested.
+                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    string path = _fullPathResolver.Resolve(fileName);
-                    if (File.Exists(path))
+                    try
                     {
-                        File.Delete(path);
+                        string path = _fullPathResolver.Resolve(fileName);
+                        if (File.Exists(path))
+                        {
+                            File.Delete(path);
+                        }
+                        else
+                        {
+                            Directory.Delete(path, true);
+                        }
                     }
-                    else
+                    catch (IOException)
                     {
-                        Directory.Delete(path, true);
                     }
-                }
-                catch (IOException)
-                {
-                }
-                catch (UnauthorizedAccessException)
-                {
+                    catch (UnauthorizedAccessException)
+                    {
+                    }
                 }
             }
-
-            Cursor.Current = Cursors.Default;
 
             return true;
         }

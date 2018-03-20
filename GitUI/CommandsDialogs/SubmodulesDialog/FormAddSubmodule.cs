@@ -38,12 +38,13 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                 return;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-            var addSubmoduleCmd = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
-            FormProcess.ShowDialog(this, addSubmoduleCmd);
+            using (new WaitCursorScope())
+            {
+                var addSubmoduleCmd = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
+                FormProcess.ShowDialog(this, addSubmoduleCmd);
 
-            Close();
-            Cursor.Current = Cursors.Default;
+                Close();
+            }
         }
 
         private void DirectorySelectedIndexChanged(object sender, EventArgs e)

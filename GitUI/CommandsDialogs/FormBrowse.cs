@@ -430,15 +430,15 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
 
-            Cursor.Current = Cursors.WaitCursor;
-            LayoutRevisionInfo();
-            InternalInitialize(false);
-            RevisionGrid.Focus();
-            RevisionGrid.IndexWatcher.Reset();
+            using (new WaitCursorScope())
+            {
+                LayoutRevisionInfo();
+                InternalInitialize(false);
+                RevisionGrid.Focus();
+                RevisionGrid.IndexWatcher.Reset();
 
-            RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
-
-            Cursor.Current = Cursors.Default;
+                RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
+            }
 
             try
             {
@@ -552,133 +552,132 @@ namespace GitUI.CommandsDialogs
 
         private void InternalInitialize(bool hard)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            UICommands.RaisePreBrowseInitialize(this);
-
-            // check for updates
-            if (AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
+            using (new WaitCursorScope())
             {
-                AppSettings.LastUpdateCheck = DateTime.Now;
-                var updateForm = new FormUpdates(Module.AppVersion);
-                updateForm.SearchForUpdatesAndShow(Owner, false);
+                UICommands.RaisePreBrowseInitialize(this);
+
+                // check for updates
+                if (AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
+                {
+                    AppSettings.LastUpdateCheck = DateTime.Now;
+                    var updateForm = new FormUpdates(Module.AppVersion);
+                    updateForm.SearchForUpdatesAndShow(Owner, false);
+                }
+
+                bool bareRepository = Module.IsBareRepository();
+                bool validWorkingDir = Module.IsValidGitWorkingDir();
+                bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
+                branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
+                if (hasWorkingDir)
+                {
+                    HideDashboard();
+                }
+                else
+                {
+                    ShowDashboard();
+                }
+
+                toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
+                CommitInfoTabControl.Visible = validWorkingDir;
+                fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
+                manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
+                branchSelect.Enabled = validWorkingDir;
+                toolStripButton1.Enabled = validWorkingDir && !bareRepository;
+                if (_toolStripGitStatus != null)
+                {
+                    _toolStripGitStatus.Enabled = validWorkingDir && !Module.IsBareRepository();
+                }
+
+                toolStripButtonPull.Enabled = validWorkingDir;
+                toolStripButtonPush.Enabled = validWorkingDir;
+                dashboardToolStripMenuItem.Visible = !validWorkingDir;
+                repositoryToolStripMenuItem.Visible = validWorkingDir;
+                commandsToolStripMenuItem.Visible = validWorkingDir;
+                toolStripFileExplorer.Enabled = validWorkingDir;
+                if (validWorkingDir)
+                {
+                    refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
+                }
+                else
+                {
+                    refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.F5;
+                }
+
+                UpdatePluginMenu(validWorkingDir);
+                gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
+                editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
+                editgitattributesToolStripMenuItem.Enabled = validWorkingDir;
+                editmailmapToolStripMenuItem.Enabled = validWorkingDir;
+                toolStripSplitStash.Enabled = validWorkingDir && !bareRepository;
+                commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
+                _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
+                _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
+
+                // Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
+                _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
+                if (RepoHosts.GitHosters.Count == 1)
+                {
+                    _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+                }
+
+                _filterBranchHelper.InitToolStripBranchFilter();
+
+                if (repositoryToolStripMenuItem.Visible)
+                {
+                    manageSubmodulesToolStripMenuItem.Enabled = !bareRepository;
+                    updateAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
+                    synchronizeAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
+                    editgitignoreToolStripMenuItem1.Enabled = !bareRepository;
+                    editgitattributesToolStripMenuItem.Enabled = !bareRepository;
+                    editmailmapToolStripMenuItem.Enabled = !bareRepository;
+                }
+
+                if (commandsToolStripMenuItem.Visible)
+                {
+                    commitToolStripMenuItem.Enabled = !bareRepository;
+                    mergeToolStripMenuItem.Enabled = !bareRepository;
+                    rebaseToolStripMenuItem1.Enabled = !bareRepository;
+                    pullToolStripMenuItem1.Enabled = !bareRepository;
+                    cleanupToolStripMenuItem.Enabled = !bareRepository;
+                    stashToolStripMenuItem.Enabled = !bareRepository;
+                    checkoutBranchToolStripMenuItem.Enabled = !bareRepository;
+                    mergeBranchToolStripMenuItem.Enabled = !bareRepository;
+                    rebaseToolStripMenuItem.Enabled = !bareRepository;
+                    applyPatchToolStripMenuItem.Enabled = !bareRepository;
+                }
+
+                stashChangesToolStripMenuItem.Enabled = !bareRepository;
+                gitGUIToolStripMenuItem.Enabled = !bareRepository;
+
+                SetShortcutKeyDisplayStringsFromHotkeySettings();
+
+                if (hard && hasWorkingDir)
+                {
+                    ShowRevisions();
+                }
+
+                RefreshWorkingDirCombo();
+                var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
+                Text = _appTitleGenerator.Generate(Module.WorkingDir, validWorkingDir, branchName);
+                UpdateJumplist(validWorkingDir);
+
+                OnActivate();
+
+                // load custom user menu
+                LoadUserMenu();
+
+                if (validWorkingDir)
+                {
+                    // add Navigate and View menu
+                    _formBrowseMenus.ResetMenuCommandSets();
+                    _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.GetNavigateMenuCommands());
+                    _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.GetViewMenuCommands());
+
+                    _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
+                }
+
+                UICommands.RaisePostBrowseInitialize(this);
             }
-
-            bool bareRepository = Module.IsBareRepository();
-            bool validWorkingDir = Module.IsValidGitWorkingDir();
-            bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
-            branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
-            if (hasWorkingDir)
-            {
-                HideDashboard();
-            }
-            else
-            {
-                ShowDashboard();
-            }
-
-            toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
-            CommitInfoTabControl.Visible = validWorkingDir;
-            fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
-            manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
-            branchSelect.Enabled = validWorkingDir;
-            toolStripButton1.Enabled = validWorkingDir && !bareRepository;
-            if (_toolStripGitStatus != null)
-            {
-                _toolStripGitStatus.Enabled = validWorkingDir && !Module.IsBareRepository();
-            }
-
-            toolStripButtonPull.Enabled = validWorkingDir;
-            toolStripButtonPush.Enabled = validWorkingDir;
-            dashboardToolStripMenuItem.Visible = !validWorkingDir;
-            repositoryToolStripMenuItem.Visible = validWorkingDir;
-            commandsToolStripMenuItem.Visible = validWorkingDir;
-            toolStripFileExplorer.Enabled = validWorkingDir;
-            if (validWorkingDir)
-            {
-                refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
-            }
-            else
-            {
-                refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.F5;
-            }
-
-            UpdatePluginMenu(validWorkingDir);
-            gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
-            editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
-            editgitattributesToolStripMenuItem.Enabled = validWorkingDir;
-            editmailmapToolStripMenuItem.Enabled = validWorkingDir;
-            toolStripSplitStash.Enabled = validWorkingDir && !bareRepository;
-            commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
-            _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-            _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-
-            // Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-            _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
-            if (RepoHosts.GitHosters.Count == 1)
-            {
-                _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-            }
-
-            _filterBranchHelper.InitToolStripBranchFilter();
-
-            if (repositoryToolStripMenuItem.Visible)
-            {
-                manageSubmodulesToolStripMenuItem.Enabled = !bareRepository;
-                updateAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
-                synchronizeAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
-                editgitignoreToolStripMenuItem1.Enabled = !bareRepository;
-                editgitattributesToolStripMenuItem.Enabled = !bareRepository;
-                editmailmapToolStripMenuItem.Enabled = !bareRepository;
-            }
-
-            if (commandsToolStripMenuItem.Visible)
-            {
-                commitToolStripMenuItem.Enabled = !bareRepository;
-                mergeToolStripMenuItem.Enabled = !bareRepository;
-                rebaseToolStripMenuItem1.Enabled = !bareRepository;
-                pullToolStripMenuItem1.Enabled = !bareRepository;
-                cleanupToolStripMenuItem.Enabled = !bareRepository;
-                stashToolStripMenuItem.Enabled = !bareRepository;
-                checkoutBranchToolStripMenuItem.Enabled = !bareRepository;
-                mergeBranchToolStripMenuItem.Enabled = !bareRepository;
-                rebaseToolStripMenuItem.Enabled = !bareRepository;
-                applyPatchToolStripMenuItem.Enabled = !bareRepository;
-            }
-
-            stashChangesToolStripMenuItem.Enabled = !bareRepository;
-            gitGUIToolStripMenuItem.Enabled = !bareRepository;
-
-            SetShortcutKeyDisplayStringsFromHotkeySettings();
-
-            if (hard && hasWorkingDir)
-            {
-                ShowRevisions();
-            }
-
-            RefreshWorkingDirCombo();
-            var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
-            Text = _appTitleGenerator.Generate(Module.WorkingDir, validWorkingDir, branchName);
-            UpdateJumplist(validWorkingDir);
-
-            OnActivate();
-
-            // load custom user menu
-            LoadUserMenu();
-
-            if (validWorkingDir)
-            {
-                // add Navigate and View menu
-                _formBrowseMenus.ResetMenuCommandSets();
-                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.GetNavigateMenuCommands());
-                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.GetViewMenuCommands());
-
-                _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
-            }
-
-            UICommands.RaisePostBrowseInitialize(this);
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void OnActivate()

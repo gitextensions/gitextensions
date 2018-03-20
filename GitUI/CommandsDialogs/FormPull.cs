@@ -228,48 +228,48 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-            LoadPuttyKey();
-
-            if (_heads == null)
+            using (new WaitCursorScope())
             {
-                if (PullFromUrl.Checked)
-                {
-                    _heads = Module.GetRefs(false, true).ToList();
-                }
-                else
-                {
-                    // The line below is the most reliable way to get a list containing
-                    // all remote branches but it is also the slowest.
-                    // Heads = GitCommands.GitCommands.GetRemoteHeads(Remotes.Text, false, true);
+                LoadPuttyKey();
 
-                    // The code below is a quick way to get a list contains all remote branches.
-                    // It only returns the heads that are already known to the repository. This
-                    // doesn't return heads that are new on the server. This can be updated using
-                    // update branch info in the manage remotes dialog.
-                    _heads = new List<IGitRef>();
-                    foreach (var head in Module.GetRefs(true, true))
+                if (_heads == null)
+                {
+                    if (PullFromUrl.Checked)
                     {
-                        if (!head.IsRemote ||
-                            !head.Name.StartsWith(_NO_TRANSLATE_Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            continue;
-                        }
+                        _heads = Module.GetRefs(false, true).ToList();
+                    }
+                    else
+                    {
+                        // The line below is the most reliable way to get a list containing
+                        // all remote branches but it is also the slowest.
+                        // Heads = GitCommands.GitCommands.GetRemoteHeads(Remotes.Text, false, true);
 
-                        _heads.Insert(0, head);
+                        // The code below is a quick way to get a list contains all remote branches.
+                        // It only returns the heads that are already known to the repository. This
+                        // doesn't return heads that are new on the server. This can be updated using
+                        // update branch info in the manage remotes dialog.
+                        _heads = new List<IGitRef>();
+                        foreach (var head in Module.GetRefs(true, true))
+                        {
+                            if (!head.IsRemote ||
+                                !head.Name.StartsWith(_NO_TRANSLATE_Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            _heads.Insert(0, head);
+                        }
                     }
                 }
+
+                Branches.DisplayMember = "LocalName";
+
+                ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
+                _heads.Insert(0, GitRef.NoHead(Module));
+                Branches.DataSource = _heads;
+
+                ComboBoxHelper.ResizeComboBoxDropDownWidth(Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             }
-
-            Branches.DisplayMember = "LocalName";
-
-            ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
-            _heads.Insert(0, GitRef.NoHead(Module));
-            Branches.DataSource = _heads;
-
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void PullClick(object sender, EventArgs e)

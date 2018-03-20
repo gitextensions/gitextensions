@@ -121,11 +121,12 @@ namespace GitUI.CommandsDialogs
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Directory.SetCurrentDirectory(Module.WorkingDir);
-            Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
-            Initialize();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                Directory.SetCurrentDirectory(Module.WorkingDir);
+                Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
+                Initialize();
+            }
         }
 
         private readonly bool _offerCommit;
@@ -138,75 +139,74 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            int oldSelectedRow = 0;
-            if (ConflictedFiles.SelectedRows.Count > 0)
+            using (new WaitCursorScope())
             {
-                oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
-            }
-
-            ConflictedFiles.DataSource = Module.GetConflicts();
-            ConflictedFiles.Columns[0].DataPropertyName = "Filename";
-            if (ConflictedFiles.Rows.Count > oldSelectedRow)
-            {
-                ConflictedFiles.Rows[oldSelectedRow].Selected = true;
-
-                if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
-                    oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
+                int oldSelectedRow = 0;
+                if (ConflictedFiles.SelectedRows.Count > 0)
                 {
-                    try
-                    {
-                        ConflictedFiles.FirstDisplayedScrollingRowIndex = oldSelectedRow;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // ignore the exception - setting the row index is not so important to crash the app
-                        // see the #2975 issues for details
-                    }
+                    oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
                 }
-            }
 
-            if (!InitMergetool())
-            {
-                Close();
-                return;
-            }
-
-            ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
-            OpenMergetool.Text = _openMergeToolItemText.Text + " " + _mergetool;
-            openMergeToolBtn.Text = _button1Text.Text + " " + _mergetool;
-
-            if (Module.InTheMiddleOfRebase())
-            {
-                Reset.Text = _resetItemRebaseText.Text;
-                ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
-                ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
-            }
-            else
-            {
-                Reset.Text = _resetItemMergeText.Text;
-                ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
-                ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
-            }
-
-            if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
-            {
-                UICommands.UpdateSubmodules(this);
-
-                if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() && _offerCommit)
+                ConflictedFiles.DataSource = Module.GetConflicts();
+                ConflictedFiles.Columns[0].DataPropertyName = "Filename";
+                if (ConflictedFiles.Rows.Count > oldSelectedRow)
                 {
-                    if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
-                        MessageBox.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    ConflictedFiles.Rows[oldSelectedRow].Selected = true;
+
+                    if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
+                        oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
                     {
-                        UICommands.StartCommitDialog(this);
+                        try
+                        {
+                            ConflictedFiles.FirstDisplayedScrollingRowIndex = oldSelectedRow;
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            // ignore the exception - setting the row index is not so important to crash the app
+                            // see the #2975 issues for details
+                        }
                     }
                 }
 
-                Close();
-            }
+                if (!InitMergetool())
+                {
+                    Close();
+                    return;
+                }
 
-            Cursor.Current = Cursors.Default;
+                ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
+                OpenMergetool.Text = _openMergeToolItemText.Text + " " + _mergetool;
+                openMergeToolBtn.Text = _button1Text.Text + " " + _mergetool;
+
+                if (Module.InTheMiddleOfRebase())
+                {
+                    Reset.Text = _resetItemRebaseText.Text;
+                    ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
+                    ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
+                }
+                else
+                {
+                    Reset.Text = _resetItemMergeText.Text;
+                    ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
+                    ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
+                }
+
+                if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
+                {
+                    UICommands.UpdateSubmodules(this);
+
+                    if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() && _offerCommit)
+                    {
+                        if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
+                            MessageBox.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            UICommands.StartCommitDialog(this);
+                        }
+                    }
+
+                    Close();
+                }
+            }
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -385,23 +385,24 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
-            try
+            using (new WaitCursorScope())
             {
-                Cursor.Current = Cursors.WaitCursor;
-                var items = GetConflicts();
-
-                StartProgressBarWithMaxValue(items.Length);
-                foreach (var conflictData in items)
+                try
                 {
-                    IncrementProgressBarValue();
-                    ResolveItemConflict(conflictData);
+                    var items = GetConflicts();
+
+                    StartProgressBarWithMaxValue(items.Length);
+                    foreach (var conflictData in items)
+                    {
+                        IncrementProgressBarValue();
+                        ResolveItemConflict(conflictData);
+                    }
                 }
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-                StopAndHideProgressBar();
-                Initialize();
+                finally
+                {
+                    StopAndHideProgressBar();
+                    Initialize();
+                }
             }
         }
 
@@ -561,42 +562,42 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
-            _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
-
-            if (string.IsNullOrEmpty(_mergetool) || _mergetool == "kdiff3")
+            using (new WaitCursorScope())
             {
-                if (string.IsNullOrEmpty(_mergetoolPath))
-                {
-                    _mergetoolPath = "kdiff3";
-                }
+                _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
+                _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
 
-                _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                if (string.IsNullOrEmpty(_mergetool) || _mergetool == "kdiff3")
                 {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text);
-                    return false;
-                }
-
-                if (EnvUtils.RunningOnWindows())
-                {
-                    // This only works when on Windows....
-                    const string executablePattern = ".exe";
-                    int idx = _mergetoolCmd.IndexOf(executablePattern);
-                    if (idx >= 0)
+                    if (string.IsNullOrEmpty(_mergetoolPath))
                     {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
-                        _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                        _mergetoolPath = "kdiff3";
+                    }
+
+                    _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                    {
+                        MessageBox.Show(this, _noMergeToolConfigured.Text);
+                        return false;
+                    }
+
+                    if (EnvUtils.RunningOnWindows())
+                    {
+                        // This only works when on Windows....
+                        const string executablePattern = ".exe";
+                        int idx = _mergetoolCmd.IndexOf(executablePattern);
+                        if (idx >= 0)
+                        {
+                            _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
+                            _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                        }
                     }
                 }
             }
 
-            Cursor.Current = Cursors.Default;
             return true;
         }
 
@@ -618,14 +619,14 @@ namespace GitUI.CommandsDialogs
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            if (ShowAbortMessage())
+            using (new WaitCursorScope())
             {
-                Module.ResetHard("");
-                Close();
+                if (ShowAbortMessage())
+                {
+                    Module.ResetHard("");
+                    Close();
+                }
             }
-
-            Cursor.Current = Cursors.Default;
         }
 
         private string GetRemoteSideString()
@@ -652,6 +653,7 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
+            // NOTE we cannot use WaitCursorScope here as there is no lexical scope for the operation
             Cursor.Current = Cursors.WaitCursor;
             baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
             if (HasMultipleRowsSelected())
@@ -742,23 +744,23 @@ namespace GitUI.CommandsDialogs
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            var conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Length);
-            foreach (var conflictItem in conflictItems)
+            using (new WaitCursorScope())
             {
-                if (CheckForBaseRevision(conflictItem))
+                var conflictItems = GetConflicts();
+                StartProgressBarWithMaxValue(conflictItems.Length);
+                foreach (var conflictItem in conflictItems)
                 {
-                    ChooseBaseOnConflict(conflictItem.Base.Filename);
+                    if (CheckForBaseRevision(conflictItem))
+                    {
+                        ChooseBaseOnConflict(conflictItem.Base.Filename);
+                    }
+
+                    IncrementProgressBarValue();
                 }
 
-                IncrementProgressBarValue();
+                StopAndHideProgressBar();
+                Initialize();
             }
-
-            StopAndHideProgressBar();
-            Initialize();
-            Cursor.Current = Cursors.Default;
         }
 
         private void ChooseBaseOnConflict(string fileName)
@@ -771,22 +773,23 @@ namespace GitUI.CommandsDialogs
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            var conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Length);
-            foreach (var conflictItem in conflictItems)
+            using (new WaitCursorScope())
             {
-                if (CheckForLocalRevision(conflictItem))
+                var conflictItems = GetConflicts();
+                StartProgressBarWithMaxValue(conflictItems.Length);
+                foreach (var conflictItem in conflictItems)
                 {
-                    ChooseLocalOnConflict(conflictItem.Filename);
+                    if (CheckForLocalRevision(conflictItem))
+                    {
+                        ChooseLocalOnConflict(conflictItem.Filename);
+                    }
+
+                    IncrementProgressBarValue();
                 }
 
-                IncrementProgressBarValue();
+                StopAndHideProgressBar();
+                Initialize();
             }
-
-            StopAndHideProgressBar();
-            Initialize();
-            Cursor.Current = Cursors.Default;
         }
 
         private void ChooseLocalOnConflict(string fileName)
@@ -799,24 +802,23 @@ namespace GitUI.CommandsDialogs
 
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            var conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Length);
-            foreach (var conflictItem in conflictItems)
+            using (new WaitCursorScope())
             {
-                if (CheckForRemoteRevision(conflictItem))
+                var conflictItems = GetConflicts();
+                StartProgressBarWithMaxValue(conflictItems.Length);
+                foreach (var conflictItem in conflictItems)
                 {
-                    ChooseRemoteOnConflict(conflictItem.Filename);
+                    if (CheckForRemoteRevision(conflictItem))
+                    {
+                        ChooseRemoteOnConflict(conflictItem.Filename);
+                    }
+
+                    IncrementProgressBarValue();
                 }
 
-                IncrementProgressBarValue();
+                StopAndHideProgressBar();
+                Initialize();
             }
-
-            StopAndHideProgressBar();
-            Initialize();
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void ChooseRemoteOnConflict(string fileName)
@@ -986,9 +988,10 @@ namespace GitUI.CommandsDialogs
 
         private void OpenMergetool_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            ConflictedFiles_DoubleClick(sender, e);
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                ConflictedFiles_DoubleClick(sender, e);
+            }
         }
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
@@ -1003,20 +1006,21 @@ namespace GitUI.CommandsDialogs
 
         private void OpenSideWith(string side)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            var conflictData = GetConflict();
-            string fileName = conflictData.Filename;
-            fileName = PathUtil.GetFileName(fileName);
-
-            fileName = Path.GetTempPath() + fileName;
-
-            if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
+            using (new WaitCursorScope())
             {
-                MessageBox.Show(this, _failureWhileOpenFile.Text);
-            }
+                var conflictData = GetConflict();
+                string fileName = conflictData.Filename;
+                fileName = PathUtil.GetFileName(fileName);
 
-            OsShellUtil.OpenAs(fileName);
-            Cursor.Current = Cursors.Default;
+                fileName = Path.GetTempPath() + fileName;
+
+                if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
+                {
+                    MessageBox.Show(this, _failureWhileOpenFile.Text);
+                }
+
+                OsShellUtil.OpenAs(fileName);
+            }
         }
 
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
@@ -1049,32 +1053,32 @@ namespace GitUI.CommandsDialogs
 
         private void SaveAs(string side)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            var conflictData = GetConflict();
-            string fileName = conflictData.Filename;
-            fileName = PathUtil.GetFileName(fileName);
-
-            using (var fileDialog = new SaveFileDialog
+            using (new WaitCursorScope())
             {
-                FileName = fileName,
-                InitialDirectory = _fullPathResolver.Resolve(PathUtil.GetDirectoryName(conflictData.Filename)),
-                AddExtension = true
-            })
-            {
-                fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-                fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
-                                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+                var conflictData = GetConflict();
+                string fileName = conflictData.Filename;
+                fileName = PathUtil.GetFileName(fileName);
 
-                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                using (var fileDialog = new SaveFileDialog
                 {
-                    if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
+                    FileName = fileName,
+                    InitialDirectory = _fullPathResolver.Resolve(PathUtil.GetDirectoryName(conflictData.Filename)),
+                    AddExtension = true
+                })
+                {
+                    fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
+                                        GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+
+                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        MessageBox.Show(this, _failureWhileSaveFile.Text);
+                        if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
+                        {
+                            MessageBox.Show(this, _failureWhileSaveFile.Text);
+                        }
                     }
                 }
             }
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void ContextSaveBaseAs_Click(object sender, EventArgs e)
@@ -1094,10 +1098,11 @@ namespace GitUI.CommandsDialogs
 
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            StageFile(GetFileName());
-            Initialize();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                StageFile(GetFileName());
+                Initialize();
+            }
         }
 
         private void ConflictedFilesContextMenu_Opening(object sender, CancelEventArgs e)

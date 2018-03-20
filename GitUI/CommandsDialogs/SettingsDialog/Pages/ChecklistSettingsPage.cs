@@ -413,11 +413,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SaveAndRescan_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            PageHost.SaveAll();
-            PageHost.LoadAll();
-            CheckSettings();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                PageHost.SaveAll();
+                PageHost.LoadAll();
+                CheckSettings();
+            }
         }
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)

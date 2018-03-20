@@ -151,9 +151,10 @@ namespace GitUI.CommandsDialogs
 
         private void FormSettings_Shown(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            LoadSettings();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                LoadSettings();
+            }
         }
 
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
@@ -176,9 +177,10 @@ namespace GitUI.CommandsDialogs
                 Text = _translatedTitle + " - " + title;
                 Application.DoEvents();
 
-                Cursor.Current = Cursors.WaitCursor;
-                settingsPage.OnPageShown();
-                Cursor.Current = Cursors.Default;
+                using (new WaitCursorScope())
+                {
+                    settingsPage.OnPageShown();
+                }
 
                 bool isInstantSavePage = settingsPage.IsInstantSavePage;
                 labelInstantSaveNotice.Visible = isInstantSavePage;
@@ -219,13 +221,13 @@ namespace GitUI.CommandsDialogs
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            if (Save())
+            using (new WaitCursorScope())
             {
-                Close();
+                if (Save())
+                {
+                    Close();
+                }
             }
-
-            Cursor.Current = Cursors.Default;
         }
 
         private bool Save()
@@ -290,16 +292,18 @@ namespace GitUI.CommandsDialogs
 
         private void buttonDiscard_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            LoadSettings();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                LoadSettings();
+            }
         }
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Save();
-            Cursor.Current = Cursors.Default;
+            using (new WaitCursorScope())
+            {
+                Save();
+            }
         }
 
         public void GotoPage(SettingsPageReference settingsPageReference)
