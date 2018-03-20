@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GitCommands.Utils;
 using JetBrains.Annotations;
 
@@ -63,20 +65,21 @@ namespace GitCommands
             {
                 Env.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
             }
-        }
 
-        private static string ComputeHomeLocation()
-        {
-            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+            return;
+
+            string ComputeHomeLocation()
             {
-                return AppSettings.CustomHomeDir;
-            }
-            else if (AppSettings.UserProfileHomeDir)
-            {
-                return Env.GetEnvironmentVariable("USERPROFILE");
-            }
-            else
-            {
+                if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+                {
+                    return AppSettings.CustomHomeDir;
+                }
+
+                if (AppSettings.UserProfileHomeDir)
+                {
+                    return Env.GetEnvironmentVariable("USERPROFILE");
+                }
+
                 return GetDefaultHomeDir();
             }
         }
