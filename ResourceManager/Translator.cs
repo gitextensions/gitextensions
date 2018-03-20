@@ -20,7 +20,7 @@ namespace ResourceManager
             {
                 _translation = new Dictionary<string, TranslationFile>();
             }
-            else if (!translationName.Equals(_name))
+            else if (translationName != _name)
             {
                 _translation = new Dictionary<string, TranslationFile>();
                 string translationsDir = GetTranslationDir();

@@ -641,7 +641,7 @@ namespace GitUI.SpellChecker
             }
 
             IsUndoInProgress = true;
-            while (TextBox.UndoActionName.Equals("Unknown"))
+            while (TextBox.UndoActionName == "Unknown")
             {
                 TextBox.Undo();
             }

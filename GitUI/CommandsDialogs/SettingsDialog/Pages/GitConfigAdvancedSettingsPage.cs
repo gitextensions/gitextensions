@@ -11,9 +11,9 @@
 
         protected override void SettingsToPage()
         {
-            checkBoxPullRebase.Checked = CurrentSettings.GetValue("pull.rebase").Equals("true");
-            checkBoxFetchPrune.Checked = CurrentSettings.GetValue("fetch.prune").Equals("true");
-            checkBoxRebaseAutostash.Checked = CurrentSettings.GetValue("rebase.autoStash").Equals("true");
+            checkBoxPullRebase.Checked = CurrentSettings.GetValue("pull.rebase") == "true";
+            checkBoxFetchPrune.Checked = CurrentSettings.GetValue("fetch.prune") == "true";
+            checkBoxRebaseAutostash.Checked = CurrentSettings.GetValue("rebase.autoStash") == "true";
         }
 
         protected override void PageToSettings()

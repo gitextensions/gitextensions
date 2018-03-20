@@ -470,7 +470,7 @@ namespace GitUI
                     // Use width-itemheight because the icon drawn in front of the text is the itemheight
                     if (textWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
                     {
-                        if (!hoveredItem.ToolTipText.Equals(gitItemStatus.ToString()))
+                        if (hoveredItem.ToolTipText != gitItemStatus.ToString())
                         {
                             hoveredItem.ToolTipText = gitItemStatus.ToString();
                         }

@@ -131,7 +131,7 @@ namespace TranslationApp
         private IEnumerable<TranslationItemWithCategory> GetCategoryItems(TranslationCategory filter)
         {
             var filteredByCategory = _translationItems.SelectMany(p => p.Value).Where(
-                translateItem => filter == null || filter.Name.Equals(translateItem.Category));
+                translateItem => filter == null || filter.Name == translateItem.Category);
             var filteredItems = filteredByCategory.Where(
                 translateItem => !hideTranslatedItems.Checked);
             return filteredItems;

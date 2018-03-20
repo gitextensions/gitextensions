@@ -46,7 +46,8 @@ namespace GitUI.CommandsDialogs
             Ok.Focus();
 
             var newName = BranchNameTextBox.Text;
-            if (newName.Equals(_oldName))
+
+            if (newName == _oldName)
             {
                 DialogResult = DialogResult.Cancel;
                 return;

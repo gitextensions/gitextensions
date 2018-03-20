@@ -753,12 +753,12 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter()))
+            if (filter == _revisionFilter.GetBranchFilter())
             {
                 return false;
             }
 
-            if (filter.Equals(""))
+            if (filter == "")
             {
                 AppSettings.BranchFilterEnabled = false;
                 AppSettings.ShowCurrentBranchOnly = true;
@@ -998,9 +998,10 @@ namespace GitUI
         {
             var revision = Module.GetRevision(CurrentCheckout, true);
             var refs = Module.GetRefs(true, true);
+
             foreach (var gitRef in refs)
             {
-                if (gitRef.Guid.Equals(revision.Guid))
+                if (gitRef.Guid == revision.Guid)
                 {
                     revision.Refs.Add(gitRef);
                 }
@@ -2563,7 +2564,7 @@ namespace GitUI
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                if (head.CompleteName.Equals(currentBranchRef))
+                if (head.CompleteName == currentBranchRef)
                 {
                     currentBranchPointsToRevision = !revision.IsArtificial;
                 }
@@ -2623,7 +2624,7 @@ namespace GitUI
                 // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
-                    if (!head.CompleteName.Equals(currentBranchRef))
+                    if (head.CompleteName != currentBranchRef)
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Tag = head.Name;
@@ -2637,7 +2638,7 @@ namespace GitUI
                     renameDropDown.Items.Add(toolStripItem); // Add to rename branch
                 }
 
-                if (!head.CompleteName.Equals(currentBranchRef))
+                if (head.CompleteName != currentBranchRef)
                 {
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)

@@ -47,7 +47,7 @@ namespace GitPluginShared
         {
             return commandBar.Controls
                 .Cast<CommandBarControl>()
-                .Where(control => control.TooltipText.Trim().Equals(tooltipText))
+                .Where(control => control.TooltipText.Trim() == tooltipText)
                 .Cast<CommandBarButton>()
                 .FirstOrDefault();
         }

@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs
                     if (localBranchRef != null && remoteBranchRef != null)
                     {
                         string mergeBaseGuid = Module.GetMergeBase(localBranchRef.Guid, remoteBranchRef.Guid);
-                        bool isResetFastForward = localBranchRef.Guid.Equals(mergeBaseGuid);
+                        bool isResetFastForward = localBranchRef.Guid == mergeBaseGuid;
                         if (!isResetFastForward)
                         {
                             string mergeBaseText = mergeBaseGuid.IsNullOrWhiteSpace()

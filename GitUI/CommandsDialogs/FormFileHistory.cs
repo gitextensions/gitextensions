@@ -281,7 +281,8 @@ namespace GitUI.CommandsDialogs
         private void SetTitle(string fileName)
         {
             Text = string.Format("File History - {0}", FileName);
-            if (!fileName.IsNullOrEmpty() && !fileName.Equals(FileName))
+
+            if (!fileName.IsNullOrEmpty() && fileName != FileName)
             {
                 Text = Text + string.Format(" ({0})", fileName);
             }

@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     var props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
 
                     var kvps = from prop in props
-                               where prop.PropertyType.Equals(typeof(Color))
+                               where prop.PropertyType == typeof(Color)
                                let c = (Color)prop.GetValue(null, null)
                                select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
 

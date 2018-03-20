@@ -57,7 +57,7 @@ namespace GitCommands.ExternalLinks
         /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
         public bool Contains(string definitionName)
         {
-            return _definitions.Any(linkDef => linkDef.Name.Equals(definitionName));
+            return _definitions.Any(linkDef => linkDef.Name == definitionName);
         }
 
         /// <summary>

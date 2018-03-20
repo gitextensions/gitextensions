@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
+            if (_prevTitle == _titleTB.Text && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
             {
                 var lastMsg = Module.GetPreviousCommitMessages(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 1).FirstOrDefault();
                 _titleTB.Text = lastMsg.TakeUntilStr("\n");

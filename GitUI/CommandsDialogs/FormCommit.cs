@@ -289,7 +289,7 @@ namespace GitUI.CommandsDialogs
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             AdjustCommitButtonPanelHeight();
-            showUntrackedFilesToolStripMenuItem.Checked = !Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles").Equals("no");
+            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
             MinimizeBox = Owner == null;
         }
 
@@ -625,7 +625,7 @@ namespace GitUI.CommandsDialogs
             {
                 void TextLoaded(object a, EventArgs b)
                 {
-                    if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
+                    if (_currentItem != null && _currentItem.Name == selectedFileName)
                     {
                         SelectedDiff.GoToLine(selectedDifflineToSelect);
                         SelectedDiff.ScrollPos = scrollPosition;
