@@ -1586,7 +1586,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            if (Repositories.RepositoryHistory.Repositories.Count() == 0)
+            if (Repositories.RepositoryHistory.Repositories.Count == 0)
             {
                 recentToolStripMenuItem.Enabled = false;
                 return;

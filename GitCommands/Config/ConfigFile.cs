@@ -286,15 +286,7 @@ namespace GitCommands.Config
 
         private IConfigSection FindConfigSection(IConfigSection configSectionToFind)
         {
-            foreach (var configSection in ConfigSections)
-            {
-                if (configSectionToFind.Equals(configSection))
-                {
-                    return configSection;
-                }
-            }
-
-            return null;
+            return ConfigSections.FirstOrDefault(configSectionToFind.Equals);
         }
 
         #region ConfigFileParser

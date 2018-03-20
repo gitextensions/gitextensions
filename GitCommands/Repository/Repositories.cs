@@ -125,15 +125,9 @@ namespace GitCommands.Repository
 
         private static Repository FindFirstCategoryRepository(string path)
         {
-            foreach (Repository repo in RepositoryCategories.SelectMany(category => category.Repositories))
-            {
-                if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return repo;
-                }
-            }
-
-            return null;
+            return RepositoryCategories
+                .SelectMany(category => category.Repositories)
+                .FirstOrDefault(repo => repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static BindingList<RepositoryCategory> RepositoryCategories

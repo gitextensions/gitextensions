@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs
             var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
 
             IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
-            if (items.Count() == 1)
+            if (items.Count == 1)
             {
                 items.Add(DiffFiles.SelectedItemParent);
             }

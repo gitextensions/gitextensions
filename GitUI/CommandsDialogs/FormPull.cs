@@ -518,17 +518,9 @@ namespace GitUI.CommandsDialogs
         private bool IsSubmodulesInitialized()
         {
             // Fast submodules check
-            var submodules = Module.GetSubmodulesLocalPaths();
-            foreach (var submoduleName in submodules)
-            {
-                GitModule submodule = Module.GetSubmodule(submoduleName);
-                if (!submodule.IsValidGitWorkingDir())
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Module.GetSubmodulesLocalPaths()
+                .Select(submoduleName => Module.GetSubmodule(submoduleName))
+                .All(submodule => submodule.IsValidGitWorkingDir());
         }
 
         private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)

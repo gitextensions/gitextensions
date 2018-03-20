@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI.Editor;
@@ -137,15 +138,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
-            foreach (var path in GetPuttyLocations())
-            {
-                if (AutoFindPuttyPathsInDir(path))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return GetPuttyLocations().Any(AutoFindPuttyPathsInDir);
         }
 
         private bool AutoFindPuttyPathsInDir(string installdir)

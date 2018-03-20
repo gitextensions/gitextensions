@@ -451,14 +451,11 @@ namespace GitUI.CommandsDialogs
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var files = new List<GitItemStatus>();
-
             // IsStaged is set by default, so that cannot be trusted, must be limited when selecting
-            var workDirFiles = DiffFiles.SelectedItemsWithParent.Where(it => it.ParentRevision.Guid == GitRevision.IndexGuid);
-            foreach (var item in workDirFiles)
-            {
-                files.Add(item.Item);
-            }
+            var files = DiffFiles.SelectedItemsWithParent
+                .Where(it => it.ParentRevision.Guid == GitRevision.IndexGuid)
+                .Select(it => it.Item)
+                .ToList();
 
             Module.StageFiles(files, out _);
             RefreshArtificial();

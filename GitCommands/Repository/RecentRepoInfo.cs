@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace GitCommands.Repository
 {
@@ -131,25 +132,16 @@ namespace GitCommands.Repository
 
             void AddSortedRepos(bool mostRecent, List<RecentRepoInfo> addToList)
             {
-                foreach (string caption in orderedRepos.Keys)
-                {
-                    List<RecentRepoInfo> list = orderedRepos[caption];
-                    foreach (RecentRepoInfo repo in list)
-                    {
-                        if (repo.MostRecent == mostRecent)
-                        {
-                            addToList.Add(repo);
-                        }
-                    }
-                }
+                addToList.AddRange(
+                    from caption in orderedRepos.Keys
+                    from repo in orderedRepos[caption]
+                    where repo.MostRecent == mostRecent
+                    select repo);
             }
 
             void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
-                foreach (RecentRepoInfo repo in list)
-                {
-                    addToList.Add(repo);
-                }
+                addToList.AddRange(list);
             }
 
             if (SortMostRecentRepos)

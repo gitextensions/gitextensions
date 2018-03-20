@@ -3506,17 +3506,17 @@ namespace GitCommands
             const string arguments = "x";
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
-            if (lines.Count() >= 2)
+            if (lines.Length >= 2)
             {
                 return false;
             }
 
             var headers = lines[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var commandIndex = Array.IndexOf(headers, "COMMAND");
-            for (int i = 1; i < lines.Count(); i++)
+            for (int i = 1; i < lines.Length; i++)
             {
                 var columns = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (commandIndex < columns.Count())
+                if (commandIndex < columns.Length)
                 {
                     var command = columns[commandIndex];
                     if (command.EndsWith("/git"))
@@ -3766,16 +3766,15 @@ namespace GitCommands
         {
             var fileList = RunGitCmd("diff-tree --name-only -z --cc --no-commit-id " + shaOfMergeCommit);
 
-            var ret = new List<GitItemStatus>();
             if (string.IsNullOrWhiteSpace(fileList))
             {
-                return ret;
+                return Array.Empty<GitItemStatus>();
             }
 
             var files = fileList.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var file in files)
-            {
-                var item = new GitItemStatus
+
+            return files.Select(
+                file => new GitItemStatus
                 {
                     IsChanged = true,
                     IsConflict = true,
@@ -3784,11 +3783,7 @@ namespace GitCommands
                     IsStaged = false,
                     IsNew = false,
                     Name = file,
-                };
-                ret.Add(item);
-            }
-
-            return ret;
+                }).ToList();
         }
 
         public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath,

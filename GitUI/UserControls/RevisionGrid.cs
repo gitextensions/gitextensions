@@ -3003,7 +3003,7 @@ namespace GitUI
         private void UpdateArtificialCommitCount(IList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
         {
             int staged = status.Count(item => item.IsStaged);
-            int unstaged = status.Count() - staged;
+            int unstaged = status.Count - staged;
             if (unstagedRev != null)
             {
                 unstagedRev.SubjectCount = "(" + unstaged + ") ";

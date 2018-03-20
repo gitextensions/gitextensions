@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
 
                 if (releases?.Blob.Value != null)
                 {

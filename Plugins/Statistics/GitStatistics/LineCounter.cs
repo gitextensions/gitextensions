@@ -20,15 +20,8 @@ namespace GitStatistics
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
         {
-            foreach (var directoryFilter in directoryFilters)
-            {
-                if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return directoryFilters.Any(
+                filter => dir.FullName.EndsWith(filter, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private static IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
