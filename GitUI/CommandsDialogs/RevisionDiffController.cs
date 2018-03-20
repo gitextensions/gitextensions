@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
