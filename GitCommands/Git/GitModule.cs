@@ -1049,9 +1049,9 @@ namespace GitCommands
             }
             else
             {
-                RunExternalCmdDetached("cmd.exe", "/c \"\"" + AppSettings.GitCommand.Replace("git.cmd", "gitk.cmd")
-                                                              .Replace("bin\\git.exe", "cmd\\gitk.cmd")
-                                                              .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --branches --tags --remotes\"");
+                RunExternalCmdDetached("cmd.exe", "/c \"\"" + AppSettings.GitCommand.Replace("git.cmd", "gitk")
+                                                              .Replace("bin\\git.exe", "cmd\\gitk")
+                                                              .Replace("bin/git.exe", "cmd/gitk") + "\" --branches --tags --remotes\"");
             }
         }
 
