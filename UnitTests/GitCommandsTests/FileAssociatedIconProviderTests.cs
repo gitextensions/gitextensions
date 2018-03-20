@@ -58,10 +58,7 @@ namespace GitCommandsTests
             const string file = @"file.txt";
             _file.Exists(Arg.Any<string>()).Returns(false);
             _file.When(x => x.Delete(Arg.Any<string>()))
-                .Do(x =>
-                {
-                    throw new DivideByZeroException("boom");
-                });
+                .Do(x => throw new DivideByZeroException("boom"));
 
             _iconProvider.Get(folder, file).Should().BeNull();
 

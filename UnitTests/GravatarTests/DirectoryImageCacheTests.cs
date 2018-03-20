@@ -164,10 +164,7 @@ namespace GravatarTests
             _directory.Exists(Arg.Any<string>()).Returns(true);
             _directory.GetFiles(_folderPath).Returns(new[] { "c:\\file.txt", "boot.sys" });
             _file.When(x => x.Delete(Arg.Any<string>()))
-                .Do(x =>
-                {
-                    throw new DivideByZeroException();
-                });
+                .Do(x => throw new DivideByZeroException());
 
             Func<Task> act = async () =>
             {
@@ -224,10 +221,7 @@ namespace GravatarTests
         {
             _file.Exists(Arg.Any<string>()).Returns(true);
             _file.When(x => x.Delete(Arg.Any<string>()))
-                .Do(x =>
-                {
-                    throw new DivideByZeroException();
-                });
+                .Do(x => throw new DivideByZeroException());
 
             Func<Task> act = async () =>
             {
@@ -272,10 +266,7 @@ namespace GravatarTests
         public void GetImage_return_null_if_exception()
         {
             _fileInfo.Exists.Returns(true);
-            _fileInfo.LastWriteTime.Returns(x =>
-            {
-                throw new DivideByZeroException();
-            });
+            _fileInfo.LastWriteTime.Returns(x => throw new DivideByZeroException());
 
             Func<Task> act = async () =>
             {

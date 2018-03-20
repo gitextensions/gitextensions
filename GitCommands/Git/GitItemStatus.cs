@@ -5,22 +5,6 @@ namespace GitCommands
 {
     public class GitItemStatus : IComparable<GitItemStatus>
     {
-        public GitItemStatus()
-        {
-            IsTracked = false;
-            IsDeleted = false;
-            IsChanged = false;
-            IsRenamed = false;
-            IsCopied = false;
-            IsConflict = false;
-            IsAssumeUnchanged = false;
-            IsSkipWorktree = false;
-            IsNew = false;
-            IsIgnored = false;
-            IsStaged = true;
-            IsSubmodule = false;
-        }
-
         public string Name { get; set; }
         public string OldName { get; set; }
         public string TreeGuid { get; set; }
@@ -34,7 +18,7 @@ namespace GitCommands
         public bool IsConflict { get; set; }
         public bool IsAssumeUnchanged { get; set; }
         public bool IsSkipWorktree { get; set; }
-        public bool IsStaged { get; set; }
+        public bool IsStaged { get; set; } = true;
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 

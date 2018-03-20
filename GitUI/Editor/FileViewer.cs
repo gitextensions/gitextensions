@@ -332,7 +332,7 @@ namespace GitUI.Editor
 
         private void OnExtraDiffArgumentsChanged()
         {
-            ExtraDiffArgumentsChanged?.Invoke(this, new EventArgs());
+            ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public string GetExtraDiffArguments()

@@ -15,10 +15,8 @@ namespace GitCommands.Settings
 
         public static GitExtSettingsCache FromCache(string settingsFilePath)
         {
-            Lazy<GitExtSettingsCache> createSettingsCache = new Lazy<GitExtSettingsCache>(() =>
-                {
-                    return new GitExtSettingsCache(settingsFilePath, true);
-                });
+            var createSettingsCache = new Lazy<GitExtSettingsCache>(
+                () => new GitExtSettingsCache(settingsFilePath, true));
 
             return FileSettingsCache.FromCache(settingsFilePath, createSettingsCache);
         }

@@ -24,7 +24,7 @@ namespace ResourceManager.Xliff
         {
             if (objName != null)
             {
-                yield return new Tuple<string, object>(objName, obj);
+                yield return Tuple.Create(objName, obj);
             }
 
             foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
@@ -37,7 +37,7 @@ namespace ResourceManager.Xliff
                     continue;
                 }
 
-                yield return new Tuple<string, object>(fieldInfo.Name, fieldInfo.GetValue(obj));
+                yield return Tuple.Create(fieldInfo.Name, fieldInfo.GetValue(obj));
             }
         }
 

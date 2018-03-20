@@ -16,7 +16,7 @@ namespace GitPluginShared.Commands
 
             string fileName = GetSelectedFile(application);
 
-            if (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 2, 0))
+            if (fileName != lastFile || DateTime.Now - lastBranchCheck > TimeSpan.FromSeconds(2))
             {
                 string newCaption = "&Commit";
                 if (enabled)

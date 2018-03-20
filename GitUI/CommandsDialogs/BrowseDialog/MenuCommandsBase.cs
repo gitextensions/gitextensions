@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private IEnumerable<Tuple<string, object>> GetMenuCommandsForTranslationImpl()
         {
-            return GetMenuCommandsForTranslation().Select(menu => new Tuple<string, object>(menu.Name, menu));
+            return GetMenuCommandsForTranslation().Select(menu => Tuple.Create(menu.Name, (object)menu));
         }
     }
 }

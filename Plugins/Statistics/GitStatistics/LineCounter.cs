@@ -51,7 +51,7 @@ namespace GitStatistics
             var filters = filePattern.Replace("*", "").Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
             var lastUpdate = DateTime.Now;
-            var timer = new TimeSpan(0, 0, 0, 0, 500);
+            var timer = TimeSpan.FromMilliseconds(500);
 
             foreach (var file in GetFiles(filesToCheck, filters))
             {

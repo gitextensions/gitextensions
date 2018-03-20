@@ -318,7 +318,7 @@ namespace GitUI.Script
 
                 if (ClientRectangle.Contains(mevent.Location) && !_dropDownRectangle.Contains(mevent.Location))
                 {
-                    OnClick(new EventArgs());
+                    OnClick(EventArgs.Empty);
                 }
             }
         }

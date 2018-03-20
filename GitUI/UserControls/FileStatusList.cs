@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;
@@ -462,7 +461,11 @@ namespace GitUI
                         text = gitItemStatus.Name;
                     }
 
-                    float textWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
+                    float textWidth;
+                    using (var graphics = listView.CreateGraphics())
+                    {
+                        textWidth = graphics.MeasureString(text, listView.Font).Width + 17;
+                    }
 
                     // Use width-itemheight because the icon drawn in front of the text is the itemheight
                     if (textWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
@@ -874,7 +877,7 @@ namespace GitUI
                     previouslySelectedItems.Add(item.Tag as GitItemStatus);
                 }
 
-                DataSourceChanged?.Invoke(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, EventArgs.Empty);
             }
 
             FileStatusListView.BeginUpdate();
@@ -957,7 +960,7 @@ namespace GitUI
             if (updateCausedByFilter == false)
             {
                 FileStatusListView_SelectedIndexChanged();
-                DataSourceChanged?.Invoke(this, new EventArgs());
+                DataSourceChanged?.Invoke(this, EventArgs.Empty);
                 if (SelectFirstItemOnSetItems)
                 {
                     SelectFirstVisibleItem();
