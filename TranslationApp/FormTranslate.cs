@@ -95,12 +95,12 @@ namespace TranslationApp
             else
             {
                 var neutralItems = new Dictionary<string, List<TranslationItemWithCategory>>();
-                foreach (var pair in _neutralTranslation)
+                foreach (var (key, file) in _neutralTranslation)
                 {
-                    var list = from item in pair.Value.TranslationCategories
+                    var list = from item in file.TranslationCategories
                                from translationItem in item.Body.TranslationItems
                                select new TranslationItemWithCategory(item.Name, translationItem.Clone());
-                    neutralItems.Add(pair.Key, list.ToList());
+                    neutralItems.Add(key, list.ToList());
                 }
 
                 _translationItems = neutralItems;
@@ -178,12 +178,12 @@ namespace TranslationApp
                 progressBar.Visible = true;
 
                 int index = 0;
-                foreach (var types in translatableTypes)
+                foreach (var (key, types) in translatableTypes)
                 {
                     var translation = new TranslationFile();
                     try
                     {
-                        foreach (Type type in types.Value)
+                        foreach (Type type in types)
                         {
                             if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
                             {
@@ -201,7 +201,7 @@ namespace TranslationApp
                     finally
                     {
                         translation.Sort();
-                        _neutralTranslation[types.Key] = translation;
+                        _neutralTranslation[key] = translation;
                     }
                 }
             }

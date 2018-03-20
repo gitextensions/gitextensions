@@ -63,13 +63,11 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                foreach (var remoteGroup in selectedBranches.GroupBy(b => b.Remote))
+                foreach (var (remote, branches) in selectedBranches.GroupBy(b => b.Remote))
                 {
-                    string remote = remoteGroup.Key;
-
                     EnsurePageant(remote);
 
-                    var cmd = new GitDeleteRemoteBranchesCmd(remote, remoteGroup);
+                    var cmd = new GitDeleteRemoteBranchesCmd(remote, branches);
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 

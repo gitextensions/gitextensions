@@ -2087,18 +2087,19 @@ namespace GitUI.CommandsDialogs
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
                 string.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
-            foreach (var item in modules)
+
+            foreach (var (path, name) in modules)
             {
                 string diff = Module.RunGitCmd(
-                     string.Format("diff --cached -z -- {0}", item.Value));
+                     string.Format("diff --cached -z -- {0}", name));
                 var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                 {
-                    sb.AppendLine("Submodule " + item.Key + ":");
-                    GitModule module = new GitModule(_fullPathResolver.Resolve(item.Value.EnsureTrailingPathSeparator()));
+                    sb.AppendLine("Submodule " + path + ":");
+                    GitModule module = new GitModule(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)

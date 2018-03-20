@@ -99,9 +99,10 @@ namespace GitUI.UserControls
             }
 
             startinfo.StartupDirectory = workdir;
-            foreach (var envVariable in envVariables)
+
+            foreach (var (name, value) in envVariables)
             {
-                startinfo.SetEnv(envVariable.Key, envVariable.Value);
+                startinfo.SetEnv(name, value);
             }
 
             startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;

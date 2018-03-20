@@ -715,9 +715,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                 int nAcum = 0;
                 for (int i = 0; i < colFormat.Count; i++)
                 {
-                    var mfr = colFormat[i];
-                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, mfr.Key - nAcum)) + mfr.Value);
-                    nAcum = mfr.Key;
+                    var (pos, markup) = colFormat[i];
+                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, pos - nAcum)) + markup);
+                    nAcum = pos;
                 }
 
                 if (nAcum < strT.Length)
@@ -1204,9 +1204,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             // apply links style
             CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
             ncf.cbSize = Marshal.SizeOf(ncf);
-            foreach (var pair in cs.links)
+            foreach (var (start, length) in cs.links)
             {
-                rtb.Select(pair.Key, pair.Value);
+                rtb.Select(start, length);
                 SetCharFormat(handleRef, ncf);
             }
 

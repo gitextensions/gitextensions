@@ -89,16 +89,14 @@ namespace GitStatistics
         {
             Action<FormGitStatistics> a = sender =>
             {
-                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(_module);
+                var (commitsPerUser, totalCommits) = CommitCounter.GroupAllCommitsByContributor(_module);
+
                 _syncContext.Post(o =>
                 {
                     if (IsDisposed)
                     {
                         return;
                     }
-
-                    var totalCommits = allCommitsByUser.Item2;
-                    var commitsPerUser = allCommitsByUser.Item1;
 
                     TotalCommits.Text = string.Format(_commits.Text, totalCommits);
 
@@ -107,11 +105,8 @@ namespace GitStatistics
                     var commitCountValues = new decimal[commitsPerUser.Count];
                     var commitCountLabels = new string[commitsPerUser.Count];
                     var n = 0;
-                    foreach (var keyValuePair in commitsPerUser)
+                    foreach (var (user, commits) in commitsPerUser)
                     {
-                        var user = keyValuePair.Key;
-                        var commits = keyValuePair.Value;
-
                         builder.AppendLine(commits + " " + user);
 
                         commitCountValues[n] = commits;
@@ -209,12 +204,12 @@ namespace GitStatistics
 
             var n = 0;
             string linesOfCodePerLanguageText = "";
-            foreach (var keyValuePair in linesOfCodePerExtension)
+            foreach (var (extension, loc) in linesOfCodePerExtension)
             {
-                string percent = ((double)keyValuePair.Value / lineCounter.NumberCodeLines).ToString("P1");
-                linesOfCodePerLanguageText += string.Format(_linesOfCodeInFiles.Text, keyValuePair.Value, keyValuePair.Key, percent) + Environment.NewLine;
-                extensionValues[n] = keyValuePair.Value;
-                extensionLabels[n] = string.Format(_linesOfCodeInFiles.Text, keyValuePair.Value, keyValuePair.Key, percent);
+                string percent = ((double)loc / lineCounter.NumberCodeLines).ToString("P1");
+                linesOfCodePerLanguageText += string.Format(_linesOfCodeInFiles.Text, loc, extension, percent) + Environment.NewLine;
+                extensionValues[n] = loc;
+                extensionLabels[n] = string.Format(_linesOfCodeInFiles.Text, loc, extension, percent);
                 n++;
             }
 

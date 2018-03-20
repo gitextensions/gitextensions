@@ -88,10 +88,10 @@ namespace GitCommands.Config
 
             foreach (var section in ConfigSections)
             {
-                var keys = section.AsDictionary();
+                var dic = section.AsDictionary();
 
                 // Skip empty sections
-                if (keys.Count == 0)
+                if (dic.Count == 0)
                 {
                     continue;
                 }
@@ -99,11 +99,11 @@ namespace GitCommands.Config
                 configFileContent.Append(section);
                 configFileContent.Append(Environment.NewLine);
 
-                foreach (var key in keys)
+                foreach (var (key, values) in dic)
                 {
-                    foreach (var value in key.Value)
+                    foreach (var value in values)
                     {
-                        configFileContent.AppendLine(string.Concat("\t", key.Key, " = ", EscapeValue(value)));
+                        configFileContent.AppendLine(string.Concat("\t", key, " = ", EscapeValue(value)));
                     }
                 }
             }
