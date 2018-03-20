@@ -454,7 +454,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (disposing)
             {
-                _loader.Cancel();
                 _loader.Dispose();
                 components?.Dispose();
             }

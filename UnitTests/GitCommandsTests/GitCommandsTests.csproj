@@ -104,7 +104,9 @@
     <Compile Include="Git\GitDirectoryResolverTests.cs" />
     <Compile Include="Git\Tag\GitTagControllerTest.cs" />
     <Compile Include="Git\GitTreeParserTests.cs" />
+    <Compile Include="AsyncLoaderTests.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
+    <Compile Include="Helpers\SingleThreadTaskScheduler.cs" />
     <Compile Include="Patch\PatchManagerTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />

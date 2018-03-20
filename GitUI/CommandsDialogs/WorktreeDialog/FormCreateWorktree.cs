@@ -91,7 +91,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             if (disposing)
             {
-                _branchesLoader.Cancel();
                 _branchesLoader.Dispose();
 
                 components?.Dispose();

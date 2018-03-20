@@ -459,8 +459,6 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _branchListLoader.Cancel();
-
                 _branchListLoader.Dispose();
 
                 if (components != null)
