@@ -1,8 +1,8 @@
 @echo off
 
 REM Also update in Product.wxs and UI\RequiredSoftwareDlg.wxs
-set GIT_VERSION=2.16.2
-set GIT_VERSION_MINOR=.1
+set GIT_VERSION=2.16
+set GIT_VERSION_MINOR=.2
 set KDIFF3_VERSION=0.9.97
 
 md %~p0\cache\ 2> NUL

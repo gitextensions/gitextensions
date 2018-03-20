@@ -9,6 +9,7 @@ pushd $PSScriptRoot
 $baseUri = "https://api.github.com/repos/gitextensions/gitextensions"
 
 try{
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $milestone = Invoke-RestMethod -Method Get -Uri $baseUri/milestones/$milestoneNumber
     $milestoneTitle = $milestone.title;
     $milestoneDue = if ($milestone.due_on -eq $null) { "no due date" } else { Get-Date $milestone.due_on -Format "dd MMM yyyy" };
