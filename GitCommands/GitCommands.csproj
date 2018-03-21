@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="AsyncLoader.cs" />
+    <Compile Include="BoolExtensions.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="CommitDataManager.cs" />
     <Compile Include="CommitTemplateItem.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Config\SettingKeyString.cs" />
     <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
+    <Compile Include="DeconstructionExtensions.cs" />
     <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="EnvironmentPathsProvider.cs" />
     <Compile Include="ExceptionUtils.cs" />
@@ -200,7 +202,7 @@
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
-    <Compile Include="System.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Utils\JsonSerializer.cs" />
     <Compile Include="Utils\RFC2047Decoder.cs" />
     <Compile Include="Utils\WeakRefCache.cs" />

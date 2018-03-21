@@ -889,30 +889,30 @@ namespace GitUI
             var fileNameOnlyMode = AppSettings.TruncatePathMethod == "fileNameOnly";
 
             var list = new List<ListViewItem>();
-            foreach (var pair in GitItemStatusesWithParents)
+            foreach (var (revision, statuses) in GitItemStatusesWithParents)
             {
                 ListViewGroup group = null;
-                if (pair.Key != null)
+                if (revision != null)
                 {
                     string groupName;
-                    if (pair.Key.Guid == CombinedDiffGuid)
+                    if (revision.Guid == CombinedDiffGuid)
                     {
                         groupName = CombinedDiff.Text;
                     }
                     else
                     {
-                        groupName = _diffWithParent.Text + " " + GetDescriptionForRevision(pair.Key.Guid);
+                        groupName = _diffWithParent.Text + " " + GetDescriptionForRevision(revision.Guid);
                     }
 
                     group = new ListViewGroup(groupName)
                     {
-                        Tag = pair.Key
+                        Tag = revision
                     };
 
                     FileStatusListView.Groups.Add(group);
                 }
 
-                foreach (var item in pair.Value)
+                foreach (var item in statuses)
                 {
                     if (_filter.IsMatch(item.Name))
                     {

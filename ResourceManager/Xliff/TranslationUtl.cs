@@ -66,7 +66,8 @@ namespace ResourceManager.Xliff
 
         private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(Tuple<string, object> item)
         {
-            object itemObj = item.Item2;
+            var (itemName, itemObj) = item;
+
             if (itemObj == null)
             {
                 yield break;
@@ -74,7 +75,6 @@ namespace ResourceManager.Xliff
 
             // Skip controls with a name started with "_NO_TRANSLATE_"
             // this is a naming convention, these are not translated
-            string itemName = item.Item1;
             if (itemName.StartsWith("_NO_TRANSLATE_"))
             {
                 yield break;
@@ -109,8 +109,8 @@ namespace ResourceManager.Xliff
         {
             foreach (var item in items)
             {
-                var itemName = item.Item1;
-                var itemObj = item.Item2;
+                var (itemName, itemObj) = item;
+
                 foreach (var property in GetItemPropertiesEnumerator(item))
                 {
                     var value = property.GetValue(itemObj, null);
@@ -149,8 +149,7 @@ namespace ResourceManager.Xliff
         {
             foreach (var item in items)
             {
-                string itemName = item.Item1;
-                object itemObj = item.Item2;
+                var (itemName, itemObj) = item;
 
                 foreach (var propertyInfo in GetItemPropertiesEnumerator(item))
                 {

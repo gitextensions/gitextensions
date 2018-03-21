@@ -225,24 +225,23 @@ namespace GitCommands.Statistics
         public static void AddIntermediateEmptyWeeks(
             ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact, Dictionary<string, DataPoint> authors)
         {
-            foreach (var authorData in authors)
+            foreach (var (author, _) in authors)
             {
-                string author = authorData.Key;
-
                 // Determine first and last commit week of each author
                 DateTime start = new DateTime(), end = new DateTime();
                 bool startFound = false;
-                foreach (var week in impact)
+
+                foreach (var (weekDate, weekDataByAuthor) in impact)
                 {
-                    if (week.Value.ContainsKey(author))
+                    if (weekDataByAuthor.ContainsKey(author))
                     {
                         if (!startFound)
                         {
-                            start = week.Key;
+                            start = weekDate;
                             startFound = true;
                         }
 
-                        end = week.Key;
+                        end = weekDate;
                     }
                 }
 
@@ -252,12 +251,12 @@ namespace GitCommands.Statistics
                 }
 
                 // Add 0 commits weeks in between
-                foreach (var week in impact)
+                foreach (var (weekDate, weekDataByAuthor) in impact)
                 {
-                    if (!week.Value.ContainsKey(author) &&
-                        week.Key > start && week.Key < end)
+                    if (!weekDataByAuthor.ContainsKey(author) &&
+                        weekDate > start && weekDate < end)
                     {
-                        week.Value.Add(author, new DataPoint(0, 0, 0));
+                        weekDataByAuthor.Add(author, new DataPoint(0, 0, 0));
                     }
                 }
             }

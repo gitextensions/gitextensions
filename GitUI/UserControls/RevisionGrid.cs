@@ -1310,8 +1310,8 @@ namespace GitUI
             }
 
             SuperProjectInfo spi = new SuperProjectInfo();
-            var currentCheckout = gitModule.GetSuperprojectCurrentCheckout();
-            if (currentCheckout.Key == 'U')
+            var (code, commit) = gitModule.GetSuperprojectCurrentCheckout();
+            if (code == 'U')
             {
                 // return local and remote hashes
                 var array = gitModule.SuperprojectModule.GetConflict(gitModule.SubmodulePath);
@@ -1321,7 +1321,7 @@ namespace GitUI
             }
             else
             {
-                spi.CurrentBranch = currentCheckout.Value;
+                spi.CurrentBranch = commit;
             }
 
             var refs = gitModule.SuperprojectModule.GetSubmoduleItemsForEachRef(gitModule.SubmodulePath, showRemoteRef);

@@ -92,9 +92,10 @@ namespace GitUI.UserControls
                 var process = new Process();
                 ProcessStartInfo startInfo = GitCommandHelpers.CreateProcessStartInfo(command, arguments, workdir, GitModule.SystemEncoding);
                 startInfo.CreateNoWindow = !ssh && !AppSettings.ShowGitCommandLine;
-                foreach (var envVariable in envVariables)
+
+                foreach (var (name, value) in envVariables)
                 {
-                    startInfo.EnvironmentVariables.Add(envVariable.Key, envVariable.Value);
+                    startInfo.EnvironmentVariables.Add(name, value);
                 }
 
                 process.StartInfo = startInfo;

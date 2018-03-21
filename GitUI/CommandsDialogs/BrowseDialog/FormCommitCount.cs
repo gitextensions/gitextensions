@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             CommitCount.Text = "";
             var dict = new Dictionary<string, HashSet<string>>();
-            var items = CommitCounter.GroupAllCommitsByContributor(Module).Item1;
+            var (items, _) = CommitCounter.GroupAllCommitsByContributor(Module);
             if (cbIncludeSubmodules.Checked)
             {
                 IList<string> submodules = Module.GetSubmodulesLocalPaths();
@@ -41,22 +41,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     GitModule submodule = Module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                     {
-                        var submoduleItems = CommitCounter.GroupAllCommitsByContributor(submodule).Item1;
-                        foreach (var keyValuePair in submoduleItems)
+                        var (submoduleItems, _) = CommitCounter.GroupAllCommitsByContributor(submodule);
+                        foreach (var (name, count) in submoduleItems)
                         {
-                            if (!dict.ContainsKey(keyValuePair.Key))
+                            if (!dict.ContainsKey(name))
                             {
-                                dict.Add(keyValuePair.Key, new HashSet<string>());
+                                dict.Add(name, new HashSet<string>());
                             }
 
-                            dict[keyValuePair.Key].Add(submodule.SubmoduleName);
-                            if (items.ContainsKey(keyValuePair.Key))
+                            dict[name].Add(submodule.SubmoduleName);
+                            if (items.ContainsKey(name))
                             {
-                                items[keyValuePair.Key] += keyValuePair.Value;
+                                items[name] += count;
                             }
                             else
                             {
-                                items.Add(keyValuePair.Key, keyValuePair.Value);
+                                items.Add(name, count);
                             }
                         }
                     }
@@ -67,15 +67,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                               orderby pair.Value descending
                               select pair;
 
-            foreach (var keyValuePair in sortedItems)
+            foreach (var (name, count) in sortedItems)
             {
                 string submodulesList = "";
-                if (dict.ContainsKey(keyValuePair.Key))
+                if (dict.ContainsKey(name))
                 {
-                    var sub = dict[keyValuePair.Key];
+                    var sub = dict[name];
                     if (sub.Count == 1)
                     {
-                        foreach (var item in dict[keyValuePair.Key])
+                        foreach (var item in dict[name])
                         {
                             submodulesList = " [" + item + "]";
                         }
@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     }
                 }
 
-                CommitCount.Text += string.Format("{0,6} - {1}{2}\r\n", keyValuePair.Value, keyValuePair.Key, submodulesList);
+                CommitCount.Text += string.Format("{0,6} - {1}{2}\r\n", count, name, submodulesList);
             }
 
             Loading.Visible = false;
