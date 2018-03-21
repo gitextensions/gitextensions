@@ -809,17 +809,8 @@ namespace GitUI
         {
             get
             {
-                var result = new List<GitItemStatus>();
-                var data = GitItemStatusesWithParents;
-                if (data != null)
-                {
-                    foreach (var plist in data.Values)
-                    {
-                        result.AddAll(plist);
-                    }
-                }
-
-                return result;
+                return GitItemStatusesWithParents?.Values.SelectMany(plist => plist).ToList()
+                       ?? (IReadOnlyList<GitItemStatus>)Array.Empty<GitItemStatus>();
             }
         }
 
