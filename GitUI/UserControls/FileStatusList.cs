@@ -820,7 +820,8 @@ namespace GitUI
         {
             get
             {
-                var result = new List<GitItemStatus>();
+                var result = new List<GitItemStatus>(FileStatusListView.Items.Count);
+
                 foreach (ListViewItem listViewItem in FileStatusListView.Items)
                 {
                     result.Add(listViewItem.Tag as GitItemStatus);
