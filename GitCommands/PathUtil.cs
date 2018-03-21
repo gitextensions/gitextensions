@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -10,13 +11,15 @@ namespace GitCommands
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
 
         /// <summary>Replaces native path separator with posix path separator.</summary>
-        public static string ToPosixPath(this string path)
+        [NotNull]
+        public static string ToPosixPath([NotNull] this string path)
         {
             return path.Replace(Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator);
         }
 
         /// <summary>Replaces '\' with '/'.</summary>
-        public static string ToNativePath(this string path)
+        [NotNull]
+        public static string ToNativePath([NotNull] this string path)
         {
             return path.Replace(AppSettings.PosixPathSeparator, Path.DirectorySeparatorChar);
         }
@@ -27,7 +30,9 @@ namespace GitCommands
         ///
         /// This method can be used to add (or keep) a trailing path separator character to a directory path.
         /// </summary>
-        public static string EnsureTrailingPathSeparator(this string dirPath)
+        [ContractAnnotation("dirPath:null=>null")]
+        [ContractAnnotation("dirPath:notnull=>notnull")]
+        public static string EnsureTrailingPathSeparator([CanBeNull] this string dirPath)
         {
             if (!dirPath.IsNullOrEmpty() &&
                 dirPath[dirPath.Length - 1] != Path.DirectorySeparatorChar &&
@@ -39,18 +44,13 @@ namespace GitCommands
             return dirPath;
         }
 
-        public static bool IsLocalFile(string fileName)
+        public static bool IsLocalFile([NotNull] string fileName)
         {
-            Regex regex = new Regex(@"^(\w+):\/\/([\S]+)");
-            if (regex.IsMatch(fileName))
-            {
-                return false;
-            }
-
-            return true;
+            return !Regex.IsMatch(fileName, @"^(\w+):\/\/([\S]+)");
         }
 
-        public static string GetFileName(string fileName)
+        [NotNull]
+        public static string GetFileName([NotNull] string fileName)
         {
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
@@ -62,7 +62,8 @@ namespace GitCommands
             return fileName;
         }
 
-        public static string GetDirectoryName(string fileName)
+        [NotNull]
+        public static string GetDirectoryName([NotNull] string fileName)
         {
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
@@ -72,10 +73,8 @@ namespace GitCommands
                 {
                     return fileName.Length == 1 ? string.Empty : AppSettings.PosixPathSeparator.ToString();
                 }
-                else
-                {
-                    fileName = fileName.Substring(0, pos);
-                }
+
+                fileName = fileName.Substring(0, pos);
             }
 
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
@@ -86,12 +85,15 @@ namespace GitCommands
             return fileName;
         }
 
-        public static bool TryConvertWindowsPathToPosix(string path, out string posixPath)
+        [ContractAnnotation("=>false,posixPath:null")]
+        [ContractAnnotation("=>true,posixPath:notnull")]
+        public static bool TryConvertWindowsPathToPosix([NotNull] string path, out string posixPath)
         {
-            posixPath = null;
             var directoryInfo = new DirectoryInfo(path);
+
             if (!directoryInfo.Exists)
             {
+                posixPath = null;
                 return false;
             }
 
@@ -99,7 +101,8 @@ namespace GitCommands
             return true;
         }
 
-        public static string GetRepositoryName(string repositoryUrl)
+        [NotNull]
+        public static string GetRepositoryName([CanBeNull] string repositoryUrl)
         {
             string name = "";
 
@@ -122,7 +125,9 @@ namespace GitCommands
             return name;
         }
 
-        public static bool TryFindFullPath(string fileName, out string fullPath)
+        [ContractAnnotation("=>false,fullPath:null")]
+        [ContractAnnotation("=>true,fullPath:notnull")]
+        public static bool TryFindFullPath([NotNull] string fileName, out string fullPath)
         {
             try
             {
@@ -150,7 +155,9 @@ namespace GitCommands
             return false;
         }
 
-        public static bool TryFindShellPath(string shell, out string shellPath)
+        [ContractAnnotation("=>false,shellPath:null")]
+        [ContractAnnotation("=>true,shellPath:notnull")]
+        public static bool TryFindShellPath([NotNull] string shell, out string shellPath)
         {
             try
             {
