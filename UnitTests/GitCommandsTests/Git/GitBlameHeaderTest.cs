@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Text;
 using GitCommands;
 using NUnit.Framework;
@@ -14,37 +13,6 @@ namespace GitCommandsTests.Git
         {
             GitBlameHeader header = new GitBlameHeader();
             Assert.IsNotNull(header);
-        }
-
-        [Test]
-        public void TestGetColor()
-        {
-            string randomGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
-
-            GitBlameHeader header = new GitBlameHeader { CommitGuid = randomGuid };
-
-            Color expectedColor = Color.FromArgb(255, 246, 226, 238);
-
-            Assert.AreEqual(expectedColor, header.GetColor());
-        }
-
-        [Test]
-        public void TestEquals()
-        {
-            GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
-            GitBlameHeader header2 = new GitBlameHeader { Author = "Author" };
-
-            Assert.IsTrue(header1.Equals(header2));
-            Assert.IsFalse(header1.Equals(null));
-        }
-
-        [Test]
-        public void TestEqualsFails()
-        {
-            GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
-            GitBlameHeader header2 = new GitBlameHeader();
-
-            Assert.IsFalse(header1.Equals(header2));
         }
 
         [Test]
