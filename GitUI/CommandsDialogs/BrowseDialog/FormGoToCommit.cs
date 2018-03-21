@@ -102,14 +102,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 });
         }
 
-        private static void GitRefsToDataSource(ComboBox cb, IList<IGitRef> refs)
+        private static void GitRefsToDataSource(ComboBox cb, IReadOnlyList<IGitRef> refs)
         {
             cb.DataSource = refs;
         }
 
-        private static IList<IGitRef> DataSourceToGitRefs(ComboBox cb)
+        private static IReadOnlyList<IGitRef> DataSourceToGitRefs(ComboBox cb)
         {
-            return (IList<IGitRef>)cb.DataSource;
+            return (IReadOnlyList<IGitRef>)cb.DataSource;
         }
 
         private void comboBoxTags_Enter(object sender, EventArgs e)

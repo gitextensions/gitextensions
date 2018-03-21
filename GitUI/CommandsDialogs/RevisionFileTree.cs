@@ -233,7 +233,7 @@ See the changes in the commit form.");
             base.OnRuntimeLoad(e);
         }
 
-        private IList<string> FindFileMatches(string name)
+        private IReadOnlyList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
             var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);

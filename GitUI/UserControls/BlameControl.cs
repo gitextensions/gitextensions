@@ -212,7 +212,7 @@ namespace GitUI.Blame
 
         private readonly AsyncLoader _blameLoader = new AsyncLoader();
 
-        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
+        public void LoadBlame(GitRevision revision, IReadOnlyList<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
             string guid = revision.Guid;
 
@@ -240,7 +240,7 @@ namespace GitUI.Blame
                 () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
         }
 
-        private void ProcessBlame(GitRevision revision, List<string> children, Control controlToMask, int line, int scrollpos)
+        private void ProcessBlame(GitRevision revision, IReadOnlyList<string> children, Control controlToMask, int line, int scrollpos)
         {
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();

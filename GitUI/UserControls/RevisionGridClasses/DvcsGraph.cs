@@ -1313,7 +1313,7 @@ namespace GitUI.RevisionGridClasses
             return guid != null && _graphData.Nodes.TryGetValue(guid, out var node) ? (int?)node.Index : null;
         }
 
-        public List<string> GetRevisionChildren(string guid)
+        public IReadOnlyList<string> GetRevisionChildren(string guid)
         {
             var childrenIds = new List<string>();
 

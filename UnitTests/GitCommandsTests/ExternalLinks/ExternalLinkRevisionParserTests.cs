@@ -163,7 +163,7 @@ namespace GitCommandsTests.ExternalLinks
             return remotes;
         }
 
-        private static IList<ExternalLinkDefinition> Parse(string xml)
+        private static IReadOnlyList<ExternalLinkDefinition> Parse(string xml)
         {
             var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
             using (var stringReader = new StringReader(xml))

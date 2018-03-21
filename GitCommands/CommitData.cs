@@ -34,7 +34,7 @@ namespace GitCommands
         // TODO mutable properties need review
 
         [CanBeNull, ItemNotNull]
-        public List<string> ChildrenGuids { get; set; }
+        public IReadOnlyList<string> ChildrenGuids { get; set; }
 
         /// <summary>
         /// Gets and sets the commit message.

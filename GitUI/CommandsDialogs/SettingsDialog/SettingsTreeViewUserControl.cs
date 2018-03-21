@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private List<TreeNode> _nodesFoundByTextBox;
         private const string FindPrompt = "Type to find";
         private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new Dictionary<SettingsPageReference, TreeNode>();
-        private readonly IList<ISettingsPage> _settingsPages = new List<ISettingsPage>();
+        private readonly List<ISettingsPage> _settingsPages = new List<ISettingsPage>();
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
         public IEnumerable<ISettingsPage> SettingsPages => _settingsPages;

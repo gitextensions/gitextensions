@@ -18,7 +18,7 @@ namespace GitUI.UserControls
 
         public string AuthorEmailToHighlight { get; private set; }
 
-        public SelectionChangeAction ProcessRevisionSelectionChange(GitModule currentModule, ICollection<GitRevision> selectedRevisions)
+        public SelectionChangeAction ProcessRevisionSelectionChange(GitModule currentModule, IReadOnlyCollection<GitRevision> selectedRevisions)
         {
             if (selectedRevisions.Count > 1)
             {

@@ -160,16 +160,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _searchResultsLV.Items.Add(new ListViewItem { Text = _strSearching.Text });
         }
 
-        private void HandleSearchResult(IList<IHostedRepository> repos)
+        private void HandleSearchResult(IReadOnlyList<IHostedRepository> repos)
         {
             _searchResultsLV.Items.Clear();
+
             foreach (var repo in repos)
             {
-                var lvi = new ListViewItem { Tag = repo, Text = repo.Name };
-                lvi.SubItems.Add(repo.Owner);
-                lvi.SubItems.Add(repo.Forks.ToString());
-                lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
-                _searchResultsLV.Items.Add(lvi);
+                _searchResultsLV.Items.Add(new ListViewItem
+                {
+                    Tag = repo,
+                    Text = repo.Name,
+                    SubItems =
+                    {
+                        repo.Owner,
+                        repo.Forks.ToString(),
+                        repo.IsAFork ? _strYes.Text : _strNo.Text
+                    }
+                });
             }
 
             _searchBtn.Enabled = true;

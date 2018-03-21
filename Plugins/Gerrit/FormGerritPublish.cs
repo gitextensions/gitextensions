@@ -192,7 +192,7 @@ namespace Gerrit
 
             _currentBranchRemote = Settings.DefaultRemote;
 
-            IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
+            var remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
             int i = remotes.IndexOf(_currentBranchRemote);
             _NO_TRANSLATE_Remotes.SelectedIndex = i >= 0 ? i : 0;
 

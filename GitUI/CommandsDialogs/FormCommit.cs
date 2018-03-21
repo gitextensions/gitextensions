@@ -875,7 +875,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RestoreSelectedFiles(IList<GitItemStatus> unstagedFiles, IList<GitItemStatus> stagedFiles, IList<GitItemStatus> lastSelection)
+        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus> lastSelection)
         {
             if (_currentFilesList == null || _currentFilesList.IsEmpty)
             {
@@ -1573,7 +1573,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Stage(IList<GitItemStatus> gitItemStatuses)
+        private void Stage(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
             EnableStageButtons(false);
             try

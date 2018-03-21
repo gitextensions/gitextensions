@@ -805,7 +805,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IList<GitItemStatus> GitItemStatuses
+        public IReadOnlyList<GitItemStatus> GitItemStatuses
         {
             get
             {
@@ -825,7 +825,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IList<GitItemStatus> GitItemFilteredStatuses
+        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses
         {
             get
             {
@@ -1133,7 +1133,7 @@ namespace GitUI
             GitItemStatusesWithParents = dictionary;
         }
 
-        public void SetDiffs(IList<GitRevision> revisions)
+        public void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
             if (revisions == null || revisions.Count == 0)
             {

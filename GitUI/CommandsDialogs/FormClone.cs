@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
         private readonly string _url;
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
         private string _puttySshKey;
-        private readonly IList<string> _defaultBranchItems;
+        private readonly IReadOnlyList<string> _defaultBranchItems;
 
         // for translation only
         private FormClone()

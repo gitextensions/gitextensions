@@ -83,7 +83,7 @@ namespace TfsInterop
             }
         }
 
-        public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
+        public IReadOnlyList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
             var result = new List<IBuild>();
             foreach (var buildDefinition in _buildDefinitions)

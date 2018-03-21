@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return toolStripMenuItem;
         }
 
-        private readonly IList<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
+        private readonly List<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
 
         /// <summary>
         /// if true all other properties have no meaning

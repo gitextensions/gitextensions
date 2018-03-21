@@ -362,11 +362,9 @@ namespace GitUI.CommandsDialogs
         {
             var selectedRevisions = FileChanges.GetSelectedRevisions();
 
-            string orgFileName = null;
-            if (selectedRevisions.Count > 0)
-            {
-                orgFileName = selectedRevisions[0].Name;
-            }
+            var orgFileName = selectedRevisions.Count != 0
+                ? selectedRevisions[0].Name
+                : null;
 
             FileChanges.OpenWithDifftool(selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
         }

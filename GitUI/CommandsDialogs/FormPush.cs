@@ -961,7 +961,7 @@ namespace GitUI.CommandsDialogs
 
         private void ProcessHeads(string remote, IReadOnlyList<IGitRef> remoteHeads)
         {
-            IList<IGitRef> localHeads = GetLocalBranches().ToList();
+            var localHeads = GetLocalBranches().ToList();
             var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
 
             // Add all the local branches.

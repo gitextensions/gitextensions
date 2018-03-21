@@ -16,7 +16,7 @@ namespace GitUI
     {
         public static SynchronizationContext UISynchronizationContext;
 
-        public static void OpenWithDifftool(this RevisionGrid grid, IList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
+        public static void OpenWithDifftool(this RevisionGrid grid, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
         {
             // Note: Order in revisions is that first clicked is last in array
 
@@ -79,7 +79,7 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static Task ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
+        public static Task ViewChanges(this FileViewer diffViewer, IReadOnlyList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 0)
             {
