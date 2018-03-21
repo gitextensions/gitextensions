@@ -10,8 +10,8 @@ namespace GitUI.UserControls
     {
         private string[] _containRevisons;
         private readonly bool _isLoading;
-        private List<string> _localBranches;
-        private List<string> _remoteBranches;
+        private string[] _localBranches;
+        private string[] _remoteBranches;
         public event EventHandler SelectedIndexChanged;
         public BranchSelector()
         {
@@ -47,18 +47,14 @@ namespace GitUI.UserControls
 
             if (_containRevisons == null)
             {
-                if (LocalBranch.Checked)
-                {
-                    Branches.Items.AddRange(GetLocalBranches().ToArray());
-                }
-                else
-                {
-                    Branches.Items.AddRange(GetRemoteBranches().ToArray());
-                }
+                Branches.Items.AddRange(
+                    LocalBranch.Checked
+                        ? GetLocalBranches()
+                        : GetRemoteBranches());
             }
             else
             {
-                Branches.Items.AddRange(GetContainsRevisionBranches().ToArray());
+                Branches.Items.AddRange(GetContainsRevisionBranches());
             }
 
             if (_containRevisons != null && Branches.Items.Count == 1)
@@ -68,6 +64,53 @@ namespace GitUI.UserControls
             else
             {
                 Branches.Text = null;
+            }
+
+            string[] GetLocalBranches()
+            {
+                if (_localBranches == null)
+                {
+                    _localBranches = Module.GetRefs(false).Select(b => b.Name).ToArray();
+                }
+
+                return _localBranches;
+            }
+
+            string[] GetRemoteBranches()
+            {
+                if (_remoteBranches == null)
+                {
+                    _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToArray();
+                }
+
+                return _remoteBranches;
+            }
+
+            string[] GetContainsRevisionBranches()
+            {
+                var result = new HashSet<string>();
+
+                if (_containRevisons.Length > 0)
+                {
+                    var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisons[0], LocalBranch.Checked,
+                            !LocalBranch.Checked)
+                        .Where(a => !GitModule.IsDetachedHead(a) &&
+                                    !a.EndsWith("/HEAD"));
+                    result.UnionWith(branches);
+                }
+
+                for (int index = 1; index < _containRevisons.Length; index++)
+                {
+                    var containRevison = _containRevisons[index];
+                    var branches =
+                        Module.GetAllBranchesWhichContainGivenCommit(containRevison, LocalBranch.Checked,
+                                !LocalBranch.Checked)
+                            .Where(a => !GitModule.IsDetachedHead(a) &&
+                                        !a.EndsWith("/HEAD"));
+                    result.IntersectWith(branches);
+                }
+
+                return result.ToArray();
             }
         }
 
@@ -87,52 +130,6 @@ namespace GitUI.UserControls
                 Task.Factory.StartNew(() => Module.GetCommitCountString(currentCheckout, branchName))
                     .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
-        }
-
-        public IList<string> GetLocalBranches()
-        {
-            if (_localBranches == null)
-            {
-                _localBranches = Module.GetRefs(false).Select(b => b.Name).ToList();
-            }
-
-            return _localBranches;
-        }
-
-        private IList<string> GetRemoteBranches()
-        {
-            if (_remoteBranches == null)
-            {
-                _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
-            }
-
-            return _remoteBranches;
-        }
-
-        private IList<string> GetContainsRevisionBranches()
-        {
-            var result = new HashSet<string>();
-            if (_containRevisons.Length > 0)
-            {
-                var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisons[0], LocalBranch.Checked,
-                        !LocalBranch.Checked)
-                        .Where(a => !GitModule.IsDetachedHead(a) &&
-                                    !a.EndsWith("/HEAD"));
-                result.UnionWith(branches);
-            }
-
-            for (int index = 1; index < _containRevisons.Length; index++)
-            {
-                var containRevison = _containRevisons[index];
-                var branches =
-                    Module.GetAllBranchesWhichContainGivenCommit(containRevison, LocalBranch.Checked,
-                        !LocalBranch.Checked)
-                        .Where(a => !GitModule.IsDetachedHead(a) &&
-                                    !a.EndsWith("/HEAD"));
-                result.IntersectWith(branches);
-            }
-
-            return result.ToList();
         }
 
         public void SetCurrentBranch(string branch, bool remote)
