@@ -12,47 +12,53 @@ namespace GitCommandsTests.Git
         public void CanGetRelativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
-            Assert.AreEqual("0 seconds ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now));
-            Assert.AreEqual("1 second ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-1)));
-            Assert.AreEqual("1 minute ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-1)));
-            Assert.AreEqual("1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-45)));
-            Assert.AreEqual("1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-1)));
-            Assert.AreEqual("1 day ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-1)));
-            Assert.AreEqual("1 week ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-7)));
-            Assert.AreEqual("1 month ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-30)));
-            Assert.AreEqual("12 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-364)));
-            Assert.AreEqual("1 year ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-365)));
 
-            Assert.AreEqual("2 seconds ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-2)));
-            Assert.AreEqual("2 minutes ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-2)));
-            Assert.AreEqual("2 hours ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-2)));
-            Assert.AreEqual("2 days ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-2)));
-            Assert.AreEqual("2 weeks ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-14)));
-            Assert.AreEqual("2 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-60)));
-            Assert.AreEqual("2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-730)));
+            var now = DateTime.Now;
+
+            Assert.AreEqual("0 seconds ago", LocalizationHelpers.GetRelativeDateString(now, now));
+            Assert.AreEqual("1 second ago", LocalizationHelpers.GetRelativeDateString(now, now.AddSeconds(-1)));
+            Assert.AreEqual("1 minute ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(-1)));
+            Assert.AreEqual("1 hour ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(-45)));
+            Assert.AreEqual("1 hour ago", LocalizationHelpers.GetRelativeDateString(now, now.AddHours(-1)));
+            Assert.AreEqual("1 day ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-1)));
+            Assert.AreEqual("1 week ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-7)));
+            Assert.AreEqual("1 month ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-30)));
+            Assert.AreEqual("12 months ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-364)));
+            Assert.AreEqual("1 year ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-365)));
+
+            Assert.AreEqual("2 seconds ago", LocalizationHelpers.GetRelativeDateString(now, now.AddSeconds(-2)));
+            Assert.AreEqual("2 minutes ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(-2)));
+            Assert.AreEqual("2 hours ago", LocalizationHelpers.GetRelativeDateString(now, now.AddHours(-2)));
+            Assert.AreEqual("2 days ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-2)));
+            Assert.AreEqual("2 weeks ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-14)));
+            Assert.AreEqual("2 months ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-60)));
+            Assert.AreEqual("2 years ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(-730)));
         }
 
         [Test]
         public void CanGetRelativeNegativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
-            Assert.AreEqual("-1 second ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(1)));
-            Assert.AreEqual("-1 minute ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(1)));
-            Assert.AreEqual("-1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(45)));
-            Assert.AreEqual("-1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(1)));
-            Assert.AreEqual("-1 day ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(1)));
-            Assert.AreEqual("-1 week ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(7)));
-            Assert.AreEqual("-1 month ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(30)));
-            Assert.AreEqual("-12 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(364)));
-            Assert.AreEqual("-1 year ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(365)));
 
-            Assert.AreEqual("-2 seconds ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(2)));
-            Assert.AreEqual("-2 minutes ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(2)));
-            Assert.AreEqual("-2 hours ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(2)));
-            Assert.AreEqual("-2 days ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(2)));
-            Assert.AreEqual("-2 weeks ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(14)));
-            Assert.AreEqual("-2 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(60)));
-            Assert.AreEqual("-2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(730)));
+            var now = DateTime.Now;
+
+            Assert.AreEqual("-1 second ago", LocalizationHelpers.GetRelativeDateString(now, now.AddSeconds(1)));
+            Assert.AreEqual("-1 minute ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(1)));
+            Assert.AreEqual("-1 hour ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(45)));
+            Assert.AreEqual("-1 hour ago", LocalizationHelpers.GetRelativeDateString(now, now.AddHours(1)));
+            Assert.AreEqual("-1 day ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(1)));
+            Assert.AreEqual("-1 week ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(7)));
+            Assert.AreEqual("-1 month ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(30)));
+            Assert.AreEqual("-12 months ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(364)));
+            Assert.AreEqual("-1 year ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(365)));
+
+            Assert.AreEqual("-2 seconds ago", LocalizationHelpers.GetRelativeDateString(now, now.AddSeconds(2)));
+            Assert.AreEqual("-2 minutes ago", LocalizationHelpers.GetRelativeDateString(now, now.AddMinutes(2)));
+            Assert.AreEqual("-2 hours ago", LocalizationHelpers.GetRelativeDateString(now, now.AddHours(2)));
+            Assert.AreEqual("-2 days ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(2)));
+            Assert.AreEqual("-2 weeks ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(14)));
+            Assert.AreEqual("-2 months ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(60)));
+            Assert.AreEqual("-2 years ago", LocalizationHelpers.GetRelativeDateString(now, now.AddDays(730)));
         }
 
         [Test]
