@@ -436,11 +436,6 @@ namespace GitCommands
             return "reset --hard \"" + commit + "\"";
         }
 
-        public static string CloneCmd(string fromPath, string toPath)
-        {
-            return CloneCmd(fromPath, toPath, false, false, string.Empty, null, null, false);
-        }
-
         /// <summary>
         /// Git Clone.
         /// </summary>
@@ -457,7 +452,7 @@ namespace GitCommands
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
         /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
-        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, bool? isSingleBranch, bool lfs)
+        public static string CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, [CanBeNull] string branch = "", int? depth = null, bool? isSingleBranch = null, bool lfs = false)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
