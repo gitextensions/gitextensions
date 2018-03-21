@@ -529,9 +529,9 @@ namespace GitCommands
                 file = string.Join(" ", files);
             }
 
-            return string.Format("rm {0} {1} {2}",
-                force ? "--force" : string.Empty,
-                isRecursive ? "-r" : string.Empty,
+            return string.Format("rm{0}{1} {2}",
+                force ? " --force" : string.Empty,
+                isRecursive ? " -r" : string.Empty,
                 file);
         }
 
@@ -738,7 +738,7 @@ namespace GitCommands
 
             if (interactive)
             {
-                sb.Append(" -i ");
+                sb.Append("-i ");
                 sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
             }
 
