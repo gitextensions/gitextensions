@@ -12,13 +12,21 @@ namespace GitUI.Blame
 {
     public sealed partial class BlameControl : GitModuleControl
     {
-        private GitBlame _blame;
+        public event EventHandler<CommandEventArgs> CommandClick;
+
+        private readonly AsyncLoader _blameLoader = new AsyncLoader();
         private GitBlameLine _lastBlameLine = new GitBlameLine();
         private GitBlameLine _clickedBlameLine = new GitBlameLine();
+        private GitBlame _blame;
         private RevisionGrid _revGrid;
         private string _blameHash;
         private string _fileName;
         private Encoding _encoding;
+        private int _lastTooltipX = -100;
+        private int _lastTooltipY = -100;
+        private string _lastTooltip = "";
+        private GitBlameHeader _lastBlameHeader;
+        private bool _bChangeScrollPosition;
 
         public BlameControl()
         {
@@ -43,21 +51,44 @@ namespace GitUI.Blame
             CommitInfo.CommandClick += commitInfo_CommandClick;
         }
 
+        public void LoadBlame(GitRevision revision, IReadOnlyList<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
+        {
+            string guid = revision.Guid;
+
+            // refresh only when something changed
+            if (!force && guid == _blameHash && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+            {
+                return;
+            }
+
+            controlToMask?.Mask();
+
+            var scrollpos = BlameFile.ScrollPos;
+
+            int line = initialLine.GetValueOrDefault(0);
+            if (_clickedBlameLine.CommitGuid == guid)
+            {
+                line = _clickedBlameLine.OriginLineNumber;
+            }
+
+            _revGrid = revGrid;
+            _fileName = fileName;
+            _encoding = encoding;
+
+            _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, guid, encoding),
+                () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
+        }
+
         private void commitInfo_CommandClick(object sender, CommandEventArgs e)
         {
             CommandClick?.Invoke(sender, e);
         }
-
-        public event EventHandler<CommandEventArgs> CommandClick;
 
         private void BlameCommitter_MouseLeave(object sender, EventArgs e)
         {
             blameTooltip.Hide(this);
         }
 
-        private int _lastTooltipX = -100;
-        private int _lastTooltipY = -100;
-        private string _lastTooltip = "";
         private void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
         {
             if (!BlameFile.Focused)
@@ -92,8 +123,6 @@ namespace GitUI.Blame
                 blameTooltip.Show(tooltipText, this, newTooltipX, newTooltipY);
             }
         }
-
-        private GitBlameHeader _lastBlameHeader;
 
         private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
@@ -167,8 +196,6 @@ namespace GitUI.Blame
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.CommitGuid);
         }
 
-        private bool _bChangeScrollPosition;
-
         private void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
         {
             if (!_bChangeScrollPosition)
@@ -208,36 +235,6 @@ namespace GitUI.Blame
         private void SyncBlameCommitterView()
         {
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
-        }
-
-        private readonly AsyncLoader _blameLoader = new AsyncLoader();
-
-        public void LoadBlame(GitRevision revision, IReadOnlyList<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
-        {
-            string guid = revision.Guid;
-
-            // refresh only when something changed
-            if (!force && guid == _blameHash && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
-            {
-                return;
-            }
-
-            controlToMask?.Mask();
-
-            var scrollpos = BlameFile.ScrollPos;
-
-            int line = initialLine.GetValueOrDefault(0);
-            if (_clickedBlameLine.CommitGuid == guid)
-            {
-                line = _clickedBlameLine.OriginLineNumber;
-            }
-
-            _revGrid = revGrid;
-            _fileName = fileName;
-            _encoding = encoding;
-
-            _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, guid, encoding),
-                () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
         }
 
         private void ProcessBlame(GitRevision revision, IReadOnlyList<string> children, Control controlToMask, int line, int scrollpos)
