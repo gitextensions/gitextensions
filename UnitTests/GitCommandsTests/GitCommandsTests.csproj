@@ -95,7 +95,7 @@
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="GitRevisionTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
-    <Compile Include="Git\GitBlameHeaderTest.cs" />
+    <Compile Include="Git\GitBlameCommitTests.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensionsTests.cs" />
     <Compile Include="Git\LongShaProviderTests.cs" />
     <Compile Include="Git\GitRevisionTesterTests.cs" />
@@ -103,7 +103,6 @@
     <Compile Include="Git\Gpg\GitGpgControllerTests.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmdTests.cs" />
     <Compile Include="Git\RevisionDiffProviderTest.cs" />
-    <Compile Include="Git\GitBlameTest.cs" />
     <Compile Include="Git\GitBranchNameNormaliserTest.cs" />
     <Compile Include="Git\GitBranchNameOptionsTest.cs" />
     <Compile Include="Git\GitCheckoutBranchCmdTest.cs" />
@@ -137,6 +136,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Patch\testdata\rebase.diff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\README.blame">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

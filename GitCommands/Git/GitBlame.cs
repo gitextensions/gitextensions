@@ -1,55 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    public class GitBlame
+    public sealed class GitBlame
     {
-        public IList<GitBlameHeader> Headers { get; } = new List<GitBlameHeader>();
-        public IList<GitBlameLine> Lines { get; } = new List<GitBlameLine>();
+        public IReadOnlyList<GitBlameLine> Lines { get; }
 
-        public GitBlameHeader FindHeaderForCommitGuid(string commitGuid)
+        public GitBlame(IReadOnlyList<GitBlameLine> lines)
         {
-            return Headers.First(h => h.CommitGuid == commitGuid);
+            Lines = lines;
         }
     }
 
-    public class GitBlameLine
+    public sealed class GitBlameLine
     {
-        public string CommitGuid { get; set; }
-        public int FinalLineNumber { get; set; }
-        public int OriginLineNumber { get; set; }
-        public string LineText { get; set; }
+        [NotNull]
+        public GitBlameCommit Commit { get; }
+        public int FinalLineNumber { get; }
+        public int OriginLineNumber { get; }
+        [NotNull]
+        public string Text { get; }
+
+        public GitBlameLine([NotNull] GitBlameCommit commit, int finalLineNumber, int originLineNumber, [NotNull] string text)
+        {
+            Commit = commit;
+            FinalLineNumber = finalLineNumber;
+            OriginLineNumber = originLineNumber;
+            Text = text;
+        }
     }
 
-    public class GitBlameHeader
+    public sealed class GitBlameCommit
     {
-        public string CommitGuid { get; set; }
-        public string AuthorMail { get; set; }
-        public DateTime AuthorTime { get; set; }
-        public string AuthorTimeZone { get; set; }
-        public string Author { get; set; }
-        public string CommitterMail { get; set; }
-        public DateTime CommitterTime { get; set; }
-        public string CommitterTimeZone { get; set; }
-        public string Committer { get; set; }
-        public string Summary { get; set; }
-        public string FileName { get; set; }
+        public string ObjectId { get; }
+        public string Author { get; }
+        public string AuthorMail { get; }
+        public DateTime AuthorTime { get; }
+        public string AuthorTimeZone { get; }
+        public string Committer { get; }
+        public string CommitterMail { get; }
+        public DateTime CommitterTime { get; }
+        public string CommitterTimeZone { get; }
+        public string Summary { get; }
+        public string FileName { get; }
+
+        public GitBlameCommit(string objectId, string author, string authorMail, DateTime authorTime, string authorTimeZone, string committer, string committerMail, DateTime committerTime, string committerTimeZone, string summary, string fileName)
+        {
+            ObjectId = objectId;
+            Author = author;
+            AuthorMail = authorMail;
+            AuthorTime = authorTime;
+            AuthorTimeZone = authorTimeZone;
+            Committer = committer;
+            CommitterMail = committerMail;
+            CommitterTime = committerTime;
+            CommitterTimeZone = committerTimeZone;
+            Summary = summary;
+            FileName = fileName;
+        }
 
         public override string ToString()
         {
-            StringBuilder toStringValue = new StringBuilder();
-            toStringValue.AppendLine("Author: " + Author);
-            toStringValue.AppendLine("AuthorTime: " + AuthorTime);
-            toStringValue.AppendLine("Committer: " + Committer);
-            toStringValue.AppendLine("CommitterTime: " + CommitterTime);
-            toStringValue.AppendLine("Summary: " + Summary);
-            toStringValue.AppendLine();
-            toStringValue.AppendLine("FileName: " + FileName);
+            var s = new StringBuilder();
 
-            return toStringValue.ToString().Trim();
+            s.Append("Author: ").AppendLine(Author);
+            s.Append("AuthorTime: ").AppendLine(AuthorTime.ToString(CultureInfo.CurrentCulture));
+            s.Append("Committer: ").AppendLine(Committer);
+            s.Append("CommitterTime: ").AppendLine(CommitterTime.ToString(CultureInfo.CurrentCulture));
+            s.Append("Summary: ").AppendLine(Summary);
+            s.AppendLine();
+            s.Append("FileName: ").Append(FileName);
+
+            return s.ToString();
         }
     }
 }

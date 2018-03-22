@@ -27,3 +27,7 @@ trim_trailing_whitespace = true
 
 [*.{patch,diff}]
 trim_trailing_whitespace = false
+
+[*.blame]
+trim_trailing_whitespace = false
+

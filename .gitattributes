@@ -1,6 +1,7 @@
 * text=auto
 *.xml diff -text
 *.patch diff -text
+*.blame diff -text
 *.cs text diff=csharp
 *.sln text eol=crlf
 *.sh text eol=lf
