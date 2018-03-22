@@ -6,9 +6,6 @@ using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestCleanup = NUnit.Framework.TearDownAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Config
 {
@@ -17,7 +14,7 @@ namespace GitCommandsTests.Config
     /// The configfile class should respond the same as "git config".
     /// Since .gitconfig is often hidden, also make sure this is tested.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ConfigFileTest
     {
         private GitModule _module;
@@ -34,7 +31,7 @@ namespace GitCommandsTests.Config
             }
         }
 
-        private string GetTempFolder()
+        private static string GetTempFolder()
         {
             return Path.GetTempPath();
         }
@@ -80,10 +77,11 @@ namespace GitCommandsTests.Config
             Assert.AreNotEqual(expectedValue, configFile.GetValue(key), "ConfigFile");
         }
 
-        [TestMethod]
+        [Test]
         public void TestWithInvalidFileName()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -93,7 +91,7 @@ namespace GitCommandsTests.Config
             Assert.IsNotNull(configFile);
         }
 
-        [TestMethod]
+        [Test]
         public void TestWithInexistentFile()
         {
             try
@@ -107,7 +105,7 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSave()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -128,7 +126,7 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetValueNonExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -145,7 +143,7 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "section1.key2", "section1key2");
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetValueExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -159,7 +157,7 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "section.key", "section.keyoverwrite");
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetValueSectionWithDotNonExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -176,7 +174,7 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "submodule.test.test2.path2", "submodule.test.test2.path2");
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetValueSectionWithDotExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -194,15 +192,17 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "submodule.test.test2.path2", "submodule.test.test2.path2");
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetPathValueNoneExisting()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
 
-            { // PERFORM TEST
+            // PERFORM TEST
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
@@ -221,10 +221,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetPathValueFileNonExisting()
         {
-            { // PERFORM TEST
+            // PERFORM TEST
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
                 configFile.Save();
@@ -243,10 +244,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetPathValueWithUncPath1()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine(@"[path]");
@@ -276,10 +278,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSetPathValueWithUncPath2()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine(@"[path]");
@@ -309,10 +312,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestHasValue()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -322,10 +326,11 @@ namespace GitCommandsTests.Config
             Assert.IsFalse(file.HasValue("section10.key1"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestHasConfigSection()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -336,10 +341,11 @@ namespace GitCommandsTests.Config
             Assert.IsFalse(file.HasConfigSection("inexistent"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetValue()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -350,7 +356,7 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "section3.subsection.key3", "value3");
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPathValue()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -361,7 +367,7 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "path.unc", @"\\test\test2\");
         }
 
-        [TestMethod]
+        [Test]
         public void TestRemoveSettingExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -379,7 +385,7 @@ namespace GitCommandsTests.Config
             Assert.IsTrue(configFile.HasValue("section1.key2"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestRemoveSettingNonExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -396,7 +402,7 @@ namespace GitCommandsTests.Config
             Assert.IsTrue(configFile.HasValue("section1.key2"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestRemoveSettingSectionWithDotExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -414,10 +420,11 @@ namespace GitCommandsTests.Config
             CheckValueIsEqual(configFile, "submodule.test.test2.path2", "submodule.test.test2.path2");
         }
 
-        [TestMethod]
+        [Test]
         public void TestRemoveConfigSection()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
@@ -429,17 +436,18 @@ namespace GitCommandsTests.Config
             Assert.IsFalse(configFile.HasConfigSection("section1"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestWithNullSettings()
         {
             ConfigFile file = new ConfigFile(GetConfigFileName(), true);
             Assert.Throws<ArgumentNullException>(() => file.GetValue(null));
         }
 
-        [TestMethod]
+        [Test]
         public void TestWithHiddenFile()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 // Write test config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
 
@@ -448,7 +456,8 @@ namespace GitCommandsTests.Config
                 configFile.Attributes = FileAttributes.Hidden;
             }
 
-            { // PERFORM TEST
+            // PERFORM TEST
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "section1.key1", "value1");
                 CheckValueIsEqual(configFile, "section2.subsection.key2", "value2");
@@ -465,10 +474,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void RandomTestCase1()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[merge]");
@@ -510,10 +520,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void RandomTestCase2()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[core]");
@@ -564,10 +575,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void NewLineTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[bugtraq]");
@@ -615,10 +627,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CommentsTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("# issue tracker configuration");
@@ -649,10 +662,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void EscapedSectionTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("# issue tracker configuration");
@@ -670,10 +684,11 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void SpacesInSubSectionTest()
         {
-            { // TESTDATA
+            // TESTDATA
+            {
                 StringBuilder content = new StringBuilder();
 
                 content.AppendLine("[section \"sub section\"]");
@@ -703,7 +718,7 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CaseSensitive()
         {
             // create test data
@@ -748,7 +763,7 @@ namespace GitCommandsTests.Config
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TwoSections_ValueInTheLast()
         {
             // test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
@@ -764,7 +779,7 @@ namespace GitCommandsTests.Config
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
+        [Test]
         public void TwoSections_ValueInTheFirst()
         {
             // test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
@@ -780,7 +795,7 @@ namespace GitCommandsTests.Config
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
+        [Test]
         public void TwoSections_ValueInBoth()
         {
             // test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
@@ -797,7 +812,7 @@ namespace GitCommandsTests.Config
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
+        [Test]
         public void TwoSections_ValueInBoth_GetValues()
         {
             // test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
@@ -810,11 +825,11 @@ namespace GitCommandsTests.Config
             ConfigFile cfg = new ConfigFile("", true);
             cfg.LoadFromString(configFileContent);
             IEnumerable<string> actual = cfg.GetValues("status.showUntrackedFiles");
-            IEnumerable<string> expected = new string[] { "yes", "no" };
+            IEnumerable<string> expected = new[] { "yes", "no" };
             Assert.True(expected.SequenceEqual(actual));
         }
 
-        [TestMethod]
+        [Test]
         public void SquareBracketInValue()
         {
             StringBuilder content = new StringBuilder();
@@ -830,7 +845,7 @@ namespace GitCommandsTests.Config
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
+        [Test]
         public void SquareBracketInSectionName()
         {
             StringBuilder content = new StringBuilder();
@@ -849,7 +864,7 @@ namespace GitCommandsTests.Config
         /// <summary>
         /// Always delete the test config file after each test
         /// </summary>
-        [TestCleanup]
+        [TearDown]
         public void Cleanup()
         {
             if (File.Exists(GetConfigFileName()))

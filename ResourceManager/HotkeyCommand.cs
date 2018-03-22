@@ -41,13 +41,8 @@ namespace ResourceManager
 
         public override bool Equals(object obj)
         {
-            HotkeyCommand other = obj as HotkeyCommand;
-            if (other == null)
-            {
-                return false;
-            }
-
-            return GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
+            return obj is HotkeyCommand other &&
+                   GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
         }
 
         private IEnumerable<object> GetFieldsToCompare()

@@ -15,7 +15,7 @@ namespace GitUI.UserControls
             Translate();
         }
 
-        private bool _isLoaded = false;
+        private bool _isLoaded;
 
         private void GotoUserManualControl_Load(object sender, EventArgs e)
         {
@@ -67,11 +67,6 @@ namespace GitUI.UserControls
         private string GetUrl()
         {
             return UserManual.UserManual.UrlFor(ManualSectionSubfolder, ManualSectionAnchorName);
-        }
-
-        private void labelHelpIcon_Click(object sender, EventArgs e)
-        {
-            OpenManual();
         }
 
         private void linkLabelHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

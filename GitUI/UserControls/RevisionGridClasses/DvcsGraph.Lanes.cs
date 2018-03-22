@@ -135,8 +135,7 @@ namespace GitUI.RevisionGridClasses
 
                     // NOTE: We could also compare with sourceGraph sourceGraph.AddedNodes[sourceGraph.processedNodes],
                     // since it should always be the same value
-                    if (_currentRow.Node == null ||
-                        _currentRow.Node.Data == null ||
+                    if (_currentRow.Node?.Data == null ||
                         (lane.Current.Data != null && lane.Current.Index < _currentRow.Node.Index))
                     {
                         _currentRow.Node = lane.Current;
@@ -715,20 +714,6 @@ namespace GitUI.RevisionGridClasses
                     {
                         return EdgeList.Count(e => e.End == lane);
                     }
-
-                    public bool IsActive(int lane)
-                    {
-                        if (lane >= CountNext())
-                        {
-                            return false;
-                        }
-
-                        return _countEnd[lane] > 0;
-                    }
-
-                    private void Remove(int start, int end)
-                    {
-                    }
                 }
 
                 #endregion
@@ -804,10 +789,6 @@ namespace GitUI.RevisionGridClasses
             {
                 private int _index;
                 private Node _node;
-
-                public LaneJunctionDetail()
-                {
-                }
 
                 public LaneJunctionDetail(Node n)
                 {
@@ -900,7 +881,7 @@ namespace GitUI.RevisionGridClasses
 
                 #region LaneRow Members
 
-                public int NodeLane { get; } = -1;
+                public int NodeLane { get; }
 
                 public Node Node { get; }
 

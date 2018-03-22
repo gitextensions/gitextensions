@@ -18,7 +18,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
 
-        private RevisionGrid _revisionGrid;
+        private readonly RevisionGrid _revisionGrid;
 
         // must both be created only once
         private IEnumerable<MenuCommand> _navigateMenuCommands;
@@ -65,7 +65,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             OnMenuChanged();
         }
 
-        private void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
+        private static void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
         {
             foreach (var sourceMc in sourceList.Where(mc => !mc.IsSeparator))
             {
@@ -87,16 +87,16 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "GotoCurrentRevision",
                     Text = "Go to current revision",
-                    Image = global::GitUI.Properties.Resources.IconGotoCurrentRevision,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.SelectCurrentRevision),
+                    Image = Properties.Resources.IconGotoCurrentRevision,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.SelectCurrentRevision),
                     ExecuteAction = SelectCurrentRevisionExecute
                 },
                 new MenuCommand
                 {
                     Name = "GotoCommit",
                     Text = "Go to commit...",
-                    Image = global::GitUI.Properties.Resources.IconGotoCommit,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.GoToCommit),
+                    Image = Properties.Resources.IconGotoCommit,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToCommit),
                     ExecuteAction = GotoCommitExcecute
                 },
                 MenuCommand.CreateSeparator(),
@@ -104,15 +104,15 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "GotoChildCommit",
                     Text = "Go to child commit",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.GoToChild),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.GoToChild)
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToChild),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.GoToChild)
                 },
                 new MenuCommand
                 {
                     Name = "GotoParentCommit",
                     Text = "Go to parent commit",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.GoToParent),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.GoToParent)
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.GoToParent),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.GoToParent)
                 },
                 MenuCommand.CreateSeparator(),
                 new MenuCommand
@@ -120,14 +120,14 @@ namespace GitUI.UserControls.RevisionGridClasses
                     Name = "NavigateBackward",
                     Text = "Navigate backward",
                     ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString(),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.NavigateBackward)
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NavigateBackward)
                 },
                 new MenuCommand
                 {
                     Name = "NavigateForward",
                     Text = "Navigate forward",
                     ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString(),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.NavigateForward)
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NavigateForward)
                 },
                 MenuCommand.CreateSeparator(),
                 new MenuCommand
@@ -140,15 +140,15 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "PrevQuickSearch",
                     Text = "Quick search previous",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.PrevQuickSearch),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.PrevQuickSearch)
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.PrevQuickSearch),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.PrevQuickSearch)
                 },
                 new MenuCommand
                 {
                     Name = "NextQuickSearch",
                     Text = "Quick search next",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.NextQuickSearch),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.NextQuickSearch)
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.NextQuickSearch),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.NextQuickSearch)
                 }
             };
         }
@@ -156,7 +156,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// this is needed because _revsionGrid is null when TranslationApp is called
         /// </summary>
-        private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands revGridCommands)
+        private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands revGridCommands)
         {
             return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
         }
@@ -174,7 +174,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "ShowAllBranches",
                     Text = "Show all branches",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowAllBranches),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowAllBranches),
                     ExecuteAction = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemChecked
                 },
@@ -182,7 +182,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "ShowCurrentBranchOnly",
                     Text = "Show current branch only",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowCurrentBranchOnly),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowCurrentBranchOnly),
                     ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemChecked
                 },
@@ -190,7 +190,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "ShowFilteredBranches",
                     Text = "Show filtered branches",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowFilteredBranches),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFilteredBranches),
                     ExecuteAction = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemChecked
                 },
@@ -201,7 +201,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "ShowRemoteBranches",
                     Text = "Show remote branches",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowRemoteBranches),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowRemoteBranches),
                     ExecuteAction = () => _revisionGrid.ShowRemoteBranches_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => AppSettings.ShowRemoteBranches
                 },
@@ -278,7 +278,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "showMergeCommitsToolStripMenuItem",
                     Text = "Show merge commits",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowMergeCommits),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleShowMergeCommits),
                     ExecuteAction = () => _revisionGrid.ShowMergeCommits_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => AppSettings.ShowMergeCommits
                 },
@@ -286,7 +286,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "showTagsToolStripMenuItem",
                     Text = "Show tags",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowTags),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleShowTags),
                     ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => AppSettings.ShowTags
                 },
@@ -322,14 +322,14 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "ToggleHighlightSelectedBranch",
                     Text = "Highlight selected branch (until refresh)",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch),
-                    ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch)
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleHighlightSelectedBranch),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.ToggleHighlightSelectedBranch)
                 },
                 new MenuCommand
                 {
                     Name = "ToggleRevisionCardLayout",
                     Text = "Change commit view layout",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleRevisionCardLayout),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleRevisionCardLayout),
                     ExecuteAction = () => _revisionGrid.ToggleRevisionCardLayout()
                 },
 
@@ -339,8 +339,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "showFirstParent",
                     Text = "Show first parents",
-                    Image = global::GitUI.Properties.Resources.IconShowFirstParent,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowFirstParent),
+                    Image = Properties.Resources.IconShowFirstParent,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFirstParent),
                     ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null),
                     IsCheckedFunc = () => AppSettings.ShowFirstParent
                 },
@@ -348,8 +348,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "filterToolStripMenuItem",
                     Text = "Set advanced filter",
-                    Image = global::GitUI.Properties.Resources.IconFilter,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.RevisionFilter),
+                    Image = Properties.Resources.IconFilter,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.RevisionFilter),
                     ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null)
                 }
             };
@@ -389,7 +389,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public void SelectCurrentRevisionExecute()
         {
-            _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.SelectCurrentRevision);
+            _revisionGrid.ExecuteCommand(RevisionGrid.Commands.SelectCurrentRevision);
         }
 
         public void GotoCommitExcecute()

@@ -7,10 +7,6 @@ namespace GitCommands
     {
         private readonly Dictionary<string, object> _byNameMap = new Dictionary<string, object>();
 
-        public SettingsCache()
-        {
-        }
-
         public void Dispose()
         {
             Dispose(true);
@@ -72,11 +68,11 @@ namespace GitCommands
         {
                 LockedAction(() =>
                 {
-                    foreach (var pair in keyValuePairs)
+                    foreach (var (key, value) in keyValuePairs)
                     {
-                        if (pair.Item2 != null)
+                        if (value != null)
                         {
-                            SetValueImpl(pair.Item1, pair.Item2);
+                            SetValueImpl(key, value);
                         }
                     }
 
@@ -116,7 +112,7 @@ namespace GitCommands
 
         private string GetValue(string name)
         {
-            return LockedAction<string>(() =>
+            return LockedAction(() =>
             {
                 EnsureSettingsAreUpToDate();
                 return GetValueImpl(name);
@@ -141,7 +137,7 @@ namespace GitCommands
                 s = encode(value);
             }
 
-            return LockedAction<bool>(() =>
+            return LockedAction(() =>
             {
                 string inMemValue = GetValue(name);
                 return inMemValue != null && !string.Equals(inMemValue, s);
@@ -177,14 +173,13 @@ namespace GitCommands
 
         public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
-            object o;
             T val = defaultValue;
 
-            bool result = LockedAction<bool>(() =>
+            bool result = LockedAction(() =>
             {
                 EnsureSettingsAreUpToDate();
 
-                if (_byNameMap.TryGetValue(name, out o))
+                if (_byNameMap.TryGetValue(name, out object o))
                 {
                     if (o == null)
                     {

@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         #endregion
 
         public IWin32Window OwnerWindow;
-        public Version CurrentVersion;
+        public Version CurrentVersion { get; }
         public bool UpdateFound;
         public string UpdateUrl;
         public string NewVersion;
@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                var releases = tree.Tree.FirstOrDefault(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase));
 
                 if (releases?.Blob.Value != null)
                 {
@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Process.Start(UpdateUrl);
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
             }
         }
@@ -179,18 +179,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e);
+                Debug.WriteLine(e);
                 return null;
             }
 
-            var version = new ReleaseVersion()
+            var version = new ReleaseVersion
             {
                 Version = ver,
                 ReleaseType = ReleaseType.Major,
                 DownloadPage = section.GetValue("DownloadPage")
             };
 
-            Enum.TryParse<ReleaseType>(section.GetValue("ReleaseType"), true, out version.ReleaseType);
+            Enum.TryParse(section.GetValue("ReleaseType"), true, out version.ReleaseType);
 
             return version;
         }

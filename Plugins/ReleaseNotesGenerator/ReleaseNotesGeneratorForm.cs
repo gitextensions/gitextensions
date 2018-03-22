@@ -128,11 +128,11 @@ namespace ReleaseNotesGenerator
                 stringBuilder.AppendFormat("{0}{1}{2}{3}", logLine.Commit, colSeparatorFirstLine, message, Environment.NewLine);
             }
 
-            string result = headerText + Environment.NewLine + stringBuilder.ToString();
+            string result = headerText + Environment.NewLine + stringBuilder;
             return result;
         }
 
-        private string CreateHtmlTable(IEnumerable<LogLine> logLines)
+        private static string CreateHtmlTable(IEnumerable<LogLine> logLines)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("<table>\r\n");

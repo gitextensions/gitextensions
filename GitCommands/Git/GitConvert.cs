@@ -2,7 +2,7 @@
 
 namespace GitCommands
 {
-    public class GitConvert
+    public static class GitConvert
     {
         public static byte[] ConvertCrLfToWorktree(byte[] buf)
         {

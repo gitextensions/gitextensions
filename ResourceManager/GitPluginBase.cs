@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace ResourceManager
 {
+    [UsedImplicitly]
     public abstract class GitPluginBase : IGitPlugin, ITranslate
     {
         public string Description { get; protected set; }
@@ -22,7 +25,7 @@ namespace ResourceManager
 
         public virtual IEnumerable<ISetting> GetSettings()
         {
-            return new List<ISetting>();
+            return Enumerable.Empty<ISetting>();
         }
 
         public virtual void Register(IGitUICommands gitUiCommands)

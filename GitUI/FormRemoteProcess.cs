@@ -27,7 +27,6 @@ namespace GitUI
 
         // only for translation
         protected FormRemoteProcess()
-            : base()
         {
         }
 

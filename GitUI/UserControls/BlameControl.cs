@@ -210,13 +210,14 @@ namespace GitUI.Blame
             BlameCommitter.ScrollPos = BlameFile.ScrollPos;
         }
 
-        private AsyncLoader _blameLoader = new AsyncLoader();
+        private readonly AsyncLoader _blameLoader = new AsyncLoader();
 
-        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
+        public void LoadBlame(GitRevision revision, IReadOnlyList<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
-            // refresh only when something changed
             string guid = revision.Guid;
-            if (!force && guid.Equals(_blameHash) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+
+            // refresh only when something changed
+            if (!force && guid == _blameHash && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
             {
                 return;
             }
@@ -239,7 +240,7 @@ namespace GitUI.Blame
                 () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
         }
 
-        private void ProcessBlame(GitRevision revision, List<string> children, Control controlToMask, int line, int scrollpos)
+        private void ProcessBlame(GitRevision revision, IReadOnlyList<string> children, Control controlToMask, int line, int scrollpos)
         {
             var blameCommitter = new StringBuilder();
             var blameFile = new StringBuilder();
@@ -255,7 +256,7 @@ namespace GitUI.Blame
                 {
                     blameCommitter.AppendLine(
                         (blameHeader.Author + " - " + blameHeader.AuthorTime + " - " + blameHeader.FileName +
-                         new string(' ', 100)).Trim(new[] { '\r', '\n' }));
+                         new string(' ', 100)).Trim('\r', '\n'));
                 }
 
                 if (blameLine.LineText == null)
@@ -264,7 +265,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    blameFile.AppendLine(blameLine.LineText.Trim(new[] { '\r', '\n' }));
+                    blameFile.AppendLine(blameLine.LineText.Trim('\r', '\n'));
                 }
             }
 

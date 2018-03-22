@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace GitStatistics.PieChart
@@ -22,7 +23,7 @@ namespace GitStatistics.PieChart
         private float _initialAngle;
         private float _leftMargin;
         private PieChart3D _pieChart;
-        private float[] _relativeSliceDisplacements = new[] { 0F };
+        private float[] _relativeSliceDisplacements = { 0F };
         private float _rightMargin;
         private ShadowStyle _shadowStyle = ShadowStyle.GradualShadow;
         private float _sliceRelativeHeight;
@@ -244,15 +245,7 @@ namespace GitStatistics.PieChart
 
         private bool HasNonZeroValue()
         {
-            foreach (var value in _values)
-            {
-                if (value != 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _values.Any(value => value != 0);
         }
 
         protected override void OnMouseEnter(EventArgs e)
@@ -331,6 +324,6 @@ namespace GitStatistics.PieChart
             base.OnMouseDown(e);
         }
 
-        public event SliceSelectedHandler SliceSelected;
+        public event EventHandler<SliceSelectedArgs> SliceSelected;
     }
 }

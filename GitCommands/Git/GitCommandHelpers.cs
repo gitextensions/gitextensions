@@ -441,23 +441,6 @@ namespace GitCommands
             return "refs/heads/" + branch;
         }
 
-        public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
-        {
-            StringBuilder cmd = new StringBuilder("branch");
-            cmd.Append(force ? " -D" : " -d");
-
-            if (remoteBranch)
-            {
-                cmd.Append(" -r");
-            }
-
-            cmd.Append(" \"");
-            cmd.Append(branchName);
-            cmd.Append("\"");
-
-            return cmd.ToString();
-        }
-
         public static string DeleteTagCmd(string tagName)
         {
             return "tag -d \"" + tagName + "\"";
@@ -1112,7 +1095,7 @@ namespace GitCommands
         /*
                source: https://git-scm.com/docs/git-status
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(IGitModule module, string statusString, bool fromDiff = false)
+        public static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString(IGitModule module, string statusString, bool fromDiff = false)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -1147,10 +1130,10 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> submodules = module.GetSubmodulesLocalPaths();
+            var submodules = module.GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
-            var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var files = trimmedStatus.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
@@ -1158,10 +1141,10 @@ namespace GitCommands
                     continue;
                 }
 
-                int splitIndex = files[n].IndexOfAny(new char[] { '\0', '\t', ' ' }, 1);
+                int splitIndex = files[n].IndexOfAny(new[] { '\0', '\t', ' ' }, 1);
 
-                string status = string.Empty;
-                string fileName = string.Empty;
+                string status;
+                string fileName;
 
                 if (splitIndex < 0)
                 {
@@ -1180,7 +1163,7 @@ namespace GitCommands
 
                 if (x != '?' && x != '!' && x != ' ')
                 {
-                    GitItemStatus gitItemStatusX = null;
+                    GitItemStatus gitItemStatusX;
                     if (x == 'R' || x == 'C')
                     {
                         // Find renamed files...
@@ -1313,17 +1296,20 @@ namespace GitCommands
 
         private static GitItemStatus GitItemStatusFromStatusCharacter(string fileName, char x)
         {
-            var gitItemStatus = new GitItemStatus();
-            gitItemStatus.Name = fileName.Trim();
-            gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
-            gitItemStatus.IsChanged = x == 'M';
-            gitItemStatus.IsDeleted = x == 'D';
-            gitItemStatus.IsSkipWorktree = x == 'S';
-            gitItemStatus.IsRenamed = false;
-            gitItemStatus.IsTracked = (x != '?' && x != '!' && x != ' ') || !gitItemStatus.IsNew;
-            gitItemStatus.IsIgnored = x == '!';
-            gitItemStatus.IsConflict = x == 'U';
-            return gitItemStatus;
+            var isNew = x == 'A' || x == '?' || x == '!';
+
+            return new GitItemStatus
+            {
+                Name = fileName.Trim(),
+                IsNew = isNew,
+                IsChanged = x == 'M',
+                IsDeleted = x == 'D',
+                IsSkipWorktree = x == 'S',
+                IsRenamed = false,
+                IsTracked = (x != '?' && x != '!' && x != ' ') || !isNew,
+                IsIgnored = x == '!',
+                IsConflict = x == 'U'
+            };
         }
 
         public static string GetRemoteName(string completeName, IEnumerable<string> remotes)

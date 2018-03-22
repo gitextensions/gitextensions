@@ -9,7 +9,7 @@ namespace GitUI
     {
         private readonly ISettingsSource _settings;
         private readonly List<SplitterData> _splitters = new List<SplitterData>();
-        private float _designTimeFontSize;
+        private readonly float _designTimeFontSize;
 
         public SplitterManager(ISettingsSource settings, float designTimeFontSize = 8.25F)
         {
@@ -19,7 +19,7 @@ namespace GitUI
 
         public void AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
         {
-            var data = new SplitterData()
+            var data = new SplitterData
             {
                 Splitter = splitter,
                 SettingName = settingName,

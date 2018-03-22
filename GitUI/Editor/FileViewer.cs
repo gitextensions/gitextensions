@@ -25,7 +25,6 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
-        private GetNextFileFnc _fileLoader;
         private readonly IFullPathResolver _fullPathResolver;
 
         public FileViewer()
@@ -61,12 +60,12 @@ namespace GitUI.Editor
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
-            ignoreWhiteSpaces.Image = GitUI.Properties.Resources.ignore_whitespaces;
+            ignoreWhiteSpaces.Image = Properties.Resources.ignore_whitespaces;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
 
             ignoreAllWhitespaces.Checked = AppSettings.IgnoreAllWhitespaceChanges;
-            ignoreAllWhitespaces.Image = GitUI.Properties.Resources.ignore_all_whitespaces;
+            ignoreAllWhitespaces.Image = Properties.Resources.ignore_all_whitespaces;
             ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
             ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
@@ -123,7 +122,7 @@ namespace GitUI.Editor
             base.DisposeUICommandsSource();
         }
 
-        private bool RunTime()
+        private static bool RunTime()
         {
             return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }
@@ -132,8 +131,8 @@ namespace GitUI.Editor
         [Browsable(false)]
         public new Font Font
         {
-            get { return _internalFileViewer.Font; }
-            set { _internalFileViewer.Font = value; }
+            get => _internalFileViewer.Font;
+            set => _internalFileViewer.Font = value;
         }
 
         [Description("Ignore changes in amount of whitespace. This ignores whitespace at line end, and considers all other sequences of one or more whitespace characters to be equivalent.")]
@@ -152,8 +151,8 @@ namespace GitUI.Editor
         [Category("Behavior")]
         public bool IsReadOnly
         {
-            get { return _internalFileViewer.IsReadOnly; }
-            set { _internalFileViewer.IsReadOnly = value; }
+            get => _internalFileViewer.IsReadOnly;
+            set => _internalFileViewer.IsReadOnly = value;
         }
 
         [DefaultValue(true)]
@@ -161,8 +160,8 @@ namespace GitUI.Editor
         [Category("Appearance")]
         public bool ShowLineNumbers
         {
-            get { return _internalFileViewer.ShowLineNumbers; }
-            set { _internalFileViewer.ShowLineNumbers = value; }
+            get => _internalFileViewer.ShowLineNumbers;
+            set => _internalFileViewer.ShowLineNumbers = value;
         }
 
         private Encoding _encoding;
@@ -190,8 +189,8 @@ namespace GitUI.Editor
         [Browsable(false)]
         public int ScrollPos
         {
-            get { return _internalFileViewer.ScrollPos; }
-            set { _internalFileViewer.ScrollPos = value; }
+            get => _internalFileViewer.ScrollPos;
+            set => _internalFileViewer.ScrollPos = value;
         }
 
         [Browsable(false)]
@@ -229,7 +228,7 @@ namespace GitUI.Editor
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
-        private void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
             ContextMenuOpening?.Invoke(sender, e);
@@ -333,7 +332,7 @@ namespace GitUI.Editor
 
         private void OnExtraDiffArgumentsChanged()
         {
-            ExtraDiffArgumentsChanged?.Invoke(this, new EventArgs());
+            ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public string GetExtraDiffArguments()
@@ -476,12 +475,6 @@ namespace GitUI.Editor
             _internalFileViewer.SetText(text, isDiff: true);
             TextLoaded?.Invoke(this, null);
             RestoreCurrentScrollPos();
-        }
-
-        public void ViewStagingPatch(Func<string> loadPatchText)
-        {
-            ViewPatchAsync(loadPatchText);
-            Reset(true, true, true);
         }
 
         public Task ViewPatchAsync(Func<string> loadPatchText)
@@ -668,29 +661,17 @@ namespace GitUI.Editor
                 path = _fullPathResolver.Resolve(fileName);
             }
 
-            if (File.Exists(path))
-            {
-                // StreamReader disposes of 'fileStream'.
-                // see: https://msdn.microsoft.com/library/ms182334.aspx
-                var fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                try
-                {
-                    using (var reader = new StreamReader(fileStream, Module.FilesEncoding))
-                    {
-                        fileStream = null;
-                        var content = reader.ReadToEnd();
-                        FilePreamble = reader.CurrentEncoding.GetPreamble();
-                        return content;
-                    }
-                }
-                finally
-                {
-                    fileStream?.Dispose();
-                }
-            }
-            else
+            if (!File.Exists(path))
             {
                 return null;
+            }
+
+            using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(stream, Module.FilesEncoding))
+            {
+                var content = reader.ReadToEnd();
+                FilePreamble = reader.CurrentEncoding.GetPreamble();
+                return content;
             }
         }
 
@@ -730,12 +711,7 @@ namespace GitUI.Editor
             _patchHighlighting = true;
         }
 
-        private void Reset(bool diff, bool text)
-        {
-            Reset(diff, text, false);
-        }
-
-        private void Reset(bool diff, bool text, bool staging_diff)
+        private void Reset(bool diff, bool text, bool staging_diff = false)
         {
             _patchHighlighting = diff;
             SetVisibilityDiffContextMenu(diff, staging_diff);
@@ -964,7 +940,7 @@ namespace GitUI.Editor
 
             // go to the top of change block
             while (firstVisibleLine > 0 &&
-                _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new string[] { "+", "-" }))
+                _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new[] { "+", "-" }))
             {
                 firstVisibleLine--;
             }
@@ -973,8 +949,8 @@ namespace GitUI.Editor
             {
                 var lineContent = _internalFileViewer.GetLineText(line);
 
-                if (lineContent.StartsWithAny(new string[] { "+", "-" })
-                    && !lineContent.StartsWithAny(new string[] { "++", "--" }))
+                if (lineContent.StartsWithAny(new[] { "+", "-" })
+                    && !lineContent.StartsWithAny(new[] { "++", "--" }))
                 {
                     emptyLineCheck = true;
                 }
@@ -1045,14 +1021,14 @@ namespace GitUI.Editor
 
         internal enum Commands
         {
-            Find,
-            GoToLine,
-            IncreaseNumberOfVisibleLines,
-            DecreaseNumberOfVisibleLines,
-            ShowEntireFile,
-            TreatFileAsText,
-            NextChange,
-            PreviousChange
+            Find = 0,
+            GoToLine = 1,
+            IncreaseNumberOfVisibleLines = 2,
+            DecreaseNumberOfVisibleLines = 3,
+            ShowEntireFile = 4,
+            TreatFileAsText = 5,
+            NextChange = 6,
+            PreviousChange = 7
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -1090,13 +1066,11 @@ namespace GitUI.Editor
         public void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _internalFileViewer.SetFileLoader(fileLoader);
-            _fileLoader = fileLoader;
         }
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Encoding encod = null;
-
+            Encoding encod;
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
             {
                 encod = Module.FilesEncoding;
@@ -1108,8 +1082,8 @@ namespace GitUI.Editor
             else
             {
                 encod = AppSettings.AvailableEncodings.Values
-                      .Where(en => en.EncodingName == encodingToolStripComboBox.Text)
-                      .FirstOrDefault() ?? Module.FilesEncoding;
+                    .FirstOrDefault(en => en.EncodingName == encodingToolStripComboBox.Text)
+                        ?? Module.FilesEncoding;
             }
 
             if (!encod.Equals(Encoding))
@@ -1176,7 +1150,7 @@ namespace GitUI.Editor
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
-                    char[] specials = new char[] { ' ', '-', '+' };
+                    char[] specials = { ' ', '-', '+' };
                     lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
                 }
 
@@ -1209,21 +1183,23 @@ namespace GitUI.Editor
         private void applySelectedLines(int selectionStart, int selectionLength, bool reverse)
         {
             // Prepare git command
-            string args = "apply --3way --whitespace=nowarn";
+            const string args = "apply --3way --whitespace=nowarn";
 
             byte[] patch;
 
             if (reverse)
             {
-                patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, GetText(),
-                selectionStart, selectionLength,
-                false, Encoding);
+                patch = PatchManager.GetResetUnstagedLinesAsPatch(
+                    Module, GetText(),
+                    selectionStart, selectionLength,
+                    false, Encoding);
             }
             else
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
-                selectionStart, selectionLength,
-                false, Encoding, false);
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    GetText(),
+                    selectionStart, selectionLength,
+                    false, Encoding, false);
             }
 
             if (patch != null && patch.Length > 0)

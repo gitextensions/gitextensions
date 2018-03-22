@@ -153,8 +153,7 @@ namespace GitCommandsTests.Helpers
         [TestCaseSource(nameof(GetInvalidPaths))]
         public void TryFindFullPath_not_throw_if_file_not_exist(string fileName)
         {
-            string fullPath;
-            PathUtil.TryFindFullPath(fileName, out fullPath).Should().BeFalse();
+            PathUtil.TryFindFullPath(fileName, out _).Should().BeFalse();
         }
 
         private static IEnumerable<string> GetInvalidPaths()

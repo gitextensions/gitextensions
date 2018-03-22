@@ -14,11 +14,11 @@ namespace GitCommands.Remote
         /// <summary>
         /// Indicates whether the "remote update" is desirable after the save operation.
         /// </summary>
-        public bool ShouldUpdateRemote { get; private set; }
+        public bool ShouldUpdateRemote { get; }
 
         /// <summary>
         /// Gets the output of the save operation (if any).
         /// </summary>
-        public string UserMessage { get; private set; }
+        public string UserMessage { get; }
     }
 }

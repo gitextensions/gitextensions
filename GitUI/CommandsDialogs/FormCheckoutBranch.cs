@@ -68,12 +68,7 @@ namespace GitUI.CommandsDialogs
             Shown += FormCheckoutBranch_Shown;
         }
 
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote)
-            : this(commands, branch, remote, null)
-        {
-        }
-
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons = null)
             : this(commands)
         {
             _isLoading = true;
@@ -287,7 +282,7 @@ namespace GitUI.CommandsDialogs
                     if (localBranchRef != null && remoteBranchRef != null)
                     {
                         string mergeBaseGuid = Module.GetMergeBase(localBranchRef.Guid, remoteBranchRef.Guid);
-                        bool isResetFastForward = localBranchRef.Guid.Equals(mergeBaseGuid);
+                        bool isResetFastForward = localBranchRef.Guid == mergeBaseGuid;
                         if (!isResetFastForward)
                         {
                             string mergeBaseText = mergeBaseGuid.IsNullOrWhiteSpace()
@@ -511,7 +506,7 @@ namespace GitUI.CommandsDialogs
             return _remoteBranches;
         }
 
-        private IList<string> GetContainsRevisionBranches()
+        private IReadOnlyList<string> GetContainsRevisionBranches()
         {
             var result = new HashSet<string>();
             if (_containRevisons.Length > 0)

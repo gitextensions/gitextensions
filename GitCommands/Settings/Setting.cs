@@ -8,7 +8,7 @@ namespace GitCommands.Settings
         public readonly T DefaultValue;
         public readonly string Name;
 
-        public Setting(string name, SettingsPath settingsSource, T defaultValue)
+        protected Setting(string name, SettingsPath settingsSource, T defaultValue)
         {
             Name = name;
             SettingsSource = settingsSource;

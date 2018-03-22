@@ -25,19 +25,19 @@ namespace Github3
         /// <summary>
         /// Local name of the remote, 'origin'
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Owner of the remote repository, in
         /// git@github.com:mabako/Git.hub.git this is 'mabako'
         /// </summary>
-        public string Owner { get; private set; }
+        public string Owner { get; }
 
         /// <summary>
         /// Name of the remote repository, in
         /// git@github.com:mabako/Git.hub.git this is 'Git.hub'
         /// </summary>
-        public string RemoteRepositoryName { get; private set; }
+        public string RemoteRepositoryName { get; }
 
         public string Data => Owner + "/" + RemoteRepositoryName;
         public string DisplayData => Data;

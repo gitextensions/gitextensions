@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    internal class CopyToClipboardMenuHelper
+    internal static class CopyToClipboardMenuHelper
     {
         /// <summary>
         /// ...
@@ -56,42 +56,6 @@ namespace GitUI.UserControls.RevisionGridClasses
             }
 
             target.Text += string.Format("     ({0})", postfix);
-        }
-
-        /// <summary>
-        /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
-        /// from http://blog.abodit.com/2010/02/string-extension-methods-for-truncating-and-adding-ellipsis/
-        /// </summary>
-        public static string StrLimitWithElipses(string str, int characterCount)
-        {
-            if (characterCount < 5)
-            {
-                return StrLimit(str, characterCount); // Can’t do much with such a short limit
-            }
-
-            if (str.Length <= characterCount - 3)
-            {
-                return str;
-            }
-            else
-            {
-                return str.Substring(0, characterCount - 3) + "...";
-            }
-        }
-
-        /// <summary>
-        /// Substring but OK if shorter
-        /// </summary>
-        public static string StrLimit(string str, int characterCount)
-        {
-            if (str.Length <= characterCount)
-            {
-                return str;
-            }
-            else
-            {
-                return str.Substring(0, characterCount).TrimEnd(' ');
-            }
         }
     }
 }

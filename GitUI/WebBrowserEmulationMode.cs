@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.Win32;
 
 namespace GitUI
 {
-    public sealed class WebBrowserEmulationMode
+    public static class WebBrowserEmulationMode
     {
         public static void SetBrowserFeatureControl()
         {
@@ -21,7 +20,7 @@ namespace GitUI
             // FeatureControl settings are per-process
             var appName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
 
-            var featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
+            const string featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
             if (TryGetBrowserEmulationMode(out var emulationMode))
             {
@@ -37,7 +36,7 @@ namespace GitUI
             emulationMode = 11000; // Internet Explorer 11. Webpages containing standards-based !DOCTYPE directives are displayed in IE11 Standards mode.
             try
             {
-                int browserVersion = 0;
+                int browserVersion;
                 using (var ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
                     RegistryKeyPermissionCheck.ReadSubTree,
                     System.Security.AccessControl.RegistryRights.QueryValues))

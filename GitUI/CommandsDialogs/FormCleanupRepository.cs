@@ -59,13 +59,11 @@ namespace GitUI.CommandsDialogs
             {
                 return null;
             }
-            else
-            {
-                // 1. get all lines from text box which are not empty
-                // 2. wrap lines with ""
-                // 3. join together with space as separator
-                return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
-            }
+
+            // 1. get all lines from text box which are not empty
+            // 2. wrap lines with ""
+            // 3. join together with space as separator
+            return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
         }
 
         private void Cancel_Click(object sender, EventArgs e)

@@ -4,7 +4,8 @@ namespace GitUI.UserManual
 {
     public class StandardHtmlUserManual : IProvideUserManual
     {
-        private readonly string _location = @"https://git-extensions-documentation.readthedocs.org/en/latest/";
+        private const string _location = @"https://git-extensions-documentation.readthedocs.org/en/latest/";
+
         private readonly string _subFolder;
         private readonly string _anchorName;
 

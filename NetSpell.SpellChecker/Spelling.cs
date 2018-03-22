@@ -16,23 +16,23 @@ namespace NetSpell.SpellChecker
     ///     The Spelling class encapsulates the functions necessary to check
     ///     the spelling of inputted text.
     /// </summary>
-    [ToolboxBitmap(typeof(NetSpell.SpellChecker.Spelling), "Spelling.bmp")]
-    public class Spelling : System.ComponentModel.Component
+    [ToolboxBitmap(typeof(Spelling), "Spelling.bmp")]
+    public class Spelling : Component
     {
         #region Global Regex
         // Regex are class scope and compiled to improve performance on reuse
-        private Regex _digitRegex = new Regex(@"^\d", RegexOptions.Compiled);
-        private Regex _htmlRegex = new Regex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase & RegexOptions.Compiled);
+        private readonly Regex _digitRegex = new Regex(@"^\d", RegexOptions.Compiled);
+        private readonly Regex _htmlRegex = new Regex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase & RegexOptions.Compiled);
         private MatchCollection _htmlTags;
-        private Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
-        private Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
-        private Regex _wordEx = new Regex(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
+        private readonly Regex _letterRegex = new Regex(@"\D", RegexOptions.Compiled);
+        private readonly Regex _upperRegex = new Regex(@"[^\p{Lu}]", RegexOptions.Compiled); // @"[^A-Z]
+        private readonly Regex _wordEx = new Regex(@"\b[\w']+\b", RegexOptions.Compiled); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
         private MatchCollection _words;
 
         #endregion
 
         #region private variables
-        private System.ComponentModel.Container _components;
+        private Container _components;
         #endregion
 
         #region Events
@@ -43,29 +43,29 @@ namespace NetSpell.SpellChecker
         /// <remarks>
         ///     Use this event to update the parent text
         /// </remarks>
-        public event DeletedWordEventHandler DeletedWord;
+        public event EventHandler<SpellingEventArgs> DeletedWord;
 
         /// <summary>
         ///     This event is fired when word is detected two times in a row
         /// </summary>
-        public event DoubledWordEventHandler DoubledWord;
+        public event EventHandler<SpellingEventArgs> DoubledWord;
 
         /// <summary>
         ///     This event is fired when the spell checker reaches the end of
         ///     the text in the Text property
         /// </summary>
-        public event EndOfTextEventHandler EndOfText;
+        public event EventHandler EndOfText;
 
         /// <summary>
         ///     This event is fired when a word is skipped
         /// </summary>
-        public event IgnoredWordEventHandler IgnoredWord;
+        public event EventHandler<SpellingEventArgs> IgnoredWord;
 
         /// <summary>
         ///     This event is fired when the spell checker finds a word that
         ///     is not in the dictionaries
         /// </summary>
-        public event MisspelledWordEventHandler MisspelledWord;
+        public event EventHandler<SpellingEventArgs> MisspelledWord;
 
         /// <summary>
         ///     This event is fired when a word is replace
@@ -73,43 +73,7 @@ namespace NetSpell.SpellChecker
         /// <remarks>
         ///     Use this event to update the parent text
         /// </remarks>
-        public event ReplacedWordEventHandler ReplacedWord;
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void DeletedWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void DoubledWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void EndOfTextEventHandler(object sender, System.EventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void IgnoredWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void MisspelledWordEventHandler(object sender, SpellingEventArgs e);
-
-        /// <summary>
-        ///     This represents the delegate method prototype that
-        ///     event receivers must implement
-        /// </summary>
-        public delegate void ReplacedWordEventHandler(object sender, ReplaceWordEventArgs e);
+        public event EventHandler<ReplaceWordEventArgs> ReplacedWord;
 
         /// <summary>
         ///     This is the method that is responsible for notifying
@@ -133,7 +97,7 @@ namespace NetSpell.SpellChecker
         ///     This is the method that is responsible for notifying
         ///     receivers that the event occurred
         /// </summary>
-        protected virtual void OnEndOfText(System.EventArgs e)
+        protected virtual void OnEndOfText(EventArgs e)
         {
             EndOfText?.Invoke(this, e);
         }
@@ -180,7 +144,7 @@ namespace NetSpell.SpellChecker
         /// <summary>
         ///     Required for Windows.Forms Class Composition Designer support
         /// </summary>
-        public Spelling(System.ComponentModel.IContainer container)
+        public Spelling(IContainer container)
         {
             container.Add(this);
             InitializeComponent();
@@ -619,7 +583,7 @@ namespace NetSpell.SpellChecker
         /// </remarks>
         public int EditDistance(string source, string target)
         {
-            return EditDistance(source, target, true);
+            return EditDistance(source, target, positionPriority: true);
         }
 
         /// <summary>
@@ -874,19 +838,18 @@ namespace NetSpell.SpellChecker
             if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
-                OnEndOfText(System.EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);    // raise event
                 return false;
             }
 
             Initialize();
 
-            string currentWord = "";
             bool misspelledWord = false;
 
             for (int i = startWordIndex; i <= endWordIndex; i++)
             {
                 WordIndex = i; // saving the current word index
-                currentWord = CurrentWord;
+                var currentWord = CurrentWord;
 
                 if (CheckString(currentWord))
                 {
@@ -918,7 +881,7 @@ namespace NetSpell.SpellChecker
 
             if (_wordIndex >= _words.Count - 1 && !misspelledWord)
             {
-                OnEndOfText(System.EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);    // raise event
             }
 
             return misspelledWord;
@@ -1188,7 +1151,7 @@ namespace NetSpell.SpellChecker
         #region public properties
 
         private WordDictionary _dictionary;
-        private HashSet<string> _autoCompleteWords = new HashSet<string>();
+        private readonly HashSet<string> _autoCompleteWords = new HashSet<string>();
         private string _replacementWord = "";
         private StringBuilder _text = new StringBuilder();
         private int _wordIndex;

@@ -40,14 +40,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         /// <summary>
-        /// might return an empty or invalid revision
-        /// </summary>
-        public string GetSelectedRevision()
-        {
-            return _selectedRevision;
-        }
-
-        /// <summary>
         /// returns null if revision does not exist (could not be revparsed)
         /// </summary>
         public string ValidateAndGetSelectedRevision()
@@ -68,7 +60,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Go()
         {
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Close();
         }
 
@@ -77,7 +69,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Go();
         }
 
-        private void linkGitRevParse_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        private void linkGitRevParse_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html#_specifying_revisions");
         }
@@ -110,14 +102,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 });
         }
 
-        private static void GitRefsToDataSource(ComboBox cb, IList<IGitRef> refs)
+        private static void GitRefsToDataSource(ComboBox cb, IReadOnlyList<IGitRef> refs)
         {
             cb.DataSource = refs;
         }
 
-        private static IList<IGitRef> DataSourceToGitRefs(ComboBox cb)
+        private static IReadOnlyList<IGitRef> DataSourceToGitRefs(ComboBox cb)
         {
-            return (IList<IGitRef>)cb.DataSource;
+            return (IReadOnlyList<IGitRef>)cb.DataSource;
         }
 
         private void comboBoxTags_Enter(object sender, EventArgs e)
@@ -206,19 +198,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Go();
         }
 
-        private void comboBoxTags_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxTags_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void comboBoxBranches_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void GoIfEnterKey(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void GoIfEnterKey(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 Go();
             }
@@ -248,9 +240,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (disposing)
             {
-                _tagsLoader.Cancel();
                 _tagsLoader.Dispose();
-                _branchesLoader.Cancel();
                 _branchesLoader.Dispose();
 
                 components?.Dispose();

@@ -14,8 +14,8 @@ namespace GitCommands
             Lines = new List<GitBlameLine>();
         }
 
-        public IList<GitBlameHeader> Headers { get; private set; }
-        public IList<GitBlameLine> Lines { get; private set; }
+        public IList<GitBlameHeader> Headers { get; }
+        public IList<GitBlameLine> Lines { get; }
 
         public GitBlameHeader FindHeaderForCommitGuid(string commitGuid)
         {
@@ -56,12 +56,12 @@ namespace GitCommands
             // return Color.White;
         }
 
-        private int GenerateIntFromString(string text)
+        private static int GenerateIntFromString(string text)
         {
             int number = 0;
             foreach (char c in text)
             {
-                number += (int)c;
+                number += c;
             }
 
             return number;
@@ -71,9 +71,9 @@ namespace GitCommands
         {
             StringBuilder toStringValue = new StringBuilder();
             toStringValue.AppendLine("Author: " + Author);
-            toStringValue.AppendLine("AuthorTime: " + AuthorTime.ToString());
+            toStringValue.AppendLine("AuthorTime: " + AuthorTime);
             toStringValue.AppendLine("Committer: " + Committer);
-            toStringValue.AppendLine("CommitterTime: " + CommitterTime.ToString());
+            toStringValue.AppendLine("CommitterTime: " + CommitterTime);
             toStringValue.AppendLine("Summary: " + Summary);
             toStringValue.AppendLine();
             toStringValue.AppendLine("FileName: " + FileName);
@@ -93,12 +93,12 @@ namespace GitCommands
 
         public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
         {
-            if (object.ReferenceEquals(x, y))
+            if (ReferenceEquals(x, y))
             {
                 return true;
             }
 
-            if (object.ReferenceEquals(x, null) || object.ReferenceEquals(y, null))
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
             {
                 return false;
             }

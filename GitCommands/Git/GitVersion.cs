@@ -30,7 +30,7 @@ namespace GitCommands
         {
             Full = Fix(version);
 
-            IList<int> numbers = GetNumbers(Full);
+            var numbers = GetNumbers(Full);
             _a = Get(numbers, 0);
             _b = Get(numbers, 1);
             _c = Get(numbers, 2);
@@ -107,12 +107,12 @@ namespace GitCommands
             return version.Trim();
         }
 
-        private static int Get(IList<int> values, int index)
+        private static int Get(IReadOnlyList<int> values, int index)
         {
             return index < values.Count ? values[index] : 0;
         }
 
-        private static IList<int> GetNumbers(string version)
+        private static IReadOnlyList<int> GetNumbers(string version)
         {
             IEnumerable<int> numbers = ParseNumbers(version);
             return new List<int>(numbers);

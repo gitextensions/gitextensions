@@ -308,7 +308,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         }
 
         #region Win32 Apis
-        internal class NativeMethods
+        internal static class NativeMethods
         {
             // Constants from the Platform SDK.
             internal const int WM_USER = 0x0400;
@@ -649,7 +649,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetUrl(this LinkClickedEventArgs e)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 return "";
@@ -666,7 +666,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
         {
-            var v = e.LinkText.Split(new char[] { '#' }, 2);
+            var v = e.LinkText.Split(new[] { '#' }, 2);
             if (v.Length == 0)
             {
                 url = "";
@@ -715,9 +715,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                 int nAcum = 0;
                 for (int i = 0; i < colFormat.Count; i++)
                 {
-                    var mfr = colFormat[i];
-                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, mfr.Key - nAcum)) + mfr.Value);
-                    nAcum = mfr.Key;
+                    var (pos, markup) = colFormat[i];
+                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, pos - nAcum)) + markup);
+                    nAcum = pos;
                 }
 
                 if (nAcum < strT.Length)
@@ -760,10 +760,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             bool fontSet = false;
             string strFont = "";
             int crFont = 0;
-            Color color = new Color();
             int yHeight = 0;
 
-            int i = 0;
+            int i;
             int pos = 0;
             int k = rtb.TextLength;
             char[] chtrim = { ' ', '\x0000' };
@@ -809,7 +808,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     int fsize = yHeight / (20 * 5);
 
                     // color object from COLORREF
-                    color = GetColor(crFont);
+                    var color = GetColor(crFont);
 
                     // add <font> tag
                     string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));
@@ -1157,9 +1156,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                 paraFormatChanged = false;
             }
 
-            public List<KeyValuePair<int, int>> links;
-            public Stack<CHARFORMAT> scf;
-            public Stack<PARAFORMAT> spf;
+            public readonly List<KeyValuePair<int, int>> links;
+            public readonly Stack<CHARFORMAT> scf;
+            public readonly Stack<PARAFORMAT> spf;
             public CHARFORMAT cf;
             public PARAFORMAT pf;
             public bool charFormatChanged;
@@ -1180,9 +1179,11 @@ namespace GitUI.Editor.RichTextBoxExtension
             IntPtr oldMask = BeginUpdate(handleRef);
             SetHideSelectionInternal(handleRef, true);
 
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
-            settings.CheckCharacters = false;
+            var settings = new XmlReaderSettings
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                CheckCharacters = false
+            };
 
             try
             {
@@ -1195,7 +1196,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }
@@ -1203,9 +1204,9 @@ namespace GitUI.Editor.RichTextBoxExtension
             // apply links style
             CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
             ncf.cbSize = Marshal.SizeOf(ncf);
-            foreach (var pair in cs.links)
+            foreach (var (start, length) in cs.links)
             {
-                rtb.Select(pair.Key, pair.Value);
+                rtb.Select(start, length);
                 SetCharFormat(handleRef, ncf);
             }
 
@@ -1274,8 +1275,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                 case XmlNodeType.ProcessingInstruction:
                     break;
                 case XmlNodeType.Comment:
-                    break;
-                default:
                     break;
             }
         }
@@ -1496,8 +1495,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             rtb.HideSelection = true;
 
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
 
             try
             {
@@ -1521,13 +1519,11 @@ namespace GitUI.Editor.RichTextBoxExtension
                                 break;
                             case XmlNodeType.Comment:
                                 break;
-                            default:
-                                break;
                         }
                     }
                 }
             }
-            catch (System.Xml.XmlException ex)
+            catch (XmlException ex)
             {
                 Debug.WriteLine(ex.Message);
             }

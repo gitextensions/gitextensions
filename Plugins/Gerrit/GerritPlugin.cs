@@ -89,16 +89,11 @@ namespace Gerrit
                 !HaveValidCommitMsgHook(e.GitModule);
         }
 
-        private bool HaveValidCommitMsgHook(IGitModule gitModule)
-        {
-            return HaveValidCommitMsgHook(gitModule, false);
-        }
-
-        private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force)
+        private static bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force = false)
         {
             if (gitModule == null)
             {
-                throw new ArgumentNullException("gitDirectory");
+                throw new ArgumentNullException(nameof(gitModule));
             }
 
             string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
@@ -402,14 +397,12 @@ namespace Gerrit
             return FindControl(form.Controls, predicate);
         }
 
-        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                 {
                     return result;
                 }

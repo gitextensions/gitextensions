@@ -9,19 +9,18 @@ namespace GitUI
     public class FilterBranchHelper : IDisposable
     {
         private bool _applyingFilter;
-        private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
-        private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
-        private RevisionGrid _NO_TRANSLATE_RevisionGrid;
-        private ToolStripMenuItem _localToolStripMenuItem;
-        private ToolStripMenuItem _tagsToolStripMenuItem;
-        private ToolStripMenuItem _remoteToolStripMenuItem;
+        private readonly ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
+        private readonly RevisionGrid _NO_TRANSLATE_RevisionGrid;
+        private readonly ToolStripMenuItem _localToolStripMenuItem;
+        private readonly ToolStripMenuItem _tagsToolStripMenuItem;
+        private readonly ToolStripMenuItem _remoteToolStripMenuItem;
         private GitModule Module => _NO_TRANSLATE_RevisionGrid.Module;
 
         public FilterBranchHelper()
         {
-            _localToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _tagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _remoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _localToolStripMenuItem = new ToolStripMenuItem();
+            _tagsToolStripMenuItem = new ToolStripMenuItem();
+            _remoteToolStripMenuItem = new ToolStripMenuItem();
 
             //
             // localToolStripMenuItem
@@ -51,10 +50,9 @@ namespace GitUI
             : this()
         {
             _NO_TRANSLATE_toolStripBranches = toolStripBranches;
-            _NO_TRANSLATE_toolStripDropDownButton2 = toolStripDropDownButton2;
             _NO_TRANSLATE_RevisionGrid = revisionGrid;
 
-            _NO_TRANSLATE_toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
+            toolStripDropDownButton2.DropDownItems.AddRange(new ToolStripItem[]
             {
                 _localToolStripMenuItem,
                 _tagsToolStripMenuItem,

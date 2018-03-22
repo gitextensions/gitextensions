@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -14,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        private List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
+        private readonly List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
         private ISettingsPageHost _pageHost;
         protected ISettingsPageHost PageHost
         {
@@ -39,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             _pageHost = pageHost;
         }
 
-        public static T Create<T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
+        public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
         {
             T result = new T();
 
@@ -125,7 +126,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
-        private IList<string> _childrenText;
+        private IReadOnlyList<string> _childrenText;
 
         /// <summary>
         /// override to provide search keywords
@@ -135,39 +136,43 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return _childrenText ?? (_childrenText = GetChildrenText(this));
         }
 
-        /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
-        private static IList<string> GetChildrenText(Control control)
+        /// <summary>
+        /// Gets the <see cref="Control.Text"/> values of <paramref name="control"/>
+        /// and all its descendants.
+        /// </summary>
+        private static IReadOnlyList<string> GetChildrenText(Control control)
         {
-            if (control.HasChildren == false)
-            {
-                return new string[0];
-            }
+            var texts = new List<string>();
 
-            List<string> texts = new List<string>();
-            foreach (Control child in control.Controls)
+            var queue = new Queue<Control>();
+            queue.Enqueue(control);
+
+            while (queue.Count != 0)
             {
-                if (!child.Visible || child is NumericUpDown)
-                {// skip: invisible; some input controls
+                var next = queue.Dequeue();
+
+                if (!next.Visible || next is NumericUpDown)
+                {
+                    // skip: invisible; some input controls
                     continue;
                 }
 
-                if (child.Enabled && !string.IsNullOrWhiteSpace(child.Text))
-                {// enabled AND not whitespace -> add
+                if (next.Enabled && !string.IsNullOrWhiteSpace(next.Text))
+                {
+                    // enabled AND not whitespace -> add
                     // also searches text boxes and comboboxes
                     // TODO(optional): search through the drop down list of comboboxes
                     // TODO(optional): convert numeric dropdown values to text
-                    texts.Add(child.Text.Trim().ToLowerInvariant());
+                    texts.Add(next.Text.Trim().ToLowerInvariant());
                 }
 
-                texts.AddRange(GetChildrenText(child)); // recurse
+                foreach (Control child in next.Controls)
+                {
+                    queue.Enqueue(child);
+                }
             }
 
             return texts;
-        }
-
-        protected virtual string GetCommaSeparatedKeywordList()
-        {
-            return "";
         }
 
         public virtual bool IsInstantSavePage => false;
@@ -184,7 +189,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class StringComboBoxAdapter : GitUIPluginInterfaces.ChoiceSetting
+    public class StringComboBoxAdapter : ChoiceSetting
     {
         public StringComboBoxAdapter(GitCommands.Settings.StringSetting setting, ComboBox comboBox)
             : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.DefaultValue)
@@ -193,7 +198,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
     }
 
-    public class IntTextBoxAdapter : GitUIPluginInterfaces.NumberSetting<int>
+    public class IntTextBoxAdapter : NumberSetting<int>
     {
         public IntTextBoxAdapter(IntNullableSetting setting, TextBox control)
             : base(setting.FullPath, setting.DefaultValue.Value)

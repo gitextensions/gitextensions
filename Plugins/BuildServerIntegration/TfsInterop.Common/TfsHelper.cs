@@ -74,7 +74,7 @@ namespace TfsInterop
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).Cast<IBuildDefinition>().ToArray();
+                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
                 }
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace TfsInterop
             }
         }
 
-        public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
+        public IReadOnlyList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
             var result = new List<IBuild>();
             foreach (var buildDefinition in _buildDefinitions)

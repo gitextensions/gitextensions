@@ -36,12 +36,12 @@ namespace GitUIPluginInterfaces
 
         public void SetBool(string name, bool? value)
         {
-            SetValue<bool?>(name, value, (bool? b) => b.HasValue ? (b.Value ? "true" : "false") : null);
+            SetValue(name, value, (bool? b) => b.HasValue ? (b.Value ? "true" : "false") : null);
         }
 
         public void SetInt(string name, int? value)
         {
-            SetValue<int?>(name, value, (int? b) => b.HasValue ? b.ToString() : null);
+            SetValue(name, value, (int? b) => b.HasValue ? b.ToString() : null);
         }
 
         public int? GetInt(string name)
@@ -59,7 +59,7 @@ namespace GitUIPluginInterfaces
 
         public void SetFloat(string name, float? value)
         {
-            SetValue<float?>(name, value, (float? b) => b.HasValue ? b.ToString() : null);
+            SetValue(name, value, (float? b) => b.HasValue ? b.ToString() : null);
         }
 
         public float? GetFloat(string name)
@@ -82,7 +82,7 @@ namespace GitUIPluginInterfaces
 
         public void SetDate(string name, DateTime? value)
         {
-            SetValue<DateTime?>(name, value, (DateTime? b) => b?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+            SetValue(name, value, (DateTime? b) => b?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
         }
 
         public DateTime? GetDate(string name)
@@ -105,17 +105,17 @@ namespace GitUIPluginInterfaces
 
         public void SetFont(string name, Font value)
         {
-            SetValue<Font>(name, value, x => x.AsString());
+            SetValue(name, value, x => x.AsString());
         }
 
         public Font GetFont(string name, Font defaultValue)
         {
-            return GetValue<Font>(name, defaultValue, x => x.Parse(defaultValue));
+            return GetValue(name, defaultValue, x => x.Parse(defaultValue));
         }
 
         public void SetColor(string name, Color? value)
         {
-            SetValue<Color?>(name, value, x => x.HasValue ? ColorTranslator.ToHtml(x.Value) : null);
+            SetValue(name, value, x => x.HasValue ? ColorTranslator.ToHtml(x.Value) : null);
         }
 
         public Color? GetColor(string name)
@@ -130,12 +130,12 @@ namespace GitUIPluginInterfaces
 
         public void SetEnum<T>(string name, T value)
         {
-            SetValue<T>(name, value, x => x.ToString());
+            SetValue(name, value, x => x.ToString());
         }
 
         public T GetEnum<T>(string name, T defaultValue) where T : struct
         {
-            return GetValue<T>(name, defaultValue, x =>
+            return GetValue(name, defaultValue, x =>
             {
                 var val = x.ToString();
 
@@ -150,7 +150,7 @@ namespace GitUIPluginInterfaces
 
         public void SetNullableEnum<T>(string name, T? value) where T : struct
         {
-            SetValue<T?>(name, value, x => x.HasValue ? x.ToString() : string.Empty);
+            SetValue(name, value, x => x.HasValue ? x.ToString() : string.Empty);
         }
 
         public T? GetNullableEnum<T>(string name) where T : struct
@@ -175,18 +175,19 @@ namespace GitUIPluginInterfaces
 
         public void SetString(string name, string value)
         {
-            SetValue<string>(name, value, s => string.IsNullOrEmpty(s) ? null : s);
+            SetValue(name, value, s => string.IsNullOrEmpty(s) ? null : s);
         }
 
         public string GetString(string name, string defaultValue)
         {
-            return GetValue<string>(name, defaultValue, x => x);
+            return GetValue(name, defaultValue, x => x);
         }
     }
 
     public static class FontParser
     {
-        private static readonly string InvariantCultureId = "_IC_";
+        private const string InvariantCultureId = "_IC_";
+
         public static string AsString(this Font value)
         {
             return string.Format(CultureInfo.InvariantCulture,
@@ -210,7 +211,7 @@ namespace GitUIPluginInterfaces
             try
             {
                 string fontSize;
-                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                if (parts.Length == 3 && parts[2] == InvariantCultureId)
                 {
                     fontSize = parts[1];
                 }

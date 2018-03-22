@@ -32,7 +32,6 @@ namespace GitUI
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
         public GitExtensionsForm(bool enablePositionRestore)
-            : base()
         {
             _enablePositionRestore = enablePositionRestore;
 
@@ -118,73 +117,68 @@ namespace GitUI
         public static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
+
             if (colorIndex == (int)ColorIndex.Unknown)
             {
                 colorIndex = 0;
             }
 
-            Icon appIcon;
+            Icon[] icons;
             if (iconStyle.Equals("small", StringComparison.OrdinalIgnoreCase))
             {
-                Icon[] icons =
+                icons = new[]
                 {
-                                    Resources.x_with_arrow,
-                                    Resources.x_with_arrow_blue,
-                                    Resources.x_with_arrow_green,
-                                    Resources.x_with_arrow_lightblue,
-                                    Resources.x_with_arrow_purple,
-                                    Resources.x_with_arrow_red,
-                                    Resources.x_with_arrow_yellow
-                                };
-                Debug.Assert(icons.Length == 7, "icons.Length == 7");
-                appIcon = icons[colorIndex];
+                    Resources.x_with_arrow,
+                    Resources.x_with_arrow_blue,
+                    Resources.x_with_arrow_green,
+                    Resources.x_with_arrow_lightblue,
+                    Resources.x_with_arrow_purple,
+                    Resources.x_with_arrow_red,
+                    Resources.x_with_arrow_yellow
+                };
             }
             else if (iconStyle.Equals("large", StringComparison.OrdinalIgnoreCase))
             {
-                Icon[] icons =
+                icons = new[]
                 {
-                                    Resources.git_extensions_logo_final,
-                                    Resources.git_extensions_logo_final_blue,
-                                    Resources.git_extensions_logo_final_green,
-                                    Resources.git_extensions_logo_final_lightblue,
-                                    Resources.git_extensions_logo_final_purple,
-                                    Resources.git_extensions_logo_final_red,
-                                    Resources.git_extensions_logo_final_yellow
-                                };
-                Debug.Assert(icons.Length == 7, "icons.Length == 7");
-                appIcon = icons[colorIndex];
+                    Resources.git_extensions_logo_final,
+                    Resources.git_extensions_logo_final_blue,
+                    Resources.git_extensions_logo_final_green,
+                    Resources.git_extensions_logo_final_lightblue,
+                    Resources.git_extensions_logo_final_purple,
+                    Resources.git_extensions_logo_final_red,
+                    Resources.git_extensions_logo_final_yellow
+                };
             }
             else if (iconStyle.Equals("cow", StringComparison.OrdinalIgnoreCase))
             {
-                Icon[] icons =
+                icons = new[]
                 {
-                                    Resources.cow_head,
-                                    Resources.cow_head_blue,
-                                    Resources.cow_head_green,
-                                    Resources.cow_head_blue,
-                                    Resources.cow_head_purple,
-                                    Resources.cow_head_red,
-                                    Resources.cow_head_yellow
-                                };
-                Debug.Assert(icons.Length == 7, "icons.Length == 7");
-                appIcon = icons[colorIndex];
+                    Resources.cow_head,
+                    Resources.cow_head_blue,
+                    Resources.cow_head_green,
+                    Resources.cow_head_blue,
+                    Resources.cow_head_purple,
+                    Resources.cow_head_red,
+                    Resources.cow_head_yellow
+                };
             }
             else
             {
-                Icon[] icons =
+                icons = new[]
                 {
-                                    Resources.git_extensions_logo_final_mixed,
-                                    Resources.git_extensions_logo_final_mixed_blue,
-                                    Resources.git_extensions_logo_final_mixed_green,
-                                    Resources.git_extensions_logo_final_mixed_lightblue,
-                                    Resources.git_extensions_logo_final_mixed_purple,
-                                    Resources.git_extensions_logo_final_mixed_red,
-                                    Resources.git_extensions_logo_final_mixed_yellow
-                                };
-                Debug.Assert(icons.Length == 7, "icons.Length == 7");
-                appIcon = icons[colorIndex];
+                    Resources.git_extensions_logo_final_mixed,
+                    Resources.git_extensions_logo_final_mixed_blue,
+                    Resources.git_extensions_logo_final_mixed_green,
+                    Resources.git_extensions_logo_final_mixed_lightblue,
+                    Resources.git_extensions_logo_final_mixed_purple,
+                    Resources.git_extensions_logo_final_mixed_red,
+                    Resources.git_extensions_logo_final_mixed_yellow
+                };
             }
 
+            Debug.Assert(icons.Length == 7, "icons.Length == 7");
+            var appIcon = icons[colorIndex];
             Debug.Assert(appIcon != null, "appIcon != null");
             return appIcon;
         }

@@ -61,8 +61,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                    checkBoxEnableBuildServerIntegration.SetNullableChecked((bool?)CurrentSettings.BuildServer.EnableIntegration.Value);
-                    checkBoxShowBuildSummary.SetNullableChecked((bool?)CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
+                    checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
+                    checkBoxShowBuildSummary.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
 
                     BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? _noneItem.Text;
                 });
@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return (string)BuildServerType.SelectedItem;
         }
 
-        private void BuildServerType_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void BuildServerType_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActivateBuildServerSettingsControl();
         }

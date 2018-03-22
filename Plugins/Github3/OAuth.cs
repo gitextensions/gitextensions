@@ -15,7 +15,7 @@ namespace Github3
             webBrowser1.ScriptErrorsSuppressed = true;
         }
 
-        protected override void OnLoad(System.EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Github3
             }
         }
 
-        private bool _gotToken = false;
+        private bool _gotToken;
 
         public void web_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
@@ -75,7 +75,7 @@ namespace Github3
 
                     GithubLoginInfo.OAuthToken = token;
 
-                    MessageBox.Show(Owner as IWin32Window, "Successfully retrieved OAuth token.", "Github Authorization");
+                    MessageBox.Show(Owner, "Successfully retrieved OAuth token.", "Github Authorization");
                 }
             }
         }

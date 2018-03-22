@@ -19,7 +19,7 @@ namespace GitCommands.Remote
         /// <summary>
         /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemotePush"/> key.
         /// </summary>
-        public IList<string> Push { get; set; }
+        public IReadOnlyList<string> Push { get; set; }
 
         /// <summary>
         /// Gets or sets value stored in .git/config via <see cref="SettingKeyString.RemotePushUrl"/> key.

@@ -3,40 +3,8 @@ using System.IO;
 
 namespace GitCommands
 {
-    public class CommitDto
+    public static class CommitHelper
     {
-        public CommitDto(string message, bool amend)
-        {
-            Message = message;
-            Amend = amend;
-        }
-
-        public string Message { get; set; }
-        public string Result { get; set; }
-        public bool Amend { get; set; }
-    }
-
-    public class CommitHelper
-    {
-        public CommitHelper(CommitDto dto)
-        {
-            Dto = dto;
-        }
-
-        public CommitDto Dto { get; set; }
-
-        public void Execute(GitModule module)
-        {
-            if (Dto.Amend)
-            {
-                Dto.Result = module.RunGitCmd("commit --amend -m \"" + Dto.Message + "\"");
-            }
-            else
-            {
-                Dto.Result = module.RunGitCmd("commit -m \"" + Dto.Message + "\"");
-            }
-        }
-
         public static void SetCommitMessage(GitModule module, string commitMessageText, bool amendCommit)
         {
             if (string.IsNullOrEmpty(commitMessageText))
@@ -63,9 +31,9 @@ namespace GitCommands
 
         public static string GetCommitMessage(GitModule module)
         {
-            if (File.Exists(CommitHelper.GetCommitMessagePath(module)))
+            if (File.Exists(GetCommitMessagePath(module)))
             {
-                return File.ReadAllText(CommitHelper.GetCommitMessagePath(module), module.CommitEncoding);
+                return File.ReadAllText(GetCommitMessagePath(module), module.CommitEncoding);
             }
 
             return string.Empty;
@@ -89,9 +57,10 @@ namespace GitCommands
         public static bool GetAmendState(GitModule module)
         {
             bool amendState = false;
-            if (AppSettings.RememberAmendCommitState && File.Exists(CommitHelper.GetAmendPath(module)))
+
+            if (AppSettings.RememberAmendCommitState && File.Exists(GetAmendPath(module)))
             {
-                var amendSaveStateFilePath = CommitHelper.GetAmendPath(module);
+                var amendSaveStateFilePath = GetAmendPath(module);
                 bool.TryParse(File.ReadAllText(amendSaveStateFilePath), out amendState);
                 try
                 {

@@ -33,6 +33,9 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
+            annotate.Items.AddRange(DropwdownTagOperation);
+            annotate.SelectedIndex = 0;
+
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
@@ -128,28 +131,21 @@ namespace GitUI.CommandsDialogs
             tagMessage.Enabled = tagOperation.CanProvideMessage();
         }
 
-        private TagOperation GetSelectedOperation(int dropdownSelection)
+        private static TagOperation GetSelectedOperation(int dropdownSelection)
         {
-            TagOperation returnValue = TagOperation.Lightweight;
             switch (dropdownSelection)
             {
                 case 0:
-                    returnValue = TagOperation.Lightweight;
-                    break;
+                    return TagOperation.Lightweight;
                 case 1:
-                    returnValue = TagOperation.Annotate;
-                    break;
+                    return TagOperation.Annotate;
                 case 2:
-                    returnValue = TagOperation.SignWithDefaultKey;
-                    break;
+                    return TagOperation.SignWithDefaultKey;
                 case 3:
-                    returnValue = TagOperation.SignWithSpecificKey;
-                    break;
+                    return TagOperation.SignWithSpecificKey;
                 default:
                     throw new NotSupportedException("Invalid dropdownSelection");
             }
-
-            return returnValue;
         }
     }
 }

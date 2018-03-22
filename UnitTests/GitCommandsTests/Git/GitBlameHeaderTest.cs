@@ -3,24 +3,20 @@ using System.Drawing;
 using System.Text;
 using GitCommands;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitBlameHeaderTest
     {
-        private const string _testGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
-
-        [TestMethod]
+        [Test]
         public void TestConstructor()
         {
             GitBlameHeader header = new GitBlameHeader();
             Assert.IsNotNull(header);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetColor()
         {
             string randomGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
@@ -32,7 +28,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(expectedColor, header.GetColor());
         }
 
-        [TestMethod]
+        [Test]
         public void TestEquals()
         {
             GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
@@ -42,7 +38,7 @@ namespace GitCommandsTests.Git
             Assert.IsFalse(header1.Equals(null));
         }
 
-        [TestMethod]
+        [Test]
         public void TestEqualsFails()
         {
             GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
@@ -51,7 +47,7 @@ namespace GitCommandsTests.Git
             Assert.IsFalse(header1.Equals(header2));
         }
 
-        [TestMethod]
+        [Test]
         public void TestToString()
         {
             DateTime committerTime = DateTime.Now;
@@ -60,9 +56,9 @@ namespace GitCommandsTests.Git
             StringBuilder expectedHeader = new StringBuilder();
 
             expectedHeader.AppendLine("Author: Author");
-            expectedHeader.AppendLine("AuthorTime: " + authorTime.ToString());
+            expectedHeader.AppendLine("AuthorTime: " + authorTime);
             expectedHeader.AppendLine("Committer: committer");
-            expectedHeader.AppendLine("CommitterTime: " + committerTime.ToString());
+            expectedHeader.AppendLine("CommitterTime: " + committerTime);
             expectedHeader.AppendLine("Summary: test summary");
             expectedHeader.AppendLine();
             expectedHeader.Append("FileName: fileName.txt");

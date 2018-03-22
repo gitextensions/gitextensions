@@ -20,11 +20,12 @@ namespace AutoCompileSubmodules
             Translate();
         }
 
-        private BoolSetting _msBuildEnabled = new BoolSetting("Enabled", false);
-        private StringSetting _msBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
-        private StringSetting _msBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        private readonly BoolSetting _msBuildEnabled = new BoolSetting("Enabled", false);
+        private readonly StringSetting _msBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
+        private readonly StringSetting _msBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
 
         private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
+
         private static string FindMsBuild()
         {
             return File.Exists(DefaultMsBuildPath) ? DefaultMsBuildPath : "";
@@ -112,9 +113,10 @@ namespace AutoCompileSubmodules
             }
         }
 
-        private static string SolutionFilesToString(IList<FileInfo> solutionFiles)
+        private static string SolutionFilesToString(IReadOnlyList<FileInfo> solutionFiles)
         {
             var solutionString = new StringBuilder();
+
             for (var n = solutionFiles.Count - 1; n > 0; n--)
             {
                 var solutionFile = solutionFiles[n];

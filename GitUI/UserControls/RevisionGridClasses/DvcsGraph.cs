@@ -23,7 +23,7 @@ namespace GitUI.RevisionGridClasses
                 IsLoading = isLoading;
             }
 
-            public bool IsLoading { get; private set; }
+            public bool IsLoading { get; }
         }
 
         #endregion
@@ -777,11 +777,7 @@ namespace GitUI.RevisionGridClasses
 
         private List<Color> GetJunctionColors(IEnumerable<Junction> junction)
         {
-            List<Color> colors = new List<Color>();
-            foreach (Junction j in junction)
-            {
-                colors.Add(GetJunctionColor(j));
-            }
+            var colors = junction.Select(GetJunctionColor).ToList();
 
             if (colors.Count == 0)
             {
@@ -1026,7 +1022,7 @@ namespace GitUI.RevisionGridClasses
 
                 // Get the x,y value of the current item's upper left in the cache
                 int curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
-                int x = 0;
+                const int x = 0;
                 int y = curCacheRow * _rowHeight;
 
                 var laneRect = new Rectangle(0, y, Width, _rowHeight);
@@ -1207,7 +1203,7 @@ namespace GitUI.RevisionGridClasses
                     }
                     finally
                     {
-                        ((IDisposable)brushLineColorPen)?.Dispose();
+                        brushLineColorPen?.Dispose();
                         ((IDisposable)brushLineColor)?.Dispose();
                     }
                 }
@@ -1318,7 +1314,7 @@ namespace GitUI.RevisionGridClasses
             return guid != null && _graphData.Nodes.TryGetValue(guid, out var node) ? (int?)node.Index : null;
         }
 
-        public List<string> GetRevisionChildren(string guid)
+        public IReadOnlyList<string> GetRevisionChildren(string guid)
         {
             var childrenIds = new List<string>();
 
@@ -1415,7 +1411,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (Data == null)
                 {
-                    string name = Id.ToString();
+                    string name = Id;
                     if (name.Length > 8)
                     {
                         name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);

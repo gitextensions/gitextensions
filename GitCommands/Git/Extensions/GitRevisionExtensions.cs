@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitCommands.Git.Extensions
+﻿namespace GitCommands.Git.Extensions
 {
     public static class GitRevisionExtensions
     {

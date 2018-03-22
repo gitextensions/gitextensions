@@ -21,8 +21,8 @@ namespace GitUI
             branches.DisplayMember = "Name";
         }
 
-        private IList<IGitRef> _branchesToSelect;
-        public IList<IGitRef> BranchesToSelect
+        private IReadOnlyList<IGitRef> _branchesToSelect;
+        public IReadOnlyList<IGitRef> BranchesToSelect
         {
             get
             {
@@ -45,7 +45,7 @@ namespace GitUI
 
         public IEnumerable<IGitRef> GetSelectedBranches()
         {
-            foreach (string branch in branches.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead == null)
@@ -76,7 +76,7 @@ namespace GitUI
 
         private void selectMultipleBranchesButton_Click(object sender, EventArgs e)
         {
-            using (FormSelectMultipleBranches formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
+            using (var formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
             {
                 foreach (var branch in GetSelectedBranches())
                 {

@@ -60,7 +60,7 @@ namespace ProxySwitcher
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 
-        private string HidePassword(string httpProxy)
+        private static string HidePassword(string httpProxy)
         {
             return Regex.Replace(httpProxy, ":(.*)@", ":****@");
         }

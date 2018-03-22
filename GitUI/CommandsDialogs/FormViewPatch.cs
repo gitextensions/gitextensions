@@ -81,13 +81,5 @@ namespace GitUI.CommandsDialogs
             {
             }
         }
-
-        private void PatchFileNameEdit_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void ViewPatch_Load(object sender, EventArgs e)
-        {
-        }
     }
 }

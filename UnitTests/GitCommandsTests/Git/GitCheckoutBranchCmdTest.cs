@@ -3,12 +3,10 @@ using System.Linq;
 using GitCommands;
 using GitCommands.Git;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitCheckoutBranchCmdTest
     {
         private GitCheckoutBranchCmd GetInstance(bool remote)
@@ -16,7 +14,7 @@ namespace GitCommandsTests.Git
             return new GitCheckoutBranchCmd("branchName", remote);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConstructor()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);
@@ -25,7 +23,7 @@ namespace GitCommandsTests.Git
             Assert.IsTrue(cmd.Remote);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConstructorRemoteIsFalse()
         {
             GitCheckoutBranchCmd cmd = GetInstance(false);
@@ -34,21 +32,21 @@ namespace GitCommandsTests.Git
             Assert.IsFalse(cmd.Remote);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGitCommandName()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);
             Assert.AreEqual(cmd.GitComandName(), "checkout");
         }
 
-        [TestMethod]
+        [Test]
         public void TestAccessesRemoteIsFalse()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);
             Assert.IsFalse(cmd.AccessesRemote());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCollectArgumentsMergeReset()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);

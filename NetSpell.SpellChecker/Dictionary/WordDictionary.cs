@@ -20,11 +20,11 @@ namespace NetSpell.SpellChecker.Dictionary
     /// <summary>
     /// The WordDictionary class contains all the logic for managing the word list.
     /// </summary>
-    [ToolboxBitmap(typeof(NetSpell.SpellChecker.Dictionary.WordDictionary), "Dictionary.bmp")]
-    public class WordDictionary : System.ComponentModel.Component
+    [ToolboxBitmap(typeof(WordDictionary), "Dictionary.bmp")]
+    public class WordDictionary : Component
     {
         private string _dictionaryFile = Thread.CurrentThread.CurrentCulture.Name + ".dic";
-        private System.ComponentModel.Container _components;
+        private Container _components;
 
         /// <summary>
         ///     Initializes a new instance of the class
@@ -37,7 +37,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// <summary>
         ///     Initializes a new instance of the class
         /// </summary>
-        public WordDictionary(System.ComponentModel.IContainer container)
+        public WordDictionary(IContainer container)
         {
             container.Add(this);
             InitializeComponent();
@@ -546,17 +546,16 @@ namespace NetSpell.SpellChecker.Dictionary
         public string PhoneticCode(string word)
         {
             string tempWord = word.ToUpper();
-            string prevWord = "";
             StringBuilder code = new StringBuilder();
 
             while (tempWord.Length > 0)
             {
                 // save previous word
-                prevWord = tempWord;
+                var prevWord = tempWord;
                 foreach (PhoneticRule rule in PhoneticRules)
                 {
-                    bool begining = tempWord.Length == word.Length ? true : false;
-                    bool ending = rule.ConditionCount == tempWord.Length ? true : false;
+                    bool begining = tempWord.Length == word.Length;
+                    bool ending = rule.ConditionCount == tempWord.Length;
 
                     if ((rule.BeginningOnly == begining || !rule.BeginningOnly)
                         && (rule.EndOnly == ending || !rule.EndOnly)

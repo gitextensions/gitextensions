@@ -139,7 +139,8 @@ namespace GitUI.Help
         /// </summary>
         public string IsOnHoverShowImage2NoticeText
         {
-            get { return labelHoverText.Text; } set { labelHoverText.Text = value; }
+            get => labelHoverText.Text;
+            set => labelHoverText.Text = value;
         }
 
         private bool _isHover;
@@ -197,8 +198,8 @@ namespace GitUI.Help
 
             // apply size to control
             var form = TopLevelControl as Form;
-            var s = new System.Drawing.Size();
-            var ms = new System.Drawing.Size();
+            var s = new Size();
+            var ms = new Size();
             if (form != null)
             {
                 s = form.Size;
@@ -207,7 +208,7 @@ namespace GitUI.Help
                 if (!ms.IsEmpty)
                 {
                     ms.Width -= Size.Width;
-                    form.MinimumSize = new System.Drawing.Size();
+                    form.MinimumSize = new Size();
                 }
             }
 

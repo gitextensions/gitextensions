@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
             foreach (var setting in settings)
             {
-                this.AddSetting(setting);
+                AddSettingControl(setting.CreateControlBinding());
             }
         }
 
@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin)
         {
-            var result = SettingsPageBase.Create<PluginSettingsPage>(pageHost);
+            var result = Create<PluginSettingsPage>(pageHost);
             result.Init(gitPlugin);
             return result;
         }

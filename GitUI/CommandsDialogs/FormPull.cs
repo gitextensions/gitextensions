@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         public bool ErrorOccurred { get; private set; }
-        private IList<IGitRef> _heads;
+        private List<IGitRef> _heads;
         private string _branch;
         private bool _bInternalUpdate;
         private const string AllRemotes = "[ All ]";
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PullFromUrl.Checked)
                 {
-                    _heads = Module.GetRefs(false, true);
+                    _heads = Module.GetRefs(false, true).ToList();
                 }
                 else
                 {
@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs
             // Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && Module.InTheMiddleOfRebase())
             {
-                UICommands.ContinueRebase(owner);
+                UICommands.StartTheContinueRebaseDialog(owner);
             }
             else if (Module.InTheMiddleOfAction())
             {
@@ -518,17 +518,9 @@ namespace GitUI.CommandsDialogs
         private bool IsSubmodulesInitialized()
         {
             // Fast submodules check
-            var submodules = Module.GetSubmodulesLocalPaths();
-            foreach (var submoduleName in submodules)
-            {
-                GitModule submodule = Module.GetSubmodule(submoduleName);
-                if (!submodule.IsValidGitWorkingDir())
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Module.GetSubmodulesLocalPaths()
+                .Select(submoduleName => Module.GetSubmodule(submoduleName))
+                .All(submodule => submodule.IsValidGitWorkingDir());
         }
 
         private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
@@ -613,7 +605,7 @@ namespace GitUI.CommandsDialogs
 
             if (_branch == localBranch.Text)
             {
-                if (remote.Equals(currentBranchRemote.Value) || currentBranchRemote.Value.IsNullOrEmpty())
+                if (remote == currentBranchRemote.Value || currentBranchRemote.Value.IsNullOrEmpty())
                 {
                     curLocalBranch = Branches.Text.IsNullOrEmpty() ? null : _branch;
                 }
@@ -628,7 +620,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
-                && !remote.Equals(currentBranchRemote.Value) && !Fetch.Checked)
+                && remote != currentBranchRemote.Value && !Fetch.Checked)
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
@@ -753,7 +745,7 @@ namespace GitUI.CommandsDialogs
                 IEnumerable<GitRemote> remotes = (IEnumerable<GitRemote>)_NO_TRANSLATE_Remotes.DataSource;
                 foreach (var r in remotes)
                 {
-                    if (!r.Name.IsNullOrWhiteSpace() && !r.Name.Equals(AllRemotes))
+                    if (!r.Name.IsNullOrWhiteSpace() && r.Name != AllRemotes)
                     {
                         yield return r.Name;
                     }
@@ -992,7 +984,7 @@ namespace GitUI.CommandsDialogs
 
         private void localBranch_Leave(object sender, EventArgs e)
         {
-            if (!_branch.Equals(localBranch.Text.Trim()) && Branches.Text.IsNullOrWhiteSpace())
+            if (_branch != localBranch.Text.Trim() && Branches.Text.IsNullOrWhiteSpace())
             {
                 Branches.Text = localBranch.Text;
             }

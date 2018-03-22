@@ -2,63 +2,84 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
-    public class AsyncLoader : IDisposable
+    public sealed class AsyncLoader : IDisposable
     {
-        private CancellationTokenSource _cancelledTokenSource;
+        /// <summary>
+        /// Invokes <paramref name="loadContent"/> on the thread pool, then executes <paramref name="continueWith"/> on the current synchronisation context.
+        /// </summary>
+        /// <remarks>
+        /// Note this method does not perform any cancellation of prior loads, nor does it support cancellation upon disposal.
+        /// If you require those features, use an instance of <see cref="AsyncLoader"/> instead.
+        /// </remarks>
+        /// <typeparam name="T">Type of data returned by <paramref name="loadContent"/> and accepted by <paramref name="continueWith"/>.</typeparam>
+        /// <param name="loadContent">A function to invoke on the thread pool that returns a value to be passed to <paramref name="continueWith"/>.</param>
+        /// <param name="continueWith">An action to invoke on the original synchronisation context with the return value from <paramref name="loadContent"/>.</param>
+        /// <param name="onError">
+        /// An optional callback for notification of exceptions from <paramref name="loadContent"/>.
+        /// Invoked on the original synchronisation context.
+        /// Invoked once per exception, so may be called multiple times.
+        /// Handlers must set <see cref="AsyncErrorEventArgs.Handled"/> to <c>true</c> to prevent any exceptions being re-thrown and faulting the async operation.
+        /// </param>
+        public static async Task<T> DoAsync<T>(Func<T> loadContent, Action<T> continueWith, Action<AsyncErrorEventArgs> onError = null)
+        {
+            using (var loader = new AsyncLoader())
+            {
+                if (onError != null)
+                {
+                    loader.LoadingError += (_, e) => onError(e);
+                }
+
+                return await loader.LoadAsync(loadContent, continueWith).ConfigureAwait(false);
+            }
+        }
+
+        public event EventHandler<AsyncErrorEventArgs> LoadingError;
+
+        [CanBeNull] private CancellationTokenSource _cancellationTokenSource;
+        private int _disposed;
+
+        /// <summary>
+        /// Gets and sets an amount of time to delay calling <c>loadContent</c> actions after a call to one of the <c>Load</c> overloads.
+        /// </summary>
+        /// <remarks>
+        /// Defaults to <see cref="TimeSpan.Zero"/>.
+        /// </remarks>
         public TimeSpan Delay { get; set; }
 
         public AsyncLoader()
         {
-            Delay = TimeSpan.Zero;
-        }
-
-        public event EventHandler<AsyncErrorEventArgs> LoadingError = delegate { };
-
-        /// <summary>
-        /// Does something on threadpool, executes continuation on current sync context thread, executes onError if the async request fails.
-        /// There does probably exist something like this in the .NET library, but I could not find it. //cocytus
-        /// </summary>
-        /// <typeparam name="T">Result to be passed from doMe to continueWith</typeparam>
-        /// <param name="doMe">The stuff we want to do. Should return whatever continueWith expects.</param>
-        /// <param name="continueWith">Do this on original sync context.</param>
-        /// <param name="onError">Do this on original sync context if doMe barfs.</param>
-        public static Task<T> DoAsync<T>(Func<T> doMe, Action<T> continueWith, Action<AsyncErrorEventArgs> onError)
-        {
-            AsyncLoader loader = new AsyncLoader();
-            loader.LoadingError += (sender, e) => onError(e);
-            return loader.LoadAsync(doMe, continueWith);
-        }
-
-        public static Task<T> DoAsync<T>(Func<T> doMe, Action<T> continueWith)
-        {
-            AsyncLoader loader = new AsyncLoader();
-            return loader.LoadAsync(doMe, continueWith);
-        }
-
-        public static Task DoAsync(Action doMe, Action continueWith)
-        {
-            AsyncLoader loader = new AsyncLoader();
-            return loader.LoadAsync(doMe, continueWith);
         }
 
         public Task LoadAsync(Action loadContent, Action onLoaded)
         {
-            return LoadAsync((token) => loadContent(), onLoaded);
+            return LoadAsync(token => loadContent(), onLoaded);
         }
 
         public async Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
+            if (Volatile.Read(ref _disposed) != 0)
+            {
+                throw new ObjectDisposedException(nameof(AsyncLoader));
+            }
+
+            // Stop any prior operation
             Cancel();
-            _cancelledTokenSource?.Dispose();
-            _cancelledTokenSource = new CancellationTokenSource();
-            var token = _cancelledTokenSource.Token;
+
+            // Create a new cancellation object
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            // Copy reference to token (important)
+            var token = _cancellationTokenSource.Token;
 
             try
             {
+                // Defer the load operation if requested
                 if (Delay > TimeSpan.Zero)
                 {
                     await Task.Delay(Delay, token).ConfigureAwait(false);
@@ -68,6 +89,7 @@ namespace GitCommands
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 }
 
+                // Load content, so long as we haven't already been cancelled
                 if (!token.IsCancellationRequested)
                 {
                     loadContent(token);
@@ -92,6 +114,7 @@ namespace GitCommands
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
+            // Invoke continuation unless cancelled
             if (!token.IsCancellationRequested)
             {
                 try
@@ -110,20 +133,31 @@ namespace GitCommands
 
         public Task<T> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            return LoadAsync((token) => loadContent(), onLoaded);
+            return LoadAsync(token => loadContent(), onLoaded);
         }
 
         public async Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
+            if (Volatile.Read(ref _disposed) != 0)
+            {
+                throw new ObjectDisposedException(nameof(AsyncLoader));
+            }
+
+            // Stop any prior operation
             Cancel();
-            _cancelledTokenSource?.Dispose();
-            _cancelledTokenSource = new CancellationTokenSource();
-            var token = _cancelledTokenSource.Token;
+
+            // Create a new cancellation object
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            // Copy reference to token (important)
+            var token = _cancellationTokenSource.Token;
 
             T result;
 
             try
             {
+                // Defer the load operation if requested
                 if (Delay > TimeSpan.Zero)
                 {
                     await Task.Delay(Delay, token).ConfigureAwait(false);
@@ -133,12 +167,14 @@ namespace GitCommands
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 }
 
+                // Bail early if cancelled, returning default value for type
                 if (token.IsCancellationRequested)
                 {
-                    result = default(T);
+                    result = default;
                 }
                 else
                 {
+                    // Load content
                     result = loadContent(token);
                 }
             }
@@ -146,7 +182,7 @@ namespace GitCommands
             {
                 if (e is OperationCanceledException && token.IsCancellationRequested)
                 {
-                    return default(T);
+                    return default;
                 }
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -156,11 +192,12 @@ namespace GitCommands
                     throw;
                 }
 
-                return default(T);
+                return default;
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+            // Invoke continuation unless cancelled
             if (!token.IsCancellationRequested)
             {
                 try
@@ -174,50 +211,54 @@ namespace GitCommands
                         throw;
                     }
 
-                    return default(T);
+                    return default;
                 }
             }
 
             return result;
         }
 
-        public void Cancel()
-        {
-            _cancelledTokenSource?.Cancel();
-        }
-
         private bool OnLoadingError(Exception exception)
         {
             var args = new AsyncErrorEventArgs(exception);
-            LoadingError(this, args);
+            LoadingError?.Invoke(this, args);
             return args.Handled;
         }
 
-        protected virtual void Dispose(bool disposing)
+        public void Cancel()
         {
-            if (disposing)
+            if (Volatile.Read(ref _disposed) != 0)
             {
-                _cancelledTokenSource?.Dispose();
+                throw new ObjectDisposedException(nameof(AsyncLoader));
             }
+
+            _cancellationTokenSource?.Cancel();
         }
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            {
+                return;
+            }
+
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
         }
     }
 
-    public class AsyncErrorEventArgs : EventArgs
+    public sealed class AsyncErrorEventArgs : EventArgs
     {
+        public Exception Exception { get; }
+
+        public bool Handled { get; set; } = true;
+
         public AsyncErrorEventArgs(Exception exception)
         {
             Exception = exception;
-            Handled = true;
         }
-
-        public Exception Exception { get; private set; }
-
-        public bool Handled { get; set; }
     }
 }

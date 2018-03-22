@@ -37,7 +37,7 @@ namespace GitUI.Script
 
         private const int SplitSectionWidth = 18;
 
-        private static int BorderSize = SystemInformation.Border3DSize.Width * 2;
+        private static readonly int BorderSize = SystemInformation.Border3DSize.Width * 2;
         private bool _skipNextOpen;
         private Rectangle _dropDownRectangle;
         private bool _showSplit;
@@ -59,14 +59,8 @@ namespace GitUI.Script
         [Browsable(false)]
         public override ContextMenuStrip ContextMenuStrip
         {
-            get
-            {
-                return SplitMenuStrip;
-            }
-            set
-            {
-                SplitMenuStrip = value;
-            }
+            get => SplitMenuStrip;
+            set => SplitMenuStrip = value;
         }
 
         [DefaultValue(null)]
@@ -324,7 +318,7 @@ namespace GitUI.Script
 
                 if (ClientRectangle.Contains(mevent.Location) && !_dropDownRectangle.Contains(mevent.Location))
                 {
-                    OnClick(new EventArgs());
+                    OnClick(EventArgs.Empty);
                 }
             }
         }
@@ -453,7 +447,7 @@ namespace GitUI.Script
             // if the width is odd - favor pushing it over one pixel right.
             middle.X += dropDownRect.Width % 2;
 
-            Point[] arrow = new[] { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
+            Point[] arrow = { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
             if (Enabled)
             {

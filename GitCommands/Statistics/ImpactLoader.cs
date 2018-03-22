@@ -16,7 +16,7 @@ namespace GitCommands.Statistics
                 Commit = commit;
             }
 
-            public Commit Commit { get; private set; }
+            public Commit Commit { get; }
         }
 
         /// <summary>
@@ -44,11 +44,12 @@ namespace GitCommands.Statistics
 
             public static DataPoint operator +(DataPoint d1, DataPoint d2)
             {
-                DataPoint temp = new DataPoint();
-                temp.Commits = d1.Commits + d2.Commits;
-                temp.AddedLines = d1.AddedLines + d2.AddedLines;
-                temp.DeletedLines = d1.DeletedLines + d2.DeletedLines;
-                return temp;
+                return new DataPoint
+                {
+                    Commits = d1.Commits + d2.Commits,
+                    AddedLines = d1.AddedLines + d2.AddedLines,
+                    DeletedLines = d1.DeletedLines + d2.DeletedLines
+                };
             }
         }
 
@@ -127,7 +128,7 @@ namespace GitCommands.Statistics
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = _module.GetSubmodulesLocalPaths();
+                var submodules = _module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
                     IGitModule submodule = _module.GetSubmodule(submoduleName);
@@ -183,7 +184,7 @@ namespace GitCommands.Statistics
                 DateTime date = DateTime.Parse(header[0]).Date;
 
                 // Calculate first day of the commit week
-                date = commit.week = date.AddDays(-(int)date.DayOfWeek);
+                commit.week = date.AddDays(-(int)date.DayOfWeek);
 
                 // Reset commit data
                 commit.data.Commits = 1;
@@ -224,24 +225,23 @@ namespace GitCommands.Statistics
         public static void AddIntermediateEmptyWeeks(
             ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact, Dictionary<string, DataPoint> authors)
         {
-            foreach (var authorData in authors)
+            foreach (var (author, _) in authors)
             {
-                string author = authorData.Key;
-
                 // Determine first and last commit week of each author
                 DateTime start = new DateTime(), end = new DateTime();
                 bool startFound = false;
-                foreach (var week in impact)
+
+                foreach (var (weekDate, weekDataByAuthor) in impact)
                 {
-                    if (week.Value.ContainsKey(author))
+                    if (weekDataByAuthor.ContainsKey(author))
                     {
                         if (!startFound)
                         {
-                            start = week.Key;
+                            start = weekDate;
                             startFound = true;
                         }
 
-                        end = week.Key;
+                        end = weekDate;
                     }
                 }
 
@@ -251,12 +251,12 @@ namespace GitCommands.Statistics
                 }
 
                 // Add 0 commits weeks in between
-                foreach (var week in impact)
+                foreach (var (weekDate, weekDataByAuthor) in impact)
                 {
-                    if (!week.Value.ContainsKey(author) &&
-                        week.Key > start && week.Key < end)
+                    if (!weekDataByAuthor.ContainsKey(author) &&
+                        weekDate > start && weekDate < end)
                     {
-                        week.Value.Add(author, new DataPoint(0, 0, 0));
+                        weekDataByAuthor.Add(author, new DataPoint(0, 0, 0));
                     }
                 }
             }

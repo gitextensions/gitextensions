@@ -7,14 +7,9 @@ using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI.CommandsDialogs.RepoHosting
 {
-    internal class DiscussionHtmlCreator
+    internal static class DiscussionHtmlCreator
     {
-        public static string CreateFor(IPullRequestInformation currentPullRequestInfo)
-        {
-            return CreateFor(currentPullRequestInfo, null);
-        }
-
-        public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry> entries)
+        public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry> entries = null)
         {
             var html = new StringBuilder();
             AddLine(html, "<html><body><style type='text/css'>");
@@ -82,7 +77,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     var props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
 
                     var kvps = from prop in props
-                               where prop.PropertyType.Equals(typeof(Color))
+                               where prop.PropertyType == typeof(Color)
                                let c = (Color)prop.GetValue(null, null)
                                select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
 

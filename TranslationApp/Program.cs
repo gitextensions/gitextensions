@@ -90,9 +90,9 @@ namespace TranslationApp
             using (var stream = File.CreateText("statistic.csv"))
             {
                 stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
-                foreach (var item in list.OrderByDescending(item => item.Value))
+                foreach (var (language, translatedItems) in list.OrderByDescending(item => item.Value))
                 {
-                    stream.WriteLine("{0};{1:F}%;{2};{3}", item.Key, 100.0f * item.Value / neutralItems.Count, item.Value,
+                    stream.WriteLine("{0};{1:F}%;{2};{3}", language, 100.0f * translatedItems / neutralItems.Count, translatedItems,
                         neutralItems.Count);
                 }
             }

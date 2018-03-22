@@ -98,7 +98,7 @@ namespace Gerrit
 
                     if (trimmed[0] == '[')
                     {
-                        inHeader = trimmed.Trim(new[] { '[', ']' }).Equals("gerrit", StringComparison.OrdinalIgnoreCase);
+                        inHeader = trimmed.Trim('[', ']').Equals("gerrit", StringComparison.OrdinalIgnoreCase);
                     }
                     else if (inHeader)
                     {
@@ -121,7 +121,7 @@ namespace Gerrit
                             case "project": result.Project = parts[1]; break;
                             case "defaultbranch": result.DefaultBranch = parts[1]; break;
                             case "defaultremote": result.DefaultRemote = parts[1]; break;
-                            case "defaultrebase": result.DefaultRebase = !parts[1].Equals("0"); break;
+                            case "defaultrebase": result.DefaultRebase = parts[1] != "0"; break;
 
                             case "port":
                                 if (!int.TryParse(parts[1], out var value))

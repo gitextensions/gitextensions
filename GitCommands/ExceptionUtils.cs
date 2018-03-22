@@ -8,22 +8,12 @@ namespace GitCommands
 {
     public static class ExceptionUtils
     {
-        public static void ShowException(Exception e)
-        {
-            ShowException(e, true);
-        }
-
-        public static void ShowException(Exception e, bool canIgnore)
+        public static void ShowException(Exception e, bool canIgnore = true)
         {
             ShowException(e, string.Empty, canIgnore);
         }
 
-        public static void ShowException(Exception e, string info)
-        {
-            ShowException(e, info, true);
-        }
-
-        public static void ShowException(Exception e, string info, bool canIgnore)
+        public static void ShowException(Exception e, string info, bool canIgnore = true)
         {
             ShowException(null, e, info, canIgnore);
         }

@@ -9,11 +9,6 @@ namespace GitStatistics
     {
         public event EventHandler LinesOfCodeUpdated;
 
-        public LineCounter()
-        {
-            LinesOfCodePerExtension = new Dictionary<string, int>();
-        }
-
         public int NumberCommentsLines { get; private set; }
         public int NumberLines { get; private set; }
         public int NumberLinesInDesignerFiles { get; private set; }
@@ -21,22 +16,15 @@ namespace GitStatistics
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
 
-        public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
+        public Dictionary<string, int> LinesOfCodePerExtension { get; } = new Dictionary<string, int>();
 
         private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
         {
-            foreach (var directoryFilter in directoryFilters)
-            {
-                if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return directoryFilters.Any(
+                filter => dir.FullName.EndsWith(filter, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
+        private static IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
         {
             foreach (var file in filesToCheck)
             {
@@ -63,7 +51,7 @@ namespace GitStatistics
             var filters = filePattern.Replace("*", "").Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
             var lastUpdate = DateTime.Now;
-            var timer = new TimeSpan(0, 0, 0, 0, 500);
+            var timer = TimeSpan.FromMilliseconds(500);
 
             foreach (var file in GetFiles(filesToCheck, filters))
             {

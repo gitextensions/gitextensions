@@ -15,10 +15,8 @@ namespace GitCommands.Settings
 
         public static GitExtSettingsCache FromCache(string settingsFilePath)
         {
-            Lazy<GitExtSettingsCache> createSettingsCache = new Lazy<GitExtSettingsCache>(() =>
-                {
-                    return new GitExtSettingsCache(settingsFilePath, true);
-                });
+            var createSettingsCache = new Lazy<GitExtSettingsCache>(
+                () => new GitExtSettingsCache(settingsFilePath, true));
 
             return FileSettingsCache.FromCache(settingsFilePath, createSettingsCache);
         }
@@ -42,7 +40,7 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(fileName, Encoding.UTF8))
+            using (XmlTextWriter xtw = new XmlTextWriter(fileName, Encoding.UTF8))
             {
                 xtw.Formatting = Formatting.Indented;
                 xtw.WriteStartDocument();
@@ -61,7 +59,7 @@ namespace GitCommands.Settings
                 CheckCharacters = false
             };
 
-            using (System.Xml.XmlReader xr = XmlReader.Create(fileName, readerSettings))
+            using (XmlReader xr = XmlReader.Create(fileName, readerSettings))
             {
                 _encodedNameMap.ReadXml(xr);
             }

@@ -5,7 +5,7 @@ namespace Github3
 {
     internal class GithubBranch : IHostedBranch
     {
-        private Branch _branch;
+        private readonly Branch _branch;
 
         public GithubBranch(Branch branch)
         {

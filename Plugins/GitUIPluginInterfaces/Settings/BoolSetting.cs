@@ -17,8 +17,8 @@ namespace GitUIPluginInterfaces
             DefaultValue = defaultValue;
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public bool DefaultValue { get; set; }
         public CheckBox CustomControl { get; set; }
 
@@ -48,9 +48,7 @@ namespace GitUIPluginInterfaces
 
             public override CheckBox CreateControl()
             {
-                CheckBox result = new CheckBox();
-                result.ThreeState = true;
-                return result;
+                return new CheckBox { ThreeState = true };
             }
 
             public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)

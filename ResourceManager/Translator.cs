@@ -8,7 +8,7 @@ namespace ResourceManager
 {
     public static class Translator
     {
-        private static readonly string EnglishTranslationName = "English";
+        private const string EnglishTranslationName = "English";
 
         // Try to cache the translation as long as possible
         private static IDictionary<string, TranslationFile> _translation = new Dictionary<string, TranslationFile>();
@@ -20,7 +20,7 @@ namespace ResourceManager
             {
                 _translation = new Dictionary<string, TranslationFile>();
             }
-            else if (!translationName.Equals(_name))
+            else if (translationName != _name)
             {
                 _translation = new Dictionary<string, TranslationFile>();
                 string translationsDir = GetTranslationDir();
@@ -56,7 +56,7 @@ namespace ResourceManager
                 string translationDir = GetTranslationDir();
                 if (!Directory.Exists(translationDir))
                 {
-                    return new string[0];
+                    return Array.Empty<string>();
                 }
 
                 foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))

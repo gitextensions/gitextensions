@@ -11,12 +11,12 @@ namespace GitCommands.ExternalLinks
         private readonly RepoDistSettings _cachedSettings;
         private readonly ExternalLinksManager _lowerPriority;
         private readonly IExternalLinksLoader _externalLinksLoader = new ExternalLinksLoader();
-        private readonly IList<ExternalLinkDefinition> _definitions;
+        private readonly List<ExternalLinkDefinition> _definitions;
 
         public ExternalLinksManager(RepoDistSettings settings)
         {
             _cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
-            _definitions = _externalLinksLoader.Load(_cachedSettings);
+            _definitions = _externalLinksLoader.Load(_cachedSettings).ToList();
 
             if (settings.LowerPriority != null)
             {
@@ -57,17 +57,18 @@ namespace GitCommands.ExternalLinks
         /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
         public bool Contains(string definitionName)
         {
-            return _definitions.Any(linkDef => linkDef.Name.Equals(definitionName));
+            return _definitions.Any(linkDef => linkDef.Name == definitionName);
         }
 
         /// <summary>
         /// Loads all settings from all available levels.
         /// </summary>
         /// <returns>A collection of all available definitions.</returns>
-        public IList<ExternalLinkDefinition> GetEffectiveSettings()
+        public IReadOnlyList<ExternalLinkDefinition> GetEffectiveSettings()
         {
-            var effective = _definitions.Union(_lowerPriority?.GetEffectiveSettings() ?? Enumerable.Empty<ExternalLinkDefinition>()).ToList();
-            return effective.ToList();
+            return _definitions
+                .Union(_lowerPriority?.GetEffectiveSettings() ?? Enumerable.Empty<ExternalLinkDefinition>())
+                .ToList();
         }
 
         /// <summary>

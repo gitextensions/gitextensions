@@ -72,6 +72,7 @@ namespace AppVeyorIntegration
                 throw new InvalidOperationException("Already initialized");
             }
 
+            _buildServerWatcher = buildServerWatcher;
             _isCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
@@ -87,7 +88,6 @@ namespace AppVeyorIntegration
                     && !string.IsNullOrWhiteSpace(_gitHubToken);
 
             _fetchBuilds = new HashSet<string>();
-            _buildServerWatcher = buildServerWatcher;
 
             _httpClientAppVeyor = GetHttpClient(WebSiteUrl, _accountToken);
 
@@ -98,7 +98,8 @@ namespace AppVeyorIntegration
             string[] projectNames = null;
             if (!useAllProjets)
             {
-                projectNames = projectNamesSetting.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
+                    .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             if (Projects.Count == 0 ||
@@ -167,7 +168,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        private HttpClient GetHttpClient(string baseUrl, string accountToken)
+        private static HttpClient GetHttpClient(string baseUrl, string accountToken)
         {
             var httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
             {
@@ -182,7 +183,7 @@ namespace AppVeyorIntegration
             return httpClient;
         }
 
-        private string BuildQueryUrl(string projectId)
+        private static string BuildQueryUrl(string projectId)
         {
             return ApiBaseUrl + projectId + "/history?recordsNumber=" + ProjectsToRetrieveCount;
         }
@@ -411,13 +412,12 @@ namespace AppVeyorIntegration
                 buildDetails.Duration = GetBuildDuration(buildData);
             }
 
-            string testResults = string.Empty;
             int testCount = buildDescription["testsCount"].ToObject<int>();
             if (testCount != 0)
             {
                 int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
                 int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
-                testResults = " : " + testCount + " tests";
+                var testResults = " : " + testCount + " tests";
                 if (failedTestCount != 0 || skippedTestCount != 0)
                 {
                     testResults += string.Format(" ( {0} failed, {1} skipped )", failedTestCount, skippedTestCount);

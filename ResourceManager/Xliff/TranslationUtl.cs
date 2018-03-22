@@ -24,39 +24,31 @@ namespace ResourceManager.Xliff
         {
             if (objName != null)
             {
-                yield return new Tuple<string, object>(objName, obj);
+                yield return Tuple.Create(objName, obj);
             }
 
             foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.SetField))
             {
                 if (fieldInfo.IsPublic && !fieldInfo.IsInitOnly)
-                {// if public AND modifiable (NOT readonly)
+                {
+                    // if public AND modifiable (NOT readonly)
                     Trace.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, fieldInfo.Name, fieldInfo.GetValue(obj)), "Translation");
                     continue;
                 }
 
-                yield return new Tuple<string, object>(fieldInfo.Name, fieldInfo.GetValue(obj));
+                yield return Tuple.Create(fieldInfo.Name, fieldInfo.GetValue(obj));
             }
         }
 
         public static void AddTranslationItem(string category, object obj, string propName, ITranslation translation)
         {
-            if (obj == null)
-            {
-                return;
-            }
-
-            var propertyInfo = obj.GetType().GetProperty(propName,
+            var propertyInfo = obj?.GetType().GetProperty(
+                propName,
                 BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
                 BindingFlags.NonPublic | BindingFlags.SetProperty);
-            if (propertyInfo == null)
-            {
-                return;
-            }
 
-            var value = propertyInfo.GetValue(obj, null) as string;
-            if (value != null && AllowTranslateProperty(value))
+            if (propertyInfo?.GetValue(obj, null) is string value && AllowTranslateProperty(value))
             {
                 translation.AddTranslationItem(category, propName, "Text", value);
             }
@@ -74,7 +66,8 @@ namespace ResourceManager.Xliff
 
         private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(Tuple<string, object> item)
         {
-            object itemObj = item.Item2;
+            var (itemName, itemObj) = item;
+
             if (itemObj == null)
             {
                 yield break;
@@ -82,7 +75,6 @@ namespace ResourceManager.Xliff
 
             // Skip controls with a name started with "_NO_TRANSLATE_"
             // this is a naming convention, these are not translated
-            string itemName = item.Item1;
             if (itemName.StartsWith("_NO_TRANSLATE_"))
             {
                 yield break;
@@ -117,8 +109,8 @@ namespace ResourceManager.Xliff
         {
             foreach (var item in items)
             {
-                var itemName = item.Item1;
-                var itemObj = item.Item2;
+                var (itemName, itemObj) = item;
+
                 foreach (var property in GetItemPropertiesEnumerator(item))
                 {
                     var value = property.GetValue(itemObj, null);
@@ -127,8 +119,7 @@ namespace ResourceManager.Xliff
                         continue;
                     }
 
-                    var valueStr = value as string;
-                    if (valueStr != null)
+                    if (value is string valueStr)
                     {
                         if (AllowTranslateProperty(valueStr))
                         {
@@ -138,12 +129,12 @@ namespace ResourceManager.Xliff
                         continue;
                     }
 
-                    var listItems = value as IList;
-                    if (listItems != null)
+                    if (value is IList listItems)
                     {
                         for (int index = 0; index < listItems.Count; index++)
                         {
                             var listItem = listItems[index] as string;
+
                             if (AllowTranslateProperty(listItem))
                             {
                                 translation.AddTranslationItem(category, itemName, "Item" + index, listItem);
@@ -158,8 +149,7 @@ namespace ResourceManager.Xliff
         {
             foreach (var item in items)
             {
-                string itemName = item.Item1;
-                object itemObj = item.Item2;
+                var (itemName, itemObj) = item;
 
                 foreach (var propertyInfo in GetItemPropertiesEnumerator(item))
                 {
@@ -171,8 +161,8 @@ namespace ResourceManager.Xliff
                         for (int index = 0; index < list.Count; index++)
                         {
                             propertyName = "Item" + index;
-                            var listValue = list[index] as string;
-                            if (listValue != null)
+
+                            if (list[index] is string listValue)
                             {
                                 string ProvideDefaultValue() => listValue;
                                 string value = translation.TranslateItem(category, itemName, propertyName,
@@ -264,8 +254,7 @@ namespace ResourceManager.Xliff
 
             if (propertyInfo.Name.Equals("Items", StringComparison.CurrentCulture))
             {
-                var items = propertyInfo.GetValue(itemObj, null) as IList;
-                if (items != null && items.Count != 0)
+                if (propertyInfo.GetValue(itemObj, null) is IList items && items.Count != 0)
                 {
                     return true;
                 }
@@ -363,7 +352,8 @@ namespace ResourceManager.Xliff
 
         public static object CreateInstanceOfClass(Type type)
         {
-            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
             object obj = null;
 
             // try to find parameter less constructor first

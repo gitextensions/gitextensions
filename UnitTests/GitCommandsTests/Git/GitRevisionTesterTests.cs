@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.IO.Abstractions;
+using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
@@ -10,12 +12,95 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class GitRevisionTesterTests
     {
-        private IGitRevisionTester _tester;
+        private FileBase _file;
+        private IFileSystem _fileSystem;
+        private IFullPathResolver _fullPathResolver;
+        private GitRevisionTester _tester;
 
         [SetUp]
         public void Setup()
         {
-            _tester = new GitRevisionTester();
+            _file = Substitute.For<FileBase>();
+            _fileSystem = Substitute.For<IFileSystem>();
+            _fileSystem.File.Returns(_file);
+
+            _fullPathResolver = Substitute.For<IFullPathResolver>();
+            _tester = new GitRevisionTester(_fullPathResolver, _fileSystem);
+        }
+
+        [Test]
+        public void AllFirstAreParentsToSelected_should_return_false_if_parents_null()
+        {
+            _tester.AllFirstAreParentsToSelected(null, null).Should().BeFalse();
+        }
+
+        [Test]
+        public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
+        {
+            IEnumerable<GitRevision> firstSelected = new List<GitRevision> { new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD") };
+            GitRevision selectedRevision = new GitRevision(GitRevision.UnstagedGuid)
+            {
+                ParentGuids = new[] { GitRevision.IndexGuid }
+            };
+            _tester.AllFirstAreParentsToSelected(firstSelected, selectedRevision).Should().BeFalse();
+        }
+
+        [Test]
+        public void AllFirstAreParentsToSelected_should_return_true_if_all_parents_contains_all_of_selected_items()
+        {
+            IEnumerable<GitRevision> firstSelected2 = new List<GitRevision> { new GitRevision("Parent1"), new GitRevision("Parent2") };
+            GitRevision selectedRevision2 = new GitRevision("HEAD")
+            {
+                ParentGuids = new[] { "Parent1", "Parent2" }
+            };
+            _tester.AllFirstAreParentsToSelected(firstSelected2, selectedRevision2).Should().BeTrue();
+        }
+
+        [Test]
+        public void LocalExists_should_should_return_false_if_items_null()
+        {
+            _tester.AnyLocalFileExists(null).Should().BeFalse();
+        }
+
+        [Test]
+        public void LocalExists_should_return_true_if_any_items_not_tracked()
+        {
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
+            {
+                new GitItemStatus() { IsTracked = true },
+                new GitItemStatus() { IsTracked = false }
+            };
+            _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeTrue();
+        }
+
+        [Test]
+        public void LocalExists_should_return_true_if_file_exists()
+        {
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
+            {
+                new GitItemStatus() { IsTracked = true, Name = "file1" },
+                new GitItemStatus() { IsTracked = true, Name = "file2" }
+            };
+            _fullPathResolver.Resolve("file1").Returns("file1");
+            _fullPathResolver.Resolve("file2").Returns("file2");
+            _file.Exists("file1").Returns(false);
+            _file.Exists("file2").Returns(true);
+            _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeTrue();
+        }
+
+        [Test]
+        public void LocalExists_should_return_false_if_none_of_locally_tracked_items_have_files()
+        {
+            IEnumerable<GitItemStatus> selectedItemsWithParent = new List<GitItemStatus>
+            {
+                new GitItemStatus() { IsTracked = true, Name = "file1" },
+                new GitItemStatus() { IsTracked = true, Name = "file2" }
+            };
+            _fullPathResolver.Resolve("file1").Returns("file1");
+            _fullPathResolver.Resolve("file2").Returns("file2");
+            _file.Exists("file1").Returns(false);
+            _file.Exists("file2").Returns(false);
+            _tester.AnyLocalFileExists(selectedItemsWithParent).Should().BeFalse();
         }
 
         [Test]

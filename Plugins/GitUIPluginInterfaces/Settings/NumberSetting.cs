@@ -16,8 +16,8 @@ namespace GitUIPluginInterfaces
             DefaultValue = defaultValue;
         }
 
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
+        public string Name { get; }
+        public string Caption { get; }
         public T DefaultValue { get; set; }
         public TextBox CustomControl { get; set; }
 
@@ -56,9 +56,10 @@ namespace GitUIPluginInterfaces
             public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
             {
                 var controlValue = control.Text;
+
                 if (areSettingsEffective)
                 {
-                    if (ConvertToString(Setting.ValueOrDefault(settings)).Equals(controlValue))
+                    if (ConvertToString(Setting.ValueOrDefault(settings)) == controlValue)
                     {
                         return;
                     }

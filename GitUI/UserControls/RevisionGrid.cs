@@ -70,7 +70,8 @@ namespace GitUI
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly ICommitDataManager _commitDataManager;
-        private readonly IGitRevisionTester _gitRevisionTester = new GitRevisionTester();
+        private readonly IFullPathResolver _fullPathResolver;
+        private readonly IGitRevisionTester _gitRevisionTester;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
@@ -94,10 +95,10 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
-        private GitRevision _baseCommitToCompare = null;
+        private GitRevision _baseCommitToCompare;
 
         // tracks status for the artificial commits while the revision graph is reloading
-        private IList<GitItemStatus> _artificialStatus;
+        private IReadOnlyList<GitItemStatus> _artificialStatus;
 
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
 
@@ -125,7 +126,7 @@ namespace GitUI
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
 
-            Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Resources.loadingpanel;
 
             Translate();
 
@@ -133,6 +134,8 @@ namespace GitUI
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarCache.Invalidated += (s, e) => Revisions.Invalidate();
             _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
 
             _commitDataManager = new CommitDataManager(() => Module);
 
@@ -201,13 +204,13 @@ namespace GitUI
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
-        private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
         {
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
-                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
-                if (toolStripMenuItem != null)
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
+
+                if (toolStripItem is ToolStripMenuItem toolStripMenuItem)
                 {
                     menuCommand.RegisterMenuItem(toolStripMenuItem);
                 }
@@ -315,8 +318,8 @@ namespace GitUI
         [DefaultValue(true)]
         public bool MultiSelect
         {
-            get { return Revisions.MultiSelect; }
-            set { Revisions.MultiSelect = value; }
+            get => Revisions.MultiSelect;
+            set => Revisions.MultiSelect = value;
         }
 
         [Description("Show uncommited changes in revision grid if enabled in settings.")]
@@ -366,7 +369,7 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision;
         }
 
-        private bool _isRefreshingRevisions = false;
+        private bool _isRefreshingRevisions;
         private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
@@ -750,12 +753,12 @@ namespace GitUI
 
         public bool SetAndApplyBranchFilter(string filter)
         {
-            if (filter.Equals(_revisionFilter.GetBranchFilter()))
+            if (filter == _revisionFilter.GetBranchFilter())
             {
                 return false;
             }
 
-            if (filter.Equals(""))
+            if (filter == "")
             {
                 AppSettings.BranchFilterEnabled = false;
                 AppSettings.ShowCurrentBranchOnly = true;
@@ -925,36 +928,21 @@ namespace GitUI
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
-            get
-            {
-                return Revisions.RevisionGraphDrawStyle;
-            }
-            set
-            {
-                Revisions.RevisionGraphDrawStyle = value;
-            }
-        }
-
-        public List<GitRevision> GetSelectedRevisions()
-        {
-            return GetSelectedRevisions(null);
+            get => Revisions.RevisionGraphDrawStyle;
+            set => Revisions.RevisionGraphDrawStyle = value;
         }
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
-            var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
 
-            string description;
+            var descriptiveRef = gitRefListsForRevision.AllBranches
+                .Concat(gitRefListsForRevision.AllTags)
+                .FirstOrDefault();
 
-            if (descriptiveRefs.Any())
-            {
-                description = GetRefUnambiguousName(descriptiveRefs.First());
-            }
-            else
-            {
-                description = revision.Subject;
-            }
+            var description = descriptiveRef != null
+                ? GetRefUnambiguousName(descriptiveRef)
+                : revision.Subject;
 
             if (!revision.IsArtificial)
             {
@@ -969,7 +957,7 @@ namespace GitUI
             return description;
         }
 
-        public List<GitRevision> GetSelectedRevisions(SortDirection? direction)
+        public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
             var rows = Revisions
                 .SelectedRows
@@ -987,7 +975,7 @@ namespace GitUI
                 .ToList();
         }
 
-        public List<string> GetRevisionChildren(string revision)
+        public IReadOnlyList<string> GetRevisionChildren(string revision)
         {
             return Revisions.GetRevisionChildren(revision);
         }
@@ -1006,9 +994,10 @@ namespace GitUI
         {
             var revision = Module.GetRevision(CurrentCheckout, true);
             var refs = Module.GetRefs(true, true);
+
             foreach (var gitRef in refs)
             {
-                if (gitRef.Guid.Equals(revision.Guid))
+                if (gitRef.Guid == revision.Guid)
                 {
                     revision.Refs.Add(gitRef);
                 }
@@ -1027,8 +1016,9 @@ namespace GitUI
 
         private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
         {
-            private RevisionGraphInMemFilter _filter1;
-            private RevisionGraphInMemFilter _filter2;
+            private readonly RevisionGraphInMemFilter _filter1;
+            private readonly RevisionGraphInMemFilter _filter2;
+
             public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter filter1,
                                               RevisionGraphInMemFilter filter2)
             {
@@ -1055,30 +1045,27 @@ namespace GitUI
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                SetUpVars(authorFilter, ref _authorFilter, ref _authorFilterRegex, ignoreCase);
-                SetUpVars(committerFilter, ref _committerFilter, ref _committerFilterRegex, ignoreCase);
-                SetUpVars(messageFilter, ref _messageFilter, ref _messageFilterRegex, ignoreCase);
+                SetUpVars(authorFilter, out _authorFilter, out _authorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, out _committerFilter, out _committerFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, out _messageFilter, out _messageFilterRegex, ignoreCase);
                 if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
                 {
-                    SetUpVars(messageFilter, ref _shaFilter, ref _shaFilterRegex, false);
+                    SetUpVars(messageFilter, out _shaFilter, out _shaFilterRegex, false);
                 }
             }
 
             private static void SetUpVars(string filterValue,
-                                   ref string filterStr,
-                                   ref Regex filterRegEx,
+                                   out string filterStr,
+                                   out Regex filterRegEx,
                                    bool ignoreCase)
             {
-                RegexOptions opts = RegexOptions.None;
-                if (ignoreCase)
-                {
-                    opts = opts | RegexOptions.IgnoreCase;
-                }
-
                 filterStr = filterValue?.Trim() ?? string.Empty;
+
+                var options = ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
+
                 try
                 {
-                    filterRegEx = new Regex(filterStr, opts);
+                    filterRegEx = new Regex(filterStr, options);
                 }
                 catch (ArgumentException)
                 {
@@ -1089,7 +1076,7 @@ namespace GitUI
             private static bool CheckCondition(string filter, Regex regex, string value)
             {
                 return string.IsNullOrEmpty(filter) ||
-                       ((regex != null) && (value != null) && regex.Match(value).Success);
+                       ((regex != null) && (value != null) && regex.IsMatch(value));
             }
 
             public override bool PassThru(GitRevision rev)
@@ -1105,20 +1092,19 @@ namespace GitUI
                                                                  string messageFilter,
                                                                  bool ignoreCase)
             {
-                if (!(string.IsNullOrEmpty(authorFilter) &&
-                      string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter) &&
-                      !MessageFilterCouldBeSHA(messageFilter)))
-                {
-                    return new RevisionGridInMemFilter(authorFilter,
-                                                       committerFilter,
-                                                       messageFilter,
-                                                       ignoreCase);
-                }
-                else
+                if (string.IsNullOrEmpty(authorFilter) &&
+                    string.IsNullOrEmpty(committerFilter) &&
+                    string.IsNullOrEmpty(messageFilter) &&
+                    !MessageFilterCouldBeSHA(messageFilter))
                 {
                     return null;
                 }
+
+                return new RevisionGridInMemFilter(
+                    authorFilter,
+                    committerFilter,
+                    messageFilter,
+                    ignoreCase);
             }
         }
 
@@ -1312,7 +1298,7 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
+        private static SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
             if (gitModule.SuperprojectModule == null)
             {
@@ -1320,8 +1306,8 @@ namespace GitUI
             }
 
             SuperProjectInfo spi = new SuperProjectInfo();
-            var currentCheckout = gitModule.GetSuperprojectCurrentCheckout();
-            if (currentCheckout.Key == 'U')
+            var (code, commit) = gitModule.GetSuperprojectCurrentCheckout();
+            if (code == 'U')
             {
                 // return local and remote hashes
                 var array = gitModule.SuperprojectModule.GetConflict(gitModule.SubmodulePath);
@@ -1331,7 +1317,7 @@ namespace GitUI
             }
             else
             {
-                spi.CurrentBranch = currentCheckout.Value;
+                spi.CurrentBranch = commit;
             }
 
             var refs = gitModule.SuperprojectModule.GetSubmoduleItemsForEachRef(gitModule.SubmodulePath, showRemoteRef);
@@ -1367,11 +1353,7 @@ namespace GitUI
                 .FileAndForget();
 
             DisposeRevisionGraphCommand();
-            this.InvokeAsync(() =>
-                {
-                    throw new AggregateException(e.Exception);
-                })
-                .FileAndForget();
+            this.InvokeAsync(() => throw new AggregateException(e.Exception)).FileAndForget();
             e.Handled = true;
         }
 
@@ -1458,7 +1440,7 @@ namespace GitUI
         private void SelectInitialRevision()
         {
             string filtredCurrentCheckout = _filtredCurrentCheckout;
-            string[] lastSelectedRows = LastSelectedRows ?? new string[0];
+            string[] lastSelectedRows = LastSelectedRows ?? Array.Empty<string>();
 
             // filter out all unavailable commits from LastSelectedRows.
             lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
@@ -1509,7 +1491,7 @@ namespace GitUI
 
             if (AppSettings.MaxRevisionGraphCommits > 0)
             {
-                revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
+                revListParams += string.Format("--max-count=\"{0}\" ", AppSettings.MaxRevisionGraphCommits);
             }
 
             return Module.ReadGitOutputLines(revListParams + initRevision).ToArray();
@@ -1619,19 +1601,19 @@ namespace GitUI
 
             var spi = SuperprojectCurrentCheckout.CompletedOrDefault();
             var superprojectRefs = new List<IGitRef>();
-            if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
+            if (spi?.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {
                 superprojectRefs.AddRange(spi.Refs[revision.Guid].Where(ShowRemoteRef));
             }
 
             e.Handled = true;
 
-            var drawRefArgs = new DrawRefArgs();
-
-            drawRefArgs.Graphics = e.Graphics;
-            drawRefArgs.CellBounds = e.CellBounds;
-
-            drawRefArgs.IsRowSelected = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
+            var drawRefArgs = new DrawRefArgs
+            {
+                Graphics = e.Graphics,
+                CellBounds = e.CellBounds,
+                IsRowSelected = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
+            };
 
             // Determine background colour for cell
             Brush cellBackgroundBrush;
@@ -1895,12 +1877,24 @@ namespace GitUI
                         e.Graphics.DrawString(timeText, rowFont, foreBrush,
                                               new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
                     }
+
+                    if (revision.IsArtificial)
+                    {
+                        // Get offset for "count" text
+                        SizeF textSize = drawRefArgs.Graphics.MeasureString(text, rowFont);
+
+                        offset += 1 + textSize.Width;
+                        offset = DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.BranchColor, ArrowType.None, false, true);
+                    }
                 }
                 else if (columnIndex == authorColIndex)
                 {
-                    var text = (string)e.FormattedValue;
-                    e.Graphics.DrawString(text, rowFont, foreBrush,
-                                          new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    if (!revision.IsArtificial)
+                    {
+                        var text = (string)e.FormattedValue;
+                        e.Graphics.DrawString(text, rowFont, foreBrush,
+                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
                 }
                 else if (columnIndex == dateColIndex)
                 {
@@ -1922,7 +1916,7 @@ namespace GitUI
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
                 {
-                    BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision, foreBrush, rowFont);
+                    BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision);
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
                 {
@@ -1944,7 +1938,7 @@ namespace GitUI
                                                                _revisionHighlighting.AuthorEmailToHighlight);
         }
 
-        private bool ShouldRenderAlternateBackColor(int rowIndex)
+        private static bool ShouldRenderAlternateBackColor(int rowIndex)
         {
             return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
@@ -2005,7 +1999,7 @@ namespace GitUI
             return offset;
         }
 
-        private static readonly string MultilineMessageIndicator = "[...]";
+        private const string MultilineMessageIndicator = "[...]";
 
         private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -2041,7 +2035,14 @@ namespace GitUI
             }
             else if (columnIndex == messageColIndex)
             {
-                e.Value = revision.SubjectCount + revision.Subject;
+                if (revision.IsArtificial)
+                {
+                    e.Value = revision.SubjectCount;
+                }
+                else
+                {
+                    e.Value = revision.Subject;
+                }
             }
             else if (columnIndex == authorColIndex)
             {
@@ -2095,10 +2096,10 @@ namespace GitUI
         {
             // code taken from CommitInfo.cs
             CommitData commitData = _commitDataManager.CreateFromRevision(revision);
-            string error = "";
+
             if (revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(commitData, revision.Guid, ref error);
+                _commitDataManager.UpdateBody(commitData, out _);
                 revision.Body = commitData.Body;
             }
 
@@ -2140,7 +2141,7 @@ namespace GitUI
             return AppSettings.OtherTagColor;
         }
 
-        private float RoundToEven(float value)
+        private static float RoundToEven(float value)
         {
             int result = ((int)value / 2) * 2;
             return result < value ? result + 2 : result;
@@ -2153,7 +2154,7 @@ namespace GitUI
             NotFilled
         }
 
-        private static readonly float[] dashPattern = new float[] { 4, 4 };
+        private static readonly float[] dashPattern = { 4, 4 };
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
@@ -2217,12 +2218,12 @@ namespace GitUI
             return additionalOffset;
         }
 
-        private float GetArrowSize(float rowHeight)
+        private static float GetArrowSize(float rowHeight)
         {
             return rowHeight - 6;
         }
 
-        private void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
+        private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
             const float horShift = 4;
             const float verShift = 3;
@@ -2312,12 +2313,12 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Any(rev => !rev.IsArtificial))
             {
-                Func<Form> provideForm = () =>
+                Form ProvideForm()
                 {
                     return new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
-                };
+                }
 
-                UICommands.ShowModelessForm(this, false, null, null, provideForm);
+                UICommands.ShowModelessForm(this, false, null, null, ProvideForm);
             }
             else if (!selectedRevisions.Any())
             {
@@ -2339,13 +2340,13 @@ namespace GitUI
                 return;
             }
 
-            using (var frm = new FormCreateTag(UICommands, LatestSelectedRevision))
-            {
-                if (frm.ShowDialog(this) == DialogResult.OK)
+            UICommands.DoActionOnRepo(() =>
                 {
-                    RefreshRevisions();
-                }
-            }
+                    using (var frm = new FormCreateTag(UICommands, LatestSelectedRevision))
+                    {
+                        return frm.ShowDialog(this) == DialogResult.OK;
+                    }
+                });
         }
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
@@ -2546,15 +2547,13 @@ namespace GitUI
             _rebaseOnTopOf = null;
             foreach (var head in gitRefListsForRevision.AllTags)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = head.Name;
-                toolStripItem.Click += ToolStripItemClickDeleteTag;
-                deleteTagDropDown.Items.Add(toolStripItem);
+                var deleteItem = new ToolStripMenuItem(head.Name) { Tag = head.Name };
+                deleteItem.Click += ToolStripItemClickDeleteTag;
+                deleteTagDropDown.Items.Add(deleteItem);
 
-                toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = GetRefUnambiguousName(head);
-                toolStripItem.Click += ToolStripItemClickMergeBranch;
-                mergeBranchDropDown.Items.Add(toolStripItem);
+                var mergeItem = new ToolStripMenuItem(head.Name) { Tag = GetRefUnambiguousName(head) };
+                mergeItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(mergeItem);
             }
 
             // For now there is no action that could be done on currentBranch
@@ -2564,7 +2563,7 @@ namespace GitUI
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                if (head.CompleteName.Equals(currentBranchRef))
+                if (head.CompleteName == currentBranchRef)
                 {
                     currentBranchPointsToRevision = !revision.IsArtificial;
                 }
@@ -2624,7 +2623,7 @@ namespace GitUI
                 // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
-                    if (!head.CompleteName.Equals(currentBranchRef))
+                    if (head.CompleteName != currentBranchRef)
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Tag = head.Name;
@@ -2638,7 +2637,7 @@ namespace GitUI
                     renameDropDown.Items.Add(toolStripItem); // Add to rename branch
                 }
 
-                if (!head.CompleteName.Equals(currentBranchRef))
+                if (head.CompleteName != currentBranchRef)
                 {
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)
@@ -2705,7 +2704,7 @@ namespace GitUI
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
-            openBuildReportToolStripMenuItem.Visible = revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url);
+            openBuildReportToolStripMenuItem.Visible = !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url);
 
             RefreshOwnScripts();
         }
@@ -2741,128 +2740,92 @@ namespace GitUI
 
         private void ToolStripItemClickDeleteTag(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                UICommands.StartDeleteTagDialog(this, toolStripItem.Tag as string);
             }
-
-            UICommands.StartDeleteTagDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                UICommands.StartDeleteBranchDialog(this, toolStripItem.Tag as string);
             }
-
-            UICommands.StartDeleteBranchDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickDeleteRemoteBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                UICommands.StartDeleteRemoteBranchDialog(this, toolStripItem.Text);
             }
-
-            UICommands.StartDeleteRemoteBranchDialog(this, toolStripItem.Text);
         }
 
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                string branch = toolStripItem.Text;
+                UICommands.StartCheckoutBranch(this, branch, false);
             }
-
-            string branch = toolStripItem.Text;
-            UICommands.StartCheckoutBranch(this, branch, false);
         }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                UICommands.StartCheckoutRemoteBranch(this, toolStripItem.Text);
             }
-
-            UICommands.StartCheckoutRemoteBranch(this, toolStripItem.Text);
         }
 
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                UICommands.StartMergeBranchDialog(this, toolStripItem.Tag as string);
             }
-
-            UICommands.StartMergeBranchDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null)
+            if (_rebaseOnTopOf != null)
             {
-                return;
+                UICommands.StartRebase(this, _rebaseOnTopOf);
             }
-
-            UICommands.StartRebase(this, _rebaseOnTopOf);
         }
 
         private void OnRebaseInteractivelyClicked(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null)
+            if (_rebaseOnTopOf != null)
             {
-                return;
+                UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
             }
-
-            UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
         }
 
         private void OnRebaseWithAdvOptionsClicked(object sender, EventArgs e)
         {
-            if (_rebaseOnTopOf == null)
+            if (_rebaseOnTopOf != null)
             {
-                return;
+                UICommands.StartRebaseDialogWithAdvOptions(this, _rebaseOnTopOf);
             }
-
-            UICommands.StartRebaseDialogWithAdvOptions(this, _rebaseOnTopOf);
         }
 
         private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
         {
-            var toolStripItem = sender as ToolStripItem;
-
-            if (toolStripItem == null)
+            if (sender is ToolStripItem toolStripItem)
             {
-                return;
+                UICommands.StartRenameDialog(this, toolStripItem.Tag as string);
             }
-
-            UICommands.StartRenameDialog(this, toolStripItem.Tag as string);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (LatestSelectedRevision == null)
+            if (LatestSelectedRevision != null)
             {
-                return;
+                string revision = LatestSelectedRevision.Guid;
+                UICommands.StartCheckoutRevisionDialog(this, revision);
             }
-
-            string revision = LatestSelectedRevision.Guid;
-            UICommands.StartCheckoutRevisionDialog(this, revision);
         }
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
@@ -2959,7 +2922,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        private string TimeToString(DateTime time)
+        private static string TimeToString(DateTime time)
         {
             if (time == DateTime.MinValue || time == DateTime.MaxValue)
             {
@@ -3027,17 +2990,17 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
-        public void UpdateArtificialCommitCount(IList<GitItemStatus> status)
+        public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status)
         {
             GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);
             GitRevision stagedRev = GetRevision(GitRevision.IndexGuid);
             UpdateArtificialCommitCount(status, unstagedRev, stagedRev);
         }
 
-        private void UpdateArtificialCommitCount(IList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
+        private void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
         {
             int staged = status.Count(item => item.IsStaged);
-            int unstaged = status.Count() - staged;
+            int unstaged = status.Count - staged;
             if (unstagedRev != null)
             {
                 unstagedRev.SubjectCount = "(" + unstaged + ") ";
@@ -3166,13 +3129,15 @@ namespace GitUI
 
         private void AddOwnScripts()
         {
-            IList<ScriptInfo> scripts = ScriptManager.GetScripts();
+            var scripts = ScriptManager.GetScripts();
+
             if (scripts == null)
             {
                 return;
             }
 
             int lastIndex = mainContextMenu.Items.Count;
+
             foreach (ScriptInfo scriptInfo in scripts)
             {
                 if (scriptInfo.Enabled)
@@ -3245,8 +3210,7 @@ namespace GitUI
 
         private void Revisions_DragDrop(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
                 if (fileNameArray.Length > 10)
                 {
@@ -3270,8 +3234,7 @@ namespace GitUI
 
         private static void Revisions_DragEnter(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
                 foreach (object fileNameObject in fileNameArray)
                 {
@@ -3362,7 +3325,7 @@ namespace GitUI
             }
         }
 
-        private void ToggleRevisionGraph()
+        private static void ToggleRevisionGraph()
         {
             if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small)
             {
@@ -3553,33 +3516,33 @@ namespace GitUI
 
         internal enum Commands
         {
-            ToggleRevisionGraph,
-            RevisionFilter,
-            ToggleAuthorDateCommitDate,
-            ToggleOrderRevisionsByDate,
-            ToggleShowRelativeDate,
-            ToggleDrawNonRelativesGray,
-            ToggleShowGitNotes,
-            ToggleRevisionCardLayout,
-            ToggleShowMergeCommits,
-            ShowAllBranches,
-            ShowCurrentBranchOnly,
-            ShowFilteredBranches,
-            ShowRemoteBranches,
-            ShowFirstParent,
-            GoToParent,
-            GoToChild,
-            ToggleHighlightSelectedBranch,
-            NextQuickSearch,
-            PrevQuickSearch,
-            SelectCurrentRevision,
-            GoToCommit,
-            NavigateBackward,
-            NavigateForward,
-            SelectAsBaseToCompare,
-            CompareToBase,
-            CreateFixupCommit,
-            ToggleShowTags,
+            ToggleRevisionGraph = 0,
+            RevisionFilter = 1,
+            ToggleAuthorDateCommitDate = 2,
+            ToggleOrderRevisionsByDate = 3,
+            ToggleShowRelativeDate = 4,
+            ToggleDrawNonRelativesGray = 5,
+            ToggleShowGitNotes = 6,
+            ToggleRevisionCardLayout = 7,
+            ToggleShowMergeCommits = 8,
+            ShowAllBranches = 9,
+            ShowCurrentBranchOnly = 10,
+            ShowFilteredBranches = 11,
+            ShowRemoteBranches = 12,
+            ShowFirstParent = 13,
+            GoToParent = 14,
+            GoToChild = 15,
+            ToggleHighlightSelectedBranch = 16,
+            NextQuickSearch = 17,
+            PrevQuickSearch = 18,
+            SelectCurrentRevision = 19,
+            GoToCommit = 20,
+            NavigateBackward = 21,
+            NavigateForward = 22,
+            SelectAsBaseToCompare = 23,
+            CompareToBase = 24,
+            CreateFixupCommit = 25,
+            ToggleShowTags = 26
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -3724,8 +3687,8 @@ namespace GitUI
             var r = LatestSelectedRevision;
             if (r != null)
             {
-                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(r.Guid, 15));
-                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(r.Subject, 30));
+                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
+                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
                 CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
                 CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
             }
@@ -3807,7 +3770,7 @@ namespace GitUI
             OpenManual();
         }
 
-        private void OpenManual()
+        private static void OpenManual()
         {
             string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
             OsShellUtil.OpenUrlInDefaultBrowser(url);
@@ -3816,7 +3779,8 @@ namespace GitUI
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var revision = GetSelectedRevisions().First();
-            if (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
+
+            if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 Process.Start(revision.BuildStatus.Url);
             }

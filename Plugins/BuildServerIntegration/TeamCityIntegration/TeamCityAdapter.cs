@@ -112,7 +112,8 @@ namespace TeamCityIntegration
 
             _buildServerWatcher = buildServerWatcher;
 
-            ProjectNames = config.GetString("ProjectName", "").Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            ProjectNames = buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", ""))
+                .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
             var buildIdFilerSetting = config.GetString("BuildIdFilter", "");
             if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))
@@ -370,8 +371,8 @@ namespace TeamCityIntegration
             }
 
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
-            bool unauthorized = (task.Status == TaskStatus.RanToCompletion &&
-                                task.CompletedResult().StatusCode == HttpStatusCode.Unauthorized) || task.CompletedResult().StatusCode == HttpStatusCode.Forbidden;
+            bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
+                                (task.CompletedResult().StatusCode == HttpStatusCode.Unauthorized || task.CompletedResult().StatusCode == HttpStatusCode.Forbidden);
 
             if (!retry)
             {
@@ -576,7 +577,7 @@ namespace TeamCityIntegration
         public List<Build> GetProjectBuilds(string projectId)
         {
             var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None));
-            return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build
             {
                 Id = (string)e.Attribute("id"),
                 Name = (string)e.Attribute("name"),

@@ -109,7 +109,7 @@ Current Branch:
             SaveScripts();
         }
 
-        private void SaveScripts()
+        private static void SaveScripts()
         {
             AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
         }
@@ -314,7 +314,7 @@ Current Branch:
             }
 
             Bitmap result = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage((Image)result))
+            using (Graphics g = Graphics.FromImage(result))
             {
                 g.DrawImage(b, 0, 0, width, height);
             }
@@ -337,9 +337,11 @@ Current Branch:
 
         private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
         {
-            var helpDisplayDialog = new SimpleHelpDisplayDialog();
-            helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
-            helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
+            var helpDisplayDialog = new SimpleHelpDisplayDialog
+            {
+                DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text,
+                ContentText = _scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine)
+            };
 
             helpDisplayDialog.ShowDialog();
         }

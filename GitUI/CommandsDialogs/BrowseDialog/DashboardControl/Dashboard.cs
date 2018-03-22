@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
         private bool _initialized;
-        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
 
         public Dashboard()
         {
@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        private void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
+        private static void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
             var repository = e.Repository;
             if (repository != null)
@@ -114,7 +114,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             //
             var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
             showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = GitCommands.AppSettings.DashboardShowCurrentBranch;
+            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
 
             var menuStrip = FindControl<MenuStrip>(Parent.Parent.Parent, p => true); // TODO: improve: Parent.Parent.Parent == FormBrowse
             var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
@@ -133,14 +133,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         /// <summary>
         /// code duplicated from GerritPlugin.cs
         /// </summary>
-        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                 {
                     return result;
                 }
@@ -225,8 +223,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             RecentRepositories.Clear();
 
-            RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
-            filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
+            var filteredRecentRepositoryHistory = new RepositoryCategory
+            {
+                Description = Repositories.RepositoryHistory.Description
+            };
 
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
@@ -244,8 +244,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
         {
-            bool newValue = !GitCommands.AppSettings.DashboardShowCurrentBranch;
-            GitCommands.AppSettings.DashboardShowCurrentBranch = newValue;
+            bool newValue = !AppSettings.DashboardShowCurrentBranch;
+            AppSettings.DashboardShowCurrentBranch = newValue;
             ((ToolStripMenuItem)sender).Checked = newValue;
             Refresh();
         }
@@ -258,7 +258,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _splitterManager.RestoreSplitters();
         }
 
-        private void TranslateItem_Click(object sender, EventArgs e)
+        private static void TranslateItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
@@ -275,8 +275,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void dashboardItem_Click(object sender, EventArgs e)
         {
-            var label = sender as DashboardItem;
-            if (label == null || string.IsNullOrEmpty(label.Path))
+            if (!(sender is DashboardItem label) || string.IsNullOrEmpty(label.Path))
             {
                 return;
             }
@@ -360,8 +359,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                 {
@@ -410,8 +408,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
         {
-            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNameArray != null)
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {
                 if (fileNameArray.Length != 1)
                 {

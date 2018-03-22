@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
-        private AsyncLoader _loader = new AsyncLoader();
+        private readonly AsyncLoader _loader = new AsyncLoader();
 
         // only for translation
         private ViewPullRequestsForm()
@@ -52,8 +52,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
         }
 
-        private List<IHostedRemote> _hostedRemotes;
-        private List<IPullRequestInformation> _pullRequestsInfo;
+        private IReadOnlyList<IHostedRemote> _hostedRemotes;
+        private IReadOnlyList<IPullRequestInformation> _pullRequestsInfo;
         private IPullRequestInformation _currentPullRequestInfo;
 
         private void ViewPullRequestsForm_Load(object sender, EventArgs e)
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                        _strError.Text));
         }
 
-        private void SetPullRequestsData(List<IPullRequestInformation> infos)
+        private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)
         {
             if (_isFirstLoad)
             {
@@ -146,8 +146,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var currentRemote = Module.GetCurrentRemote();
             var hostedRemote = _selectHostedRepoCB.Items.
                 Cast<IHostedRemote>().
-                Where(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase)).
-                FirstOrDefault();
+                FirstOrDefault(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase));
 
             if (hostedRemote == null)
             {
@@ -426,54 +425,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
-        private void _postComment_Click(object sender, EventArgs e)
-        {
-            string text = _postCommentText.Text;
-            if (_currentPullRequestInfo == null || text == null || text.Trim().Length == 0)
-            {
-                return;
-            }
-
-            try
-            {
-                _currentPullRequestInfo.Discussion.Post(text);
-                _postCommentText.Text = "";
-                _currentPullRequestInfo.Discussion.ForceReload();
-                LoadDiscussion(_currentPullRequestInfo.Discussion);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message, _strError.Text);
-            }
-        }
-
-        private void _postCommentText_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && e.Control)
-            {
-                _postComment_Click(sender, e);
-                e.Handled = true;
-            }
-        }
-
-        private void _refreshCommentsBtn_Click(object sender, EventArgs e)
-        {
-            if (_currentPullRequestInfo == null)
-            {
-                return;
-            }
-
-            try
-            {
-                _currentPullRequestInfo.Discussion.ForceReload();
-                LoadDiscussion(_currentPullRequestInfo.Discussion);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message, _strError.Text);
-            }
-        }
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -482,7 +433,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (disposing)
             {
-                _loader.Cancel();
                 _loader.Dispose();
                 components?.Dispose();
             }

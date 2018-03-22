@@ -36,7 +36,7 @@ namespace Gerrit
             }
         }
 
-        private string PushCmd(string remote, string toBranch)
+        private static string PushCmd(string remote, string toBranch)
         {
             remote = remote.ToPosixPath();
 
@@ -83,6 +83,18 @@ namespace Gerrit
             if (!string.IsNullOrEmpty(topic))
             {
                 targetBranch += "/" + topic;
+            }
+
+            string reviewers = _NO_TRANSLATE_Reviewers.Text.Trim();
+            if (!string.IsNullOrEmpty(reviewers))
+            {
+                string formattedReviewers = string.Join(",", reviewers.Split(' ')
+                                                                      .Where(r => !string.IsNullOrEmpty(r))
+                                                                      .Select(r => "r=" + r));
+                if (!formattedReviewers.IsNullOrEmpty())
+                {
+                    targetBranch += "%" + formattedReviewers;
+                }
             }
 
             pushCommand.CommandText = PushCmd(
@@ -153,8 +165,7 @@ namespace Gerrit
 
                 // Don't use the Gerrit change number as a topic branch.
 
-                int unused;
-                if (int.TryParse(branchName, out unused))
+                if (int.TryParse(branchName, out _))
                 {
                     branchName = null;
                 }
@@ -181,7 +192,7 @@ namespace Gerrit
 
             _currentBranchRemote = Settings.DefaultRemote;
 
-            IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
+            var remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
             int i = remotes.IndexOf(_currentBranchRemote);
             _NO_TRANSLATE_Remotes.SelectedIndex = i >= 0 ? i : 0;
 

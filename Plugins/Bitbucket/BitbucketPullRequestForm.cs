@@ -19,23 +19,15 @@ namespace Bitbucket
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
-        private Settings _settings;
-        private readonly BitbucketPlugin _plugin;
-        private readonly GitUIBaseEventArgs _gitUiCommands;
-        private readonly ISettingsSource _settingsContainer;
+        private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
-        private readonly List<string> _bitbucketUsers = new List<string>();
 
         public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();
 
-            _plugin = plugin;
-            _settingsContainer = settings;
-            _gitUiCommands = gitUiCommands;
-
-            _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer, _plugin);
+            _settings = Settings.Parse(gitUiCommands.GitModule, settings, plugin);
             if (_settings == null)
             {
                 MessageBox.Show(_yourRepositoryIsNotInBitbucket.Text);
@@ -75,7 +67,7 @@ namespace Bitbucket
                         ddlRepositoryTarget.Enabled = true;
                     });
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
                 }
             });
@@ -99,9 +91,8 @@ namespace Bitbucket
                         lbxPullRequests.DisplayMember = "DisplayName";
                     });
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
-                    return;
                 }
             });
         }
@@ -166,7 +157,7 @@ namespace Bitbucket
             }
         }
 
-        private Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
+        private readonly Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (_branches.ContainsKey(selectedRepo))
@@ -187,18 +178,6 @@ namespace Bitbucket
 
             _branches.Add(selectedRepo, list);
             return list;
-        }
-
-        private void ReviewersDataGridEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {
-            var cellEdit = e.Control as DataGridViewTextBoxEditingControl;
-            if (cellEdit != null)
-            {
-                cellEdit.AutoCompleteCustomSource = new AutoCompleteStringCollection();
-                cellEdit.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                cellEdit.AutoCompleteSource = AutoCompleteSource.CustomSource;
-                cellEdit.AutoCompleteCustomSource.AddRange(_bitbucketUsers.ToArray());
-            }
         }
 
         private void DdlRepositorySourceSelectedValueChanged(object sender, EventArgs e)
@@ -333,63 +312,59 @@ namespace Bitbucket
 
         private void BtnMergeClick(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null)
+            if (lbxPullRequests.SelectedItem is PullRequest curItem)
             {
-                return;
-            }
+                var mergeInfo = new MergeRequestInfo
+                {
+                    Id = curItem.Id,
+                    Version = curItem.Version,
+                    ProjectKey = curItem.DestProjectKey,
+                    TargetRepo = curItem.DestRepo,
+                };
 
-            var mergeInfo = new MergeRequestInfo
-            {
-                Id = curItem.Id,
-                Version = curItem.Version,
-                ProjectKey = curItem.DestProjectKey,
-                TargetRepo = curItem.DestRepo,
-            };
-
-            // Merge
-            var mergeRequest = new MergePullRequest(_settings, mergeInfo);
-            var response = mergeRequest.Send();
-            if (response.Success)
-            {
-                MessageBox.Show(_success.Text);
-                BitbucketViewPullRequestFormLoad(null, null);
-            }
-            else
-            {
-                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                    _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Merge
+                var mergeRequest = new MergePullRequest(_settings, mergeInfo);
+                var response = mergeRequest.Send();
+                if (response.Success)
+                {
+                    MessageBox.Show(_success.Text);
+                    BitbucketViewPullRequestFormLoad(null, null);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        string.Join(Environment.NewLine, response.Messages),
+                        _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
         private void BtnApproveClick(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
-            if (curItem == null)
+            if (lbxPullRequests.SelectedItem is PullRequest curItem)
             {
-                return;
-            }
+                var mergeInfo = new MergeRequestInfo
+                {
+                    Id = curItem.Id,
+                    Version = curItem.Version,
+                    ProjectKey = curItem.DestProjectKey,
+                    TargetRepo = curItem.DestRepo,
+                };
 
-            var mergeInfo = new MergeRequestInfo
-            {
-                Id = curItem.Id,
-                Version = curItem.Version,
-                ProjectKey = curItem.DestProjectKey,
-                TargetRepo = curItem.DestRepo,
-            };
-
-            // Approve
-            var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
-            var response = approveRequest.Send();
-            if (response.Success)
-            {
-                MessageBox.Show(_success.Text);
-                BitbucketViewPullRequestFormLoad(null, null);
-            }
-            else
-            {
-                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                    _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Approve
+                var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
+                var response = approveRequest.Send();
+                if (response.Success)
+                {
+                    MessageBox.Show(_success.Text);
+                    BitbucketViewPullRequestFormLoad(null, null);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        string.Join(Environment.NewLine, response.Messages),
+                        _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

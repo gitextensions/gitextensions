@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -19,7 +17,7 @@ namespace Bitbucket
 
     internal abstract class BitbucketRequestBase<T>
     {
-        protected Settings Settings { get; private set; }
+        protected Settings Settings { get; }
 
         protected BitbucketRequestBase(Settings settings)
         {
@@ -30,8 +28,7 @@ namespace Bitbucket
         {
             if (Settings.DisableSSL)
             {
-                System.Net.ServicePointManager.ServerCertificateValidationCallback
-                    = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
 
             var client = new RestClient
@@ -85,7 +82,7 @@ namespace Bitbucket
 
         private static BitbucketResponse<T> ParseErrorResponse(string jsonString)
         {
-            var json = new JObject();
+            JObject json;
             try
             {
                 System.Console.WriteLine(jsonString);

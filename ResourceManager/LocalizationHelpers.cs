@@ -85,8 +85,7 @@ namespace ResourceManager
                 // TEMP, will be moved in the follow up refactor
                 ICommitDataManager commitDataManager = new CommitDataManager(() => module);
 
-                string error = "";
-                CommitData data = commitDataManager.GetCommitData(hash, ref error);
+                CommitData data = commitDataManager.GetCommitData(hash, out _);
                 if (data == null)
                 {
                     sb.AppendLine("Commit hash:\t" + hash);
@@ -142,17 +141,16 @@ namespace ResourceManager
             CommitData oldCommitData = null;
             if (gitModule.IsValidGitWorkingDir())
             {
-                string error = "";
                 if (status.OldCommit != null)
                 {
-                    oldCommitData = commitDataManager.GetCommitData(status.OldCommit, ref error);
+                    oldCommitData = commitDataManager.GetCommitData(status.OldCommit, out _);
                 }
 
                 if (oldCommitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var delim = new[] { '\n', '\r' };
+                    var lines = oldCommitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                     {
                         sb.AppendLine("\t\t" + curline);
@@ -170,17 +168,16 @@ namespace ResourceManager
             CommitData commitData = null;
             if (gitModule.IsValidGitWorkingDir())
             {
-                string error = "";
                 if (status.Commit != null)
                 {
-                    commitData = commitDataManager.GetCommitData(status.Commit, ref error);
+                    commitData = commitDataManager.GetCommitData(status.Commit, out _);
                 }
 
                 if (commitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var delim = new[] { '\n', '\r' };
+                    var lines = commitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                     {
                         sb.AppendLine("\t\t" + curline);

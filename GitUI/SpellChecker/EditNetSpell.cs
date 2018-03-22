@@ -57,7 +57,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
-        public bool IsUndoInProgress = false;
+        public bool IsUndoInProgress;
 
         public EditNetSpell()
         {
@@ -169,14 +169,8 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectionStart
         {
-            get
-            {
-                return TextBox.SelectionStart;
-            }
-            set
-            {
-                TextBox.SelectionStart = value;
-            }
+            get => TextBox.SelectionStart;
+            set => TextBox.SelectionStart = value;
         }
 
         [Category("Appearance")]
@@ -184,15 +178,9 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual int SelectionLength
         {
-            get
-            {
-                return TextBox.SelectionLength;
-            }
+            get => TextBox.SelectionLength;
 
-            set
-            {
-                TextBox.SelectionLength = value;
-            }
+            set => TextBox.SelectionLength = value;
         }
 
         [Category("Appearance")]
@@ -200,14 +188,8 @@ namespace GitUI.SpellChecker
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual string SelectedText
         {
-            get
-            {
-                return TextBox.SelectedText;
-            }
-            set
-            {
-                TextBox.SelectedText = value;
-            }
+            get => TextBox.SelectedText;
+            set => TextBox.SelectedText = value;
         }
 
         protected RepoDistSettings Settings => IsUICommandsInitialized ?
@@ -444,7 +426,7 @@ namespace GitUI.SpellChecker
                     foreach (var suggestion in _spelling.Suggestions)
                     {
                         var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
-                        si.Font = new System.Drawing.Font(si.Font, FontStyle.Bold);
+                        si.Font = new Font(si.Font, FontStyle.Bold);
                     }
 
                     AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick)
@@ -651,7 +633,7 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
-        private bool _skipSelectionUndo = false;
+        private bool _skipSelectionUndo;
 
         private void UndoHighlighting()
         {
@@ -661,7 +643,7 @@ namespace GitUI.SpellChecker
             }
 
             IsUndoInProgress = true;
-            while (TextBox.UndoActionName.Equals("Unknown"))
+            while (TextBox.UndoActionName == "Unknown")
             {
                 TextBox.Undo();
             }

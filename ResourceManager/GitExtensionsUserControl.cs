@@ -83,7 +83,7 @@ namespace ResourceManager
         /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
             _translated = true;
         }
 
@@ -100,14 +100,16 @@ namespace ResourceManager
         protected void TranslateItem(string itemName, object item)
         {
             var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+
             if (translation.Count == 0)
             {
                 return;
             }
 
+            var itemsToTranslate = new[] { Tuple.Create(itemName, item) };
+
             foreach (var pair in translation)
             {
-                IEnumerable<Tuple<string, object>> itemsToTranslate = new[] { new Tuple<string, object>(itemName, item) };
                 TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
             }
         }

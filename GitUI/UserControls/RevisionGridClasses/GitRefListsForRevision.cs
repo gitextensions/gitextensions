@@ -49,7 +49,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// </summary>
         public IGitRef[] GetDeletableLocalRefs(string currentBranch)
         {
-            return _localBranches.Where(b => !b.Name.Equals(currentBranch)).Union(_tags).ToArray();
+            return _localBranches.Where(b => b.Name != currentBranch).Union(_tags).ToArray();
         }
 
         /// <summary>

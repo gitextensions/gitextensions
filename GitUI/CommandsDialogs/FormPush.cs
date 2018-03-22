@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs
         private string _selectedBranch;
         private GitRemote _selectedRemote;
         private string _selectedRemoteBranchName;
-        private IList<IGitRef> _gitRefs;
+        private IReadOnlyList<IGitRef> _gitRefs;
         private readonly IGitRemoteManager _remoteManager;
 
         public bool ErrorOccurred { get; private set; }
@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner)
+        public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {
             if (!PushChanges(owner))
             {
@@ -155,11 +155,6 @@ namespace GitUI.CommandsDialogs
             }
 
             return DialogResult.OK;
-        }
-
-        public DialogResult PushAndShowDialogWhenFailed()
-        {
-            return PushAndShowDialogWhenFailed(null);
         }
 
         private bool CheckIfRemoteExist()
@@ -729,9 +724,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PushToRemote.Checked)
                 {
-                    var branch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
-
-                    if (branch != null)
+                    if (_NO_TRANSLATE_Branch.SelectedItem is GitRef branch)
                     {
                         if (_selectedRemote != null)
                         {
@@ -913,7 +906,7 @@ namespace GitUI.CommandsDialogs
             Cursor = Cursors.AppStarting;
             try
             {
-                IList<IGitRef> remoteHeads;
+                IReadOnlyList<IGitRef> remoteHeads;
                 if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
                 {
                     EnsurePageant(remote);
@@ -966,9 +959,9 @@ namespace GitUI.CommandsDialogs
             return cmdOutput;
         }
 
-        private void ProcessHeads(string remote, IList<IGitRef> remoteHeads)
+        private void ProcessHeads(string remote, IReadOnlyList<IGitRef> remoteHeads)
         {
-            IList<IGitRef> localHeads = GetLocalBranches().ToList();
+            var localHeads = GetLocalBranches().ToList();
             var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
 
             // Add all the local branches.

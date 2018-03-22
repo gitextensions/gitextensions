@@ -30,6 +30,6 @@ namespace TfsInterop.Interface
     {
         bool IsDependencyOk();
         void ConnectToTfsServer(string hostname, string teamCollection, string projectName, Regex buildDefinitionFilter = null);
-        IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running);
+        IReadOnlyList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running);
     }
 }

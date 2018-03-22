@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _warningOpenFailedCaption =
             new TranslationString("Error");
 
-        private GitModule _choosenModule = null;
+        private GitModule _choosenModule;
 
         public FormOpenDirectory(GitModule currentModule)
         {
@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _NO_TRANSLATE_Directory.Select();
         }
 
-        private IList<string> GetDirectories(GitModule currentModule)
+        private static IReadOnlyList<string> GetDirectories(GitModule currentModule)
         {
             List<string> directories = new List<string>();
 
@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 directories.Add(PathUtil.EnsureTrailingPathSeparator(AppSettings.DefaultCloneDestinationPath));
             }
 
-            if (currentModule != null && !string.IsNullOrWhiteSpace(currentModule.WorkingDir))
+            if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
                 DirectoryInfo di = new DirectoryInfo(currentModule.WorkingDir);
                 if (di.Parent != null)

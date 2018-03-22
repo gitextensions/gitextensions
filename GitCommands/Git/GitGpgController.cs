@@ -143,13 +143,12 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            TagStatus tagStatus = TagStatus.NoTag;
-
             /* No Tag present, exit */
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
+            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+
             if (usefulTagRefs.Count == 0)
             {
-                return tagStatus;
+                return TagStatus.NoTag;
             }
 
             return await Task.Run(() =>
@@ -157,48 +156,33 @@ namespace GitCommands.Gpg
                 /* More than one tag on the revision */
                 if (usefulTagRefs.Count > 1)
                 {
-                    tagStatus = TagStatus.Many;
+                    return TagStatus.Many;
                 }
-                else
+
+                /* Raw message to be checked */
+                string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
+
+                /* Look for icon to be shown */
+                if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
                 {
-                    /* Raw message to be checked */
-                    string rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
-
-                    /* Look for icon to be shown */
-                    var goodSignatureMatch = GoodSignatureTagRegex.Match(rawGpgMessage);
-                    var validSignatureMatch = ValidSignatureTagRegex.Match(rawGpgMessage);
-
-                    if (goodSignatureMatch.Success && validSignatureMatch.Success)
-                    {
-                        /* It's only one good tag */
-                        tagStatus = TagStatus.OneGood;
-                    }
-                    else
-                    {
-                        Match noSignature = NoSignatureFoundTagRegex.Match(rawGpgMessage);
-                        if (noSignature.Success)
-                        {
-                            /* One tag, but not signed */
-                            tagStatus = TagStatus.TagNotSigned;
-                        }
-                        else
-                        {
-                            Match noPubKeyMatch = NoPubKeyTagRegex.Match(rawGpgMessage);
-                            if (noPubKeyMatch.Success)
-                            {
-                                /* One tag, signed, but user has not the public key */
-                                tagStatus = TagStatus.NoPubKey;
-                            }
-                            else
-                            {
-                                /* One tag, signed, any other error */
-                                tagStatus = TagStatus.OneBad;
-                            }
-                        }
-                    }
+                    /* It's only one good tag */
+                    return TagStatus.OneGood;
                 }
 
-                return tagStatus;
+                if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
+                {
+                    /* One tag, but not signed */
+                    return TagStatus.TagNotSigned;
+                }
+
+                if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
+                {
+                    /* One tag, signed, but user has not the public key */
+                    return TagStatus.NoPubKey;
+                }
+
+                /* One tag, signed, any other error */
+                return TagStatus.OneBad;
             });
         }
 
@@ -228,7 +212,7 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList<IGitRef>();
+            var usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
             return EvaluateTagVerifyMessage(usefulTagRefs);
         }
 
@@ -240,13 +224,13 @@ namespace GitCommands.Gpg
                 return null;
             }
 
-            string rawFlag = raw == true ? "--raw" : "";
+            string rawFlag = raw ? "--raw" : "";
 
             var module = GetModule();
             return module.RunGitCmd($"verify-tag {rawFlag} {tagName}");
         }
 
-        private string EvaluateTagVerifyMessage(IList<IGitRef> usefulTagRefs)
+        private string EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)
         {
             if (usefulTagRefs.Count == 0)
             {

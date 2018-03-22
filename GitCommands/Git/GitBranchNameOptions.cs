@@ -29,6 +29,6 @@ namespace GitCommands.Git
         /// Gets the character which will replace all invalid characters in git branch name.
         /// </summary>
         /// <seealso cref="GitBranchNameNormaliser"/>.
-        public string ReplacementToken { get; private set; }
+        public string ReplacementToken { get; }
     }
 }

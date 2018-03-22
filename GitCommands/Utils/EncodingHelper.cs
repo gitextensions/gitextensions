@@ -7,7 +7,7 @@ namespace GitCommands
     /// <summary>
     /// Encoding Helper
     /// </summary>
-    public class EncodingHelper
+    public static class EncodingHelper
     {
         public static string GetString(byte[] output, byte[] error, Encoding encoding)
         {

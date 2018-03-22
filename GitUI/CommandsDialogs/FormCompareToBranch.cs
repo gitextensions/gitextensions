@@ -18,7 +18,8 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             if (!IsUICommandsInitialized)
-            {// UICommands is not initialized in translation unit test.
+            {
+                // UICommands is not initialized in translation unit test.
                 return;
             }
 

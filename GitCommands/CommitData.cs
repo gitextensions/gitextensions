@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    public class CommitData
+    public sealed class CommitData
     {
         public CommitData(string guid,
-            string treeGuid, ReadOnlyCollection<string> parentGuids,
+            string treeGuid, IReadOnlyList<string> parentGuids,
             string author, DateTimeOffset authorDate,
             string committer, DateTimeOffset commitDate,
             string body)
@@ -25,14 +25,20 @@ namespace GitCommands
 
         public string Guid { get; }
         public string TreeGuid { get; }
-        public ReadOnlyCollection<string> ParentGuids { get; }
-        public List<string> ChildrenGuids { get; set; }
+        public IReadOnlyList<string> ParentGuids { get; }
         public string Author { get; }
         public DateTimeOffset AuthorDate { get; }
         public string Committer { get; }
         public DateTimeOffset CommitDate { get; }
 
-        // TODO: this needs review, it shouldn't be mutable
+        // TODO mutable properties need review
+
+        [CanBeNull, ItemNotNull]
+        public IReadOnlyList<string> ChildrenGuids { get; set; }
+
+        /// <summary>
+        /// Gets and sets the commit message.
+        /// </summary>
         public string Body { get; set; }
     }
 }

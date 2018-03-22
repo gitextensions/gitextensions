@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,12 +45,20 @@ namespace GitExtensions
                 // is this exception caused by the configuration?
                 if (tie.InnerException != null
                     && tie.InnerException.GetType()
-                        .IsSubclassOf(typeof(System.Configuration.ConfigurationException)))
+                        .IsSubclassOf(typeof(ConfigurationException)))
                 {
-                    HandleConfigurationException((System.Configuration.ConfigurationException)tie.InnerException);
+                    HandleConfigurationException((ConfigurationException)tie.InnerException);
                 }
             }
 
+            // NOTE we perform the rest of the application's startup in another method to defer
+            // the JIT processing more types than required to configure NBug.
+            // In this way, there's more chance we can handle startup exceptions correctly.
+            RunApplication();
+        }
+
+        private static void RunApplication()
+        {
             string[] args = Environment.GetCommandLineArgs();
 
             // This form created for obtain UI synchronization context only
@@ -76,7 +85,7 @@ namespace GitExtensions
 
             try
             {
-                if (!(args.Length >= 2 && args[1].Equals("uninstall"))
+                if (!(args.Length >= 2 && args[1] == "uninstall")
                     && (AppSettings.CheckSettings
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
@@ -175,7 +184,7 @@ namespace GitExtensions
         /// <summary>
         /// Used in the rare event that the configuration file for the application is corrupted
         /// </summary>
-        private static void HandleConfigurationException(System.Configuration.ConfigurationException ce)
+        private static void HandleConfigurationException(ConfigurationException ce)
         {
             bool exceptionHandled = false;
             try
@@ -184,7 +193,7 @@ namespace GitExtensions
                 var in3 = ce.InnerException.InnerException;
 
                 // saves having to have a reference to System.Xml just to check that we have an XmlException
-                if (in3.GetType().Name.Equals("XmlException"))
+                if (in3.GetType().Name == "XmlException")
                 {
                     var localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
@@ -203,8 +212,7 @@ namespace GitExtensions
                                 if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart GitExtensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
-                                    System.Diagnostics.Process p = new System.Diagnostics.Process();
-                                    p.StartInfo.FileName = args[0];
+                                    var p = new System.Diagnostics.Process { StartInfo = { FileName = args[0] } };
                                     if (args.Length > 1)
                                     {
                                         args[0] = "";
@@ -239,7 +247,7 @@ namespace GitExtensions
                     MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                System.Environment.Exit(1);
+                Environment.Exit(1);
             }
         }
     }

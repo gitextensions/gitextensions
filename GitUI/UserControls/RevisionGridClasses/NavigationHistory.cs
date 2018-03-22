@@ -18,7 +18,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// </summary>
         public void Push(string curr)
         {
-            if ((_prevItems.Count == 0) || !_prevItems.Peek().Equals(curr))
+            if (_prevItems.Count == 0 || _prevItems.Peek() != curr)
             {
                 _prevItems.Push(curr);
                 _nextItems.Clear();
@@ -36,17 +36,15 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <exception cref="InvalidOperationException">When no previous history is available.</exception>
         public string NavigateBackward()
         {
-            if (CanNavigateBackward)
-            {
-                string curr = _prevItems.Pop();
-                string prev = _prevItems.Peek();
-                _nextItems.Push(curr);
-                return prev;
-            }
-            else
+            if (!CanNavigateBackward)
             {
                 throw new InvalidOperationException();
             }
+
+            string curr = _prevItems.Pop();
+            string prev = _prevItems.Peek();
+            _nextItems.Push(curr);
+            return prev;
         }
 
         /// <summary>
@@ -60,16 +58,14 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <exception cref="InvalidOperationException">When no forward history is available.</exception>
         public string NavigateForward()
         {
-            if (CanNavigateForward)
-            {
-                string next = _nextItems.Pop();
-                _prevItems.Push(next);
-                return next;
-            }
-            else
+            if (!CanNavigateForward)
             {
                 throw new InvalidOperationException();
             }
+
+            string next = _nextItems.Pop();
+            _prevItems.Push(next);
+            return next;
         }
 
         /// <summary>

@@ -120,9 +120,17 @@ namespace GitCommands
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Returns a value indicating whether <paramref name="id"/> is a valid SHA-1 hash.
+        /// </summary>
+        /// <remarks>
+        /// To be valid the string must contain exactly 40 lower-case hexadecimal characters.
+        /// </remarks>
+        /// <param name="id">The string to validate.</param>
+        /// <returns><c>true</c> if <paramref name="id"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
         public static bool IsFullSha1Hash(string id)
         {
-            return Regex.IsMatch(id, GitRevision.Sha1HashPattern);
+            return Sha1HashRegex.IsMatch(id);
         }
     }
 }

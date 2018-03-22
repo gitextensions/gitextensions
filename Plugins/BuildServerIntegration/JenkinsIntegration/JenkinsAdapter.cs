@@ -55,7 +55,7 @@ namespace JenkinsIntegration
         private HttpClient _httpClient;
 
         private readonly Dictionary<string, JenkinsCacheInfo> _lastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
-        private readonly IList<string> _projectsUrls = new List<string>();
+        private readonly List<string> _projectsUrls = new List<string>();
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
@@ -75,15 +75,18 @@ namespace JenkinsIntegration
                                      ? new Uri(hostName, UriKind.Absolute)
                                      : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
-                _httpClient = new HttpClient(new HttpClientHandler() { UseDefaultCredentials = true });
-                _httpClient.Timeout = TimeSpan.FromMinutes(2);
-                _httpClient.BaseAddress = baseAdress;
+                _httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
+                {
+                    Timeout = TimeSpan.FromMinutes(2),
+                    BaseAddress = baseAdress
+                };
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
-                string[] projectUrls = projectName.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] projectUrls = _buildServerWatcher.ReplaceVariables(projectName)
+                    .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var projectUrl in projectUrls.Select(s => baseAdress + "job/" + s.Trim() + "/"))
                 {
                     AddGetBuildUrl(projectUrl);
@@ -193,8 +196,9 @@ namespace JenkinsIntegration
             // Similar for 'sinceDate', not supported in Jenkins API
             try
             {
-                IList<JoinableTask<ResponseInfo>> allBuildInfos = new List<JoinableTask<ResponseInfo>>();
-                IList<JoinableTask<ResponseInfo>> latestBuildInfos = new List<JoinableTask<ResponseInfo>>();
+                var allBuildInfos = new List<JoinableTask<ResponseInfo>>();
+                var latestBuildInfos = new List<JoinableTask<ResponseInfo>>();
+
                 foreach (var projectUrl in _projectsUrls)
                 {
                     if (_lastBuildCache[projectUrl].Timestamp <= 0)
@@ -278,14 +282,15 @@ namespace JenkinsIntegration
             catch (Exception ex)
             {
                 // Cancelling a subtask is similar to cancelling this task
-                if (ex.InnerException == null || !(ex.InnerException is OperationCanceledException))
+                if (!(ex.InnerException is OperationCanceledException))
                 {
                     observer.OnError(ex);
                 }
             }
         }
 
-        private readonly string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+        private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+
         private static BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
@@ -470,7 +475,7 @@ namespace JenkinsIntegration
                 TaskScheduler.Current);
         }
 
-        private string FormatToGetJson(string restServicePath, bool buildsInfo = false)
+        private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)
         {
             string buildTree = "lastBuild[timestamp]";
             int depth = 1;

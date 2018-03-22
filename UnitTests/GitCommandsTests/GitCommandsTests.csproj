@@ -79,6 +79,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GitUITests\ConfigureJoinableTaskFactoryAttribute.cs">
+      <Link>ConfigureJoinableTaskFactoryAttribute.cs</Link>
+    </Compile>
     <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
@@ -90,8 +93,10 @@
     <Compile Include="ExternalLinks\ExternalLinksManagerIntegrationTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
+    <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
+    <Compile Include="GitRevisionTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensionsTests.cs" />
@@ -111,8 +116,7 @@
     <Compile Include="Git\GitDirectoryResolverTests.cs" />
     <Compile Include="Git\Tag\GitTagControllerTest.cs" />
     <Compile Include="Git\GitTreeParserTests.cs" />
-    <Compile Include="Helpers\FileInfoExtensions.cs" />
-    <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
+    <Compile Include="AsyncLoaderTests.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
     <Compile Include="Patch\PatchManagerTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
@@ -120,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
     <Compile Include="SshPathLocatorTest.cs" />
+    <Compile Include="StringExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />

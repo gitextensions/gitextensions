@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool ManageStashes { get; set; }
 
-        private AsyncLoader _asyncLoader = new AsyncLoader();
+        private readonly AsyncLoader _asyncLoader = new AsyncLoader();
 
         private FormStash()
             : this(null)
@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
+            Loading.Image = Properties.Resources.loadingpanel;
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = Module.GetStashes();
+            var stashedItems = Module.GetStashes().ToList();
 
             _currentWorkingDirStashItem = new GitStash("currentWorkingDirStashItem")
             {
@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
+        private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
             Stashed.SetDiffs(items: gitItemStatuses);
             Loading.Visible = false;
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 {
                     return;
                 }
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
         {
             if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
             {
-                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                if (MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 {
                     return;
                 }

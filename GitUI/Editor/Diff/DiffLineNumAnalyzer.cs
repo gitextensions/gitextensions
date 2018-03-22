@@ -8,17 +8,17 @@ namespace GitUI.Editor.Diff
 {
     public class DiffLineNumAnalyzer
     {
-        private static Regex regex = new Regex(
+        private static readonly Regex regex = new Regex(
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public class Result
         {
-            public Dictionary<int, DiffLineNum> LineNumbers = new Dictionary<int, DiffLineNum>();
-            public int MaxLineNumber = 0;
+            public Dictionary<int, DiffLineNum> LineNumbers { get; } = new Dictionary<int, DiffLineNum>();
+            public int MaxLineNumber;
         }
 
-        private void AddToResult(Result result, DiffLineNum diffLine)
+        private static void AddToResult(Result result, DiffLineNum diffLine)
         {
             result.LineNumbers.Add(diffLine.LineNumInDiff, diffLine);
             result.MaxLineNumber = Math.Max(result.MaxLineNumber,

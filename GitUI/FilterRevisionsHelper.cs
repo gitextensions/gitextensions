@@ -6,27 +6,25 @@ namespace GitUI
 {
     public class FilterRevisionsHelper : IDisposable
     {
-        private ToolStripTextBox _NO_TRANSLATE_textBox;
-        private ToolStripDropDownButton _NO_TRANSLATE_dropDownButton;
-        private RevisionGrid _NO_TRANSLATE_revisionGrid;
-        private ToolStripLabel _NO_TRANSLATE_label;
-        private ToolStripButton _NO_TRANSLATE_showFirstParentButton;
+        private readonly ToolStripTextBox _NO_TRANSLATE_textBox;
+        private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
+        private readonly ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
-        private ToolStripMenuItem _commitToolStripMenuItem;
-        private ToolStripMenuItem _committerToolStripMenuItem;
-        private ToolStripMenuItem _authorToolStripMenuItem;
-        private ToolStripMenuItem _diffContainsToolStripMenuItem;
-        private ToolStripMenuItem _hashToolStripMenuItem;
+        private readonly ToolStripMenuItem _commitToolStripMenuItem;
+        private readonly ToolStripMenuItem _committerToolStripMenuItem;
+        private readonly ToolStripMenuItem _authorToolStripMenuItem;
+        private readonly ToolStripMenuItem _diffContainsToolStripMenuItem;
+        private readonly ToolStripMenuItem _hashToolStripMenuItem;
 
-        private Form _NO_TRANSLATE_form;
+        private readonly Form _NO_TRANSLATE_form;
 
         public FilterRevisionsHelper()
         {
-            _commitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _committerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _diffContainsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            _hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            _commitToolStripMenuItem = new ToolStripMenuItem();
+            _committerToolStripMenuItem = new ToolStripMenuItem();
+            _authorToolStripMenuItem = new ToolStripMenuItem();
+            _diffContainsToolStripMenuItem = new ToolStripMenuItem();
+            _hashToolStripMenuItem = new ToolStripMenuItem();
 
             //
             // commitToolStripMenuItem1
@@ -70,14 +68,12 @@ namespace GitUI
         public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
             : this()
         {
-            _NO_TRANSLATE_dropDownButton = dropDownButton;
             _NO_TRANSLATE_textBox = textBox;
             _NO_TRANSLATE_revisionGrid = revisionGrid;
-            _NO_TRANSLATE_label = label;
             _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
             _NO_TRANSLATE_form = form;
 
-            _NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
+            dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
             {
                 _commitToolStripMenuItem,
                 _committerToolStripMenuItem,
@@ -87,7 +83,7 @@ namespace GitUI
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
-            _NO_TRANSLATE_label.Click += ToolStripLabelClick;
+            label.Click += ToolStripLabelClick;
             _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
             _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
             _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;

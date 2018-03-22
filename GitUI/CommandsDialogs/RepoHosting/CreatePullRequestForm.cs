@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
         private readonly string _chooseRemote;
-        private List<IHostedRemote> _hostedRemotes;
+        private IReadOnlyList<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
         private string _prevTitle;
         private readonly AsyncLoader _remoteLoader = new AsyncLoader();
@@ -79,8 +79,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 for (int i = 0; i < _pullReqTargetsCB.Items.Count; i++)
                 {
-                    var ihr = _pullReqTargetsCB.Items[i] as IHostedRemote;
-                    if (ihr != null && ihr.Name == _chooseRemote)
+                    if (_pullReqTargetsCB.Items[i] is IHostedRemote ihr && ihr.Name == _chooseRemote)
                     {
                         _pullReqTargetsCB.SelectedIndex = i;
                         break;
@@ -172,7 +171,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
+            if (_prevTitle == _titleTB.Text && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
             {
                 var lastMsg = Module.GetPreviousCommitMessages(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 1).FirstOrDefault();
                 _titleTB.Text = lastMsg.TakeUntilStr("\n");
@@ -218,7 +217,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (disposing)
             {
-                _remoteLoader.Cancel();
                 _remoteLoader.Dispose();
                 components?.Dispose();
             }

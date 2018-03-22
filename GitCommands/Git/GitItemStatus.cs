@@ -8,77 +8,9 @@ namespace GitCommands
     {
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
 
-        public GitItemStatus()
-        {
-            IsTracked = false;
-            IsDeleted = false;
-            IsChanged = false;
-            IsRenamed = false;
-            IsCopied = false;
-            IsConflict = false;
-            IsAssumeUnchanged = false;
-            IsSkipWorktree = false;
-            IsNew = false;
-            IsIgnored = false;
-            IsStaged = true;
-            IsSubmodule = false;
-        }
-
         public string Name { get; set; }
         public string OldName { get; set; }
         public string TreeGuid { get; set; }
-
-        public string ChangeString
-        {
-            get
-            {
-                if (!IsIgnored)
-                {
-                    return "Ignored";
-                }
-                else if (!IsTracked)
-                {
-                    return "Untracked";
-                }
-                else if (IsDeleted)
-                {
-                    return "Deleted";
-                }
-                else if (IsChanged)
-                {
-                    return "Modified";
-                }
-                else if (IsNew)
-                {
-                    return "New";
-                }
-                else if (IsRenamed)
-                {
-                    return "Renamed";
-                }
-                else if (IsConflict)
-                {
-                    return "Conflict";
-                }
-                else if (IsCopied)
-                {
-                    return "Copied";
-                }
-                else if (IsAssumeUnchanged)
-                {
-                    return "Unchanged";
-                }
-                else if (IsSkipWorktree)
-                {
-                    return "SkipWorktree";
-                }
-                else
-                {
-                    return "";
-                }
-            }
-        }
-
         public bool IsTracked { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsChanged { get; set; }
@@ -89,7 +21,7 @@ namespace GitCommands
         public bool IsConflict { get; set; }
         public bool IsAssumeUnchanged { get; set; }
         public bool IsSkipWorktree { get; set; }
-        public bool IsStaged { get; set; }
+        public bool IsStaged { get; set; } = true;
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
@@ -116,7 +48,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            string toString = string.Empty;
+            string toString;
             if (IsRenamed)
             {
                 toString = string.Concat("Renamed\n   ", OldName, "\nto\n   ", Name, "");

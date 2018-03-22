@@ -76,7 +76,7 @@ namespace TranslationApp
         private void UpdateProgress()
         {
             int translatedCount = _translationItems.Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
-            int totalCount = _translationItems.Count();
+            int totalCount = _translationItems.Count;
             var progresMsg = string.Format(_translateProgressText.Text, translatedCount, totalCount);
             if (translateProgress.Text != progresMsg)
             {
@@ -95,12 +95,12 @@ namespace TranslationApp
             else
             {
                 var neutralItems = new Dictionary<string, List<TranslationItemWithCategory>>();
-                foreach (var pair in _neutralTranslation)
+                foreach (var (key, file) in _neutralTranslation)
                 {
-                    var list = from item in pair.Value.TranslationCategories
+                    var list = from item in file.TranslationCategories
                                from translationItem in item.Body.TranslationItems
                                select new TranslationItemWithCategory(item.Name, translationItem.Clone());
-                    neutralItems.Add(pair.Key, list.ToList());
+                    neutralItems.Add(key, list.ToList());
                 }
 
                 _translationItems = neutralItems;
@@ -131,13 +131,13 @@ namespace TranslationApp
         private IEnumerable<TranslationItemWithCategory> GetCategoryItems(TranslationCategory filter)
         {
             var filteredByCategory = _translationItems.SelectMany(p => p.Value).Where(
-                translateItem => filter == null || filter.Name.Equals(translateItem.Category));
+                translateItem => filter == null || filter.Name == translateItem.Category);
             var filteredItems = filteredByCategory.Where(
                 translateItem => !hideTranslatedItems.Checked);
             return filteredItems;
         }
 
-        private IEnumerable<TranslationCategory> GetCategories(IDictionary<string, TranslationFile> translation)
+        private static IEnumerable<TranslationCategory> GetCategories(IDictionary<string, TranslationFile> translation)
         {
             return translation.SelectMany(pair => pair.Value.TranslationCategories);
         }
@@ -178,12 +178,12 @@ namespace TranslationApp
                 progressBar.Visible = true;
 
                 int index = 0;
-                foreach (var types in translatableTypes)
+                foreach (var (key, types) in translatableTypes)
                 {
                     var translation = new TranslationFile();
                     try
                     {
-                        foreach (Type type in types.Value)
+                        foreach (Type type in types)
                         {
                             if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
                             {
@@ -201,7 +201,7 @@ namespace TranslationApp
                     finally
                     {
                         translation.Sort();
-                        _neutralTranslation[types.Key] = translation;
+                        _neutralTranslation[key] = translation;
                     }
                 }
             }
@@ -428,7 +428,7 @@ namespace TranslationApp
 
         private TranslationItemWithCategory _translationItemWithCategoryInEditing;
 
-        private void translatedText_Enter(object sender, System.EventArgs e)
+        private void translatedText_Enter(object sender, EventArgs e)
         {
             if (_translationItemWithCategoryInEditing != null)
             {
@@ -443,7 +443,7 @@ namespace TranslationApp
             }
         }
 
-        private void translatedText_Leave(object sender, System.EventArgs e)
+        private void translatedText_Leave(object sender, EventArgs e)
         {
             ////Debug.Assert(_translationItemWithCategoryInEditing != null);
 

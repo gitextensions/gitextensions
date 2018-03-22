@@ -54,7 +54,6 @@ namespace GitUI
 
         private TextEditorControl Editor
         {
-            get { return _editor; }
             set
             {
                 _editor = value;
@@ -81,7 +80,8 @@ namespace GitUI
         private void UpdateTitleBar()
         {
             string text = ReplaceMode ? _findAndReplaceString.Text : _findString.Text;
-            if (_editor != null && _editor.FileName != null)
+
+            if (_editor?.FileName != null)
             {
                 text += " - " + Path.GetFileName(_editor.FileName);
             }
@@ -157,7 +157,7 @@ namespace GitUI
 
             int startIdx = -1;
             int currentIdx = -1;
-            TextRange range = null;
+            TextRange range;
             do
             {
                 Caret caret = _editor.ActiveTextAreaControl.Caret;

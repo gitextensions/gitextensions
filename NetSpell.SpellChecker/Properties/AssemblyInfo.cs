@@ -42,7 +42,7 @@ namespace NetSpell.SpellChecker
     /// </summary>
     public class AssemblyInfo
     {
-        private Type _myType;
+        private readonly Type _myType;
 
         /// <summary>
         ///     Initialized the AssemblyInfo class with the given type

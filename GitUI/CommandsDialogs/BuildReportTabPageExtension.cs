@@ -37,18 +37,18 @@ namespace GitUI.CommandsDialogs
             }
 
             _selectedGitRevision = revision;
+
             if (_selectedGitRevision != null)
             {
                 _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
             }
 
-            var buildInfoIsAvailable =
-                !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
-
             _tabControl.SuspendLayout();
 
             try
             {
+                var buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
+
                 if (buildInfoIsAvailable)
                 {
                     if (_buildReportTabPage == null)
@@ -175,7 +175,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private string DetermineFavIconUrl(HtmlDocument htmlDocument)
+        private static string DetermineFavIconUrl(HtmlDocument htmlDocument)
         {
             var links = htmlDocument.GetElementsByTagName("link");
             var favIconLink =

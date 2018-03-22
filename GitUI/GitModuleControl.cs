@@ -13,7 +13,7 @@ namespace GitUI
         private readonly object _lock = new object();
 
         [Browsable(false)]
-        public bool UICommandsSourceParentSearch { get; private set; }
+        public bool UICommandsSourceParentSearch { get; }
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]

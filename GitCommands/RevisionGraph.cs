@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -94,7 +93,6 @@ namespace GitCommands
         {
             if (disposing)
             {
-                _backgroundLoader.Cancel();
                 _backgroundLoader.Dispose();
             }
         }
@@ -105,7 +103,7 @@ namespace GitCommands
         public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        private static char[] ShellGlobCharacters = new[] { '?', '*', '[' };
+        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
 
         public void Execute()
         {
@@ -227,7 +225,7 @@ namespace GitCommands
 
         private static IEnumerable<string> ReadDataBlocks(StreamReader reader)
         {
-            int bufferSize = 4 * 1024;
+            const int bufferSize = 4 * 1024;
             char[] buffer = new char[bufferSize];
 
             StringBuilder incompleteBlock = new StringBuilder();
@@ -240,7 +238,7 @@ namespace GitCommands
                 }
 
                 string bufferString = new string(buffer, 0, bytesRead);
-                string[] dataBlocks = bufferString.Split(new char[] { '\0' });
+                string[] dataBlocks = bufferString.Split('\0');
 
                 if (dataBlocks.Length > 1)
                 {
@@ -276,7 +274,7 @@ namespace GitCommands
             Exited?.Invoke(this, EventArgs.Empty);
         }
 
-        private IList<IGitRef> GetRefs()
+        private IReadOnlyList<IGitRef> GetRefs()
         {
             var result = _module.GetRefs(true);
             bool validWorkingDir = _module.IsValidGitWorkingDir();
@@ -363,7 +361,7 @@ namespace GitCommands
                 case ReadStep.Commit:
                     data = GitModule.ReEncodeString(data, GitModule.LosslessEncoding, _module.LogOutputEncoding);
 
-                    string[] lines = data.Split(new char[] { '\n' });
+                    string[] lines = data.Split('\n');
                     Debug.Assert(lines.Length == 11, "lines.Length == 11");
                     Debug.Assert(lines[0] == CommitBegin, "lines[0] == CommitBegin");
 
@@ -378,7 +376,7 @@ namespace GitCommands
                     }
 
                     // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
-                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    _revision.ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     _revision.TreeGuid = lines[3];
 
                     _revision.Author = lines[4];
@@ -416,7 +414,7 @@ namespace GitCommands
                         // Git adds \n between the format string (ends with \0 in our case)
                         // and the first file name. So, we need to remove it from the file name.
                         data = GitModule.ReEncodeFileNameFromLossless(data);
-                        _revision.Name = data.TrimStart(new char[] { '\n' });
+                        _revision.Name = data.TrimStart('\n');
                     }
 
                     break;

@@ -30,17 +30,12 @@ namespace Gerrit
             Translate();
         }
 
-        public void PushAndShowDialogWhenFailed(IWin32Window owner)
+        public void PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {
             if (!DownloadChange(owner))
             {
                 ShowDialog(owner);
             }
-        }
-
-        public void PushAndShowDialogWhenFailed()
-        {
-            PushAndShowDialogWhenFailed(null);
         }
 
         private void DownloadClick(object sender, EventArgs e)
@@ -71,7 +66,7 @@ namespace Gerrit
 
             var reviewInfo = LoadReviewInfo();
 
-            if (reviewInfo == null || reviewInfo["id"] == null)
+            if (reviewInfo?["id"] == null)
             {
                 MessageBox.Show(owner, _cannotGetChangeDetails.Text);
                 return false;
@@ -153,7 +148,7 @@ namespace Gerrit
             return !command.ErrorOccurred;
         }
 
-        private string FetchCommand(string remote, string remoteBranch)
+        private static string FetchCommand(string remote, string remoteBranch)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -218,7 +213,7 @@ namespace Gerrit
 
             _currentBranchRemote = Settings.DefaultRemote;
 
-            IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
+            var remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
             int i = remotes.IndexOf(_currentBranchRemote);
             _NO_TRANSLATE_Remotes.SelectedIndex = i >= 0 ? i : 0;
 

@@ -70,7 +70,7 @@ namespace GitUI
         {
             string truncatePathMethod = AppSettings.TruncatePathMethod;
 
-            if (truncatePathMethod.Equals("fileNameOnly"))
+            if (truncatePathMethod == "fileNameOnly")
             {
                 return FormatTextForFileNameOnly(name, oldName);
             }
@@ -108,7 +108,7 @@ namespace GitUI
             var fileName = Path.GetFileName(name);
             var oldFileName = Path.GetFileName(oldName);
 
-            if (fileName.Equals(oldFileName))
+            if (fileName == oldFileName)
             {
                 oldFileName = null;
             }

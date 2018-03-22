@@ -65,7 +65,7 @@ namespace GitUI.UserControls
 
         #region Win32 Apis
 
-        protected class NativeMethods
+        protected static class NativeMethods
         {
             [DllImport("user32", CharSet = CharSet.Auto)]
             public static extern IntPtr SendMessage(HandleRef hWnd,
@@ -95,8 +95,8 @@ namespace GitUI.UserControls
             [StructLayout(LayoutKind.Sequential)]
             public struct POINT
             {
-                public int X;
-                public int Y;
+                public readonly int X;
+                public readonly int Y;
 
                 public POINT(int x, int y)
                 {

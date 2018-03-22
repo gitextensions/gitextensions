@@ -118,11 +118,12 @@ namespace GitUI.CommitInfo
         }
 
         private GitRevision _revision;
-        private List<string> _children;
-        public void SetRevisionWithChildren(GitRevision revision, List<string> children)
+        private IReadOnlyList<string> _children;
+        public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<string> children)
         {
             _revision = revision;
             _children = children;
+
             ReloadCommitInfo();
         }
 
@@ -130,14 +131,8 @@ namespace GitUI.CommitInfo
         [Browsable(false)]
         public GitRevision Revision
         {
-            get
-            {
-                return _revision;
-            }
-            set
-            {
-                SetRevisionWithChildren(value, null);
-            }
+            get => _revision;
+            set => SetRevisionWithChildren(value, null);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -153,7 +148,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private IList<string> _sortedRefs;
-        private System.Drawing.Rectangle _headerResize; // Cache desired size for commit header
+        private Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
@@ -175,11 +170,10 @@ namespace GitUI.CommitInfo
 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
-            string error = "";
             CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
-                _commitDataManager.UpdateCommitMessage(data, _revision.Guid, ref error);
+                _commitDataManager.UpdateBody(data, out _);
                 _revision.Body = data.Body;
             }
 
@@ -230,7 +224,7 @@ namespace GitUI.CommitInfo
 
         private void LoadSortedRefs()
         {
-            _sortedRefs = Module.GetSortedRefs();
+            _sortedRefs = Module.GetSortedRefs().ToList();
             this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
         }
 
@@ -364,8 +358,8 @@ namespace GitUI.CommitInfo
             int gravatarIndex, revInfoIndex, gravatarSpan, revInfoSpan;
             if (right)
             {
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+                tableLayout.ColumnStyles.Add(new ColumnStyle());
                 gravatarIndex = 1;
                 revInfoIndex = 0;
                 gravatarSpan = 1;
@@ -373,8 +367,8 @@ namespace GitUI.CommitInfo
             }
             else
             {
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-                tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                tableLayout.ColumnStyles.Add(new ColumnStyle());
+                tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 gravatarIndex = 0;
                 revInfoIndex = 1;
                 gravatarSpan = 2;
@@ -404,7 +398,7 @@ namespace GitUI.CommitInfo
             if (_sortedRefs != null)
             {
                 if (_annotatedTagsMessages != null &&
-                    _annotatedTagsMessages.Count() > 0 &&
+                    _annotatedTagsMessages.Count > 0 &&
                     string.IsNullOrEmpty(_annotatedTagsInfo) &&
                     Revision != null)
                 {

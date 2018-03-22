@@ -50,7 +50,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             FormProcess.ShowDialog(this, GitCommandHelpers.StartBisectCmd());
             UpdateButtonsState();
 
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
+            var revisions = _revisionGrid.GetSelectedRevisions();
+
             if (revisions.Count > 1)
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

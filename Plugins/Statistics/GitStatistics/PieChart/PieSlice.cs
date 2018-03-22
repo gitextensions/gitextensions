@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -9,7 +8,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Object representing 3D pie.
     /// </summary>
-    public class PieSlice : object, IDisposable
+    public class PieSlice : IDisposable
     {
         /// <summary>
         ///   Angle offset used to define reference angle for gradual shadow.
@@ -29,12 +28,12 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Style used for shadow.
         /// </summary>
-        private readonly ShadowStyle _shadowStyle = ShadowStyle.NoShadow;
+        private readonly ShadowStyle _shadowStyle;
 
         /// <summary>
         ///   Color of the surface.
         /// </summary>
-        private readonly Color _surfaceColor = Color.Empty;
+        private readonly Color _surfaceColor;
 
         /// <summary>
         ///   <c>Brush</c> used to render slice ending cut side.
@@ -970,7 +969,7 @@ namespace GitStatistics.PieChart
         /// </returns>
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
-            var peripherySurfaceBounds = new ArrayList();
+            var peripherySurfaceBounds = new List<PeripherySurfaceBounds>();
 
             // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees
@@ -1012,7 +1011,7 @@ namespace GitStatistics.PieChart
                 }
             }
 
-            return (PeripherySurfaceBounds[])peripherySurfaceBounds.ToArray(typeof(PeripherySurfaceBounds));
+            return peripherySurfaceBounds;
         }
 
         /// <summary>
@@ -1163,13 +1162,13 @@ namespace GitStatistics.PieChart
                 EndPoint = endPoint;
             }
 
-            public float StartAngle { get; private set; }
+            public float StartAngle { get; }
 
-            public float EndAngle { get; private set; }
+            public float EndAngle { get; }
 
-            public PointF StartPoint { get; private set; }
+            public PointF StartPoint { get; }
 
-            public PointF EndPoint { get; private set; }
+            public PointF EndPoint { get; }
         }
 
         #endregion

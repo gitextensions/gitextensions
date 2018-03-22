@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using GitCommands;
 using NUnit.Framework;
 using ResourceManager;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitCommandsHelperTest
     {
-        [TestMethod]
+        [Test]
         public void CanGetRelativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
@@ -35,7 +33,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-730)));
         }
 
-        [TestMethod]
+        [Test]
         public void CanGetRelativeNegativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
@@ -58,11 +56,12 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("-2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(730)));
         }
 
-        [TestMethod]
+        [Test]
         public void TestFetchArguments()
         {
             GitModule module = new GitModule(null);
-            { // Specifying a remote and a local branch creates a local branch
+            {
+                // Specifying a remote and a local branch creates a local branch
                 var fetchCmd = module.FetchCmd("origin", "some-branch", "local");
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
@@ -72,79 +71,90 @@ namespace GitCommandsTests.Git
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
             }
 
-            { // Using a URL as remote and passing a local branch creates the branch
+            {
+                // Using a URL as remote and passing a local branch creates the branch
                 var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local");
                 Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
-            { // Using a URL as remote and not passing a local branch
+            {
+                // Using a URL as remote and not passing a local branch
                 var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null);
                 Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
-            { // No remote branch -> No local branch
+            {
+                // No remote branch -> No local branch
                 var fetchCmd = module.FetchCmd("origin", "", "local");
                 Assert.AreEqual("fetch --progress \"origin\" --no-tags", fetchCmd);
             }
 
-            { // Pull doesn't accept a local branch ever
+            {
+                // Pull doesn't accept a local branch ever
                 var fetchCmd = module.PullCmd("origin", "some-branch", false);
                 Assert.AreEqual("pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
 
-            { // Not even for URL remote
+            {
+                // Not even for URL remote
                 var fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false);
                 Assert.AreEqual("pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
-            { // Pull with rebase
+            {
+                // Pull with rebase
                 var fetchCmd = module.PullCmd("origin", "some-branch", true);
                 Assert.AreEqual("pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetAllChangedFilesFromString()
         {
             GitModule module = new GitModule(null);
-            {// git diff -M -C -z --cached --name-status
+            {
+                // git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
 
-            {// git diff -M -C -z --cached --name-status
+            {
+                // git diff -M -C -z --cached --name-status
                 string statusString = "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
 
-            {// git diff -M -C -z --cached --name-status
+            {
+                // git diff -M -C -z --cached --name-status
                 string statusString = "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0";
-                List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
 
-            {// git diff -M -C -z --cached --name-status
+            {
+                // git diff -M -C -z --cached --name-status
                 string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
-                List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
 
-            { // git status --porcelain --untracked-files=no -z
+            {
+                // git status --porcelain --untracked-files=no -z
                 string statusString = "M  adfs.h\0M  dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
-                List<GitItemStatus> status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, false);
+                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, false);
                 Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "adfs.h");
                 Assert.IsTrue(status[1].Name == "dir.c");
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetFullBranchNameTest()
         {
             Assert.AreEqual(null, GitCommandHelpers.GetFullBranchName(null));
@@ -158,7 +168,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("refs/tags/my-tag", GitCommandHelpers.GetFullBranchName("refs/tags/my-tag"));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_Incompatible()
         {
             // Test urls that are incompatible and need to be changed
@@ -182,7 +192,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(expectUrl, outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_Compatible()
         {
             // Test urls that are already compatible, these shouldn't be changed
@@ -199,7 +209,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_NoPlink()
         {
             // Test urls that are no valid uris, these should be ignored
@@ -246,7 +256,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPlinkCompatibleUrl_Invalid()
         {
             // Test urls that are no valid uris, these should be ignored
@@ -261,7 +271,7 @@ namespace GitCommandsTests.Git
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
 
-        [TestMethod]
+        [Test]
         public void GetSubmoduleNamesFromDiffTest()
         {
             GitModule testModule = new GitModule("D:\\Test\\SuperProject");

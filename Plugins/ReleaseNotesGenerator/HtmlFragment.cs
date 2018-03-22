@@ -112,7 +112,7 @@ namespace ReleaseNotesGenerator
 
                     // Optional Source URL, used for resolving relative links.
                     case "sourceurl":
-                        SourceUrl = new System.Uri(val);
+                        SourceUrl = new Uri(val);
                         break;
                 }
             } // end for
@@ -144,7 +144,7 @@ namespace ReleaseNotesGenerator
         /// <summary>
         /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
         /// </summary>
-        public System.Uri SourceUrl { get; }
+        public Uri SourceUrl { get; }
 
         #endregion // Read and decode from clipboard
 
@@ -158,26 +158,15 @@ namespace ReleaseNotesGenerator
         }
 
         /// <summary>
-        /// Clears clipboard and copy a HTML fragment to the clipboard. This generates the header.
-        /// </summary>
-        /// <param name="htmlFragment">A html fragment.</param>
-        /// <example>
-        ///    HtmlFragment.CopyToClipboard("<b>Hello!</b>");
-        /// </example>
-        public static void CopyToClipboard(string htmlFragment)
-        {
-            CopyToClipboard(htmlFragment, null, null);
-        }
-
-        /// <summary>
         /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
         /// </summary>
         /// <param name="htmlFragment">a html fragment</param>
         /// <param name="title">optional title of the HTML document (can be null)</param>
         /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-        public static void CopyToClipboard(string htmlFragment, string title, Uri sourceUri)
+        public static void CopyToClipboard(string htmlFragment, string title = null, Uri sourceUri = null)
         {
             var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
+
             Clipboard.Clear();
             Clipboard.SetDataObject(dataObject);
 
@@ -196,12 +185,11 @@ namespace ReleaseNotesGenerator
             // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
-            string header =
-                "Version:0.9\r\n" +
-                "StartHTML:<<<<<<<1\r\n" +
-                "EndHTML:<<<<<<<2\r\n" +
-                "StartFragment:<<<<<<<3\r\n" +
-                "EndFragment:<<<<<<<4\r\n";
+            const string header = "Version:0.9\r\n" +
+                                  "StartHTML:<<<<<<<1\r\n" +
+                                  "EndHTML:<<<<<<<2\r\n" +
+                                  "StartFragment:<<<<<<<3\r\n" +
+                                  "EndFragment:<<<<<<<4\r\n";
 
             sb.Append(header);
 

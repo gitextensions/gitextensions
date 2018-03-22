@@ -94,12 +94,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly IFullPathResolver _fullPathResolver;
 
-        public FormResolveConflicts(GitUICommands commands)
-            : this(commands, true)
-        {
-        }
-
-        public FormResolveConflicts(GitUICommands commands, bool offerCommit)
+        public FormResolveConflicts(GitUICommands commands, bool offerCommit = true)
             : base(commands)
         {
             InitializeComponent();
@@ -238,13 +233,13 @@ namespace GitUI.CommandsDialogs
             return GetConflict().Filename;
         }
 
-        private string FixPath(string path)
+        private static string FixPath(string path)
         {
             return (path ?? "").ToNativePath();
         }
 
-        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
-            {
+        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>
+        {
                 { ".doc",  "merge-doc.js" },
                 { ".docx", "merge-doc.js" },
                 { ".docm", "merge-doc.js" },
@@ -595,7 +590,7 @@ namespace GitUI.CommandsDialogs
                     int idx = _mergetoolCmd.IndexOf(executablePattern);
                     if (idx >= 0)
                     {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
+                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
                         _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
                     }
                 }
@@ -1180,10 +1175,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void conflictDescription_Click(object sender, EventArgs e)
-        {
-        }
-
         private void merge_Click(object sender, EventArgs e)
         {
             OpenMergetool_Click(sender, e);
@@ -1209,11 +1200,11 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            Merge,
-            Rescan,
-            ChooseRemote,
-            ChooseLocal,
-            ChooseBase
+            Merge = 0,
+            Rescan = 1,
+            ChooseRemote = 2,
+            ChooseLocal = 3,
+            ChooseBase = 4
         }
 
         protected override bool ExecuteCommand(int cmd)

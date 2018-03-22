@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public sealed class RevisionDiffInfoProvider
+    public static class RevisionDiffInfoProvider
     {
         /// <summary>
         /// One row selected:
@@ -14,7 +14,7 @@ namespace GitUI
         /// A - first selected row
         /// B - second selected row
         /// </summary>
-        public static string Get(IList<GitRevision> revisions, RevisionDiffKind diffKind,
+        public static string Get(IReadOnlyList<GitRevision> revisions, RevisionDiffKind diffKind,
             out string extraDiffArgs, out string firstRevision, out string secondRevision)
         {
             // Note: Order in revisions is that first clicked is last in array

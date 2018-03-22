@@ -68,15 +68,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void SetShorteningStrategy(string strategy)
         {
-            if (RecentRepoSplitter.ShorteningStrategy_None.Equals(strategy))
+            if (strategy == RecentRepoSplitter.ShorteningStrategy_None)
             {
                 dontShortenRB.Checked = true;
             }
-            else if (RecentRepoSplitter.ShorteningStrategy_MostSignDir.Equals(strategy))
+            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MostSignDir)
             {
                 mostSigDirRB.Checked = true;
             }
-            else if (RecentRepoSplitter.ShorteningStrategy_MiddleDots.Equals(strategy))
+            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MiddleDots)
             {
                 middleDotRB.Checked = true;
             }
@@ -94,14 +94,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
-            RecentRepoSplitter splitter = new RecentRepoSplitter();
-            splitter.MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
-            splitter.ShorteningStrategy = GetShorteningStrategy();
-            splitter.SortLessRecentRepos = sortLessRecentRepos.Checked;
-            splitter.SortMostRecentRepos = sortMostRecentRepos.Checked;
-            splitter.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
-            splitter.MeasureFont = MostRecentLB.Font;
-            splitter.Graphics = MostRecentLB.CreateGraphics();
+            var splitter = new RecentRepoSplitter
+            {
+                MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
+                ShorteningStrategy = GetShorteningStrategy(),
+                SortLessRecentRepos = sortLessRecentRepos.Checked,
+                SortMostRecentRepos = sortMostRecentRepos.Checked,
+                RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
+                MeasureFont = MostRecentLB.Font,
+                Graphics = MostRecentLB.CreateGraphics()
+            };
+
             try
             {
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);

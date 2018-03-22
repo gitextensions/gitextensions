@@ -19,7 +19,7 @@ namespace GitFlow
 
         private readonly GitUIBaseEventArgs _gitUiCommands;
 
-        private Dictionary<string, List<string>> Branches { get; set; }
+        private Dictionary<string, IReadOnlyList<string>> Branches { get; } = new Dictionary<string, IReadOnlyList<string>>();
 
         private readonly AsyncLoader _task = new AsyncLoader();
 
@@ -37,7 +37,7 @@ namespace GitFlow
             support
         }
 
-        private List<string> BranchTypes
+        private static List<string> BranchTypes
         {
             get { return Enum.GetValues(typeof(Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
@@ -50,8 +50,6 @@ namespace GitFlow
             Translate();
 
             _gitUiCommands = gitUiCommands;
-
-            Branches = new Dictionary<string, List<string>>();
 
             lblPrefixManage.Text = string.Empty;
             ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
@@ -91,7 +89,7 @@ namespace GitFlow
             }
         }
 
-        private bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
+        private static bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
         {
             foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {
@@ -128,15 +126,17 @@ namespace GitFlow
             }
         }
 
-        private List<string> GetBranches(string typeBranch)
+        private IReadOnlyList<string> GetBranches(string typeBranch)
         {
             var result = _gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
+
             if (result.ExitCode != 0)
             {
-                return new List<string>();
+                return Array.Empty<string>();
             }
 
             string[] references = result.StdOutput.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
@@ -155,7 +155,7 @@ namespace GitFlow
             var isThereABranch = branches.Any();
 
             cbManageType.Enabled = true;
-            cbBranches.DataSource = isThereABranch ? branches : new List<string> { string.Format(_noBranchExist.Text, branchType) };
+            cbBranches.DataSource = isThereABranch ? branches : new[] { string.Format(_noBranchExist.Text, branchType) };
             cbBranches.Enabled = isThereABranch;
             if (isThereABranch && CurrentBranch != null)
             {
@@ -232,14 +232,14 @@ namespace GitFlow
 
         private void btnPublish_Click(object sender, EventArgs e)
         {
-            var branchType = cbType.SelectedValue.ToString();
+            var branchType = cbManageType.SelectedValue.ToString();
             RunCommand(string.Format("flow {0} publish {1}", branchType, cbBranches.SelectedValue));
         }
 
         private void btnPull_Click(object sender, EventArgs e)
         {
-            var branchType = cbType.SelectedValue.ToString();
-            RunCommand(string.Format("flow {0} pull {1} {2}" + branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
+            var branchType = cbManageType.SelectedValue.ToString();
+            RunCommand(string.Format("flow {0} pull {1} {2}", branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
@@ -284,7 +284,8 @@ namespace GitFlow
         #endregion
 
         #region GUI interactions
-        private void ForceRefresh(Control c)
+
+        private static void ForceRefresh(Control c)
         {
             c.Invalidate();
             c.Update();

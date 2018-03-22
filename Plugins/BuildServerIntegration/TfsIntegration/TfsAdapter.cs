@@ -60,7 +60,7 @@ namespace TfsIntegration
 
             _tfsServer = config.GetString("TfsServer", null);
             _tfsTeamCollectionName = config.GetString("TfsTeamCollectionName", null);
-            _projectName = config.GetString("ProjectName", null);
+            _projectName = _buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", null));
             var tfsBuildDefinitionNameFilterSetting = config.GetString("TfsBuildDefinitionName", "");
             if (!BuildServerSettingsHelper.IsRegexValid(tfsBuildDefinitionNameFilterSetting))
             {

@@ -4,20 +4,8 @@ using System.Linq;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
-    public class WordWrapper
+    public static class WordWrapper
     {
-        public static string Wrap(string text, int lineLimit)
-        {
-            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            var newLines = new List<string>();
-            foreach (var line in lines)
-            {
-                newLines.AddRange(InternalWrapSingleLine(line, lineLimit));
-            }
-
-            return string.Join(Environment.NewLine, newLines);
-        }
-
         private static IEnumerable<string> InternalWrapSingleLine(string line, int lineLimit)
         {
             var wrapper = new WrapperState(lineLimit);
@@ -45,7 +33,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private class WrapperState
         {
-            private List<string> _wordList = new List<string>();
+            private readonly List<string> _wordList = new List<string>();
             private int _wordsLength;
             private readonly int _lineLimit;
 

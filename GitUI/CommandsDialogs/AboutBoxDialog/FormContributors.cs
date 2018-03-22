@@ -6,10 +6,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public class FormContributors : GitExtensionsForm
     {
-        private static readonly string[] tabCaptions = new string[]
-        {
-            "The Coders", "The Translators", "The Designers"
-        };
+        private static readonly string[] tabCaptions = { "The Coders", "The Translators", "The Designers" };
 
         private readonly TextBox[] _textboxes = new TextBox[tabCaptions.Length];
         private readonly TabPage[] _tabPages = new TabPage[tabCaptions.Length];
@@ -21,40 +18,44 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             Translate();
         }
 
-        private TextBox GetNewTextBox()
+        private static TextBox GetNewTextBox()
         {
-            TextBox tb = new TextBox();
-            tb.BackColor = Color.White;
-            tb.Dock = DockStyle.Fill;
-            tb.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, (byte)0);
-            tb.Margin = new System.Windows.Forms.Padding(0);
-            tb.Multiline = true;
-            tb.ReadOnly = true;
-            tb.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            tb.TabStop = false;
-            return tb;
+            return new TextBox
+            {
+                BackColor = Color.White,
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0),
+                Margin = new Padding(0),
+                Multiline = true,
+                ReadOnly = true,
+                ScrollBars = ScrollBars.Vertical,
+                TabStop = false
+            };
         }
 
-        private TabPage GetNewTabPage(TextBox tb, string caption)
+        private static TabPage GetNewTabPage(TextBox tb, string caption)
         {
-            TabPage tp = new TabPage();
-            tp.Margin = new System.Windows.Forms.Padding(0);
-            tp.Text = caption;
+            var tp = new TabPage
+            {
+                Margin = new Padding(0),
+                Text = caption
+            };
             tp.Controls.Add(tb);
             return tp;
         }
 
-        private TabControl GetNewTabControl()
+        private static TabControl GetNewTabControl()
         {
-            TabControl tc = new TabControl();
-            tc.Dock = DockStyle.Fill;
-            tc.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
-            tc.ItemSize = new Size(150, 26);
-            tc.Margin = new Padding(0);
-            tc.Padding = new Point(0, 0);
-            tc.SelectedIndex = 0;
-            tc.SizeMode = TabSizeMode.Fixed;
-            return tc;
+            return new TabControl
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                ItemSize = new Size(150, 26),
+                Margin = new Padding(0),
+                Padding = new Point(0, 0),
+                SelectedIndex = 0,
+                SizeMode = TabSizeMode.Fixed
+            };
         }
 
         private void SetupForm()
@@ -86,7 +87,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             ResumeLayout(false);
         }
 
-        public void LoadContributors(string coders, string translators, string designers, string others)
+        public void LoadContributors(string coders, string translators, string designers)
         {
             const string NEWLINES = @"\r\n?|\n";
             _textboxes[0].Text = Regex.Replace(coders, NEWLINES, " ");

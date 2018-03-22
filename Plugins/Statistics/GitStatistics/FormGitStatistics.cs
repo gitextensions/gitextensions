@@ -34,8 +34,7 @@ namespace GitStatistics
         private readonly string _codeFilePattern;
         private readonly bool _countSubmodule;
 
-        protected Color[] DecentColors =
-            new[]
+        protected Color[] DecentColors { get; } =
                 {
                     Color.Red,
                     Color.Yellow,
@@ -54,7 +53,6 @@ namespace GitStatistics
 
         public string DirectoriesToIgnore { get; set; }
         private LineCounter _lineCounter;
-        private Task _loadThread;
         private readonly IGitModule _module;
 
         public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodule)
@@ -95,7 +93,7 @@ namespace GitStatistics
                 {
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                    var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(_module);
+                    var (commitsPerUser, totalCommits) = CommitCounter.GroupAllCommitsByContributor(_module);
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -104,9 +102,6 @@ namespace GitStatistics
                         return;
                     }
 
-                    var totalCommits = allCommitsByUser.Item2;
-                    var commitsPerUser = allCommitsByUser.Item1;
-
                     TotalCommits.Text = string.Format(_commits.Text, totalCommits);
 
                     var builder = new StringBuilder();
@@ -114,11 +109,8 @@ namespace GitStatistics
                     var commitCountValues = new decimal[commitsPerUser.Count];
                     var commitCountLabels = new string[commitsPerUser.Count];
                     var n = 0;
-                    foreach (var keyValuePair in commitsPerUser)
+                    foreach (var (user, commits) in commitsPerUser)
                     {
-                        var user = keyValuePair.Key;
-                        var commits = keyValuePair.Value;
-
                         builder.AppendLine(commits + " " + user);
 
                         commitCountValues[n] = commits;
@@ -170,7 +162,7 @@ namespace GitStatistics
             _lineCounter = new LineCounter();
             _lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            _loadThread = Task.Run(() => LoadLinesOfCode());
+            Task.Run(() => LoadLinesOfCode());
         }
 
         public void LoadLinesOfCode()
@@ -214,12 +206,12 @@ namespace GitStatistics
 
             var n = 0;
             string linesOfCodePerLanguageText = "";
-            foreach (var keyValuePair in linesOfCodePerExtension)
+            foreach (var (extension, loc) in linesOfCodePerExtension)
             {
-                string percent = ((double)keyValuePair.Value / lineCounter.NumberCodeLines).ToString("P1");
-                linesOfCodePerLanguageText += string.Format(_linesOfCodeInFiles.Text, keyValuePair.Value, keyValuePair.Key, percent) + Environment.NewLine;
-                extensionValues[n] = keyValuePair.Value;
-                extensionLabels[n] = string.Format(_linesOfCodeInFiles.Text, keyValuePair.Value, keyValuePair.Key, percent);
+                string percent = ((double)loc / lineCounter.NumberCodeLines).ToString("P1");
+                linesOfCodePerLanguageText += string.Format(_linesOfCodeInFiles.Text, loc, extension, percent) + Environment.NewLine;
+                extensionValues[n] = loc;
+                extensionLabels[n] = string.Format(_linesOfCodeInFiles.Text, loc, extension, percent);
                 n++;
             }
 

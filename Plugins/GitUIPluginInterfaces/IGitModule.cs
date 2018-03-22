@@ -11,7 +11,7 @@ namespace GitUIPluginInterfaces
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
-        IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
+        IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
         IEnumerable<IGitItem> GetTree(string id, bool full);
 
@@ -106,7 +106,7 @@ namespace GitUIPluginInterfaces
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
-        IList<string> GetSubmodulesLocalPaths(bool recursive = true);
+        IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
         IGitModule GetSubmodule(string submoduleName);
 
@@ -121,6 +121,9 @@ namespace GitUIPluginInterfaces
         /// </summary>
         /// <returns>Registered remotes.</returns>
         string[] GetRemotes(bool allowEmpty);
+
+        /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
+        string GetCurrentRemote();
 
         string GetSetting(string setting);
         string GetEffectiveSetting(string setting);

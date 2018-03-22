@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace PatchApply
@@ -76,13 +76,10 @@ namespace PatchApply
             if (Type == PatchType.NewFile)
             {
                 HandleNewFilePatchType();
-                return;
             }
-
-            if (Type == PatchType.ChangeFile)
+            else if (Type == PatchType.ChangeFile)
             {
                 HandleChangeFilePatchType(filesContentEncoding);
-                return;
             }
         }
 
@@ -120,11 +117,7 @@ namespace PatchApply
 
         private void HandleChangeFilePatchType(Encoding filesContentEncoding)
         {
-            var fileLines = new List<string>();
-            foreach (string s in LoadFile(FileNameA, filesContentEncoding).Split('\n'))
-            {
-                fileLines.Add(s);
-            }
+            var fileLines = LoadFile(FileNameA, filesContentEncoding).Split('\n').ToList();
 
             int lineNumber = 0;
             foreach (string line in Text.Split('\n'))

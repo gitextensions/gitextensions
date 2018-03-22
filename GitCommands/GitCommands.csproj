@@ -60,6 +60,9 @@
     <DocumentationFile>bin\Release\GitCommands.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Threading, Version=15.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Threading.15.6.46\lib\net46\Microsoft.VisualStudio.Threading.dll</HintPath>
       <Private>True</Private>
@@ -90,9 +93,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Annotations.cs" />
     <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="AsyncLoader.cs" />
+    <Compile Include="BoolExtensions.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="CommitDataManager.cs" />
     <Compile Include="CommitTemplateItem.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Config\SettingKeyString.cs" />
     <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
+    <Compile Include="DeconstructionExtensions.cs" />
     <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="EnvironmentPathsProvider.cs" />
     <Compile Include="ExceptionUtils.cs" />
@@ -130,6 +134,7 @@
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
+    <Compile Include="Remote\RepoNameExtractor.cs" />
     <Compile Include="Repository\RepositoryDescriptionProvider.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Git\GitGpgController.cs" />
@@ -168,7 +173,6 @@
     </Compile>
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
-    <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="CommitHelper.cs" />
@@ -207,7 +211,7 @@
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
-    <Compile Include="System.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Utils\JsonSerializer.cs" />
     <Compile Include="Utils\RFC2047Decoder.cs" />
     <Compile Include="Utils\WeakRefCache.cs" />

@@ -9,21 +9,14 @@ namespace GitUI.SpellChecker
     ///   Wraps API calls for access to missing functionality
     ///   from the System.Windows.Forms text box.
     /// </summary>
-    internal class TextBoxHelper
+    internal static class TextBoxHelper
     {
         private const double AnInch = 14.4;
 
-        private TextBoxHelper()
-        {
-            // intentionally left blank
-        }
-
         internal static int GetTextWidthAtCharIndex(TextBoxBase textBoxBase, int index, int length)
         {
-            var richTextBox = textBoxBase as RichTextBox;
-
             // TODO!
-            if (richTextBox == null || !EnvUtils.RunningOnWindows())
+            if (!(textBoxBase is RichTextBox richTextBox) || !EnvUtils.RunningOnWindows())
             {
                 return textBoxBase.Font.Height;
             }
@@ -63,8 +56,7 @@ namespace GitUI.SpellChecker
 
         internal static int GetBaselineOffsetAtCharIndex(TextBoxBase tb, int index)
         {
-            var rtb = tb as RichTextBox;
-            if (rtb == null || !EnvUtils.RunningOnWindows())
+            if (!(tb is RichTextBox rtb) || !EnvUtils.RunningOnWindows())
             {
                 return tb.Font.Height;
             }
@@ -98,7 +90,7 @@ namespace GitUI.SpellChecker
 
             var formatRange = GetFormatRange(charRange, canvasHdc, rect, rectPage);
 
-            NativeMethods.SendMessage(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange).ToInt32();
+            NativeMethods.SendMessage(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange);
 
             canvas.ReleaseHdc(canvasHdc);
             canvas.Dispose();
@@ -194,16 +186,13 @@ namespace GitUI.SpellChecker
         ///   area of the control.</returns>
         private static Point PosFromChar(TextBoxBase textBoxBase, int charIndex)
         {
-            unchecked
-            {
-                var xy =
-                    NativeMethods.SendMessageInt(
-                        textBoxBase.Handle,
-                        NativeMethods.EM_POSFROMCHAR,
-                        new IntPtr(charIndex),
-                        IntPtr.Zero).ToInt32();
-                return new Point(xy);
-            }
+            var xy =
+                NativeMethods.SendMessageInt(
+                    textBoxBase.Handle,
+                    NativeMethods.EM_POSFROMCHAR,
+                    new IntPtr(charIndex),
+                    IntPtr.Zero).ToInt32();
+            return new Point(xy);
         }
 
         private static int GetFirstVisibleLine(TextBoxBase txt)

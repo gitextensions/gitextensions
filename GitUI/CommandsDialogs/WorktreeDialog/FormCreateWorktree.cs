@@ -68,30 +68,14 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        public IList<IGitRef> ExistingBranches { get; set; }
+        public IReadOnlyList<IGitRef> ExistingBranches { get; set; }
 
-        private void comboBoxBranches_TextChanged(object sender, EventArgs e)
-        {
-            if (comboBoxBranches.DataSource == null)
-            {
-                return;
-            }
-        }
-
-        private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (comboBoxBranches.SelectedValue == null)
-            {
-                return;
-            }
-        }
-
-        private void comboBoxBranches_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void comboBoxBranches_KeyUp(object sender, KeyEventArgs e)
         {
             GoIfEnterKey(sender, e);
         }
 
-        private void GoIfEnterKey(object sender, System.Windows.Forms.KeyEventArgs e)
+        private void GoIfEnterKey(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -107,7 +91,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             if (disposing)
             {
-                _branchesLoader.Cancel();
                 _branchesLoader.Dispose();
 
                 components?.Dispose();
@@ -173,7 +156,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             if (createWorktreeButton.Enabled)
             {
                 createWorktreeButton.Enabled = IsTargetFolderValid();
-                return;
             }
         }
 

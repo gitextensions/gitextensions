@@ -33,7 +33,7 @@ namespace GitUI
 
         public void Initialize()
         {
-            IList<PatchFile> patchFiles;
+            IReadOnlyList<PatchFile> patchFiles;
 
             if (Module.InTheMiddleOfInteractiveRebase())
             {

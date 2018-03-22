@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
-    public class ManagedExtensibility
+    public static class ManagedExtensibility
     {
         private static List<CompositionContainer> _compositionContainers;
 
@@ -54,7 +54,7 @@ namespace GitUIPluginInterfaces
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError("Failed to get exports, {0}", ex.ToString());
+                    Trace.TraceError("Failed to get exports, {0}", ex);
                 }
             }
 

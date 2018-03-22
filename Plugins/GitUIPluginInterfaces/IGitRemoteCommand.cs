@@ -11,14 +11,14 @@ namespace GitUIPluginInterfaces
         bool ErrorOccurred { get; }
         string CommandOutput { get; }
 
-        event GitRemoteCommandCompletedEventHandler Completed;
+        event EventHandler<GitRemoteCommandCompletedEventArgs> Completed;
 
         void Execute();
     }
 
     public class GitRemoteCommandCompletedEventArgs : EventArgs
     {
-        public IGitRemoteCommand Command { get; private set; }
+        public IGitRemoteCommand Command { get; }
 
         public bool IsError { get; set; }
 
@@ -31,6 +31,4 @@ namespace GitUIPluginInterfaces
             Handled = handled;
         }
     }
-
-    public delegate void GitRemoteCommandCompletedEventHandler(object sender, GitRemoteCommandCompletedEventArgs e);
 }

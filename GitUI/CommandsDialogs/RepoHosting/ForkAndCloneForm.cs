@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private readonly IRepositoryHostPlugin _gitHoster;
-        private EventHandler<GitModuleEventArgs> _gitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
         public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 var hist = Repositories.RepositoryHistory;
                 var lastRepo = hist.Repositories.FirstOrDefault();
-                if (lastRepo != null && !string.IsNullOrEmpty(lastRepo.Path))
+                if (!string.IsNullOrEmpty(lastRepo?.Path))
                 {
                     string p = lastRepo.Path.Trim('/', '\\');
 
@@ -160,16 +160,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _searchResultsLV.Items.Add(new ListViewItem { Text = _strSearching.Text });
         }
 
-        private void HandleSearchResult(IList<IHostedRepository> repos)
+        private void HandleSearchResult(IReadOnlyList<IHostedRepository> repos)
         {
             _searchResultsLV.Items.Clear();
+
             foreach (var repo in repos)
             {
-                var lvi = new ListViewItem { Tag = repo, Text = repo.Name };
-                lvi.SubItems.Add(repo.Owner);
-                lvi.SubItems.Add(repo.Forks.ToString());
-                lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
-                _searchResultsLV.Items.Add(lvi);
+                _searchResultsLV.Items.Add(new ListViewItem
+                {
+                    Tag = repo,
+                    Text = repo.Name,
+                    SubItems =
+                    {
+                        repo.Owner,
+                        repo.Forks.ToString(),
+                        repo.IsAFork ? _strYes.Text : _strNo.Text
+                    }
+                });
             }
 
             _searchBtn.Enabled = true;
@@ -304,8 +311,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
-            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd);
-            formRemoteProcess.Remote = repoSrc;
+            var formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd)
+            {
+                Remote = repoSrc
+            };
+
             formRemoteProcess.ShowDialog();
 
             if (formRemoteProcess.ErrorOccurred())
@@ -352,12 +362,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
-        private void UpdateCloneInfo()
-        {
-            UpdateCloneInfo(true);
-        }
-
-        private void UpdateCloneInfo(bool updateCreateDirTB)
+        private void UpdateCloneInfo(bool updateCreateDirTB = true)
         {
             var repo = CurrentySelectedGitRepo;
 

@@ -44,9 +44,10 @@ namespace System.Linq
             foreach (TSource sourceElement in source)
             {
                 TKey key = keySelector(sourceElement);
+
                 if (key == null)
                 {
-                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    var ex = new ArgumentException("Key selector produced a key that is null. See exception data for source.", nameof(keySelector));
                     ex.Data.Add("source", sourceElement);
                     throw ex;
                 }
@@ -75,9 +76,10 @@ namespace System.Linq
             foreach (TSource sourceElement in source)
             {
                 TKey key = keySelector(sourceElement);
+
                 if (key == null)
                 {
-                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    var ex = new ArgumentException("Key selector produced a key that is null. See exception data for source.", nameof(keySelector));
                     ex.Data.Add("source", sourceElement);
                     throw ex;
                 }
@@ -131,7 +133,7 @@ namespace System.Linq
 
         private class FuncComparer<T> : IComparer<T>
         {
-            private Func<T, T, int> _comparer;
+            private readonly Func<T, T, int> _comparer;
 
             public FuncComparer(Func<T, T, int> comparer)
             {

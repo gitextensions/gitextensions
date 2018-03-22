@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace GitCommands.Repository
 {
@@ -81,8 +82,8 @@ namespace GitCommands.Repository
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
-            bool middleDot = ShorteningStrategy_MiddleDots.Equals(ShorteningStrategy);
-            bool signDir = ShorteningStrategy_MostSignDir.Equals(ShorteningStrategy);
+            bool middleDot = ShorteningStrategy == ShorteningStrategy_MiddleDots;
+            bool signDir = ShorteningStrategy == ShorteningStrategy_MostSignDir;
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
 
@@ -131,25 +132,16 @@ namespace GitCommands.Repository
 
             void AddSortedRepos(bool mostRecent, List<RecentRepoInfo> addToList)
             {
-                foreach (string caption in orderedRepos.Keys)
-                {
-                    List<RecentRepoInfo> list = orderedRepos[caption];
-                    foreach (RecentRepoInfo repo in list)
-                    {
-                        if (repo.MostRecent == mostRecent)
-                        {
-                            addToList.Add(repo);
-                        }
-                    }
-                }
+                addToList.AddRange(
+                    from caption in orderedRepos.Keys
+                    from repo in orderedRepos[caption]
+                    where repo.MostRecent == mostRecent
+                    select repo);
             }
 
             void AddNotSortedRepos(List<RecentRepoInfo> list, List<RecentRepoInfo> addToList)
             {
-                foreach (RecentRepoInfo repo in list)
-                {
-                    addToList.Add(repo);
-                }
+                addToList.AddRange(list);
             }
 
             if (SortMostRecentRepos)
@@ -171,7 +163,7 @@ namespace GitCommands.Repository
             }
         }
 
-        private void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
+        private static void AddToOrderedSignDir(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo, bool shortenPath)
         {
             // if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo != null)
@@ -233,7 +225,7 @@ namespace GitCommands.Repository
             }
         }
 
-        private string MakePath(string l, string r)
+        private static string MakePath(string l, string r)
         {
             if (l == null)
             {
@@ -269,9 +261,8 @@ namespace GitCommands.Repository
                 string root = null;
                 string company = null;
                 string repository = null;
-                string workingDir = null;
+                var workingDir = dirInfo.Name;
 
-                workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
                 if (dirInfo != null)
                 {
@@ -283,7 +274,7 @@ namespace GitCommands.Repository
 
                 if (dirInfo != null)
                 {
-                    while (dirInfo.Parent != null && dirInfo.Parent.Parent != null)
+                    while (dirInfo.Parent?.Parent != null)
                     {
                         dirInfo = dirInfo.Parent;
                         addDots = true;
@@ -296,24 +287,23 @@ namespace GitCommands.Repository
                     }
                 }
 
-                bool ShortenPathWithCompany(int skipCount)
+                void ShortenPathWithCompany(int skipCount)
                 {
-                    bool result = false;
                     string c = null;
                     string r = null;
+
                     if (company?.Length > skipCount)
                     {
                         c = company.Substring(0, company.Length - skipCount);
-                        result = true;
                     }
 
                     if (repository?.Length > skipCount)
                     {
                         r = repository.Substring(skipCount, repository.Length - skipCount);
-                        result = true;
                     }
 
                     repoInfo.Caption = MakePath(root, c);
+
                     if (addDots)
                     {
                         repoInfo.Caption = MakePath(repoInfo.Caption, "..");
@@ -321,8 +311,6 @@ namespace GitCommands.Repository
 
                     repoInfo.Caption = MakePath(repoInfo.Caption, r);
                     repoInfo.Caption = MakePath(repoInfo.Caption, workingDir);
-
-                    return result && addDots;
                 }
 
                 bool ShortenPath(int skipCount)

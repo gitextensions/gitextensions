@@ -5,7 +5,7 @@ namespace GitUI.AutoCompletion
 {
     public class AutoCompleteWord : IEquatable<AutoCompleteWord>
     {
-        public string Word { get; private set; }
+        public string Word { get; }
         private readonly string _camelHumps;
 
         public AutoCompleteWord(string word)

@@ -6,8 +6,6 @@ using GitUI.UserControls;
 
 namespace GitUI
 {
-    internal delegate void DataCallback(string text);
-
     /// <param name="isError">if command finished with error</param>
     /// <param name="form">this form</param>
     /// <returns>if handled</returns>
@@ -61,7 +59,7 @@ namespace GitUI
 
         public static bool ShowDialog(GitModuleForm owner, string arguments)
         {
-            return ShowDialog(owner, (string)null, arguments);
+            return ShowDialog(owner, null, arguments);
         }
 
         public static bool ShowDialog(GitModuleForm owner, string process, string arguments)
@@ -100,9 +98,11 @@ namespace GitUI
 
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            FormProcess formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings);
+            var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings)
+            {
+                ControlBox = true
+            };
 
-            formProcess.ControlBox = true;
             formProcess.Show(owner);
 
             return formProcess;
@@ -256,21 +256,6 @@ namespace GitUI
         public static bool IsOperationAborted(string dialogResult)
         {
             return dialogResult.Trim('\r', '\n') == "Aborted";
-        }
-
-        private void InitializeComponent()
-        {
-            SuspendLayout();
-
-            //
-            // FormProcess
-            //
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            ClientSize = new System.Drawing.Size(565, 326);
-            Name = "FormProcess";
-            ResumeLayout(false);
-            PerformLayout();
         }
     }
 }

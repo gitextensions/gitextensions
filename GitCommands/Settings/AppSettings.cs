@@ -138,12 +138,13 @@ namespace GitCommands
         {
 #if DEBUG
             string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
-            string debugPath = @"GitExtensions\bin\Debug";
+            const string debugPath = @"GitExtensions\bin\Debug";
             int len = debugPath.Length;
             if (gitExtDir.Length > len)
             {
                 var path = gitExtDir.Substring(gitExtDir.Length - len);
-                if (debugPath.ToPosixPath().Equals(path.ToPosixPath()))
+
+                if (debugPath.ToPosixPath() == path.ToPosixPath())
                 {
                     string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
                     return Path.Combine(projectPath, "Bin");
@@ -261,18 +262,6 @@ namespace GitCommands
             }
         }
 
-        public static int UserMenuLocationX
-        {
-            get => GetInt("usermenulocationx", -1);
-            set => SetInt("usermenulocationx", value);
-        }
-
-        public static int UserMenuLocationY
-        {
-            get => GetInt("usermenulocationy", -1);
-            set => SetInt("usermenulocationy", value);
-        }
-
         public static bool StashKeepIndex
         {
             get => GetBool("stashkeepindex", false);
@@ -367,6 +356,12 @@ namespace GitCommands
         {
             get => GetBool("showgitstatusinbrowsetoolbar", true);
             set => SetBool("showgitstatusinbrowsetoolbar", value);
+        }
+
+        public static bool ShowGitStatusForArtificialCommits
+        {
+            get => GetBool("showgitstatusforartificialcommits", true);
+            set => SetBool("showgitstatusforartificialcommits", value);
         }
 
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||
@@ -473,7 +468,7 @@ namespace GitCommands
                 {
                     return CultureInfo.GetCultureInfo(CurrentLanguageCode);
                 }
-                catch (System.Globalization.CultureNotFoundException)
+                catch (CultureNotFoundException)
                 {
                     Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
                     return CultureInfo.GetCultureInfo("en");
@@ -615,7 +610,7 @@ namespace GitCommands
 
         public static bool RevisionGraphShowWorkingDirChanges
         {
-            get => GetBool("revisiongraphshowworkingdirchanges", false);
+            get => GetBool("revisiongraphshowworkingdirchanges", true);
             set => SetBool("revisiongraphshowworkingdirchanges", value);
         }
 
@@ -742,7 +737,7 @@ namespace GitCommands
         public static PullAction? AutoPullOnPushRejectedAction
         {
             get => GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction");
-            set => SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value);
+            set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
         }
 
         public static bool DontConfirmPushNewBranch
@@ -1016,7 +1011,7 @@ namespace GitCommands
             set => SetBool("StartWithRecentWorkingDir", value);
         }
 
-        public static CommandLogger GitLog { get; private set; }
+        public static CommandLogger GitLog { get; }
 
         public static string Plink
         {
@@ -1504,6 +1499,7 @@ namespace GitCommands
         private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
+
             if (oldSettings == null)
             {
                 yield break;
@@ -1512,9 +1508,10 @@ namespace GitCommands
             foreach (string name in oldSettings.GetValueNames())
             {
                 object value = oldSettings.GetValue(name, null);
+
                 if (value != null)
                 {
-                    yield return new Tuple<string, string>(name, value.ToString());
+                    yield return Tuple.Create(name, value.ToString());
                 }
             }
         }
@@ -1522,11 +1519,6 @@ namespace GitCommands
         private static void ImportFromRegistry()
         {
             SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
-        }
-
-        public static string PrefixedName(string prefix, string name)
-        {
-            return prefix == null ? name : prefix + '_' + name;
         }
 
         public static bool? GetBool(string name)

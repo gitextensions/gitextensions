@@ -36,8 +36,8 @@ namespace Gource
             Translate();
         }
 
-        private StringSetting _gourcePath = new StringSetting("Path to Gource", "");
-        private StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+        private readonly StringSetting _gourcePath = new StringSetting("Path to Gource", "");
+        private readonly StringSetting _gourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
 
@@ -51,7 +51,7 @@ namespace Gource
         public override bool Execute(GitUIBaseEventArgs eventArgs)
         {
             IGitModule gitUiCommands = eventArgs.GitModule;
-            var ownerForm = eventArgs.OwnerForm as IWin32Window;
+            var ownerForm = eventArgs.OwnerForm;
             if (!gitUiCommands.IsValidGitWorkingDir())
             {
                 MessageBox.Show(ownerForm, _currentDirectoryIsNotValidGit.Text);
@@ -68,7 +68,7 @@ namespace Gource
                             string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        Settings.SetValue<string>(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
+                        Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
                         pathToGource = _gourcePath.DefaultValue;
                     }
                 }
@@ -113,8 +113,8 @@ namespace Gource
             using (var gourceStart = new GourceStart(pathToGource, eventArgs, _gourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
-                Settings.SetValue<string>(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
-                Settings.SetValue<string>(_gourcePath.Name, gourceStart.PathToGource, s => s);
+                Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
+                Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
             }
 
             return true;

@@ -8,10 +8,10 @@ namespace GitUI.CommandsDialogs
 {
     public partial class SearchWindow<T> : Form where T : class
     {
-        private readonly Func<string, IList<T>> _getCandidates;
-        private AsyncLoader _backgroundLoader = new AsyncLoader();
+        private readonly Func<string, IReadOnlyList<T>> _getCandidates;
+        private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
 
-        public SearchWindow(Func<string, IList<T>> getCandidates)
+        public SearchWindow(Func<string, IReadOnlyList<T>> getCandidates)
         {
             InitializeComponent();
             textBox1.Select();
@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void SearchForCandidates(IList<T> candidates)
+        private void SearchForCandidates(IReadOnlyList<T> candidates)
         {
             var selectionStart = textBox1.SelectionStart;
             var selectionLength = textBox1.SelectionLength;

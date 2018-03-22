@@ -45,7 +45,7 @@ namespace GitCommands.ExternalLinks
 
         private IEnumerable<Match> ParseRemotes(ExternalLinkDefinition definition)
         {
-            IList<Match> allMatches = new List<Match>();
+            var allMatches = new List<Match>();
 
             if (definition.RemoteSearchPattern.IsNullOrWhiteSpace() || definition.RemoteSearchPatternRegex.Value == null)
             {
@@ -53,7 +53,7 @@ namespace GitCommands.ExternalLinks
                 return allMatches;
             }
 
-            IList<string> remoteUrls = new List<string>();
+            var remoteUrls = new List<string>();
 
             var remotes = _gitRemoteManager.LoadRemotes(false);
             var matchingRemotes = GetMatchingRemotes(definition, remotes);
@@ -93,24 +93,24 @@ namespace GitCommands.ExternalLinks
             return allMatches;
         }
 
-        private IEnumerable<ExternalLink> ParseRevision(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch)
+        private static IEnumerable<ExternalLink> ParseRevision(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch)
         {
             var links = new List<IEnumerable<ExternalLink>>();
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.LocalBranches))
             {
-                foreach (var head in revision.Refs.Where(b => !b.IsRemote))
-                {
-                    links.Add(ParseRevisionPart(revision, definition, remoteMatch, head.LocalName));
-                }
+                links.AddRange(
+                    revision.Refs
+                        .Where(b => !b.IsRemote)
+                        .Select(head => ParseRevisionPart(revision, definition, remoteMatch, head.LocalName)));
             }
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.RemoteBranches))
             {
-                foreach (var head in revision.Refs.Where(b => b.IsRemote))
-                {
-                    links.Add(ParseRevisionPart(revision, definition, remoteMatch, head.LocalName));
-                }
+                links.AddRange(
+                    revision.Refs
+                        .Where(b => b.IsRemote)
+                        .Select(head => ParseRevisionPart(revision, definition, remoteMatch, head.LocalName)));
             }
 
             if (definition.SearchInParts.Contains(ExternalLinkDefinition.RevisionPart.Message))
@@ -121,14 +121,14 @@ namespace GitCommands.ExternalLinks
             return links.SelectMany(list => list);
         }
 
-        private IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
+        private static IEnumerable<ExternalLink> ParseRevisionPart(GitRevision revision, ExternalLinkDefinition definition, Match remoteMatch, string part)
         {
             if (definition.SearchPattern.IsNullOrEmpty() || definition.SearchPatternRegex.Value == null || part == null)
             {
                 yield break;
             }
 
-            IList<Match> allMatches = new List<Match>();
+            var allMatches = new List<Match>();
 
             MatchCollection matches = definition.SearchPatternRegex.Value.Matches(part);
             for (var i = 0; i < matches.Count; i++)

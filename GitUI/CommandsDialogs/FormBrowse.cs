@@ -193,7 +193,11 @@ namespace GitUI.CommandsDialogs
 
             Translate();
 
-            if (AppSettings.ShowGitStatusInBrowseToolbar)
+            // Activation of the control requires restart of Browse, limit also deactivation for consistency
+            bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
+            bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
+
+            if (countToolbar || countArtificial)
             {
                 _toolStripGitStatus = new ToolStripMenuItem
                 {
@@ -225,7 +229,7 @@ namespace GitUI.CommandsDialogs
                     var status = e.ItemStatuses.ToList();
                     _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
 
-                    if (status.Count == 0)
+                    if (status.Count == 0 || !countToolbar)
                     {
                         _toolStripGitStatus.Text = _commitButtonText.Text;
                     }
@@ -234,7 +238,10 @@ namespace GitUI.CommandsDialogs
                         _toolStripGitStatus.Text = string.Format(_commitButtonText + " ({0})", status.Count.ToString());
                     }
 
-                    RevisionGrid.UpdateArtificialCommitCount(status);
+                    if (countArtificial)
+                    {
+                        RevisionGrid.UpdateArtificialCommitCount(status);
+                    }
 
                     // The diff filelist is not updated, as the selected diff is unset
                     ////_revisionDiff.RefreshArtificial();
@@ -479,18 +486,15 @@ namespace GitUI.CommandsDialogs
         {
             var menuItem = sender as ToolStripMenuItem;
 
-            var plugin = menuItem?.Tag as IGitPlugin;
-            if (plugin == null)
+            if (menuItem?.Tag is IGitPlugin plugin)
             {
-                return;
-            }
+                var eventArgs = new GitUIEventArgs(this, UICommands);
 
-            var eventArgs = new GitUIEventArgs(this, UICommands);
-
-            bool refresh = plugin.Execute(eventArgs);
-            if (refresh)
-            {
-                RefreshToolStripMenuItemClick(null, null);
+                bool refresh = plugin.Execute(eventArgs);
+                if (refresh)
+                {
+                    RefreshToolStripMenuItemClick(null, null);
+                }
             }
         }
 
@@ -498,9 +502,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (ToolStripItem item in pluginsToolStripMenuItem.DropDownItems)
             {
-                var plugin = item.Tag as IGitPluginForRepository;
-
-                item.Enabled = plugin == null || validWorkingDir;
+                item.Enabled = !(item.Tag is IGitPluginForRepository) || validWorkingDir;
             }
         }
 
@@ -770,26 +772,25 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ToolStripSeparator toolstripseparator = new ToolStripSeparator();
-            toolstripseparator.Tag = "userscript";
-            ToolStrip.Items.Add(toolstripseparator);
+            ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
             foreach (ScriptInfo scriptInfo in scripts)
             {
-                ToolStripButton tempButton = new ToolStripButton();
-
-                // store scriptname
-                tempButton.Text = scriptInfo.Name;
-                tempButton.Tag = "userscript";
+                var tempButton = new ToolStripButton
+                {
+                    // store scriptname
+                    Text = scriptInfo.Name,
+                    Tag = "userscript",
+                    Enabled = true,
+                    Visible = true,
+                    Image = scriptInfo.GetIcon(),
+                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                    ////Image = GitUI.Properties.Resources.bug,
+                    ////Icon = "Cow"
+                };
 
                 // add handler
                 tempButton.Click += UserMenu_Click;
-                tempButton.Enabled = true;
-                tempButton.Visible = true;
-                ////tempButton.Image = GitUI.Properties.Resources.bug;
-                ////scriptInfo.Icon = "Cow";
-                tempButton.Image = scriptInfo.GetIcon();
-                tempButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
 
                 // add to toolstrip
                 ToolStrip.Items.Add(tempButton);
@@ -866,7 +867,7 @@ namespace GitUI.CommandsDialogs
                     _pullButton.Click += PullToolStripMenuItemClick;
 
                     _toolbarButtonsCreated = true;
-                    ThumbnailToolBarButton[] buttons = new[] { _commitButton, _pullButton, _pushButton };
+                    ThumbnailToolBarButton[] buttons = { _commitButton, _pullButton, _pushButton };
 
                     // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
                     TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);
@@ -908,14 +909,16 @@ namespace GitUI.CommandsDialogs
 
                 // set dimensions accordingly to fit inside size^2 square
                 if (r > 1)
-                { // w is bigger, so divide h by r
+                {
+                    // w is bigger, so divide h by r
                     w = size;
                     h = (int)(size / r);
                     x = 0;
                     y = (size - h) / 2; // center the image
                 }
                 else
-                { // h is bigger, so multiply w by r
+                {
+                    // h is bigger, so multiply w by r
                     w = (int)(size * r);
                     h = size;
                     y = 0;
@@ -1036,7 +1039,7 @@ namespace GitUI.CommandsDialogs
         {
             if (Module.InTheMiddleOfRebase())
             {
-                UICommands.ContinueRebase(this);
+                UICommands.StartTheContinueRebaseDialog(this);
             }
             else
             {
@@ -1071,8 +1074,6 @@ namespace GitUI.CommandsDialogs
 
         private void FillDiff()
         {
-            DiffTabPage.Text = _diffTabPageTitleBase;
-
             if (CommitInfoTabControl.SelectedTab != DiffTabPage)
             {
                 return;
@@ -1084,8 +1085,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
-
-            DiffTabPage.Text = revisionDiff.GetTabText();
+            revisionDiff.DisplayDiffTab();
         }
 
         private void FillCommitInfo()
@@ -1468,7 +1468,8 @@ namespace GitUI.CommandsDialogs
 
         private void RebaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions();
+
             if (revisions.Count == 2)
             {
                 string to = null;
@@ -1536,8 +1537,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var toolStripMenuItem = sender as ToolStripMenuItem;
-            if (toolStripMenuItem != null)
+            if (sender is ToolStripMenuItem toolStripMenuItem)
             {
                 var submodule = toolStripMenuItem.Tag as string;
                 FormProcess.ShowDialog(this, Module.SuperprojectModule, GitCommandHelpers.SubmoduleUpdateCmd(submodule));
@@ -1588,7 +1588,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            if (Repositories.RepositoryHistory.Repositories.Count() == 0)
+            if (Repositories.RepositoryHistory.Repositories.Count == 0)
             {
                 recentToolStripMenuItem.Enabled = false;
                 return;
@@ -1641,14 +1641,10 @@ namespace GitUI.CommandsDialogs
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
         {
-            var button = sender as ToolStripMenuItem;
-
-            if (button == null)
+            if (sender is ToolStripMenuItem button)
             {
-                return;
+                ChangeWorkingDir(button.Text);
             }
-
-            ChangeWorkingDir(button.Text);
         }
 
         private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
@@ -1718,7 +1714,7 @@ namespace GitUI.CommandsDialogs
 
             toolStripItem.Click += (hs, he) => ChangeWorkingDir(repo.Path);
 
-            if (repo.Title != null || !repo.Path.Equals(caption))
+            if (repo.Title != null || repo.Path != caption)
             {
                 toolStripItem.ToolTipText = repo.Path;
             }
@@ -1948,8 +1944,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<string> GetBranchNames()
         {
-            IList<IGitRef> branches = Module.GetRefs(false);
-            IEnumerable<string> branchNames = branches.Select(b => b.Name);
+            IEnumerable<string> branchNames = Module.GetRefs(false).Select(b => b.Name);
             if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
             {
                 branchNames = branchNames.OrderBy(b => b);
@@ -2011,30 +2006,37 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            GitBash,
-            GitGui,
-            GitGitK,
-            FocusRevisionGrid,
-            FocusCommitInfo,
-            FocusFileTree,
-            FocusDiff,
-            Commit,
-            AddNotes,
-            FindFileInSelectedCommit,
-            CheckoutBranch,
-            QuickFetch,
-            QuickPull,
-            QuickPush,
-            RotateApplicationIcon,
-            CloseRepository,
-            Stash,
-            StashPop
+            GitBash = 0,
+            GitGui = 1,
+            GitGitK = 2,
+            FocusRevisionGrid = 3,
+            FocusCommitInfo = 4,
+            FocusFileTree = 5,
+            FocusDiff = 6,
+            FocusFilter = 18,
+            Commit = 7,
+            AddNotes = 8,
+            FindFileInSelectedCommit = 9,
+            CheckoutBranch = 10,
+            QuickFetch = 11,
+            QuickPull = 12,
+            QuickPush = 13,
+            RotateApplicationIcon = 14,
+            CloseRepository = 15,
+            Stash = 16,
+            StashPop = 17
         }
 
         private void AddNotes()
         {
             Module.EditNotes(RevisionGrid.GetSelectedRevisions().Count > 0 ? RevisionGrid.GetSelectedRevisions()[0].Guid : string.Empty);
             FillCommitInfo();
+        }
+
+        private void FocusFilter()
+        {
+            ToolStripControlHost filterToFocus = toolStripRevisionFilterTextBox.Focused ? (ToolStripControlHost)toolStripBranchFilterComboBox : (ToolStripControlHost)toolStripRevisionFilterTextBox;
+            filterToFocus.Focus();
         }
 
         private void FindFileInSelectedCommit()
@@ -2062,6 +2064,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfoTabPage; break;
                 case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = TreeTabPage; fileTree.Focus(); break;
                 case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = DiffTabPage; revisionDiff.Focus(); break;
+                case Commands.FocusFilter: FocusFilter(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
@@ -2144,7 +2147,7 @@ namespace GitUI.CommandsDialogs
             base.OnClosed(e);
         }
 
-        private void CommandsToolStripMenuItem_DropDownOpening(object sender, System.EventArgs e)
+        private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             // Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
@@ -2317,9 +2320,8 @@ namespace GitUI.CommandsDialogs
             }
 
             RefreshPullIcon();
-            bool pullCompelted;
 
-            UICommands.StartPullDialog(this, true, out pullCompelted, true);
+            UICommands.StartPullDialog(this, true, out _, true);
 
             // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)
@@ -2364,8 +2366,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
-                string error = "";
-                CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
+                CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit != null)
                 {
                     RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid));
@@ -2383,8 +2384,7 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
-            var menuSender = sender as ToolStripMenuItem;
-            if (menuSender != null)
+            if (sender is ToolStripMenuItem menuSender)
             {
                 SetWorkingDir(menuSender.Tag as string);
             }
@@ -2402,26 +2402,18 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.Focus();
         }
 
-        private void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
+        private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
         {
-            var control = sender as ToolStripSplitButton;
-
-            if (control == null)
+            if (sender is ToolStripSplitButton control)
             {
-                return;
+                control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
+
+                if (control.Tag is Control controlToFocus)
+                {
+                    controlToFocus.Focus();
+                    control.Tag = null;
+                }
             }
-
-            control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
-
-            var controlToFocus = control.Tag as Control;
-
-            if (controlToFocus == null)
-            {
-                return;
-            }
-
-            controlToFocus.Focus();
-            control.Tag = null;
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
@@ -2434,8 +2426,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in toolStripButtonLevelUp.DropDownItems)
             {
-                var toolStripButton = item as ToolStripMenuItem;
-                if (toolStripButton != null)
+                if (item is ToolStripMenuItem toolStripButton)
                 {
                     toolStripButton.Click -= SubmoduleToolStripButtonClick;
                 }
@@ -2450,7 +2441,7 @@ namespace GitUI.CommandsDialogs
             return string.Format("[{0}]", GitModule.IsDetachedHead(branch) ? _noBranchTitle.Text : branch);
         }
 
-        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat)
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat = "{0}")
         {
             var spmenu = new ToolStripMenuItem(string.Format(textFormat, info.Text));
             spmenu.Click += SubmoduleToolStripButtonClick;
@@ -2463,11 +2454,6 @@ namespace GitUI.CommandsDialogs
 
             spmenu.Image = GetItemImage(info);
             return spmenu;
-        }
-
-        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info)
-        {
-            return CreateSubmoduleMenuItem(info, "{0}");
         }
 
         private DateTime _previousUpdateTime;
@@ -2804,7 +2790,7 @@ namespace GitUI.CommandsDialogs
                     // Lazy-create on first opening the tab
                     tabpage.Controls.Clear();
                     tabpage.Controls.Add(
-                        _terminal = new ConEmuControl()
+                        _terminal = new ConEmuControl
                         {
                             Dock = DockStyle.Fill,
                             AutoStartInfo = null,
@@ -2852,8 +2838,8 @@ namespace GitUI.CommandsDialogs
                         break;
                     default:
                         // Choose the console: bash from git with fallback to cmd
-                        string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                        string justSh = "sh.exe"; // Fallback to SH
+                        const string justBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                        const string justSh = "sh.exe"; // Fallback to SH
                         exeList = new[] { justBash, justSh };
                         break;
                 }
@@ -2900,7 +2886,7 @@ namespace GitUI.CommandsDialogs
 
         public void ChangeTerminalActiveFolder(string path)
         {
-            if (_terminal == null || _terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(path))
             {
                 return;
             }
@@ -2924,7 +2910,7 @@ namespace GitUI.CommandsDialogs
 
         private void ClearTerminalCommandLineAndRunCommand(string command)
         {
-            if (_terminal == null || _terminal.RunningSession == null || string.IsNullOrWhiteSpace(command))
+            if (_terminal?.RunningSession == null || string.IsNullOrWhiteSpace(command))
             {
                 return;
             }

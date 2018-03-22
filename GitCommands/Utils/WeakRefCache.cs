@@ -7,7 +7,7 @@ namespace GitCommands.Utils
 {
     public class WeakRefCache : IDisposable
     {
-        private Dictionary<string, WeakReference> _weakMap = new Dictionary<string, WeakReference>();
+        private readonly Dictionary<string, WeakReference> _weakMap = new Dictionary<string, WeakReference>();
         private readonly Timer _clearTimer = new Timer(60 * 1000);
 
         public static readonly WeakRefCache Default = new WeakRefCache();
@@ -48,7 +48,7 @@ namespace GitCommands.Utils
             return (T)cached;
         }
 
-        private void OnClearTimer(object source, System.Timers.ElapsedEventArgs e)
+        private void OnClearTimer(object source, ElapsedEventArgs e)
         {
             lock (_weakMap)
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,9 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using GitUI.UserControls.RevisionGridClasses;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -18,30 +20,34 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _saveFileFilterCurrentFormat = new TranslationString("Current format");
         private readonly TranslationString _saveFileFilterAllFiles = new TranslationString("All files");
-        private readonly TranslationString _diffNoSelection = new TranslationString("Diff (no selection)");
-        private readonly TranslationString _diffParentWithSelection = new TranslationString("Diff (A: parent --> B: selection)");
-        private readonly TranslationString _diffTwoSelected = new TranslationString("Diff (A: first --> B: second)");
-        private readonly TranslationString _diffNotSupported = new TranslationString("Diff (not supported)");
         private readonly TranslationString _deleteSelectedFilesCaption = new TranslationString("Delete");
         private readonly TranslationString _deleteSelectedFiles =
             new TranslationString("Are you sure you want delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
+        private readonly TranslationString _multipleDescription = new TranslationString("<multiple>");
+        private readonly TranslationString _selectedRevision = new TranslationString("Selected");
+        private readonly TranslationString _firstRevision = new TranslationString("First");
 
         private RevisionGrid _revisionGrid;
         private RevisionFileTree _revisionFileTree;
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
+        private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+        private readonly IGitRevisionTester _gitRevisionTester;
 
         public RevisionDiff()
         {
             InitializeComponent();
+            DiffFiles.AlwaysRevisionGroups = true;
             Translate();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
+            _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
+            _revisionDiffContextMenuController = new FileStatusListContextMenuController();
         }
 
         public void ForceRefreshRevisions()
@@ -80,7 +86,7 @@ namespace GitUI.CommandsDialogs
 
         internal enum Commands
         {
-            DeleteSelectedFiles,
+            DeleteSelectedFiles = 0
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -101,32 +107,17 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        public string GetTabText()
+        public void DisplayDiffTab()
         {
-            var revisions = _revisionGrid.GetSelectedRevisions();
-
             DiffText.SaveCurrentScrollPos();
+            var revisions = _revisionGrid.GetSelectedRevisions();
             DiffFiles.SetDiffs(revisions);
-            if (_oldDiffItem != null && revisions.Count > 0 && revisions[0].Guid == _oldRevision)
+            if (_oldDiffItem != null && DiffFiles.Revision?.Guid == _oldRevision)
             {
                 DiffFiles.SelectedItem = _oldDiffItem;
                 _oldDiffItem = null;
                 _oldRevision = null;
             }
-
-            switch (revisions.Count)
-            {
-                case 0:
-                    return _diffNoSelection.Text;
-
-                case 1: // diff "parent" --> "selected revision"
-                    return _diffParentWithSelection.Text;
-
-                case 2: // diff "first clicked revision" --> "second clicked revision"
-                    return _diffTwoSelected.Text;
-            }
-
-            return _diffNotSupported.Text;
         }
 
         public void Bind(RevisionGrid revisionGrid, RevisionFileTree revisionFileTree)
@@ -149,7 +140,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffController = new RevisionDiffController();
+            _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
             DiffFiles.FilterVisible = true;
             DiffFiles.DescribeRevision = DescribeRevision;
@@ -164,21 +155,56 @@ namespace GitUI.CommandsDialogs
 
         private string DescribeRevision(string sha1)
         {
+            return DescribeRevision(sha1, 0);
+        }
+
+        private string DescribeRevision(string sha1, int maxLength)
+        {
+            if (sha1.IsNullOrEmpty())
+            {
+                // No parent at all, present as working directory
+                return Strings.GetCurrentUnstagedChanges();
+            }
+
             var revision = _revisionGrid.GetRevision(sha1);
             if (revision == null)
             {
                 return sha1.ShortenTo(8);
             }
 
-            return _revisionGrid.DescribeRevision(revision);
+            return _revisionGrid.DescribeRevision(revision, maxLength);
+        }
+
+        /// <summary>
+        /// Provide a description for the first selected or parent to the "primary" selected last
+        /// </summary>
+        /// <returns>A description of the selected parent</returns>
+        private string DescribeSelectedParentRevision(bool showUnstagedAndCombined)
+        {
+            var parents = DiffFiles.SelectedItemParents
+                .Where(i => showUnstagedAndCombined ||
+                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == DiffFiles.CombinedDiffGuid))
+                .Distinct()
+                .Count();
+            if (parents == 0)
+            {
+                return null;
+            }
+            else if (parents == 1)
+            {
+                return DescribeRevision(DiffFiles.SelectedItemParent?.Guid, 50);
+            }
+            else
+            {
+                return _multipleDescription.Text;
+            }
         }
 
         private bool GetNextPatchFile(bool searchBackward, bool loop, out int fileIndex, out Task loadFileContent)
         {
             fileIndex = -1;
             loadFileContent = Task.CompletedTask;
-            var revisions = _revisionGrid.GetSelectedRevisions();
-            if (revisions.Count == 0)
+            if (DiffFiles.Revision == null)
             {
                 return false;
             }
@@ -208,29 +234,49 @@ namespace GitUI.CommandsDialogs
 
         private ContextMenuSelectionInfo GetSelectionInfo()
         {
-            IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+            // First (A) is parent if one revision selected or if parent, then selected
+            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
 
-            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiff.Text);
+            // Combined diff is a display only diff, no manipulations
+            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiffGuid);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
-            var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent?.Guid;
-            var selectedItemStatus = DiffFiles.SelectedItem;
+
+            // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();
+            bool isAnyTracked = DiffFiles.SelectedItems.Any(item => item.IsTracked);
+            bool isAnySubmodule = DiffFiles.SelectedItems.Any(item => item.IsSubmodule);
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(DiffFiles.SelectedItem.Name));
 
-            var selectionInfo = new ContextMenuSelectionInfo(selectedRevisions, selectedItemStatus, isAnyCombinedDiff, isExactlyOneItemSelected, isCombinedDiff, isAnyItemSelected, isBareRepository, singleFileExists);
+            var selectionInfo = new ContextMenuSelectionInfo(DiffFiles.Revision,
+                firstIsParent: firstIsParent,
+                isAnyCombinedDiff: isAnyCombinedDiff,
+                isSingleGitItemSelected: isExactlyOneItemSelected,
+                isAnyItemSelected: isAnyItemSelected,
+                isBareRepository: isBareRepository,
+                singleFileExists: singleFileExists,
+                isAnyTracked: isAnyTracked,
+                isAnySubmodule: isAnySubmodule);
             return selectionInfo;
         }
 
-        private void ResetSelectedItemsTo(string revision, bool actsAsChild)
+        private void ResetSelectedItemsTo(bool actsAsChild)
         {
+            if (!DiffFiles.SelectedItems.Any())
+            {
+                return;
+            }
+
             var selectedItems = DiffFiles.SelectedItems;
-            IEnumerable<GitItemStatus> itemsToCheckout;
             if (actsAsChild)
             {
+                // selected, all are the same
+                string revision = DiffFiles.Revision.Guid;
                 var deletedItems = selectedItems.Where(item => item.IsDeleted);
                 Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
-                itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
+
+                var itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
+                Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), revision, false);
             }
             else
             {
@@ -238,43 +284,40 @@ namespace GitUI.CommandsDialogs
                 // if file is new to the parent, it has to be removed
                 var addedItems = selectedItems.Where(item => item.IsNew);
                 Module.RemoveFiles(addedItems.Select(item => item.Name), false);
-                itemsToCheckout = selectedItems.Where(item => !item.IsNew);
+
+                foreach (var parent in DiffFiles.SelectedItemParents)
+                {
+                    var itemsToCheckout = DiffFiles.SelectedItemsWithParent.Where(item => !item.Item.IsNew && item.ParentRevision.Guid == parent.Guid);
+                    Module.CheckoutFiles(itemsToCheckout.Select(item => item.Item.Name), parent.Guid, false);
+                }
             }
 
-            Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), revision, false);
             RefreshArtificial();
         }
 
         private async Task ShowSelectedFileDiffAsync()
         {
-            var items = _revisionGrid.GetSelectedRevisions();
-            if (DiffFiles.SelectedItem == null || items.Count() == 0)
+            if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
                 DiffText.ViewPatch("");
                 return;
             }
 
-            if (items.Count() == 1)
+            if (DiffFiles.SelectedItemParent?.Guid == DiffFiles.CombinedDiffGuid)
             {
-                items.Add(DiffFiles.SelectedItemParent);
+                var diffOfConflict = Module.GetCombinedDiffContent(DiffFiles.Revision, DiffFiles.SelectedItem.Name,
+                    DiffText.GetExtraDiffArguments(), DiffText.Encoding);
 
-                if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent?.Guid)
-                    && DiffFiles.SelectedItemParent?.Guid == DiffFiles.CombinedDiff.Text)
+                if (string.IsNullOrWhiteSpace(diffOfConflict))
                 {
-                    var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name,
-                        DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-
-                    if (string.IsNullOrWhiteSpace(diffOfConflict))
-                    {
-                        diffOfConflict = Strings.GetUninterestingDiffOmitted();
-                    }
-
-                    DiffText.ViewPatch(diffOfConflict);
-                    return;
+                    diffOfConflict = Strings.GetUninterestingDiffOmitted();
                 }
+
+                DiffText.ViewPatch(diffOfConflict);
+                return;
             }
 
-            await DiffText.ViewChangesAsync(items, DiffFiles.SelectedItem, string.Empty);
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
         }
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -304,10 +347,16 @@ namespace GitUI.CommandsDialogs
                     {
                         var status = await DiffFiles.SelectedItem.GetSubmoduleStatusAsync().ConfigureAwait(false);
 
-                        Process process = new Process();
-                        process.StartInfo.FileName = Application.ExecutablePath;
-                        process.StartInfo.Arguments = "browse -commit=" + status.Commit;
-                        process.StartInfo.WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator());
+                        var process = new Process
+                        {
+                            StartInfo =
+                            {
+                                FileName = Application.ExecutablePath,
+                                Arguments = "browse -commit=" + status.Commit,
+                                WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
+                            }
+                        };
+
                         process.Start();
                     });
             }
@@ -363,7 +412,7 @@ namespace GitUI.CommandsDialogs
             diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
-            resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuResetFile(selectionInfo);
+            resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
 
             diffEditFileToolStripMenuItem.Visible =
                diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditFile(selectionInfo);
@@ -399,44 +448,39 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
-                UICommands.StartFileHistoryDialog(this, item.Name, revision, true, true);
+                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision, true, true);
             }
         }
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var files = new List<GitItemStatus>();
-            foreach (var item in DiffFiles.SelectedItems)
-            {
-                files.Add(item);
-            }
+            // IsStaged is set by default, so that cannot be trusted, must be limited when selecting
+            var files = DiffFiles.SelectedItemsWithParent
+                .Where(it => it.ParentRevision.Guid == GitRevision.IndexGuid)
+                .Select(it => it.Item)
+                .ToList();
 
-            bool err;
-            Module.StageFiles(files, out err);
+            Module.StageFiles(files, out _);
             RefreshArtificial();
         }
 
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
             var files = new List<GitItemStatus>();
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in DiffFiles.SelectedItems.Where(i => i.IsStaged))
             {
-                if (item.IsStaged)
+                if (!item.IsNew)
                 {
-                    if (!item.IsNew)
-                    {
-                        Module.UnstageFileToRemove(item.Name);
+                    Module.UnstageFileToRemove(item.Name);
 
-                        if (item.IsRenamed)
-                        {
-                            Module.UnstageFileToRemove(item.OldName);
-                        }
-                    }
-                    else
+                    if (item.IsRenamed)
                     {
-                        files.Add(item);
+                        Module.UnstageFileToRemove(item.OldName);
                     }
+                }
+                else
+                {
+                    files.Add(item);
                 }
             }
 
@@ -458,14 +502,14 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            Func<string, IList<GitItemStatus>> findDiffFilesMatches = (string name) =>
+            IReadOnlyList<GitItemStatus> FindDiffFilesMatches(string name)
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
-            };
+            }
 
             GitItemStatus selectedItem;
-            using (var searchWindow = new SearchWindow<GitItemStatus>(findDiffFilesMatches)
+            using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
             {
                 Owner = FindForm()
             })
@@ -497,78 +541,60 @@ namespace GitUI.CommandsDialogs
 
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
                 return;
             }
 
-            GitUI.RevisionDiffKind diffKind;
+            RevisionDiffKind diffKind;
 
-            if (sender == aLocalToolStripMenuItem)
+            if (sender == firstToLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffALocal;
+                diffKind = RevisionDiffKind.DiffALocal;
             }
-            else if (sender == bLocalToolStripMenuItem)
+            else if (sender == selectedToLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
+                diffKind = RevisionDiffKind.DiffBLocal;
             }
-            else if (sender == parentOfALocalToolStripMenuItem)
+            else if (sender == firstParentToLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
+                diffKind = RevisionDiffKind.DiffAParentLocal;
             }
-            else if (sender == parentOfBLocalToolStripMenuItem)
+            else if (sender == selectedParentToLocalToolStripMenuItem)
             {
-                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
+                diffKind = RevisionDiffKind.DiffBParentLocal;
             }
             else
             {
-                diffKind = GitUI.RevisionDiffKind.DiffAB;
+                diffKind = RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
-                IList<GitRevision> revs = new List<GitRevision> { DiffFiles.Revision, itemWithParent.ParentRevision };
+                var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
                 _revisionGrid.OpenWithDifftool(revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+            bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
+            bool localExists = _gitRevisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
-            // Should be blocked in the GUI but not an error to show to the user
-            Debug.Assert(selectedRevisions.Count == 1 || selectedRevisions.Count == 2,
-                "Unexpectedly number of revisions for difftool" + selectedRevisions.Count);
-            if (selectedRevisions.Count < 1 || selectedRevisions.Count > 2)
-            {
-                return null;
-            }
+            IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
+            bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
+            bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
+            var revisions = _revisionGrid.GetSelectedRevisions();
 
-#pragma warning disable SA1305 // Field names should not use Hungarian notation
-            bool aIsLocal = selectedRevisions.Count == 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
-            bool bIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
-            bool multipleRevisionsSelected = selectedRevisions.Count == 2;
+            // Parents to First (A) are only known if A is explicitly selected (there is no explicit search for parents to parents of a single selected revision)
+            bool firstParentsValid = revisions != null && revisions.Count > 1;
 
-            bool localExists = false;
-            bool bIsNormal = false; // B is assumed to be new or deleted (check from DiffFiles)
-#pragma warning restore SA1305 // Field names should not use Hungarian notation
-
-            // enable *<->Local items only when (any) local file exists
-            foreach (var item in DiffFiles.SelectedItems)
-            {
-                bIsNormal = bIsNormal || !(item.IsNew || item.IsDeleted);
-                string filePath = _fullPathResolver.Resolve(item.Name);
-                if (File.Exists(filePath) || Directory.Exists(filePath))
-                {
-                    localExists = true;
-                    if (localExists && bIsNormal)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            var selectionInfo = new ContextMenuDiffToolInfo(aIsLocal, bIsLocal, bIsNormal, localExists, multipleRevisionsSelected);
+            var selectionInfo = new ContextMenuDiffToolInfo(DiffFiles.Revision, selectedItemParentRevs,
+                allAreNew: allAreNew,
+                allAreDeleted: allAreDeleted,
+                firstIsParent: firstIsParent,
+                firstParentsValid: firstParentsValid,
+                localExists: localExists);
             return selectionInfo;
         }
 
@@ -576,148 +602,76 @@ namespace GitUI.CommandsDialogs
         {
             ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
 
-            aBToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAB(selectionInfo);
-            aLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuALocal(selectionInfo);
-            bLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBLocal(selectionInfo);
-            parentOfALocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAParentLocal(selectionInfo);
-            parentOfBLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBParentLocal(selectionInfo);
-            parentOfALocalToolStripMenuItem.Visible = parentOfALocalToolStripMenuItem.Enabled || _revisionDiffController.ShouldShowMenuAParent(selectionInfo);
-            parentOfBLocalToolStripMenuItem.Visible = parentOfBLocalToolStripMenuItem.Enabled || _revisionDiffController.ShouldShowMenuBParent(selectionInfo);
+            if (DiffFiles.SelectedItemsWithParent.Any())
+            {
+                selectedDiffCaptionMenuItem.Text = _selectedRevision + ": (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+                selectedDiffCaptionMenuItem.Visible = true;
+                MenuUtil.SetAsCaptionMenuItem(selectedDiffCaptionMenuItem, DiffContextMenu);
+
+                firstDiffCaptionMenuItem.Text = _firstRevision + ":";
+                var parentDesc = DescribeSelectedParentRevision(true);
+                if (parentDesc.IsNotNullOrWhitespace())
+                {
+                    firstDiffCaptionMenuItem.Text += " (" + parentDesc + ")";
+                }
+
+                firstDiffCaptionMenuItem.Visible = true;
+                MenuUtil.SetAsCaptionMenuItem(firstDiffCaptionMenuItem, DiffContextMenu);
+            }
+            else
+            {
+                firstDiffCaptionMenuItem.Visible = false;
+                selectedDiffCaptionMenuItem.Visible = false;
+            }
+
+            firstToSelectedToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToSelected(selectionInfo);
+            firstToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstToLocal(selectionInfo);
+            selectedToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Enabled = _revisionDiffContextMenuController.ShouldShowMenuSelectedParentToLocal(selectionInfo);
+            firstParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuFirstParentToLocal(selectionInfo);
+            selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
-        private void resetFileToFirstToolStripMenuItem_Click(object sender, EventArgs e)
+        private void resetFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count != 2 || !DiffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            ResetSelectedItemsTo(revisions[1].Guid, false);
-        }
-
-        private void resetFileToParentToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count != 1 || !DiffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            if (!revisions[0].HasParent)
-            {
-                throw new ApplicationException("This menu should be disabled for revisions that don't have a parent.");
-            }
-
-            ResetSelectedItemsTo(revisions[0].FirstParentGuid, false);
-        }
-
-        private void resetFileToSecondToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count != 2 || !DiffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            ResetSelectedItemsTo(revisions[0].Guid, true);
-        }
-
-        private void resetFileToSelectedToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count != 1 || !DiffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            ResetSelectedItemsTo(revisions[0].Guid, true);
+            ResetSelectedItemsTo(sender == resetFileToSelectedToolStripMenuItem);
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-            int selectedRevsCount = revisions.Count;
-
-            if (selectedRevsCount == 1)
-            {
-                if (revisions[0].Guid == GitRevision.UnstagedGuid)
-                {
-                    resetFileToSelectedToolStripMenuItem.Visible = false;
-                }
-                else
-                {
-                    resetFileToSelectedToolStripMenuItem.Visible = true;
-                    TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                    resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0], 50) + ")";
-                }
-
-                if (revisions[0].HasParent)
-                {
-                    resetFileToParentToolStripMenuItem.Visible = true;
-                    TranslateItem(resetFileToParentToolStripMenuItem.Name, resetFileToParentToolStripMenuItem);
-                    GitRevision parentRev = _revisionGrid.GetRevision(revisions[0].FirstParentGuid);
-                    if (parentRev != null)
-                    {
-                        resetFileToParentToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(parentRev, 50) + ")";
-                    }
-                }
-                else
-                {
-                    resetFileToParentToolStripMenuItem.Visible = false;
-                }
-            }
-            else
+            if (DiffFiles.Revision == null)
             {
                 resetFileToSelectedToolStripMenuItem.Visible = false;
                 resetFileToParentToolStripMenuItem.Visible = false;
+                return;
             }
 
-            if (selectedRevsCount == 2)
+            if (DiffFiles.Revision.Guid == GitRevision.UnstagedGuid)
             {
-                if (revisions[1].Guid == GitRevision.UnstagedGuid)
-                {
-                    resetFileToFirstToolStripMenuItem.Visible = false;
-                }
-                else
-                {
-                    resetFileToFirstToolStripMenuItem.Visible = true;
-                    TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                    resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1], 50) + ")";
-                }
-
-                if (revisions[0].Guid == GitRevision.UnstagedGuid)
-                {
-                    resetFileToSecondToolStripMenuItem.Visible = false;
-                }
-                else
-                {
-                    resetFileToSecondToolStripMenuItem.Visible = true;
-                    TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                    resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0], 50) + ")";
-                }
+                resetFileToSelectedToolStripMenuItem.Visible = false;
             }
             else
             {
-                resetFileToFirstToolStripMenuItem.Visible = false;
-                resetFileToSecondToolStripMenuItem.Visible = false;
+                resetFileToSelectedToolStripMenuItem.Visible = true;
+                resetFileToSelectedToolStripMenuItem.Text = _selectedRevision + " (" + _revisionGrid.DescribeRevision(DiffFiles.Revision, 50) + ")";
+            }
+
+            var parentDesc = DescribeSelectedParentRevision(false);
+            if (parentDesc.IsNullOrWhiteSpace())
+            {
+                resetFileToParentToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                resetFileToParentToolStripMenuItem.Visible = true;
+                resetFileToParentToolStripMenuItem.Text = _firstRevision + " (" + parentDesc + ")";
             }
         }
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count == 0)
-            {
-                return;
-            }
-
-            if (DiffFiles.SelectedItem == null)
+            if (DiffFiles.Revision == null || DiffFiles.SelectedItem == null)
             {
                 return;
             }
@@ -742,7 +696,7 @@ namespace GitUI.CommandsDialogs
 
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Module.SaveBlobAs(fileDialog.FileName, string.Format("{0}:\"{1}\"", revisions[0].Guid, item.Name));
+                    Module.SaveBlobAs(fileDialog.FileName, string.Format("{0}:\"{1}\"", DiffFiles.Revision?.Guid, item.Name));
                 }
             }
         }

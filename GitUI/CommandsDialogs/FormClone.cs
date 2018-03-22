@@ -25,11 +25,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _errorDestinationNotRooted = new TranslationString("Destination folder must be an absolute path.");
         private readonly TranslationString _errorCloneFailed = new TranslationString("Clone Failed");
 
-        private bool _openedFromProtocolHandler;
+        private readonly bool _openedFromProtocolHandler;
         private readonly string _url;
-        private EventHandler<GitModuleEventArgs> _gitModuleChanged;
+        private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
         private string _puttySshKey;
-        private readonly IList<string> _defaultBranchItems;
+        private readonly IReadOnlyList<string> _defaultBranchItems;
 
         // for translation only
         private FormClone()
@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool CanBeGitURL(string url)
+        private static bool CanBeGitURL(string url)
         {
             if (url == null)
             {
@@ -354,7 +354,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
+                destinationPath += _NO_TRANSLATE_To.Text.TrimEnd('\\', '/');
             }
 
             destinationPath += "\\";
@@ -407,7 +407,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(RemoteActionResult<IList<IGitRef>> branchList)
+        private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
         {
             Cursor = Cursors.Default;
 
@@ -422,8 +422,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (branchList.AuthenticationFail)
             {
-                string loadedKey;
-                if (FormPuttyError.AskForKey(this, out loadedKey))
+                if (FormPuttyError.AskForKey(this, out _))
                 {
                     LoadBranches();
                 }
@@ -460,8 +459,6 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _branchListLoader.Cancel();
-
                 _branchListLoader.Dispose();
 
                 if (components != null)

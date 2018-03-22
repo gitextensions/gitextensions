@@ -70,31 +70,27 @@ namespace GitCommands.Core
             return ToString(obj, string.Empty);
         }
 
-        private string ToString(object obj, string indent)
+        private static string ToString(object obj, string indent)
         {
             if (obj == null)
             {
                 return indent + "[null]";
             }
-            else
+
+            if (!(obj is string))
             {
-                if (!(obj is string))
+                if (obj is IEnumerable eo)
                 {
-                    IEnumerable eo = obj as IEnumerable;
-                    if (eo != null)
-                    {
-                        return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
-                    }
+                    return eo.Cast<object>().Select(o => ToString(o, indent + "  ")).Join("\n");
                 }
-
-                SimpleStructured ss = obj as SimpleStructured;
-                if (ss != null)
-                {
-                    return ToString(ss.InlinedStructure(), indent);
-                }
-
-                return indent + obj.ToString();
             }
+
+            if (obj is SimpleStructured ss)
+            {
+                return ToString(ss.InlinedStructure(), indent);
+            }
+
+            return indent + obj;
         }
     }
 }

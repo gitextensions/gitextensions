@@ -11,7 +11,8 @@ namespace GitUI
 {
     public partial class FormStatus : GitExtensionsForm
     {
-        private readonly bool _useDialogSettings = true;
+        private readonly bool _useDialogSettings;
+
         private DispatcherFrameModalControler _modalControler;
 
         public FormStatus() : this(true)
@@ -35,7 +36,7 @@ namespace GitUI
             Translate();
             if (_useDialogSettings)
             {
-                KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
             }
             else
             {
@@ -81,38 +82,39 @@ namespace GitUI
         public void SetProgress(string text)
         {
             // This has to happen on the UI thread
-            SendOrPostCallback method = o =>
+            BeginInvoke((SendOrPostCallback)Method, this);
+
+            void Method(object o)
+            {
+                int index = text.LastIndexOf('%');
+                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
                 {
-                    int index = text.LastIndexOf('%');
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
+                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
                     {
-                        if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                        {
-                            ProgressBar.Style = ProgressBarStyle.Blocks;
-                        }
-
-                        ProgressBar.Value = Math.Min(100, progressValue);
-
-                        if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                        {
-                            try
-                            {
-                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                            }
-                            catch (InvalidOperationException)
-                            {
-                            }
-                        }
+                        ProgressBar.Style = ProgressBarStyle.Blocks;
                     }
 
-                    // Show last progress message in the title, unless it's showin in the control body already
-                    if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    ProgressBar.Value = Math.Min(100, progressValue);
+
+                    if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                     {
-                        Text = text;
+                        try
+                        {
+                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                        }
+                        catch (InvalidOperationException)
+                        {
+                        }
                     }
-                };
-            BeginInvoke(method, this);
+                }
+
+                // Show last progress message in the title, unless it's showin in the control body already
+                if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                {
+                    Text = text;
+                }
+            }
         }
 
         /// <summary>
@@ -158,11 +160,11 @@ namespace GitUI
 
                 if (isSuccess)
                 {
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
+                    picBoxSuccessFail.Image = Properties.Resources.success;
                 }
                 else
                 {
-                    picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
+                    picBoxSuccessFail.Image = Properties.Resources.error;
                 }
 
                 _errorOccurred = !isSuccess;
@@ -198,12 +200,7 @@ namespace GitUI
             ProcessCallback(this);
         }
 
-        public void ShowDialogOnError()
-        {
-            ShowDialogOnError(null);
-        }
-
-        public void ShowDialogOnError(IWin32Window owner)
+        public void ShowDialogOnError(IWin32Window owner = null)
         {
             KeepDialogOpen.Visible = false;
             Abort.Visible = false;
@@ -315,9 +312,9 @@ namespace GitUI
 
     internal class DispatcherFrameModalControler
     {
-        private DispatcherFrame _dispatcherFrame = new DispatcherFrame();
-        private FormStatus _formStatus;
-        private IWin32Window _owner;
+        private readonly DispatcherFrame _dispatcherFrame = new DispatcherFrame();
+        private readonly FormStatus _formStatus;
+        private readonly IWin32Window _owner;
 
         public DispatcherFrameModalControler(FormStatus formStatus, IWin32Window owner)
         {

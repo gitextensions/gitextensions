@@ -29,13 +29,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 ListIncludedEncodings.EndUpdate();
             }
 
-            var availableEncoding = System.Text.Encoding.GetEncodings()
+            var availableEncoding = Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
                 .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
                 .ToList();
 
             // If exists utf-8, then replace to utf-8 without BOM
-            var utf8 = availableEncoding.Where(e => typeof(UTF8Encoding) == e.GetType()).FirstOrDefault();
+            var utf8 = availableEncoding.FirstOrDefault(e => typeof(UTF8Encoding) == e.GetType());
             if (utf8 != null)
             {
                 availableEncoding.Remove(utf8);

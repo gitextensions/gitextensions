@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
             _lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select<string, LostObject>((s) => LostObject.TryParse(Module, s))
+                .Select((s) => LostObject.TryParse(Module, s))
                 .Where(parsedLostObject => parsedLostObject != null));
 
             UpdateFilteredLostObjects();
@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{currentTag}", lostObject.Hash);
-                var success = _gitTagController.CreateTag(createTagArgs, this);
+                _gitTagController.CreateTag(createTagArgs, this);
             }
 
             return currentTag;

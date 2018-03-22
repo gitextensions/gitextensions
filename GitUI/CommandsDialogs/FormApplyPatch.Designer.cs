@@ -178,7 +178,6 @@
             this.PatchDirMode.TabIndex = 1;
             this.PatchDirMode.Text = "Patch directory";
             this.PatchDirMode.UseVisualStyleBackColor = true;
-            this.PatchDirMode.CheckedChanged += new System.EventHandler(this.PatchDirMode_CheckedChanged);
             // 
             // PatchFileMode
             // 

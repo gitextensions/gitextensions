@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -15,8 +14,8 @@ namespace GitUI.SpellChecker
         public bool IsImeStartingComposition { get; private set; }
 
         private readonly RichTextBox _richTextBox;
-        public List<TextPos> IllFormedLines = new List<TextPos>();
-        public List<TextPos> Lines = new List<TextPos>();
+        public List<TextPos> IllFormedLines { get; } = new List<TextPos>();
+        public List<TextPos> Lines { get; } = new List<TextPos>();
         private Bitmap _bitmap;
         private Graphics _bufferGraphics;
         private int _lineHeight;
@@ -159,14 +158,14 @@ namespace GitUI.SpellChecker
             var pen = Pens.Red;
             if ((end.X - start.X) > 4)
             {
-                var pl = new ArrayList();
+                var pl = new List<Point>();
                 for (var i = start.X; i <= (end.X - 2); i += 4)
                 {
                     pl.Add(new Point(i, start.Y));
                     pl.Add(new Point(i + 2, start.Y + 2));
                 }
 
-                var p = (Point[])pl.ToArray(typeof(Point));
+                var p = pl.ToArray();
                 _bufferGraphics.DrawLines(pen, p);
             }
             else

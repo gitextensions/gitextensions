@@ -44,143 +44,143 @@ namespace GitUI
 
         #region IGitUICommands Members
 
-        public event GitUIEventHandler PreBrowse;
-        public event GitUIEventHandler PostBrowse;
+        public event EventHandler<GitUIBaseEventArgs> PreBrowse;
+        public event EventHandler<GitUIBaseEventArgs> PostBrowse;
 
-        public event GitUIEventHandler PreDeleteBranch;
-        public event GitUIPostActionEventHandler PostDeleteBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreDeleteBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostDeleteBranch;
 
-        public event GitUIEventHandler PreDeleteRemoteBranch;
-        public event GitUIPostActionEventHandler PostDeleteRemoteBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreDeleteRemoteBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostDeleteRemoteBranch;
 
-        public event GitUIEventHandler PreCheckoutRevision;
-        public event GitUIPostActionEventHandler PostCheckoutRevision;
+        public event EventHandler<GitUIBaseEventArgs> PreCheckoutRevision;
+        public event EventHandler<GitUIPostActionEventArgs> PostCheckoutRevision;
 
-        public event GitUIEventHandler PreCheckoutBranch;
-        public event GitUIPostActionEventHandler PostCheckoutBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreCheckoutBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostCheckoutBranch;
 
-        public event GitUIEventHandler PreFileHistory;
-        public event GitUIPostActionEventHandler PostFileHistory;
+        public event EventHandler<GitUIBaseEventArgs> PreFileHistory;
+        public event EventHandler<GitUIPostActionEventArgs> PostFileHistory;
 
-        public event GitUIEventHandler PreCompareRevisions;
-        public event GitUIPostActionEventHandler PostCompareRevisions;
+        public event EventHandler<GitUIBaseEventArgs> PreCompareRevisions;
+        public event EventHandler<GitUIPostActionEventArgs> PostCompareRevisions;
 
-        public event GitUIEventHandler PreAddFiles;
-        public event GitUIPostActionEventHandler PostAddFiles;
+        public event EventHandler<GitUIBaseEventArgs> PreAddFiles;
+        public event EventHandler<GitUIPostActionEventArgs> PostAddFiles;
 
-        public event GitUIEventHandler PreCreateBranch;
-        public event GitUIPostActionEventHandler PostCreateBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreCreateBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostCreateBranch;
 
-        public event GitUIEventHandler PreClone;
-        public event GitUIPostActionEventHandler PostClone;
+        public event EventHandler<GitUIBaseEventArgs> PreClone;
+        public event EventHandler<GitUIPostActionEventArgs> PostClone;
 
-        public event GitUIEventHandler PreSvnClone;
-        public event GitUIPostActionEventHandler PostSvnClone;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnClone;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnClone;
 
-        public event GitUIEventHandler PreCommit;
-        public event GitUIPostActionEventHandler PostCommit;
+        public event EventHandler<GitUIBaseEventArgs> PreCommit;
+        public event EventHandler<GitUIPostActionEventArgs> PostCommit;
 
-        public event GitUIEventHandler PreSvnDcommit;
-        public event GitUIPostActionEventHandler PostSvnDcommit;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnDcommit;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnDcommit;
 
-        public event GitUIEventHandler PreSvnRebase;
-        public event GitUIPostActionEventHandler PostSvnRebase;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnRebase;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnRebase;
 
-        public event GitUIEventHandler PreSvnFetch;
-        public event GitUIPostActionEventHandler PostSvnFetch;
+        public event EventHandler<GitUIBaseEventArgs> PreSvnFetch;
+        public event EventHandler<GitUIPostActionEventArgs> PostSvnFetch;
 
-        public event GitUIEventHandler PreInitialize;
-        public event GitUIPostActionEventHandler PostInitialize;
+        public event EventHandler<GitUIBaseEventArgs> PreInitialize;
+        public event EventHandler<GitUIPostActionEventArgs> PostInitialize;
 
-        public event GitUIEventHandler PrePush;
-        public event GitUIPostActionEventHandler PostPush;
+        public event EventHandler<GitUIBaseEventArgs> PrePush;
+        public event EventHandler<GitUIPostActionEventArgs> PostPush;
 
-        public event GitUIEventHandler PrePull;
-        public event GitUIPostActionEventHandler PostPull;
+        public event EventHandler<GitUIBaseEventArgs> PrePull;
+        public event EventHandler<GitUIPostActionEventArgs> PostPull;
 
-        public event GitUIEventHandler PreViewPatch;
-        public event GitUIPostActionEventHandler PostViewPatch;
+        public event EventHandler<GitUIBaseEventArgs> PreViewPatch;
+        public event EventHandler<GitUIPostActionEventArgs> PostViewPatch;
 
-        public event GitUIEventHandler PreApplyPatch;
-        public event GitUIPostActionEventHandler PostApplyPatch;
+        public event EventHandler<GitUIBaseEventArgs> PreApplyPatch;
+        public event EventHandler<GitUIPostActionEventArgs> PostApplyPatch;
 
-        public event GitUIEventHandler PreFormatPatch;
-        public event GitUIPostActionEventHandler PostFormatPatch;
+        public event EventHandler<GitUIBaseEventArgs> PreFormatPatch;
+        public event EventHandler<GitUIPostActionEventArgs> PostFormatPatch;
 
-        public event GitUIEventHandler PreStash;
-        public event GitUIPostActionEventHandler PostStash;
+        public event EventHandler<GitUIBaseEventArgs> PreStash;
+        public event EventHandler<GitUIPostActionEventArgs> PostStash;
 
-        public event GitUIEventHandler PreResolveConflicts;
-        public event GitUIPostActionEventHandler PostResolveConflicts;
+        public event EventHandler<GitUIBaseEventArgs> PreResolveConflicts;
+        public event EventHandler<GitUIPostActionEventArgs> PostResolveConflicts;
 
-        public event GitUIEventHandler PreCherryPick;
-        public event GitUIPostActionEventHandler PostCherryPick;
+        public event EventHandler<GitUIBaseEventArgs> PreCherryPick;
+        public event EventHandler<GitUIPostActionEventArgs> PostCherryPick;
 
-        public event GitUIEventHandler PreRevertCommit;
-        public event GitUIPostActionEventHandler PostRevertCommit;
+        public event EventHandler<GitUIBaseEventArgs> PreRevertCommit;
+        public event EventHandler<GitUIPostActionEventArgs> PostRevertCommit;
 
-        public event GitUIEventHandler PreMergeBranch;
-        public event GitUIPostActionEventHandler PostMergeBranch;
+        public event EventHandler<GitUIBaseEventArgs> PreMergeBranch;
+        public event EventHandler<GitUIPostActionEventArgs> PostMergeBranch;
 
-        public event GitUIEventHandler PreCreateTag;
-        public event GitUIPostActionEventHandler PostCreateTag;
+        public event EventHandler<GitUIBaseEventArgs> PreCreateTag;
+        public event EventHandler<GitUIPostActionEventArgs> PostCreateTag;
 
-        public event GitUIEventHandler PreDeleteTag;
-        public event GitUIPostActionEventHandler PostDeleteTag;
+        public event EventHandler<GitUIBaseEventArgs> PreDeleteTag;
+        public event EventHandler<GitUIPostActionEventArgs> PostDeleteTag;
 
-        public event GitUIEventHandler PreEditGitIgnore;
-        public event GitUIPostActionEventHandler PostEditGitIgnore;
+        public event EventHandler<GitUIBaseEventArgs> PreEditGitIgnore;
+        public event EventHandler<GitUIPostActionEventArgs> PostEditGitIgnore;
 
-        public event GitUIEventHandler PreSettings;
-        public event GitUIPostActionEventHandler PostSettings;
+        public event EventHandler<GitUIBaseEventArgs> PreSettings;
+        public event EventHandler<GitUIPostActionEventArgs> PostSettings;
 
-        public event GitUIEventHandler PreArchive;
-        public event GitUIPostActionEventHandler PostArchive;
+        public event EventHandler<GitUIBaseEventArgs> PreArchive;
+        public event EventHandler<GitUIPostActionEventArgs> PostArchive;
 
-        public event GitUIEventHandler PreMailMap;
-        public event GitUIPostActionEventHandler PostMailMap;
+        public event EventHandler<GitUIBaseEventArgs> PreMailMap;
+        public event EventHandler<GitUIPostActionEventArgs> PostMailMap;
 
-        public event GitUIEventHandler PreVerifyDatabase;
-        public event GitUIPostActionEventHandler PostVerifyDatabase;
+        public event EventHandler<GitUIBaseEventArgs> PreVerifyDatabase;
+        public event EventHandler<GitUIPostActionEventArgs> PostVerifyDatabase;
 
-        public event GitUIEventHandler PreRemotes;
-        public event GitUIPostActionEventHandler PostRemotes;
+        public event EventHandler<GitUIBaseEventArgs> PreRemotes;
+        public event EventHandler<GitUIPostActionEventArgs> PostRemotes;
 
-        public event GitUIEventHandler PreRebase;
-        public event GitUIPostActionEventHandler PostRebase;
+        public event EventHandler<GitUIBaseEventArgs> PreRebase;
+        public event EventHandler<GitUIPostActionEventArgs> PostRebase;
 
-        public event GitUIEventHandler PreRename;
-        public event GitUIPostActionEventHandler PostRename;
+        public event EventHandler<GitUIBaseEventArgs> PreRename;
+        public event EventHandler<GitUIPostActionEventArgs> PostRename;
 
-        public event GitUIEventHandler PreSubmodulesEdit;
-        public event GitUIPostActionEventHandler PostSubmodulesEdit;
+        public event EventHandler<GitUIBaseEventArgs> PreSubmodulesEdit;
+        public event EventHandler<GitUIPostActionEventArgs> PostSubmodulesEdit;
 
-        public event GitUIEventHandler PreUpdateSubmodules;
-        public event GitUIPostActionEventHandler PostUpdateSubmodules;
+        public event EventHandler<GitUIBaseEventArgs> PreUpdateSubmodules;
+        public event EventHandler<GitUIPostActionEventArgs> PostUpdateSubmodules;
 
-        public event GitUIEventHandler PreSyncSubmodules;
-        public event GitUIPostActionEventHandler PostSyncSubmodules;
+        public event EventHandler<GitUIBaseEventArgs> PreSyncSubmodules;
+        public event EventHandler<GitUIPostActionEventArgs> PostSyncSubmodules;
 
-        public event GitUIEventHandler PreBlame;
-        public event GitUIPostActionEventHandler PostBlame;
+        public event EventHandler<GitUIBaseEventArgs> PreBlame;
+        public event EventHandler<GitUIPostActionEventArgs> PostBlame;
 
-        public event GitUIEventHandler PreEditGitAttributes;
-        public event GitUIPostActionEventHandler PostEditGitAttributes;
+        public event EventHandler<GitUIBaseEventArgs> PreEditGitAttributes;
+        public event EventHandler<GitUIPostActionEventArgs> PostEditGitAttributes;
 
-        public event GitUIEventHandler PreBrowseInitialize;
-        public event GitUIEventHandler PostBrowseInitialize;
+        public event EventHandler<GitUIBaseEventArgs> PreBrowseInitialize;
+        public event EventHandler<GitUIBaseEventArgs> PostBrowseInitialize;
 
-        public event GitUIEventHandler PreSparseWorkingCopy;
-        public event GitUIPostActionEventHandler PostSparseWorkingCopy;
+        public event EventHandler<GitUIBaseEventArgs> PreSparseWorkingCopy;
+        public event EventHandler<GitUIPostActionEventArgs> PostSparseWorkingCopy;
 
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
-        public event GitUIEventHandler PostRepositoryChanged;
+        public event EventHandler<GitUIBaseEventArgs> PostRepositoryChanged;
 
-        public event GitUIEventHandler PostRegisterPlugin;
+        public event EventHandler<GitUIBaseEventArgs> PostRegisterPlugin;
 
-        public ILockableNotifier RepoChangedNotifier { get; private set; }
+        public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion
@@ -352,74 +352,66 @@ namespace GitUI
 
         public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IEnumerable<string> selectedFiles = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
                 FormProcess.ShowDialog(owner, Module, arguments);
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, null, null, action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StashPop(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormProcess.ShowDialog(owner, Module, "stash pop");
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, null, null, action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
         /// Applies the changes recorded in the stash to the new working directory and index.</summary>
         public bool StashBranch(IWin32Window owner, string branchName, string stash = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.QuoteNE()));
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, null, null, action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StashDrop(IWin32Window owner, string stashName)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormProcess.ShowDialog(owner, Module, "stash drop " + stashName.Quote());
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, null, null, action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StashApply(IWin32Window owner, string stashName)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, null, null, action);
-        }
-
-        public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
-        {
-            form.FormClosed += (object o, FormClosedEventArgs ea) =>
-            {
-                InvokeEvent(form == null ? null : form.Owner, ev);
-            };
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir,
-            GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<Form> provideForm)
+            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<Form> provideForm)
         {
             if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
             {
@@ -433,15 +425,13 @@ namespace GitUI
 
             Form form = provideForm();
 
-            FormClosedEventHandler formClosed = null;
+            void FormClosed(object sender, FormClosedEventArgs e)
+            {
+                form.FormClosed -= FormClosed;
+                InvokePostEvent(owner, true, postEvent);
+            }
 
-            formClosed = (sender, e) =>
-                {
-                    form.FormClosed -= formClosed;
-                    InvokePostEvent(owner, true, postEvent);
-                };
-
-            form.FormClosed += formClosed;
+            form.FormClosed += FormClosed;
             form.ShowInTaskbar = true;
 
             if (Application.OpenForms.Count > 0)
@@ -462,7 +452,7 @@ namespace GitUI
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
         /// <returns>true if action was successfully done, false otherwise</returns>
         public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo,
-            GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
+            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<bool> action)
         {
             bool actionDone = false;
             RepoChangedNotifier.Lock();
@@ -495,16 +485,6 @@ namespace GitUI
             return actionDone;
         }
 
-        public void DoActionOnRepo(Action action)
-        {
-            Func<bool> fnc = () =>
-                {
-                    action();
-                    return true;
-                };
-            DoActionOnRepo(null, false, false, null, null, fnc);
-        }
-
         public bool DoActionOnRepo(Func<bool> action)
         {
             return DoActionOnRepo(null, false, true, null, null, action);
@@ -512,7 +492,7 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string[] containRevisons)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch = "", bool remote = false, string[] containRevisons = null)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
@@ -523,29 +503,19 @@ namespace GitUI
             });
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote)
-        {
-            return StartCheckoutBranch(owner, branch, remote, null);
-        }
-
         public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisons)
         {
             return StartCheckoutBranch(owner, "", false, containRevisons);
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner)
-        {
-            return StartCheckoutBranch(owner, "", false, null);
-        }
-
         public bool StartCheckoutBranch(string branch, bool remote)
         {
-            return StartCheckoutBranch(null, branch, remote, null);
+            return StartCheckoutBranch(null, branch, remote);
         }
 
         public bool StartCheckoutBranch()
         {
-            return StartCheckoutBranch(null, "", false, null);
+            return StartCheckoutBranch(null);
         }
 
         public bool StartCheckoutRemoteBranch(IWin32Window owner, string branch)
@@ -557,15 +527,15 @@ namespace GitUI
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormLog(this))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreCompareRevisions, PostCompareRevisions, action);
+            return DoActionOnRepo(owner, true, true, PreCompareRevisions, PostCompareRevisions, Action);
         }
 
         public bool StartCompareRevisionsDialog()
@@ -573,7 +543,7 @@ namespace GitUI
             return StartCompareRevisionsDialog(null);
         }
 
-        public bool StartAddFilesDialog(IWin32Window owner, string addFiles)
+        public bool StartAddFilesDialog(IWin32Window owner, string addFiles = null)
         {
             return DoActionOnRepo(owner, true, true, PreAddFiles, PostAddFiles, () =>
             {
@@ -584,11 +554,6 @@ namespace GitUI
 
                 return true;
             });
-        }
-
-        public bool StartAddFilesDialog(IWin32Window owner)
-        {
-            return StartAddFilesDialog(owner, null);
         }
 
         public bool StartAddFilesDialog(string addFiles)
@@ -603,15 +568,15 @@ namespace GitUI
 
         public bool StartCreateBranchDialog(IWin32Window owner, GitRevision revision)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormCreateBranch(this, revision))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreCreateBranch, PostCreateBranch, action);
+            return DoActionOnRepo(owner, true, true, PreCreateBranch, PostCreateBranch, Action);
         }
 
         public bool StartCreateBranchDialog()
@@ -619,9 +584,9 @@ namespace GitUI
             return StartCreateBranchDialog(null, null);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)
+        public bool StartCloneDialog(IWin32Window owner, string url = null, bool openedFromProtocolHandler = false, EventHandler<GitModuleEventArgs> gitModuleChanged = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormClone(this, url, openedFromProtocolHandler, gitModuleChanged))
                 {
@@ -629,9 +594,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, false, false, PreClone, PostClone, action);
+            return DoActionOnRepo(owner, false, false, PreClone, PostClone, Action);
         }
 
         public bool StartCloneDialog(IWin32Window owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged)
@@ -639,29 +604,19 @@ namespace GitUI
             return StartCloneDialog(owner, url, false, gitModuleChanged);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url)
-        {
-            return StartCloneDialog(owner, url, false, null);
-        }
-
-        public bool StartCloneDialog(IWin32Window owner)
-        {
-            return StartCloneDialog(owner, null, false, null);
-        }
-
         public bool StartCloneDialog(string url)
         {
-            return StartCloneDialog(null, url, false, null);
+            return StartCloneDialog(null, url);
         }
 
         public bool StartCloneDialog()
         {
-            return StartCloneDialog(null, null, false, null);
+            return StartCloneDialog(null, null);
         }
 
         public bool StartSvnCloneDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormSvnClone(this, gitModuleChanged))
                 {
@@ -669,9 +624,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, false, false, PreSvnClone, PostSvnClone, action);
+            return DoActionOnRepo(owner, false, false, PreSvnClone, PostSvnClone, Action);
         }
 
         public bool StartSvnCloneDialog()
@@ -690,7 +645,7 @@ namespace GitUI
 
         public bool StartSquashCommitDialog(IWin32Window owner, GitRevision revision)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormCommit(this, CommitKind.Squash, revision))
                 {
@@ -698,14 +653,14 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(action);
+            return DoActionOnRepo(Action);
         }
 
         public bool StartFixupCommitDialog(IWin32Window owner, GitRevision revision)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormCommit(this, CommitKind.Fixup, revision))
                 {
@@ -713,14 +668,14 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(action);
+            return DoActionOnRepo(Action);
         }
 
-        public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges)
+        public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges = false)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormCommit(this))
                 {
@@ -735,14 +690,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreCommit, PostCommit, action);
-        }
-
-        public bool StartCommitDialog(IWin32Window owner)
-        {
-            return StartCommitDialog(owner, false);
+            return DoActionOnRepo(owner, true, false, PreCommit, PostCommit, Action);
         }
 
         public bool StartCommitDialog(bool showOnlyWhenChanges)
@@ -752,7 +702,7 @@ namespace GitUI
 
         public bool StartCommitDialog()
         {
-            return StartCommitDialog(null, false);
+            return StartCommitDialog(null);
         }
 
         public bool StartSvnDcommitDialog(IWin32Window owner)
@@ -762,12 +712,12 @@ namespace GitUI
                 return false;
             }
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreSvnDcommit, PostSvnDcommit, action);
+            return DoActionOnRepo(owner, true, true, PreSvnDcommit, PostSvnDcommit, Action);
         }
 
         public bool StartSvnDcommitDialog()
@@ -782,13 +732,13 @@ namespace GitUI
                 return false;
             }
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreSvnRebase, PostSvnRebase, action);
+            return DoActionOnRepo(owner, true, true, PreSvnRebase, PostSvnRebase, Action);
         }
 
         public bool StartSvnRebaseDialog()
@@ -803,12 +753,12 @@ namespace GitUI
                 return false;
             }
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.FetchCmd());
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreSvnFetch, PostSvnFetch, action);
+            return DoActionOnRepo(owner, true, true, PreSvnFetch, PostSvnFetch, Action);
         }
 
         public bool StartSvnFetchDialog()
@@ -823,12 +773,12 @@ namespace GitUI
 
         public bool StartInitializeDialog()
         {
-            return StartInitializeDialog((IWin32Window)null, null);
+            return StartInitializeDialog(null, null);
         }
 
         public bool StartInitializeDialog(IWin32Window owner, string dir, EventHandler<GitModuleEventArgs> gitModuleChanged)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 if (dir == null)
                 {
@@ -841,9 +791,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, false, true, PreInitialize, PostInitialize, action);
+            return DoActionOnRepo(owner, false, true, PreInitialize, PostInitialize, Action);
         }
 
         public bool StartInitializeDialog(string dir)
@@ -861,7 +811,7 @@ namespace GitUI
         {
             var pulled = false;
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (FormPull formPull = new FormPull(this, remoteBranch, remote))
                 {
@@ -887,9 +837,9 @@ namespace GitUI
 
                     return dlgResult == DialogResult.OK;
                 }
-            };
+            }
 
-            bool done = DoActionOnRepo(owner, true, true, PrePull, PostPull, action);
+            bool done = DoActionOnRepo(owner, true, true, PrePull, PostPull, Action);
 
             pullCompleted = pulled;
 
@@ -908,8 +858,7 @@ namespace GitUI
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow)
         {
-            bool errorOccurred;
-            return StartPullDialog(owner, pullOnShow, out errorOccurred, false);
+            return StartPullDialog(owner, pullOnShow, out _, false);
         }
 
         public bool StartPullDialog(bool pullOnShow, out bool pullCompleted)
@@ -922,21 +871,14 @@ namespace GitUI
             return StartPullDialog(null, pullOnShow, remoteBranch, null, out pullCompleted, false);
         }
 
-        public bool StartPullDialog(bool pullOnShow)
+        public bool StartPullDialog(bool pullOnShow, string remoteBranch = null)
         {
-            return StartPullDialog(pullOnShow, null);
-        }
-
-        public bool StartPullDialog(bool pullOnShow, string remoteBranch)
-        {
-            bool errorOccurred;
-            return StartPullDialog(pullOnShow, remoteBranch, out errorOccurred);
+            return StartPullDialog(pullOnShow, remoteBranch, out _);
         }
 
         public bool StartPullDialog(IWin32Window owner)
         {
-            bool errorOccurred;
-            return StartPullDialog(owner, false, out errorOccurred, false);
+            return StartPullDialog(owner, false, out _, false);
         }
 
         public bool StartPullDialog()
@@ -944,9 +886,9 @@ namespace GitUI
             return StartPullDialog(false);
         }
 
-        public bool StartViewPatchDialog(IWin32Window owner, string patchFile)
+        public bool StartViewPatchDialog(IWin32Window owner, string patchFile = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var viewPatch = new FormViewPatch(this))
                 {
@@ -959,19 +901,14 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, false, false, PreViewPatch, PostViewPatch, action);
+            return DoActionOnRepo(owner, false, false, PreViewPatch, PostViewPatch, Action);
         }
 
         public bool StartViewPatchDialog(string patchFile)
         {
             return StartViewPatchDialog(null, patchFile);
-        }
-
-        public bool StartViewPatchDialog(IWin32Window owner)
-        {
-            return StartViewPatchDialog(owner, null);
         }
 
         public bool StartViewPatchDialog()
@@ -986,7 +923,7 @@ namespace GitUI
 
         public bool StartSparseWorkingCopyDialog([CanBeNull] IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormSparseWorkingCopy(this))
                 {
@@ -994,9 +931,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
+            return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, Action);
         }
 
         public void AddCommitTemplate(string key, Func<string> addingText)
@@ -1011,7 +948,7 @@ namespace GitUI
 
         public bool StartFormatPatchDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormFormatPatch(this))
                 {
@@ -1019,9 +956,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreFormatPatch, PostFormatPatch, action);
+            return DoActionOnRepo(owner, true, false, PreFormatPatch, PostFormatPatch, Action);
         }
 
         public bool StartFormatPatchDialog()
@@ -1031,7 +968,7 @@ namespace GitUI
 
         public bool StartStashDialog(IWin32Window owner, bool manageStashes = true)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormStash(this) { ManageStashes = manageStashes })
                 {
@@ -1039,9 +976,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreStash, PostStash, action);
+            return DoActionOnRepo(owner, true, false, PreStash, PostStash, Action);
         }
 
         public bool StartStashDialog()
@@ -1049,7 +986,7 @@ namespace GitUI
             return StartStashDialog(null);
         }
 
-        public bool StartResetChangesDialog(IWin32Window owner)
+        public bool StartResetChangesDialog(IWin32Window owner = null)
         {
             var unstagedFiles = Module.GetUnstagedFiles();
             return StartResetChangesDialog(owner, unstagedFiles, false);
@@ -1065,7 +1002,7 @@ namespace GitUI
                 return false;
             }
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 if (onlyUnstaged)
                 {
@@ -1083,9 +1020,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, null, null, action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartResetChangesDialog(IWin32Window owner, string fileName)
@@ -1118,10 +1055,10 @@ namespace GitUI
                         Directory.Delete(path, true);
                     }
                 }
-                catch (System.IO.IOException)
+                catch (IOException)
                 {
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (UnauthorizedAccessException)
                 {
                 }
             }
@@ -1136,27 +1073,22 @@ namespace GitUI
             return StartResetChangesDialog(null, fileName);
         }
 
-        public bool StartResetChangesDialog()
-        {
-            return StartResetChangesDialog((IWin32Window)null);
-        }
-
         public bool StartRevertCommitDialog(IWin32Window owner, GitRevision revision)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormRevertCommit(this, revision))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreRevertCommit, PostRevertCommit, action);
+            return DoActionOnRepo(owner, true, true, PreRevertCommit, PostRevertCommit, Action);
         }
 
-        public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
+        public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit = true)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormResolveConflicts(this, offerCommit))
                 {
@@ -1164,14 +1096,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreResolveConflicts, PostResolveConflicts, action);
-        }
-
-        public bool StartResolveConflictsDialog(IWin32Window owner)
-        {
-            return StartResolveConflictsDialog(owner, true);
+            return DoActionOnRepo(owner, true, true, PreResolveConflicts, PostResolveConflicts, Action);
         }
 
         public bool StartResolveConflictsDialog(bool offerCommit)
@@ -1181,20 +1108,20 @@ namespace GitUI
 
         public bool StartResolveConflictsDialog()
         {
-            return StartResolveConflictsDialog(null, true);
+            return StartResolveConflictsDialog(null);
         }
 
-        public bool StartCherryPickDialog(IWin32Window owner, GitRevision revision)
+        public bool StartCherryPickDialog(IWin32Window owner, GitRevision revision = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormCherryPick(this, revision))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
+            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, Action);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
@@ -1205,7 +1132,7 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(revisions));
             }
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormCherryPick prevForm = null;
 
@@ -1239,14 +1166,9 @@ namespace GitUI
                 {
                     prevForm?.Dispose();
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
-        }
-
-        public bool StartCherryPickDialog(IWin32Window owner)
-        {
-            return StartCherryPickDialog(owner, (GitRevision)null);
+            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, Action);
         }
 
         public bool StartCherryPickDialog()
@@ -1259,7 +1181,7 @@ namespace GitUI
         /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormMergeBranch(this, branch))
                 {
@@ -1267,9 +1189,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreMergeBranch, PostMergeBranch, action);
+            return DoActionOnRepo(owner, true, false, PreMergeBranch, PostMergeBranch, Action);
         }
 
         /// <summary>Start Merge dialog, using the specified branch.</summary>
@@ -1281,15 +1203,15 @@ namespace GitUI
 
         public bool StartCreateTagDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormCreateTag(this, null))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreCreateTag, PostCreateTag, action);
+            return DoActionOnRepo(owner, true, true, PreCreateTag, PostCreateTag, Action);
         }
 
         public bool StartCreateTagDialog()
@@ -1299,15 +1221,15 @@ namespace GitUI
 
         public bool StartDeleteTagDialog(IWin32Window owner, string tag)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormDeleteTag(this, tag))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreDeleteTag, PostDeleteTag, action);
+            return DoActionOnRepo(owner, true, true, PreDeleteTag, PostDeleteTag, Action);
         }
 
         public bool StartDeleteTagDialog(string tag)
@@ -1322,7 +1244,7 @@ namespace GitUI
 
         public bool StartEditGitIgnoreDialog(IWin32Window owner, bool localExcludes)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormGitIgnore(this, localExcludes))
                 {
@@ -1330,9 +1252,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, action);
+            return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, Action);
         }
 
         public bool StartEditGitIgnoreDialog(bool localExcludes)
@@ -1342,7 +1264,7 @@ namespace GitUI
 
         public bool StartAddToGitIgnoreDialog(IWin32Window owner, bool localExclude, params string[] filePattern)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var frm = new FormAddToGitIgnore(this, localExclude, filePattern))
                 {
@@ -1350,21 +1272,21 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, action);
+            return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, Action);
         }
 
         public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initialPage = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 FormSettings.ShowSettingsDialog(this, owner, initialPage);
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, false, true, PreSettings, PostSettings, action);
+            return DoActionOnRepo(owner, false, true, PreSettings, PostSettings, Action);
         }
 
         public bool StartSettingsDialog()
@@ -1407,7 +1329,7 @@ namespace GitUI
 
         public bool StartMailMapDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormMailMap(this))
                 {
@@ -1415,9 +1337,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreMailMap, PostMailMap, action);
+            return DoActionOnRepo(owner, true, false, PreMailMap, PostMailMap, Action);
         }
 
         public bool StartMailMapDialog()
@@ -1427,7 +1349,7 @@ namespace GitUI
 
         public bool StartVerifyDatabaseDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormVerify(this))
                 {
@@ -1435,10 +1357,10 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
             // TODO: move Notify to FormVerify and friends
-            return DoActionOnRepo(owner, true, true, PreVerifyDatabase, PostVerifyDatabase, action);
+            return DoActionOnRepo(owner, true, true, PreVerifyDatabase, PostVerifyDatabase, Action);
         }
 
         public bool StartVerifyDatabaseDialog()
@@ -1447,9 +1369,9 @@ namespace GitUI
         }
 
         /// <param name="preselectRemote">makes the FormRemotes initialially select the given remote</param>
-        public bool StartRemotesDialog(IWin32Window owner, string preselectRemote)
+        public bool StartRemotesDialog(IWin32Window owner, string preselectRemote = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormRemotes(this))
                 {
@@ -1458,14 +1380,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreRemotes, PostRemotes, action);
-        }
-
-        public bool StartRemotesDialog(IWin32Window owner)
-        {
-            return StartRemotesDialog(owner, null);
+            return DoActionOnRepo(owner, true, true, PreRemotes, PostRemotes, Action);
         }
 
         public bool StartRemotesDialog()
@@ -1481,20 +1398,18 @@ namespace GitUI
 
         public bool StartRebase(IWin32Window owner, string onto)
         {
-            return StartRebaseDialog(owner, onto,
-                interactive: false, startRebaseImmediately: true);
+            return StartRebaseDialog(owner, onto, interactive: false);
         }
 
-        public bool ContinueRebase(IWin32Window owner)
+        public bool StartTheContinueRebaseDialog(IWin32Window owner)
         {
             return StartRebaseDialog(owner, onto: null,
-                interactive: false, startRebaseImmediately: true);
+                interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartInteractiveRebase(IWin32Window owner, string onto)
         {
-            return StartRebaseDialog(owner, onto,
-                interactive: true, startRebaseImmediately: true);
+            return StartRebaseDialog(owner, onto, interactive: true);
         }
 
         public bool StartRebaseDialogWithAdvOptions(IWin32Window owner, string onto)
@@ -1506,17 +1421,17 @@ namespace GitUI
         public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto,
             bool interactive = false, bool startRebaseImmediately = true)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
-                using (var form = new FormRebase(this, from, to, onto, interactive, startRebaseImmediately))
+                using (var form = new FormRebase(this, @from, to, onto, interactive, startRebaseImmediately))
                 {
                     form.ShowDialog(owner);
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreRebase, PostRebase, action);
+            return DoActionOnRepo(owner, true, true, PreRebase, PostRebase, Action);
         }
 
         public bool StartRebaseDialog(IWin32Window owner, string onto)
@@ -1531,20 +1446,20 @@ namespace GitUI
 
         public bool StartRenameDialog(IWin32Window owner, string branch)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormRenameBranch(this, branch))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreRename, PostRename, action);
+            return DoActionOnRepo(owner, true, true, PreRename, PostRename, Action);
         }
 
         public bool StartSubmodulesDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormSubmodules(this))
                 {
@@ -1552,9 +1467,9 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreSubmodulesEdit, PostSubmodulesEdit, action);
+            return DoActionOnRepo(owner, true, true, PreSubmodulesEdit, PostSubmodulesEdit, Action);
         }
 
         public bool StartSubmodulesDialog()
@@ -1564,12 +1479,12 @@ namespace GitUI
 
         public bool StartUpdateSubmodulesDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleUpdateCmd(""));
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreUpdateSubmodules, PostUpdateSubmodules, action);
+            return DoActionOnRepo(owner, true, true, PreUpdateSubmodules, PostUpdateSubmodules, Action);
         }
 
         public bool StartUpdateSubmodulesDialog()
@@ -1579,12 +1494,12 @@ namespace GitUI
 
         public bool StartSyncSubmodulesDialog(IWin32Window owner)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleSyncCmd(""));
-            };
+            }
 
-            return DoActionOnRepo(owner, true, true, PreSyncSubmodules, PostSyncSubmodules, action);
+            return DoActionOnRepo(owner, true, true, PreSyncSubmodules, PostSyncSubmodules, Action);
         }
 
         public bool StartSyncSubmodulesDialog()
@@ -1619,7 +1534,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
@@ -1654,45 +1569,30 @@ namespace GitUI
             return StartBrowseDialog(null, filter, selectedCommit);
         }
 
-        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
+        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision = null, bool filterByRevision = false, bool showBlame = false)
         {
-            Func<Form> provideForm = () =>
+            Form ProvideForm()
+            {
+                var form = new FormFileHistory(this, fileName, revision, filterByRevision);
+
+                if (showBlame)
                 {
-                    var form = new FormFileHistory(this, fileName, revision, filterByRevision);
+                    form.SelectBlameTab();
+                }
+                else
+                {
+                    form.SelectDiffTab();
+                }
 
-                    if (showBlame)
-                    {
-                        form.SelectBlameTab();
-                    }
-                    else
-                    {
-                        form.SelectDiffTab();
-                    }
+                return form;
+            }
 
-                    return form;
-                };
-
-            ShowModelessForm(owner, true, PreFileHistory, PostFileHistory, provideForm);
-        }
-
-        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
-        {
-            StartFileHistoryDialog(owner, fileName, revision, filterByRevision, false);
-        }
-
-        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision)
-        {
-            StartFileHistoryDialog(owner, fileName, revision, false);
-        }
-
-        public void StartFileHistoryDialog(IWin32Window owner, string fileName)
-        {
-            StartFileHistoryDialog(owner, fileName, null, false);
+            ShowModelessForm(owner, true, PreFileHistory, PostFileHistory, ProvideForm);
         }
 
         public void StartFileHistoryDialog(string fileName, GitRevision revision)
         {
-            StartFileHistoryDialog(null, fileName, revision, false);
+            StartFileHistoryDialog(null, fileName, revision);
         }
 
         public void StartFileHistoryDialog(string fileName)
@@ -1714,7 +1614,7 @@ namespace GitUI
         {
             bool pushed = false;
 
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormPush(this))
                 {
@@ -1740,9 +1640,9 @@ namespace GitUI
 
                     return dlgResult == DialogResult.OK;
                 }
-            };
+            }
 
-            bool done = DoActionOnRepo(owner, true, true, PrePush, PostPush, action);
+            bool done = DoActionOnRepo(owner, true, true, PrePush, PostPush, Action);
 
             pushCompleted = pushed;
 
@@ -1751,8 +1651,7 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
         {
-            bool pushCompleted;
-            return StartPushDialog(owner, pushOnShow, out pushCompleted);
+            return StartPushDialog(owner, pushOnShow, out _);
         }
 
         public bool StartPushDialog(bool pushOnShow)
@@ -1760,7 +1659,7 @@ namespace GitUI
             return StartPushDialog(null, pushOnShow);
         }
 
-        public bool StartApplyPatchDialog(IWin32Window owner, string patchFile)
+        public bool StartApplyPatchDialog(IWin32Window owner, string patchFile = null)
         {
             return DoActionOnRepo(owner, true, false, PreApplyPatch, PostApplyPatch, () =>
                 {
@@ -1787,19 +1686,14 @@ namespace GitUI
             return StartApplyPatchDialog(null, patchFile);
         }
 
-        public bool StartApplyPatchDialog(IWin32Window owner)
-        {
-            return StartApplyPatchDialog(owner, null);
-        }
-
         public bool StartApplyPatchDialog()
         {
             return StartApplyPatchDialog(null, null);
         }
 
-        public bool StartEditGitAttributesDialog(IWin32Window owner)
+        public bool StartEditGitAttributesDialog(IWin32Window owner = null)
         {
-            Func<bool> action = () =>
+            bool Action()
             {
                 using (var form = new FormGitAttributes(this))
                 {
@@ -1807,17 +1701,12 @@ namespace GitUI
                 }
 
                 return true;
-            };
+            }
 
-            return DoActionOnRepo(owner, true, false, PreEditGitAttributes, PostEditGitAttributes, action);
+            return DoActionOnRepo(owner, true, false, PreEditGitAttributes, PostEditGitAttributes, Action);
         }
 
-        public bool StartEditGitAttributesDialog()
-        {
-            return StartEditGitAttributesDialog(null);
-        }
-
-        private bool InvokeEvent(IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
+        private bool InvokeEvent(IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
         {
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
         }
@@ -1826,7 +1715,7 @@ namespace GitUI
 
         public IGitModule GitModule => Module;
 
-        private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, GitUIPostActionEventHandler gitUIEventHandler)
+        private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
         {
             if (gitUIEventHandler != null)
             {
@@ -1835,7 +1724,7 @@ namespace GitUI
             }
         }
 
-        internal bool InvokeEvent(object sender, IWin32Window ownerForm, GitUIEventHandler gitUIEventHandler)
+        internal bool InvokeEvent(object sender, IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
         {
             try
             {
@@ -1873,11 +1762,6 @@ namespace GitUI
         public bool StartBlameDialog(string fileName, int? initialLine = null)
         {
             return StartBlameDialog(null, fileName, null, initialLine);
-        }
-
-        private bool StartBlameDialog(string fileName, GitRevision revision)
-        {
-            return StartBlameDialog(null, fileName, revision);
         }
 
         private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster,
@@ -1933,7 +1817,8 @@ namespace GitUI
         public void StartCreatePullRequest(IWin32Window owner)
         {
             List<IRepositoryHostPlugin> relevantHosts =
-                (from gh in RepoHosts.GitHosters where gh.GitModuleIsRelevantToMe(Module) select gh).ToList();
+                RepoHosts.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe(Module)).ToList();
+
             if (relevantHosts.Count == 0)
             {
                 MessageBox.Show(owner, "Could not find any repo hosts for current working directory");
@@ -1948,19 +1833,9 @@ namespace GitUI
             }
         }
 
-        public void StartCreatePullRequest()
+        public void StartCreatePullRequest(IRepositoryHostPlugin gitHoster = null)
         {
-            StartCreatePullRequest((IRepositoryHostPlugin)null);
-        }
-
-        public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster)
-        {
-            StartCreatePullRequest(owner, gitHoster, null, null);
-        }
-
-        public void StartCreatePullRequest(IRepositoryHostPlugin gitHoster)
-        {
-            StartCreatePullRequest(null, gitHoster, null, null);
+            StartCreatePullRequest(null, gitHoster);
         }
 
         public void StartCreatePullRequest(IRepositoryHostPlugin gitHoster, string chooseRemote, string chooseBranch)
@@ -1968,15 +1843,20 @@ namespace GitUI
             StartCreatePullRequest(null, gitHoster, chooseRemote, chooseBranch);
         }
 
-        public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster, string chooseRemote, string chooseBranch)
+        public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster, string chooseRemote = null, string chooseBranch = null)
         {
-            WrapRepoHostingCall("Create pull request", gitHoster,
-                                gh =>
-                                {
-                                    CreatePullRequestForm form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch);
-                                    form.ShowInTaskbar = true;
-                                    form.Show();
-                                });
+            WrapRepoHostingCall(
+                "Create pull request",
+                gitHoster,
+                gh =>
+                {
+                    var form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch)
+                    {
+                        ShowInTaskbar = true
+                    };
+
+                    form.Show();
+                });
         }
 
         public void RunCommand(string[] args)
@@ -1989,31 +1869,32 @@ namespace GitUI
             }
 
             var command = args[1];
-            if (command.Equals("blame") && args.Length <= 2)
+
+            if (command == "blame" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
                 return;
             }
 
-            if (command.Equals("difftool") && args.Length <= 2)
+            if (command == "difftool" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool");
                 return;
             }
 
-            if (command.Equals("filehistory") && args.Length <= 2)
+            if (command == "filehistory" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
                 return;
             }
 
-            if (command.Equals("fileeditor") && args.Length <= 2)
+            if (command == "fileeditor" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                 return;
             }
 
-            if (command.Equals("revert") && args.Length <= 2)
+            if (command == "revert" && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open revert, there is no file selected.", "Revert");
                 return;
@@ -2083,7 +1964,7 @@ namespace GitUI
                 case "fileeditor":  // filename
                     if (!StartFileEditorDialog(args[2]))
                     {
-                        System.Environment.ExitCode = -1;
+                        Environment.ExitCode = -1;
                     }
 
                     return;
@@ -2152,19 +2033,19 @@ namespace GitUI
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
-                        StartCloneDialog(null, args[1], true, null);
+                        StartCloneDialog(null, args[1], true);
                         return;
                     }
 
                     if (args[1].StartsWith("github-windows://openRepo/"))
                     {
-                        StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true, null);
+                        StartCloneDialog(null, args[1].Replace("github-windows://openRepo/", ""), true);
                         return;
                     }
 
                     if (args[1].StartsWith("github-mac://openRepo/"))
                     {
-                        StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true, null);
+                        StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true);
                         return;
                     }
 
@@ -2172,12 +2053,10 @@ namespace GitUI
             }
             #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
-            var frmCmdLine = new FormCommandlineHelp();
-            frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
-            Application.Run(frmCmdLine);
+            Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
         }
 
-        private void Uninstall()
+        private static void Uninstall()
         {
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
 
@@ -2239,7 +2118,7 @@ namespace GitUI
             {
                 if (File.Exists(args[2]))
                 {
-                    string path = File.ReadAllText(args[2]).Trim().Split(new char[] { '\n' }, 1).FirstOrDefault();
+                    string path = File.ReadAllText(args[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
                     if (Directory.Exists(path))
                     {
                         c = new GitUICommands(path);
@@ -2355,7 +2234,7 @@ namespace GitUI
             return arguments;
         }
 
-        private IList<string> FindFileMatches(string name)
+        private IReadOnlyList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree("HEAD");
 
@@ -2451,7 +2330,7 @@ namespace GitUI
 
             public readonly GitModule Module;
 
-            public event GitRemoteCommandCompletedEventHandler Completed;
+            public event EventHandler<GitRemoteCommandCompletedEventArgs> Completed;
 
             internal GitRemoteCommand(GitModule module)
             {
@@ -2502,8 +2381,7 @@ namespace GitUI
 
         public override bool Equals(object obj)
         {
-            GitUICommands other = obj as GitUICommands;
-            return (other != null) && Equals(other);
+            return obj is GitUICommands other && Equals(other);
         }
 
         private bool Equals(GitUICommands other)

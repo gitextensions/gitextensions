@@ -9,8 +9,6 @@ namespace GitCommands.Settings
     /// </summary>
     public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
-        public GitModule Module { get; private set; }
-
         public RepoDistSettings(RepoDistSettings lowerPriority, GitExtSettingsCache settingsCache)
             : base(lowerPriority, settingsCache)
         {
@@ -57,7 +55,7 @@ namespace GitCommands.Settings
 
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            bool isEffectiveLevel = LowerPriority != null && LowerPriority.LowerPriority != null;
+            bool isEffectiveLevel = LowerPriority?.LowerPriority != null;
             bool isDetachedOrGlobal = LowerPriority == null;
 
             if (isDetachedOrGlobal || SettingsCache.HasValue(name))

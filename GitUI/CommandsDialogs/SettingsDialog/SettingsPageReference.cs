@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public override bool Equals(object obj)
         {
-            return obj is SettingsPageReferenceByType && ((SettingsPageReferenceByType)obj).SettingsPageType.Equals(SettingsPageType);
+            return obj is SettingsPageReferenceByType type && type.SettingsPageType == SettingsPageType;
         }
 
         public override int GetHashCode()

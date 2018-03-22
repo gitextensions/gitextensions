@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
         public bool UserAbleToChangeRevision { get; set; }
         public bool CouldBeOrphan { get; set; }
 
-        private IEnumerable<T> FindControls<T>(Control control) where T : Control
+        private static IEnumerable<T> FindControls<T>(Control control) where T : Control
         {
             var controls = control.Controls.Cast<Control>().ToList();
             return controls.SelectMany(FindControls<T>)
@@ -124,7 +124,8 @@ namespace GitUI.CommandsDialogs
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
                 if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
-                {// orphan AND orphan creation success AND clear
+                {
+                    // orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
                 }

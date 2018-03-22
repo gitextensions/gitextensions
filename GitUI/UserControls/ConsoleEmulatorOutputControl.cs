@@ -26,7 +26,7 @@ namespace GitUI.UserControls
 
         private void InitializeComponent()
         {
-            Controls.Add(_panel = new Panel() { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
+            Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
         }
 
         public override int ExitCode => _nLastExitCode;
@@ -54,7 +54,7 @@ namespace GitUI.UserControls
         {
             ConEmuControl oldTerminal = _terminal;
 
-            _terminal = new ConEmuControl()
+            _terminal = new ConEmuControl
             {
                 Dock = DockStyle.Fill,
                 AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
@@ -99,9 +99,10 @@ namespace GitUI.UserControls
             }
 
             startinfo.StartupDirectory = workdir;
-            foreach (var envVariable in envVariables)
+
+            foreach (var (name, value) in envVariables)
             {
-                startinfo.SetEnv(envVariable.Key, envVariable.Value);
+                startinfo.SetEnv(name, value);
             }
 
             startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
@@ -131,9 +132,9 @@ namespace GitUI.UserControls
     [CLSCompliant(false)]
     public class ConsoleCommandLineOutputProcessor
     {
-        private Action<TextEventArgs> _fireDataReceived;
+        private readonly Action<TextEventArgs> _fireDataReceived;
         private int _commandLineCharsInOutput;
-        private string _lineChunk = null;
+        private string _lineChunk;
 
         public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
         {

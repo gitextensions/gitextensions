@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI.Editor;
@@ -19,11 +20,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
 
             label18.ForeColor = ColorHelper.GetForeColorForBackColor(label18.BackColor);
-        }
-
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return "plink,putty,openssh,pageant";
         }
 
         public static SettingsPageReference GetPageReference()
@@ -142,15 +138,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
-            foreach (var path in GetPuttyLocations())
-            {
-                if (AutoFindPuttyPathsInDir(path))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return GetPuttyLocations().Any(AutoFindPuttyPathsInDir);
         }
 
         private bool AutoFindPuttyPathsInDir(string installdir)

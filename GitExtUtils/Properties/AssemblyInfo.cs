@@ -8,5 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: System.CLSCompliant(true)]
 
 [assembly: InternalsVisibleTo("GitExtensions")]
+[assembly: InternalsVisibleTo("GitCommandsTests")]
 [assembly: InternalsVisibleTo("GitUITests")]
 [assembly: InternalsVisibleTo("GravatarTests")]

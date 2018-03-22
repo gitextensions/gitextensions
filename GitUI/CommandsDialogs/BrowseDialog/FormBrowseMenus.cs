@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
     /// </summary>
     internal class FormBrowseMenus : ITranslate, IDisposable
     {
-        private ToolStrip _menuStrip;
+        private readonly ToolStrip _menuStrip;
 
         private IList<MenuCommand> _navigateMenuCommands;
         private IList<MenuCommand> _viewMenuCommands;
@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
 
         // we have to remember which items we registered with the menucommands because other
         // location (RevisionGrid) can register items too!
-        private IList<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new List<ToolStripMenuItem>();
+        private readonly IList<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new List<ToolStripMenuItem>();
 
         public FormBrowseMenus(ToolStrip menuStrip)
         {
@@ -121,23 +121,27 @@ namespace GitUI.CommandsDialogs
         {
             if (_navigateToolStripMenuItem == null)
             {
-                _navigateToolStripMenuItem = new ToolStripMenuItem();
-                _navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
-                _navigateToolStripMenuItem.Text = "Navigate";
+                _navigateToolStripMenuItem = new ToolStripMenuItem
+                {
+                    Name = "navigateToolStripMenuItem",
+                    Text = "Navigate"
+                };
             }
 
             if (_viewToolStripMenuItem == null)
             {
-                _viewToolStripMenuItem = new ToolStripMenuItem();
-                _viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-                _viewToolStripMenuItem.Text = "View";
+                _viewToolStripMenuItem = new ToolStripMenuItem
+                {
+                    Name = "viewToolStripMenuItem",
+                    Text = "View"
+                };
             }
         }
 
         private IEnumerable<Tuple<string, object>> GetAdditionalMainMenuItemsForTranslation()
         {
-            var list = new List<ToolStripMenuItem> { _navigateToolStripMenuItem, _viewToolStripMenuItem };
-            return list.Select(menuItem => new Tuple<string, object>(menuItem.Name, menuItem));
+            var list = new[] { _navigateToolStripMenuItem, _viewToolStripMenuItem };
+            return list.Select(menuItem => Tuple.Create(menuItem.Name, (object)menuItem));
         }
 
         private void SetDropDownItems(ToolStripMenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
@@ -150,8 +154,7 @@ namespace GitUI.CommandsDialogs
                 var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
                 toolStripItems.Add(toolStripItem);
 
-                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
-                if (toolStripMenuItem != null)
+                if (toolStripItem is ToolStripMenuItem toolStripMenuItem)
                 {
                     menuCommand.RegisterMenuItem(toolStripMenuItem);
                     _itemsRegisteredWithMenuCommand.Add(toolStripMenuItem);
@@ -196,7 +199,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_navigateMenuCommands == null && _viewMenuCommands == null)
             {
-                return new List<MenuCommand>();
+                return Enumerable.Empty<MenuCommand>();
             }
             else if (_navigateMenuCommands != null && _viewMenuCommands != null)
             {
