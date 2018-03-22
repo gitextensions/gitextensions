@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
@@ -11,13 +12,9 @@ namespace PatchApply
 {
     public class PatchManager
     {
-        public string PatchFileName { get; set; }
-
-        public string DirToPatch { get; set; }
-
         public List<Patch> Patches { get; set; } = new List<Patch>();
 
-        public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
+        public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
         {
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
@@ -185,41 +182,21 @@ namespace PatchApply
         }
 
         // TODO encoding for each file in patch should be obtained separately from .gitattributes
-        public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
+        public void LoadPatch(string text, Encoding filesContentEncoding)
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
             Patches = patchProcessor.CreatePatchesFromString(text).ToList();
-
-            if (!applyPatch)
-            {
-                return;
-            }
-
-            foreach (Patch patchApply in Patches)
-            {
-                if (patchApply.Apply)
-                {
-                    patchApply.ApplyPatch(filesContentEncoding);
-                }
-            }
         }
 
-        public void LoadPatchFile(bool applyPatch, Encoding filesContentEncoding)
+        public void LoadPatchFile(string path, Encoding filesContentEncoding)
         {
-            using (var re = new StreamReader(PatchFileName, GitModule.LosslessEncoding))
-            {
-                LoadPatchStream(re, applyPatch, filesContentEncoding);
-            }
-        }
-
-        private void LoadPatchStream(TextReader reader, bool applyPatch, Encoding filesContentEncoding)
-        {
-            LoadPatch(reader.ReadToEnd(), applyPatch, filesContentEncoding);
+            var text = File.ReadAllText(path, GitModule.LosslessEncoding);
+            LoadPatch(text, filesContentEncoding);
         }
     }
 
-    internal class PatchLine
+    internal sealed class PatchLine
     {
         public string Text { get; private set; }
         public bool Selected { get; set; }
@@ -241,7 +218,7 @@ namespace PatchApply
         }
     }
 
-    internal class SubChunk
+    internal sealed class SubChunk
     {
         public List<PatchLine> PreContext { get; } = new List<PatchLine>();
         public List<PatchLine> RemovedLines { get; } = new List<PatchLine>();
@@ -433,13 +410,13 @@ namespace PatchApply
 
     internal delegate string SubChunkToPatchFnc(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines);
 
-    internal class Chunk
+    internal sealed class Chunk
     {
         private int _startLine;
         private readonly List<SubChunk> _subChunks = new List<SubChunk>();
         private SubChunk _currentSubChunk;
 
-        public SubChunk CurrentSubChunk
+        private SubChunk CurrentSubChunk
         {
             get
             {
@@ -453,7 +430,7 @@ namespace PatchApply
             }
         }
 
-        public void AddContextLine(PatchLine line, bool preContext)
+        private void AddContextLine(PatchLine line, bool preContext)
         {
             if (preContext)
             {
@@ -465,7 +442,7 @@ namespace PatchApply
             }
         }
 
-        public void AddDiffLine(PatchLine line, bool removed)
+        private void AddDiffLine(PatchLine line, bool removed)
         {
             // if postContext is not empty @line comes from next SubChunk
             if (CurrentSubChunk.PostContext.Count > 0)
@@ -483,12 +460,24 @@ namespace PatchApply
             }
         }
 
-        public bool ParseHeader(string header)
+        /// <summary>
+        /// Parses a header line, setting the start index.
+        /// </summary>
+        /// <remarks>
+        /// An example header line is:
+        /// <code>
+        ///  -116,12 +117,15 @@ private string LoadFile(string fileName, Encoding filesContentEncoding)
+        /// </code>
+        /// In which case the start line is <c>116</c>.
+        /// </remarks>
+        private void ParseHeader(string header)
         {
-            header = header.SkipStr("-");
-            header = header.TakeUntilStr(",");
+            var match = Regex.Match(header, @".*-(\d+),");
 
-            return int.TryParse(header, out _startLine);
+            if (match.Success)
+            {
+                _startLine = int.Parse(match.Groups[1].Value);
+            }
         }
 
         public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
@@ -739,7 +728,7 @@ namespace PatchApply
             return ToPatch(SubChunkToPatch);
         }
 
-        protected string ToPatch(SubChunkToPatchFnc subChunkToPatch)
+        private string ToPatch(SubChunkToPatchFnc subChunkToPatch)
         {
             string result = null;
 

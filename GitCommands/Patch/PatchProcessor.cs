@@ -109,18 +109,12 @@ namespace PatchApply
                     }
 
                     patch.File = Patch.FileType.Binary;
-
-                    // TODO: NOT SUPPORTED!
-                    patch.Apply = false;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }
                 else if (IsBinaryPatch(input))
                 {
                     patch.File = Patch.FileType.Binary;
-
-                    // TODO: NOT SUPPORTED!
-                    patch.Apply = false;
                     state = PatchProcessorState.OutsidePatch;
                     break;
                 }

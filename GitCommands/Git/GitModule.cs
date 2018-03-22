@@ -2420,7 +2420,7 @@ namespace GitCommands
                 patch = RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
             }
 
-            patchManager.LoadPatch(patch, false, encoding);
+            patchManager.LoadPatch(patch, encoding);
 
             return GetPatch(patchManager, fileName, oldFileName);
         }
@@ -2682,7 +2682,7 @@ namespace GitCommands
 
             string result = RunGitCmd(args, LosslessEncoding);
             var patchManager = new PatchManager();
-            patchManager.LoadPatch(result, false, encoding);
+            patchManager.LoadPatch(result, encoding);
 
             return GetPatch(patchManager, fileName, oldFileName);
         }
@@ -3827,7 +3827,7 @@ namespace GitCommands
                 return "";
             }
 
-            patchManager.LoadPatch(patch, false, encoding);
+            patchManager.LoadPatch(patch, encoding);
             return GetPatch(patchManager, filePath, filePath).Text;
         }
 

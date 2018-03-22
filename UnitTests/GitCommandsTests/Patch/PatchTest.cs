@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
+using PatchApply;
 
-namespace GitCommandsTests.Patch
+namespace GitCommandsTests.PatchApply
 {
     [TestFixture]
     internal class PatchTest
@@ -8,7 +9,7 @@ namespace GitCommandsTests.Patch
         [Test]
         public void TestPatchConstructor()
         {
-            PatchApply.Patch patch = new PatchApply.Patch();
+            Patch patch = new Patch();
 
             Assert.IsNotNull(patch);
         }
@@ -16,7 +17,7 @@ namespace GitCommandsTests.Patch
         [Test]
         public void TestAppendText()
         {
-            PatchApply.Patch patch = new PatchApply.Patch();
+            Patch patch = new Patch();
             patch.AppendText("text1");
             patch.AppendText("text2");
 
@@ -26,7 +27,7 @@ namespace GitCommandsTests.Patch
         [Test]
         public void TestAppendTextLine()
         {
-            PatchApply.Patch patch = new PatchApply.Patch();
+            Patch patch = new Patch();
 
             patch.AppendTextLine("text1");
             patch.AppendTextLine("text2");
