@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading;
 using System.Windows.Forms;
 using GitUI;
@@ -15,7 +16,16 @@ namespace GitUITests
 
         public void BeforeTest(ITest test)
         {
-            var apartmentState = test.Properties[nameof(ApartmentState)];
+            IList apartmentState = null;
+            for (var scope = test; scope != null; scope = scope.Parent)
+            {
+                apartmentState = scope.Properties[nameof(ApartmentState)];
+                if (apartmentState.Count > 0)
+                {
+                    break;
+                }
+            }
+
             if (!apartmentState.Contains(ApartmentState.STA))
             {
                 return;
