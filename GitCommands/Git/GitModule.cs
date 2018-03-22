@@ -445,7 +445,7 @@ namespace GitCommands
         /// This approach is a faster than <see cref="GetSubmodulesInfo"/> which
         /// invokes the <c>git submodule</c> command.
         /// </remarks>
-        public IList<string> GetSubmodulesLocalPaths(bool recursive = true)
+        public IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var submodules = GetSubmodulePaths(this);
 
@@ -958,7 +958,7 @@ namespace GitCommands
             return list;
         }
 
-        public IList<string> GetSortedRefs()
+        public IReadOnlyList<string> GetSortedRefs()
         {
             const string command = "for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/";
 
@@ -1903,7 +1903,7 @@ namespace GitCommands
             }
         }
 
-        public string AssumeUnchangedFiles(IList<GitItemStatus> files, bool assumeUnchanged, out bool wereErrors)
+        public string AssumeUnchangedFiles(IReadOnlyList<GitItemStatus> files, bool assumeUnchanged, out bool wereErrors)
         {
             var output = "";
             string error = "";
@@ -1927,7 +1927,7 @@ namespace GitCommands
             return output.Combine(Environment.NewLine, error);
         }
 
-        public string SkipWorktreeFiles(IList<GitItemStatus> files, bool skipWorktree)
+        public string SkipWorktreeFiles(IReadOnlyList<GitItemStatus> files, bool skipWorktree)
         {
             var output = "";
             string error = "";
@@ -1950,7 +1950,7 @@ namespace GitCommands
             return output.Combine(Environment.NewLine, error);
         }
 
-        public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
+        public string StageFiles(IReadOnlyList<GitItemStatus> files, out bool wereErrors)
         {
             var output = "";
             string error = "";
@@ -1991,7 +1991,7 @@ namespace GitCommands
             return output.Combine(Environment.NewLine, error);
         }
 
-        public string UnstageFiles(IList<GitItemStatus> files)
+        public string UnstageFiles(IReadOnlyList<GitItemStatus> files)
         {
             var output = "";
             string error = "";
@@ -2092,12 +2092,12 @@ namespace GitCommands
             return File.Exists(GetRebaseDir() + "git-rebase-todo");
         }
 
-        public IList<PatchFile> GetInteractiveRebasePatchFiles()
+        public IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
         {
             string todoFile = GetRebaseDir() + "git-rebase-todo";
             string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
 
-            IList<PatchFile> patchFiles = new List<PatchFile>();
+            var patchFiles = new List<PatchFile>();
 
             if (todoCommits != null)
             {
@@ -2131,7 +2131,7 @@ namespace GitCommands
             return patchFiles;
         }
 
-        public IList<PatchFile> GetRebasePatchFiles()
+        public IReadOnlyList<PatchFile> GetRebasePatchFiles()
         {
             var patchFiles = new List<PatchFile>();
 
@@ -2365,7 +2365,7 @@ namespace GitCommands
             LocalConfigFile.SetPathValue(setting, value);
         }
 
-        public IList<GitStash> GetStashes()
+        public IReadOnlyList<GitStash> GetStashes()
         {
             var list = RunGitCmd("stash list").Split('\n');
 
@@ -2456,19 +2456,19 @@ namespace GitCommands
             return noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
-        public List<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision)
         {
             var status = GetDiffFiles(firstRevision, secondRevision);
             GetSubmoduleStatus(status, firstRevision, secondRevision);
             return status;
         }
 
-        public List<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, bool noCache = false)
+        public IReadOnlyList<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, bool noCache = false)
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
-            var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
+            var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true).ToList();
             if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
                 // For unstaged the untracked must be added too
@@ -2492,9 +2492,9 @@ namespace GitCommands
             return resultCollection;
         }
 
-        public IList<GitItemStatus> GetStashDiffFiles(string stashName)
+        public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
-            var resultCollection = GetDiffFiles(stashName + "^", stashName, true);
+            var resultCollection = GetDiffFiles(stashName + "^", stashName, true).ToList();
 
             // shows untracked files
             string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
@@ -2507,7 +2507,7 @@ namespace GitCommands
             return resultCollection;
         }
 
-        public IList<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
+        public IReadOnlyList<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
         {
             var tree = GetTree(treeGuid, full);
 
@@ -2536,12 +2536,12 @@ namespace GitCommands
             return list;
         }
 
-        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true,
+        public IReadOnlyList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true,
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
             UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
-            List<GitItemStatus> result = GitCommandHelpers.GetAllChangedFilesFromString(this, status);
+            var result = GitCommandHelpers.GetAllChangedFilesFromString(this, status).ToList();
 
             if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
             {
@@ -2560,7 +2560,7 @@ namespace GitCommands
             return result;
         }
 
-        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true,
+        public IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true,
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
             UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
@@ -2569,7 +2569,7 @@ namespace GitCommands
             return status;
         }
 
-        private void GetCurrentSubmoduleStatus(IList<GitItemStatus> status)
+        private void GetCurrentSubmoduleStatus(IReadOnlyList<GitItemStatus> status)
         {
             foreach (var item in status)
             {
@@ -2591,7 +2591,7 @@ namespace GitCommands
             }
         }
 
-        private void GetSubmoduleStatus(IList<GitItemStatus> status, string firstRevision, string secondRevision)
+        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, string firstRevision, string secondRevision)
         {
             status.ForEach(item =>
             {
@@ -2614,7 +2614,7 @@ namespace GitCommands
             });
         }
 
-        public IList<GitItemStatus> GetStagedFiles()
+        public IReadOnlyList<GitItemStatus> GetStagedFiles()
         {
             string status = RunGitCmd(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status", SystemEncoding);
 
@@ -2623,31 +2623,31 @@ namespace GitCommands
                 // This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.No);
                 status = RunGitCmd(command, SystemEncoding);
-                IList<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
+                IReadOnlyList<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList();
             }
 
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status, true);
         }
 
-        public IList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
+        public IReadOnlyList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
         {
             var status = GetStagedFiles();
             GetCurrentSubmoduleStatus(status);
             return status;
         }
 
-        public IList<GitItemStatus> GetUnstagedFiles()
+        public IReadOnlyList<GitItemStatus> GetUnstagedFiles()
         {
             return GetAllChangedFiles().Where(x => !x.IsStaged).ToArray();
         }
 
-        public IList<GitItemStatus> GetUnstagedFilesWithSubmodulesStatus()
+        public IReadOnlyList<GitItemStatus> GetUnstagedFilesWithSubmodulesStatus()
         {
             return GetAllChangedFilesWithSubmodulesStatus().Where(x => !x.IsStaged).ToArray();
         }
 
-        public IList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = 0)
+        public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = 0)
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunGitCmd(command);
@@ -2832,9 +2832,9 @@ namespace GitCommands
             return GetRefs().Where(r => r.IsRemote);
         }
 
-        public RemoteActionResult<IList<IGitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
+        public RemoteActionResult<IReadOnlyList<IGitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
         {
-            var result = new RemoteActionResult<IList<IGitRef>>
+            var result = new RemoteActionResult<IReadOnlyList<IGitRef>>
             {
                 AuthenticationFail = false,
                 HostKeyFail = false,
@@ -2889,14 +2889,14 @@ namespace GitCommands
             return GetTreeFromRemoteRefsEx(remote, tags, branches);
         }
 
-        public IList<IGitRef> GetRefs(bool tags = true, bool branches = true)
+        public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
             var tree = GetTree(tags, branches);
             return GetTreeRefs(tree);
         }
 
         /// <param name="option">Ordery by date is slower.</param>
-        public IList<IGitRef> GetTagRefs(GetTagRefsSortOrder option)
+        public IReadOnlyList<IGitRef> GetTagRefs(GetTagRefsSortOrder option)
         {
             var list = GetRefs(true, false);
 
@@ -2984,7 +2984,7 @@ namespace GitCommands
             return "";
         }
 
-        public IList<IGitRef> GetTreeRefs(string tree)
+        public IReadOnlyList<IGitRef> GetTreeRefs(string tree)
         {
             var itemsStrings = tree.Split('\n');
 
@@ -3131,10 +3131,12 @@ namespace GitCommands
         /// Returns list of filenames which would be ignored
         /// </summary>
         /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax)</param>
-        public IList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
+        public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
         {
             var notEmptyPatterns = ignorePatterns
-                    .Where(pattern => !pattern.IsNullOrWhiteSpace());
+                .Where(pattern => !pattern.IsNullOrWhiteSpace())
+                .ToList();
+
             if (notEmptyPatterns.Count() != 0)
             {
                 var excludeParams =
@@ -3155,7 +3157,7 @@ namespace GitCommands
             }
         }
 
-        public string[] GetFullTree(string id)
+        public IReadOnlyList<string> GetFullTree(string id)
         {
             string tree = RunCacheableCmd(AppSettings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
             return tree.Split('\0', '\n');
@@ -3558,7 +3560,7 @@ namespace GitCommands
             }
 
             char[] chars = fileName.ToCharArray();
-            IList<byte> blist = new List<byte>();
+            var blist = new List<byte>();
             int i = 0;
             StringBuilder sb = new StringBuilder();
             while (i < chars.Length)
@@ -3783,7 +3785,7 @@ namespace GitCommands
             return branchName;
         }
 
-        public IList<GitItemStatus> GetCombinedDiffFileList(string shaOfMergeCommit)
+        public IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(string shaOfMergeCommit)
         {
             var fileList = RunGitCmd("diff-tree --name-only -z --cc --no-commit-id " + shaOfMergeCommit);
 

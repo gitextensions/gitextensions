@@ -83,7 +83,7 @@ namespace GitCommands.Settings
             });
         }
 
-        public IList<string> GetValues(string key)
+        public IReadOnlyList<string> GetValues(string key)
         {
             return LockedAction(() =>
             {
@@ -92,7 +92,7 @@ namespace GitCommands.Settings
             });
         }
 
-        public IList<IConfigSection> GetConfigSections()
+        public IReadOnlyList<IConfigSection> GetConfigSections()
         {
             return LockedAction(() =>
             {

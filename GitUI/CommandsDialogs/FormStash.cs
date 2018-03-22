@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = Module.GetStashes();
+            var stashedItems = Module.GetStashes().ToList();
 
             _currentWorkingDirStashItem = new GitStash("currentWorkingDirStashItem")
             {
@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
+        private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
             Stashed.SetDiffs(items: gitItemStatuses);
             Loading.Visible = false;

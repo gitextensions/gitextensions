@@ -509,9 +509,9 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool doAsync)
+        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>> onComputed, bool doAsync)
         {
-            IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
+            IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
             {
                 return Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
@@ -778,7 +778,7 @@ namespace GitUI.CommandsDialogs
         ///   This method is passed in to the SetTextCallBack delegate
         ///   to set the Text property of textBox1.
         /// </summary>
-        private void LoadUnstagedOutput(IList<GitItemStatus> allChangedFiles)
+        private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
             var lastSelection = new List<GitItemStatus>();
             if (_currentFilesList != null)
@@ -875,7 +875,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RestoreSelectedFiles(IList<GitItemStatus> unstagedFiles, IList<GitItemStatus> stagedFiles, IList<GitItemStatus> lastSelection)
+        private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus> lastSelection)
         {
             if (_currentFilesList == null || _currentFilesList.IsEmpty)
             {
@@ -1573,7 +1573,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Stage(IList<GitItemStatus> gitItemStatuses)
+        private void Stage(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
             EnableStageButtons(false);
             try

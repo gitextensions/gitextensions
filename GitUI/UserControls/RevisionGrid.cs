@@ -98,7 +98,7 @@ namespace GitUI
         private GitRevision _baseCommitToCompare;
 
         // tracks status for the artificial commits while the revision graph is reloading
-        private IList<GitItemStatus> _artificialStatus;
+        private IReadOnlyList<GitItemStatus> _artificialStatus;
 
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
 
@@ -935,18 +935,14 @@ namespace GitUI
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
-            var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
 
-            string description;
+            var descriptiveRef = gitRefListsForRevision.AllBranches
+                .Concat(gitRefListsForRevision.AllTags)
+                .FirstOrDefault();
 
-            if (descriptiveRefs.Any())
-            {
-                description = GetRefUnambiguousName(descriptiveRefs.First());
-            }
-            else
-            {
-                description = revision.Subject;
-            }
+            var description = descriptiveRef != null
+                ? GetRefUnambiguousName(descriptiveRef)
+                : revision.Subject;
 
             if (!revision.IsArtificial)
             {
@@ -961,7 +957,7 @@ namespace GitUI
             return description;
         }
 
-        public List<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
+        public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
             var rows = Revisions
                 .SelectedRows
@@ -979,7 +975,7 @@ namespace GitUI
                 .ToList();
         }
 
-        public List<string> GetRevisionChildren(string revision)
+        public IReadOnlyList<string> GetRevisionChildren(string revision)
         {
             return Revisions.GetRevisionChildren(revision);
         }
@@ -2991,14 +2987,14 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
-        public void UpdateArtificialCommitCount(IList<GitItemStatus> status)
+        public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status)
         {
             GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);
             GitRevision stagedRev = GetRevision(GitRevision.IndexGuid);
             UpdateArtificialCommitCount(status, unstagedRev, stagedRev);
         }
 
-        private void UpdateArtificialCommitCount(IList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
+        private void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
         {
             int staged = status.Count(item => item.IsStaged);
             int unstaged = status.Count - staged;
@@ -3130,13 +3126,15 @@ namespace GitUI
 
         private void AddOwnScripts()
         {
-            IList<ScriptInfo> scripts = ScriptManager.GetScripts();
+            var scripts = ScriptManager.GetScripts();
+
             if (scripts == null)
             {
                 return;
             }
 
             int lastIndex = mainContextMenu.Items.Count;
+
             foreach (ScriptInfo scriptInfo in scripts)
             {
                 if (scriptInfo.Enabled)

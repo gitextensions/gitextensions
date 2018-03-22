@@ -1095,7 +1095,7 @@ namespace GitCommands
         /*
                source: https://git-scm.com/docs/git-status
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(IGitModule module, string statusString, bool fromDiff = false)
+        public static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString(IGitModule module, string statusString, bool fromDiff = false)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -1130,7 +1130,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> submodules = module.GetSubmodulesLocalPaths();
+            var submodules = module.GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);

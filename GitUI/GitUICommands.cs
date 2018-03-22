@@ -2234,7 +2234,7 @@ namespace GitUI
             return arguments;
         }
 
-        private IList<string> FindFileMatches(string name)
+        private IReadOnlyList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree("HEAD");
 

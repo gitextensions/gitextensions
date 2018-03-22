@@ -499,7 +499,7 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            IList<GitItemStatus> FindDiffFilesMatches(string name)
+            IReadOnlyList<GitItemStatus> FindDiffFilesMatches(string name)
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
                 return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
@@ -568,7 +568,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
-                IList<GitRevision> revs = new List<GitRevision> { DiffFiles.Revision, itemWithParent.ParentRevision };
+                var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
                 _revisionGrid.OpenWithDifftool(revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }

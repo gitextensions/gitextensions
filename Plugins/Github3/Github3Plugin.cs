@@ -75,6 +75,7 @@ namespace Github3
 
         internal static Github3Plugin instance;
         internal static Client github;
+
         public Github3Plugin()
         {
             SetNameAndDescription("Github");
@@ -120,12 +121,12 @@ namespace Github3
 
         // --
 
-        public IList<IHostedRepository> SearchForRepository(string search)
+        public IReadOnlyList<IHostedRepository> SearchForRepository(string search)
         {
             return github.searchRepositories(search).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
-        public IList<IHostedRepository> GetRepositoriesOfUser(string user)
+        public IReadOnlyList<IHostedRepository> GetRepositoriesOfUser(string user)
         {
             return github.getRepositories(user).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
@@ -135,7 +136,7 @@ namespace Github3
             return new GithubRepo(github.getRepository(user, repositoryName));
         }
 
-        public IList<IHostedRepository> GetMyRepos()
+        public IReadOnlyList<IHostedRepository> GetMyRepos()
         {
             return github.getRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
@@ -150,7 +151,7 @@ namespace Github3
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
-        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
+        public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
         {
             var repoInfos = new List<IHostedRemote>();
 

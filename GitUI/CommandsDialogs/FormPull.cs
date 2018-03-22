@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         public bool ErrorOccurred { get; private set; }
-        private IList<IGitRef> _heads;
+        private List<IGitRef> _heads;
         private string _branch;
         private bool _bInternalUpdate;
         private const string AllRemotes = "[ All ]";
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PullFromUrl.Checked)
                 {
-                    _heads = Module.GetRefs(false, true);
+                    _heads = Module.GetRefs(false, true).ToList();
                 }
                 else
                 {

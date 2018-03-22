@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
         private readonly string _chooseRemote;
-        private List<IHostedRemote> _hostedRemotes;
+        private IReadOnlyList<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
         private string _prevTitle;
         private readonly AsyncLoader _remoteLoader = new AsyncLoader();

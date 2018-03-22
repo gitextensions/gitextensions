@@ -18,11 +18,11 @@ namespace GitCommands.Config
     /// </summary>
     public class ConfigSection : IConfigSection
     {
-        private readonly IDictionary<string, IList<string>> _configKeys;
+        private readonly IDictionary<string, List<string>> _configKeys;
 
         internal ConfigSection(string name, bool forceCaseSensitive)
         {
-            _configKeys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
+            _configKeys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
             if (name.Contains("\""))
             {
@@ -73,9 +73,9 @@ namespace GitCommands.Config
             return path.ToPosixPath();
         }
 
-        public IDictionary<string, IList<string>> AsDictionary()
+        public IDictionary<string, IReadOnlyList<string>> AsDictionary()
         {
-            return _configKeys.ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
+            return _configKeys.ToDictionary(kv => kv.Key, kv => (IReadOnlyList<string>)kv.Value, StringComparer.OrdinalIgnoreCase);
         }
 
         public bool HasValue(string key)
@@ -128,7 +128,7 @@ namespace GitCommands.Config
             return defaultValue;
         }
 
-        public IList<string> GetValues(string key)
+        public IReadOnlyList<string> GetValues(string key)
         {
             return _configKeys.ContainsKey(key) ? _configKeys[key] : new List<string>();
         }

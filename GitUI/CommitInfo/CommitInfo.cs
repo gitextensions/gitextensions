@@ -118,11 +118,12 @@ namespace GitUI.CommitInfo
         }
 
         private GitRevision _revision;
-        private List<string> _children;
-        public void SetRevisionWithChildren(GitRevision revision, List<string> children)
+        private IReadOnlyList<string> _children;
+        public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<string> children)
         {
             _revision = revision;
             _children = children;
+
             ReloadCommitInfo();
         }
 
@@ -223,7 +224,7 @@ namespace GitUI.CommitInfo
 
         private void LoadSortedRefs()
         {
-            _sortedRefs = Module.GetSortedRefs();
+            _sortedRefs = Module.GetSortedRefs().ToList();
             this.InvokeAsync(UpdateRevisionInfo);
         }
 

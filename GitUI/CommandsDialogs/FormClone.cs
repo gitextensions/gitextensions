@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
         private readonly string _url;
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
         private string _puttySshKey;
-        private readonly IList<string> _defaultBranchItems;
+        private readonly IReadOnlyList<string> _defaultBranchItems;
 
         // for translation only
         private FormClone()
@@ -407,7 +407,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(RemoteActionResult<IList<IGitRef>> branchList)
+        private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
         {
             Cursor = Cursors.Default;
 

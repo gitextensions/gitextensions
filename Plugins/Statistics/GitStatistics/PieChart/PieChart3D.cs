@@ -571,7 +571,7 @@ namespace GitStatistics.PieChart
         /// <returns>
         ///   Index of the foremost pie slice.
         /// </returns>
-        private static int GetForemostPieSlice(IList<PieSlice> pieSlices)
+        private static int GetForemostPieSlice(IReadOnlyList<PieSlice> pieSlices)
         {
             Debug.Assert(pieSlices != null && pieSlices.Count > 0, "pieSlices != null && pieSlices.Count > 0");
             for (var i = 0; i < pieSlices.Count; ++i)

@@ -53,7 +53,7 @@ namespace JenkinsIntegration
         private HttpClient _httpClient;
 
         private readonly Dictionary<string, JenkinsCacheInfo> _lastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
-        private readonly IList<string> _projectsUrls = new List<string>();
+        private readonly List<string> _projectsUrls = new List<string>();
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
@@ -194,8 +194,9 @@ namespace JenkinsIntegration
             // Similar for 'sinceDate', not supported in Jenkins API
             try
             {
-                IList<Task<ResponseInfo>> allBuildInfos = new List<Task<ResponseInfo>>();
-                IList<Task<ResponseInfo>> latestBuildInfos = new List<Task<ResponseInfo>>();
+                var allBuildInfos = new List<Task<ResponseInfo>>();
+                var latestBuildInfos = new List<Task<ResponseInfo>>();
+
                 foreach (var projectUrl in _projectsUrls)
                 {
                     if (_lastBuildCache[projectUrl].Timestamp <= 0)

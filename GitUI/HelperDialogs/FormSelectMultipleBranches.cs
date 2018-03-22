@@ -15,7 +15,7 @@ namespace GitUI.HelperDialogs
             Translate();
         }
 
-        public FormSelectMultipleBranches(IList<IGitRef> branchesToSelect)
+        public FormSelectMultipleBranches(IReadOnlyList<IGitRef> branchesToSelect)
         {
             InitializeComponent();
             Translate();
@@ -44,9 +44,9 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        public IList<IGitRef> GetSelectedBranches()
+        public IReadOnlyList<IGitRef> GetSelectedBranches()
         {
-            IList<IGitRef> branches = new List<IGitRef>();
+            var branches = new List<IGitRef>();
 
             foreach (IGitRef head in Branches.CheckedItems)
             {

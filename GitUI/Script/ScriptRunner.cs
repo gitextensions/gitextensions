@@ -112,7 +112,7 @@ namespace GitUI.Script
             string argument = scriptInfo.Arguments;
 
             string command = OverrideCommandWhenNecessary(originalCommand);
-            var allSelectedRevisions = new List<GitRevision>();
+            IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
 
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
@@ -518,7 +518,7 @@ namespace GitUI.Script
         {
             if (currentRevision == null)
             {
-                IList<IGitRef> refs;
+                IEnumerable<IGitRef> refs;
 
                 if (revisionGrid == null)
                 {

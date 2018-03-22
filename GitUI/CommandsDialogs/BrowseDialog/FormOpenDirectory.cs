@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _NO_TRANSLATE_Directory.Select();
         }
 
-        private static IList<string> GetDirectories(GitModule currentModule)
+        private static IReadOnlyList<string> GetDirectories(GitModule currentModule)
         {
             List<string> directories = new List<string>();
 

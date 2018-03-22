@@ -496,7 +496,7 @@ namespace GitUI.CommandsDialogs
             return _remoteBranches;
         }
 
-        private IList<string> GetContainsRevisionBranches()
+        private IReadOnlyList<string> GetContainsRevisionBranches()
         {
             var result = new HashSet<string>();
             if (_containRevisons.Length > 0)

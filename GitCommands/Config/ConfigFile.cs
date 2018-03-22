@@ -10,16 +10,16 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        public string FileName { get; }
+        private readonly List<IConfigSection> _configSections = new List<IConfigSection>();
 
+        public string FileName { get; }
         public bool Local { get; }
 
         public ConfigFile(string fileName, bool local)
         {
-            ConfigSections = new List<IConfigSection>();
             Local = local;
-
             FileName = fileName;
+
             try
             {
                 Load();
@@ -31,7 +31,7 @@ namespace GitCommands.Config
             }
         }
 
-        public IList<IConfigSection> ConfigSections { get; }
+        public IReadOnlyList<IConfigSection> ConfigSections => _configSections;
 
         public IEnumerable<IConfigSection> GetConfigSections(string sectionName)
         {
@@ -214,7 +214,7 @@ namespace GitCommands.Config
             return GetStringValue(setting);
         }
 
-        public IList<string> GetValues(string setting)
+        public IReadOnlyList<string> GetValues(string setting)
         {
             var keyIndex = FindAndCheckKeyIndex(setting);
 
@@ -249,7 +249,7 @@ namespace GitCommands.Config
             if (result == null)
             {
                 result = new ConfigSection(name, true);
-                ConfigSections.Add(result);
+                _configSections.Add(result);
             }
 
             return result;
@@ -262,7 +262,7 @@ namespace GitCommands.Config
                 throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
             }
 
-            ConfigSections.Add(configSection);
+            _configSections.Add(configSection);
         }
 
         public void RemoveConfigSection(string configSectionName)
@@ -274,7 +274,7 @@ namespace GitCommands.Config
                 return;
             }
 
-            ConfigSections.Remove(configSection);
+            _configSections.Remove(configSection);
         }
 
         public IConfigSection FindConfigSection(string name)
@@ -336,7 +336,7 @@ namespace GitCommands.Config
                 if (_section == null)
                 {
                     _section = new ConfigSection(sectionName, false);
-                    _configFile.ConfigSections.Add(_section);
+                    _configFile._configSections.Add(_section);
                 }
             }
 

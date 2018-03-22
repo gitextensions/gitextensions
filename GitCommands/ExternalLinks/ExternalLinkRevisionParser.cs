@@ -45,7 +45,7 @@ namespace GitCommands.ExternalLinks
 
         private IEnumerable<Match> ParseRemotes(ExternalLinkDefinition definition)
         {
-            IList<Match> allMatches = new List<Match>();
+            var allMatches = new List<Match>();
 
             if (definition.RemoteSearchPattern.IsNullOrWhiteSpace() || definition.RemoteSearchPatternRegex.Value == null)
             {
@@ -53,7 +53,7 @@ namespace GitCommands.ExternalLinks
                 return allMatches;
             }
 
-            IList<string> remoteUrls = new List<string>();
+            var remoteUrls = new List<string>();
 
             var remotes = _gitRemoteManager.LoadRemotes(false);
             var matchingRemotes = GetMatchingRemotes(definition, remotes);
@@ -128,7 +128,7 @@ namespace GitCommands.ExternalLinks
                 yield break;
             }
 
-            IList<Match> allMatches = new List<Match>();
+            var allMatches = new List<Match>();
 
             MatchCollection matches = definition.SearchPatternRegex.Value.Matches(part);
             for (var i = 0; i < matches.Count; i++)

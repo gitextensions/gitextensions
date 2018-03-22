@@ -24,6 +24,7 @@ namespace GitCommands
         /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
         /// </summary>
         [ContractAnnotation("=>null,error:notnull")]
+        [ContractAnnotation("=>notnull,error:null")]
         CommitData GetCommitData([NotNull] string sha1, out string error);
 
         /// <summary>

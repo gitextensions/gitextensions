@@ -19,8 +19,8 @@ using ResourceManager;
 namespace GitUI
 {
     // Parents is used as the "first selected" (not always the parent) for GitItemStatus
-    using IGitItemsWithParents = IDictionary<GitRevision, IList<GitItemStatus>>;
-    using GitItemsWithParents = Dictionary<GitRevision, IList<GitItemStatus>>;
+    using IGitItemsWithParents = IDictionary<GitRevision, IReadOnlyList<GitItemStatus>>;
+    using GitItemsWithParents = Dictionary<GitRevision, IReadOnlyList<GitItemStatus>>;
 
     public delegate string DescribeRevisionDelegate(string sha1);
 
@@ -805,31 +805,23 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IList<GitItemStatus> GitItemStatuses
+        public IReadOnlyList<GitItemStatus> GitItemStatuses
         {
             get
             {
-                var result = new List<GitItemStatus>();
-                var data = GitItemStatusesWithParents;
-                if (data != null)
-                {
-                    foreach (var plist in data.Values)
-                    {
-                        result.AddAll(plist);
-                    }
-                }
-
-                return result;
+                return GitItemStatusesWithParents?.Values.SelectMany(plist => plist).ToList()
+                       ?? (IReadOnlyList<GitItemStatus>)Array.Empty<GitItemStatus>();
             }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IList<GitItemStatus> GitItemFilteredStatuses
+        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses
         {
             get
             {
-                var result = new List<GitItemStatus>();
+                var result = new List<GitItemStatus>(FileStatusListView.Items.Count);
+
                 foreach (ListViewItem listViewItem in FileStatusListView.Items)
                 {
                     result.Add(listViewItem.Tag as GitItemStatus);
@@ -1074,9 +1066,9 @@ namespace GitUI
             {
                 SuspendLayout();
 
-                var items = AllItems;
-                int i = 0;
-                foreach (var item in items)
+                var itemCount = AllItems.Count();
+
+                for (var i = 0; i < itemCount; i++)
                 {
                     FileStatusListView.Items[i].Selected = true;
                     i++;
@@ -1117,7 +1109,7 @@ namespace GitUI
             }
         }
 
-        public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IList<GitItemStatus> items = null)
+        public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IReadOnlyList<GitItemStatus> items = null)
         {
             Revision = selectedRev;
 
@@ -1133,7 +1125,7 @@ namespace GitUI
             GitItemStatusesWithParents = dictionary;
         }
 
-        public void SetDiffs(IList<GitRevision> revisions)
+        public void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
             if (revisions == null || revisions.Count == 0)
             {
