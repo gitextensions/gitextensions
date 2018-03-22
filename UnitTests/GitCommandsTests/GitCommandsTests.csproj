@@ -79,9 +79,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GitUITests\ConfigureJoinableTaskFactoryAttribute.cs">
-      <Link>ConfigureJoinableTaskFactoryAttribute.cs</Link>
-    </Compile>
     <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />

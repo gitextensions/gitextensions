@@ -83,9 +83,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GitUITests\ConfigureJoinableTaskFactoryAttribute.cs">
-      <Link>ConfigureJoinableTaskFactoryAttribute.cs</Link>
-    </Compile>
     <Compile Include="AvatarImageNameProviderTests.cs" />
     <Compile Include="DirectoryImageCacheTests.cs" />
     <Compile Include="GravatarServiceTests.cs" />
@@ -107,6 +104,10 @@
     <ProjectReference Include="..\..\Gravatar\Gravatar.csproj">
       <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
       <Name>Gravatar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj">
+      <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
+      <Name>CommonTestUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

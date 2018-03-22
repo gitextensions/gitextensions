@@ -84,7 +84,6 @@
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
-    <Compile Include="ConfigureJoinableTaskFactoryAttribute.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
@@ -135,6 +134,10 @@
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
       <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
       <Name>ResourceManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj">
+      <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
+      <Name>CommonTestUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

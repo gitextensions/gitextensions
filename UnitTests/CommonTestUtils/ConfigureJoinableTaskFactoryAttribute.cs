@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace GitUITests
+namespace CommonTestUtils
 {
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
     public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
