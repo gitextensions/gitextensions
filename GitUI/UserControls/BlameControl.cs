@@ -153,8 +153,8 @@ namespace GitUI.Blame
                     {
                         if (prevLine != i - 1 && startLine != -1)
                         {
-                            BlameCommitter.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
-                            BlameFile.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
+                            BlameCommitter.HighlightLines(startLine, prevLine, Color.White);
+                            BlameFile.HighlightLines(startLine, prevLine, Color.White);
                             startLine = -1;
                         }
 
@@ -168,8 +168,8 @@ namespace GitUI.Blame
 
                 if (startLine != -1)
                 {
-                    BlameCommitter.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
-                    BlameFile.HighlightLines(startLine, prevLine, Color.FromArgb(225, 225, 225));
+                    BlameCommitter.HighlightLines(startLine, prevLine, Color.White);
+                    BlameFile.HighlightLines(startLine, prevLine, Color.White);
                 }
 
                 BlameCommitter.Refresh();
