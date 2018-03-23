@@ -77,29 +77,35 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void LoadTagsAsync()
         {
             comboBoxTags.Text = Strings.GetLoadingData();
-            _tagsLoader.LoadAsync(
-                () => Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByCommitDateDescending).ToList(),
-                list =>
-                {
-                    comboBoxTags.Text = string.Empty;
-                    GitRefsToDataSource(comboBoxTags, list);
-                    comboBoxTags.DisplayMember = "LocalName";
-                    SetSelectedRevisionByFocusedControl();
-                });
+            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+            {
+                return _tagsLoader.LoadAsync(
+                    () => Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByCommitDateDescending).ToList(),
+                    list =>
+                    {
+                        comboBoxTags.Text = string.Empty;
+                        GitRefsToDataSource(comboBoxTags, list);
+                        comboBoxTags.DisplayMember = "LocalName";
+                        SetSelectedRevisionByFocusedControl();
+                    });
+            });
         }
 
         private void LoadBranchesAsync()
         {
             comboBoxBranches.Text = Strings.GetLoadingData();
-            _branchesLoader.LoadAsync(
-                () => Module.GetRefs(false).ToList(),
-                list =>
-                {
-                    comboBoxBranches.Text = string.Empty;
-                    GitRefsToDataSource(comboBoxBranches, list);
-                    comboBoxBranches.DisplayMember = "LocalName";
-                    SetSelectedRevisionByFocusedControl();
-                });
+            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+            {
+                return _branchesLoader.LoadAsync(
+                    () => Module.GetRefs(false).ToList(),
+                    list =>
+                    {
+                        comboBoxBranches.Text = string.Empty;
+                        GitRefsToDataSource(comboBoxBranches, list);
+                        comboBoxBranches.DisplayMember = "LocalName";
+                        SetSelectedRevisionByFocusedControl();
+                    });
+            });
         }
 
         private static void GitRefsToDataSource(ComboBox cb, IReadOnlyList<IGitRef> refs)

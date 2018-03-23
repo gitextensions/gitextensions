@@ -940,9 +940,12 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.ShowStashCount)
             {
-                AsyncLoader.DoAsync(() => Module.GetStashes().Count,
-                    (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
-                        result != 1 ? _stashPlural.Text : _stashSingular.Text));
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                {
+                    return AsyncLoader.DoAsync(() => Module.GetStashes().Count,
+                        (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
+                            result != 1 ? _stashPlural.Text : _stashSingular.Text));
+                });
             }
             else
             {
@@ -998,41 +1001,44 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            AsyncLoader.DoAsync(
-                () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                      !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
-                (result) =>
-                {
-                    if (result)
+            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+            {
+                return AsyncLoader.DoAsync(
+                    () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
+                            !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
+                    (result) =>
                     {
-                        if (_warning == null)
+                        if (result)
                         {
-                            _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                            _warning.Click += WarningClick;
-                            statusStrip.Items.Add(_warning);
+                            if (_warning == null)
+                            {
+                                _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
+                                _warning.Click += WarningClick;
+                                statusStrip.Items.Add(_warning);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (_warning != null)
+                        else
                         {
-                            _warning.Click -= WarningClick;
-                            statusStrip.Items.Remove(_warning);
-                            _warning = null;
+                            if (_warning != null)
+                            {
+                                _warning.Click -= WarningClick;
+                                statusStrip.Items.Remove(_warning);
+                                _warning = null;
+                            }
                         }
-                    }
 
-                    // Only show status strip when there are status items on it.
-                    // There is always a close (x) button, do not count first item.
-                    if (statusStrip.Items.Count > 1)
-                    {
-                        statusStrip.Show();
-                    }
-                    else
-                    {
-                        statusStrip.Hide();
-                    }
-                });
+                        // Only show status strip when there are status items on it.
+                        // There is always a close (x) button, do not count first item.
+                        if (statusStrip.Items.Count > 1)
+                        {
+                            statusStrip.Show();
+                        }
+                        else
+                        {
+                            statusStrip.Hide();
+                        }
+                    });
+            });
         }
 
         private void RebaseClick(object sender, EventArgs e)

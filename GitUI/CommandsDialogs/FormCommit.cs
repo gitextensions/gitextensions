@@ -522,7 +522,10 @@ namespace GitUI.CommandsDialogs
 
             if (doAsync)
             {
-                _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed);
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                {
+                    return _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed);
+                });
             }
             else
             {

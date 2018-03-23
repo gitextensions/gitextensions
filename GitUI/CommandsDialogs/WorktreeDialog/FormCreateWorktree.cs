@@ -44,16 +44,18 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             var selectedBranch = UICommands.GitModule.GetSelectedBranch();
             ExistingBranches = Module.GetRefs(false);
             comboBoxBranches.Text = Strings.GetLoadingData();
-            _branchesLoader.LoadAsync(
-                () => ExistingBranches.Where(r => r.Name != selectedBranch).ToList(),
-                list =>
-                {
-                    comboBoxBranches.Text = string.Empty;
-                    comboBoxBranches.DataSource = list;
-                    comboBoxBranches.DisplayMember = "LocalName";
-                })
-            .ContinueWith(_ =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                await _branchesLoader.LoadAsync(
+                    () => ExistingBranches.Where(r => r.Name != selectedBranch).ToList(),
+                    list =>
+                    {
+                        comboBoxBranches.Text = string.Empty;
+                        comboBoxBranches.DataSource = list;
+                        comboBoxBranches.DisplayMember = "LocalName";
+                    });
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 if (comboBoxBranches.Items.Count == 0)
                 {
                     radioButtonCreateNewBranch.Checked = true;
@@ -65,7 +67,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
 
                 ValidateWorktreeOptions();
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            });
         }
 
         public IReadOnlyList<IGitRef> ExistingBranches { get; set; }
