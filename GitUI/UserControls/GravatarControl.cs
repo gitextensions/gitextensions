@@ -94,12 +94,14 @@ namespace GitUI
 
         private void ClearImagecacheToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    await _avatarCache.ClearAsync().ConfigureAwait(false);
-                    await UpdateGravatarAsync().ConfigureAwait(false);
-                });
+            ThreadHelper.JoinableTaskFactory
+                .RunAsync(
+                    async () =>
+                    {
+                        await _avatarCache.ClearAsync().ConfigureAwait(false);
+                        await UpdateGravatarAsync().ConfigureAwait(false);
+                    })
+                .FileAndForget();
         }
 
         private void noImageService_Click(object sender, EventArgs e)
