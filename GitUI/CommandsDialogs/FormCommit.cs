@@ -2039,9 +2039,9 @@ namespace GitUI.CommandsDialogs
 
             commitMessageToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (var localLastCommitMessage in prevMsgs)
+            foreach (var prevMsg in prevMsgs)
             {
-                AddCommitMessageToMenu(localLastCommitMessage);
+                AddCommitMessageToMenu(prevMsg);
             }
 
             commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
@@ -2049,29 +2049,37 @@ namespace GitUI.CommandsDialogs
                 toolStripMenuItem1,
                 generateListOfChangesInSubmodulesChangesToolStripMenuItem
             });
-        }
 
-        private void AddCommitMessageToMenu(string commitMessage)
-        {
-            if (string.IsNullOrEmpty(commitMessage))
+            void AddCommitMessageToMenu(string commitMessage)
             {
-                return;
-            }
+                const int maxLabelLength = 50;
 
-            var toolStripItem =
-                new ToolStripMenuItem
+                string label;
+
+                if (commitMessage.Length <= maxLabelLength)
+                {
+                    label = commitMessage;
+                }
+                else
+                {
+                    var newlineIndex = commitMessage.IndexOf('\n');
+
+                    if (newlineIndex != -1 && newlineIndex <= maxLabelLength)
+                    {
+                        label = commitMessage.Substring(0, newlineIndex);
+                    }
+                    else
+                    {
+                        label = commitMessage.ShortenTo(maxLabelLength);
+                    }
+                }
+
+                commitMessageToolStripMenuItem.DropDownItems.Add(new ToolStripMenuItem
                 {
                     Tag = commitMessage,
-                    Text =
-                        commitMessage.Substring(
-                            0,
-                            Math.Min(
-                                                    Math.Min(50, commitMessage.Length),
-                                                    commitMessage.Contains("\n") ? commitMessage.IndexOf('\n') : 99)) +
-                        "..."
-                };
-
-            commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
+                    Text = label
+                });
+            }
         }
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
