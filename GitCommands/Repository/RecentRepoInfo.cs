@@ -76,11 +76,11 @@ namespace GitCommands.Repository
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(ICollection<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
+        public void SplitRecentRepos(IReadOnlyList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
         {
-            SortedList<string, List<RecentRepoInfo>> orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
-            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
-            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
+            var orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
+            var mostRecentRepos = new List<RecentRepoInfo>();
+            var lessRecentRepos = new List<RecentRepoInfo>();
 
             bool middleDot = ShorteningStrategy == ShorteningStrategy_MiddleDots;
             bool signDir = ShorteningStrategy == ShorteningStrategy_MostSignDir;
