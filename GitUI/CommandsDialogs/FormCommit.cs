@@ -2017,12 +2017,12 @@ namespace GitUI.CommandsDialogs
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            commitMessageToolStripMenuItem.DropDownItems.Clear();
-
             var msg = AppSettings.LastCommitMessage;
             var maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
 
-            var prevMsgs = Module.GetPreviousCommitMessages(maxCount).ToList();
+            var prevMsgs = Module.GetPreviousCommitMessages(maxCount)
+                .Select(message => message.TrimEnd('\n'))
+                .ToList();
 
             if (!prevMsgs.Contains(msg))
             {
@@ -2036,6 +2036,8 @@ namespace GitUI.CommandsDialogs
                 // Insert the last commit message as the first entry
                 prevMsgs.Insert(0, msg);
             }
+
+            commitMessageToolStripMenuItem.DropDownItems.Clear();
 
             foreach (var localLastCommitMessage in prevMsgs)
             {
