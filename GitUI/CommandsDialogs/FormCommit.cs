@@ -167,6 +167,7 @@ namespace GitUI.CommandsDialogs
             _useFormCommitMessage = AppSettings.UseFormCommitMessage;
 
             InitializeComponent();
+
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
 
@@ -228,6 +229,12 @@ namespace GitUI.CommandsDialogs
             {
                 gpgSignCommitToolStripComboBox.SelectedIndex = 0;
             }
+
+            ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = false;
+            ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
+
+            ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowImageMargin = false;
+            ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
         }
 
         private void ConfigureMessageBox()
