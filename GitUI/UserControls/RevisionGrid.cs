@@ -27,6 +27,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using Gravatar;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI
@@ -296,7 +297,7 @@ namespace GitUI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string FiltredFileName { get; set; }
         [Browsable(false)]
-        public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
+        private JoinableTask<SuperProjectInfo> SuperprojectCurrentCheckout { get; set; }
         [Browsable(false)]
         public int LatestSelectedRowIndex { get; private set; }
         [Browsable(false)]
@@ -1158,10 +1159,24 @@ namespace GitUI
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
-                Task<SuperProjectInfo> newSuperPrjectInfo =
-                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
-                newSuperPrjectInfo.ContinueWith((task) => Refresh(),
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                JoinableTask<SuperProjectInfo> newSuperPrjectInfo =
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                        return GetSuperprojectCheckout(ShowRemoteRef, capturedModule);
+                    });
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    try
+                    {
+                        await newSuperPrjectInfo;
+                    }
+                    finally
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        Refresh();
+                    }
+                }).FileAndForget();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1599,7 +1614,7 @@ namespace GitUI
                 return;
             }
 
-            var spi = SuperprojectCurrentCheckout.CompletedOrDefault();
+            var spi = SuperprojectCurrentCheckout.Task.CompletedOrDefault();
             var superprojectRefs = new List<IGitRef>();
             if (spi?.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {

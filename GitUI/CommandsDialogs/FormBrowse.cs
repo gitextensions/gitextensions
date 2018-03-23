@@ -25,6 +25,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
@@ -183,8 +184,19 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.UICommandsSource = this;
             Repositories.LoadRepositoryHistoryAsync();
-            Task.Run(() => PluginLoader.Load())
-                .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                try
+                {
+                    PluginLoader.Load();
+                }
+                finally
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    RegisterPlugins();
+                }
+            }).FileAndForget();
             RevisionGrid.GitModuleChanged += SetGitModule;
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);

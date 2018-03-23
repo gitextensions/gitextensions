@@ -3056,17 +3056,18 @@ namespace GitUI.CommandsDialogs
                 _interactiveAddBashCloseWaitCts.Cancel();
                 _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
 
-                var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    await gitProcess.WaitForExitAsync().ConfigureAwait(false);
+                    gitProcess.Dispose();
 
-                Task.Run(() =>
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_interactiveAddBashCloseWaitCts.Token);
+                    if (!_interactiveAddBashCloseWaitCts.Token.IsCancellationRequested)
                     {
-                        gitProcess.WaitForExit();
-                        gitProcess.Dispose();
-                    })
-                    .ContinueWith(_ => RescanChanges(),
-                        _interactiveAddBashCloseWaitCts.Token,
-                        TaskContinuationOptions.OnlyOnRanToCompletion,
-                        formsTaskScheduler);
+                        RescanChanges();
+                    }
+                });
             }
         }
 
