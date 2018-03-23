@@ -173,7 +173,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_prevTitle == _titleTB.Text && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
             {
-                var lastMsg = Module.GetPreviousCommitMessages(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 1).FirstOrDefault();
+                var lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)).FirstOrDefault();
                 _titleTB.Text = lastMsg.TakeUntilStr("\n");
                 _prevTitle = _titleTB.Text;
             }

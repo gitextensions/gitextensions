@@ -3189,12 +3189,7 @@ namespace GitCommands
             return _gitTreeParser.Parse(tree);
         }
 
-        public GitBlame Blame(string filename, string from, Encoding encoding)
-        {
-            return Blame(filename, from, null, encoding);
-        }
-
-        public GitBlame Blame(string fileName, string from, string lines, Encoding encoding)
+        public GitBlame Blame(string fileName, string from, Encoding encoding, string lines = null)
         {
             from = from.ToPosixPath();
             fileName = fileName.ToPosixPath();
@@ -3480,12 +3475,7 @@ namespace GitCommands
             return null;
         }
 
-        public IEnumerable<string> GetPreviousCommitMessages(int count)
-        {
-            return GetPreviousCommitMessages("HEAD", count);
-        }
-
-        public IEnumerable<string> GetPreviousCommitMessages(string revision, int count)
+        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
         {
             const string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
             string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
