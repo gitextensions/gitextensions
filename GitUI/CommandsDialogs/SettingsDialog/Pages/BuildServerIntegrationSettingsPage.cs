@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                             return export.Metadata.BuildServerType.Combine(" - ", canBeLoaded);
                         }).ToArray();
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
 
                     checkBoxEnableBuildServerIntegration.Enabled = true;
                     checkBoxShowBuildSummary.Enabled = true;
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     await _populateBuildServerTypeTask.JoinAsync();
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
 
                     checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
                     checkBoxShowBuildSummary.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);

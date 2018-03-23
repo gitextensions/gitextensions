@@ -134,7 +134,7 @@ namespace GitUI.UserControls
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                         var text = Module.GetCommitCountString(currentCheckout, branchName);
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        await this.SwitchToMainThreadAsync();
                         lbChanges.Text = text;
                     });
             }

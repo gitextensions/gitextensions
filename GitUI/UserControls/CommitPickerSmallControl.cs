@@ -53,7 +53,7 @@ namespace GitUI.UserControls
 
                         var text = Module.GetCommitCountString(Module.GetCurrentCheckout(), SelectedCommitHash);
 
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        await this.SwitchToMainThreadAsync();
 
                         lbCommits.Text = text;
                     });

@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs
                         {
                             if (imageStream != null)
                             {
-                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                await _tabControl.SwitchToMainThreadAsync();
 
                                 var favIconImage = Image.FromStream(imageStream)
                                                         .GetThumbnailImage(16, 16, null, IntPtr.Zero);

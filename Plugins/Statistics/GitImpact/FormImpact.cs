@@ -37,7 +37,7 @@ namespace GitImpact
             ThreadHelper.JoinableTaskFactory.Run(
                 async () =>
                 {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
                     UpdateAuthorInfo(Impact.GetSelectedAuthor());
                 });
         }

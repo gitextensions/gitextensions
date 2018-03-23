@@ -1173,7 +1173,7 @@ namespace GitUI
                     }
                     finally
                     {
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        await this.SwitchToMainThreadAsync();
                         Refresh();
                     }
                 }).FileAndForget();

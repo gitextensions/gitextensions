@@ -204,25 +204,13 @@ namespace GitUI
 
         public static async Task InvokeAsync(this Control control, Action action)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            if (control.IsDisposed)
-            {
-                return;
-            }
-
+            await control.SwitchToMainThreadAsync();
             action();
         }
 
         public static async Task InvokeAsync<T>(this Control control, Action<T> action, T state)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            if (control.IsDisposed)
-            {
-                return;
-            }
-
+            await control.SwitchToMainThreadAsync();
             action(state);
         }
 

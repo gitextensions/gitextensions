@@ -164,12 +164,7 @@ namespace DeleteUnusedBranches
                     _gitCommands.RunGitCmd("branch -d " + localBranchNames);
                 }
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                if (IsDisposed)
-                {
-                    return;
-                }
+                await this.SwitchToMainThreadAsync();
 
                 tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = true;
                 await RefreshObsoleteBranchesAsync().ConfigureAwait(false);
@@ -250,8 +245,8 @@ namespace DeleteUnusedBranches
             }
             catch
             {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                if (IsDisposed || context.CancellationToken.IsCancellationRequested)
+                await this.SwitchToMainThreadAsync();
+                if (context.CancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
@@ -259,8 +254,8 @@ namespace DeleteUnusedBranches
                 throw;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            if (IsDisposed || context.CancellationToken.IsCancellationRequested)
+            await this.SwitchToMainThreadAsync();
+            if (context.CancellationToken.IsCancellationRequested)
             {
                 return;
             }

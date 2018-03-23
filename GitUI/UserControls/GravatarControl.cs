@@ -54,7 +54,7 @@ namespace GitUI
 
         private async Task UpdateGravatarAsync()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await this.SwitchToMainThreadAsync();
 
             // resize our control (I'm not using AutoSize for a reason)
             var size = new Size(AppSettings.AuthorImageSize, AppSettings.AuthorImageSize);

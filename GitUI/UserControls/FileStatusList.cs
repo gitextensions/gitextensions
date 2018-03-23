@@ -934,7 +934,7 @@ namespace GitUI
                                 {
                                     await item.GetSubmoduleStatusAsync();
 
-                                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                    await this.SwitchToMainThreadAsync();
 
                                     listItem.ImageIndex = GetItemImageIndex(capturedItem);
                                 });

@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
                     RefreshLogItems();
                 });
         }
@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
                     RefreshCommandCacheItems();
                 });
         }

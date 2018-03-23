@@ -722,7 +722,7 @@ namespace GitUI.CommandsDialogs
 
             var currentBranchName = Module.GetSelectedBranch();
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await this.SwitchToMainThreadAsync();
 
             branchNameLabel.Text = currentBranchName;
             Text = string.Format(_formTitle.Text, currentBranchName, Module.WorkingDir);

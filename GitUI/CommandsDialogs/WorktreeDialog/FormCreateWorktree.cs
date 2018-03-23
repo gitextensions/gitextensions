@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                         comboBoxBranches.DisplayMember = "LocalName";
                     });
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await this.SwitchToMainThreadAsync();
                 if (comboBoxBranches.Items.Count == 0)
                 {
                     radioButtonCreateNewBranch.Checked = true;

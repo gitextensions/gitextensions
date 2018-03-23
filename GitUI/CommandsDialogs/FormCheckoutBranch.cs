@@ -479,7 +479,7 @@ namespace GitUI.CommandsDialogs
 
                         var text = Module.GetCommitCountString(Module.GetCurrentCheckout(), branch);
 
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        await this.SwitchToMainThreadAsync();
 
                         lbChanges.Text = text;
                     });

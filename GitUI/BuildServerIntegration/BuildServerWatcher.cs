@@ -59,12 +59,7 @@ namespace GitUI.BuildServerIntegration
                 {
                     _buildServerAdapter = await GetBuildServerAdapterAsync();
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                    if (_revisions.IsDisposed)
-                    {
-                        return;
-                    }
+                    await _revisions.SwitchToMainThreadAsync();
 
                     UpdateUI();
 

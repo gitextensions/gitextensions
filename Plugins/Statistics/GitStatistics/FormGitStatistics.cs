@@ -95,12 +95,7 @@ namespace GitStatistics
 
                     var (commitsPerUser, totalCommits) = CommitCounter.GroupAllCommitsByContributor(_module);
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                    if (IsDisposed)
-                    {
-                        return;
-                    }
+                    await this.SwitchToMainThreadAsync();
 
                     TotalCommits.Text = string.Format(_commits.Text, totalCommits);
 
@@ -218,7 +213,7 @@ namespace GitStatistics
             // Sync rest to UI thread
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await this.SwitchToMainThreadAsync();
                 UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels);
             });
         }
