@@ -2955,76 +2955,72 @@ namespace GitUI.CommandsDialogs
             FilenameToClipboardToolStripMenuItemClick(sender, e);
         }
 
-        private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var frm = new FormCommitTemplateSettings())
-            {
-                frm.ShowDialog(this);
-            }
-
-            _shouldReloadCommitTemplates = true;
-        }
-
         private void LoadCommitTemplates()
         {
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
-            var fromSettings = CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>().Where(t => !t.Name.IsNullOrEmpty()).ToArray();
-            var commitTemplates = _commitTemplateManager.RegisteredTemplates
-               .Union(new[] { (CommitTemplateItem)null })
-               .Union(fromSettings)
-               .Union(fromSettings.Length > 0 ? new[] { (CommitTemplateItem)null } : Array.Empty<CommitTemplateItem>())
-               .ToArray();
-
-            if (commitTemplates.Length > 0)
+            // Add registered templates
+            foreach (var item in _commitTemplateManager.RegisteredTemplates)
             {
-                foreach (CommitTemplateItem item in commitTemplates)
+                CreateToolStripItem(item);
+            }
+
+            AddSeparator();
+
+            // Add templates from settings
+            foreach (var item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
+            {
+                CreateToolStripItem(item);
+            }
+
+            AddSeparator();
+
+            // Add a settings item
+            AddSettingsItem();
+
+            void CreateToolStripItem(CommitTemplateItem item)
+            {
+                if (string.IsNullOrEmpty(item.Name))
                 {
-                    if (item == null)
+                    return;
+                }
+
+                var toolStripItem = new ToolStripMenuItem(item.Name);
+                toolStripItem.Click += (s, e) =>
+                {
+                    try
                     {
-                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                        Message.Text = item.Text;
+                        Message.Focus();
                     }
-                    else
+                    catch
                     {
-                        AddTemplateCommitMessageToMenu(item, item.Name);
                     }
+                };
+                commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+            }
+
+            void AddSeparator()
+            {
+                if (commitTemplatesToolStripMenuItem.DropDownItems.Count != 0)
+                {
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
                 }
             }
 
-            var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
-            toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
-        }
-
-        private void AddTemplateCommitMessageToMenu(CommitTemplateItem item, string name)
-        {
-            if (string.IsNullOrEmpty(name))
+            void AddSettingsItem()
             {
-                return;
-            }
-
-            var toolStripItem =
-                new ToolStripMenuItem
+                var settingsItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
+                settingsItem.Click += (s, e) =>
                 {
-                    Tag = item,
-                    Text = name
+                    using (var frm = new FormCommitTemplateSettings())
+                    {
+                        frm.ShowDialog(this);
+                    }
+
+                    _shouldReloadCommitTemplates = true;
                 };
-
-            toolStripItem.Click += commitTemplatesToolStripMenuItem_Clicked;
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
-        }
-
-        private void commitTemplatesToolStripMenuItem_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                ToolStripMenuItem item = (ToolStripMenuItem)sender;
-                CommitTemplateItem templateItem = (CommitTemplateItem)item.Tag;
-                Message.Text = templateItem.Text;
-                Message.Focus();
-            }
-            catch
-            {
+                commitTemplatesToolStripMenuItem.DropDownItems.Add(settingsItem);
             }
         }
 
