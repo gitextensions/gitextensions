@@ -2020,12 +2020,21 @@ namespace GitUI.CommandsDialogs
             commitMessageToolStripMenuItem.DropDownItems.Clear();
 
             var msg = AppSettings.LastCommitMessage;
+            var maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
 
-            var prevMsgs = Module.GetPreviousCommitMessages(AppSettings.CommitDialogNumberOfPreviousMessages);
+            var prevMsgs = Module.GetPreviousCommitMessages(maxCount).ToList();
 
             if (!prevMsgs.Contains(msg))
             {
-                prevMsgs = new[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
+                // If the list is already full
+                if (prevMsgs.Count == maxCount)
+                {
+                    // Remove the last item
+                    prevMsgs.RemoveAt(maxCount - 1);
+                }
+
+                // Insert the last commit message as the first entry
+                prevMsgs.Insert(0, msg);
             }
 
             foreach (var localLastCommitMessage in prevMsgs)
