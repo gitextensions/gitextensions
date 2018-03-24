@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -107,6 +108,106 @@ namespace GitUITests
                 JoinPendingOperations();
                 Assert.Null(helper.Exception, helper.Message);
             }
+        }
+
+        [Test]
+        public void ThrowIfNotOnUIThread()
+        {
+            Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await TaskScheduler.Default;
+
+                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+
+                Assert.Throws<COMException>(() => ThreadHelper.ThrowIfNotOnUIThread());
+            });
+        }
+
+        [Test]
+        public void ThrowIfOnUIThread()
+        {
+            Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            Assert.Throws<COMException>(() => ThreadHelper.ThrowIfOnUIThread());
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await TaskScheduler.Default;
+
+                Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+
+                ThreadHelper.ThrowIfOnUIThread();
+            });
+        }
+
+        [Test]
+        public void CompletedResultThrowsIfNotCompleted()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            Assert.Throws<InvalidOperationException>(() => tcs.Task.CompletedResult());
+        }
+
+        [Test]
+        public void CompletedResultReturnsResultIfCompleted()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            tcs.SetResult(1);
+            Assert.AreEqual(1, tcs.Task.CompletedResult());
+        }
+
+        [Test]
+        public void CompletedResultThrowsIfCancelled()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            tcs.SetCanceled();
+            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+            Assert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
+        }
+
+        [Test]
+        public void CompletedResultThrowsIfFaulted()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            var ex = new Exception();
+            tcs.SetException(ex);
+            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+            Assert.AreSame(ex, actual.InnerException);
+            Assert.AreEqual(1, actual.InnerExceptions.Count);
+        }
+
+        [Test]
+        public void CompletedOrDefaultReturnsDefaultIfNotCompleted()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            Assert.AreEqual(0, tcs.Task.CompletedOrDefault());
+        }
+
+        [Test]
+        public void CompletedOrDefaultReturnsResultIfCompleted()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            tcs.SetResult(1);
+            Assert.AreEqual(1, tcs.Task.CompletedOrDefault());
+        }
+
+        [Test]
+        public void CompletedOrDefaultThrowsIfCancelled()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            tcs.SetCanceled();
+            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+            Assert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
+        }
+
+        [Test]
+        public void CompletedOrDefaultThrowsIfFaulted()
+        {
+            var tcs = new TaskCompletionSource<int>();
+            var ex = new Exception();
+            tcs.SetException(ex);
+            var actual = Assert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+            Assert.AreSame(ex, actual.InnerException);
+            Assert.AreEqual(1, actual.InnerExceptions.Count);
         }
 
         private static void JoinPendingOperations()
