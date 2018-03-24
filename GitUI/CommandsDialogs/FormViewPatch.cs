@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using PatchApply;
+using GitCommands.Patches;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

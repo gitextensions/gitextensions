@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using GitCommands;
+using GitCommands.Patches;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
-using PatchApply;
 
 namespace GitUI.Editor.Diff
 {

@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
-using PatchApply;
+﻿using GitCommands.Patches;
+using NUnit.Framework;
 
-namespace GitCommandsTests.PatchApply
+namespace GitCommandsTests.Patches
 {
     [TestFixture]
     internal class PatchTest

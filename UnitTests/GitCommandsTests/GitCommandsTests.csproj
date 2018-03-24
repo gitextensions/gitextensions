@@ -114,8 +114,8 @@
     <Compile Include="Git\GitTreeParserTests.cs" />
     <Compile Include="AsyncLoaderTests.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
-    <Compile Include="Patch\PatchProcessorTest.cs" />
-    <Compile Include="Patch\PatchTest.cs" />
+    <Compile Include="Patches\PatchProcessorTest.cs" />
+    <Compile Include="Patches\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
@@ -129,13 +129,13 @@
     <EmbeddedResource Include="ExternalLinks\MockData\level2_repodist_GitExtensions.settings.xml">
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Patch\testdata\big.patch">
+    <None Include="Patches\testdata\big.patch">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Patch\testdata\bigBin.patch">
+    <None Include="Patches\testdata\bigBin.patch">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Patch\testdata\rebase.diff">
+    <None Include="Patches\testdata\rebase.diff">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\README.blame">
@@ -177,5 +177,4 @@
     <Error Condition="!Exists('..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets'))" />
   </Target>
-  <Import Project="..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />
 </Project>

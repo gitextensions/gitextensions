@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Patches;
 using GitUI.Editor;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -38,7 +39,7 @@ namespace GitUI
         }
 
         [CanBeNull]
-        private static PatchApply.Patch GetItemPatch(
+        private static Patch GetItemPatch(
             [NotNull] GitModule module,
             [NotNull] GitItemStatus file,
             [CanBeNull] string firstRevision,
@@ -74,7 +75,7 @@ namespace GitUI
                 return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, ThreadHelper.JoinableTaskFactory.Run(() => file.GetSubmoduleStatusAsync()));
             }
 
-            PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
+            Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
                 diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
 
             if (patch == null)

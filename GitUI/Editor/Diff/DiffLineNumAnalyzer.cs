@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Patches;
 using JetBrains.Annotations;
-using PatchApply;
 
 namespace GitUI.Editor.Diff
 {

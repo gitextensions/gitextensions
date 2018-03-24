@@ -8,7 +8,7 @@ using GitCommands;
 using GitCommands.Settings;
 using JetBrains.Annotations;
 
-namespace PatchApply
+namespace GitCommands.Patches
 {
     public static class PatchManager
     {

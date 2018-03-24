@@ -8,18 +8,17 @@ using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
+using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using PatchApply;
 using SmartFormat;
 
 namespace GitCommands

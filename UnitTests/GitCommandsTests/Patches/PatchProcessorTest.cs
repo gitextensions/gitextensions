@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using GitCommands;
+using GitCommands.Patches;
 using NUnit.Framework;
-using PatchApply;
 
-namespace GitCommandsTests.PatchApply
+namespace GitCommandsTests.Patches
 {
     [TestFixture]
     public sealed class PatchProcessorTest
@@ -23,7 +22,7 @@ namespace GitCommandsTests.PatchApply
 
             string LoadPatch(string fileName)
             {
-                var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patch/testdata", fileName);
+                var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patches/testdata", fileName);
                 var bytes = File.ReadAllBytes(path);
                 return GitModule.LosslessEncoding.GetString(bytes);
             }

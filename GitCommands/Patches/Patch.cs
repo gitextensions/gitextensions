@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace PatchApply
+namespace GitCommands.Patches
 {
     public sealed class Patch
     {

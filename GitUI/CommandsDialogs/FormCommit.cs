@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Patches;
 using GitCommands.Utils;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -18,7 +19,6 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
 using Microsoft.VisualStudio.Threading;
-using PatchApply;
 using ResourceManager;
 using Timer = System.Windows.Forms.Timer;
 

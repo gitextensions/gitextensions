@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs
             // 
             // patchBindingSource
             // 
-            this.patchBindingSource.DataSource = typeof(PatchApply.Patch);
+            this.patchBindingSource.DataSource = typeof(GitCommands.Patches.Patch);
             // 
             // ChangesList
             // 
