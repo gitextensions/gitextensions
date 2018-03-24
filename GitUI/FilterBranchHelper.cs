@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {
@@ -67,6 +69,8 @@ namespace GitUI
 
         public void InitToolStripBranchFilter()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             bool local = _localToolStripMenuItem.Checked;
             bool tag = _tagsToolStripMenuItem.Checked;
             bool remote = _remoteToolStripMenuItem.Checked;
@@ -75,21 +79,26 @@ namespace GitUI
 
             if (Module.IsValidGitWorkingDir())
             {
-                AsyncLoader.DoAsync(() => GetBranchAndTagRefs(local, tag, remote),
-                    branches =>
-                    {
-                        foreach (var branch in branches)
-                        {
-                            _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
-                        }
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default;
 
-                        var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
-                        if (!autoCompleteList.SequenceEqual(branches))
-                        {
-                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
-                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
-                        }
-                    });
+                    var branches = GetBranchAndTagRefs(local, tag, remote);
+
+                    await _NO_TRANSLATE_toolStripBranches.SwitchToMainThreadAsync();
+
+                    foreach (var branch in branches)
+                    {
+                        _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+                    }
+
+                    var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+                    if (!autoCompleteList.SequenceEqual(branches))
+                    {
+                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+                    }
+                }).FileAndForget();
             }
 
             _NO_TRANSLATE_toolStripBranches.Enabled = Module.IsValidGitWorkingDir();

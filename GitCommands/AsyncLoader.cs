@@ -10,7 +10,7 @@ namespace GitCommands
     public sealed class AsyncLoader : IDisposable
     {
         /// <summary>
-        /// Invokes <paramref name="loadContent"/> on the thread pool, then executes <paramref name="continueWith"/> on the current synchronisation context.
+        /// Invokes <paramref name="loadContent"/> on the thread pool, then executes <paramref name="continueWith"/> on the main thread.
         /// </summary>
         /// <remarks>
         /// Note this method does not perform any cancellation of prior loads, nor does it support cancellation upon disposal.
@@ -18,14 +18,14 @@ namespace GitCommands
         /// </remarks>
         /// <typeparam name="T">Type of data returned by <paramref name="loadContent"/> and accepted by <paramref name="continueWith"/>.</typeparam>
         /// <param name="loadContent">A function to invoke on the thread pool that returns a value to be passed to <paramref name="continueWith"/>.</param>
-        /// <param name="continueWith">An action to invoke on the original synchronisation context with the return value from <paramref name="loadContent"/>.</param>
+        /// <param name="continueWith">An action to invoke on the main thread with the return value from <paramref name="loadContent"/>.</param>
         /// <param name="onError">
-        /// An optional callback for notification of exceptions from <paramref name="loadContent"/>.
+        /// A callback for notification of exceptions from <paramref name="loadContent"/>.
         /// Invoked on the original synchronisation context.
         /// Invoked once per exception, so may be called multiple times.
         /// Handlers must set <see cref="AsyncErrorEventArgs.Handled"/> to <c>true</c> to prevent any exceptions being re-thrown and faulting the async operation.
         /// </param>
-        public static async Task<T> DoAsync<T>(Func<T> loadContent, Action<T> continueWith, Action<AsyncErrorEventArgs> onError = null)
+        public static async Task<T> DoAsync<T>(Func<T> loadContent, Action<T> continueWith, Action<AsyncErrorEventArgs> onError)
         {
             using (var loader = new AsyncLoader())
             {
