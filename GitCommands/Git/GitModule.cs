@@ -2370,15 +2370,15 @@ namespace GitCommands
 
         public IReadOnlyList<GitStash> GetStashes()
         {
-            var list = RunGitCmd("stash list").Split('\n');
+            var lines = RunGitCmd("stash list").Split('\n');
 
-            var stashes = new List<GitStash>();
-            for (int i = 0; i < list.Length; i++)
+            var stashes = new List<GitStash>(lines.Length);
+
+            foreach (var line in lines)
             {
-                string stashString = list[i];
-                if (stashString.IndexOf(':') > 0 && !stashString.StartsWith("fatal: "))
+                if (GitStash.TryParse(line, out var stash))
                 {
-                    stashes.Add(new GitStash(stashString, i));
+                    stashes.Add(stash);
                 }
             }
 
