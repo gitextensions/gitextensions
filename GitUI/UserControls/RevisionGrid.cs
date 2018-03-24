@@ -688,7 +688,10 @@ namespace GitUI
         }
 
         public void FormatQuickFilter(string filter,
-                                      bool[] parameters,
+                                      bool filterCommit,
+                                      bool filterCommitter,
+                                      bool filterAuthor,
+                                      bool filterDiffContent,
                                       out string revListArgs,
                                       out string inMemMessageFilter,
                                       out string inMemCommitterFilter,
@@ -703,7 +706,7 @@ namespace GitUI
                 // hash filtering only possible in memory
                 var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
-                if (parameters[0])
+                if (filterCommit)
                 {
                     if (cmdLineSafe && !MessageFilterCouldBeSHA(filter))
                     {
@@ -715,7 +718,7 @@ namespace GitUI
                     }
                 }
 
-                if (parameters[1] && !filter.IsNullOrWhiteSpace())
+                if (filterCommitter && !filter.IsNullOrWhiteSpace())
                 {
                     if (cmdLineSafe)
                     {
@@ -727,7 +730,7 @@ namespace GitUI
                     }
                 }
 
-                if (parameters[2] && !filter.IsNullOrWhiteSpace())
+                if (filterAuthor && !filter.IsNullOrWhiteSpace())
                 {
                     if (cmdLineSafe)
                     {
@@ -739,7 +742,7 @@ namespace GitUI
                     }
                 }
 
-                if (parameters[3])
+                if (filterDiffContent)
                 {
                     if (cmdLineSafe)
                     {
