@@ -89,13 +89,13 @@ Current Branch:
                 foreach (System.Collections.DictionaryEntry icon in resourceSet)
                 {
                     // add entry to toolstrip
-                    if (icon.Value.GetType() == typeof(Icon))
+                    if (icon.Value is Icon)
                     {
                         ////contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                     }
-                    else if (icon.Value.GetType() == typeof(Bitmap))
+                    else if (icon.Value is Bitmap bitmap)
                     {
-                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
+                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click);
                     }
                     ////var aa = icon.Value.GetType();
                 }

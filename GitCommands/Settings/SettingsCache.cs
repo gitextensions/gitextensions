@@ -166,9 +166,9 @@ namespace GitCommands
                         val = defaultValue;
                         return false;
                     }
-                    else if (o is T)
+                    else if (o is T t)
                     {
-                        val = (T)o;
+                        val = t;
                         return true;
                     }
                     else

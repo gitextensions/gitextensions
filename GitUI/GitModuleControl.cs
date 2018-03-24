@@ -122,9 +122,9 @@ namespace GitUI
                 Control parent = Parent;
                 while (parent != null && cmdsSrc == null)
                 {
-                    if (parent is IGitUICommandsSource)
+                    if (parent is IGitUICommandsSource source)
                     {
-                        cmdsSrc = parent as IGitUICommandsSource;
+                        cmdsSrc = source;
                     }
                     else
                     {

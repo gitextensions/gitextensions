@@ -1658,9 +1658,9 @@ namespace GitUI
             // Draw cell background
             e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
             Color? backColor = null;
-            if (cellBackgroundBrush is SolidBrush)
+            if (cellBackgroundBrush is SolidBrush brush)
             {
-                backColor = (cellBackgroundBrush as SolidBrush).Color;
+                backColor = brush.Color;
             }
 
             // Draw graphics column
