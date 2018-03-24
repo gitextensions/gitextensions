@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiffGuid);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
+            bool isAnyItemSelected = DiffFiles.SelectedItems.Any();
 
             // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();

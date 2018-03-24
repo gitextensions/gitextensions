@@ -1717,7 +1717,7 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (_currentFilesList == null || _currentFilesList.SelectedItems.Count() == 0)
+                if (_currentFilesList == null || !_currentFilesList.SelectedItems.Any())
                 {
                     return;
                 }
