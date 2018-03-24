@@ -2322,7 +2322,11 @@ namespace GitCommands
         public string[] GetRemotes(bool allowEmpty = true)
         {
             string remotes = RunGitCmd("remote show");
-            return allowEmpty ? remotes.Split('\n') : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // TODO why allowEmpty? splitting on \n always produces a meaningless blank line at the end
+            return allowEmpty
+                ? remotes.Split('\n')
+                : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public IEnumerable<string> GetSettings(string setting)
