@@ -702,5 +702,18 @@ namespace GitCommandsTests.Git
                 "am --3way --signoff --ignore-whitespace",
                 GitCommandHelpers.ApplyMailboxPatchCmd(true));
         }
+
+        [Test]
+        public void GetRemoteName()
+        {
+            Assert.AreEqual("foo", GitCommandHelpers.GetRemoteName("refs/remotes/foo/master"));
+            Assert.AreEqual("", GitCommandHelpers.GetRemoteName("refs/tags/1.0.0"));
+
+            var remotes = new[] { "foo", "bar" };
+
+            Assert.AreEqual("foo", GitCommandHelpers.GetRemoteName("foo/master", remotes));
+            Assert.AreEqual("", GitCommandHelpers.GetRemoteName("food/master", remotes));
+            Assert.AreEqual("", GitCommandHelpers.GetRemoteName("refs/tags/1.0.0", remotes));
+        }
     }
 }

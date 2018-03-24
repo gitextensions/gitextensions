@@ -1049,13 +1049,37 @@ namespace GitCommands
             };
         }
 
-        public static string GetRemoteName(string completeName, IEnumerable<string> remotes)
+        [NotNull]
+        public static string GetRemoteName([NotNull] string refName)
         {
-            string trimmedName = completeName.StartsWith("refs/remotes/") ? completeName.Substring(13) : completeName;
+            var regex = new Regex("^refs/remotes/([^/]+)");
 
-            foreach (string remote in remotes)
+            var match = regex.Match(refName);
+
+            if (match.Success)
             {
-                if (trimmedName.StartsWith(string.Concat(remote, "/")))
+                return match.Groups[1].Value;
+            }
+
+            // This method requires the full form of the ref path, which begins with "refs/".
+            // The overload which accepts multiple remote names can be used when the format might
+            // be abbreviated to "remote/branch".
+            Debug.Assert(refName.StartsWith("refs/"), "Must begin with \"refs/\".");
+
+            return string.Empty;
+        }
+
+        [NotNull]
+        public static string GetRemoteName([NotNull] string refName, [NotNull, ItemNotNull] IEnumerable<string> remotes)
+        {
+            if (refName.StartsWith("refs/"))
+            {
+                return GetRemoteName(refName);
+            }
+
+            foreach (var remote in remotes)
+            {
+                if (refName.StartsWith(remote) && refName.Length > remote.Length && refName[remote.Length] == '/')
                 {
                     return remote;
                 }
