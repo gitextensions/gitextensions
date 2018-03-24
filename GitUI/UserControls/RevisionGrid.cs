@@ -1290,11 +1290,11 @@ namespace GitUI
                     RefsOptions = _refsOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
                     PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
+                    InMemFilter = revGraphIMF
                 };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
-                _revisionGraphCommand.InMemFilter = revGraphIMF;
                 _revisionGraphCommand.Execute();
                 LoadRevisions();
                 SetRevisionsLayout();

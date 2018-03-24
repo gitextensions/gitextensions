@@ -1684,9 +1684,10 @@ namespace GitUI
             switch (args[1])
             {
                 case "about":
-                    var frm = new AboutBox();
-                    frm.StartPosition = FormStartPosition.CenterScreen;
-                    Application.Run(frm);
+                    Application.Run(new AboutBox
+                    {
+                        StartPosition = FormStartPosition.CenterScreen
+                    });
                     return;
                 case "add":
                 case "addfiles":
