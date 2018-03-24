@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -87,9 +86,6 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
-        public static readonly char RefSeparator = '/';
-        public static readonly string RefSep = RefSeparator.ToString(CultureInfo.InvariantCulture);
-
         private const char LineSeparator = '\n';
         public static readonly char ActiveBranchIndicator = '*';
 

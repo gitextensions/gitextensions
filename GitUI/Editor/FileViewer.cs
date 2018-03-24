@@ -218,7 +218,7 @@ namespace GitUI.Editor
             _internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
             ReloadHotkeys();
             Font = AppSettings.DiffFont;

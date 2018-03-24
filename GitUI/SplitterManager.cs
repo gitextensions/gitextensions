@@ -39,11 +39,6 @@ namespace GitUI
             _splitters.ForEach(s => s.SaveToSettings(_settings));
         }
 
-        public void AdjustAccordingToFontSize()
-        {
-            _splitters.ForEach(s => s.AdjustToCurrentFontSize());
-        }
-
         private class SplitterData
         {
             public SplitContainer Splitter;

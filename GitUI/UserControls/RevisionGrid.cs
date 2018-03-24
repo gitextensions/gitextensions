@@ -243,8 +243,6 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public int LastScrollPos { get; private set; }
-        [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
         public Font RefsFont { get; private set; }
@@ -776,11 +774,6 @@ namespace GitUI
 
             SetShowBranches();
             return true;
-        }
-
-        public void SetLimit(int limit)
-        {
-            _revisionFilter.SetLimit(limit);
         }
 
         public override void Refresh()

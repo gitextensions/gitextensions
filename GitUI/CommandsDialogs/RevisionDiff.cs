@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
             DiffText.ReloadHotkeys();
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
             _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs
 
             GotFocus += (s, e1) => DiffFiles.Focus();
 
-            base.OnRuntimeLoad(e);
+            base.OnRuntimeLoad();
         }
 
         private string DescribeRevision(string sha1)

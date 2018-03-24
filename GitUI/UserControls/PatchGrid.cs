@@ -28,7 +28,7 @@ namespace GitUI
             Status.Width = DpiUtil.Scale(80);
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
             Initialize();
         }

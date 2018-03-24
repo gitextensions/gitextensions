@@ -271,16 +271,7 @@ namespace GitUI.CommandsDialogs
             ////Cursor.Current = Cursors.Default;
         }
 
-        #region Hotkey commands
-
         public static readonly string HotkeySettingsName = "Scripts";
-
-        internal enum Commands
-        {
-            NothingYet
-        }
-
-        #endregion
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {

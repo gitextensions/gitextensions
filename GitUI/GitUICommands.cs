@@ -264,7 +264,7 @@ namespace GitUI
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
         {
-            return StartDeleteBranchDialog(owner, new string[] { branch });
+            return StartDeleteBranchDialog(owner, new[] { branch });
         }
 
         public bool StartDeleteBranchDialog(IWin32Window owner, IEnumerable<string> branches)
@@ -1295,7 +1295,7 @@ namespace GitUI
         {
             bool Action()
             {
-                using (var form = new FormRebase(this, @from, to, onto, interactive, startRebaseImmediately))
+                using (var form = new FormRebase(this, from, to, onto, interactive, startRebaseImmediately))
                 {
                     form.ShowDialog(owner);
                 }

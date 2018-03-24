@@ -45,7 +45,6 @@ namespace GitUI.Script
         private bool _isSplitMenuVisible;
 
         private ContextMenuStrip _splitMenuStrip;
-        private ContextMenu _splitMenu;
 
         private TextFormatFlags _textFormatFlags = TextFormatFlags.Default;
 
@@ -61,33 +60,6 @@ namespace GitUI.Script
         {
             get => SplitMenuStrip;
             set => SplitMenuStrip = value;
-        }
-
-        [DefaultValue(null)]
-        public ContextMenu SplitMenu
-        {
-            get { return _splitMenu; }
-            set
-            {
-                // remove the event handlers for the old SplitMenu
-                if (_splitMenu != null)
-                {
-                    _splitMenu.Popup -= SplitMenu_Popup;
-                }
-
-                // add the event handlers for the new SplitMenu
-                if (value != null)
-                {
-                    ShowSplit = true;
-                    value.Popup += SplitMenu_Popup;
-                }
-                else
-                {
-                    ShowSplit = false;
-                }
-
-                _splitMenu = value;
-            }
         }
 
         [DefaultValue(null)]
@@ -240,8 +212,6 @@ namespace GitUI.Script
             }
         }
 
-        private bool _isMouseEntered;
-
         protected override void OnMouseEnter(EventArgs e)
         {
             if (!_showSplit)
@@ -249,8 +219,6 @@ namespace GitUI.Script
                 base.OnMouseEnter(e);
                 return;
             }
-
-            _isMouseEntered = true;
 
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
             {
@@ -266,8 +234,6 @@ namespace GitUI.Script
                 return;
             }
 
-            _isMouseEntered = false;
-
             if (!State.Equals(PushButtonState.Pressed) && !State.Equals(PushButtonState.Disabled))
             {
                 State = Focused ? PushButtonState.Default : PushButtonState.Normal;
@@ -280,12 +246,6 @@ namespace GitUI.Script
             {
                 base.OnMouseDown(e);
                 return;
-            }
-
-            // handle ContextMenu re-clicking the drop-down region to close the menu
-            if (_splitMenu != null && e.Button == MouseButtons.Left && !_isMouseEntered)
-            {
-                _skipNextOpen = true;
             }
 
             if ((_dropDownRectangle.Contains(e.Location) || WholeButtonDropdown) &&
@@ -312,7 +272,7 @@ namespace GitUI.Script
             {
                 ShowContextMenuStrip();
             }
-            else if ((_splitMenuStrip == null && _splitMenu == null) || !_isSplitMenuVisible)
+            else if (_splitMenuStrip == null || !_isSplitMenuVisible)
             {
                 SetButtonDrawState();
 
@@ -792,7 +752,7 @@ namespace GitUI.Script
             return VerticalAlignment.Top;
         }
 
-        internal static Rectangle AlignInRectangle(Rectangle outer, Size inner, System.Drawing.ContentAlignment align)
+        private static Rectangle AlignInRectangle(Rectangle outer, Size inner, System.Drawing.ContentAlignment align)
         {
             int x = 0;
             int y = 0;
@@ -840,14 +800,7 @@ namespace GitUI.Script
 
             State = PushButtonState.Pressed;
 
-            if (_splitMenu != null)
-            {
-                _splitMenu.Show(this, new Point(0, Height));
-            }
-            else
-            {
-                _splitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
-            }
+            _splitMenuStrip?.Show(this, new Point(0, Height), ToolStripDropDownDirection.BelowRight);
         }
 
         private void SplitMenuStrip_Opening(object sender, CancelEventArgs e)
@@ -865,11 +818,6 @@ namespace GitUI.Script
             {
                 _skipNextOpen = _dropDownRectangle.Contains(PointToClient(Cursor.Position)) && MouseButtons == MouseButtons.Left;
             }
-        }
-
-        private void SplitMenu_Popup(object sender, EventArgs e)
-        {
-            _isSplitMenuVisible = true;
         }
 
         protected override void WndProc(ref Message m)

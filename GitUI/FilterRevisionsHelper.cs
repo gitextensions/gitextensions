@@ -185,11 +185,6 @@ namespace GitUI
             }
         }
 
-        public void SetLimit(int limit)
-        {
-            _NO_TRANSLATE_revisionGrid.SetLimit(limit);
-        }
-
         public void Dispose()
         {
             Dispose(true);

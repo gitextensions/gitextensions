@@ -69,15 +69,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         }
 
         /// <summary>
-        /// Clears history and sets current item
-        /// </summary>
-        public void Reset(string curr)
-        {
-            Clear();
-            _prevItems.Push(curr);
-        }
-
-        /// <summary>
         /// Clears both backward and forward history
         /// </summary>
         public void Clear()
