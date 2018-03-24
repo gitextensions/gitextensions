@@ -20,15 +20,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void GitLogFormLoad(object sender, EventArgs e)
         {
-            SubscribeToEvents();
-            RefreshLogItems();
+            AppSettings.GitLog.CommandsChanged += OnCommandsLogChanged;
+            GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
 
+            RefreshLogItems();
             RefreshCommandCacheItems();
         }
 
         private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            UnsubscribeFromEvents();
+            AppSettings.GitLog.CommandsChanged -= OnCommandsLogChanged;
+            GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
             instance = null;
         }
 
@@ -117,18 +119,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             TopMost = !TopMost;
             alwaysOnTopCheckBox.Checked = TopMost;
-        }
-
-        private void UnsubscribeFromEvents()
-        {
-            AppSettings.GitLog.CommandsChanged -= OnCommandsLogChanged;
-            GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
-        }
-
-        private void SubscribeToEvents()
-        {
-            AppSettings.GitLog.CommandsChanged += OnCommandsLogChanged;
-            GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
         }
 
         private void OnCommandsLogChanged(object sender, EventArgs e)

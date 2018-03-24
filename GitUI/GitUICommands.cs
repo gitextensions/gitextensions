@@ -1553,24 +1553,6 @@ namespace GitUI
             return true;
         }
 
-        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision, int? initialLine = null)
-        {
-            return DoActionOnRepo(owner, true, false, PreBlame, PostBlame, () =>
-                {
-                    using (var frm = new FormBlame(this, fileName, revision, initialLine))
-                    {
-                        frm.ShowDialog(owner);
-                    }
-
-                    return true;
-                });
-        }
-
-        public bool StartBlameDialog(string fileName, int? initialLine = null)
-        {
-            return StartBlameDialog(null, fileName, null, initialLine);
-        }
-
         private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster,
                                                 Action<IRepositoryHostPlugin> call)
         {
@@ -1996,7 +1978,15 @@ namespace GitUI
                 }
             }
 
-            StartBlameDialog(filenameFromBlame, initialLine);
+            DoActionOnRepo(null, true, false, PreBlame, PostBlame, () =>
+            {
+                using (var frm = new FormBlame(this, filenameFromBlame, null, initialLine))
+                {
+                    frm.ShowDialog(null);
+                }
+
+                return true;
+            });
         }
 
         private void RunMergeToolOrConflictCommand(Dictionary<string, string> arguments)
