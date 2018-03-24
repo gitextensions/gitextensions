@@ -53,7 +53,7 @@ namespace GitUI
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
 
-        [NotNull]
+        [CanBeNull]
         private static string GetSelectedPatch(
             [NotNull] this FileViewer diffViewer,
             [CanBeNull] string firstRevision,
