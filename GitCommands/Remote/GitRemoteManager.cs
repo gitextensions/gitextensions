@@ -294,7 +294,7 @@ namespace GitCommands.Remote
             Func<string[]> func;
             if (enabled)
             {
-                func = module.GetRemotes;
+                func = () => module.GetRemotes();
             }
             else
             {
