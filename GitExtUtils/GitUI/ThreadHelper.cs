@@ -81,6 +81,10 @@ namespace GitUI
                     {
                         await task.ConfigureAwait(false);
                     }
+                    catch (OperationCanceledException)
+                    {
+                        // Do not rethrow these
+                    }
                     catch (Exception ex) when (fileOnlyIf?.Invoke(ex) ?? true)
                     {
                         await JoinableTaskFactory.SwitchToMainThreadAsync();

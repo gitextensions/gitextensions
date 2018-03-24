@@ -84,11 +84,12 @@
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
-    <Compile Include="ControlThreadingTests.cs" />
+    <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="SplitterManagerTest.cs" />
+    <Compile Include="ThreadHelperTests.cs" />
     <Compile Include="TranslationTest.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlightingFixture.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControlFixture.cs" />

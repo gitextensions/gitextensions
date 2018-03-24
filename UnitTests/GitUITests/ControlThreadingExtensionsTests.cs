@@ -12,7 +12,7 @@ namespace GitUITests
 {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
-    public class ControlThreadingTests
+    public class ControlThreadingExtensionsTests
     {
         [Test]
         public void ControlSwitchToMainThreadOnMainThread()
