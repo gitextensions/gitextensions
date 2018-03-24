@@ -2755,27 +2755,32 @@ namespace GitCommands
                 return string.Empty;
             }
 
-            string head;
-            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
-            if (File.Exists(headFileName))
-            {
-                head = File.ReadAllText(headFileName, SystemEncoding);
-                if (!head.Contains("ref:"))
-                {
-                    return DetachedBranch;
-                }
-            }
-            else
+            // eg. "/path/to/repo/.git/HEAD"
+            var headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
+
+            if (!File.Exists(headFileName))
             {
                 return string.Empty;
             }
 
-            if (!string.IsNullOrEmpty(head))
+            var headFileContents = File.ReadAllText(headFileName, SystemEncoding);
+
+            // eg. "ref: refs/heads/master"
+            //     "9601551c564b48208bccd50b705264e9bd68140d"
+
+            if (!headFileContents.StartsWith("ref: "))
             {
-                return head.Replace("ref:", "").Replace("refs/heads/", string.Empty).Trim();
+                return DetachedBranch;
             }
 
-            return string.Empty;
+            const string prefix = "ref: refs/heads/";
+
+            if (!headFileContents.StartsWith(prefix))
+            {
+                return string.Empty;
+            }
+
+            return headFileContents.Substring(prefix.Length).TrimEnd();
         }
 
         /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
