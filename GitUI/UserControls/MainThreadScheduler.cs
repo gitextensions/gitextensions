@@ -11,16 +11,18 @@ namespace GitUI.UserControls
 
         public override IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)
         {
+            var cancellationDisposable = new CancellationDisposable();
             var disposable = new SingleAssignmentDisposable();
             var normalizedTime = Scheduler.Normalize(dueTime);
+            var token = cancellationDisposable.Token;
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await Task.Delay(normalizedTime);
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await Task.Delay(normalizedTime, token);
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                     disposable.Disposable = action(this, state);
                 });
-            return disposable;
+            return new CompositeDisposable(cancellationDisposable, disposable);
         }
     }
 }
