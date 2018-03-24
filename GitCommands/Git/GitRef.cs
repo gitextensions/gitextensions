@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -10,21 +11,6 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-
-        /// <summary>"refs/tags/"</summary>
-        public static readonly string RefsTagsPrefix = "refs/tags/";
-
-        /// <summary>"refs/heads/"</summary>
-        public static readonly string RefsHeadsPrefix = "refs/heads/";
-
-        /// <summary>"refs/remotes/"</summary>
-        public static readonly string RefsRemotesPrefix = "refs/remotes/";
-
-        /// <summary>"refs/bisect/"</summary>
-        public static readonly string RefsBisectPrefix = "refs/bisect/";
-
-        /// <summary>"^{}"</summary>
-        public static readonly string TagDereferenceSuffix = "^{}";
 
         public IGitModule Module { get; }
 
@@ -40,11 +26,12 @@ namespace GitCommands
             Selected = false;
             CompleteName = completeName;
             Remote = remote;
-            IsTag = CompleteName.StartsWith(RefsTagsPrefix);
-            IsDereference = CompleteName.EndsWith(TagDereferenceSuffix);
-            IsHead = CompleteName.StartsWith(RefsHeadsPrefix);
-            IsRemote = CompleteName.StartsWith(RefsRemotesPrefix);
-            IsBisect = CompleteName.StartsWith(RefsBisectPrefix);
+
+            IsTag = CompleteName.StartsWith(GitRefName.RefsTagsPrefix);
+            IsDereference = CompleteName.EndsWith(GitRefName.TagDereferenceSuffix);
+            IsHead = CompleteName.StartsWith(GitRefName.RefsHeadsPrefix);
+            IsRemote = CompleteName.StartsWith(GitRefName.RefsRemotesPrefix);
+            IsBisect = CompleteName.StartsWith(GitRefName.RefsBisectPrefix);
 
             var name = ParseName();
             Name = name.IsNullOrWhiteSpace() ? CompleteName : name;
@@ -122,7 +109,7 @@ namespace GitCommands
                 }
                 else
                 {
-                    Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
+                    Module.SetSetting(_mergeSettingName, GitRefName.GetFullBranchName(value));
                 }
             }
         }
@@ -135,7 +122,7 @@ namespace GitCommands
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
-            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
+            return merge.StartsWith(GitRefName.RefsHeadsPrefix) ? merge.Substring(11) : merge;
         }
 
         public static GitRef NoHead(GitModule module)
@@ -167,8 +154,8 @@ namespace GitCommands
             {
                 // we need the one containing ^{}, because it contains the reference
                 var temp =
-                    CompleteName.Contains(TagDereferenceSuffix)
-                        ? CompleteName.Substring(0, CompleteName.Length - TagDereferenceSuffix.Length)
+                    CompleteName.Contains(GitRefName.TagDereferenceSuffix)
+                        ? CompleteName.Substring(0, CompleteName.Length - GitRefName.TagDereferenceSuffix.Length)
                         : CompleteName;
 
                 return temp.Substring(CompleteName.LastIndexOf("tags/") + 5);

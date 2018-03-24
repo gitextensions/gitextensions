@@ -161,20 +161,6 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void GetFullBranchNameTest()
-        {
-            Assert.AreEqual(null, GitCommandHelpers.GetFullBranchName(null));
-            Assert.AreEqual("", GitCommandHelpers.GetFullBranchName(""));
-            Assert.AreEqual("", GitCommandHelpers.GetFullBranchName("    "));
-            Assert.AreEqual("4e0f0fe3f6add43557913c354de02560b8faec32", GitCommandHelpers.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32"));
-            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName("master"));
-            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName(" master "));
-            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName("refs/heads/master"));
-            Assert.AreEqual("refs/heads/release/2.48", GitCommandHelpers.GetFullBranchName("refs/heads/release/2.48"));
-            Assert.AreEqual("refs/tags/my-tag", GitCommandHelpers.GetFullBranchName("refs/tags/my-tag"));
-        }
-
-        [Test]
         public void TestGetPlinkCompatibleUrl_Incompatible()
         {
             // Test urls that are incompatible and need to be changed
@@ -701,19 +687,6 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "am --3way --signoff --ignore-whitespace",
                 GitCommandHelpers.ApplyMailboxPatchCmd(true));
-        }
-
-        [Test]
-        public void GetRemoteName()
-        {
-            Assert.AreEqual("foo", GitCommandHelpers.GetRemoteName("refs/remotes/foo/master"));
-            Assert.AreEqual("", GitCommandHelpers.GetRemoteName("refs/tags/1.0.0"));
-
-            var remotes = new[] { "foo", "bar" };
-
-            Assert.AreEqual("foo", GitCommandHelpers.GetRemoteName("foo/master", remotes));
-            Assert.AreEqual("", GitCommandHelpers.GetRemoteName("food/master", remotes));
-            Assert.AreEqual("", GitCommandHelpers.GetRemoteName("refs/tags/1.0.0", remotes));
         }
     }
 }

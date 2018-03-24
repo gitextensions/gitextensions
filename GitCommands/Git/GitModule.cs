@@ -86,7 +86,6 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
-        private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
@@ -1725,7 +1724,7 @@ namespace GitCommands
 
                 if (!string.IsNullOrEmpty(localBranch))
                 {
-                    branchArguments += ":" + GitCommandHelpers.GetFullBranchName(localBranch);
+                    branchArguments += ":" + GitRefName.GetFullBranchName(localBranch);
                 }
             }
 
@@ -1802,8 +1801,7 @@ namespace GitCommands
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
             fromBranch = FormatBranchName(fromBranch);
-
-            toBranch = GitCommandHelpers.GetFullBranchName(toBranch)?.Replace(" ", "");
+            toBranch = GitRefName.GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
             {
@@ -2883,7 +2881,7 @@ namespace GitCommands
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))
-                .Where(b => !string.IsNullOrEmpty(GitCommandHelpers.GetRemoteName(b, remotes)))
+                .Where(b => !string.IsNullOrEmpty(GitRefName.GetRemoteName(b, remotes)))
                 .ToList();
         }
 
@@ -2927,10 +2925,10 @@ namespace GitCommands
             {
                 var refName = match.Groups["refname"].Value;
                 var objectId = match.Groups["objectid"].Value;
-                var remoteName = GitCommandHelpers.GetRemoteName(refName);
+                var remoteName = GitRefName.GetRemoteName(refName);
                 var head = new GitRef(this, objectId, refName, remoteName);
 
-                if (DefaultHeadPattern.IsMatch(refName))
+                if (GitRefName.IsRemoteHead(refName))
                 {
                     headByRemote[remoteName] = head;
                 }
@@ -3544,7 +3542,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(branchName));
             }
 
-            string fullBranchName = GitCommandHelpers.GetFullBranchName(branchName);
+            string fullBranchName = GitRefName.GetFullBranchName(branchName);
             if (string.IsNullOrEmpty(RevParse(fullBranchName)))
             {
                 fullBranchName = branchName;

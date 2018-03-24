@@ -2564,7 +2564,7 @@ namespace GitUI
             }
 
             // For now there is no action that could be done on currentBranch
-            string currentBranchRef = GitRef.RefsHeadsPrefix + Module.GetSelectedBranch();
+            string currentBranchRef = GitRefName.RefsHeadsPrefix + Module.GetSelectedBranch();
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;

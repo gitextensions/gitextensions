@@ -324,39 +324,6 @@ namespace GitCommands
             return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
-        /// <summary>
-        /// Check if a string represents a commit hash
-        /// </summary>
-        private static bool IsCommitHash(string value)
-        {
-            return GitRevision.Sha1HashRegex.IsMatch(value);
-        }
-
-        [ContractAnnotation("branch:null=>null")]
-        public static string GetFullBranchName(string branch)
-        {
-            if (branch == null)
-            {
-                return null;
-            }
-
-            branch = branch.Trim();
-
-            if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
-            {
-                return branch;
-            }
-
-            // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
-            // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
-            if (IsCommitHash(branch))
-            {
-                return branch;
-            }
-
-            return "refs/heads/" + branch;
-        }
-
         public static string DeleteTagCmd(string tagName)
         {
             return "tag -d \"" + tagName + "\"";
@@ -1047,45 +1014,6 @@ namespace GitCommands
                 IsIgnored = x == '!',
                 IsConflict = x == 'U'
             };
-        }
-
-        [NotNull]
-        public static string GetRemoteName([NotNull] string refName)
-        {
-            var regex = new Regex("^refs/remotes/([^/]+)");
-
-            var match = regex.Match(refName);
-
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-
-            // This method requires the full form of the ref path, which begins with "refs/".
-            // The overload which accepts multiple remote names can be used when the format might
-            // be abbreviated to "remote/branch".
-            Debug.Assert(refName.StartsWith("refs/"), "Must begin with \"refs/\".");
-
-            return string.Empty;
-        }
-
-        [NotNull]
-        public static string GetRemoteName([NotNull] string refName, [NotNull, ItemNotNull] IEnumerable<string> remotes)
-        {
-            if (refName.StartsWith("refs/"))
-            {
-                return GetRemoteName(refName);
-            }
-
-            foreach (var remote in remotes)
-            {
-                if (refName.StartsWith(remote) && refName.Length > remote.Length && refName[remote.Length] == '/')
-                {
-                    return remote;
-                }
-            }
-
-            return string.Empty;
         }
 
         public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string message, int? log)
