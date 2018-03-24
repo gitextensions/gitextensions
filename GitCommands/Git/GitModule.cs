@@ -2907,46 +2907,50 @@ namespace GitCommands
             return "";
         }
 
-        public IReadOnlyList<IGitRef> GetTreeRefs(string tree)
+        [NotNull, ItemNotNull]
+        public IReadOnlyList<IGitRef> GetTreeRefs([NotNull] string tree)
         {
-            var itemsStrings = tree.Split('\n');
+            // Parse lines of format:
+            //
+            // 69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master
+            // 69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master
+            // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
+
+            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40}) (?<refname>.+)$", RegexOptions.Multiline);
+
+            var matches = regex.Matches(tree);
 
             var gitRefs = new List<IGitRef>();
-            var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
-            var remotes = GetRemotes(false);
+            var headByRemote = new Dictionary<string, GitRef>();
 
-            foreach (var itemsString in itemsStrings)
+            foreach (Match match in matches)
             {
-                if (itemsString == null || itemsString.Length <= 42 || itemsString.StartsWith("error: "))
-                {
-                    continue;
-                }
+                var refName = match.Groups["refname"].Value;
+                var objectId = match.Groups["objectid"].Value;
+                var remoteName = GitCommandHelpers.GetRemoteName(refName);
+                var head = new GitRef(this, objectId, refName, remoteName);
 
-                var completeName = itemsString.Substring(41).Trim();
-                var guid = itemsString.Substring(0, 40);
-                if (GitRevision.IsFullSha1Hash(guid) && completeName.StartsWith("refs/"))
+                if (DefaultHeadPattern.IsMatch(refName))
                 {
-                    var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
-                    var head = new GitRef(this, guid, completeName, remoteName);
-                    if (DefaultHeadPattern.IsMatch(completeName))
-                    {
-                        defaultHeads[remoteName] = head;
-                    }
-                    else
-                    {
-                        gitRefs.Add(head);
-                    }
+                    headByRemote[remoteName] = head;
+                }
+                else
+                {
+                    gitRefs.Add(head);
                 }
             }
 
             // do not show default head if remote has a branch on the same commit
-            GitRef defaultHead;
-            foreach (var gitRef in gitRefs.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
+            foreach (var gitRef in gitRefs)
             {
-                defaultHeads.Remove(gitRef.Remote);
+                if (headByRemote.TryGetValue(gitRef.Remote, out var defaultHead) &&
+                    gitRef.Guid == defaultHead.Guid)
+                {
+                    headByRemote.Remove(gitRef.Remote);
+                }
             }
 
-            gitRefs.AddRange(defaultHeads.Values);
+            gitRefs.AddRange(headByRemote.Values);
 
             return gitRefs;
         }
