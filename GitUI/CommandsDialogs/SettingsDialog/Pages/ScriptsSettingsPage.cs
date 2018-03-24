@@ -141,7 +141,7 @@ Current Branch:
                 return;
             }
 
-            ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+            var scriptInfo = (ScriptInfo)ScriptList.SelectedRows[0].DataBoundItem;
 
             nameTextBox.Text = scriptInfo.Name;
             commandTextBox.Text = scriptInfo.Command;
@@ -187,7 +187,8 @@ Current Branch:
         {
             if (ScriptList.SelectedRows.Count > 0)
             {
-                ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                var selectedScriptInfo = (ScriptInfo)ScriptList.SelectedRows[0].DataBoundItem;
+
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;

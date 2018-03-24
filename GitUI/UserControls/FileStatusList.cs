@@ -720,7 +720,8 @@ namespace GitUI
 
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            var cm = sender as ContextMenuStrip;
+            var cm = (ContextMenuStrip)sender;
+
             if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
             {
                 cm.Items.Insert(1, _openSubmoduleMenuItem);

@@ -73,7 +73,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (SettingsPageSelected != null)
             {
-                ISettingsPage page = node.Tag as ISettingsPage;
+                var page = (ISettingsPage)node.Tag;
+
                 if (page.GuiControl == null)
                 {
                     var firstSubNode = node.FirstNode;
