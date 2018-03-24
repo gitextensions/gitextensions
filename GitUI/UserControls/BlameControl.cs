@@ -20,7 +20,7 @@ namespace GitUI.Blame
 
         [CanBeNull] private GitBlameLine _lastBlameLine;
         [CanBeNull] private GitBlameLine _clickedBlameLine;
-        private GitBlameCommit _lastBlameCommit;
+        private GitBlameCommit _highlightedCommit;
         private GitBlame _blame;
         private RevisionGrid _revGrid;
         private string _blameHash;
@@ -28,7 +28,7 @@ namespace GitUI.Blame
         private Encoding _encoding;
         private int _lastTooltipX = -100;
         private int _lastTooltipY = -100;
-        private string _lastTooltip = "";
+        private GitBlameCommit _tooltipCommit;
         private bool _changingScrollPosition;
 
         public BlameControl()
@@ -102,26 +102,28 @@ namespace GitUI.Blame
                 return;
             }
 
-            int line = BlameCommitter.GetLineFromVisualPosY(e.Y);
+            var lineIndex = BlameCommitter.GetLineFromVisualPosY(e.Y);
 
-            if (line >= _blame.Lines.Count)
+            var blameCommit = lineIndex < _blame.Lines.Count
+                ? _blame.Lines[lineIndex].Commit
+                : null;
+
+            HighlightLinesForCommit(blameCommit);
+
+            if (blameCommit == null)
             {
                 return;
             }
 
-            GitBlameCommit blameCommit = _blame.Lines[line].Commit;
-
-            string tooltipText = blameCommit.ToString();
-
             int newTooltipX = splitContainer2.SplitterDistance + 60;
             int newTooltipY = e.Y + splitContainer1.SplitterDistance + 20;
 
-            if (_lastTooltip != tooltipText || Math.Abs(_lastTooltipX - newTooltipX) > 5 || Math.Abs(_lastTooltipY - newTooltipY) > 5)
+            if (_tooltipCommit != blameCommit || Math.Abs(_lastTooltipX - newTooltipX) > 5 || Math.Abs(_lastTooltipY - newTooltipY) > 5)
             {
-                _lastTooltip = tooltipText;
+                _tooltipCommit = blameCommit;
                 _lastTooltipX = newTooltipX;
                 _lastTooltipY = newTooltipY;
-                blameTooltip.Show(tooltipText, this, newTooltipX, newTooltipY);
+                blameTooltip.Show(blameCommit.ToString(), this, newTooltipX, newTooltipY);
             }
         }
 
@@ -132,50 +134,61 @@ namespace GitUI.Blame
                 return;
             }
 
-            int line = BlameFile.GetLineFromVisualPosY(e.Y);
+            var lineIndex = BlameFile.GetLineFromVisualPosY(e.Y);
 
-            if (line >= _blame.Lines.Count)
+            var blameCommit = lineIndex < _blame.Lines.Count
+                ? _blame.Lines[lineIndex].Commit
+                : null;
+
+            HighlightLinesForCommit(blameCommit);
+        }
+
+        private void HighlightLinesForCommit([CanBeNull] GitBlameCommit commit)
+        {
+            if (commit == _highlightedCommit)
             {
                 return;
             }
 
-            GitBlameCommit blameCommit = _blame.Lines[line].Commit;
+            _highlightedCommit = commit;
 
-            if (blameCommit != _lastBlameCommit)
+            BlameCommitter.ClearHighlighting();
+            BlameFile.ClearHighlighting();
+
+            if (commit == null)
             {
-                BlameCommitter.ClearHighlighting();
-                BlameFile.ClearHighlighting();
-                int startLine = -1;
-                int prevLine = -1;
-                for (int i = 0; i < _blame.Lines.Count; i++)
-                {
-                    if (ReferenceEquals(_blame.Lines[i].Commit, blameCommit))
-                    {
-                        if (prevLine != i - 1 && startLine != -1)
-                        {
-                            BlameCommitter.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
-                            BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
-                            startLine = -1;
-                        }
+                return;
+            }
 
-                        prevLine = i;
-                        if (startLine == -1)
-                        {
-                            startLine = i;
-                        }
+            int startLine = -1;
+            int prevLine = -1;
+            for (int i = 0; i < _blame.Lines.Count; i++)
+            {
+                if (ReferenceEquals(_blame.Lines[i].Commit, commit))
+                {
+                    if (prevLine != i - 1 && startLine != -1)
+                    {
+                        BlameCommitter.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+                        BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+                        startLine = -1;
+                    }
+
+                    prevLine = i;
+                    if (startLine == -1)
+                    {
+                        startLine = i;
                     }
                 }
-
-                if (startLine != -1)
-                {
-                    BlameCommitter.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
-                    BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
-                }
-
-                BlameCommitter.Refresh();
-                BlameFile.Refresh();
-                _lastBlameCommit = blameCommit;
             }
+
+            if (startLine != -1)
+            {
+                BlameCommitter.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+                BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+            }
+
+            BlameCommitter.Refresh();
+            BlameFile.Refresh();
         }
 
         private void SelectedLineChanged(object sender, SelectedLineEventArgs e)
