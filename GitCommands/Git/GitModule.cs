@@ -3291,24 +3291,6 @@ namespace GitCommands
             string summary;
             string filename;
 
-            void Reset()
-            {
-                hasCommitHeader = false;
-                objectId = null;
-                finalLineNumber = -1;
-                originLineNumber = -1;
-                author = null;
-                authorMail = null;
-                authorTime = DateTime.MinValue;
-                authorTimeZone = null;
-                committer = null;
-                committerMail = null;
-                committerTime = DateTime.MinValue;
-                committerTimeZone = null;
-                summary = null;
-                filename = null;
-            }
-
             Reset();
 
             foreach (var line in output.Split('\n').Select(l => l.TrimEnd('\r')))
@@ -3395,6 +3377,24 @@ namespace GitCommands
             }
 
             return new GitBlame(lines);
+
+            void Reset()
+            {
+                hasCommitHeader = false;
+                objectId = null;
+                finalLineNumber = -1;
+                originLineNumber = -1;
+                author = null;
+                authorMail = null;
+                authorTime = DateTime.MinValue;
+                authorTimeZone = null;
+                committer = null;
+                committerMail = null;
+                committerTime = DateTime.MinValue;
+                committerTimeZone = null;
+                summary = null;
+                filename = null;
+            }
         }
 
         public string GetFileText(string id, Encoding encoding)
