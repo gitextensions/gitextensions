@@ -46,7 +46,8 @@ namespace GitCommands
             IsRemote = CompleteName.StartsWith(RefsRemotesPrefix);
             IsBisect = CompleteName.StartsWith(RefsBisectPrefix);
 
-            ParseName();
+            var name = ParseName();
+            Name = name.IsNullOrWhiteSpace() ? CompleteName : name;
 
             _remoteSettingName = RemoteSettingName(Name);
             _mergeSettingName = string.Format("branch.{0}.merge", Name);
@@ -145,7 +146,7 @@ namespace GitCommands
         #region IGitItem Members
 
         public string Guid { get; }
-        public string Name { get; private set; }
+        public string Name { get; }
 
         #endregion
 
@@ -154,13 +155,15 @@ namespace GitCommands
             return CompleteName;
         }
 
-        private void ParseName()
+        [CanBeNull]
+        private string ParseName()
         {
             if (IsRemote)
             {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                return CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
             }
-            else if (IsTag)
+
+            if (IsTag)
             {
                 // we need the one containing ^{}, because it contains the reference
                 var temp =
@@ -168,22 +171,16 @@ namespace GitCommands
                         ? CompleteName.Substring(0, CompleteName.Length - TagDereferenceSuffix.Length)
                         : CompleteName;
 
-                Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
-            }
-            else if (IsHead)
-            {
-                Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
-            }
-            else
-            {
-                // if we don't know ref type then we don't know if '/' is a valid ref character
-                Name = CompleteName.SkipStr("refs/");
+                return temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
             }
 
-            if (Name.IsNullOrWhiteSpace())
+            if (IsHead)
             {
-                Name = CompleteName;
+                return CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
             }
+
+            // if we don't know ref type then we don't know if '/' is a valid ref character
+            return CompleteName.SkipStr("refs/");
         }
 
         public static ISet<string> GetAmbiguousRefNames(IEnumerable<IGitRef> refs)
