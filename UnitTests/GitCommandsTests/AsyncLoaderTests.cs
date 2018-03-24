@@ -32,6 +32,7 @@ namespace GitCommandsTests
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var loadSignal = new SemaphoreSlim(0);
+                var completeSignal = new SemaphoreSlim(0);
 
                 var started = 0;
                 var completed = 0;
@@ -40,7 +41,7 @@ namespace GitCommandsTests
                     {
                         started++;
                         loadSignal.Release();
-                        Thread.Sleep(100);
+                        completeSignal.Wait();
                     },
                     () => completed++);
 
@@ -48,6 +49,8 @@ namespace GitCommandsTests
 
                 Assert.AreEqual(1, started);
                 Assert.AreEqual(0, completed);
+
+                completeSignal.Release();
 
                 await task;
 
@@ -88,6 +91,7 @@ namespace GitCommandsTests
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var loadSignal = new SemaphoreSlim(0);
+                var completeSignal = new SemaphoreSlim(0);
 
                 var started = 0;
                 var completed = 0;
@@ -96,7 +100,7 @@ namespace GitCommandsTests
                     {
                         started++;
                         loadSignal.Release();
-                        Thread.Sleep(100);
+                        completeSignal.Wait();
                     },
                     () => completed++);
 
@@ -106,6 +110,7 @@ namespace GitCommandsTests
                 Assert.AreEqual(0, completed);
 
                 _loader.Cancel();
+                completeSignal.Release();
 
                 await task;
 
@@ -152,6 +157,7 @@ namespace GitCommandsTests
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var loadSignal = new SemaphoreSlim(0);
+                var completeSignal = new SemaphoreSlim(0);
 
                 var started = 0;
                 var completed = 0;
@@ -160,7 +166,7 @@ namespace GitCommandsTests
                     {
                         started++;
                         loadSignal.Release();
-                        Thread.Sleep(100);
+                        completeSignal.Wait();
                     },
                     () => completed++);
 
@@ -170,6 +176,7 @@ namespace GitCommandsTests
                 Assert.AreEqual(0, completed);
 
                 _loader.Dispose();
+                completeSignal.Release();
 
                 await task;
 

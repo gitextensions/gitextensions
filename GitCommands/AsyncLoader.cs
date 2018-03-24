@@ -112,7 +112,13 @@ namespace GitCommands
                 return;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            try
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+            }
 
             // Invoke continuation unless cancelled
             if (!token.IsCancellationRequested)
@@ -195,7 +201,13 @@ namespace GitCommands
                 return default;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            try
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+            }
 
             // Invoke continuation unless cancelled
             if (!token.IsCancellationRequested)
