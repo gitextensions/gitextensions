@@ -221,7 +221,7 @@ namespace GitUI
         {
             if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
             {
-                SetProgress(e.Text);
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => SetProgressAsync(e.Text)).FileAndForget();
             }
             else
             {
