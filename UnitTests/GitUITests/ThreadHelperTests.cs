@@ -13,7 +13,16 @@ namespace GitUITests
     [Apartment(ApartmentState.STA)]
     public sealed class ThreadHelperTests
     {
-        private static readonly Action EmptyAction = () => { };
+        private static async Task YieldOntoControlMainThreadAsync(Control control)
+        {
+            await control.SwitchToMainThreadAsync();
+        }
+
+        private static async Task ThrowExceptionAsync(Exception ex)
+        {
+            await Task.Yield();
+            throw ex;
+        }
 
         [Test]
         public void FileAndForgetReportsThreadException()
@@ -23,10 +32,10 @@ namespace GitUITests
             {
                 var ex = new Exception();
 
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                ThreadHelper.JoinableTaskFactory.Run(() =>
                 {
-                    await TaskScheduler.Default;
-                    form.InvokeAsync(() => throw ex).FileAndForget();
+                    ThrowExceptionAsync(ex).FileAndForget();
+                    return Task.CompletedTask;
                 });
 
                 JoinPendingOperations();
@@ -42,10 +51,10 @@ namespace GitUITests
                 var form = new Form();
                 form.Dispose();
 
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                ThreadHelper.JoinableTaskFactory.Run(() =>
                 {
-                    await TaskScheduler.Default;
-                    form.InvokeAsync(EmptyAction).FileAndForget();
+                    YieldOntoControlMainThreadAsync(form).FileAndForget();
+                    return Task.CompletedTask;
                 });
 
                 JoinPendingOperations();
@@ -61,10 +70,10 @@ namespace GitUITests
             {
                 var ex = new Exception();
 
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                ThreadHelper.JoinableTaskFactory.Run(() =>
                 {
-                    await TaskScheduler.Default;
-                    form.InvokeAsync(() => throw ex).FileAndForget(fileOnlyIf: e => e == ex);
+                    ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
+                    return Task.CompletedTask;
                 });
 
                 JoinPendingOperations();
@@ -80,10 +89,10 @@ namespace GitUITests
             {
                 var ex = new Exception();
 
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                ThreadHelper.JoinableTaskFactory.Run(() =>
                 {
-                    await TaskScheduler.Default;
-                    form.InvokeAsync(() => throw ex).FileAndForget(fileOnlyIf: e => e != ex);
+                    ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
+                    return Task.CompletedTask;
                 });
 
                 JoinPendingOperations();
@@ -99,10 +108,10 @@ namespace GitUITests
                 var form = new Form();
                 form.Dispose();
 
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                ThreadHelper.JoinableTaskFactory.Run(() =>
                 {
-                    await TaskScheduler.Default;
-                    form.InvokeAsync(EmptyAction).FileAndForget(fileOnlyIf: ex => true);
+                    YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
+                    return Task.CompletedTask;
                 });
 
                 JoinPendingOperations();
