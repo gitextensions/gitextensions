@@ -170,7 +170,7 @@ namespace GitUI.BuildServerIntegration
 
                 if (!useStoredCredentialsIfExisting || !foundInConfig)
                 {
-                    buildServerCredentials = ShowBuildServerCredentialsForm(buildServerAdapter.UniqueKey, buildServerCredentials);
+                    buildServerCredentials = ThreadHelper.JoinableTaskFactory.Run(() => ShowBuildServerCredentialsFormAsync(buildServerAdapter.UniqueKey, buildServerCredentials));
 
                     if (buildServerCredentials != null)
                     {
@@ -225,12 +225,9 @@ namespace GitUI.BuildServerIntegration
             return projectNames;
         }
 
-        private IBuildServerCredentials ShowBuildServerCredentialsForm(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
+        private async Task<IBuildServerCredentials> ShowBuildServerCredentialsFormAsync(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
         {
-            if (_revisionGrid.InvokeRequired)
-            {
-                return (IBuildServerCredentials)_revisionGrid.Invoke(new Func<IBuildServerCredentials>(() => ShowBuildServerCredentialsForm(buildServerUniqueKey, buildServerCredentials)));
-            }
+            await _revisionGrid.SwitchToMainThreadAsync();
 
             using (var form = new FormBuildServerCredentials(buildServerUniqueKey))
             {
