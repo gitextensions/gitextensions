@@ -114,21 +114,20 @@ namespace GitUI
         private void noImageService_Click(object sender, EventArgs e)
         {
             var tag = (sender as ToolStripMenuItem)?.Tag;
-            if (!(tag is DefaultImageType))
+
+            if (tag is DefaultImageType type)
             {
-                return;
+                AppSettings.GravatarDefaultImageType = type.ToString();
+
+                ThreadHelper.JoinableTaskFactory
+                    .RunAsync(
+                        async () =>
+                        {
+                            await _avatarCache.ClearAsync().ConfigureAwait(true);
+                            await UpdateGravatarAsync().ConfigureAwait(false);
+                        })
+                    .FileAndForget();
             }
-
-            AppSettings.GravatarDefaultImageType = ((DefaultImageType)tag).ToString();
-
-            ThreadHelper.JoinableTaskFactory
-                .RunAsync(
-                    async () =>
-                    {
-                        await _avatarCache.ClearAsync().ConfigureAwait(true);
-                        await UpdateGravatarAsync().ConfigureAwait(false);
-                    })
-                .FileAndForget();
         }
 
         private void noImageGeneratorToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
