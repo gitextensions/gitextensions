@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,17 +53,25 @@ namespace Gravatar
         public async Task<Image> GetAvatarAsync(string email, int imageSize, string defaultImageType)
         {
             var imageFileName = _avatarImageNameProvider.Get(email);
+
             var image = await _cache.GetImageAsync(imageFileName, null);
+
             if (image == null)
             {
                 if (email.EndsWith(GitHubPrivateEmailSuffix, StringComparison.OrdinalIgnoreCase))
                 {
-                    image = await LoadFromGitHubAsync(imageFileName, email, imageSize);
+                    image = await LoadFromGitHubAsync(email, imageSize);
                 }
                 else
                 {
-                    image = await LoadFromGravatarAsync(imageFileName, email, imageSize, GetDefaultImageType(defaultImageType));
+                    image = await LoadFromGravatarAsync(email, imageSize, GetDefaultImageType(defaultImageType));
                 }
+
+                // Store image to cache for future
+                var stream = new MemoryStream();
+                image.Save(stream, ImageFormat.Png);
+                stream.Position = 0;
+                await _cache.AddImageAsync(imageFileName, stream);
             }
 
             return image;
@@ -89,66 +100,8 @@ namespace Gravatar
             return defaultImageType;
         }
 
-        /// <summary>
-        /// Builds a <see cref="Uri"/> corresponding to a given email address.
-        /// </summary>
-        /// <param name="email">The email address for which to build the <see cref="Uri"/>.</param>
-        /// <param name="size">The size of the image to request.  The default is 32.</param>
-        /// <param name="useHttps">Indicates whether or not the request should be performed over Secure HTTP.</param>
-        /// <param name="rating">The maximum rating of the returned image.</param>
-        /// <param name="defaultImageType">The Gravatar service that will be used for fall-back.</param>
-        /// <returns>The constructed <see cref="Uri"/>.</returns>
-        private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, DefaultImageType defaultImageType)
+        private static async Task<Image> LoadFromGitHubAsync(string email, int imageSize)
         {
-            var builder = new UriBuilder("http://www.gravatar.com/avatar/");
-            if (useHttps)
-            {
-                builder.Scheme = "https";
-            }
-
-            builder.Path += HashEmail(email);
-
-            var query = string.Format("s={0}&r={1}&d={2}",
-                size,
-                rating.ToString().ToLowerInvariant(),
-                GetDefaultImageString(defaultImageType));
-
-            builder.Query = query;
-
-            return builder.Uri;
-        }
-
-        /// <summary>
-        /// Provides a mapping for the image defaults.
-        /// </summary>
-        private static string GetDefaultImageString(DefaultImageType defaultImageType)
-        {
-            switch (defaultImageType)
-            {
-                case DefaultImageType.Identicon: return "identicon";
-                case DefaultImageType.MonsterId: return "monsterid";
-                case DefaultImageType.Wavatar: return "wavatar";
-                case DefaultImageType.Retro: return "retro";
-                default: return "404";
-            }
-        }
-
-        /// <summary>
-        /// Generates an email hash as per the Gravatar specifications.
-        /// </summary>
-        /// <param name="email">The email to hash.</param>
-        /// <returns>The hash of the email.</returns>
-        /// <remarks>
-        /// The process of creating the hash are specified at http://en.gravatar.com/site/implement/hash/
-        /// </remarks>
-        private static string HashEmail(string email)
-        {
-            return MD5.CalcMD5(email.Trim().ToLowerInvariant());
-        }
-
-        private async Task<Image> LoadFromGitHubAsync(string imageFileName, string email, int imageSize)
-        {
-            string imageUrl = null;
             try
             {
                 int suffixPosition = email.IndexOf(GitHubPrivateEmailSuffix, StringComparison.OrdinalIgnoreCase);
@@ -162,7 +115,9 @@ namespace Gravatar
                     query.Append(query.Length == 0 ? "?" : "&");
                     query.AppendFormat("s={0}", imageSize);
                     builder.Query = query.ToString();
-                    imageUrl = builder.Uri.AbsoluteUri;
+                    var imageUrl = builder.Uri.AbsoluteUri;
+
+                    return await DownloadImageAsync(imageUrl);
                 }
             }
             catch (Exception ex)
@@ -170,33 +125,68 @@ namespace Gravatar
                 Trace.WriteLine(ex.Message);
             }
 
-            if (string.IsNullOrEmpty(imageUrl))
-            {
-                return null;
-            }
-
-            return await DownloadImageAsync(new Uri(imageUrl), imageFileName);
+            return null;
         }
 
-        private Task<Image> LoadFromGravatarAsync(string imageFileName, string email, int imageSize, DefaultImageType defaultImageType)
+        private static Task<Image> LoadFromGravatarAsync(string email, int imageSize, DefaultImageType defaultImageType)
         {
-            var imageUrl = BuildGravatarUrl(email, imageSize, false, Rating.G, defaultImageType);
-            return DownloadImageAsync(imageUrl, imageFileName);
+            return DownloadImageAsync(BuildGravatarUrl());
+
+            string BuildGravatarUrl()
+            {
+                var d = GetDefaultImageString();
+                var hash = CalculateHash();
+
+                return $"http://www.gravatar.com/avatar/{hash}?s={imageSize}&r=g&d={d}";
+
+                string GetDefaultImageString()
+                {
+                    switch (defaultImageType)
+                    {
+                        case DefaultImageType.Identicon: return "identicon";
+                        case DefaultImageType.MonsterId: return "monsterid";
+                        case DefaultImageType.Wavatar: return "wavatar";
+                        case DefaultImageType.Retro: return "retro";
+                        default: return "404";
+                    }
+                }
+
+                string CalculateHash()
+                {
+                    // Hash specified at http://en.gravatar.com/site/implement/hash/
+                    using (var md5 = new MD5CryptoServiceProvider())
+                    {
+                        // Gravatar doesn't specify an encoding
+                        var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
+
+                        var hashBytes = md5.ComputeHash(emailBytes);
+
+                        // TODO can combine with more efficient logic from ObjectId if that PR is merged
+                        var builder = new StringBuilder(capacity: 32);
+
+                        foreach (var b in hashBytes)
+                        {
+                            builder.Append(b.ToString("x2"));
+                        }
+
+                        return builder.ToString();
+                    }
+                }
+            }
         }
 
-        private async Task<Image> DownloadImageAsync(Uri imageUrl, string imageFileName)
+        private static async Task<Image> DownloadImageAsync(string imageUrl)
         {
             try
             {
                 using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
                 {
                     webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
+
                     using (var imageStream = await webClient.OpenReadTaskAsync(imageUrl))
                     {
-                        await _cache.AddImageAsync(imageFileName, imageStream);
+                        return Image.FromStream(imageStream);
                     }
-
-                    return await _cache.GetImageAsync(imageFileName, null);
                 }
             }
             catch (Exception ex)

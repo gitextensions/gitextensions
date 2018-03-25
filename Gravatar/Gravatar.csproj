@@ -63,8 +63,6 @@
     <Compile Include="DirectoryImageCache.cs" />
     <Compile Include="DefaultImageType.cs" />
     <Compile Include="GravatarService.cs" />
-    <Compile Include="MD5.cs" />
-    <Compile Include="Rating.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
