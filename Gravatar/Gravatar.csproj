@@ -53,6 +53,7 @@
     <Compile Include="DirectoryImageCache.cs" />
     <Compile Include="DefaultImageType.cs" />
     <Compile Include="GravatarService.cs" />
+    <Compile Include="MruImageCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">

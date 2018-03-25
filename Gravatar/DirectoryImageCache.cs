@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Gravatar
 {
+    // TODO image cache should differentiate by image size, as on a system where DPI changes (eg. laptop/monitor screens) the cached images may be innapropriate
+
     public interface IImageCache
     {
         /// <summary>
