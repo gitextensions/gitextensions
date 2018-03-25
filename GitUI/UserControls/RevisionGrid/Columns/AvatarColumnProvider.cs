@@ -44,7 +44,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var imageName = _avatarImageNameProvider.Get(revision.AuthorEmail);
 
-            var gravatar = _avatarCache.GetImage(imageName, null);
+            var gravatar = _avatarCache.GetImage(imageName);
 
             if (gravatar == null)
             {
