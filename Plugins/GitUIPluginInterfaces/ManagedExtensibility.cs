@@ -1,97 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
+using GitUI;
+using Microsoft.VisualStudio.Composition;
 
 namespace GitUIPluginInterfaces
 {
     public static class ManagedExtensibility
     {
-        private static List<CompositionContainer> _compositionContainers;
+        private static readonly Lazy<ExportProvider> _exportProvider = new Lazy<ExportProvider>(CreateExportProvider, LazyThreadSafetyMode.ExecutionAndPublication);
 
-        private static readonly object compositionContainerSyncObj = new object();
-
-        private static readonly HashSet<string> _loggedExceptionMessages = new HashSet<string>();
-
-        /// <summary>
-        /// The MEF container.
-        /// </summary>
-        private static List<CompositionContainer> GetCompositionContainers()
+        private static ExportProvider CreateExportProvider()
         {
-            lock (compositionContainerSyncObj)
+            var stopwatch = Stopwatch.StartNew();
+
+            var file = new FileInfo(Application.ExecutablePath);
+
+            FileInfo[] plugins =
+                Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
+                ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
+                : new FileInfo[] { };
+
+            var pluginFiles = plugins;
+
+            var cacheFile = @"Plugins\GitUIPluginInterfaces\composition.cache";
+            IExportProviderFactory exportProviderFactory;
+            if (File.Exists(cacheFile))
             {
-                if (_compositionContainers == null)
+                using (var cacheStream = File.OpenRead(cacheFile))
                 {
-                    _compositionContainers = new List<CompositionContainer>();
-                    var pluginsDir = new DirectoryInfo(Directory.GetParent(Application.ExecutablePath).FullName + Path.DirectorySeparatorChar + "Plugins");
-                    if (pluginsDir.Exists)
-                    {
-                        foreach (var dll in pluginsDir.EnumerateFiles("*.dll"))
-                        {
-                            _compositionContainers.Add(new CompositionContainer(new DirectoryCatalog(dll.DirectoryName, dll.Name)));
-                        }
-                    }
+                    exportProviderFactory = ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().LoadExportProviderFactoryAsync(cacheStream, Resolver.DefaultInstance));
+                }
+            }
+            else
+            {
+                var assemblies = pluginFiles.Select(assemblyFile => TryLoadAssembly(assemblyFile)).Where(assembly => assembly != null).ToArray();
+
+                var discovery = PartDiscovery.Combine(
+                    new AttributedPartDiscoveryV1(Resolver.DefaultInstance),
+                    new AttributedPartDiscovery(Resolver.DefaultInstance, isNonPublicSupported: true));
+                var parts = ThreadHelper.JoinableTaskFactory.Run(() => discovery.CreatePartsAsync(assemblies));
+                var catalog = ComposableCatalog.Create(Resolver.DefaultInstance).AddParts(parts);
+
+                var configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
+                var runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
+                using (var cacheStream = File.OpenWrite(cacheFile))
+                {
+                    ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
                 }
 
-                return _compositionContainers;
+                exportProviderFactory = runtimeComposition.CreateExportProviderFactory();
+            }
+
+            return exportProviderFactory.CreateExportProvider();
+        }
+
+        private static Assembly TryLoadAssembly(FileInfo file)
+        {
+            try
+            {
+                var assemblyName = AssemblyName.GetAssemblyName(file.FullName);
+                if (assemblyName == null)
+                {
+                    return null;
+                }
+
+                return Assembly.Load(assemblyName);
+            }
+            catch
+            {
+                return null;
             }
         }
 
         public static IEnumerable<Lazy<T>> GetExports<T>()
         {
-            var ret = new List<Lazy<T>>();
-            foreach (var container in GetCompositionContainers())
-            {
-                try
-                {
-                    ret.AddRange(container.GetExports<T>());
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    Trace.TraceError("GetExports() failed {0}", string.Join(Environment.NewLine, ex.LoaderExceptions.Select(r => r.ToString())));
-                }
-                catch (Exception ex)
-                {
-                    Trace.TraceError("Failed to get exports, {0}", ex);
-                }
-            }
-
-            return ret;
+            return _exportProvider.Value.GetExports<T>();
         }
 
         public static IEnumerable<Lazy<T, TMetadataView>> GetExports<T, TMetadataView>()
         {
-            var ret = new List<Lazy<T, TMetadataView>>();
-            foreach (var container in GetCompositionContainers())
-            {
-                try
-                {
-                    ret.AddRange(container.GetExports<T, TMetadataView>());
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    var exceptions = ex.LoaderExceptions.Where(ShouldLogException).ToList();
-                    if (exceptions.Count != 0)
-                    {
-                        Trace.TraceError("Failed to load type when getting exports: {0}", string.Join(Environment.NewLine, exceptions.Select(r => r.ToString())));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    if (ShouldLogException(ex))
-                    {
-                        Trace.TraceError("Failed to get exports: {0}", ex);
-                    }
-                }
-            }
-
-            return ret;
-
-            bool ShouldLogException(Exception e) => _loggedExceptionMessages.Add(e.Message);
+            return _exportProvider.Value.GetExports<T, TMetadataView>();
         }
     }
 }
