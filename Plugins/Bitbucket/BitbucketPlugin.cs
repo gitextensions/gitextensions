@@ -1,8 +1,10 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.ComponentModel.Composition;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace Bitbucket
 {
+    [Export(typeof(IGitPlugin))]
     public class BitbucketPlugin : GitPluginBase
     {
         public readonly StringSetting BitbucketUsername = new StringSetting("Bitbucket Username", string.Empty);

@@ -1,8 +1,10 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.ComponentModel.Composition;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitStatistics
 {
+    [Export(typeof(IGitPlugin))]
     public class GitStatisticsPlugin : GitPluginBase, IGitPluginForRepository
     {
         public GitStatisticsPlugin()

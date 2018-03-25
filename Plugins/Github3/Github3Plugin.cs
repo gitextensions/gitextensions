@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -69,6 +70,7 @@ namespace Github3
         }
     }
 
+    [Export(typeof(IGitPlugin))]
     public class Github3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
         public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");

@@ -1,8 +1,10 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.ComponentModel.Composition;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitFlow
 {
+    [Export(typeof(IGitPlugin))]
     public class GitFlowPlugin : GitPluginBase, IGitPluginForRepository
     {
         public GitFlowPlugin()

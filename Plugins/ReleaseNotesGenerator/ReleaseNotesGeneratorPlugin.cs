@@ -1,9 +1,11 @@
-﻿using System.Windows.Forms;
+﻿using System.ComponentModel.Composition;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace ReleaseNotesGenerator
 {
+    [Export(typeof(IGitPlugin))]
     public class ReleaseNotesGeneratorPlugin : GitPluginBase
     {
         public ReleaseNotesGeneratorPlugin()
