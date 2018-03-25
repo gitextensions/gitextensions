@@ -3085,7 +3085,7 @@ namespace GitCommands
             }
             else
             {
-                return new string[] { };
+                return Array.Empty<string>();
             }
         }
 
