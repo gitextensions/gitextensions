@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -46,7 +46,7 @@ namespace GravatarTests
                     await _cache.Received(1).GetImageAsync($"{Email}.png");
                 });
             });
-            await _cache.DidNotReceive().AddImageAsync(Arg.Any<string>(), Arg.Any<Stream>());
+            _cache.DidNotReceive().AddImage(Arg.Any<string>(), Arg.Any<Image>());
         }
 
         [Ignore("Need to abstract WebClient or replace with HttpClient")]
