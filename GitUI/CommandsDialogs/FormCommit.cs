@@ -2978,6 +2978,8 @@ namespace GitUI.CommandsDialogs
             // Add a settings item
             AddSettingsItem();
 
+            return;
+
             void CreateToolStripItem(CommitTemplateItem item)
             {
                 if (string.IsNullOrEmpty(item.Name))
