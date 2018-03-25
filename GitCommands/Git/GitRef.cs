@@ -52,11 +52,6 @@ namespace GitCommands
             _mergeSettingName = string.Format("branch.{0}.merge", Name);
         }
 
-        public static GitRef CreateBranchRef(GitModule module, string guid, string name)
-        {
-            return new GitRef(module, guid, RefsHeadsPrefix + name);
-        }
-
         public string CompleteName { get; }
         public bool Selected { get; set; }
         public bool SelectedHeadMergeSource { get; set; }
