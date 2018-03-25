@@ -10,7 +10,7 @@ namespace Gravatar
     public interface IImageCache
     {
         /// <summary>
-        /// Occurs whenever the cache is invalidated.
+        /// Raised whenever the cache is changed by adding, removing or clearing all images.
         /// </summary>
         event EventHandler Invalidated;
 
