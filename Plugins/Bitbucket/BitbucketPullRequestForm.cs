@@ -4,9 +4,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace Bitbucket
@@ -54,23 +57,17 @@ namespace Bitbucket
                 return;
             }
 
-            ThreadPool.QueueUserWorkItem(state =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 var repositories = GetRepositories();
-                try
-                {
-                    Invoke((MethodInvoker)delegate
-                    {
-                        ddlRepositorySource.DataSource = repositories.ToList();
-                        ddlRepositoryTarget.DataSource = repositories.ToList();
-                        ddlRepositorySource.Enabled = true;
-                        ddlRepositoryTarget.Enabled = true;
-                    });
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            });
+
+                await this.SwitchToMainThreadAsync();
+                ddlRepositorySource.DataSource = repositories.ToList();
+                ddlRepositoryTarget.DataSource = repositories.ToList();
+                ddlRepositorySource.Enabled = true;
+                ddlRepositoryTarget.Enabled = true;
+            }).FileAndForget();
         }
 
         private void BitbucketViewPullRequestFormLoad(object sender, EventArgs e)
@@ -80,21 +77,15 @@ namespace Bitbucket
                 return;
             }
 
-            ThreadPool.QueueUserWorkItem(state =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 var pullReqs = GetPullRequests();
-                try
-                {
-                    Invoke((MethodInvoker)delegate
-                    {
-                        lbxPullRequests.DataSource = pullReqs;
-                        lbxPullRequests.DisplayMember = "DisplayName";
-                    });
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            });
+
+                await this.SwitchToMainThreadAsync();
+                lbxPullRequests.DataSource = pullReqs;
+                lbxPullRequests.DisplayMember = "DisplayName";
+            }).FileAndForget();
         }
 
         private List<Repository> GetRepositories()

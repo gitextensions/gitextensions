@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.ExternalLinks;
@@ -15,6 +16,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
@@ -177,11 +179,19 @@ namespace GitUI.CommitInfo
                 _revision.Body = data.Body;
             }
 
-            ThreadPool.QueueUserWorkItem(_ => LoadLinksForRevision(_revision));
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                LoadLinksForRevision(_revision);
+            }).FileAndForget();
 
             if (_sortedRefs == null)
             {
-                ThreadPool.QueueUserWorkItem(_ => LoadSortedRefs());
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadSortedRefs();
+                }).FileAndForget();
             }
 
             data.ChildrenGuids = _children;
@@ -203,17 +213,29 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInBranches)
             {
-                ThreadPool.QueueUserWorkItem(_ => LoadBranchInfo(_revision.Guid));
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadBranchInfo(_revision.Guid);
+                }).FileAndForget();
             }
 
             if (AppSettings.ShowAnnotatedTagsMessages)
             {
-                ThreadPool.QueueUserWorkItem(_ => LoadAnnotatedTagInfo(_revision));
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadAnnotatedTagInfo(_revision);
+                }).FileAndForget();
             }
 
             if (AppSettings.CommitInfoShowContainedInTags)
             {
-                ThreadPool.QueueUserWorkItem(_ => LoadTagInfo(_revision.Guid));
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadTagInfo(_revision.Guid);
+                }).FileAndForget();
             }
         }
 
