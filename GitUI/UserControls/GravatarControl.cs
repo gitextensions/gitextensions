@@ -28,7 +28,12 @@ namespace GitUI
             wavatarToolStripMenuItem.Tag = DefaultImageType.Wavatar;
             retroToolStripMenuItem.Tag = DefaultImageType.Retro;
 
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+            // We cache avatar images on disk...
+            var persistentCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+
+            // And in memory...
+            _avatarCache = new MruImageCache(persistentCache);
+
             _gravatarService = new GravatarService(_avatarCache);
         }
 
