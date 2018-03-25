@@ -77,6 +77,18 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual(PathUtil.IsLocalFile("ssh://domain\\user@serverip/cache/git/something/something.git"), false);
         }
 
+        [TestCase(null, false)]
+        [TestCase("", false)]
+        [TestCase("    ", false)]
+        [TestCase("http://", true)]
+        [TestCase("HTTPS://www", true)]
+        [TestCase("git://", true)]
+        [TestCase("SSH", true)]
+        public void IsUrl(string path, bool expected)
+        {
+            PathUtil.IsUrl(path).Should().Be(expected);
+        }
+
         [Test]
         public void GetFileNameTest()
         {

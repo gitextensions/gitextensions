@@ -50,7 +50,7 @@ namespace GitCommands.Repository
                 _remoteRepositoryHistory = new RepositoryHistory(size);
                 foreach (Repository repo in repositoryHistory.Repositories)
                 {
-                    if (repo.IsRemote)
+                    if (PathUtil.IsUrl(repo.Path))
                     {
                         repo.Path = repo.Path.ToPosixPath();
                         _remoteRepositoryHistory.AddRepository(repo);
@@ -227,7 +227,7 @@ namespace GitCommands.Repository
 
         public static void AddMostRecentRepository(string repo)
         {
-            if (Repository.PathIsUrl(repo))
+            if (PathUtil.IsUrl(repo))
             {
                 RemoteRepositoryHistory.AddMostRecentRepository(repo);
             }

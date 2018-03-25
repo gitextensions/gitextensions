@@ -67,7 +67,7 @@ namespace GitCommands.Repository
                 return;
             }
 
-            if (!Repository.PathIsUrl(repo))
+            if (!PathUtil.IsUrl(repo))
             {
                 repo = repo.ToNativePath().EnsureTrailingPathSeparator();
             }

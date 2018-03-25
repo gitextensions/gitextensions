@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.Serialization;
 
 namespace GitCommands.Repository
 {
@@ -31,9 +30,6 @@ namespace GitCommands.Repository
 
         public string Category { get; set; }
 
-        [XmlIgnore]
-        public bool IsRemote => PathIsUrl(Path);
-
         public string Path
         {
             get => _path ?? string.Empty;
@@ -43,15 +39,6 @@ namespace GitCommands.Repository
         public override string ToString()
         {
             return Path + " (" + Anchor + ")";
-        }
-
-        // TODO: doesn't belong here
-        public static bool PathIsUrl(string path)
-        {
-            return !string.IsNullOrEmpty(path) &&
-                (path.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) ||
-                 path.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) ||
-                 path.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
