@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -54,70 +53,55 @@ namespace GravatarTests
         }
 
         [Test]
-        public async Task AddImage_should_exit_if_stream_null()
+        public void AddImage_should_exit_if_stream_null()
         {
-            await _cache.AddImageAsync("file", null);
+            _cache.AddImage("file", null);
 
             _directory.DidNotReceive().Exists(_folderPath);
         }
 
         [Test]
-        public async Task AddImage_should_create_if_folder_absent()
+        public void AddImage_should_create_if_folder_absent()
         {
             var fileSystem = new MockFileSystem();
             _cache = new DirectoryImageCache(_folderPath, 2, fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
-            using (var s = new MemoryStream())
-            {
-                await _cache.AddImageAsync("file", s);
-            }
+            _cache.AddImage("file", Resources.User);
 
             fileSystem.Directory.Exists(_folderPath).Should().BeTrue();
         }
 
         [Test]
-        public async Task AddImage_should_create_image_from_stream()
+        public void AddImage_should_create_image_from_stream()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var folderPath = Path.Combine(currentFolder, "Images");
+            var fileSystem = new FileSystem();
 
-            using (var imageStream = new MemoryStream())
-            {
-                var fileSystem = new FileSystem();
-                Resources.User.Save(imageStream, ImageFormat.Png);
-                imageStream.Position = 0;
+            _cache = new DirectoryImageCache(folderPath, 2, fileSystem);
+            fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
-                _cache = new DirectoryImageCache(folderPath, 2, fileSystem);
-                fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
+            _cache.AddImage("file.png", Resources.User);
 
-                await _cache.AddImageAsync("file.png", imageStream);
-
-                fileSystem.Directory.Exists(folderPath).Should().BeTrue();
-                fileSystem.File.Exists(Path.Combine(folderPath, "file.png")).Should().BeTrue();
-            }
+            fileSystem.Directory.Exists(folderPath).Should().BeTrue();
+            fileSystem.File.Exists(Path.Combine(folderPath, "file.png")).Should().BeTrue();
         }
 
         [Test]
-        public async Task AddImage_should_raise_invalidate()
+        public void AddImage_should_raise_invalidate()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var folderPath = Path.Combine(currentFolder, "Images");
+            var fileSystem = new FileSystem();
 
-            using (var imageStream = new MemoryStream())
-            {
-                var fileSystem = new FileSystem();
-                Resources.User.Save(imageStream, ImageFormat.Png);
-                imageStream.Position = 0;
+            bool eventRaised = false;
+            _cache = new DirectoryImageCache(folderPath, 2, fileSystem);
+            _cache.Invalidated += (s, e) => eventRaised = true;
 
-                bool eventRaised = false;
-                _cache = new DirectoryImageCache(folderPath, 2, fileSystem);
-                _cache.Invalidated += (s, e) => eventRaised = true;
+            _cache.AddImage("file.png", Resources.User);
 
-                await _cache.AddImageAsync("file.png", imageStream);
-
-                eventRaised.Should().BeTrue();
-            }
+            eventRaised.Should().BeTrue();
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
@@ -14,11 +15,11 @@ namespace Gravatar
         event EventHandler Invalidated;
 
         /// <summary>
-        /// Adds the image to the cache from the supplied stream.
+        /// Adds an image to the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="imageStream">The stream which contains the image.</param>
-        Task AddImageAsync(string imageFileName, Stream imageStream);
+        /// <param name="image">The image to add to the cache.</param>
+        void AddImage(string imageFileName, Image image);
 
         /// <summary>
         /// Clears the cache by deleting all images.
@@ -69,9 +70,9 @@ namespace Gravatar
 
         public event EventHandler Invalidated;
 
-        public async Task AddImageAsync(string imageFileName, Stream imageStream)
+        public void AddImage(string imageFileName, Image image)
         {
-            if (string.IsNullOrWhiteSpace(imageFileName) || imageStream == null)
+            if (string.IsNullOrWhiteSpace(imageFileName) || image == null)
             {
                 return;
             }
@@ -86,7 +87,7 @@ namespace Gravatar
                 string file = Path.Combine(_cachePath, imageFileName);
                 using (var output = new FileStream(file, FileMode.Create))
                 {
-                    await imageStream.CopyToAsync(output);
+                    image.Save(output, ImageFormat.Png);
                 }
             }
             catch
