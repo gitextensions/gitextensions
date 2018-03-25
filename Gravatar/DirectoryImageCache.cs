@@ -35,17 +35,13 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        Image GetImage(string imageFileName, Bitmap defaultBitmap);
+        Image GetImage(string imageFileName);
 
         /// <summary>
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap);
+        Task<Image> GetImageAsync(string imageFileName);
     }
 
     public sealed class DirectoryImageCache : IImageCache
@@ -170,9 +166,7 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        public Image GetImage(string imageFileName, Bitmap defaultBitmap)
+        public Image GetImage(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
@@ -202,11 +196,9 @@ namespace Gravatar
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        public async Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap)
+        public async Task<Image> GetImageAsync(string imageFileName)
         {
-            return await Task.Run(() => GetImage(imageFileName, defaultBitmap));
+            return await Task.Run(() => GetImage(imageFileName));
         }
 
         private bool HasExpired(string fileName)

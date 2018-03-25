@@ -47,7 +47,7 @@ namespace GravatarTests
         [TestCase("\t")]
         public async Task AddImage_should_exit_if_filename_not_supplied(string fileName)
         {
-            var image = await _cache.GetImageAsync(fileName, null);
+            var image = await _cache.GetImageAsync(fileName);
 
             image.Should().BeNull();
             _ = _fileInfo.DidNotReceive().LastWriteTime;
@@ -233,7 +233,7 @@ namespace GravatarTests
         [Test]
         public async Task GetImage_return_null_if_filename_not_supplied()
         {
-            var image = await _cache.GetImageAsync(null, null);
+            var image = await _cache.GetImageAsync(null);
 
             image.Should().BeNull();
             _ = _fileInfo.DidNotReceive().LastWriteTime;
@@ -244,7 +244,7 @@ namespace GravatarTests
         {
             _fileInfo.Exists.Returns(false);
 
-            var image = await _cache.GetImageAsync(FileName, null);
+            var image = await _cache.GetImageAsync(FileName);
 
             image.Should().BeNull();
             _ = _fileInfo.DidNotReceive().LastWriteTime;
@@ -256,7 +256,7 @@ namespace GravatarTests
             _fileInfo.Exists.Returns(true);
             _fileInfo.LastWriteTime.Returns(new DateTime(2010, 1, 1));
 
-            var image = await _cache.GetImageAsync(FileName, null);
+            var image = await _cache.GetImageAsync(FileName);
 
             image.Should().BeNull();
             _ = _fileInfo.Received(1).LastWriteTime;
@@ -270,7 +270,7 @@ namespace GravatarTests
 
             Func<Task> act = async () =>
             {
-                await _cache.GetImageAsync(FileName, null);
+                await _cache.GetImageAsync(FileName);
             };
             act.Should().NotThrow();
         }
