@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("2.1.7.35462")]
 
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]
 [assembly: ComVisible(false)]
 
 namespace NetSpell.SpellChecker
