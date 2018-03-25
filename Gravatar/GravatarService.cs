@@ -54,7 +54,7 @@ namespace Gravatar
         {
             var imageFileName = _avatarImageNameProvider.Get(email);
 
-            var image = await _cache.GetImageAsync(imageFileName, null);
+            var image = await _cache.GetImageAsync(imageFileName);
 
             if (image == null)
             {

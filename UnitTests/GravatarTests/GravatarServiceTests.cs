@@ -34,7 +34,7 @@ namespace GravatarTests
         public async Task GetAvatarAsync_should_not_call_gravatar_if_exist_in_cache()
         {
             var avatar = Resources.User;
-            _cache.GetImageAsync(Arg.Any<string>(), null).Returns(avatar);
+            _cache.GetImageAsync(Arg.Any<string>()).Returns(avatar);
 
             var image = await _service.GetAvatarAsync(Email, 1, DefaultImageType.Identicon.ToString());
 
@@ -43,7 +43,7 @@ namespace GravatarTests
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    await _cache.Received(1).GetImageAsync($"{Email}.png", null);
+                    await _cache.Received(1).GetImageAsync($"{Email}.png");
                 });
             });
             await _cache.DidNotReceive().AddImageAsync(Arg.Any<string>(), Arg.Any<Stream>());
