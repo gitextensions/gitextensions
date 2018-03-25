@@ -68,10 +68,7 @@ namespace Gravatar
                 }
 
                 // Store image to cache for future
-                var stream = new MemoryStream();
-                image.Save(stream, ImageFormat.Png);
-                stream.Position = 0;
-                await _cache.AddImageAsync(imageFileName, stream);
+                _cache.AddImage(imageFileName, image);
             }
 
             return image;
