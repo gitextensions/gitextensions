@@ -132,7 +132,9 @@ namespace JenkinsIntegration
             }
             catch
             {
-                // Could be cancelled or failed
+                // Could be cancelled or failed. Explicitly assign 't' to reveal the intended behavior of following code
+                // for this case.
+                t = null;
             }
 
             if (t.IsNotNullOrWhitespace())

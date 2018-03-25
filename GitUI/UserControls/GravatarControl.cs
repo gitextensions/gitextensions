@@ -43,7 +43,7 @@ namespace GitUI
             }
 
             Email = email;
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateGravatarAsync());
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateGravatarAsync()).FileAndForget();
         }
 
         private void RefreshImage(Image image)
@@ -72,12 +72,14 @@ namespace GitUI
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    await _gravatarService.DeleteAvatarAsync(Email).ConfigureAwait(false);
-                    await UpdateGravatarAsync().ConfigureAwait(false);
-                });
+            ThreadHelper.JoinableTaskFactory
+                .RunAsync(
+                    async () =>
+                    {
+                        await _gravatarService.DeleteAvatarAsync(Email).ConfigureAwait(true);
+                        await UpdateGravatarAsync().ConfigureAwait(false);
+                    })
+                .FileAndForget();
         }
 
         private void RegisterAtGravatarcomToolStripMenuItemClick(object sender, EventArgs e)
@@ -98,7 +100,7 @@ namespace GitUI
                 .RunAsync(
                     async () =>
                     {
-                        await _avatarCache.ClearAsync().ConfigureAwait(false);
+                        await _avatarCache.ClearAsync().ConfigureAwait(true);
                         await UpdateGravatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();
@@ -114,12 +116,14 @@ namespace GitUI
 
             AppSettings.GravatarDefaultImageType = ((DefaultImageType)tag).ToString();
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    await _avatarCache.ClearAsync().ConfigureAwait(false);
-                    await UpdateGravatarAsync().ConfigureAwait(false);
-                });
+            ThreadHelper.JoinableTaskFactory
+                .RunAsync(
+                    async () =>
+                    {
+                        await _avatarCache.ClearAsync().ConfigureAwait(true);
+                        await UpdateGravatarAsync().ConfigureAwait(false);
+                    })
+                .FileAndForget();
         }
 
         private void noImageGeneratorToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

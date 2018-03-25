@@ -215,7 +215,7 @@ namespace GitStatistics
             {
                 await this.SwitchToMainThreadAsync();
                 UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels);
-            });
+            }).FileAndForget();
         }
 
         private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,
