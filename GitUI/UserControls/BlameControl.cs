@@ -250,6 +250,11 @@ namespace GitUI.Blame
 
             GitBlameCommit lastCommit = null;
 
+            // NOTE EOL white-space supports highlight on mouse-over.
+            // Highlighting is done via text background colour.
+            // If it could be done with a solid rectangle around the text,
+            // the extra spaces added here could be omitted.
+
             foreach (var line in _blame.Lines)
             {
                 if (line.Commit == lastCommit)
