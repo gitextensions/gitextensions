@@ -67,16 +67,8 @@ namespace Gravatar
         {
         }
 
-        /// <summary>
-        /// Occurs whenever the cache is invalidated.
-        /// </summary>
         public event EventHandler Invalidated;
 
-        /// <summary>
-        /// Adds the image to the cache from the supplied stream.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="imageStream">The stream which contains the image.</param>
         public async Task AddImageAsync(string imageFileName, Stream imageStream)
         {
             if (string.IsNullOrWhiteSpace(imageFileName) || imageStream == null)
@@ -105,9 +97,6 @@ namespace Gravatar
             Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary>
-        /// Clears the cache by deleting all images.
-        /// </summary>
         public async Task ClearAsync()
         {
             if (!_fileSystem.Directory.Exists(_cachePath))
@@ -133,10 +122,6 @@ namespace Gravatar
             Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary>
-        /// Deletes the specified image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
         public async Task DeleteImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -162,10 +147,6 @@ namespace Gravatar
             Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <summary>
-        /// Retrieves the image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
         public Image GetImage(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -192,10 +173,6 @@ namespace Gravatar
             }
         }
 
-        /// <summary>
-        /// Retrieves the image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
         public async Task<Image> GetImageAsync(string imageFileName)
         {
             return await Task.Run(() => GetImage(imageFileName));
