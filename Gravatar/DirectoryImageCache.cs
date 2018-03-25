@@ -95,7 +95,7 @@ namespace Gravatar
                 // do nothing
             }
 
-            OnInvalidated(EventArgs.Empty);
+            OnInvalidated();
         }
 
         public async Task ClearAsync()
@@ -119,7 +119,7 @@ namespace Gravatar
                     }
                 }
             });
-            OnInvalidated(EventArgs.Empty);
+            OnInvalidated();
         }
 
         public async Task DeleteImageAsync(string imageFileName)
@@ -144,7 +144,7 @@ namespace Gravatar
                 // do nothing
             }
 
-            OnInvalidated(EventArgs.Empty);
+            OnInvalidated();
         }
 
         public Image GetImage(string imageFileName)
@@ -189,10 +189,9 @@ namespace Gravatar
             return file.LastWriteTime < DateTime.Now.AddDays(-_cacheDays);
         }
 
-        private void OnInvalidated(EventArgs e)
+        private void OnInvalidated()
         {
-            var handler = Invalidated;
-            handler?.Invoke(this, e);
+            Invalidated?.Invoke(this, EventArgs.Empty);
         }
     }
 }
