@@ -28,7 +28,6 @@ namespace GitUITests
         public void FileAndForgetReportsThreadException()
         {
             using (var helper = new ThreadExceptionHelper())
-            using (var form = new Form())
             {
                 var ex = new Exception();
 
@@ -66,7 +65,6 @@ namespace GitUITests
         public void FileAndForgetFilterCanAllowExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
-            using (var form = new Form())
             {
                 var ex = new Exception();
 
@@ -85,7 +83,6 @@ namespace GitUITests
         public void FileAndForgetFilterCanIgnoreExceptions()
         {
             using (var helper = new ThreadExceptionHelper())
-            using (var form = new Form())
             {
                 var ex = new Exception();
 
