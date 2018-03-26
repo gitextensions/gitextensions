@@ -108,7 +108,6 @@
     <Compile Include="ISetting.cs" />
     <Compile Include="ISettingsSource.cs" />
     <Compile Include="ManagedExtensibility.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
     <Compile Include="IGitPluginSettingsContainer.cs" />

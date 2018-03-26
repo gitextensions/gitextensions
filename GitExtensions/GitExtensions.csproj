@@ -91,7 +91,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -187,13 +186,11 @@
       <PluginProjects Include="..\Plugins\*\*.csproj;..\Plugins\*\*\*.csproj" />
       <PluginDirectory Include="@(PluginProjects->'%(RelativeDir)')" />
     </ItemGroup>
-
     <PropertyGroup>
       <PluginBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.dll')</PluginBinariesExpression>
       <PluginSymbolsExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*.pdb')</PluginSymbolsExpression>
       <PluginSatelliteBinariesExpression>@(PluginDirectory->'%(Identity)bin\$(Configuration)\*\*.dll')</PluginSatelliteBinariesExpression>
     </PropertyGroup>
-
     <ItemGroup>
       <PluginBinary Include="$(PluginBinariesExpression)" />
       <!-- Plugin symbols-->
@@ -201,7 +198,6 @@
       <!-- Plugin satellite assemblies -->
       <PluginSatelliteBinary Include="$(PluginSatelliteBinariesExpression)" />
     </ItemGroup>
-
     <ItemGroup>
       <None Include="@(PluginBinary)" Condition="'%(Filename)' != 'Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader' AND '%(Filename)' != 'Microsoft.WITDataStore'">
         <Link>Plugins\%(Filename)%(Extension)</Link>
