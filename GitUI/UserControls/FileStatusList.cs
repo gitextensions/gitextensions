@@ -1194,7 +1194,6 @@ namespace GitUI
             if (_filterVisible)
             {
                 FilterComboBox.Visible = filesPresent;
-                FilterWatermarkLabel.Visible = filesPresent;
             }
         }
 
