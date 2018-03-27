@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -51,6 +52,11 @@ namespace GitUI
 
         public static void ThrowIfNotOnUIThread([CallerMemberName] string callerMemberName = "")
         {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+            {
+                return;
+            }
+
             if (!JoinableTaskContext.IsOnMainThread)
             {
                 string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on the UI thread.", callerMemberName);
