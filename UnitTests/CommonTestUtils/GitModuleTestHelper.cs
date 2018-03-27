@@ -31,7 +31,7 @@ namespace CommonTestUtils
         /// <summary>
         /// Gets the module.
         /// </summary>
-        public IGitModule Module { get; }
+        public GitModule Module { get; }
 
         /// <summary>
         /// Gets the temporary path where test repositories will be created for integration tests.
