@@ -3187,6 +3187,8 @@ namespace GitUI.CommandsDialogs
             }
 
             public EditNetSpell Message => _formCommit.Message;
+
+            public ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
         }
     }
 

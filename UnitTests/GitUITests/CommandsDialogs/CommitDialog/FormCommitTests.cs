@@ -8,6 +8,7 @@ using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
+using File = System.IO.File;
 using Path = System.IO.Path;
 
 namespace GitUITests.CommandsDialogs.CommitDialog
@@ -27,6 +28,13 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             if (_moduleTestHelper == null)
             {
                 _moduleTestHelper = new GitModuleTestHelper();
+                _moduleTestHelper.CreateRepoFile("A.txt", "A");
+                _moduleTestHelper.Module.StageFile("A.txt");
+                File.WriteAllText(
+                    CommitHelper.GetCommitMessagePath(_moduleTestHelper.Module),
+                    "A commit message",
+                    _moduleTestHelper.Module.CommitEncoding);
+                _moduleTestHelper.Module.RunGitCmd(_moduleTestHelper.Module.CommitCmd(amend: false));
             }
 
             // Undo potential impact from earlier tests
@@ -60,6 +68,25 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             RunFormCommitTest(formCommit =>
             {
                 Assert.AreEqual(generatedCommitMessage, formCommit.GetTestAccessor().Message.Text);
+            });
+        }
+
+        [Test]
+        public void SelectMessageFromHistory()
+        {
+            var generatedCommitMessage = Path.GetRandomFileName();
+
+            RunFormCommitTest(formCommit =>
+            {
+                var commitMessageToolStripMenuItem = formCommit.GetTestAccessor().CommitMessageToolStripMenuItem;
+
+                // Verify the message appears correctly
+                commitMessageToolStripMenuItem.ShowDropDown();
+                Assert.AreEqual("A commit message", commitMessageToolStripMenuItem.DropDownItems[0].Text);
+
+                // Verify the message is selected correctly
+                commitMessageToolStripMenuItem.DropDownItems[0].PerformClick();
+                Assert.AreEqual("A commit message", formCommit.GetTestAccessor().Message.Text);
             });
         }
 
