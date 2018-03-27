@@ -1304,9 +1304,15 @@ namespace GitUI
             }
         }
 
+        private void FilterWatermarkLabel_Click(object sender, EventArgs e)
+        {
+            FilterComboBox.Focus();
+        }
+
         private Regex _filter;
 
         #endregion Filtering
+
     }
 
     public class GitItemStatusWithParent
