@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateLostObjects()
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
 

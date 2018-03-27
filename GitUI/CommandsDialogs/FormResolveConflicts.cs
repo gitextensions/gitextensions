@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs
 
         private void Mergetool_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 Directory.SetCurrentDirectory(Module.WorkingDir);
                 Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 int oldSelectedRow = 0;
                 if (ConflictedFiles.SelectedRows.Count > 0)
@@ -385,7 +385,7 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 try
                 {
@@ -562,7 +562,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
                 _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
@@ -619,7 +619,7 @@ namespace GitUI.CommandsDialogs
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 if (ShowAbortMessage())
                 {
@@ -744,7 +744,7 @@ namespace GitUI.CommandsDialogs
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
                 StartProgressBarWithMaxValue(conflictItems.Length);
@@ -773,7 +773,7 @@ namespace GitUI.CommandsDialogs
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
                 StartProgressBarWithMaxValue(conflictItems.Length);
@@ -802,7 +802,7 @@ namespace GitUI.CommandsDialogs
 
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
                 StartProgressBarWithMaxValue(conflictItems.Length);
@@ -988,7 +988,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenMergetool_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 ConflictedFiles_DoubleClick(sender, e);
             }
@@ -1006,7 +1006,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenSideWith(string side)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var conflictData = GetConflict();
                 string fileName = conflictData.Filename;
@@ -1053,7 +1053,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveAs(string side)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var conflictData = GetConflict();
                 string fileName = conflictData.Filename;
@@ -1098,7 +1098,7 @@ namespace GitUI.CommandsDialogs
 
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 StageFile(GetFileName());
                 Initialize();

@@ -9,7 +9,7 @@ namespace GitUI
     /// <remarks>
     /// Usage is:
     /// <code>
-    /// using (new WaitCursorScope())
+    /// using (WaitCursorScope.Enter())
     /// {
     ///     // perform UI activity
     /// }
@@ -21,18 +21,25 @@ namespace GitUI
     /// Only the top-most scope will fully restore the mouse cursor.</item>
     /// </list>
     /// </remarks>
-    public sealed class WaitCursorScope : IDisposable
+    public readonly struct WaitCursorScope : IDisposable
     {
-        private readonly Cursor _cursorAtStartOfScope;
-
         /// <summary>
         /// Starts a new scope, recording <see cref="Cursor.Current"/> and setting the mouse cursor to <see cref="Cursors.WaitCursor"/>.
         /// </summary>
-        public WaitCursorScope()
+        public static WaitCursorScope Enter()
         {
-            _cursorAtStartOfScope = Cursor.Current;
+            var cursorAtStartOfScope = Cursor.Current;
 
             Cursor.Current = Cursors.WaitCursor;
+
+            return new WaitCursorScope(cursorAtStartOfScope);
+        }
+
+        private readonly Cursor _cursorAtStartOfScope;
+
+        private WaitCursorScope(Cursor cursorAtStartOfScope)
+        {
+            _cursorAtStartOfScope = cursorAtStartOfScope;
         }
 
         /// <summary>

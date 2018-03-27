@@ -907,7 +907,7 @@ namespace GitUI
                 return false;
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 // Reset all changes.
                 Module.ResetFile(fileName);

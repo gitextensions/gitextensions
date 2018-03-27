@@ -413,7 +413,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SaveAndRescan_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 PageHost.SaveAll();
                 PageHost.LoadAll();

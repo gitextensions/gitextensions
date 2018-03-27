@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 if (PatchFileMode.Checked)
                 {
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
 
         private void Skip_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.SkipCmd());
                 EnableButtons();
@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
 
         private void Resolved_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.ResolvedCmd());
                 EnableButtons();
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
 
         private void Abort_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.AbortCmd());
                 EnableButtons();

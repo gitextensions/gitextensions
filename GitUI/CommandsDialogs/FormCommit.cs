@@ -735,7 +735,7 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 if (loadUnstaged)
                 {
@@ -766,7 +766,7 @@ namespace GitUI.CommandsDialogs
 
         private void InitializedStaged()
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
                 Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), Module.GetStagedFilesWithSubmodulesStatus());
@@ -1378,7 +1378,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 EnableStageButtons(false);
                 try
@@ -1580,7 +1580,7 @@ namespace GitUI.CommandsDialogs
 
         private void Stage(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 EnableStageButtons(false);
                 try

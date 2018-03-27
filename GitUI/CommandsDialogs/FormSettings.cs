@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormSettings_Shown(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 LoadSettings();
             }
@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
                 Text = _translatedTitle + " - " + title;
                 Application.DoEvents();
 
-                using (new WaitCursorScope())
+                using (WaitCursorScope.Enter())
                 {
                     settingsPage.OnPageShown();
                 }
@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 if (Save())
                 {
@@ -292,7 +292,7 @@ namespace GitUI.CommandsDialogs
 
         private void buttonDiscard_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 LoadSettings();
             }
@@ -300,7 +300,7 @@ namespace GitUI.CommandsDialogs
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 Save();
             }

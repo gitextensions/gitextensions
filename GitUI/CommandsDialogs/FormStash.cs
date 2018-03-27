@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs
 
             EnablePartialStash();
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 if (stashedItem != null &&
                     gitStash == _currentWorkingDirStashItem)
@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg);
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Name));
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs
         {
             EnablePartialStash();
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 InitializeSoft();
 
@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshAll()
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 Initialize();
             }

@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, string.Empty);
             }
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
 
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions());
             }

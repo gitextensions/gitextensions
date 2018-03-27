@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResolvedClick(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
 
@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
 
         private void SkipClick(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs
 
         private void AbortClick(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
 
@@ -224,7 +224,7 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 if (string.IsNullOrEmpty(Branches.Text))
                 {

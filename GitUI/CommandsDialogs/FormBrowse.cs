@@ -430,7 +430,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 LayoutRevisionInfo();
                 InternalInitialize(false);
@@ -552,7 +552,7 @@ namespace GitUI.CommandsDialogs
 
         private void InternalInitialize(bool hard)
         {
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 UICommands.RaisePreBrowseInitialize(this);
 

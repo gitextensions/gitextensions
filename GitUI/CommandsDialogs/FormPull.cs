@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (new WaitCursorScope())
+            using (WaitCursorScope.Enter())
             {
                 LoadPuttyKey();
 
