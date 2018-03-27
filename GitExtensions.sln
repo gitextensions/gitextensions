@@ -168,7 +168,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GitExtensionsTest.ruleset = GitExtensionsTest.ruleset
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{472B72D9-9336-4C8B-A199-300F0CA7669E}"
+	ProjectSection(SolutionItems) = preProject
+		Build\stylecop.json = Build\stylecop.json
+		Build\vs-threading.MainThreadAssertingMethods.txt = Build\vs-threading.MainThreadAssertingMethods.txt
+		Build\vs-threading.MainThreadSwitchingMethods.txt = Build\vs-threading.MainThreadSwitchingMethods.txt
+		Build\vs-threading.TypesRequiringMainThread.txt = Build\vs-threading.TypesRequiringMainThread.txt
 	EndProjectSection
 EndProject
 Global
@@ -746,6 +753,7 @@ Global
 		{93CE3A27-5A63-4436-8C64-CBCA75322C5B} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
+		{472B72D9-9336-4C8B-A199-300F0CA7669E} = {C5855184-8571-4AD0-A373-B98215BA56CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
