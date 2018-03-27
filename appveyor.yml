@@ -53,7 +53,7 @@ test_script:
         -register:user `
         -returntargetcode `
         -hideskipped:All `
-        -filter:"+[*]*" `
+        -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]*" `
         -excludebyattribute:*.ExcludeFromCodeCoverage* `
         -excludebyfile:*\*Designer.cs `
         -output:"OpenCover.GitExtensions.xml" `
