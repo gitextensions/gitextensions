@@ -86,6 +86,27 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             });
         }
 
+        [TestCase(CommitKind.Fixup)]
+        [TestCase(CommitKind.Squash)]
+        public void DoNotPreserveCommitMessageOnReopenFromSpecialCommit(CommitKind commitKind)
+        {
+            var generatedCommitMessage = Path.GetRandomFileName();
+
+            RunFormCommitTest(
+                formCommit =>
+                {
+                    string prefix = commitKind.ToString().ToLowerInvariant();
+                    Assert.AreEqual($"{prefix}! A commit message", formCommit.GetTestAccessor().Message.Text);
+                    formCommit.GetTestAccessor().Message.Text = generatedCommitMessage;
+                },
+                commitKind);
+
+            RunFormCommitTest(formCommit =>
+            {
+                Assert.IsEmpty(formCommit.GetTestAccessor().Message.Text);
+            });
+        }
+
         [Test]
         public void SelectMessageFromHistory()
         {
@@ -123,21 +144,39 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             }
         }
 
-        private void RunFormCommitTest(Action<FormCommit> testDriver)
+        private void RunFormCommitTest(Action<FormCommit> testDriver, CommitKind commitKind = CommitKind.Normal)
         {
-            RunFormCommitTest(formCommit =>
-            {
-                testDriver(formCommit);
-                return Task.CompletedTask;
-            });
+            RunFormCommitTest(
+                formCommit =>
+                {
+                    testDriver(formCommit);
+                    return Task.CompletedTask;
+                },
+                commitKind);
         }
 
-        private void RunFormCommitTest(Func<FormCommit, Task> testDriverAsync)
+        private void RunFormCommitTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
             var asyncTest = ThreadHelper.JoinableTaskFactory.RunAsync(TestWrapperAsync);
             try
             {
-                Assert.True(_commands.StartCommitDialog());
+                switch (commitKind)
+                {
+                case CommitKind.Normal:
+                    Assert.True(_commands.StartCommitDialog());
+                    break;
+
+                case CommitKind.Squash:
+                    Assert.True(_commands.StartSquashCommitDialog(owner: null, _moduleTestHelper.Module.GetRevision("HEAD")));
+                    break;
+
+                case CommitKind.Fixup:
+                    Assert.True(_commands.StartFixupCommitDialog(owner: null, _moduleTestHelper.Module.GetRevision("HEAD")));
+                    break;
+
+                default:
+                    throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
+                }
             }
             finally
             {
