@@ -468,25 +468,6 @@ namespace GitUI.CommandsDialogs
                 .FileAndForget();
         }
 
-        private bool _pluginsLoaded;
-        private void LoadPluginsInPluginMenu()
-        {
-            if (_pluginsLoaded)
-            {
-                return;
-            }
-
-            foreach (var plugin in LoadedPlugins.Plugins)
-            {
-                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
-            }
-
-            _pluginsLoaded = true;
-            UpdatePluginMenu(Module.IsValidGitWorkingDir());
-        }
-
         /// <summary>
         ///   Execute plugin
         /// </summary>
@@ -518,10 +499,18 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var plugin in LoadedPlugins.Plugins)
             {
+                // Add the plugin to the Plugins menu
+                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                item.Click += ItemClick;
+                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
+
+                // Allow the plugin to perform any self-registration actions
                 plugin.Register(UICommands);
             }
 
             UICommands.RaisePostRegisterPlugin(this);
+
+            UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
 
         private void UnregisterPlugins()
@@ -1905,11 +1894,6 @@ namespace GitUI.CommandsDialogs
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
         {
             statusStrip.Hide();
-        }
-
-        private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            LoadPluginsInPluginMenu();
         }
 
         private void BisectClick(object sender, EventArgs e)

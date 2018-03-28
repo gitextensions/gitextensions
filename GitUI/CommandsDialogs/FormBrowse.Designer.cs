@@ -1369,7 +1369,6 @@ namespace GitUI.CommandsDialogs
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
             this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.pluginsToolStripMenuItem.Text = "Plugins";
-            this.pluginsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.pluginsToolStripMenuItem_DropDownOpening);
             // 
             // toolStripSeparator15
             // 
