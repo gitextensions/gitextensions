@@ -3182,111 +3182,230 @@ namespace GitCommands
             return Blame(filename, from, null, encoding);
         }
 
-        public GitBlame Blame(string filename, string from, string lines, Encoding encoding)
+        public GitBlame Blame(string fileName, string from, string lines, Encoding encoding)
         {
             from = from.ToPosixPath();
-            filename = filename.ToPosixPath();
+            fileName = fileName.ToPosixPath();
 
             string detectCopyInFileOpt = AppSettings.DetectCopyInFileOnBlame ? " -M" : string.Empty;
             string detectCopyInAllOpt = AppSettings.DetectCopyInAllOnBlame ? " -C" : string.Empty;
             string ignoreWhitespaceOpt = AppSettings.IgnoreWhitespaceOnBlame ? " -w" : string.Empty;
             string linesOpt = lines != null ? " -L " + lines : string.Empty;
 
-            string blameCommand = $"blame --porcelain{detectCopyInFileOpt}{detectCopyInAllOpt}{ignoreWhitespaceOpt} -l{linesOpt} \"{from}\" -- \"{filename}\"";
-            var itemsStrings =
-                RunCacheableCmd(
-                    AppSettings.GitCommand,
-                    blameCommand,
-                    LosslessEncoding)
-                    .Split('\n');
+            string blameCommand = $"blame --porcelain{detectCopyInFileOpt}{detectCopyInAllOpt}{ignoreWhitespaceOpt} -l{linesOpt} \"{from}\" -- \"{fileName}\"";
 
-            GitBlame blame = new GitBlame();
+            var output = RunCacheableCmd(AppSettings.GitCommand, blameCommand, LosslessEncoding);
 
-            GitBlameHeader blameHeader = null;
-            GitBlameLine blameLine = null;
-
-            for (int i = 0; i < itemsStrings.GetLength(0); i++)
+            try
             {
-                try
+                return ParseGitBlame(output, encoding);
+            }
+            catch
+            {
+                // Catch all parser errors, and ignore them all!
+                // We should never get here...
+                AppSettings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!", DateTime.Now, DateTime.Now);
+
+                return new GitBlame(Array.Empty<GitBlameLine>());
+            }
+        }
+
+        internal GitBlame ParseGitBlame(string output, Encoding encoding)
+        {
+            // "git blame --porcelain" produces a stable, machine-readable format which we parse here.
+            // Each line in the file is associated with a commit, and one commit may originate many lines
+            // in the file, both in contiguous chunks and disparate ranges.
+            //
+            // The command output walks the file from top to bottom, line by line.
+            // Each time a new commit is encountered, its 'header' is presented.
+            // Later chunks from the same commit will refer back to this header by
+            // the object ID (SHA-1).
+            //
+            // After this header, the lines from the file are presented, indented.
+            //
+            // Here is an excerpt from the middle of GE's README.md file:
+
+            // e3268019c66da7534414e9562ececdee5d455b1b 6 6 1
+            // author RussKie
+            // author-mail <russkie@gmail.com>
+            // author-time 1510573702
+            // author-tz +1100
+            // committer RussKie
+            // committer-mail <russkie@gmail.com>
+            // committer-time 1510573702
+            // committer-tz +1100
+            // summary chore: Reformat readme
+            // previous cd032fd48a6693b080f38d87388bc0f601db4e02 README.md
+            // filename README.md
+            //         ## Overview
+            // 957ff3ce9193fec3bd2578378e71676841804935 4 7 1
+            //
+            // e3268019c66da7534414e9562ececdee5d455b1b 8 8 1
+            //         Git Extensions is a standalone UI tool for managing git repositories.<br />
+
+            // Where one commit is responsible for multiple contiguous lines, they appear as follows:
+
+            // e3268019c66da7534414e9562ececdee5d455b1b 11 13 9
+            //         <table>
+            // e3268019c66da7534414e9562ececdee5d455b1b 12 14
+            //           <tr>
+            // e3268019c66da7534414e9562ececdee5d455b1b 13 15
+            //             <th>&nbsp;</th>
+            // e3268019c66da7534414e9562ececdee5d455b1b 14 16
+            //             <th>Windows</th>
+            // e3268019c66da7534414e9562ececdee5d455b1b 15 17
+            //             <th>Linux/Mac</th>
+            // e3268019c66da7534414e9562ececdee5d455b1b 16 18
+            //           </tr>
+            // e3268019c66da7534414e9562ececdee5d455b1b 17 19
+            //           <tr>
+            // e3268019c66da7534414e9562ececdee5d455b1b 18 20
+            //             <td>Requirement</td>
+            // e3268019c66da7534414e9562ececdee5d455b1b 19 21
+
+            // On the first line here, there are three trailing numbers. The third is the number of
+            // lines from the one commit.
+
+            // There are three 'chunks' here. The first includes a commit header.
+            // The second and third refer back to a header that would have been presented earlier.
+            // We see the content of the chunks, where the first is a markdown header, the second
+            // is a blank line, and third is an introductory paragraph about the project.
+
+            var commitByObjectId = new Dictionary<string, GitBlameCommit>();
+            var lines = new List<GitBlameLine>(capacity: 256);
+
+            var headerRegex = new Regex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.Compiled);
+
+            bool hasCommitHeader;
+            string objectId;
+            int finalLineNumber;
+            int originLineNumber;
+            string author;
+            string authorMail;
+            DateTime authorTime;
+            string authorTimeZone;
+            string committer;
+            string committerMail;
+            DateTime committerTime;
+            string committerTimeZone;
+            string summary;
+            string filename;
+
+            Reset();
+
+            foreach (var line in output.Split('\n').Select(l => l.TrimEnd('\r')))
+            {
+                var match = headerRegex.Match(line);
+
+                if (match.Success)
                 {
-                    string line = itemsStrings[i];
-
-                    // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
-                    if (line.StartsWith("\t"))
-                    {
-                        blameLine.LineText = line.Substring(1) // trim ONLY first tab
-                                                 .Trim('\r'); // trim \r, this is a workaround for a \r\n bug
-                        blameLine.LineText = ReEncodeStringFromLossless(blameLine.LineText, encoding);
-                    }
-                    else if (line.StartsWith("author-mail"))
-                    {
-                        blameHeader.AuthorMail = ReEncodeStringFromLossless(line.Substring("author-mail".Length).Trim());
-                    }
-                    else if (line.StartsWith("author-time"))
-                    {
-                        blameHeader.AuthorTime = DateTimeUtils.ParseUnixTime(line.Substring("author-time".Length).Trim());
-                    }
-                    else if (line.StartsWith("author-tz"))
-                    {
-                        blameHeader.AuthorTimeZone = line.Substring("author-tz".Length).Trim();
-                    }
-                    else if (line.StartsWith("author"))
-                    {
-                        blameHeader = new GitBlameHeader
-                        {
-                            CommitGuid = blameLine.CommitGuid,
-                            Author = ReEncodeStringFromLossless(line.Substring("author".Length).Trim())
-                        };
-                        blame.Headers.Add(blameHeader);
-                    }
-                    else if (line.StartsWith("committer-mail"))
-                    {
-                        blameHeader.CommitterMail = line.Substring("committer-mail".Length).Trim();
-                    }
-                    else if (line.StartsWith("committer-time"))
-                    {
-                        blameHeader.CommitterTime = DateTimeUtils.ParseUnixTime(line.Substring("committer-time".Length).Trim());
-                    }
-                    else if (line.StartsWith("committer-tz"))
-                    {
-                        blameHeader.CommitterTimeZone = line.Substring("committer-tz".Length).Trim();
-                    }
-                    else if (line.StartsWith("committer"))
-                    {
-                        blameHeader.Committer = ReEncodeStringFromLossless(line.Substring("committer".Length).Trim());
-                    }
-                    else if (line.StartsWith("summary"))
-                    {
-                        blameHeader.Summary = ReEncodeStringFromLossless(line.Substring("summary".Length).Trim());
-                    }
-                    else if (line.StartsWith("filename"))
-                    {
-                        blameHeader.FileName = ReEncodeFileNameFromLossless(line.Substring("filename".Length).Trim());
-                    }
-                    else if (line.IndexOf(' ') == 40)
-                    {
-                        // SHA1, create new line!
-                        blameLine = new GitBlameLine();
-                        var headerParams = line.Split(' ');
-                        blameLine.CommitGuid = headerParams[0];
-                        if (headerParams.Length >= 3)
-                        {
-                            blameLine.OriginLineNumber = int.Parse(headerParams[1]);
-                            blameLine.FinalLineNumber = int.Parse(headerParams[2]);
-                        }
-
-                        blame.Lines.Add(blameLine);
-                    }
+                    objectId = match.Groups["objectid"].Value;
+                    finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
+                    originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
                 }
-                catch
+                else if (line.StartsWith("\t"))
                 {
-                    // Catch all parser errors, and ignore them all!
-                    // We should never get here...
-                    AppSettings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!", DateTime.Now, DateTime.Now);
+                    // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
+                    var text = ReEncodeStringFromLossless(line.Substring(1), encoding);
+
+                    GitBlameCommit commit;
+                    if (hasCommitHeader)
+                    {
+                        commit = new GitBlameCommit(
+                            objectId,
+                            author,
+                            authorMail,
+                            authorTime,
+                            authorTimeZone,
+                            committer,
+                            committerMail,
+                            committerTime,
+                            committerTimeZone,
+                            summary,
+                            filename);
+                        commitByObjectId[objectId] = commit;
+                    }
+                    else
+                    {
+                        commit = commitByObjectId[objectId];
+                    }
+
+                    lines.Add(new GitBlameLine(commit, finalLineNumber, originLineNumber, text));
+
+                    // Start a new header
+                    Reset();
+                }
+                else if (line.StartsWith("author "))
+                {
+                    author = ReEncodeStringFromLossless(line.Substring("author ".Length));
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("author-mail "))
+                {
+                    authorMail = ReEncodeStringFromLossless(line.Substring("author-mail ".Length));
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("author-time "))
+                {
+                    authorTime = DateTimeUtils.ParseUnixTime(line.Substring("author-time ".Length));
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("author-tz "))
+                {
+                    authorTimeZone = line.Substring("author-tz ".Length);
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("committer "))
+                {
+                    committer = ReEncodeStringFromLossless(line.Substring("committer ".Length));
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("committer-mail "))
+                {
+                    committerMail = line.Substring("committer-mail ".Length);
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("committer-time "))
+                {
+                    committerTime = DateTimeUtils.ParseUnixTime(line.Substring("committer-time ".Length));
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("committer-tz "))
+                {
+                    committerTimeZone = line.Substring("committer-tz ".Length);
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("summary "))
+                {
+                    summary = ReEncodeStringFromLossless(line.Substring("summary ".Length));
+                    hasCommitHeader = true;
+                }
+                else if (line.StartsWith("filename "))
+                {
+                    filename = ReEncodeFileNameFromLossless(line.Substring("filename ".Length));
+                    hasCommitHeader = true;
                 }
             }
 
-            return blame;
+            return new GitBlame(lines);
+
+            void Reset()
+            {
+                hasCommitHeader = false;
+                objectId = null;
+                finalLineNumber = -1;
+                originLineNumber = -1;
+                author = null;
+                authorMail = null;
+                authorTime = DateTime.MinValue;
+                authorTimeZone = null;
+                committer = null;
+                committerMail = null;
+                committerTime = DateTime.MinValue;
+                committerTimeZone = null;
+                summary = null;
+                filename = null;
+            }
         }
 
         public string GetFileText(string id, Encoding encoding)

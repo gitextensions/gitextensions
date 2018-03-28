@@ -1,116 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+using System.Globalization;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    public class GitBlame
+    public sealed class GitBlame
     {
-        public GitBlame()
-        {
-            Headers = new List<GitBlameHeader>();
-            Lines = new List<GitBlameLine>();
-        }
+        public IReadOnlyList<GitBlameLine> Lines { get; }
 
-        public IList<GitBlameHeader> Headers { get; }
-        public IList<GitBlameLine> Lines { get; }
-
-        public GitBlameHeader FindHeaderForCommitGuid(string commitGuid)
+        public GitBlame(IReadOnlyList<GitBlameLine> lines)
         {
-            return Headers.First(h => h.CommitGuid == commitGuid);
+            Lines = lines;
         }
     }
 
-    public class GitBlameLine
+    public sealed class GitBlameLine
     {
-        // Line
-        public string CommitGuid { get; set; }
-        public int FinalLineNumber { get; set; }
-        public int OriginLineNumber { get; set; }
+        [NotNull]
+        public GitBlameCommit Commit { get; }
+        public int FinalLineNumber { get; }
+        public int OriginLineNumber { get; }
+        [NotNull]
+        public string Text { get; }
 
-        public string LineText { get; set; }
+        public GitBlameLine([NotNull] GitBlameCommit commit, int finalLineNumber, int originLineNumber, [NotNull] string text)
+        {
+            Commit = commit;
+            FinalLineNumber = finalLineNumber;
+            OriginLineNumber = originLineNumber;
+            Text = text;
+        }
     }
 
-    public class GitBlameHeader
+    public sealed class GitBlameCommit
     {
-        // Header
-        public string CommitGuid { get; set; }
-        public string AuthorMail { get; set; }
-        public DateTime AuthorTime { get; set; }
-        public string AuthorTimeZone { get; set; }
-        public string Author { get; set; }
-        public string CommitterMail { get; set; }
-        public DateTime CommitterTime { get; set; }
-        public string CommitterTimeZone { get; set; }
-        public string Committer { get; set; }
-        public string Summary { get; set; }
-        public string FileName { get; set; }
+        public string ObjectId { get; }
+        public string Author { get; }
+        public string AuthorMail { get; }
+        public DateTime AuthorTime { get; }
+        public string AuthorTimeZone { get; }
+        public string Committer { get; }
+        public string CommitterMail { get; }
+        public DateTime CommitterTime { get; }
+        public string CommitterTimeZone { get; }
+        public string Summary { get; }
+        public string FileName { get; }
 
-        public Color GetColor()
+        public GitBlameCommit(string objectId, string author, string authorMail, DateTime authorTime, string authorTimeZone, string committer, string committerMail, DateTime committerTime, string committerTimeZone, string summary, string fileName)
         {
-            int partLength = CommitGuid.Length / 3;
-            return Color.FromArgb((GenerateIntFromString(CommitGuid.Substring(0, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength, partLength)) % 55) + 200, (GenerateIntFromString(CommitGuid.Substring(partLength)) % 55) + 200);
-
-            // return Color.White;
-        }
-
-        private static int GenerateIntFromString(string text)
-        {
-            int number = 0;
-            foreach (char c in text)
-            {
-                number += c;
-            }
-
-            return number;
+            ObjectId = objectId;
+            Author = author;
+            AuthorMail = authorMail;
+            AuthorTime = authorTime;
+            AuthorTimeZone = authorTimeZone;
+            Committer = committer;
+            CommitterMail = committerMail;
+            CommitterTime = committerTime;
+            CommitterTimeZone = committerTimeZone;
+            Summary = summary;
+            FileName = fileName;
         }
 
         public override string ToString()
         {
-            StringBuilder toStringValue = new StringBuilder();
-            toStringValue.AppendLine("Author: " + Author);
-            toStringValue.AppendLine("AuthorTime: " + AuthorTime);
-            toStringValue.AppendLine("Committer: " + Committer);
-            toStringValue.AppendLine("CommitterTime: " + CommitterTime);
-            toStringValue.AppendLine("Summary: " + Summary);
-            toStringValue.AppendLine();
-            toStringValue.AppendLine("FileName: " + FileName);
+            var s = new StringBuilder();
 
-            return toStringValue.ToString().Trim();
-        }
+            s.Append("Author: ").AppendLine(Author);
+            s.Append("AuthorTime: ").AppendLine(AuthorTime.ToString(CultureInfo.CurrentCulture));
+            s.Append("Committer: ").AppendLine(Committer);
+            s.Append("CommitterTime: ").AppendLine(CommitterTime.ToString(CultureInfo.CurrentCulture));
+            s.Append("Summary: ").AppendLine(Summary);
+            s.AppendLine();
+            s.Append("FileName: ").Append(FileName);
 
-        public override bool Equals(object obj)
-        {
-            return this == (GitBlameHeader)obj;
-        }
-
-        public override int GetHashCode()
-        {
-            return ToString().GetHashCode();
-        }
-
-        public static bool operator ==(GitBlameHeader x, GitBlameHeader y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
-            {
-                return false;
-            }
-
-            return x.Author == y.Author && x.AuthorTime == y.AuthorTime &&
-                x.Committer == y.Committer && x.CommitterTime == y.CommitterTime &&
-                x.Summary == y.Summary && x.FileName == y.FileName;
-        }
-
-        public static bool operator !=(GitBlameHeader x, GitBlameHeader y)
-        {
-            return !(x == y);
+            return s.ToString();
         }
     }
 }

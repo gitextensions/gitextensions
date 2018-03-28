@@ -1,0 +1,347 @@
+957ff3ce9193fec3bd2578378e71676841804935 1 1 2
+author Henk Westhuis
+author-mail <henk_westhuis@hotmail.com>
+author-time 1282471367
+author-tz +0200
+committer Henk Westhuis
+committer-mail <henk_westhuis@hotmail.com>
+committer-time 1282471367
+committer-tz +0200
+summary Updated readme.txt
+previous 0a2eef9c205040a0067514643c56297c7eeaedce README.TXT
+filename README.TXT
+	# Git Extensions
+957ff3ce9193fec3bd2578378e71676841804935 2 2
+	
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 3 3 1
+author RussKie
+author-mail <RussKie@users.noreply.github.com>
+author-time 1514950944
+author-tz +1100
+committer GitHub
+committer-mail <noreply@github.com>
+committer-time 1514950944
+committer-tz +1100
+summary Update README.md
+previous 859aa9c8152f2df900d4078dc2be98433f979a5c README.md
+filename README.md
+	 
+e8cebc1036ee1cda5ff352c36261681eacbe2568 6 4 1
+author Arkadiy Shapkin
+author-mail <arkadiy_s@inbox.ru>
+author-time 1419095499
+author-tz +0300
+committer Arkadiy Shapkin
+committer-mail <arkadiy_s@inbox.ru>
+committer-time 1419095499
+committer-tz +0300
+summary Update README.md
+previous c5e3aea4ecc9e01ac8ff7941f0c9a564ce22ef76 README.md
+filename README.md
+	
+50909a507ae4b2cd320ba8afc300b9a996332481 5 5 1
+author Arkadiy Shapkin
+author-mail <arkadiy_s@inbox.ru>
+author-time 1408907497
+author-tz +0400
+committer Arkadiy Shapkin
+committer-mail <arkadiy_s@inbox.ru>
+committer-time 1408912733
+committer-tz +0400
+summary GitExtensionsTest moved from submodule
+previous aa6db0264ebabe5fe45aa514bfa57e10e126be1a README.md
+filename README.md
+	
+e3268019c66da7534414e9562ececdee5d455b1b 6 6 1
+author RussKie
+author-mail <russkie@gmail.com>
+author-time 1510573702
+author-tz +1100
+committer RussKie
+committer-mail <russkie@gmail.com>
+committer-time 1510573702
+committer-tz +1100
+summary chore: Reformat readme
+previous cd032fd48a6693b080f38d87388bc0f601db4e02 README.md
+filename README.md
+	## Overview
+957ff3ce9193fec3bd2578378e71676841804935 4 7 1
+	
+e3268019c66da7534414e9562ececdee5d455b1b 8 8 1
+	Git Extensions is a standalone UI tool for managing git repositories.<br />
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 9 9 3
+	It also integrates with Windows Explorer and Microsoft Visual Studio (2010/2012/2013/2015/2017). For more information please check out our website [http://gitextensions.github.io/](http://gitextensions.github.io/) or [download the latest version](https://github.com/gitextensions/gitextensions/releases/latest) and give it a try.
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 10 10
+	
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 11 11
+	### Current Status
+64d5dbad5bd9578b5eaae3da585deabc50d55eaf 6 12 1
+author Arkadiy Shapkin
+author-mail <arkadiy_s@inbox.ru>
+author-time 1401870960
+author-tz +0400
+committer Arkadiy Shapkin
+committer-mail <arkadiy_s@inbox.ru>
+committer-time 1401870960
+committer-tz +0400
+summary TeamCity build status added
+previous cbb08e4f4fcfa4a2130413346c48f629e753ce95 README.markdown
+filename README.md
+	
+e3268019c66da7534414e9562ececdee5d455b1b 11 13 9
+	<table>
+e3268019c66da7534414e9562ececdee5d455b1b 12 14
+	  <tr>
+e3268019c66da7534414e9562ececdee5d455b1b 13 15
+	    <th>&nbsp;</th>
+e3268019c66da7534414e9562ececdee5d455b1b 14 16
+	    <th>Windows</th>
+e3268019c66da7534414e9562ececdee5d455b1b 15 17
+	    <th>Linux/Mac</th>
+e3268019c66da7534414e9562ececdee5d455b1b 16 18
+	  </tr>
+e3268019c66da7534414e9562ececdee5d455b1b 17 19
+	  <tr>
+e3268019c66da7534414e9562ececdee5d455b1b 18 20
+	    <td>Requirement</td>
+e3268019c66da7534414e9562ececdee5d455b1b 19 21
+	    <td>MS Windows 7SP1+ <br/>MS .NET Framework 4.6.1+</td>
+f60d42073f9c62168d92afdcfa0f92e3b3a16276 22 22 1
+author Gerhard Olsson
+author-mail <gerhard.nospam@gmail.com>
+author-time 1517865351
+author-tz +0100
+committer RussKie
+committer-mail <RussKie@users.noreply.github.com>
+committer-time 1517865351
+committer-tz +1100
+summary Remove Mono build scripts and solutions (#4430)
+previous 7d7f7b7e1076649a471f439dd2341b982c0cece4 README.md
+filename README.md
+	    <td><a href="http://www.mono-project.com/download/">Mono 5.0+</a> <br /><small>(deprecated support due to Mono WinForms implementation)</small></td>
+e3268019c66da7534414e9562ececdee5d455b1b 21 23 3
+	  </tr>
+e3268019c66da7534414e9562ececdee5d455b1b 22 24
+	  <tr>
+e3268019c66da7534414e9562ececdee5d455b1b 23 25
+	    <td>Current dev status</td>
+f873612b766d140b660d595481eb5c4444cc4d81 26 26 1
+author Sam Harwell
+author-mail <sam@tunnelvisionlabs.com>
+author-time 1519678397
+author-tz -0600
+committer RussKie
+committer-mail <RussKie@users.noreply.github.com>
+committer-time 1519678397
+committer-tz +1100
+summary Enable code coverage during pull request builds (#4532)
+previous 77c2052f9a3de5cab6f588ae456290103567883f README.md
+filename README.md
+	    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
+e3268019c66da7534414e9562ececdee5d455b1b 25 27 2
+	    <td><a href="https://travis-ci.org/gitextensions/gitextensions"><img alt="Build status" src="https://travis-ci.org/gitextensions/gitextensions.svg?branch=master" style="max-width:100%;"></a></td>
+e3268019c66da7534414e9562ececdee5d455b1b 26 28
+	  </tr>
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 29 29 5
+	  <tr>
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 30 30
+	    <td>Translations</td>
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 31 31
+	    <td colspan=2><a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://www.transifex.com/projects/p/git-extensions" 
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 32 32
+	title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png" ></a></td>
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 33 33
+	  </tr>
+1254f240a3929f2d42e24ef0849ff8e6bc038bb6 8 34 1
+author Arkadiy Shapkin
+author-mail <arkadiy_s@inbox.ru>
+author-time 1401873074
+author-tz +0400
+committer Arkadiy Shapkin
+committer-mail <arkadiy_s@inbox.ru>
+committer-time 1401873074
+committer-tz +0400
+summary Translation status added
+previous 64d5dbad5bd9578b5eaae3da585deabc50d55eaf README.md
+filename README.md
+	
+e3268019c66da7534414e9562ececdee5d455b1b 28 35 1
+	</table>
+1254f240a3929f2d42e24ef0849ff8e6bc038bb6 10 36 1
+	
+1cef72e93d21e1c23098a78086cda607dae74755 19 37 1
+author Arkadiy Shapkin
+author-mail <arkadiy_s@inbox.ru>
+author-time 1418395669
+author-tz +0300
+committer Arkadiy Shapkin
+committer-mail <arkadiy_s@inbox.ru>
+committer-time 1418395669
+committer-tz +0300
+summary Issue adnd Transifex stats added
+previous b1ea98b60645284b2759a2c7256d907fc64277e6 README.md
+filename README.md
+	
+e3268019c66da7534414e9562ececdee5d455b1b 33 38 1
+	## Download
+1254f240a3929f2d42e24ef0849ff8e6bc038bb6 12 39 1
+	
+e3268019c66da7534414e9562ececdee5d455b1b 35 40 1
+	<table>
+10621bf684f596eaab8b1bdb78d5199033d7c9a5 36 41 1
+author RussKie
+author-mail <RussKie@users.noreply.github.com>
+author-time 1514892581
+author-tz +1100
+committer GitHub
+committer-mail <noreply@github.com>
+committer-time 1514892581
+committer-tz +1100
+summary Update README.md
+previous 5542334ab518b329426783d74c8f4204c2d75a43 README.md
+filename README.md
+	  <tr>
+14cde7124020fd13e43779a4a1dd4fd055106809 42 42 2
+author RussKie
+author-mail <russkie@gmail.com>
+author-time 1517093778
+author-tz +1100
+committer RussKie
+committer-mail <russkie@gmail.com>
+committer-time 1517093778
+committer-tz +1100
+summary Update readme
+previous 700a3000a8672205a6f523e6d4dc70f0f66314d9 README.md
+filename README.md
+	    <td><strong>Latest Release (v2.51.00)</strong></td>
+14cde7124020fd13e43779a4a1dd4fd055106809 43 43
+	    <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a> / <a href="GitUI/Resources/ChangeLog.md#version-25100-28-jan-2018">Changelog</a><br />
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 49 44 1
+	        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="Github Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+e3268019c66da7534414e9562ececdee5d455b1b 39 45 7
+	  </tr>
+e3268019c66da7534414e9562ececdee5d455b1b 40 46
+	  <tr>
+e3268019c66da7534414e9562ececdee5d455b1b 41 47
+	    <td><strong>Latest dev build</strong></td>
+e3268019c66da7534414e9562ececdee5d455b1b 42 48
+	    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a></td>
+e3268019c66da7534414e9562ececdee5d455b1b 43 49
+	  </tr>
+e3268019c66da7534414e9562ececdee5d455b1b 44 50
+	  <tr>
+e3268019c66da7534414e9562ececdee5d455b1b 45 51
+	    <td><strong>Visual Studio VSIX (2015/2017)</strong></td>
+d4d473c5fc0fac22f88adb4a0b20de8a29d6e323 46 52 1
+author RussKie
+author-mail <RussKie@users.noreply.github.com>
+author-time 1510976722
+author-tz +1100
+committer GitHub
+committer-mail <noreply@github.com>
+committer-time 1510976722
+committer-tz +1100
+summary Update README.md
+previous a2020849041da641e92dc6278598db71af9ad449 README.md
+filename README.md
+	    <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a> or install via Visual Studio</td>
+e3268019c66da7534414e9562ececdee5d455b1b 47 53 5
+	  </tr>
+e3268019c66da7534414e9562ececdee5d455b1b 48 54
+	  <tr>
+e3268019c66da7534414e9562ececdee5d455b1b 49 55
+	    <td><strong>Visual Studio addin (2010/2012/2013)</strong></td>
+e3268019c66da7534414e9562ececdee5d455b1b 50 56
+	    <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a></td>
+e3268019c66da7534414e9562ececdee5d455b1b 51 57
+	  </tr>
+d4d473c5fc0fac22f88adb4a0b20de8a29d6e323 52 58 5
+	  <tr>
+d4d473c5fc0fac22f88adb4a0b20de8a29d6e323 53 59
+	    <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="/pmiossec" class="author text-inherit">@pmiossec</a></td>
+d4d473c5fc0fac22f88adb4a0b20de8a29d6e323 54 60
+	    <td><a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
+d4d473c5fc0fac22f88adb4a0b20de8a29d6e323 55 61
+	      NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.</td>
+d4d473c5fc0fac22f88adb4a0b20de8a29d6e323 56 62
+	  </tr></table>
+e3268019c66da7534414e9562ececdee5d455b1b 53 63 6
+	
+e3268019c66da7534414e9562ececdee5d455b1b 54 64
+	
+e3268019c66da7534414e9562ececdee5d455b1b 55 65
+	
+e3268019c66da7534414e9562ececdee5d455b1b 56 66
+	
+e3268019c66da7534414e9562ececdee5d455b1b 57 67
+	## Shoutouts
+e3268019c66da7534414e9562ececdee5d455b1b 58 68
+	 * Special thanks to JetBRAINS for [Resharper](https://www.jetbrains.com/resharper/) licenses.
+fe4bb94ca2a74dbbe14348dc41e96284fecdbe06 26 69 1
+author Arkadiy Shapkin
+author-mail <arkadiy_s@inbox.ru>
+author-time 1441050971
+author-tz +0300
+committer Arkadiy Shapkin
+committer-mail <arkadiy_s@inbox.ru>
+committer-time 1441050971
+committer-tz +0300
+summary Thanks to JetBRAINS added
+previous 6f0cc88594e50bf7542663bc9546b34c5c612553 README.md
+filename README.md
+	
+0d9277ca990945b348b661a57f8bb25e64b4b4a4 26 70 1
+author Jay Asbury
+author-mail <vbjay.net@gmail.com>
+author-time 1502747969
+author-tz -0400
+committer RussKie
+committer-mail <RussKie@users.noreply.github.com>
+committer-time 1502747969
+committer-tz +1000
+summary Update README.md (#3743)
+previous d3abff56653921481eb67582654ee4993d354463 README.md
+filename README.md
+	
+59f8cc5eb9d98621746300f0b289b5da7abaa13b 7 71 1
+author Janusz Białobrzewski
+author-mail <jbialobr@o2.pl>
+author-time 1370927337
+author-tz +0200
+committer Janusz Białobrzewski
+committer-mail <jbialobr@o2.pl>
+committer-time 1370927381
+committer-tz +0200
+summary Changed download page to sourceforge. Added link to online manual.
+previous 438a20135a8cbee21f5136e3e28fec4702a6af72 README.markdown
+filename README.markdown
+	## Links
+957ff3ce9193fec3bd2578378e71676841804935 8 72 1
+	
+e3268019c66da7534414e9562ececdee5d455b1b 63 73 2
+	* Website: [http://gitextensions.github.io/](http://gitextensions.github.io/)
+e3268019c66da7534414e9562ececdee5d455b1b 64 74
+	* Source code: [http://github.com/gitextensions/gitextensions](http://github.com/gitextensions/gitextensions)
+59f8cc5eb9d98621746300f0b289b5da7abaa13b 10 75 2
+	* Online manual: [https://git-extensions-documentation.readthedocs.org/en/latest/](https://git-extensions-documentation.readthedocs.org/en/latest/)
+59f8cc5eb9d98621746300f0b289b5da7abaa13b 11 76
+	* Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
+88bb86326419ee8dfa03c7fde9aae78b9b7fb961 15 77 1
+author Janusz Białobrzewski
+author-mail <jbialobr@o2.pl>
+author-time 1371798172
+author-tz +0200
+committer Janusz Białobrzewski
+committer-mail <jbialobr@o2.pl>
+committer-time 1371798206
+committer-tz +0200
+summary Added likn to wiki page
+previous 8038b98b012ea0ae9f98a6b28829c5d77dfcafde README.markdown
+filename README.markdown
+	* Wiki: [https://github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
+57ab0416679067dd61cea71c525f90fb1dcdd6f6 83 78 1
+	* Gitter chat: [https://gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+e3268019c66da7534414e9562ececdee5d455b1b 68 79 2
+	* Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
+e3268019c66da7534414e9562ececdee5d455b1b 69 80
+	
