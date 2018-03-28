@@ -251,16 +251,16 @@ namespace GitUI
 
         public static Control FindFocusedControl(this ContainerControl container)
         {
-            var control = container.ActiveControl;
-            container = control as ContainerControl;
-
-            if (container == null)
+            while (true)
             {
-                return control;
-            }
-            else
-            {
-                return container.FindFocusedControl();
+                if (container.ActiveControl is ContainerControl activeContainer)
+                {
+                    container = activeContainer;
+                }
+                else
+                {
+                    return container.ActiveControl;
+                }
             }
         }
     }
