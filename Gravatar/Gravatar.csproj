@@ -83,7 +83,6 @@
     <Compile Include="DefaultImageType.cs" />
     <Compile Include="GravatarService.cs" />
     <Compile Include="MD5.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rating.cs" />
   </ItemGroup>
   <ItemGroup>

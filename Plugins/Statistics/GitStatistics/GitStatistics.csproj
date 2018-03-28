@@ -96,7 +96,6 @@
     <Compile Include="PieChart\Quadrilateral.cs" />
     <Compile Include="PieChart\SliceSelectedArgs.cs" />
     <Compile Include="PieChart\ShadowStyle.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
