@@ -115,6 +115,12 @@
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\RestSharp.dll" />
       </Component>
+      <Component Id="Microsoft.VisualStudio.Threading.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Threading.dll" />
+      </Component>
+      <Component Id="Microsoft.VisualStudio.Validation.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Validation.dll" />
+      </Component>
       <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
         <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
       </Component>
@@ -693,6 +699,8 @@
       <ComponentRef Id="English.Plugins.xlf" />
       <ComponentRef Id="Git.hub.dll" />
       <ComponentRef Id="RestSharp.dll" />
+      <ComponentRef Id="Microsoft.VisualStudio.Threading.dll" />
+      <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->
