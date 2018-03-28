@@ -7,8 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\stylecop.json">
       <Link>stylecop.json</Link>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\vs-threading.MainThreadAssertingMethods.txt">
+      <Visible>False</Visible>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\vs-threading.MainThreadSwitchingMethods.txt">
+      <Visible>False</Visible>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Build\vs-threading.TypesRequiringMainThread.txt">
+      <Visible>False</Visible>
     </AdditionalFiles>
   </ItemGroup>
 
