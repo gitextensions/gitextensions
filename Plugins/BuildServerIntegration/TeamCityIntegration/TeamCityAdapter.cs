@@ -17,8 +17,10 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using GitCommands.Utils;
+using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using Microsoft.VisualStudio.Threading;
 
 namespace TeamCityIntegration
 {
@@ -59,7 +61,7 @@ namespace TeamCityIntegration
 
         private string _httpClientHostSuffix;
 
-        private readonly List<Task<IEnumerable<string>>> _getBuildTypesTask = new List<Task<IEnumerable<string>>>();
+        private readonly List<JoinableTask<IEnumerable<string>>> _getBuildTypesTask = new List<JoinableTask<IEnumerable<string>>>();
 
         private CookieContainer _teamCityNtlmAuthCookie;
 
@@ -131,12 +133,12 @@ namespace TeamCityIntegration
                     _getBuildTypesTask.Clear();
                     foreach (var name in ProjectNames)
                     {
-                        _getBuildTypesTask.Add(
-                            GetProjectFromNameXmlResponseAsync(name, CancellationToken.None)
-                            .ContinueWith(
-                            task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
-                                    select element.Attribute("id").Value,
-                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
+                        _getBuildTypesTask.Add(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                        {
+                            var response = await GetProjectFromNameXmlResponseAsync(name, CancellationToken.None).ConfigureAwait(false);
+                            return from element in response.XPathSelectElements("/project/buildTypes/buildType")
+                                   select element.Attribute("id").Value;
+                        }));
                     }
                 }
             }
@@ -184,7 +186,7 @@ namespace TeamCityIntegration
             }
 
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task<IDisposable>.Factory.StartNew(
+                Task.Run(
                     () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
         }
 
@@ -192,13 +194,13 @@ namespace TeamCityIntegration
         {
             try
             {
-                if (_getBuildTypesTask.Any(task => PropagateTaskAnomalyToObserver(task, observer)))
+                if (_getBuildTypesTask.Any(task => PropagateTaskAnomalyToObserver(task.Task, observer)))
                 {
                     return;
                 }
 
                 var localObserver = observer;
-                var buildTypes = _getBuildTypesTask.SelectMany(t => t.Result).Where(id => BuildIdFilter.IsMatch(id));
+                var buildTypes = _getBuildTypesTask.SelectMany(t => t.Join()).Where(id => BuildIdFilter.IsMatch(id));
                 var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
 
                 Task.Factory
@@ -209,7 +211,7 @@ namespace TeamCityIntegration
                                 var buildIds = completedTasks.Where(task => task.Status == TaskStatus.RanToCompletion)
                                                              .SelectMany(
                                                                  buildIdTask =>
-                                                                 buildIdTask.Result
+                                                                 buildIdTask.CompletedResult()
                                                                             .XPathSelectElements("/builds/build")
                                                                             .Select(x => x.Attribute("id").Value))
                                                              .ToArray();
@@ -249,7 +251,7 @@ namespace TeamCityIntegration
                                 {
                                     if (task.Status == TaskStatus.RanToCompletion)
                                     {
-                                        var buildDetails = task.Result;
+                                        var buildDetails = task.CompletedResult();
                                         var buildInfo = CreateBuildInfo(buildDetails);
                                         if (buildInfo.CommitHashList.Any())
                                         {
@@ -363,15 +365,20 @@ namespace TeamCityIntegration
 
         private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
+            if (!task.IsCompleted)
+            {
+                throw new InvalidOperationException($"Task in state '{task.Status}' was expected to be completed.");
+            }
+
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
             bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
-                                (task.Result.StatusCode == HttpStatusCode.Unauthorized || task.Result.StatusCode == HttpStatusCode.Forbidden);
+                                (task.CompletedResult().StatusCode == HttpStatusCode.Unauthorized || task.CompletedResult().StatusCode == HttpStatusCode.Forbidden);
 
             if (!retry)
             {
-                if (task.Result.IsSuccessStatusCode)
+                if (task.CompletedResult().IsSuccessStatusCode)
                 {
-                    var httpContent = task.Result.Content;
+                    var httpContent = task.CompletedResult().Content;
 
                     if (httpContent.Headers.ContentType.MediaType == "text/html")
                     {
@@ -408,7 +415,7 @@ namespace TeamCityIntegration
                 }
             }
 
-            throw new HttpRequestException(task.Result.ReasonPhrase);
+            throw new HttpRequestException(task.CompletedResult().ReasonPhrase);
         }
 
         public void UpdateHttpClientOptionsNtlmAuth(IBuildServerCredentials buildServerCredentials)
@@ -540,7 +547,7 @@ namespace TeamCityIntegration
 
         public Project GetProjectsTree()
         {
-            var projectsRootElement = GetProjectsResponseAsync(CancellationToken.None).Result;
+            var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectsResponseAsync(CancellationToken.None));
             var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e => new Project
             {
                 Id = (string)e.Attribute("id"),
@@ -569,7 +576,7 @@ namespace TeamCityIntegration
 
         public List<Build> GetProjectBuilds(string projectId)
         {
-            var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
+            var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None));
             return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build
             {
                 Id = (string)e.Attribute("id"),
@@ -580,7 +587,7 @@ namespace TeamCityIntegration
 
         public Build GetBuildType(string buildId)
         {
-            var projectsRootElement = GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None).Result;
+            var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None));
             var buildType = projectsRootElement.Root;
             return new Build
             {

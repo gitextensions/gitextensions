@@ -16,6 +16,7 @@ using GitCommands.Config;
 using GitCommands.Remote;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -47,57 +48,56 @@ namespace GitUI.BuildServerIntegration
 
         public void LaunchBuildServerInfoFetchOperation()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             CancelBuildStatusFetchOperation();
 
             DisposeBuildServerAdapter();
 
-            GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
-            {
-                if (_revisions.IsDisposed)
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    return;
-                }
+                    _buildServerAdapter = await GetBuildServerAdapterAsync();
 
-                _buildServerAdapter = task.Result;
+                    await _revisions.SwitchToMainThreadAsync();
 
-                UpdateUI();
+                    UpdateUI();
 
-                if (_buildServerAdapter == null)
-                {
-                    return;
-                }
+                    if (_buildServerAdapter == null)
+                    {
+                        return;
+                    }
 
-                var scheduler = NewThreadScheduler.Default;
+                    var scheduler = NewThreadScheduler.Default;
 
-                // Run this first as it (may) force start queries
-                var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
+                    // Run this first as it (may) force start queries
+                    var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
 
-                var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-                var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
-                var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+                    var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+                    var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
+                    var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
 
-                var cancellationToken = new CompositeDisposable
-                {
-                    fullDayObservable.OnErrorResumeNext(fullObservable)
-                                     .OnErrorResumeNext(Observable.Empty<BuildInfo>()
-                                                                  .DelaySubscription(TimeSpan.FromMinutes(1))
-                                                                  .OnErrorResumeNext(fromNowObservable)
-                                                                  .Retry()
-                                                                  .Repeat())
-                                     .ObserveOn(SynchronizationContext.Current)
-                                     .Subscribe(OnBuildInfoUpdate),
+                    var cancellationToken = new CompositeDisposable
+                    {
+                        fullDayObservable.OnErrorResumeNext(fullObservable)
+                                         .OnErrorResumeNext(Observable.Empty<BuildInfo>()
+                                                                      .DelaySubscription(TimeSpan.FromMinutes(1))
+                                                                      .OnErrorResumeNext(fromNowObservable)
+                                                                      .Retry()
+                                                                      .Repeat())
+                                         .ObserveOn(MainThreadScheduler.Instance)
+                                         .Subscribe(OnBuildInfoUpdate),
 
-                    runningBuildsObservable.OnErrorResumeNext(Observable.Empty<BuildInfo>()
-                                                                        .DelaySubscription(TimeSpan.FromSeconds(10)))
-                                           .Retry()
-                                           .Repeat()
-                                           .ObserveOn(SynchronizationContext.Current)
-                                           .Subscribe(OnBuildInfoUpdate)
-                };
+                        runningBuildsObservable.OnErrorResumeNext(Observable.Empty<BuildInfo>()
+                                                                            .DelaySubscription(TimeSpan.FromSeconds(10)))
+                                               .Retry()
+                                               .Repeat()
+                                               .ObserveOn(MainThreadScheduler.Instance)
+                                               .Subscribe(OnBuildInfoUpdate)
+                    };
 
-                _buildStatusCancellationToken = cancellationToken;
-            },
-                TaskScheduler.FromCurrentSynchronizationContext());
+                    _buildStatusCancellationToken = cancellationToken;
+                });
         }
 
         public void CancelBuildStatusFetchOperation()
@@ -310,9 +310,9 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        private Task<IBuildServerAdapter> GetBuildServerAdapter()
+        private Task<IBuildServerAdapter> GetBuildServerAdapterAsync()
         {
-            return Task<IBuildServerAdapter>.Factory.StartNew(() =>
+            return Task.Run(() =>
             {
                 if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
                 {

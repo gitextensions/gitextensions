@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.AutoCompletion;
+using Microsoft.VisualStudio.Threading;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
 using ResourceManager;
@@ -38,7 +39,7 @@ namespace GitUI.SpellChecker
 
         private CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
         private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>();
-        private Task<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
+        private AsyncLazy<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate;
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
@@ -223,15 +224,16 @@ namespace GitUI.SpellChecker
             if (AppSettings.ProvideAutocompletion)
             {
                 InitializeAutoCompleteWordsTask();
-                _autoCompleteListTask.ContinueWith(
-                    w =>
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
                     {
-                        _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word));
-                        w.Dispose();
-                    },
-                    _autoCompleteCancellationTokenSource.Token,
-                    TaskContinuationOptions.NotOnCanceled,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                        var words = await _autoCompleteListTask.GetValueAsync();
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
+                        _autoCompleteCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                        _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
+                    });
             }
 
             //
@@ -837,37 +839,34 @@ namespace GitUI.SpellChecker
         {
             CancelAutoComplete();
             _autoCompleteCancellationTokenSource = new CancellationTokenSource();
-            _autoCompleteListTask = new Task<IEnumerable<AutoCompleteWord>>(
-                    () =>
+            _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>>(
+                async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                    var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(_autoCompleteCancellationTokenSource.Token)).ToArray();
+                    try
                     {
-                        var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWords(_autoCompleteCancellationTokenSource)).ToArray();
-                        try
+                        var results = await Task.WhenAll(subTasks);
+                        return results.SelectMany(result => result).Distinct().ToList();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // WaitAll was cancelled
+                        return null;
+                    }
+                    catch (Exception)
+                    {
+                        if (subTasks.Any(t => t.IsCanceled))
                         {
-                            Task.WaitAll(subTasks, _autoCompleteCancellationTokenSource.Token);
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            // WaitAll was cancelled
+                            // At least one task was cancelled
                             return null;
                         }
-                        catch (AggregateException ex)
-                        {
-                            if (ex.InnerExceptions.OfType<OperationCanceledException>().Any())
-                            {
-                                // At least one task was cancelled
-                                return null;
-                            }
 
-                            throw;
-                        }
-
-                        return subTasks.SelectMany(t =>
-                        {
-                            var res = t.Result;
-                            t.Dispose();
-                            return res;
-                        }).Distinct().ToList();
-                    }, _autoCompleteCancellationTokenSource.Token);
+                        throw;
+                    }
+                },
+                ThreadHelper.JoinableTaskFactory);
         }
 
         public void AddAutoCompleteProvider(IAutoCompleteProvider autoCompleteProvider)
@@ -944,12 +943,9 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            if (!_autoCompleteListTask.IsCompleted)
+            if (!_autoCompleteListTask.IsValueFactoryCompleted)
             {
-                if (_autoCompleteListTask.Status == TaskStatus.Created)
-                {
-                    _autoCompleteListTask.Start();
-                }
+                _autoCompleteListTask.GetValueAsync().Forget();
 
                 if (calledByUser)
                 {
@@ -978,7 +974,8 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var list = _autoCompleteListTask.Result.Where(x => x.Matches(word)).Distinct().ToList();
+            var autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(() => _autoCompleteListTask.GetValueAsync());
+            var list = autoCompleteList.Where(x => x.Matches(word)).Distinct().ToList();
 
             if (list.Count == 0)
             {
@@ -1081,10 +1078,6 @@ namespace GitUI.SpellChecker
                 _autoCompleteCancellationTokenSource.Dispose();
                 _customUnderlines?.Dispose();
                 components?.Dispose();
-                if (_autoCompleteListTask != null && _autoCompleteListTask.Status == TaskStatus.Canceled)
-                {
-                    _autoCompleteListTask.Dispose();
-                }
             }
 
             base.Dispose(disposing);

@@ -133,15 +133,15 @@ namespace GitUI
 
         private async void btnFindPrevious_Click(object sender, EventArgs e)
         {
-            await FindNext(false, true, _textNotFoundString.Text);
+            await FindNextAsync(false, true, _textNotFoundString.Text);
         }
 
         private async void btnFindNext_Click(object sender, EventArgs e)
         {
-            await FindNext(false, false, _textNotFoundString.Text);
+            await FindNextAsync(false, false, _textNotFoundString.Text);
         }
 
-        public async Task<TextRange> FindNext(bool viaF3, bool searchBackward, string messageIfNotFound)
+        public async Task<TextRange> FindNextAsync(bool viaF3, bool searchBackward, string messageIfNotFound)
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
@@ -306,7 +306,7 @@ namespace GitUI
                 InsertText(txtReplaceWith.Text);
             }
 
-            await FindNext(false, _lastSearchWasBackward, _textNotFoundString.Text);
+            await FindNextAsync(false, _lastSearchWasBackward, _textNotFoundString.Text);
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)
@@ -323,7 +323,7 @@ namespace GitUI
             _editor.Document.UndoStack.StartUndoGroup();
             try
             {
-                while (FindNext(false, false, null) != null)
+                while (FindNextAsync(false, false, null) != null)
                 {
                     if (_lastSearchLoopedAround)
                     {

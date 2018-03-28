@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (AppSettings.DashboardShowCurrentBranch)
             {
                 _branchNameLoader = new AsyncLoader();
-                _branchNameLoader.Load(() =>
+                _branchNameLoader.LoadAsync(() =>
                 {
                     if (!GitModule.IsBareRepository(repository.Path))
                     {

@@ -68,7 +68,7 @@ namespace Gerrit
             {
                 if (File.Exists(Module.WorkingDir + ".gitreview"))
                 {
-                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.WorkingDir + ".gitreview");
+                    _NO_TRANSLATE_GitReviewEdit.ViewFileAsync(Module.WorkingDir + ".gitreview");
                 }
             }
             catch (Exception ex)

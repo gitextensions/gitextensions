@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeleteUnusedBranches.Properties;
+using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace DeleteUnusedBranches
@@ -47,7 +49,7 @@ namespace DeleteUnusedBranches
             _gitUiCommands = gitUiCommands;
             _gitPlugin = gitPlugin;
             imgLoading.Image = Resources.loadingpanel;
-            RefreshObsoleteBranches();
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 
         protected override void OnLoad(EventArgs e)
@@ -144,8 +146,10 @@ namespace DeleteUnusedBranches
             imgLoading.Visible = true;
             lblStatus.Text = _deletingBranches.Text;
 
-            Task.Factory.StartNew(() =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
                 if (remoteBranches.Count > 0)
                 {
                     // TODO: use GitCommandHelpers.PushMultipleCmd after moving this window to GE (see FormPush as example)
@@ -159,17 +163,12 @@ namespace DeleteUnusedBranches
                     var localBranchNames = string.Join(" ", localBranches.Select(branch => branch.Name));
                     _gitCommands.RunGitCmd("branch -d " + localBranchNames);
                 }
-            })
-            .ContinueWith(_ =>
-            {
-                if (IsDisposed)
-                {
-                    return;
-                }
+
+                await this.SwitchToMainThreadAsync();
 
                 tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = true;
-                RefreshObsoleteBranches();
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                await RefreshObsoleteBranchesAsync().ConfigureAwait(false);
+            });
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
@@ -199,7 +198,7 @@ namespace DeleteUnusedBranches
 
         private void Refresh_Click(object sender, EventArgs e)
         {
-            RefreshObsoleteBranches();
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 
         private void BranchesGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -214,7 +213,7 @@ namespace DeleteUnusedBranches
             lblStatus.Text = GetDefaultStatusText();
         }
 
-        private void RefreshObsoleteBranches()
+        private async Task RefreshObsoleteBranchesAsync()
         {
             if (IsRefreshing)
             {
@@ -236,23 +235,36 @@ namespace DeleteUnusedBranches
                 regexDoesNotMatch.Checked ? regexDoesNotMatch.Checked : false,
                 TimeSpan.FromDays((int)olderThanDays.Value),
                 _refreshCancellation.Token);
-            Task.Factory.StartNew(() => GetObsoleteBranches(context, curBranch).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
-                .ContinueWith(task =>
+
+            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+            IEnumerable<Branch> branches;
+            try
+            {
+                branches = GetObsoleteBranches(context, curBranch);
+            }
+            catch
+            {
+                await this.SwitchToMainThreadAsync();
+                if (context.CancellationToken.IsCancellationRequested)
                 {
-                    if (IsDisposed || context.CancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
+                    return;
+                }
 
-                    if (task.IsCompleted)
-                    {
-                        _branches.Clear();
-                        _branches.AddRange(task.Result);
-                        _branches.ResetBindings();
-                    }
+                throw;
+            }
 
-                    IsRefreshing = false;
-                }, TaskScheduler.FromCurrentSynchronizationContext());
+            await this.SwitchToMainThreadAsync();
+            if (context.CancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            _branches.Clear();
+            _branches.AddRange(branches);
+            _branches.ResetBindings();
+
+            IsRefreshing = false;
         }
 
         private bool IsRefreshing

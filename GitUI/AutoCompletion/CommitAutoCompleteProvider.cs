@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.AutoCompletion
 {
@@ -20,51 +21,47 @@ namespace GitUI.AutoCompletion
             _module = module;
         }
 
-        public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWords(CancellationTokenSource cts)
+        public async Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
         {
-            var cancellationToken = cts.Token;
+            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-            return Task.Factory.StartNew(
-                    () =>
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var autoCompleteWords = new HashSet<string>();
+
+            foreach (var file in _module.GetAllChangedFiles())
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var regex = GetRegexForExtension(Path.GetExtension(file.Name));
+
+                if (regex != null)
+                {
+                    var text = GetChangedFileText(_module, file);
+                    var matches = regex.Matches(text);
+                    foreach (Match match in matches)
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        var autoCompleteWords = new HashSet<string>();
-
-                        foreach (var file in _module.GetAllChangedFiles())
+                        // Skip first group since it always contains the entire matched string (regardless of capture groups)
+                        foreach (Group group in match.Groups.OfType<Group>().Skip(1))
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            var regex = GetRegexForExtension(Path.GetExtension(file.Name));
-
-                            if (regex != null)
+                            foreach (Capture capture in group.Captures)
                             {
-                                var text = GetChangedFileText(_module, file);
-                                var matches = regex.Matches(text);
-                                foreach (Match match in matches)
-                                {
-                                    // Skip first group since it always contains the entire matched string (regardless of capture groups)
-                                    foreach (Group group in match.Groups.OfType<Group>().Skip(1))
-                                    {
-                                        foreach (Capture capture in group.Captures)
-                                        {
-                                            autoCompleteWords.Add(capture.Value);
-                                        }
-                                    }
-                                }
-                            }
-
-                            autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
-                            autoCompleteWords.Add(Path.GetFileName(file.Name));
-                            if (!string.IsNullOrWhiteSpace(file.OldName))
-                            {
-                                autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.OldName));
-                                autoCompleteWords.Add(Path.GetFileName(file.OldName));
+                                autoCompleteWords.Add(capture.Value);
                             }
                         }
+                    }
+                }
 
-                        return autoCompleteWords.Select(w => new AutoCompleteWord(w));
-                    }, cancellationToken);
+                autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
+                autoCompleteWords.Add(Path.GetFileName(file.Name));
+                if (!string.IsNullOrWhiteSpace(file.OldName))
+                {
+                    autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.OldName));
+                    autoCompleteWords.Add(Path.GetFileName(file.OldName));
+                }
+            }
+
+            return autoCompleteWords.Select(w => new AutoCompleteWord(w));
         }
 
         private static Regex GetRegexForExtension(string extension)

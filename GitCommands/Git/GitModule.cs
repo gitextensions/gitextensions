@@ -8,14 +8,17 @@ using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using PatchApply;
 using SmartFormat;
 
@@ -2576,8 +2579,10 @@ namespace GitCommands
                 if (item.IsSubmodule)
                 {
                     var localItem = item;
-                    localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
+                    localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
                         var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
                         if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
@@ -2586,7 +2591,7 @@ namespace GitCommands
                         }
 
                         return submoduleStatus;
-                    });
+                    }));
                 }
             }
         }
@@ -2597,8 +2602,10 @@ namespace GitCommands
             {
                 if (item.IsSubmodule)
                 {
-                    item.SubmoduleStatus = Task.Factory.StartNew(() =>
+                    item.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
                         Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
                         var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text, this, item.Name);
@@ -2609,7 +2616,7 @@ namespace GitCommands
                         }
 
                         return submoduleStatus;
-                    });
+                    }));
                 }
             });
         }

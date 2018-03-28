@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -106,7 +107,7 @@ namespace GitCommands
 
         public void Execute()
         {
-            _backgroundLoader.Load(ProccessGitLog, ProccessGitLogExecuted);
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => _backgroundLoader.LoadAsync(ProccessGitLog, ProccessGitLogExecuted));
         }
 
         private void ProccessGitLog(CancellationToken taskState)

@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _isFirstLoad = true;
 
             this.Mask();
-            _loader.Load(
+            _loader.LoadAsync(
                 () =>
                 {
                     var t = _gitHoster.GetHostedRemotesForModule(Module).ToList();
@@ -219,7 +219,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 _currentPullRequestInfo = null;
                 _discussionWB.DocumentText = "";
-                _diffViewer.ViewText("", "");
+                _diffViewer.ViewTextAsync("", "");
                 return;
             }
 

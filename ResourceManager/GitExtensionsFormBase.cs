@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI;
 
 namespace ResourceManager
 {
@@ -15,6 +16,8 @@ namespace ResourceManager
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             SetFont();
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;

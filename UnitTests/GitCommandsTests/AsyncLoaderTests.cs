@@ -4,11 +4,12 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
-using GitCommandsTests.Helpers;
+using GitUI;
 using NUnit.Framework;
 
 namespace GitCommandsTests
 {
+    [Apartment(ApartmentState.STA)]
     public sealed class AsyncLoaderTests
     {
         private AsyncLoader _loader;
@@ -16,8 +17,6 @@ namespace GitCommandsTests
         [SetUp]
         public void SetUp()
         {
-            SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-
             _loader = new AsyncLoader();
         }
 
@@ -28,178 +27,205 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public async Task Load_should_execute_async_operation_and_callback()
+        public void Load_should_execute_async_operation_and_callback()
         {
-            var loadSignal = new SemaphoreSlim(0);
-
-            var started = 0;
-            var completed = 0;
-            var task = _loader.Load(
-                () =>
-                {
-                    started++;
-                    loadSignal.Release();
-                    Thread.Sleep(100);
-                },
-                () => completed++);
-
-            Assert.True(await loadSignal.WaitAsync(1000));
-
-            Assert.AreEqual(1, started);
-            Assert.AreEqual(0, completed);
-
-            await task;
-
-            Assert.AreEqual(1, started);
-            Assert.AreEqual(1, completed);
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        }
-
-        [Test]
-        public async Task Load_performed_on_thread_pool_and_result_handled_via_callers_context()
-        {
-            var callerThread = Thread.CurrentThread;
-            Thread loadThread = null;
-            Thread continuationThread = null;
-
-            Assert.False(callerThread.IsThreadPoolThread);
-
-            using (var scheduler = new SingleThreadTaskScheduler())
-            using (var loader = new AsyncLoader(scheduler))
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                await loader.Load(
-                    () => loadThread = Thread.CurrentThread,
-                    () => continuationThread = Thread.CurrentThread);
-            }
+                var loadSignal = new SemaphoreSlim(0);
+                var completeSignal = new SemaphoreSlim(0);
 
-            Assert.True(loadThread.IsThreadPoolThread);
-            Assert.AreNotSame(loadThread, callerThread);
-            Assert.AreNotSame(loadThread, continuationThread);
+                var started = 0;
+                var completed = 0;
+                var task = _loader.LoadAsync(
+                    () =>
+                    {
+                        started++;
+                        loadSignal.Release();
+                        completeSignal.Wait();
+                    },
+                    () => completed++);
+
+                Assert.True(await loadSignal.WaitAsync(1000));
+
+                Assert.AreEqual(1, started);
+                Assert.AreEqual(0, completed);
+
+                completeSignal.Release();
+
+                await task;
+
+                Assert.AreEqual(1, started);
+                Assert.AreEqual(1, completed);
+
+                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            });
         }
 
         [Test]
-        public async Task Cancel_during_load_means_callback_not_fired()
+        public void Load_performed_on_thread_pool_and_result_handled_via_callers_context()
         {
-            var loadSignal = new SemaphoreSlim(0);
-
-            var started = 0;
-            var completed = 0;
-            var task = _loader.Load(
-                () =>
-                {
-                    started++;
-                    loadSignal.Release();
-                    Thread.Sleep(100);
-                },
-                () => completed++);
-
-            Assert.True(await loadSignal.WaitAsync(1000));
-
-            Assert.AreEqual(1, started);
-            Assert.AreEqual(0, completed);
-
-            _loader.Cancel();
-
-            await task;
-
-            Assert.AreEqual(1, started);
-            Assert.AreEqual(0, completed, "Should not have called the follow-up action");
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        }
-
-        [Test]
-        public async Task Cancel_during_delay_means_load_not_fired()
-        {
-            // Deliberately use a long delay as cancellation should cut it short
-            _loader.Delay = TimeSpan.FromMilliseconds(5000);
-
-            var started = 0;
-            var completed = 0;
-            var task = _loader.Load(
-                () => started++,
-                () => completed++);
-
-            await Task.Delay(50);
-
-            Assert.AreEqual(0, started);
-            Assert.AreEqual(0, completed);
-
-            _loader.Cancel();
-
-            await task;
-
-            Assert.AreEqual(0, started);
-            Assert.AreEqual(0, completed);
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        }
-
-        [Test]
-        public async Task Dispose_during_load_means_callback_not_fired()
-        {
-            var loadSignal = new SemaphoreSlim(0);
-
-            var started = 0;
-            var completed = 0;
-            var task = _loader.Load(
-                () =>
-                {
-                    started++;
-                    loadSignal.Release();
-                    Thread.Sleep(100);
-                },
-                () => completed++);
-
-            Assert.True(await loadSignal.WaitAsync(1000));
-
-            Assert.AreEqual(1, started);
-            Assert.AreEqual(0, completed);
-
-            _loader.Dispose();
-
-            await task;
-
-            Assert.AreEqual(1, started);
-            Assert.AreEqual(0, completed, "Should not have called the follow-up action");
-
-            Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        }
-
-        [Test]
-        public async Task Delay_causes_load_callback_to_be_deferred()
-        {
-            _loader.Delay = TimeSpan.FromMilliseconds(100);
-
-            var sw = Stopwatch.StartNew();
-
-            await _loader.Load(
-                () => sw.Stop(),
-                () => { });
-
-            Assert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(10));
-        }
-
-        [Test]
-        public async Task Error_raised_via_event_and_marked_as_handled_does_not_fault_task()
-        {
-            var observed = new List<Exception>();
-
-            _loader.LoadingError += (_, e) =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                observed.Add(e.Exception);
-                e.Handled = true;
-            };
+                var callerThread = Thread.CurrentThread;
+                Thread loadThread = null;
+                Thread continuationThread = null;
 
-            var ex = new Exception();
+                Assert.False(callerThread.IsThreadPoolThread);
 
-            await _loader.Load(
-                () => throw ex,
-                Assert.Fail);
+                using (var loader = new AsyncLoader())
+                {
+                    await loader.LoadAsync(
+                        () => loadThread = Thread.CurrentThread,
+                        () => continuationThread = Thread.CurrentThread);
+                }
 
-            Assert.AreEqual(1, observed.Count);
-            Assert.AreSame(ex, observed[0]);
+                Assert.True(loadThread.IsThreadPoolThread);
+                Assert.AreNotSame(loadThread, callerThread);
+                Assert.AreNotSame(loadThread, continuationThread);
+            });
+        }
+
+        [Test]
+        public void Cancel_during_load_means_callback_not_fired()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var loadSignal = new SemaphoreSlim(0);
+                var completeSignal = new SemaphoreSlim(0);
+
+                var started = 0;
+                var completed = 0;
+                var task = _loader.LoadAsync(
+                    () =>
+                    {
+                        started++;
+                        loadSignal.Release();
+                        completeSignal.Wait();
+                    },
+                    () => completed++);
+
+                Assert.True(await loadSignal.WaitAsync(1000));
+
+                Assert.AreEqual(1, started);
+                Assert.AreEqual(0, completed);
+
+                _loader.Cancel();
+                completeSignal.Release();
+
+                await task;
+
+                Assert.AreEqual(1, started);
+                Assert.AreEqual(0, completed, "Should not have called the follow-up action");
+
+                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            });
+        }
+
+        [Test]
+        public void Cancel_during_delay_means_load_not_fired()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                // Deliberately use a long delay as cancellation should cut it short
+                _loader.Delay = TimeSpan.FromMilliseconds(5000);
+
+                var started = 0;
+                var completed = 0;
+                var task = _loader.LoadAsync(
+                    () => started++,
+                    () => completed++);
+
+                await Task.Delay(50);
+
+                Assert.AreEqual(0, started);
+                Assert.AreEqual(0, completed);
+
+                _loader.Cancel();
+
+                await task;
+
+                Assert.AreEqual(0, started);
+                Assert.AreEqual(0, completed);
+
+                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            });
+        }
+
+        [Test]
+        public void Dispose_during_load_means_callback_not_fired()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var loadSignal = new SemaphoreSlim(0);
+                var completeSignal = new SemaphoreSlim(0);
+
+                var started = 0;
+                var completed = 0;
+                var task = _loader.LoadAsync(
+                    () =>
+                    {
+                        started++;
+                        loadSignal.Release();
+                        completeSignal.Wait();
+                    },
+                    () => completed++);
+
+                Assert.True(await loadSignal.WaitAsync(1000));
+
+                Assert.AreEqual(1, started);
+                Assert.AreEqual(0, completed);
+
+                _loader.Dispose();
+                completeSignal.Release();
+
+                await task;
+
+                Assert.AreEqual(1, started);
+                Assert.AreEqual(0, completed, "Should not have called the follow-up action");
+
+                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            });
+        }
+
+        [Test]
+        public void Delay_causes_load_callback_to_be_deferred()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                _loader.Delay = TimeSpan.FromMilliseconds(100);
+
+                var sw = Stopwatch.StartNew();
+
+                await _loader.LoadAsync(
+                    () => sw.Stop(),
+                    () => { });
+
+                Assert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(10));
+            });
+        }
+
+        [Test]
+        public void Error_raised_via_event_and_marked_as_handled_does_not_fault_task()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var observed = new List<Exception>();
+
+                _loader.LoadingError += (_, e) =>
+                {
+                    observed.Add(e.Exception);
+                    e.Handled = true;
+                };
+
+                var ex = new Exception();
+
+                await _loader.LoadAsync(
+                    () => throw ex,
+                    Assert.Fail);
+
+                Assert.AreEqual(1, observed.Count);
+                Assert.AreSame(ex, observed[0]);
+            });
         }
 
         [Test]
@@ -215,9 +241,11 @@ namespace GitCommandsTests
 
             var ex = new Exception();
 
-            var oe = Assert.ThrowsAsync<Exception>(() => _loader.Load(
+            var loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
                 () => throw ex,
                 Assert.Fail));
+
+            var oe = Assert.Throws<Exception>(() => loadTask.Join());
 
             Assert.AreEqual(1, observed.Count);
             Assert.AreSame(ex, observed[0]);
@@ -235,10 +263,10 @@ namespace GitCommandsTests
             loader.Dispose();
 
             // Any use after dispose should throw
-            Assert.Throws<ObjectDisposedException>(() => loader.Load(() => { }, () => { }));
-            Assert.Throws<ObjectDisposedException>(() => loader.Load(_ => { }, () => { }));
-            Assert.Throws<ObjectDisposedException>(() => loader.Load(() => 1, i => { }));
-            Assert.Throws<ObjectDisposedException>(() => loader.Load(_ => 1, i => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(() => { }, () => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(() => 1, i => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(_ => { }, () => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(_ => 1, i => { }));
             Assert.Throws<ObjectDisposedException>(() => loader.Cancel());
         }
     }

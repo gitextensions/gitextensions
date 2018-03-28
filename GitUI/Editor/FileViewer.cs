@@ -408,9 +408,9 @@ namespace GitUI.Editor
             ResetCurrentScrollPos();
         }
 
-        public Task ViewFile(string fileName)
+        public Task ViewFileAsync(string fileName)
         {
-            return ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName),
+            return ViewItemAsync(fileName, () => GetImage(fileName), () => GetFileText(fileName),
                 () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
         }
 
@@ -421,37 +421,38 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(GitItemStatus item)
         {
-            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.SubmoduleStatus);
+            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync);
         }
 
         public void ViewCurrentChanges(GitItemStatus item, bool isStaged)
         {
-            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.SubmoduleStatus);
+            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync);
         }
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
-            bool isSubmodule, Task<GitSubmoduleStatus> status)
+            bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync)
         {
             if (!isSubmodule)
             {
-                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
+                _async.LoadAsync(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
             }
-            else if (status != null)
+            else if (getStatusAsync() != null)
             {
-                _async.Load(() =>
+                _async.LoadAsync(() =>
                     {
-                        if (status.Result == null)
+                        var status = ThreadHelper.JoinableTaskFactory.Run(() => getStatusAsync());
+                        if (status == null)
                         {
                             return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
                         }
 
-                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status.Result);
+                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status);
                     }, ViewPatch);
             }
             else
             {
-                _async.Load(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
+                _async.LoadAsync(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
             }
         }
@@ -476,12 +477,12 @@ namespace GitUI.Editor
             RestoreCurrentScrollPos();
         }
 
-        public Task ViewPatch(Func<string> loadPatchText)
+        public Task ViewPatchAsync(Func<string> loadPatchText)
         {
-            return _async.Load(loadPatchText, ViewPatch);
+            return _async.LoadAsync(loadPatchText, ViewPatch);
         }
 
-        public Task ViewText(string fileName, string text)
+        public Task ViewTextAsync(string fileName, string text)
         {
             ResetForText(fileName);
 
@@ -500,18 +501,18 @@ namespace GitUI.Editor
             return Task.CompletedTask;
         }
 
-        public Task ViewGitItemRevision(string fileName, string guid)
+        public Task ViewGitItemRevisionAsync(string fileName, string guid)
         {
             if (guid == GitRevision.UnstagedGuid)
             {
                 // No blob exists for unstaged, present contents from file system
-                return ViewFile(fileName);
+                return ViewFileAsync(fileName);
             }
             else
             {
                 // Retrieve blob, same as GitItemStatus.TreeGuid
                 string blob = Module.GetFileBlobHash(fileName, guid);
-                return ViewGitItem(fileName, blob);
+                return ViewGitItemAsync(fileName, blob);
             }
         }
 
@@ -527,13 +528,13 @@ namespace GitUI.Editor
             }
         }
 
-        public Task ViewGitItem(string fileName, string guid)
+        public Task ViewGitItemAsync(string fileName, string guid)
         {
-            return ViewItem(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
+            return ViewItemAsync(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
                 () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
         }
 
-        private Task ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
+        private Task ViewItemAsync(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
             FilePreamble = null;
 
@@ -543,16 +544,16 @@ namespace GitUI.Editor
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    return _async.Load(getSubmoduleText, text => ViewText(fileName, text));
+                    return _async.LoadAsync(getSubmoduleText, text => ViewTextAsync(fileName, text));
                 }
                 else
                 {
-                    return ViewText(null, "Directory: " + fileName);
+                    return ViewTextAsync(null, "Directory: " + fileName);
                 }
             }
             else if (IsImage(fileName))
             {
-                return _async.Load(getImage,
+                return _async.LoadAsync(getImage,
                             image =>
                             {
                                 ResetForImage();
@@ -576,11 +577,11 @@ namespace GitUI.Editor
             // Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
-                return ViewText(null, "Binary file: " + fileName);
+                return ViewTextAsync(null, "Binary file: " + fileName);
             }
             else
             {
-                return _async.Load(getFileText, text => ViewText(fileName, text));
+                return _async.LoadAsync(getFileText, text => ViewTextAsync(fileName, text));
             }
         }
 
@@ -1054,7 +1055,7 @@ namespace GitUI.Editor
 
         public void Clear()
         {
-            ViewText("", "");
+            ViewTextAsync("", "");
         }
 
         public bool HasAnyPatches()

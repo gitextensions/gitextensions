@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GitUI;
 using Gravatar;
 using GravatarTests.Properties;
 using NSubstitute;
@@ -28,6 +30,7 @@ namespace GravatarTests
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public async Task GetAvatarAsync_should_not_call_gravatar_if_exist_in_cache()
         {
             var avatar = Resources.User;
@@ -36,9 +39,12 @@ namespace GravatarTests
             var image = await _service.GetAvatarAsync(Email, 1, DefaultImageType.Identicon.ToString());
 
             image.Should().Be(avatar);
-            Received.InOrder(async () =>
+            Received.InOrder(() =>
             {
-                await _cache.Received(1).GetImageAsync($"{Email}.png", null);
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await _cache.Received(1).GetImageAsync($"{Email}.png", null);
+                });
             });
             await _cache.DidNotReceive().AddImageAsync(Arg.Any<string>(), Arg.Any<Stream>());
         }
@@ -62,13 +68,17 @@ namespace GravatarTests
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public async Task RemoveAvatarAsync_should_invoke_cache_remove()
         {
             await _service.DeleteAvatarAsync(Email);
 
-            Received.InOrder(async () =>
+            Received.InOrder(() =>
             {
-                await _cache.Received(1).DeleteImageAsync($"{Email}.png");
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await _cache.Received(1).DeleteImageAsync($"{Email}.png");
+                });
             });
         }
 

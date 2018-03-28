@@ -77,11 +77,11 @@ namespace GitUI.Editor
 
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F3)
             {
-                await _findAndReplaceForm.FindNext(true, true, "Text not found");
+                await _findAndReplaceForm.FindNextAsync(true, true, "Text not found");
             }
             else if (e.KeyCode == Keys.F3)
             {
-                await _findAndReplaceForm.FindNext(true, false, "Text not found");
+                await _findAndReplaceForm.FindNextAsync(true, false, "Text not found");
             }
 
             VScrollBar_ValueChanged(this, e);

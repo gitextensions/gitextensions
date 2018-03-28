@@ -15,8 +15,6 @@ namespace GitUI
 {
     public static class GitUIExtensions
     {
-        public static SynchronizationContext UISynchronizationContext;
-
         public static void OpenWithDifftool(this RevisionGrid grid, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
         {
             // Note: Order in revisions is that first clicked is last in array
@@ -59,9 +57,9 @@ namespace GitUI
                 }
             }
 
-            if (file.IsSubmodule && file.SubmoduleStatus != null)
+            if (file.IsSubmodule && file.GetSubmoduleStatusAsync() != null)
             {
-                return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Result);
+                return LocalizationHelpers.ProcessSubmoduleStatus(diffViewer.Module, ThreadHelper.JoinableTaskFactory.Run(() => file.GetSubmoduleStatusAsync()));
             }
 
             PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
@@ -80,7 +78,7 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static Task ViewChanges(this FileViewer diffViewer, IReadOnlyList<GitRevision> revisions, GitItemStatus file, string defaultText)
+        public static Task ViewChangesAsync(this FileViewer diffViewer, IReadOnlyList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 0)
             {
@@ -95,10 +93,10 @@ namespace GitUI
                 firstRevision = selectedRevision.FirstParentGuid;
             }
 
-            return ViewChanges(diffViewer, firstRevision, secondRevision, file, defaultText);
+            return ViewChangesAsync(diffViewer, firstRevision, secondRevision, file, defaultText);
         }
 
-        public static Task ViewChanges(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
+        public static Task ViewChangesAsync(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file, string defaultText)
         {
             if (firstRevision == null)
             {
@@ -110,16 +108,16 @@ namespace GitUI
                         throw new ArgumentException(nameof(secondRevision));
                     }
 
-                    return diffViewer.ViewGitItemRevision(file.Name, secondRevision);
+                    return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
                 }
                 else
                 {
-                    return diffViewer.ViewGitItem(file.Name, file.TreeGuid);
+                    return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid);
                 }
             }
             else
             {
-                return diffViewer.ViewPatch(() =>
+                return diffViewer.ViewPatchAsync(() =>
                 {
                     string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
                     return selectedPatch ?? defaultText;
@@ -196,54 +194,59 @@ namespace GitUI
             }
         }
 
-        public static void InvokeAsync(this Control control, Action action)
+        public static async Task InvokeAsync(this Control control, Action action)
         {
-            InvokeAsync(control, _ => action(), null);
+            await control.SwitchToMainThreadAsync();
+            action();
         }
 
-        public static void InvokeAsync(this Control control, SendOrPostCallback action, object state)
+        public static async Task InvokeAsync<T>(this Control control, Action<T> action, T state)
         {
-            void CheckDisposedAndInvoke(object s)
+            await control.SwitchToMainThreadAsync();
+            action(state);
+        }
+
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        /// <summary>
+        /// Use <see cref="InvokeAsync(Control, Action)"/> instead. If the result of
+        /// <see cref="InvokeAsync(Control, Action)"/> is not awaited, use
+        /// <see cref="ThreadHelper.FileAndForget(Task, Func{Exception, bool})"/> to ignore it.
+        /// </summary>
+        public static async void InvokeAsyncDoNotUseInNewCode(this Control control, Action action)
+#pragma warning restore VSTHRD100 // Avoid async void methods
+        {
+            if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
             {
-                if (!control.IsDisposed)
-                {
-                    action(s);
-                }
+                await Task.Yield();
+            }
+            else
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             }
 
-            if (!control.IsDisposed)
+            if (control.IsDisposed)
             {
-                UISynchronizationContext.Post(CheckDisposedAndInvoke, state);
+                return;
             }
+
+            action();
         }
 
         public static void InvokeSync(this Control control, Action action)
         {
-            InvokeSync(control, _ => action(), null);
-        }
-
-        public static void InvokeSync(this Control control, SendOrPostCallback action, object state)
-        {
-            void CheckDisposedAndInvoke(object s)
-            {
-                if (!control.IsDisposed)
+            ThreadHelper.JoinableTaskFactory.Run(
+                async () =>
                 {
                     try
                     {
-                        action(s);
+                        await InvokeAsync(control, action);
                     }
                     catch (Exception e)
                     {
                         e.Data["StackTrace" + e.Data.Count] = e.StackTrace;
                         throw;
                     }
-                }
-            }
-
-            if (!control.IsDisposed)
-            {
-                UISynchronizationContext.Send(CheckDisposedAndInvoke, state);
-            }
+                });
         }
 
         public static Control FindFocusedControl(this ContainerControl container)

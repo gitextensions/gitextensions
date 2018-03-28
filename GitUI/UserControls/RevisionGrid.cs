@@ -27,6 +27,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using Gravatar;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI
@@ -296,7 +297,7 @@ namespace GitUI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string FiltredFileName { get; set; }
         [Browsable(false)]
-        public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
+        private JoinableTask<SuperProjectInfo> SuperprojectCurrentCheckout { get; set; }
         [Browsable(false)]
         public int LatestSelectedRowIndex { get; private set; }
         [Browsable(false)]
@@ -1158,10 +1159,24 @@ namespace GitUI
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
-                Task<SuperProjectInfo> newSuperPrjectInfo =
-                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
-                newSuperPrjectInfo.ContinueWith((task) => Refresh(),
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                JoinableTask<SuperProjectInfo> newSuperPrjectInfo =
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                        return GetSuperprojectCheckout(ShowRemoteRef, capturedModule);
+                    });
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    try
+                    {
+                        await newSuperPrjectInfo;
+                    }
+                    finally
+                    {
+                        await this.SwitchToMainThreadAsync();
+                        Refresh();
+                    }
+                }).FileAndForget();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1341,7 +1356,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeAsync(o =>
+            this.InvokeAsync(() =>
                                   {
                                       Error.Visible = true;
                                       ////Error.BringToFront();
@@ -1349,10 +1364,11 @@ namespace GitUI
                                       NoCommits.Visible = false;
                                       Revisions.Visible = false;
                                       Loading.Visible = false;
-                                  }, this);
+                                  })
+                .FileAndForget();
 
             DisposeRevisionGraphCommand();
-            this.InvokeAsync(() => throw new AggregateException(e.Exception));
+            this.InvokeAsync(() => throw new AggregateException(e.Exception)).FileAndForget();
             e.Handled = true;
         }
 
@@ -1405,7 +1421,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(o =>
+                this.InvokeAsync(() =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1413,12 +1429,13 @@ namespace GitUI
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
                                           _isRefreshingRevisions = false;
-                                      }, this);
+                                      })
+                    .FileAndForget();
             }
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(o =>
+                this.InvokeAsync(() =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1428,7 +1445,8 @@ namespace GitUI
                                           {
                                               BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                           }
-                                      }, this);
+                                      })
+                    .FileAndForget();
             }
 
             DisposeRevisionGraphCommand();
@@ -1596,7 +1614,7 @@ namespace GitUI
                 return;
             }
 
-            var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
+            var spi = SuperprojectCurrentCheckout.Task.CompletedOrDefault();
             var superprojectRefs = new List<IGitRef>();
             if (spi?.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {
@@ -2101,7 +2119,7 @@ namespace GitUI
             }
 
             // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
-            this.InvokeAsync(() =>
+            this.InvokeAsyncDoNotUseInNewCode(() =>
             {
                 if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
                 {

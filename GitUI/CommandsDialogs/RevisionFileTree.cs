@@ -200,7 +200,7 @@ See the changes in the commit form.");
 
                 if (tvGitTree.SelectedNode == null)
                 {
-                    FileText.ViewText("", "");
+                    FileText.ViewTextAsync("", "");
                 }
             }
             finally
@@ -310,19 +310,19 @@ See the changes in the commit form.");
                 {
                     case GitObjectType.Blob:
                     {
-                        FileText.ViewGitItem(gitItem.FileName, gitItem.Guid);
+                        FileText.ViewGitItemAsync(gitItem.FileName, gitItem.Guid);
                         break;
                     }
 
                     case GitObjectType.Commit:
                     {
-                        FileText.ViewText(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
+                        FileText.ViewTextAsync(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
                         break;
                     }
 
                     default:
                     {
-                        FileText.ViewText("", "");
+                        FileText.ViewTextAsync("", "");
                         break;
                     }
                 }

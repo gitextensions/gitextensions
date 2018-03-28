@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
     public class GitItemStatus : IComparable<GitItemStatus>
     {
+        private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
+
         public string Name { get; set; }
         public string OldName { get; set; }
         public string TreeGuid { get; set; }
@@ -22,7 +25,15 @@ namespace GitCommands
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
-        public Task<GitSubmoduleStatus> SubmoduleStatus { get; set; }
+        public Task<GitSubmoduleStatus> GetSubmoduleStatusAsync()
+        {
+            return _submoduleStatus?.JoinAsync();
+        }
+
+        internal void SetSubmoduleStatus(JoinableTask<GitSubmoduleStatus> status)
+        {
+            _submoduleStatus = status;
+        }
 
         public int CompareTo(GitItemStatus other)
         {

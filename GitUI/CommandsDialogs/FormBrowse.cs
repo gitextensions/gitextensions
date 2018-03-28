@@ -25,6 +25,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
@@ -183,8 +184,19 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.UICommandsSource = this;
             Repositories.LoadRepositoryHistoryAsync();
-            Task.Factory.StartNew(PluginLoader.Load)
-                .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                try
+                {
+                    PluginLoader.Load();
+                }
+                finally
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    RegisterPlugins();
+                }
+            }).FileAndForget();
             RevisionGrid.GitModuleChanged += SetGitModule;
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
@@ -354,7 +366,7 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            this.InvokeAsync(RefreshRevisions);
+            this.InvokeAsync(RefreshRevisions).FileAndForget();
         }
 
         private void RefreshRevisions()
@@ -456,7 +468,8 @@ namespace GitUI.CommandsDialogs
                 RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
                                           ? Resources.arrow_refresh_dirty
                                           : Resources.arrow_refresh;
-            });
+            })
+                .FileAndForget();
         }
 
         private bool _pluginsLoaded;
@@ -937,9 +950,12 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.ShowStashCount)
             {
-                AsyncLoader.DoAsync(() => Module.GetStashes().Count,
-                    (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
-                        result != 1 ? _stashPlural.Text : _stashSingular.Text));
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                {
+                    return AsyncLoader.DoAsync(() => Module.GetStashes().Count,
+                        (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
+                            result != 1 ? _stashPlural.Text : _stashSingular.Text));
+                });
             }
             else
             {
@@ -995,41 +1011,44 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            AsyncLoader.DoAsync(
-                () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                      !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
-                (result) =>
-                {
-                    if (result)
+            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+            {
+                return AsyncLoader.DoAsync(
+                    () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
+                            !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
+                    (result) =>
                     {
-                        if (_warning == null)
+                        if (result)
                         {
-                            _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                            _warning.Click += WarningClick;
-                            statusStrip.Items.Add(_warning);
+                            if (_warning == null)
+                            {
+                                _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
+                                _warning.Click += WarningClick;
+                                statusStrip.Items.Add(_warning);
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (_warning != null)
+                        else
                         {
-                            _warning.Click -= WarningClick;
-                            statusStrip.Items.Remove(_warning);
-                            _warning = null;
+                            if (_warning != null)
+                            {
+                                _warning.Click -= WarningClick;
+                                statusStrip.Items.Remove(_warning);
+                                _warning = null;
+                            }
                         }
-                    }
 
-                    // Only show status strip when there are status items on it.
-                    // There is always a close (x) button, do not count first item.
-                    if (statusStrip.Items.Count > 1)
-                    {
-                        statusStrip.Show();
-                    }
-                    else
-                    {
-                        statusStrip.Hide();
-                    }
-                });
+                        // Only show status strip when there are status items on it.
+                        // There is always a close (x) button, do not count first item.
+                        if (statusStrip.Items.Count > 1)
+                        {
+                            statusStrip.Show();
+                        }
+                        else
+                        {
+                            statusStrip.Hide();
+                        }
+                    });
+            });
         }
 
         private void RebaseClick(object sender, EventArgs e)
@@ -1051,7 +1070,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                FillGpgInfo();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
                 FillBuildReport();
             }
 
@@ -1110,7 +1129,7 @@ namespace GitUI.CommandsDialogs
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
-        private async void FillGpgInfo()
+        private async Task FillGpgInfoAsync()
         {
             if (!AppSettings.ShowGpgInformation.ValueOrDefault || CommitInfoTabControl.SelectedTab != GpgInfoTabPage)
             {
@@ -1161,7 +1180,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
-                FillGpgInfo();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
                 FillBuildReport();
             }
             catch (Exception ex)
@@ -1509,7 +1528,7 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
-            FillGpgInfo();
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
             FillBuildReport();
             FillTerminalTab();
         }
@@ -2541,9 +2560,10 @@ namespace GitUI.CommandsDialogs
             var cancelToken = _submodulesStatusCts.Token;
             string thisModuleDir = Module.WorkingDir;
 
-            // First task: Gather list of submodules on a background thread.
-            var updateTask = Task.Factory.StartNew(() =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                // First task: Gather list of submodules on a background thread.
+
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 GitModule threadModule = new GitModule(thisModuleDir);
                 SubmoduleInfoResult result = new SubmoduleInfoResult();
@@ -2633,14 +2653,12 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                return result;
-            }, cancelToken);
+                // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
+                // CreateSubmoduleMenuItem to update images with submodule status.
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancelToken);
+                cancelToken.ThrowIfCancellationRequested();
 
-            // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
-            // CreateSubmoduleMenuItem to update images with submodule status.
-            updateTask.ContinueWith((task) =>
-            {
-                if (task.Result == null)
+                if (result == null)
                 {
                     return;
                 }
@@ -2648,22 +2666,22 @@ namespace GitUI.CommandsDialogs
                 RemoveSubmoduleButtons();
                 var newItems = new List<ToolStripItem>();
 
-                task.Result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
-                if (task.Result.OurSubmodules.Count == 0)
+                result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                if (result.OurSubmodules.Count == 0)
                 {
                     newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
                 }
 
-                if (task.Result.Superproject != null)
+                if (result.Superproject != null)
                 {
                     newItems.Add(new ToolStripSeparator());
-                    if (task.Result.TopProject != null)
+                    if (result.TopProject != null)
                     {
-                        newItems.Add(CreateSubmoduleMenuItem(task.Result.TopProject, _topProjectModuleFormat.Text));
+                        newItems.Add(CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text));
                     }
 
-                    newItems.Add(CreateSubmoduleMenuItem(task.Result.Superproject, _superprojectModuleFormat.Text));
-                    task.Result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                    newItems.Add(CreateSubmoduleMenuItem(result.Superproject, _superprojectModuleFormat.Text));
+                    result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
                 }
 
                 newItems.Add(new ToolStripSeparator());
@@ -2672,10 +2690,10 @@ namespace GitUI.CommandsDialogs
                 mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
                 newItems.Add(mi);
 
-                if (task.Result.CurrentSubmoduleName != null)
+                if (result.CurrentSubmoduleName != null)
                 {
                     var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
-                    usmi.Tag = task.Result.CurrentSubmoduleName;
+                    usmi.Tag = result.CurrentSubmoduleName;
                     usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
                     newItems.Add(usmi);
                 }
@@ -2685,10 +2703,7 @@ namespace GitUI.CommandsDialogs
                 toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
 
                 _previousUpdateTime = DateTime.Now;
-            },
-                cancelToken,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                TaskScheduler.FromCurrentSynchronizationContext());
+            });
         }
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
@@ -2722,7 +2737,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormBrowse_Activated(object sender, EventArgs e)
         {
-            this.InvokeAsync(OnActivate);
+            this.InvokeAsyncDoNotUseInNewCode(OnActivate);
         }
 
         /// <summary>

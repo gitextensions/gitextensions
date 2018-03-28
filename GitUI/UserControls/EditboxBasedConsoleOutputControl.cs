@@ -129,7 +129,7 @@ namespace GitUI.UserControls
                         _process = null;
                         _timer.Stop(true);
                         FireProcessExited();
-                    });
+                    }).FileAndForget();
                 };
 
                 process.Exited += (sender, args) =>

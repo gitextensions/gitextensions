@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
                 items.Add(DiffFiles.SelectedItemParent);
             }
 
-            DiffText.ViewChanges(items, DiffFiles.SelectedItem, string.Empty);
+            DiffText.ViewChangesAsync(items, DiffFiles.SelectedItem, string.Empty);
         }
 
         private void btnSwap_Click(object sender, EventArgs e)

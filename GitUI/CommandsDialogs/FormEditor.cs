@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 _fileName = fileName;
-                fileViewer.ViewFile(_fileName);
+                fileViewer.ViewFileAsync(_fileName);
                 fileViewer.IsReadOnly = false;
                 fileViewer.SetVisibilityDiffContextMenu(false, false);
                 Text = _fileName;

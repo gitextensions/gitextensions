@@ -210,7 +210,7 @@ namespace GitUI
                 }
 
                 Done(!isError);
-            });
+            }).FileAndForget();
         }
 
         protected virtual void DataReceived(object sender, TextEventArgs e)

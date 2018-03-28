@@ -114,7 +114,7 @@ namespace GitFlow
             cbBranches.DataSource = new List<string> { _loading.Text };
             if (!Branches.ContainsKey(branchType))
             {
-                _task.Load(() => GetBranches(branchType), branches =>
+                _task.LoadAsync(() => GetBranches(branchType), branches =>
                 {
                     Branches.Add(branchType, branches);
                     DisplayBranchDatas();

@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.Visible = true;
 
-            _asyncLoader.Load(() => BuildFilter(FileName), (filter) =>
+            _asyncLoader.LoadAsync(() => BuildFilter(FileName), (filter) =>
             {
                 if (filter == null)
                 {
@@ -320,7 +320,7 @@ namespace GitUI.CommandsDialogs
                 var scrollpos = View.ScrollPos;
 
                 View.Encoding = Diff.Encoding;
-                View.ViewGitItemRevision(fileName, revision.Guid);
+                View.ViewGitItemRevisionAsync(fileName, revision.Guid);
                 View.ScrollPos = scrollpos;
             }
             else if (tabControl1.SelectedTab == DiffTab)
@@ -331,7 +331,7 @@ namespace GitUI.CommandsDialogs
                     Name = fileName,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
+                Diff.ViewChangesAsync(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {

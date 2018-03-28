@@ -45,7 +45,7 @@ namespace GitUI.UserControls
         {
             try
             {
-                await ViewSelectedDiff();
+                await ViewSelectedDiffAsync();
             }
             catch (OperationCanceledException)
             {
@@ -56,19 +56,19 @@ namespace GitUI.UserControls
         {
             try
             {
-                await ViewSelectedDiff();
+                await ViewSelectedDiffAsync();
             }
             catch (OperationCanceledException)
             {
             }
         }
 
-        private async Task ViewSelectedDiff()
+        private async Task ViewSelectedDiffAsync()
         {
             GitRevision revision = DiffFiles.Revision;
             if (DiffFiles.SelectedItem != null && revision != null)
             {
-                await DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, revision.Guid, DiffFiles.SelectedItem, string.Empty);
+                await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, revision.Guid, DiffFiles.SelectedItem, string.Empty);
             }
         }
     }

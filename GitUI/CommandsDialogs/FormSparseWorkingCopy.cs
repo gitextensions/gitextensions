@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs
                 FileInfo sparsefile = sparse.GetPathToSparseCheckoutFile();
                 if (sparsefile.Exists)
                 {
-                    editor.ViewFile(sparsefile.FullName);
+                    editor.ViewFileAsync(sparsefile.FullName);
                 }
             }
             catch (Exception ex)

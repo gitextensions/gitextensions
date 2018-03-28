@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.Statistics
 {
@@ -93,17 +96,22 @@ namespace GitCommands.Statistics
             _backgroundLoaderTokenSource.Cancel();
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
-            Task[] tasks = GetTasks(token);
-            Task.Factory.ContinueWhenAll(tasks, task =>
+            JoinableTask[] tasks = GetTasks(token);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                try
                 {
+                    await Task.WhenAll(tasks.Select(joinableTask => joinableTask.Task));
+                }
+                finally
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                     if (!token.IsCancellationRequested)
                     {
                         Exited?.Invoke(this, EventArgs.Empty);
                     }
-                },
-                CancellationToken.None,
-                TaskContinuationOptions.None,
-                TaskScheduler.FromCurrentSynchronizationContext());
+                }
+            });
         }
 
         private bool _showSubmodules;
@@ -117,14 +125,19 @@ namespace GitCommands.Statistics
             }
         }
 
-        private Task[] GetTasks(CancellationToken token)
+        private JoinableTask[] GetTasks(CancellationToken token)
         {
-            List<Task> tasks = new List<Task>();
+            List<JoinableTask> tasks = new List<JoinableTask>();
             string authorName = RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, _module, token), token));
+            tasks.Add(ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    LoadModuleInfo(command, _module, token);
+                }));
 
             if (ShowSubmodules)
             {
@@ -134,7 +147,12 @@ namespace GitCommands.Statistics
                     IGitModule submodule = _module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                     {
-                        tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
+                        tasks.Add(ThreadHelper.JoinableTaskFactory.RunAsync(
+                            async () =>
+                            {
+                                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                                LoadModuleInfo(command, submodule, token);
+                            }));
                     }
                 }
             }

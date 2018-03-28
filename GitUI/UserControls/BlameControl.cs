@@ -236,7 +236,7 @@ namespace GitUI.Blame
             _fileName = fileName;
             _encoding = encoding;
 
-            _blameLoader.Load(() => _blame = Module.Blame(fileName, guid, encoding),
+            _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, guid, encoding),
                 () => ProcessBlame(revision, children, controlToMask, line, scrollpos));
         }
 
@@ -269,8 +269,8 @@ namespace GitUI.Blame
                 }
             }
 
-            BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
-            BlameFile.ViewText(_fileName, blameFile.ToString());
+            BlameCommitter.ViewTextAsync("committer.txt", blameCommitter.ToString());
+            BlameFile.ViewTextAsync(_fileName, blameFile.ToString());
             if (line > 0)
             {
                 BlameFile.GoToLine(line - 1);

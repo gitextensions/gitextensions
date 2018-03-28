@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
                 DiffFiles.SetSelectedIndex(fileIndex, notify: false);
             }
 
-            loadFileContent = ShowSelectedFileDiff();
+            loadFileContent = ShowSelectedFileDiffAsync();
             return true;
         }
 
@@ -295,7 +295,7 @@ namespace GitUI.CommandsDialogs
             RefreshArtificial();
         }
 
-        private async Task ShowSelectedFileDiff()
+        private async Task ShowSelectedFileDiffAsync()
         {
             if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
@@ -317,14 +317,14 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            await DiffText.ViewChanges(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty);
         }
 
         private async void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                await ShowSelectedFileDiff();
+                await ShowSelectedFileDiffAsync();
             }
             catch (OperationCanceledException)
             {
@@ -341,15 +341,18 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
             {
                 var submoduleName = DiffFiles.SelectedItem.Name;
-                DiffFiles.SelectedItem.SubmoduleStatus.ContinueWith(
-                    (t) =>
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
                     {
+                        var status = await DiffFiles.SelectedItem.GetSubmoduleStatusAsync().ConfigureAwait(false);
+
                         var process = new Process
                         {
                             StartInfo =
                             {
                                 FileName = Application.ExecutablePath,
-                                Arguments = "browse -commit=" + t.Result.Commit,
+                                Arguments = "browse -commit=" + status.Commit,
                                 WorkingDirectory = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator())
                             }
                         };
@@ -375,7 +378,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                await ShowSelectedFileDiff();
+                await ShowSelectedFileDiffAsync();
             }
             catch (OperationCanceledException)
             {

@@ -1,28 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using GitUI;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
     public sealed class AsyncLoader : IDisposable
     {
-        private static readonly ThreadLocal<TaskScheduler> _defaultScheduler = new ThreadLocal<TaskScheduler>(trackAllValues: false);
-
-        /// <summary>
-        /// Gets and sets the default <see cref="TaskScheduler"/> to use for continuations following calls to <c>Load</c> from the current thread.
-        /// </summary>
-        /// <remarks>
-        /// Defaults to <see cref="TaskScheduler.FromCurrentSynchronizationContext"/>.
-        /// </remarks>
-        [NotNull]
-        public static TaskScheduler DefaultContinuationTaskScheduler
-        {
-            get => _defaultScheduler.IsValueCreated ? _defaultScheduler.Value : TaskScheduler.FromCurrentSynchronizationContext();
-            set => _defaultScheduler.Value = value ?? throw new ArgumentNullException();
-        }
-
         /// <summary>
         /// Invokes <paramref name="loadContent"/> on the thread pool, then executes <paramref name="continueWith"/> on the current synchronisation context.
         /// </summary>
@@ -39,7 +25,7 @@ namespace GitCommands
         /// Invoked once per exception, so may be called multiple times.
         /// Handlers must set <see cref="AsyncErrorEventArgs.Handled"/> to <c>true</c> to prevent any exceptions being re-thrown and faulting the async operation.
         /// </param>
-        public static async void DoAsync<T>(Func<T> loadContent, Action<T> continueWith, Action<AsyncErrorEventArgs> onError = null)
+        public static async Task<T> DoAsync<T>(Func<T> loadContent, Action<T> continueWith, Action<AsyncErrorEventArgs> onError = null)
         {
             using (var loader = new AsyncLoader())
             {
@@ -48,13 +34,12 @@ namespace GitCommands
                     loader.LoadingError += (_, e) => onError(e);
                 }
 
-                await loader.Load(loadContent, continueWith);
+                return await loader.LoadAsync(loadContent, continueWith).ConfigureAwait(false);
             }
         }
 
         public event EventHandler<AsyncErrorEventArgs> LoadingError;
 
-        [NotNull] private readonly TaskScheduler _continuationTaskScheduler;
         [CanBeNull] private CancellationTokenSource _cancellationTokenSource;
         private int _disposed;
 
@@ -66,17 +51,16 @@ namespace GitCommands
         /// </remarks>
         public TimeSpan Delay { get; set; }
 
-        public AsyncLoader(TaskScheduler continuationTaskScheduler = null)
+        public AsyncLoader()
         {
-            _continuationTaskScheduler = continuationTaskScheduler ?? DefaultContinuationTaskScheduler;
         }
 
-        public Task Load(Action loadContent, Action onLoaded)
+        public Task LoadAsync(Action loadContent, Action onLoaded)
         {
-            return Load(token => loadContent(), onLoaded);
+            return LoadAsync(token => loadContent(), onLoaded);
         }
 
-        public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
+        public async Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
             if (Volatile.Read(ref _disposed) != 0)
             {
@@ -93,20 +77,16 @@ namespace GitCommands
             // Copy reference to token (important)
             var token = _cancellationTokenSource.Token;
 
-            return Task.Factory
-                .StartNew(Load, token)
-                .ContinueWith(
-                    Continuation,
-                    CancellationToken.None,
-                    TaskContinuationOptions.NotOnCanceled,
-                    _continuationTaskScheduler);
-
-            void Load()
+            try
             {
                 // Defer the load operation if requested
                 if (Delay > TimeSpan.Zero)
                 {
-                    token.WaitHandle.WaitOne(Delay);
+                    await Task.Delay(Delay, token).ConfigureAwait(false);
+                }
+                else
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 }
 
                 // Load content, so long as we haven't already been cancelled
@@ -115,35 +95,41 @@ namespace GitCommands
                     loadContent(token);
                 }
             }
-
-            void Continuation(Task task)
+            catch (Exception e)
             {
-                if (task.IsFaulted)
+                if (e is OperationCanceledException && token.IsCancellationRequested)
                 {
-                    Debug.Assert(task.Exception != null, "Faulted task should have a non-null exception");
-
-                    foreach (var e in task.Exception.InnerExceptions)
-                    {
-                        if (!OnLoadingError(e))
-                        {
-                            throw e;
-                        }
-                    }
-
                     return;
                 }
 
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                if (!OnLoadingError(e))
+                {
+                    throw;
+                }
+
+                return;
+            }
+
+            try
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+            }
+
+            // Invoke continuation unless cancelled
+            if (!token.IsCancellationRequested)
+            {
                 try
                 {
-                    // Invoke continuation unless cancelled
-                    if (!token.IsCancellationRequested)
-                    {
-                        onLoaded();
-                    }
+                    onLoaded();
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    if (!OnLoadingError(exception))
+                    if (!OnLoadingError(e))
                     {
                         throw;
                     }
@@ -151,12 +137,12 @@ namespace GitCommands
             }
         }
 
-        public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
+        public Task<T> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            return Load(token => loadContent(), onLoaded);
+            return LoadAsync(token => loadContent(), onLoaded);
         }
 
-        public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
+        public async Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             if (Volatile.Read(ref _disposed) != 0)
             {
@@ -173,60 +159,66 @@ namespace GitCommands
             // Copy reference to token (important)
             var token = _cancellationTokenSource.Token;
 
-            return Task.Factory
-                .StartNew(Load, token)
-                .ContinueWith(
-                    Continuation,
-                    CancellationToken.None,
-                    TaskContinuationOptions.NotOnCanceled,
-                    _continuationTaskScheduler);
+            T result;
 
-            T Load()
+            try
             {
                 // Defer the load operation if requested
                 if (Delay > TimeSpan.Zero)
                 {
-                    token.WaitHandle.WaitOne(Delay);
+                    await Task.Delay(Delay, token).ConfigureAwait(false);
+                }
+                else
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 }
 
                 // Bail early if cancelled, returning default value for type
                 if (token.IsCancellationRequested)
                 {
+                    result = default;
+                }
+                else
+                {
+                    // Load content
+                    result = loadContent(token);
+                }
+            }
+            catch (Exception e)
+            {
+                if (e is OperationCanceledException && token.IsCancellationRequested)
+                {
                     return default;
                 }
 
-                // Load content
-                return loadContent(token);
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                if (!OnLoadingError(e))
+                {
+                    throw;
+                }
+
+                return default;
             }
 
-            T Continuation(Task<T> task)
+            try
             {
-                if (task.IsFaulted)
-                {
-                    foreach (var e in task.Exception.InnerExceptions)
-                    {
-                        if (!OnLoadingError(e))
-                        {
-                            throw e;
-                        }
-                    }
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+            }
 
-                    return default;
-                }
-
+            // Invoke continuation unless cancelled
+            if (!token.IsCancellationRequested)
+            {
                 try
                 {
-                    // Invoke continuation unless cancelled
-                    if (!token.IsCancellationRequested)
-                    {
-                        onLoaded(task.Result);
-                    }
-
-                    return task.Result;
+                    onLoaded(result);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    if (!OnLoadingError(exception))
+                    if (!OnLoadingError(e))
                     {
                         throw;
                     }
@@ -234,6 +226,8 @@ namespace GitCommands
                     return default;
                 }
             }
+
+            return result;
         }
 
         private bool OnLoadingError(Exception exception)

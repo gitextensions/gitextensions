@@ -108,13 +108,13 @@ namespace GitUI.CommandsDialogs
             if (gitStash == _currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
+                _asyncLoader.LoadAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
             }
             else if (gitStash != null)
             {
-                _asyncLoader.Load(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+                _asyncLoader.LoadAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
                 Clear.Enabled = true; // allow Drop
                 Apply.Enabled = true; // allow Apply
             }
@@ -154,11 +154,11 @@ namespace GitUI.CommandsDialogs
                 {
                     if (!stashedItem.IsSubmodule)
                     {
-                        View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                        View.ViewGitItemAsync(stashedItem.Name, stashedItem.TreeGuid);
                     }
                     else
                     {
-                        View.ViewText(stashedItem.Name,
+                        View.ViewTextAsync(stashedItem.Name,
                             LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
                     }
                 }
@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
                     Encoding encoding = View.Encoding;
-                    View.ViewPatch(() =>
+                    View.ViewPatchAsync(() =>
                     {
                         Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
                         if (patch == null)
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                View.ViewText(string.Empty, string.Empty);
+                View.ViewTextAsync(string.Empty, string.Empty);
             }
 
             Cursor.Current = Cursors.Default;

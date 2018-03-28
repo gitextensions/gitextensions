@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (File.Exists(ExcludeFile))
                 {
-                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(ExcludeFile);
+                    _NO_TRANSLATE_GitIgnoreEdit.ViewFileAsync(ExcludeFile);
                 }
             }
             catch (Exception ex)
@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
-            _NO_TRANSLATE_GitIgnoreEdit.ViewText(ExcludeFile,
+            _NO_TRANSLATE_GitIgnoreEdit.ViewTextAsync(ExcludeFile,
                 currentFileContent + Environment.NewLine +
                 string.Join(Environment.NewLine, patternsToAdd) + Environment.NewLine + string.Empty);
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
@@ -45,8 +46,17 @@ namespace GitUI.UserControls
             else
             {
                 textBoxCommitHash.Text = GitRevision.ToShortSha(SelectedCommitHash);
-                Task.Factory.StartNew(() => Module.GetCommitCountString(Module.GetCurrentCheckout(), SelectedCommitHash))
-                     .ContinueWith(t => lbCommits.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
+                    {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                        var text = Module.GetCommitCountString(Module.GetCurrentCheckout(), SelectedCommitHash);
+
+                        await this.SwitchToMainThreadAsync();
+
+                        lbCommits.Text = text;
+                    });
             }
         }
 
