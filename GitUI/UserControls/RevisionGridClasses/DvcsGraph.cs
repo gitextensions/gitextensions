@@ -83,7 +83,7 @@ namespace GitUI.RevisionGridClasses
 
         private int _backgroundScrollTo;
         private readonly Thread _backgroundThread;
-        private volatile bool _shouldRun = true;
+        private volatile bool _shouldRun = LicenseManager.UsageMode != LicenseUsageMode.Designtime;
         private int _cacheCount; // Number of elements in the cache.
         private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
         private int _cacheHead = -1; // The 'slot' that is the head of the circular bitmap
