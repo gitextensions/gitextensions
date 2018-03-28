@@ -62,79 +62,13 @@ namespace GitCommands
 
         public async Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
-            if (Volatile.Read(ref _disposed) != 0)
-            {
-                throw new ObjectDisposedException(nameof(AsyncLoader));
-            }
-
-            // Stop any prior operation
-            Cancel();
-
-            // Create a new cancellation object
-            _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            // Copy reference to token (important)
-            var token = _cancellationTokenSource.Token;
-
-            try
-            {
-                // Defer the load operation if requested
-                if (Delay > TimeSpan.Zero)
-                {
-                    await Task.Delay(Delay, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                }
-
-                // Load content, so long as we haven't already been cancelled
-                if (!token.IsCancellationRequested)
+            await LoadAsync(
+                (token) =>
                 {
                     loadContent(token);
-                }
-            }
-            catch (Exception e)
-            {
-                if (e is OperationCanceledException && token.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                if (!OnLoadingError(e))
-                {
-                    throw;
-                }
-
-                return;
-            }
-
-            try
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-            }
-            catch (OperationCanceledException) when (token.IsCancellationRequested)
-            {
-            }
-
-            // Invoke continuation unless cancelled
-            if (!token.IsCancellationRequested)
-            {
-                try
-                {
-                    onLoaded();
-                }
-                catch (Exception e)
-                {
-                    if (!OnLoadingError(e))
-                    {
-                        throw;
-                    }
-                }
-            }
+                    return string.Empty;
+                },
+                _ => onLoaded());
         }
 
         public Task<T> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
