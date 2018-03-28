@@ -2319,23 +2319,14 @@ namespace GitCommands
                     : RunGitCmd(string.Format("remote add \"{0}\" \"{1}\"", name, location));
         }
 
-        /// <summary>
-        /// Retrieves registered remotes by running <c>git remote show</c> command.
-        /// </summary>
-        /// <returns>Registered remotes.</returns>
-        public string[] GetRemotes()
-        {
-            return GetRemotes(true);
-        }
-
-        /// <summary>
-        /// Retrieves registered remotes by running <c>git remote show</c> command.
-        /// </summary>
-        /// <returns>Registered remotes.</returns>
-        public string[] GetRemotes(bool allowEmpty)
+        public string[] GetRemotes(bool allowEmpty = true)
         {
             string remotes = RunGitCmd("remote show");
-            return allowEmpty ? remotes.Split('\n') : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // TODO why allowEmpty? splitting on \n always produces a meaningless blank line at the end
+            return allowEmpty
+                ? remotes.Split('\n')
+                : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public IEnumerable<string> GetSettings(string setting)
