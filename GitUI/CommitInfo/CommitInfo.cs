@@ -179,19 +179,11 @@ namespace GitUI.CommitInfo
                 _revision.Body = data.Body;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                LoadLinksForRevision(_revision);
-            }).FileAndForget();
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadLinksForRevisionAsync(_revision)).FileAndForget();
 
             if (_sortedRefs == null)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    LoadSortedRefs();
-                }).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
             }
 
             data.ChildrenGuids = _children;
@@ -213,29 +205,17 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInBranches)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    LoadBranchInfo(_revision.Guid);
-                }).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.Guid)).FileAndForget();
             }
 
             if (AppSettings.ShowAnnotatedTagsMessages)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    LoadAnnotatedTagInfo(_revision);
-                }).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision)).FileAndForget();
             }
 
             if (AppSettings.CommitInfoShowContainedInTags)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    LoadTagInfo(_revision.Guid);
-                }).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.Guid)).FileAndForget();
             }
         }
 
@@ -244,16 +224,22 @@ namespace GitUI.CommitInfo
             return _headerResize.Height;
         }
 
-        private void LoadSortedRefs()
+        private async Task LoadSortedRefsAsync()
         {
+            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
             _sortedRefs = Module.GetSortedRefs().ToList();
-            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
+
+            await this.SwitchToMainThreadAsync();
+            UpdateRevisionInfo();
         }
 
-        private void LoadAnnotatedTagInfo(GitRevision revision)
+        private async Task LoadAnnotatedTagInfoAsync(GitRevision revision)
         {
+            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
             _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
-            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
+
+            await this.SwitchToMainThreadAsync();
+            UpdateRevisionInfo();
         }
 
         private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
@@ -306,14 +292,19 @@ namespace GitUI.CommitInfo
             return result;
         }
 
-        private void LoadTagInfo(string revision)
+        private async Task LoadTagInfoAsync(string revision)
         {
+            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
             _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
-            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
+
+            await this.SwitchToMainThreadAsync();
+            UpdateRevisionInfo();
         }
 
-        private void LoadBranchInfo(string revision)
+        private async Task LoadBranchInfoAsync(string revision)
         {
+            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
             bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
                             AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -322,18 +313,23 @@ namespace GitUI.CommitInfo
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
-            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
+
+            await this.SwitchToMainThreadAsync();
+            UpdateRevisionInfo();
         }
 
-        private void LoadLinksForRevision(GitRevision revision)
+        private async Task LoadLinksForRevisionAsync(GitRevision revision)
         {
             if (revision == null)
             {
                 return;
             }
 
+            await TaskScheduler.Default;
             _linksInfo = GetLinksForRevision(revision);
-            this.InvokeAsyncDoNotUseInNewCode(UpdateRevisionInfo);
+
+            await this.SwitchToMainThreadAsync();
+            UpdateRevisionInfo();
         }
 
         private class ItemTpComparer : IComparer<string>
