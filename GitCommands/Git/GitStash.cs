@@ -1,80 +1,52 @@
-﻿using System;
+﻿using System.Text.RegularExpressions;
 
 namespace GitCommands.Git
 {
     /// <summary>Stored local modifications.</summary>
-    public class GitStash
+    public sealed class GitStash
     {
-        /// <summary>"stash@{i}"</summary>
-        private const string NameFormat = "stash@{{{0}}}";
-        private readonly string _stash;
+        private static readonly Regex _regex = new Regex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.Compiled);
 
-        /// <summary>Name of the stash. <remarks>Usually, "stash@{n}"</remarks></summary>
-        public string Name { get; set; }
-
-        /// <summary>Short description of the commit the stash was based on.</summary>
-        public string Message { get; set; }
-
-        /// <summary>Gets the index of the stash in the list.</summary>
-        public int Index { get; set; }
-
-        /// <summary>Initializes a new <see cref="GitStash"/> with all properties null.</summary>
-        public GitStash(string stash)
-        {
-            if (string.IsNullOrWhiteSpace(stash))
-            {
-                throw new ArgumentException("stash");
-            }
-
-            _stash = stash;
-        }
-
-        public GitStash(string stash, int i)
-            : this(stash)
+        public static bool TryParse(string s, out GitStash stash)
         {
             // "stash@{i}: WIP on {branch}: {PreviousCommitMiniSHA} {PreviousCommitMessage}"
             // "stash@{i}: On {branch}: {Message}"
             // "stash@{i}: autostash"
 
-            Index = i;
+            var match = _regex.Match(s);
 
-            Name = string.Format(NameFormat, Index);
-
-            int msgStart = stash.IndexOf(':') + 1;
-            if (msgStart < stash.Length)
+            if (!match.Success)
             {
-                Message = stash.Substring(msgStart).Trim();
+                stash = default;
+                return false;
             }
+
+            stash = new GitStash(
+                int.Parse(match.Groups["index"].Value),
+                match.Groups["message"].Value);
+
+            return true;
         }
+
+        /// <summary>Short description of the commit the stash was based on.</summary>
+        public string Message { get; }
+
+        /// <summary>Gets the index of the stash in the list.</summary>
+        public int Index { get; }
+
+        public GitStash(int index, string message)
+        {
+            Index = index;
+            Message = message;
+        }
+
+        /// <summary>Name of the stash.</summary>
+        /// <remarks>"stash@{n}"</remarks>
+        public string Name => $"stash@{{{Index}}}";
 
         public override string ToString()
         {
             return Message;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (this == obj)
-            {
-                return true;
-            }
-
-            return obj is GitStash other && Equals(other);
-        }
-
-        protected bool Equals(GitStash other)
-        {
-            return string.Equals(_stash, other._stash);
-        }
-
-        public override int GetHashCode()
-        {
-            return _stash.GetHashCode();
         }
     }
 }
