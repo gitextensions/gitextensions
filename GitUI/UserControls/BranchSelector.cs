@@ -44,19 +44,13 @@ namespace GitUI.UserControls
             Remotebranch.Checked = remote;
 
             _containRevisons = containRevisons;
-            Branches.Items.Clear();
 
-            if (_containRevisons == null)
-            {
-                Branches.Items.AddRange(
-                    LocalBranch.Checked
-                        ? GetLocalBranches()
-                        : GetRemoteBranches());
-            }
-            else
-            {
-                Branches.Items.AddRange(GetContainsRevisionBranches());
-            }
+            Branches.Items.Clear();
+            Branches.Items.AddRange(_containRevisons != null
+                ? GetContainsRevisionBranches()
+                : LocalBranch.Checked
+                    ? GetLocalBranches()
+                    : GetRemoteBranches());
 
             if (_containRevisons != null && Branches.Items.Count == 1)
             {

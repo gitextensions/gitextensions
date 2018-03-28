@@ -53,15 +53,9 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
-                bool? settingVal;
-                if (areSettingsEffective)
-                {
-                    settingVal = Setting.ValueOrDefault(settings);
-                }
-                else
-                {
-                    settingVal = Setting[settings];
-                }
+                bool? settingVal = areSettingsEffective
+                    ? Setting.ValueOrDefault(settings)
+                    : Setting[settings];
 
                 control.SetNullableChecked(settingVal);
             }

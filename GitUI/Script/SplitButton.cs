@@ -449,14 +449,11 @@ namespace GitUI.Script
 
             Point[] arrow = { new Point(middle.X - 2, middle.Y - 1), new Point(middle.X + 3, middle.Y - 1), new Point(middle.X, middle.Y + 2) };
 
-            if (Enabled)
-            {
-                g.FillPolygon(SystemBrushes.ControlText, arrow);
-            }
-            else
-            {
-                g.FillPolygon(SystemBrushes.ButtonShadow, arrow);
-            }
+            var brush = Enabled
+                ? SystemBrushes.ControlText
+                : SystemBrushes.ButtonShadow;
+
+            g.FillPolygon(brush, arrow);
         }
 
         public override Size GetPreferredSize(Size proposedSize)

@@ -234,16 +234,9 @@ namespace GitUI.Help
                 return;
             }
 
-            bool isHover = IsHovering();
-
-            if (isHover)
-            {
-                pictureBox1.Image = Image2;
-            }
-            else
-            {
-                pictureBox1.Image = Image1;
-            }
+            pictureBox1.Image = IsHovering()
+                ? Image2
+                : Image1;
         }
 
         private void HelpImageDisplayUserControl_MouseEnter(object sender, EventArgs e)

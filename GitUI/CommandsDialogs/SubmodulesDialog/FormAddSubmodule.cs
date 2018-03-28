@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -63,18 +62,18 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private void BranchDropDown(object sender, EventArgs e)
         {
             GitModule module = new GitModule(Directory.Text);
-            Branch.DisplayMember = "Name";
-            List<IGitRef> heads;
+
+            var heads = new List<IGitRef>
+            {
+                GitRef.NoHead(module)
+            };
+
             if (module.IsValidGitWorkingDir())
             {
-                heads = module.GetRefs(false).ToList();
-            }
-            else
-            {
-                heads = new List<IGitRef>();
+                heads.AddRange(module.GetRefs(false));
             }
 
-            heads.Insert(0, GitRef.NoHead(module));
+            Branch.DisplayMember = "Name";
             Branch.DataSource = heads;
         }
 

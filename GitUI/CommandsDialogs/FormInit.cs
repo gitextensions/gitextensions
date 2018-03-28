@@ -32,14 +32,9 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            if (string.IsNullOrEmpty(dir))
-            {
-                Directory.Text = AppSettings.DefaultCloneDestinationPath;
-            }
-            else
-            {
-                Directory.Text = dir;
-            }
+            Directory.Text = string.IsNullOrEmpty(dir)
+                ? AppSettings.DefaultCloneDestinationPath
+                : dir;
         }
 
         private void DirectoryDropDown(object sender, EventArgs e)

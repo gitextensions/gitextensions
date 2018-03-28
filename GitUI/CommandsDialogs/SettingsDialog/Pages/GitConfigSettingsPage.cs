@@ -266,14 +266,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string mergeTool = _NO_TRANSLATE_GlobalMergeTool.Text.ToLowerInvariant();
             string exeFile = MergeToolsHelper.GetMergeToolExeFile(mergeTool);
 
-            if (exeFile != null)
-            {
-                MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
-            }
-            else
-            {
-                MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalMergeTool.Text), MergetoolPath.Text);
-            }
+            var filter = exeFile != null
+                ? string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalMergeTool.Text, exeFile)
+                : string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalMergeTool.Text);
+
+            MergetoolPath.Text = CommonLogic.SelectFile(".", filter, MergetoolPath.Text);
         }
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
@@ -300,14 +297,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string diffTool = _NO_TRANSLATE_GlobalDiffTool.Text.ToLowerInvariant();
             string exeFile = MergeToolsHelper.GetDiffToolExeFile(diffTool);
 
-            if (exeFile != null)
-            {
-                DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
-            }
-            else
-            {
-                DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolPath.Text);
-            }
+            var filter = exeFile != null
+                ? string.Format("{0} ({1})|{1}", _NO_TRANSLATE_GlobalDiffTool.Text, exeFile)
+                : string.Format("{0} (*.exe)|*.exe", _NO_TRANSLATE_GlobalDiffTool.Text);
+
+            DifftoolPath.Text = CommonLogic.SelectFile(".", filter, DifftoolPath.Text);
         }
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)

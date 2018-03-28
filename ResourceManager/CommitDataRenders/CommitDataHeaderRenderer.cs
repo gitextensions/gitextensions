@@ -165,17 +165,9 @@ namespace ResourceManager.CommitDataRenders
 
         private string RenderHashCollection(IEnumerable<string> hashes, bool showRevisionsAsLinks)
         {
-            string commitsString;
-            if (showRevisionsAsLinks)
-            {
-                commitsString = hashes.Select(g => _linkFactory.CreateCommitLink(g)).Join(" ");
-            }
-            else
-            {
-                commitsString = hashes.Select(guid => GitRevision.ToShortSha(guid)).Join(" ");
-            }
-
-            return commitsString;
+            return showRevisionsAsLinks
+                ? hashes.Select(g => _linkFactory.CreateCommitLink(g)).Join(" ")
+                : hashes.Select(g => GitRevision.ToShortSha(g)).Join(" ");
         }
     }
 }

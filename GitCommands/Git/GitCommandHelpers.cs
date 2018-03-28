@@ -627,24 +627,13 @@ namespace GitCommands
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
-            string cmd = null;
-            if (checkout)
-            {
-                cmd = string.Format("checkout -b \"{0}\"", branchName.Trim());
-            }
-            else
-            {
-                cmd = string.Format("branch \"{0}\"", branchName.Trim());
-            }
+            var cmd = checkout
+                ? $"checkout -b \"{branchName.Trim()}\""
+                : $"branch \"{branchName.Trim()}\"";
 
-            if (revision.IsNullOrWhiteSpace())
-            {
-                return cmd;
-            }
-            else
-            {
-                return cmd + string.Format(" \"{0}\"", revision);
-            }
+            return revision.IsNullOrWhiteSpace()
+                ? cmd
+                : $"{cmd} \"{revision}\"";
         }
 
         public static string MergedBranches(bool includeRemote = false)

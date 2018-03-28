@@ -40,15 +40,9 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
             {
-                string settingVal;
-                if (areSettingsEffective)
-                {
-                    settingVal = Setting.ValueOrDefault(settings);
-                }
-                else
-                {
-                    settingVal = Setting[settings];
-                }
+                string settingVal = areSettingsEffective
+                    ? Setting.ValueOrDefault(settings)
+                    : Setting[settings];
 
                 control.Text = settingVal;
             }

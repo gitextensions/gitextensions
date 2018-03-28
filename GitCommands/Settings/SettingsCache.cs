@@ -126,16 +126,9 @@ namespace GitCommands
 
         public bool HasADifferentValue<T>(string name, T value, Func<T, string> encode)
         {
-            string s;
-
-            if (value == null)
-            {
-                s = null;
-            }
-            else
-            {
-                s = encode(value);
-            }
+            var s = value != null
+                ? encode(value)
+                : null;
 
             return LockedAction(() =>
             {
@@ -146,28 +139,15 @@ namespace GitCommands
 
         public void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            string s;
-
-            if (value == null)
-            {
-                s = null;
-            }
-            else
-            {
-                s = encode(value);
-            }
+            var s = value != null
+                ? encode(value)
+                : null;
 
             LockedAction(() =>
             {
                 SetValue(name, s);
-                if (s == null)
-                {
-                    _byNameMap[name] = null;
-                }
-                else
-                {
-                    _byNameMap[name] = value;
-                }
+
+                _byNameMap[name] = s == null ? (object)null : value;
             });
         }
 

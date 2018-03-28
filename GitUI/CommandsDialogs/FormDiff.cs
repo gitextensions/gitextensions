@@ -83,14 +83,9 @@ namespace GitUI.CommandsDialogs
             lblBaseCommit.Text = _baseCommitDisplayStr;
             lblHeadCommit.Text = _headCommitDisplayStr;
 
-            if (ckCompareToMergeBase.Checked)
-            {
-                DiffFiles.SetDiffs(new List<GitRevision> { _headRevision, _mergeBase });
-            }
-            else
-            {
-                DiffFiles.SetDiffs(new List<GitRevision> { _headRevision, _baseRevision });
-            }
+            DiffFiles.SetDiffs(ckCompareToMergeBase.Checked
+                ? new[] { _headRevision, _mergeBase }
+                : new[] { _headRevision, _baseRevision });
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)

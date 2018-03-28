@@ -112,15 +112,9 @@ namespace GitUI.CommandsDialogs
             {
                 var originalHash = Module.GetCurrentCheckout();
 
-                string cmd;
-                if (Orphan.Checked)
-                {
-                    cmd = GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid);
-                }
-                else
-                {
-                    cmd = GitCommandHelpers.BranchCmd(branchName, commitGuid, chkbxCheckoutAfterCreate.Checked);
-                }
+                var cmd = Orphan.Checked
+                    ? GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid)
+                    : GitCommandHelpers.BranchCmd(branchName, commitGuid, chkbxCheckoutAfterCreate.Checked);
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
                 if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)

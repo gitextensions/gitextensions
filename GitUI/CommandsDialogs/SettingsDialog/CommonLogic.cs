@@ -130,14 +130,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void EncodingToCombo(Encoding encoding, ComboBox combo)
         {
-            if (encoding == null)
-            {
-                combo.Text = "";
-            }
-            else
-            {
-                combo.Text = encoding.EncodingName;
-            }
+            combo.Text = encoding?.EncodingName ?? "";
         }
 
         public Encoding ComboToEncoding(ComboBox combo)

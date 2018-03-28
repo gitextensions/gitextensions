@@ -155,15 +155,9 @@ namespace GitCommands.Config
 
         public bool Equals(IConfigSection other)
         {
-            StringComparison sc;
-            if (SubSectionCaseSensitive)
-            {
-                sc = StringComparison.Ordinal;
-            }
-            else
-            {
-                sc = StringComparison.OrdinalIgnoreCase;
-            }
+            var sc = SubSectionCaseSensitive
+                ? StringComparison.Ordinal
+                : StringComparison.OrdinalIgnoreCase;
 
             return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(SubSection, other.SubSection, sc);
