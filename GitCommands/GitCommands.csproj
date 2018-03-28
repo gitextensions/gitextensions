@@ -119,6 +119,7 @@
     <Compile Include="FullPathResolver.cs" />
     <Compile Include="GitRevisionInfoProvider.cs" />
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
+    <Compile Include="Git\EnvironmentConfiguration.cs" />
     <Compile Include="Git\FileDeleteException.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />

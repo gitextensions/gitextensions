@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return Path.GetFullPath(Path.Combine(xdgConfigHome, "git/ignore"));
             }
 
-            return Path.GetFullPath(Path.Combine(GitCommandHelpers.GetHomeDir(), ".config/git/ignore"));
+            return Path.GetFullPath(Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config/git/ignore"));
         }
 
         private void StartWatchingChanges(string workTreePath, string gitDirPath)

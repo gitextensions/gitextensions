@@ -58,91 +58,6 @@ namespace GitCommands
     {
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
-        public static void SetEnvironmentVariable(bool reload = false)
-        {
-            string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
-            if (!string.IsNullOrEmpty(AppSettings.GitBinDir) && !path.Contains(AppSettings.GitBinDir))
-            {
-                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", AppSettings.GitBinDir), EnvironmentVariableTarget.Process);
-            }
-
-            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
-            {
-                Environment.SetEnvironmentVariable(
-                    "HOME",
-                    AppSettings.CustomHomeDir);
-                return;
-            }
-
-            if (AppSettings.UserProfileHomeDir)
-            {
-                Environment.SetEnvironmentVariable(
-                    "HOME",
-                    Environment.GetEnvironmentVariable("USERPROFILE"));
-                return;
-            }
-
-            if (reload)
-            {
-                Environment.SetEnvironmentVariable(
-                    "HOME",
-                    UserHomeDir);
-            }
-
-            // Default!
-            Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
-
-            // to prevent from leaking processes see issue #1092 for details
-            Environment.SetEnvironmentVariable("TERM", "msys");
-            string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
-            if (EnvUtils.RunningOnWindows())
-            {
-                if (File.Exists(sshAskPass))
-                {
-                    Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
-                }
-            }
-            else if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_ASKPASS")))
-            {
-                Environment.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
-            }
-        }
-
-        public static string GetHomeDir()
-        {
-            return Environment.GetEnvironmentVariable("HOME") ?? "";
-        }
-
-        public static string GetDefaultHomeDir()
-        {
-            if (!string.IsNullOrEmpty(UserHomeDir))
-            {
-                return UserHomeDir;
-            }
-
-            if (EnvUtils.RunningOnWindows())
-            {
-                return WindowsDefaultHomeDir;
-            }
-
-            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        }
-
-        private static string WindowsDefaultHomeDir
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE")))
-                {
-                    string homePath = Environment.GetEnvironmentVariable("HOMEDRIVE");
-                    homePath += Environment.GetEnvironmentVariable("HOMEPATH");
-                    return homePath;
-                }
-
-                return Environment.GetEnvironmentVariable("USERPROFILE");
-            }
-        }
-
         public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             return new ProcessStartInfo
@@ -163,7 +78,7 @@ namespace GitCommands
 
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
-            SetEnvironmentVariable();
+            EnvironmentConfiguration.SetEnvironmentVariables();
 
             var executionStartTimestamp = DateTime.Now;
 
@@ -288,7 +203,7 @@ namespace GitCommands
         /// </summary>
         public static IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string workDir, string stdInput)
         {
-            SetEnvironmentVariable();
+            EnvironmentConfiguration.SetEnvironmentVariables();
             arguments = arguments.Replace("$QUOTE$", "\\\"");
             return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
         }
@@ -320,7 +235,7 @@ namespace GitCommands
         {
             try
             {
-                SetEnvironmentVariable();
+                EnvironmentConfiguration.SetEnvironmentVariables();
 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
@@ -386,8 +301,6 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
-        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
-            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
         public static GitVersion VersionInUse
         {

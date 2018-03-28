@@ -503,7 +503,7 @@ namespace GitCommands
 
         private static Process StartProccess(string fileName, string arguments, string workingDir, bool showConsole)
         {
-            GitCommandHelpers.SetEnvironmentVariable();
+            EnvironmentConfiguration.SetEnvironmentVariables();
 
             string quotedCmd = fileName;
             if (quotedCmd.IndexOf(' ') != -1)
