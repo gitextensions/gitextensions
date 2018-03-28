@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileFilterAllFiles = new TranslationString("All files");
         private readonly TranslationString _deleteSelectedFilesCaption = new TranslationString("Delete");
         private readonly TranslationString _deleteSelectedFiles =
-            new TranslationString("Are you sure you want delete the selected file(s)?");
+            new TranslationString("Are you sure you want to delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
         private readonly TranslationString _multipleDescription = new TranslationString("<multiple>");
         private readonly TranslationString _selectedRevision = new TranslationString("Selected");
