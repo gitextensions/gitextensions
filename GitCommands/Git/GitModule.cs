@@ -3311,7 +3311,18 @@ namespace GitCommands
                     GitBlameCommit commit;
                     if (hasCommitHeader)
                     {
-                        commit = new GitBlameCommit(objectId, author, authorMail, authorTime, authorTimeZone, committer, committerMail, committerTime, committerTimeZone, summary, filename);
+                        commit = new GitBlameCommit(
+                            objectId,
+                            author,
+                            authorMail,
+                            authorTime,
+                            authorTimeZone,
+                            committer,
+                            committerMail,
+                            committerTime,
+                            committerTimeZone,
+                            summary,
+                            filename);
                         commitByObjectId[objectId] = commit;
                     }
                     else
