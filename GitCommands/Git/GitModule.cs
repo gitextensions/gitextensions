@@ -3682,18 +3682,20 @@ namespace GitCommands
         /// </summary>
         /// <remarks>
         /// If no portions of <paramref name="s"/> contain escaped data, then <paramref name="s"/> is returned.
+        /// <para />
+        /// If <paramref name="s"/> is <c>null</c> then an empty string is returned.
         /// </remarks>
         /// <example>
         /// <code>UnescapeOctalCodePoints(@"\353\221\220\353\213\244") == "두다"</code>
         /// </example>
         /// <param name="s">The string to unescape.</param>
-        /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present.</returns>
-        [ContractAnnotation("s:null=>null")]
-        public static string UnescapeOctalCodePoints(string s)
+        /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
+        [NotNull]
+        public static string UnescapeOctalCodePoints([CanBeNull] string s)
         {
-            if (s == null)
+            if (string.IsNullOrWhiteSpace(s))
             {
-                return null;
+                return s ?? string.Empty;
             }
 
             return _escapedOctalCodePointRegex.Replace(

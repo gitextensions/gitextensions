@@ -67,7 +67,7 @@ namespace GitCommandsTests
         [Test]
         public void UnescapeOctalCodePoints_handles_octal_codes()
         {
-            Assert.IsNull(GitModule.UnescapeOctalCodePoints(null));
+            Assert.AreEqual("", GitModule.UnescapeOctalCodePoints(null));
             Assert.AreEqual("", GitModule.UnescapeOctalCodePoints(""));
             Assert.AreEqual(" ", GitModule.UnescapeOctalCodePoints(" "));
             Assert.AreEqual("Hello, World!", GitModule.UnescapeOctalCodePoints("Hello, World!"));
