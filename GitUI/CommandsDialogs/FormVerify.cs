@@ -190,25 +190,26 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateLostObjects()
         {
-            Cursor.Current = Cursors.WaitCursor;
-
-            var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
-
-            if (FormProcess.IsOperationAborted(dialogResult))
+            using (WaitCursorScope.Enter())
             {
-                DialogResult = DialogResult.Abort;
-                return;
+                var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
+
+                if (FormProcess.IsOperationAborted(dialogResult))
+                {
+                    DialogResult = DialogResult.Abort;
+                    return;
+                }
+
+                _lostObjects.Clear();
+                _lostObjects.AddRange(
+                    dialogResult
+                        .Split('\r', '\n')
+                        .Where(s => !string.IsNullOrEmpty(s))
+                        .Select((s) => LostObject.TryParse(Module, s))
+                        .Where(parsedLostObject => parsedLostObject != null));
+
+                UpdateFilteredLostObjects();
             }
-
-            _lostObjects.Clear();
-            _lostObjects.AddRange(dialogResult
-                .Split('\r', '\n')
-                .Where(s => !string.IsNullOrEmpty(s))
-                .Select((s) => LostObject.TryParse(Module, s))
-                .Where(parsedLostObject => parsedLostObject != null));
-
-            UpdateFilteredLostObjects();
-            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateFilteredLostObjects()

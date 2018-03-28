@@ -1135,6 +1135,7 @@
     <Compile Include="UserControls\WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WaitCursorScope.cs" />
     <Compile Include="WebBrowserEmulationMode.cs" />
     <Compile Include="WindowPositionList.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\WordWrapper.cs" />

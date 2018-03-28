@@ -44,16 +44,18 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-            diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, string.Empty);
-            Cursor.Current = Cursors.Default;
+            using (WaitCursorScope.Enter())
+            {
+                diffViewer.ViewChangesAsync(RevisionGrid.GetSelectedRevisions(), DiffFiles.SelectedItem, string.Empty);
+            }
         }
 
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions());
-            Cursor.Current = Cursors.Default;
+            using (WaitCursorScope.Enter())
+            {
+                DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions());
+            }
         }
 
         private void DiffViewerExtraDiffArgumentsChanged(object sender, EventArgs e)

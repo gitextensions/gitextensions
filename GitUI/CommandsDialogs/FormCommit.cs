@@ -734,28 +734,28 @@ namespace GitUI.CommandsDialogs
             _initialized = true;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
-            Cursor.Current = Cursors.WaitCursor;
 
-            if (loadUnstaged)
+            using (WaitCursorScope.Enter())
             {
-                Loading.Visible = true;
-                LoadingStaged.Visible = true;
+                if (loadUnstaged)
+                {
+                    Loading.Visible = true;
+                    LoadingStaged.Visible = true;
 
-                Commit.Enabled = false;
-                CommitAndPush.Enabled = false;
-                Amend.Enabled = false;
-                Reset.Enabled = false;
-                ResetUnStaged.Enabled = false;
-                EnableStageButtons(false);
+                    Commit.Enabled = false;
+                    CommitAndPush.Enabled = false;
+                    Amend.Enabled = false;
+                    Reset.Enabled = false;
+                    ResetUnStaged.Enabled = false;
+                    EnableStageButtons(false);
 
-                ComputeUnstagedFiles(LoadUnstagedOutput, true);
+                    ComputeUnstagedFiles(LoadUnstagedOutput, true);
+                }
+
+                UpdateMergeHead();
+
+                Message.TextBoxFont = AppSettings.CommitFont;
             }
-
-            UpdateMergeHead();
-
-            Message.TextBoxFont = AppSettings.CommitFont;
-
-            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateMergeHead()
@@ -766,10 +766,11 @@ namespace GitUI.CommandsDialogs
 
         private void InitializedStaged()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
-            Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), Module.GetStagedFilesWithSubmodulesStatus());
-            Cursor.Current = Cursors.Default;
+            using (WaitCursorScope.Enter())
+            {
+                SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+                Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), Module.GetStagedFilesWithSubmodulesStatus());
+            }
         }
 
         private event Action OnStageAreaLoaded;
@@ -1377,118 +1378,119 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-            EnableStageButtons(false);
-            try
+            using (WaitCursorScope.Enter())
             {
-                var lastSelection = new List<GitItemStatus>();
-                if (_currentFilesList != null)
+                EnableStageButtons(false);
+                try
                 {
-                    lastSelection = _currentSelection;
-                }
+                    var lastSelection = new List<GitItemStatus>();
+                    if (_currentFilesList != null)
+                    {
+                        lastSelection = _currentSelection;
+                    }
 
-                toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = Staged.SelectedItems.Count() * 2;
-                toolStripProgressBar1.Value = 0;
-                Staged.StoreNextIndexToSelect();
+                    toolStripProgressBar1.Visible = true;
+                    toolStripProgressBar1.Maximum = Staged.SelectedItems.Count() * 2;
+                    toolStripProgressBar1.Value = 0;
+                    Staged.StoreNextIndexToSelect();
 
-                var files = new List<GitItemStatus>();
-                var allFiles = new List<GitItemStatus>();
+                    var files = new List<GitItemStatus>();
+                    var allFiles = new List<GitItemStatus>();
 
-                foreach (var item in Staged.SelectedItems)
-                {
-                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                    if (!item.IsNew)
+                    foreach (var item in Staged.SelectedItems)
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        Module.UnstageFileToRemove(item.Name);
+                        if (!item.IsNew)
+                        {
+                            toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                            Module.UnstageFileToRemove(item.Name);
+
+                            if (item.IsRenamed)
+                            {
+                                Module.UnstageFileToRemove(item.OldName);
+                            }
+                        }
+                        else
+                        {
+                            files.Add(item);
+                        }
+
+                        allFiles.Add(item);
+                    }
+
+                    Module.UnstageFiles(files);
+
+                    _skipUpdate = true;
+                    InitializedStaged();
+                    var stagedFiles = Staged.GitItemStatuses.ToList();
+                    var unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                    foreach (var item in allFiles)
+                    {
+                        var item1 = item;
+                        if (stagedFiles.Exists(i => i.Name == item1.Name))
+                        {
+                            continue;
+                        }
+
+                        var item2 = item;
+                        if (unstagedFiles.Exists(i => i.Name == item2.Name))
+                        {
+                            continue;
+                        }
+
+                        if (item.IsNew && !item.IsChanged && !item.IsDeleted)
+                        {
+                            item.IsTracked = false;
+                        }
+                        else
+                        {
+                            item.IsTracked = true;
+                        }
 
                         if (item.IsRenamed)
                         {
-                            Module.UnstageFileToRemove(item.OldName);
+                            var clone = new GitItemStatus
+                            {
+                                Name = item.OldName,
+                                IsDeleted = true,
+                                IsTracked = true,
+                                IsStaged = false
+                            };
+                            unstagedFiles.Add(clone);
+
+                            item.IsRenamed = false;
+                            item.IsNew = true;
+                            item.IsTracked = false;
+                            item.OldName = string.Empty;
                         }
+
+                        item.IsStaged = false;
+                        unstagedFiles.Add(item);
                     }
-                    else
+
+                    Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
+                    Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), stagedFiles);
+                    _skipUpdate = false;
+                    Staged.SelectStoredNextIndex();
+
+                    toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
+
+                    toolStripProgressBar1.Visible = false;
+
+                    if (Staged.IsEmpty)
                     {
-                        files.Add(item);
+                        _currentFilesList = Unstaged;
+                        RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
+                        Unstaged.Focus();
                     }
-
-                    allFiles.Add(item);
                 }
-
-                Module.UnstageFiles(files);
-
-                _skipUpdate = true;
-                InitializedStaged();
-                var stagedFiles = Staged.GitItemStatuses.ToList();
-                var unstagedFiles = Unstaged.GitItemStatuses.ToList();
-                foreach (var item in allFiles)
+                catch (Exception ex)
                 {
-                    var item1 = item;
-                    if (stagedFiles.Exists(i => i.Name == item1.Name))
-                    {
-                        continue;
-                    }
-
-                    var item2 = item;
-                    if (unstagedFiles.Exists(i => i.Name == item2.Name))
-                    {
-                        continue;
-                    }
-
-                    if (item.IsNew && !item.IsChanged && !item.IsDeleted)
-                    {
-                        item.IsTracked = false;
-                    }
-                    else
-                    {
-                        item.IsTracked = true;
-                    }
-
-                    if (item.IsRenamed)
-                    {
-                        var clone = new GitItemStatus
-                        {
-                            Name = item.OldName,
-                            IsDeleted = true,
-                            IsTracked = true,
-                            IsStaged = false
-                        };
-                        unstagedFiles.Add(clone);
-
-                        item.IsRenamed = false;
-                        item.IsNew = true;
-                        item.IsTracked = false;
-                        item.OldName = string.Empty;
-                    }
-
-                    item.IsStaged = false;
-                    unstagedFiles.Add(item);
+                    Trace.WriteLine(ex.Message);
                 }
 
-                Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
-                Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), stagedFiles);
-                _skipUpdate = false;
-                Staged.SelectStoredNextIndex();
-
-                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
-
-                toolStripProgressBar1.Visible = false;
-
-                if (Staged.IsEmpty)
-                {
-                    _currentFilesList = Unstaged;
-                    RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
-                    Unstaged.Focus();
-                }
+                EnableStageButtons(true);
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-
-            EnableStageButtons(true);
-            Cursor.Current = Cursors.Default;
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
             {
@@ -1578,120 +1580,123 @@ namespace GitUI.CommandsDialogs
 
         private void Stage(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
-            EnableStageButtons(false);
-            try
+            using (WaitCursorScope.Enter())
             {
-                var lastSelection = new List<GitItemStatus>();
-                if (_currentFilesList != null)
+                EnableStageButtons(false);
+                try
                 {
-                    lastSelection = _currentSelection;
-                }
-
-                Cursor.Current = Cursors.WaitCursor;
-                Unstaged.StoreNextIndexToSelect();
-                toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = gitItemStatuses.Count * 2;
-                toolStripProgressBar1.Value = 0;
-
-                var files = new List<GitItemStatus>();
-
-                foreach (var gitItemStatus in gitItemStatuses)
-                {
-                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                    if (gitItemStatus.Name.EndsWith("/"))
+                    var lastSelection = new List<GitItemStatus>();
+                    if (_currentFilesList != null)
                     {
-                        gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
+                        lastSelection = _currentSelection;
                     }
 
-                    files.Add(gitItemStatus);
-                }
+                    Unstaged.StoreNextIndexToSelect();
+                    toolStripProgressBar1.Visible = true;
+                    toolStripProgressBar1.Maximum = gitItemStatuses.Count * 2;
+                    toolStripProgressBar1.Value = 0;
 
-                bool wereErrors = false;
-                if (AppSettings.ShowErrorsWhenStagingFiles)
-                {
-                    void ProcessStart(FormStatus form)
-                    {
-                        form.AppendMessageCrossThread(
-                            string.Format(
-                                _stageFiles.Text + "\n", files.Count));
-                        var output = Module.StageFiles(files, out wereErrors);
-                        form.AppendMessageCrossThread(output);
-                        form.Done(string.IsNullOrEmpty(output));
-                    }
+                    var files = new List<GitItemStatus>();
 
-                    using (var process = new FormStatus(ProcessStart, null) { Text = _stageDetails.Text })
+                    foreach (var gitItemStatus in gitItemStatuses)
                     {
-                        process.ShowDialogOnError(this);
-                    }
-                }
-                else
-                {
-                    Module.StageFiles(files, out wereErrors);
-                }
-
-                if (wereErrors)
-                {
-                    RescanChanges();
-                }
-                else
-                {
-                    InitializedStaged();
-                    var unstagedFiles = Unstaged.GitItemStatuses.ToList();
-                    _skipUpdate = true;
-                    var names = new HashSet<string>();
-                    foreach (var item in files)
-                    {
-                        names.Add(item.Name);
-                        names.Add(item.OldName);
-                    }
-
-                    var unstagedItems = new HashSet<GitItemStatus>();
-                    foreach (var item in unstagedFiles)
-                    {
-                        if (names.Contains(item.Name))
+                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                        if (gitItemStatus.Name.EndsWith("/"))
                         {
-                            unstagedItems.Add(item);
+                            gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
+                        }
+
+                        files.Add(gitItemStatus);
+                    }
+
+                    bool wereErrors = false;
+                    if (AppSettings.ShowErrorsWhenStagingFiles)
+                    {
+                        void ProcessStart(FormStatus form)
+                        {
+                            form.AppendMessageCrossThread(
+                                string.Format(
+                                    _stageFiles.Text + "\n", files.Count));
+                            var output = Module.StageFiles(files, out wereErrors);
+                            form.AppendMessageCrossThread(output);
+                            form.Done(string.IsNullOrEmpty(output));
+                        }
+
+                        using (var process = new FormStatus(ProcessStart, null) { Text = _stageDetails.Text })
+                        {
+                            process.ShowDialogOnError(this);
                         }
                     }
-
-                    unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-                    unstagedFiles.RemoveAll(item => item.IsSubmodule && item.GetSubmoduleStatusAsync().IsCompleted &&
-                        (item.GetSubmoduleStatusAsync().CompletedResult() == null ||
-                        (!item.GetSubmoduleStatusAsync().CompletedResult().IsDirty && unstagedItems.Contains(item))));
-                    foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
-                        (ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync()) == null ||
-                        (item.GetSubmoduleStatusAsync().IsCompleted && item.GetSubmoduleStatusAsync().CompletedResult().IsDirty))))
+                    else
                     {
-                        item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
+                        Module.StageFiles(files, out wereErrors);
                     }
 
-                    Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
-                    Unstaged.ClearSelected();
-                    _skipUpdate = false;
-                    Unstaged.SelectStoredNextIndex();
+                    if (wereErrors)
+                    {
+                        RescanChanges();
+                    }
+                    else
+                    {
+                        InitializedStaged();
+                        var unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                        _skipUpdate = true;
+                        var names = new HashSet<string>();
+                        foreach (var item in files)
+                        {
+                            names.Add(item.Name);
+                            names.Add(item.OldName);
+                        }
+
+                        var unstagedItems = new HashSet<GitItemStatus>();
+                        foreach (var item in unstagedFiles)
+                        {
+                            if (names.Contains(item.Name))
+                            {
+                                unstagedItems.Add(item);
+                            }
+                        }
+
+                        unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
+                        unstagedFiles.RemoveAll(
+                            item => item.IsSubmodule && item.GetSubmoduleStatusAsync().IsCompleted &&
+                                    (item.GetSubmoduleStatusAsync().CompletedResult() == null ||
+                                     (!item.GetSubmoduleStatusAsync().CompletedResult().IsDirty && unstagedItems.Contains(item))));
+                        foreach (var item in unstagedItems.Where(
+                            item => item.IsSubmodule &&
+                                    (ThreadHelper.JoinableTaskFactory.Run(() => item.GetSubmoduleStatusAsync()) == null ||
+                                     (item.GetSubmoduleStatusAsync().IsCompleted && item.GetSubmoduleStatusAsync().CompletedResult().IsDirty))))
+                        {
+                            item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
+                        }
+
+                        Unstaged.SetDiffs(new GitRevision(GitRevision.UnstagedGuid), new GitRevision(GitRevision.IndexGuid), unstagedFiles);
+                        Unstaged.ClearSelected();
+                        _skipUpdate = false;
+                        Unstaged.SelectStoredNextIndex();
+                    }
+
+                    toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
+
+                    toolStripProgressBar1.Visible = false;
+
+                    if (Unstaged.IsEmpty)
+                    {
+                        _currentFilesList = Staged;
+                        RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
+                    }
                 }
-
-                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
-
-                toolStripProgressBar1.Visible = false;
-
-                if (Unstaged.IsEmpty)
+                catch (Exception ex)
                 {
-                    _currentFilesList = Staged;
-                    RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
+                    Trace.WriteLine(ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
 
-            EnableStageButtons(true);
+                EnableStageButtons(true);
 
-            Commit.Enabled = true;
-            Amend.Enabled = true;
-            AcceptButton = Commit;
-            Cursor.Current = Cursors.Default;
+                Commit.Enabled = true;
+                Amend.Enabled = true;
+                AcceptButton = Commit;
+            }
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
             {
