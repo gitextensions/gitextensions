@@ -50,7 +50,7 @@ namespace GitCommandsTests
             _module.WorkingDir.Returns(_workingDir);
             _module.GetEffectiveSetting("commit.template").Returns(template);
 
-            ((Action)(() => _manager.LoadGitCommitTemplate())).ShouldThrow<FileNotFoundException>();
+            ((Action)(() => _manager.LoadGitCommitTemplate())).Should().Throw<FileNotFoundException>();
         }
 
         [Test]

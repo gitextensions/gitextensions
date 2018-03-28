@@ -37,7 +37,7 @@ namespace GitCommandsTests.Git
         {
             _module = null;
 
-            ((Action)(() => _provider.Get("xx"))).ShouldThrow<ArgumentException>();
+            ((Action)(() => _provider.Get("xx"))).Should().Throw<ArgumentException>();
         }
 
         [TestCase("0123", true)]

@@ -80,7 +80,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_throw_if_data_null()
         {
-            ((Action)(() => _renderer.Render(null, true))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _renderer.Render(null, true))).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -255,7 +255,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_should_throw_if_data_null()
         {
-            ((Action)(() => _renderer.RenderPlain(null))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _renderer.RenderPlain(null))).Should().Throw<ArgumentNullException>();
         }
 
         [Test]

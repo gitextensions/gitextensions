@@ -170,7 +170,7 @@ namespace GravatarTests
             {
                 await _cache.ClearAsync();
             };
-            act.ShouldNotThrow();
+            act.Should().NotThrow();
         }
 
         [TestCase(null)]
@@ -227,7 +227,7 @@ namespace GravatarTests
             {
                 await _cache.DeleteImageAsync(FileName);
             };
-            act.ShouldNotThrow();
+            act.Should().NotThrow();
         }
 
         [Test]
@@ -272,7 +272,7 @@ namespace GravatarTests
             {
                 await _cache.GetImageAsync(FileName, null);
             };
-            act.ShouldNotThrow();
+            act.Should().NotThrow();
         }
     }
 }

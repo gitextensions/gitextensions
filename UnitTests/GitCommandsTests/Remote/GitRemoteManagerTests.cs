@@ -35,7 +35,7 @@ namespace GitCommandsTests.Remote
         {
             _module = null;
 
-            ((Action)(() => _controller.LoadRemotes(true))).ShouldNotThrow();
+            ((Action)(() => _controller.LoadRemotes(true))).Should().NotThrow();
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void RemoveRemote_should_throw_if_remote_is_null()
         {
-            ((Action)(() => _controller.RemoveRemote(null))).ShouldThrow<ArgumentNullException>()
+            ((Action)(() => _controller.RemoveRemote(null))).Should().Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remote");
         }
 
@@ -112,11 +112,11 @@ namespace GitCommandsTests.Remote
         [Test]
         public void SaveRemote_should_throw_if_remoteName_is_null_or_empty()
         {
-            ((Action)(() => _controller.SaveRemote(null, null, "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
+            ((Action)(() => _controller.SaveRemote(null, null, "b", "c", "d"))).Should().Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
-            ((Action)(() => _controller.SaveRemote(null, "", "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
+            ((Action)(() => _controller.SaveRemote(null, "", "b", "c", "d"))).Should().Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
-            ((Action)(() => _controller.SaveRemote(null, "  ", "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
+            ((Action)(() => _controller.SaveRemote(null, "  ", "b", "c", "d"))).Should().Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
         }
 
@@ -217,7 +217,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void SetRemoteState_should_throw_if_remote_is_null()
         {
-            ((Action)(() => _controller.ToggleRemoteState(null, false))).ShouldThrow<ArgumentNullException>()
+            ((Action)(() => _controller.ToggleRemoteState(null, false))).Should().Throw<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
         }
 

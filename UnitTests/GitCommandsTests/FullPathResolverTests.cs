@@ -23,7 +23,7 @@ namespace GitCommandsTests
         [TestCase(" ")]
         public void Resolve_should_throw_if_path_null_or_empty(string path)
         {
-            ((Action)(() => _resolver.Resolve(path))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _resolver.Resolve(path))).Should().Throw<ArgumentNullException>();
         }
 
         [TestCase(@"c:\")]
@@ -35,7 +35,7 @@ namespace GitCommandsTests
         [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
         public void Resolve_should_throw_PathTooLongException(string path)
         {
-            ((Action)(() => _resolver.Resolve(path))).ShouldThrow<PathTooLongException>();
+            ((Action)(() => _resolver.Resolve(path))).Should().Throw<PathTooLongException>();
         }
 
         [TestCase(@"file")]

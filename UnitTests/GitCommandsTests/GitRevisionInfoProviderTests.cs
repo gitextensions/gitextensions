@@ -25,7 +25,7 @@ namespace GitCommandsTests
         [Test]
         public void LoadChildren_should_throw_if_null()
         {
-            ((Action)(() => _provider.LoadChildren(null))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _provider.LoadChildren(null))).Should().Throw<ArgumentNullException>();
         }
 
         [TestCase(null)]
@@ -36,7 +36,7 @@ namespace GitCommandsTests
             var item = Substitute.For<IGitItem>();
             item.Guid.Returns(guid);
 
-            ((Action)(() => _provider.LoadChildren(item))).ShouldThrow<ArgumentException>();
+            ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace GitCommandsTests
 
             _provider = new GitRevisionInfoProvider(() => null);
 
-            ((Action)(() => _provider.LoadChildren(item))).ShouldThrow<ArgumentException>();
+            ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
         }
 
         [Test]

@@ -23,7 +23,7 @@ namespace GitUITests
         public void Get_should_throw_if_pattern_is_null(string pattern)
         {
             Action predicate = () => { _provider.Get(pattern, workingDirDefault); };
-            predicate.ShouldThrow<ArgumentNullException>();
+            predicate.Should().Throw<ArgumentNullException>();
         }
 
         [TestCase("")]
@@ -31,14 +31,14 @@ namespace GitUITests
         public void Get_should_not_throw_if_pattern_is_empty(string pattern)
         {
             Action predicate = () => { _provider.Get(pattern, workingDirDefault); };
-            predicate.ShouldNotThrow<ArgumentNullException>();
+            predicate.Should().NotThrow<ArgumentNullException>();
         }
 
         [TestCase(null)]
         public void Get_should_throw_if_workingDir_is_null(string workingDir)
         {
             Action predicate = () => { _provider.Get(patternDefault, workingDir); };
-            predicate.ShouldThrow<ArgumentNullException>();
+            predicate.Should().Throw<ArgumentNullException>();
         }
 
         [TestCase("")]
@@ -46,7 +46,7 @@ namespace GitUITests
         public void Get_should_throw_if_workingDir_is_empty(string workingDir)
         {
             Action predicate = () => { _provider.Get(patternDefault, workingDir); };
-            predicate.ShouldNotThrow<ArgumentNullException>();
+            predicate.Should().NotThrow<ArgumentNullException>();
         }
 
         [TestCase(@"test2/t", "test1/test2/test3")]
@@ -61,7 +61,7 @@ namespace GitUITests
         public void Get_should_not_throw_then_workingDir_lenght_greater_that_pattern_length(string pattern, string workingDir)
         {
             Action predicate = () => { _provider.Get(pattern, workingDir); };
-            predicate.ShouldNotThrow<ArgumentNullException>();
+            predicate.Should().NotThrow<ArgumentNullException>();
         }
 
         [TestCase(@"D:\test1", @"D:/", "test1/test2/test3/")]
@@ -110,7 +110,7 @@ namespace GitUITests
             var predicate = _provider.Get(patternDefault, workingDirDefault);
 
             Action executor = () => { predicate(filePath); };
-            executor.ShouldNotThrow<ArgumentNullException>();
+            executor.Should().NotThrow<ArgumentNullException>();
         }
     }
 }
