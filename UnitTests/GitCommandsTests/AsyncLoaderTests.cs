@@ -229,6 +229,19 @@ namespace GitCommandsTests
         }
 
         [Test]
+        public void Error_raised_via_event_when_no_error_handler_installed_does_not_fault_task()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var ex = new Exception();
+
+                await _loader.LoadAsync(
+                    () => throw ex,
+                    Assert.Fail);
+            });
+        }
+
+        [Test]
         public void Error_raised_via_event_and_not_marked_as_handled_faults_task()
         {
             var observed = new List<Exception>();
