@@ -510,6 +510,13 @@ namespace GitUI.CommandsDialogs
 
             UICommands.RaisePostRegisterPlugin(this);
 
+            // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
+            _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
+            if (RepoHosts.GitHosters.Count == 1)
+            {
+                _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+            }
+
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
 
@@ -601,13 +608,6 @@ namespace GitUI.CommandsDialogs
                 commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
                 _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-
-                // Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-                _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
-                if (RepoHosts.GitHosters.Count == 1)
-                {
-                    _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-                }
 
                 _filterBranchHelper.InitToolStripBranchFilter();
 
