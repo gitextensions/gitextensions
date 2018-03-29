@@ -20,11 +20,11 @@ namespace ResourceManager.Xliff
             return text.Any(char.IsLetter);
         }
 
-        public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
+        public static IEnumerable<(string name, object item)> GetObjFields(object obj, string objName)
         {
             if (objName != null)
             {
-                yield return Tuple.Create(objName, obj);
+                yield return (objName, obj);
             }
 
             foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
@@ -37,7 +37,7 @@ namespace ResourceManager.Xliff
                     continue;
                 }
 
-                yield return Tuple.Create(fieldInfo.Name, fieldInfo.GetValue(obj));
+                yield return (fieldInfo.Name, fieldInfo.GetValue(obj));
             }
         }
 
@@ -64,39 +64,37 @@ namespace ResourceManager.Xliff
             AddTranslationItemsFromList(category, translation, GetObjFields(obj, "$this"));
         }
 
-        private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(Tuple<string, object> item)
+        private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object item)
         {
-            var (itemName, itemObj) = item;
-
-            if (itemObj == null)
+            if (item == null)
             {
                 yield break;
             }
 
             // Skip controls with a name started with "_NO_TRANSLATE_"
             // this is a naming convention, these are not translated
-            if (itemName.StartsWith("_NO_TRANSLATE_"))
+            if (name.StartsWith("_NO_TRANSLATE_"))
             {
                 yield break;
             }
 
             Func<PropertyInfo, bool> isTranslatableItem;
-            if (itemObj is DataGridViewColumn)
+            if (item is DataGridViewColumn)
             {
-                var c = itemObj as DataGridViewColumn;
+                var c = item as DataGridViewColumn;
 
                 isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
             }
-            else if (itemObj is ComboBox || itemObj is ListBox)
+            else if (item is ComboBox || item is ListBox)
             {
-                isTranslatableItem = propertyInfo => IsTranslatableItemInBox(propertyInfo, itemObj);
+                isTranslatableItem = propertyInfo => IsTranslatableItemInBox(propertyInfo, item);
             }
             else
             {
                 isTranslatableItem = IsTranslatableItemInComponent;
             }
 
-            foreach (var propertyInfo in itemObj.GetType()
+            foreach (var propertyInfo in item.GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
                                BindingFlags.NonPublic | BindingFlags.SetProperty)
                 .Where(isTranslatableItem))
@@ -105,15 +103,14 @@ namespace ResourceManager.Xliff
             }
         }
 
-        public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
+        public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
         {
-            foreach (var item in items)
+            foreach (var (itemName, itemObj) in items)
             {
-                var (itemName, itemObj) = item;
-
-                foreach (var property in GetItemPropertiesEnumerator(item))
+                foreach (var property in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
                     var value = property.GetValue(itemObj, null);
+
                     if (value == null)
                     {
                         continue;
@@ -145,13 +142,11 @@ namespace ResourceManager.Xliff
             }
         }
 
-        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
+        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<(string name, object item)> items)
         {
-            foreach (var item in items)
+            foreach (var (itemName, itemObj) in items)
             {
-                var (itemName, itemObj) = item;
-
-                foreach (var propertyInfo in GetItemPropertiesEnumerator(item))
+                foreach (var propertyInfo in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
                     var property = propertyInfo; // copy for lambda
                     string propertyName = property.Name;

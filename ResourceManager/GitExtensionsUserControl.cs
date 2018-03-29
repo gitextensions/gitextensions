@@ -106,7 +106,7 @@ namespace ResourceManager
                 return;
             }
 
-            var itemsToTranslate = new[] { Tuple.Create(itemName, item) };
+            var itemsToTranslate = new[] { (itemName, item) };
 
             foreach (var pair in translation)
             {

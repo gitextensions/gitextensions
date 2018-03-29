@@ -64,7 +64,7 @@ namespace GitCommands
                 });
         }
 
-        public void Import(IEnumerable<Tuple<string, string>> keyValuePairs)
+        public void Import(IEnumerable<(string name, string value)> keyValuePairs)
         {
                 LockedAction(() =>
                 {

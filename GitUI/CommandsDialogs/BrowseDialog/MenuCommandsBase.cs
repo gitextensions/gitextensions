@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using ResourceManager;
@@ -31,9 +30,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         // override and return all commands created by extending class
         protected abstract IEnumerable<MenuCommand> GetMenuCommandsForTranslation();
 
-        private IEnumerable<Tuple<string, object>> GetMenuCommandsForTranslationImpl()
+        private IEnumerable<(string name, object item)> GetMenuCommandsForTranslationImpl()
         {
-            return GetMenuCommandsForTranslation().Select(menu => Tuple.Create(menu.Name, (object)menu));
+            return GetMenuCommandsForTranslation().Select(menu => (menu.Name, (object)menu));
         }
     }
 }
