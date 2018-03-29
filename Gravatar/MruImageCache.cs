@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Gravatar
         private const int CleanAtSize = 30;
         private const int CleanToSize = 25;
 
-        private readonly Dictionary<string, Entry> _entryByFileName = new Dictionary<string, Entry>();
+        private readonly ConcurrentDictionary<string, Entry> _entryByFileName = new ConcurrentDictionary<string, Entry>();
         private readonly IImageCache _inner;
 
         public MruImageCache(IImageCache inner)
@@ -47,7 +48,7 @@ namespace Gravatar
 
         Task IImageCache.DeleteImageAsync(string imageFileName)
         {
-            _entryByFileName.Remove(imageFileName);
+            _entryByFileName.TryRemove(imageFileName, out _);
             return _inner.DeleteImageAsync(imageFileName);
         }
 
@@ -100,7 +101,7 @@ namespace Gravatar
                 // Take as many as we need to remove, and remove them from the dictionary.
                 foreach (var entry in sortedEntries.Values.Take(_entryByFileName.Count - CleanToSize))
                 {
-                    _entryByFileName.Remove(entry.FileName);
+                    _entryByFileName.TryRemove(entry.FileName, out _);
                 }
             }
         }
