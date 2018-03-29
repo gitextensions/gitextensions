@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
 
-        private CancellationTokenSource _submodulesStatusCts = new CancellationTokenSource();
+        private readonly CancellableSequence _submodulesStatusSequence = new CancellableSequence();
         private BuildReportTabPageExtension _buildReportTabPageExtension;
         private string _diffTabPageTitleBase = "";
 
@@ -2543,16 +2543,13 @@ namespace GitUI.CommandsDialogs
             _previousUpdateTime = DateTime.Now;
 
             // Cancel any previous async activities:
-            _submodulesStatusCts?.Cancel();
-            _submodulesStatusCts?.Dispose();
-            _submodulesStatusCts = new CancellationTokenSource();
+            var cancelToken = _submodulesStatusSequence.Next();
 
             RemoveSubmoduleButtons();
             toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
 
             // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
             // responsiveness if there are numerous submodules (e.g. > 100).
-            var cancelToken = _submodulesStatusCts.Token;
             string thisModuleDir = Module.WorkingDir;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
@@ -2938,9 +2935,9 @@ namespace GitUI.CommandsDialogs
                     _pullButton.Dispose();
                 }
 
-                if (_submodulesStatusCts != null)
+                if (_submodulesStatusSequence != null)
                 {
-                    _submodulesStatusCts.Dispose();
+                    _submodulesStatusSequence.Dispose();
                 }
 
                 if (_formBrowseMenus != null)

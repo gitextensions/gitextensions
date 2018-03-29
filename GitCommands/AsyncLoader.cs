@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -40,7 +39,8 @@ namespace GitCommands
 
         public event EventHandler<AsyncErrorEventArgs> LoadingError;
 
-        [CanBeNull] private CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellableSequence _cancellationSequence = new CancellableSequence();
+
         private int _disposed;
 
         /// <summary>
@@ -50,10 +50,6 @@ namespace GitCommands
         /// Defaults to <see cref="TimeSpan.Zero"/>.
         /// </remarks>
         public TimeSpan Delay { get; set; }
-
-        public AsyncLoader()
-        {
-        }
 
         public Task LoadAsync(Action loadContent, Action onLoaded)
         {
@@ -86,12 +82,8 @@ namespace GitCommands
             // Stop any prior operation
             Cancel();
 
-            // Create a new cancellation object
-            _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = new CancellationTokenSource();
-
-            // Copy reference to token (important)
-            var token = _cancellationTokenSource.Token;
+            // Create a new cancellation token
+            var token = _cancellationSequence.Next();
 
             T result;
 
@@ -178,7 +170,7 @@ namespace GitCommands
                 throw new ObjectDisposedException(nameof(AsyncLoader));
             }
 
-            _cancellationTokenSource?.Cancel();
+            _cancellationSequence.Cancel();
         }
 
         public void Dispose()
@@ -188,11 +180,7 @@ namespace GitCommands
                 return;
             }
 
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-            }
+            _cancellationSequence?.Dispose();
         }
     }
 

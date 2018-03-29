@@ -61,6 +61,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GitUI\CancellableSequence.cs" />
     <Compile Include="GitUI\ControlThreadingExtensions.cs" />
     <Compile Include="GitUI\ThreadHelper.cs" />
     <Compile Include="GitUI\UIExtensions.cs" />
