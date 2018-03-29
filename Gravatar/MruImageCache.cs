@@ -90,11 +90,14 @@ namespace Gravatar
             {
                 var sortedEntries = new SortedList<DateTime, Entry>(_entryByFileName.Count);
 
+                // Build list of all entries, sorted by their last access times
                 foreach (var entry in _entryByFileName.Values)
                 {
                     sortedEntries.Add(entry.LastAccesedAt, entry);
                 }
 
+                // The first items in that sorted list are the oldest ones.
+                // Take as many as we need to remove, and remove them from the dictionary.
                 foreach (var entry in sortedEntries.Values.Take(_entryByFileName.Count - CleanToSize))
                 {
                     _entryByFileName.Remove(entry.FileName);
