@@ -1859,7 +1859,10 @@ namespace GitUI
                             gravatar = Resources.User;
 
                             // kick off download operation, will likely display the avatar during the next round of repaint
-                            _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
+                            if (!string.IsNullOrWhiteSpace(revision.AuthorEmail))
+                            {
+                                _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
+                            }
                         }
 
                         e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
