@@ -23,7 +23,7 @@ namespace GravatarTests
         private FileBase _file;
         private FileInfoBase _fileInfo;
         private IFileInfoFactory _fileInfoFactory;
-        private DirectoryImageCache _cache;
+        private IImageCache _cache;
 
         [SetUp]
         public void Setup()
