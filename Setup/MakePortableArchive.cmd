@@ -101,8 +101,6 @@ xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\Atlassian.Jira.dll 
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\netstandard.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\NString.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.dll GitExtensions\Plugins\
