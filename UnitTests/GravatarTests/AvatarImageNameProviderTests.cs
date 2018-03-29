@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Gravatar;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GravatarTests
@@ -7,7 +9,7 @@ namespace GravatarTests
     [TestFixture]
     public class AvatarImageNameProviderTests
     {
-        private AvatarImageNameProvider _provider;
+        private IImageNameProvider _provider;
 
         [SetUp]
         public void Setup()
@@ -18,9 +20,9 @@ namespace GravatarTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
-        public void Get_return_null_if_email_not_supplied(string email)
+        public void Get_throws_if_email_null_or_whitespace(string email)
         {
-            _provider.Get(email).Should().BeNull();
+            Assert.Throws<ArgumentException>(() => _provider.Get(email));
         }
 
         [Test]
