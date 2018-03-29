@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Gravatar
 {
@@ -34,9 +35,14 @@ namespace Gravatar
 
         void IImageCache.AddImage(string imageFileName, Image image)
         {
-            if (string.IsNullOrWhiteSpace(imageFileName) || image == null)
+            if (string.IsNullOrWhiteSpace(imageFileName))
             {
-                return;
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
             }
 
             if (!_fileSystem.Directory.Exists(_cachePath))
@@ -47,6 +53,7 @@ namespace Gravatar
             try
             {
                 string file = Path.Combine(_cachePath, imageFileName);
+
                 using (var output = new FileStream(file, FileMode.Create))
                 {
                     image.Save(output, ImageFormat.Png);
@@ -81,6 +88,7 @@ namespace Gravatar
                     }
                 }
             });
+
             OnInvalidated();
         }
 
@@ -88,10 +96,11 @@ namespace Gravatar
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
-                return;
+                throw new ArgumentException(nameof(imageFileName));
             }
 
             string file = Path.Combine(_cachePath, imageFileName);
+
             if (!_fileSystem.File.Exists(file))
             {
                 return;
@@ -113,10 +122,11 @@ namespace Gravatar
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
-                return null;
+                throw new ArgumentException(nameof(imageFileName));
             }
 
             string file = Path.Combine(_cachePath, imageFileName);
+
             try
             {
                 if (HasExpired(file))
@@ -137,12 +147,18 @@ namespace Gravatar
 
         async Task<Image> IImageCache.GetImageAsync(string imageFileName)
         {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
             return await Task.Run(() => ((IImageCache)this).GetImage(imageFileName));
         }
 
-        private bool HasExpired(string fileName)
+        private bool HasExpired([NotNull] string fileName)
         {
             var file = _fileSystem.FileInfo.FromFileName(fileName);
+
             if (!file.Exists)
             {
                 return true;
