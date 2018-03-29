@@ -7,6 +7,7 @@ using GitUI;
 using Gravatar;
 using GravatarTests.Properties;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GravatarTests
@@ -17,7 +18,7 @@ namespace GravatarTests
         private const string Email = "x@x.com";
         private IImageCache _cache;
         private IImageNameProvider _avatarImageNameProvider;
-        private GravatarService _service;
+        private IAvatarService _service;
 
         [SetUp]
         public void Setup()
@@ -82,8 +83,15 @@ namespace GravatarTests
             });
         }
 
-        [TestCase(null)]
+        [Test]
+        public void GetDefaultImageType_should_throw_if_requested_type_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => _service.GetDefaultImageType(null));
+        }
+
         [TestCase("")]
+        [TestCase("  ")]
+        [TestCase("\t")]
         [TestCase("boo")]
         public void GetDefaultImageType_should_return_None_if_requested_type_invalid(string imageType)
         {

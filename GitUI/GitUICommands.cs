@@ -97,7 +97,7 @@ namespace GitUI
             return true;
         }
 
-        public void CacheAvatar(string email)
+        public void CacheAvatar([NotNull] string email)
         {
             _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
