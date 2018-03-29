@@ -32,7 +32,7 @@ namespace Gravatar
 
         public event EventHandler Invalidated;
 
-        public void AddImage(string imageFileName, Image image)
+        void IImageCache.AddImage(string imageFileName, Image image)
         {
             if (string.IsNullOrWhiteSpace(imageFileName) || image == null)
             {
@@ -60,7 +60,7 @@ namespace Gravatar
             Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task ClearAsync()
+        async Task IImageCache.ClearAsync()
         {
             if (!_fileSystem.Directory.Exists(_cachePath))
             {
@@ -85,7 +85,7 @@ namespace Gravatar
             Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
-        public async Task DeleteImageAsync(string imageFileName)
+        async Task IImageCache.DeleteImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
@@ -110,7 +110,7 @@ namespace Gravatar
             Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
-        public Image GetImage(string imageFileName)
+        Image IImageCache.GetImage(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
@@ -136,9 +136,9 @@ namespace Gravatar
             }
         }
 
-        public async Task<Image> GetImageAsync(string imageFileName)
+        async Task<Image> IImageCache.GetImageAsync(string imageFileName)
         {
-            return await Task.Run(() => GetImage(imageFileName));
+            return await Task.Run(() => ((IImageCache)this).GetImage(imageFileName));
         }
 
         private bool HasExpired(string fileName)
