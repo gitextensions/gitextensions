@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using GitUI;
 using NUnit.Framework;
 
@@ -102,6 +104,71 @@ namespace GitUITests
             var sequence = new CancellationTokenSequence();
 
             sequence.Dispose();
+        }
+
+        [Test]
+        [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
+        public void Concurrent_callers_to_Next_only_result_in_one_non_cancelled_token_being_issued()
+        {
+            const int loopCount = 10000;
+
+            // Assume hyperthreading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
+            var coreCount = Math.Max(1, Environment.ProcessorCount / 2);
+
+            if (coreCount == 1)
+            {
+                Assert.Inconclusive("This test requires more than one processor to run.");
+            }
+
+            using (var sequence = new CancellationTokenSequence())
+            using (var barrier = new Barrier(coreCount))
+            using (var countdown = new CountdownEvent(loopCount * coreCount))
+            {
+                var completedCount = 0;
+
+                var completionTokenSource = new CancellationTokenSource();
+                var completionToken = completionTokenSource.Token;
+                var winnerByIndex = new int[coreCount];
+
+                for (var i = 0; i < coreCount; i++)
+                {
+                    new Thread(ThreadMethod).Start(i);
+                }
+
+                Assert.True(countdown.Wait(TimeSpan.FromSeconds(10)), "Test should have completed within a reasonable amount of time");
+
+                Assert.AreEqual(loopCount, completedCount);
+
+                Console.Out.WriteLine("Winner by index: " + string.Join(",", winnerByIndex));
+
+                void ThreadMethod(object o)
+                {
+                    while (true)
+                    {
+                        barrier.SignalAndWait();
+
+                        if (completionToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        var token = sequence.Next();
+
+                        barrier.SignalAndWait();
+
+                        if (!token.IsCancellationRequested)
+                        {
+                            Interlocked.Increment(ref completedCount);
+                            Interlocked.Increment(ref winnerByIndex[(int)o]);
+                        }
+
+                        if (countdown.Signal())
+                        {
+                            completionTokenSource.Cancel();
+                        }
+                    }
+                }
+            }
         }
     }
 }
