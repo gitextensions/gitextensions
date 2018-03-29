@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Gravatar
 {
@@ -18,29 +19,39 @@ namespace Gravatar
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
         /// <param name="image">The image to add to the cache.</param>
-        void AddImage(string imageFileName, Image image);
+        /// <exception cref="ArgumentException"><paramref name="imageFileName"/> is <c>null</c> or white-space.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="image"/> is <c>null</c>.</exception>
+        void AddImage([NotNull] string imageFileName, [NotNull] Image image);
 
         /// <summary>
         /// Clears the cache by deleting all images.
         /// </summary>
+        [NotNull]
         Task ClearAsync();
 
         /// <summary>
         /// Deletes the specified image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        Task DeleteImageAsync(string imageFileName);
+        /// <exception cref="ArgumentException"><paramref name="imageFileName"/> is <c>null</c> or white-space.</exception>
+        [NotNull]
+        Task DeleteImageAsync([NotNull] string imageFileName);
 
         /// <summary>
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        Image GetImage(string imageFileName);
+        /// <exception cref="ArgumentException"><paramref name="imageFileName"/> is <c>null</c> or white-space.</exception>
+        [CanBeNull]
+        Image GetImage([NotNull] string imageFileName);
 
         /// <summary>
         /// Retrieves the image from the cache.
         /// </summary>
         /// <param name="imageFileName">The image file name.</param>
-        Task<Image> GetImageAsync(string imageFileName);
+        /// <exception cref="ArgumentException"><paramref name="imageFileName"/> is <c>null</c> or white-space.</exception>
+        [NotNull]
+        [ItemCanBeNull]
+        Task<Image> GetImageAsync([NotNull] string imageFileName);
     }
 }

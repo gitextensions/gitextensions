@@ -9,6 +9,7 @@ using FluentAssertions;
 using Gravatar;
 using GravatarTests.Properties;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GravatarTests
@@ -44,18 +45,17 @@ namespace GravatarTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
-        public async Task AddImage_should_exit_if_filename_not_supplied(string fileName)
+        public void AddImage_should_throw_if_filename_not_supplied(string fileName)
         {
-            var image = await _cache.GetImageAsync(fileName);
+            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(fileName));
 
-            image.Should().BeNull();
             _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
 
         [Test]
-        public void AddImage_should_exit_if_stream_null()
+        public void AddImage_should_throw_if_stream_null()
         {
-            _cache.AddImage("file", null);
+            Assert.Throws<ArgumentNullException>(() => _cache.AddImage("file", null));
 
             _directory.DidNotReceive().Exists(_folderPath);
         }
@@ -76,6 +76,9 @@ namespace GravatarTests
         public void AddImage_should_create_image_from_stream()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            Assert.NotNull(currentFolder);
+
             var folderPath = Path.Combine(currentFolder, "Images");
             var fileSystem = new FileSystem();
 
@@ -92,6 +95,9 @@ namespace GravatarTests
         public void AddImage_should_raise_invalidate()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            Assert.NotNull(currentFolder);
+
             var folderPath = Path.Combine(currentFolder, "Images");
             var fileSystem = new FileSystem();
 
@@ -160,9 +166,9 @@ namespace GravatarTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
-        public async Task DeleteImage_should_exit_if_filename_not_supplied(string fileName)
+        public void DeleteImage_should_throw_if_filename_not_supplied(string fileName)
         {
-            await _cache.DeleteImageAsync(fileName);
+            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.DeleteImageAsync(fileName));
 
             _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
@@ -215,11 +221,10 @@ namespace GravatarTests
         }
 
         [Test]
-        public async Task GetImage_return_null_if_filename_not_supplied()
+        public void GetImage_throws_if_filename_not_supplied()
         {
-            var image = await _cache.GetImageAsync(null);
+            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(null));
 
-            image.Should().BeNull();
             _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
 
