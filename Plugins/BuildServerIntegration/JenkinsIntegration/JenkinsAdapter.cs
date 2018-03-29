@@ -137,7 +137,7 @@ namespace JenkinsIntegration
                 t = null;
             }
 
-            if (t.IsNotNullOrWhitespace())
+            if (t.IsNotNullOrWhitespace() && !cancellationToken.IsCancellationRequested)
             {
                 JObject jobDescription = JObject.Parse(t);
                 if (jobDescription["builds"] != null)
@@ -187,9 +187,12 @@ namespace JenkinsIntegration
 
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task.Run(
-                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
+            return Observable.Create<BuildInfo>(
+                async (observer, cancellationToken) =>
+                {
+                    await TaskScheduler.Default;
+                    return scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken));
+                });
         }
 
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
@@ -377,74 +380,58 @@ namespace JenkinsIntegration
             }
         }
 
-        private Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
+        private async Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-                .ContinueWith(
-                    task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
-                    cancellationToken,
-                    TaskContinuationOptions.AttachedToParent,
-                    TaskScheduler.Current)
-                .Unwrap();
-        }
+            var response = await _httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
-        private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
-        {
-            if (!task.IsCompleted)
+            return await GetStreamFromHttpResponseAsync(response);
+
+            async Task<Stream> GetStreamFromHttpResponseAsync(HttpResponseMessage resp)
             {
-                throw new InvalidOperationException($"Task in state '{task.Status}' was expected to be completed.");
-            }
+                bool unauthorized = resp.StatusCode == HttpStatusCode.Unauthorized;
 
-            bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
-                                task.CompletedResult().StatusCode == HttpStatusCode.Unauthorized;
-
-            if (task.IsFaulted || task.IsCanceled)
-            {
-                // No results for this task
-                return null;
-            }
-
-            if (task.CompletedResult().IsSuccessStatusCode)
-            {
-                var httpContent = task.CompletedResult().Content;
-
-                if (httpContent.Headers.ContentType.MediaType == "text/html")
+                if (resp.IsSuccessStatusCode)
                 {
-                    // Jenkins responds with an HTML login page when guest access is denied.
+                    var httpContent = resp.Content;
+
+                    if (httpContent.Headers.ContentType.MediaType == "text/html")
+                    {
+                        // Jenkins responds with an HTML login page when guest access is denied.
+                        unauthorized = true;
+                    }
+                    else
+                    {
+                        return await httpContent.ReadAsStreamAsync();
+                    }
+                }
+                else if (resp.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // The url does not exist, no jobs to retrieve
+                    return null;
+                }
+                else if (resp.StatusCode == HttpStatusCode.Forbidden)
+                {
                     unauthorized = true;
                 }
-                else
+
+                if (unauthorized)
                 {
-                    return httpContent.ReadAsStreamAsync();
-                }
-            }
-            else if (task.CompletedResult().StatusCode == HttpStatusCode.NotFound)
-            {
-                // The url does not exist, no jobs to retrieve
-                return null;
-            }
-            else if (task.CompletedResult().StatusCode == HttpStatusCode.Forbidden)
-            {
-                unauthorized = true;
-            }
+                    var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
 
-            if (unauthorized)
-            {
-                var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
+                    if (buildServerCredentials != null)
+                    {
+                        UpdateHttpClientOptions(buildServerCredentials);
 
-                if (buildServerCredentials != null)
-                {
-                    UpdateHttpClientOptions(buildServerCredentials);
+                        return await GetStreamAsync(restServicePath, cancellationToken);
+                    }
 
-                    return GetStreamAsync(restServicePath, cancellationToken);
+                    throw new OperationCanceledException(resp.ReasonPhrase);
                 }
 
-                throw new OperationCanceledException(task.CompletedResult().ReasonPhrase);
+                throw new HttpRequestException(resp.ReasonPhrase);
             }
-
-            throw new HttpRequestException(task.CompletedResult().ReasonPhrase);
         }
 
         private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)
@@ -455,26 +442,15 @@ namespace JenkinsIntegration
                 ? null : CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
         }
 
-        private Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)
+        private async Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)
         {
-            var getStreamTask = GetStreamAsync(relativePath, cancellationToken);
-
-            return getStreamTask.ContinueWith(
-                task =>
+            using (var responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false))
+            {
+                using (var reader = new StreamReader(responseStream))
                 {
-                    if (task.Status != TaskStatus.RanToCompletion)
-                    {
-                        return string.Empty;
-                    }
-
-                    using (var responseStream = task.Result)
-                    {
-                        return new StreamReader(responseStream).ReadToEnd();
-                    }
-                },
-                cancellationToken,
-                TaskContinuationOptions.AttachedToParent,
-                TaskScheduler.Current);
+                    return await reader.ReadToEndAsync();
+                }
+            }
         }
 
         private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)
