@@ -18,15 +18,22 @@ namespace Gravatar
     /// </remarks>
     public sealed class MruImageCache : IImageCache
     {
-        private const int CleanAtSize = 30;
-        private const int CleanToSize = 25;
+        private readonly int _cleanAtSize;
+        private readonly int _cleanToSize;
 
         private readonly ConcurrentDictionary<string, Entry> _entryByFileName = new ConcurrentDictionary<string, Entry>();
         private readonly IImageCache _inner;
 
-        public MruImageCache([NotNull] IImageCache inner)
+        public MruImageCache([NotNull] IImageCache inner, int cleanAtSize = 30, int cleanToSize = 25)
         {
+            if (cleanToSize >= cleanAtSize)
+            {
+                throw new ArgumentException($"{nameof(cleanAtSize)} must be less than {nameof(cleanToSize)}.");
+            }
+
             _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+            _cleanToSize = cleanToSize;
+            _cleanAtSize = cleanAtSize;
         }
 
         event EventHandler IImageCache.Invalidated
@@ -81,7 +88,14 @@ namespace Gravatar
                 return entry.Image;
             }
 
-            return _inner.GetImage(imageFileName);
+            var image = _inner.GetImage(imageFileName);
+
+            if (image != null)
+            {
+                UpdateEntry(imageFileName, image);
+            }
+
+            return image;
         }
 
         async Task<Image> IImageCache.GetImageAsync(string imageFileName)
@@ -99,7 +113,10 @@ namespace Gravatar
 
             var image = await _inner.GetImageAsync(imageFileName);
 
-            UpdateEntry(imageFileName, image);
+            if (image != null)
+            {
+                UpdateEntry(imageFileName, image);
+            }
 
             return image;
         }
@@ -118,24 +135,19 @@ namespace Gravatar
 
             _entryByFileName[imageFileName] = new Entry(imageFileName, image);
 
-            if (_entryByFileName.Count > CleanAtSize)
+            if (_entryByFileName.Count > _cleanAtSize)
             {
                 RemoveOldEntries();
             }
 
             void RemoveOldEntries()
             {
-                var sortedEntries = new SortedList<DateTime, Entry>(_entryByFileName.Count);
-
                 // Build list of all entries, sorted by their last access times
-                foreach (var entry in _entryByFileName.Values)
-                {
-                    sortedEntries.Add(entry.LastAccesedAt, entry);
-                }
+                var sortedEntries = _entryByFileName.Values.OrderBy(e => e.LastAccesedAt).ToList();
 
                 // The first items in that sorted list are the oldest ones.
                 // Take as many as we need to remove, and remove them from the dictionary.
-                foreach (var entry in sortedEntries.Values.Take(_entryByFileName.Count - CleanToSize))
+                foreach (var entry in sortedEntries.Take(_entryByFileName.Count - _cleanToSize))
                 {
                     _entryByFileName.TryRemove(entry.FileName, out _);
                 }

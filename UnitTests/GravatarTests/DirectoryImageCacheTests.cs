@@ -221,6 +221,14 @@ namespace GravatarTests
         }
 
         [Test]
+        public void GetImageAsync_throws_if_filename_not_supplied()
+        {
+            Assert.Throws<ArgumentException>(() => _cache.GetImage(null));
+
+            _ = _fileInfo.DidNotReceive().LastWriteTime;
+        }
+
+        [Test]
         public void GetImage_throws_if_filename_not_supplied()
         {
             Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(null));
