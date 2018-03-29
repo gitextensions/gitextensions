@@ -5,6 +5,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Gravatar
 {
@@ -13,18 +14,22 @@ namespace Gravatar
         /// <summary>
         /// Loads avatar either from the local cache or from the remote service.
         /// </summary>
-        Task<Image> GetAvatarAsync(string email, int imageSize, string defaultImageType);
+        [NotNull]
+        [ItemNotNull]
+        Task<Image> GetAvatarAsync([NotNull] string email, int imageSize, [NotNull] string defaultImageType);
 
         /// <summary>
         /// Removes the avatar from the local cache.
         /// </summary>
-        Task DeleteAvatarAsync(string email);
+        [NotNull]
+        Task DeleteAvatarAsync([NotNull] string email);
 
         /// <summary>
         /// Translates the serialised image type into the corresponding enum value.
         /// </summary>
         /// <param name="imageType">The serialised image type.</param>
-        DefaultImageType GetDefaultImageType(string imageType);
+        /// <exception cref="ArgumentNullException"><paramref name="imageType"/> is <c>null</c>.</exception>
+        DefaultImageType GetDefaultImageType([NotNull] string imageType);
     }
 
     public class GravatarService : IAvatarService
@@ -45,11 +50,18 @@ namespace Gravatar
         {
         }
 
-        /// <summary>
-        /// Loads avatar either from the local cache or from the remote service.
-        /// </summary>
-        public async Task<Image> GetAvatarAsync(string email, int imageSize, string defaultImageType)
+        async Task<Image> IAvatarService.GetAvatarAsync(string email, int imageSize, string defaultImageType)
         {
+            if (email == null)
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
+            if (defaultImageType == null)
+            {
+                throw new ArgumentNullException(nameof(defaultImageType));
+            }
+
             var imageFileName = _avatarImageNameProvider.Get(email);
 
             var image = await _cache.GetImageAsync(imageFileName);
@@ -62,7 +74,7 @@ namespace Gravatar
                 }
                 else
                 {
-                    image = await LoadFromGravatarAsync(email, imageSize, GetDefaultImageType(defaultImageType));
+                    image = await LoadFromGravatarAsync(email, imageSize, ((IAvatarService)this).GetDefaultImageType(defaultImageType));
                 }
 
                 // Store image to cache for future
@@ -72,21 +84,25 @@ namespace Gravatar
             return image;
         }
 
-        /// <summary>
-        /// Removes the avatar from the local cache.
-        /// </summary>
-        public async Task DeleteAvatarAsync(string email)
+        async Task IAvatarService.DeleteAvatarAsync(string email)
         {
+            if (email == null)
+            {
+                throw new ArgumentNullException(nameof(email));
+            }
+
             var imageFileName = _avatarImageNameProvider.Get(email);
+
             await _cache.DeleteImageAsync(imageFileName);
         }
 
-        /// <summary>
-        /// Translates the serialised image type into the corresponding enum value.
-        /// </summary>
-        /// <param name="imageType">The serialised image type.</param>
-        public DefaultImageType GetDefaultImageType(string imageType)
+        DefaultImageType IAvatarService.GetDefaultImageType(string imageType)
         {
+            if (imageType == null)
+            {
+                throw new ArgumentNullException(nameof(imageType));
+            }
+
             if (!Enum.TryParse(imageType, true, out DefaultImageType defaultImageType))
             {
                 defaultImageType = DefaultImageType.None;
