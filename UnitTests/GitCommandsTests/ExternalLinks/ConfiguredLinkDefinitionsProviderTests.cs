@@ -58,7 +58,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void Get_should_throw_if_data_null()
         {
-            ((Action)(() => _provider.Get(null))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _provider.Get(null))).Should().Throw<ArgumentNullException>();
         }
 
         [Test]

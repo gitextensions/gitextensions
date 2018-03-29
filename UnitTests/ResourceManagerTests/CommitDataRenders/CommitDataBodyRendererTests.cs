@@ -34,7 +34,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_throw_if_data_null()
         {
-            ((Action)(() => _renderer.Render(null, true))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _renderer.Render(null, true))).Should().Throw<ArgumentNullException>();
         }
 
         [Test]

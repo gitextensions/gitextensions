@@ -22,7 +22,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void ReplacementToken_cant_be_multichar()
         {
-            ((Action)(() => new GitBranchNameOptions("aaa"))).ShouldThrow<ArgumentOutOfRangeException>()
+            ((Action)(() => new GitBranchNameOptions("aaa"))).Should().Throw<ArgumentOutOfRangeException>()
                 .WithMessage("Replacement token must be a single character\r\nParameter name: replacementToken");
         }
 
@@ -32,7 +32,7 @@ namespace GitCommandsTests.Git
         [TestCase(":", ':')]
         public void ReplacementToken_cant_be_invalid(string token, char expected)
         {
-            ((Action)(() => new GitBranchNameOptions(token))).ShouldThrow<ArgumentOutOfRangeException>()
+            ((Action)(() => new GitBranchNameOptions(token))).Should().Throw<ArgumentOutOfRangeException>()
                 .WithMessage(string.Format("Replacement token invalid: '{0}'\r\nParameter name: replacementToken", expected));
         }
     }

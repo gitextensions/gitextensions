@@ -41,7 +41,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void Resolve_should_throw_if_path_is_null()
         {
-            ((Action)(() => _resolver.Resolve(null))).ShouldThrow<ArgumentNullException>();
+            ((Action)(() => _resolver.Resolve(null))).Should().Throw<ArgumentNullException>();
         }
 
         [TestCase("")]
