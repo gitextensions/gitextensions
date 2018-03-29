@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;

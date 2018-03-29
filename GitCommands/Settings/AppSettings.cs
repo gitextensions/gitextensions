@@ -1496,7 +1496,7 @@ namespace GitCommands
             return Properties.Settings.Default.IsPortable;
         }
 
-        private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
+        private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
 
@@ -1511,7 +1511,7 @@ namespace GitCommands
 
                 if (value != null)
                 {
-                    yield return Tuple.Create(name, value.ToString());
+                    yield return (name, value.ToString());
                 }
             }
         }

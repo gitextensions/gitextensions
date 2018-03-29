@@ -6,12 +6,14 @@ namespace GitCommands.Statistics
 {
     public static class CommitCounter
     {
-        public static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(IGitModule module)
+        public static (Dictionary<string, int> commitsPerContributor, int totalCommits)
+            GroupAllCommitsByContributor(IGitModule module)
         {
             return GroupAllCommitsByContributor(module, DateTime.MinValue, DateTime.MaxValue);
         }
 
-        private static Tuple<Dictionary<string, int>, int> GroupAllCommitsByContributor(IGitModule module, DateTime since, DateTime until)
+        private static (Dictionary<string, int> commitsPerContributor, int totalCommits)
+            GroupAllCommitsByContributor(IGitModule module, DateTime since, DateTime until)
         {
             var sinceParam = since != DateTime.MinValue ? GetDateParameter(since, "since") : "";
             var untilParam = until != DateTime.MaxValue ? GetDateParameter(since, "until") : "";
@@ -24,8 +26,8 @@ namespace GitCommands.Statistics
             return ParseCommitsPerContributor(unformattedCommitsPerContributor);
         }
 
-        private static Tuple<Dictionary<string, int>, int> ParseCommitsPerContributor(
-            IEnumerable<string> unformattedCommitsPerContributor)
+        private static (Dictionary<string, int> commitsPerContributor, int totalCommits)
+            ParseCommitsPerContributor(IEnumerable<string> unformattedCommitsPerContributor)
         {
             var commitsPerContributor = new Dictionary<string, int>();
             var delimiter = new[] { ' ', '\t' };
@@ -62,7 +64,7 @@ namespace GitCommands.Statistics
                 }
             }
 
-            return Tuple.Create(commitsPerContributor, totalCommits);
+            return (commitsPerContributor, totalCommits);
         }
 
         private static string GetDateParameter(DateTime sinceDate, string paramName)

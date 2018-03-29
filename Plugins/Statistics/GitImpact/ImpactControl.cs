@@ -38,10 +38,10 @@ namespace GitImpact
         private Dictionary<string, SolidBrush> _brushes;
 
         // The changed-lines-labels for each author
-        private Dictionary<string, List<Tuple<PointF, int>>> _lineLabels;
+        private Dictionary<string, List<(PointF point, int size)>> _lineLabels;
 
         // The week-labels
-        private List<Tuple<PointF, DateTime>> _weekLabels;
+        private List<(PointF point, DateTime date)> _weekLabels;
 
         private HScrollBar _scrollBar;
 
@@ -79,8 +79,8 @@ namespace GitImpact
                 _authorStack = new List<string>();
                 _paths = new Dictionary<string, GraphicsPath>();
                 _brushes = new Dictionary<string, SolidBrush>();
-                _lineLabels = new Dictionary<string, List<Tuple<PointF, int>>>();
-                _weekLabels = new List<Tuple<PointF, DateTime>>();
+                _lineLabels = new Dictionary<string, List<(PointF, int)>>();
+                _weekLabels = new List<(PointF, DateTime)>();
             }
         }
 
@@ -305,11 +305,11 @@ namespace GitImpact
                 {
                     Brush brush = Brushes.Gray;
 
-                    foreach (var (point, size) in _weekLabels)
+                    foreach (var (point, date) in _weekLabels)
                     {
-                        SizeF sz = g.MeasureString(size.ToString("dd. MMM yy"), font);
+                        SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
                         PointF pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
-                        g.DrawString(size.ToString("dd. MMM yy"), font, brush, pt);
+                        g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
             }
@@ -326,7 +326,7 @@ namespace GitImpact
         {
             int h_max = 0;
             int x = 0;
-            var author_points_dict = new Dictionary<string, List<Tuple<Rectangle, int>>>();
+            var author_points_dict = new Dictionary<string, List<(Rectangle, int changeCount)>>();
 
             lock (_dataLock)
             {
@@ -348,10 +348,10 @@ namespace GitImpact
                         // Add rectangle to temporary list
                         if (!author_points_dict.ContainsKey(author))
                         {
-                            author_points_dict.Add(author, new List<Tuple<Rectangle, int>>());
+                            author_points_dict.Add(author, new List<(Rectangle, int)>());
                         }
 
-                        author_points_dict[author].Add(Tuple.Create(rc, data.ChangedLines));
+                        author_points_dict[author].Add((rc, data.ChangedLines));
 
                         // Create a new random brush for the author if none exists yet
                         if (!_brushes.ContainsKey(author))
@@ -368,7 +368,7 @@ namespace GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add(Tuple.Create(new PointF(x + (BlockWidth / 2), y), weekDate));
+                    _weekLabels.Add((new PointF(x + (BlockWidth / 2), y), weekDate));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;
@@ -382,9 +382,9 @@ namespace GitImpact
                 {
                     var (point, date) = _weekLabels[i];
 
-                    _weekLabels[i] = Tuple.Create(
-                        new PointF(point.X, point.Y * (float)height_factor),
-                        date);
+                    var adjustedPoint = new PointF(point.X, point.Y * (float)height_factor);
+
+                    _weekLabels[i] = (adjustedPoint, date);
                 }
 
                 // Clear previous paths
@@ -404,20 +404,19 @@ namespace GitImpact
                         var rect = new Rectangle(unscaledRect.Left, (int)(unscaledRect.Top * height_factor),
                             unscaledRect.Width, Math.Max(1, (int)(unscaledRect.Height * height_factor)));
 
-                        points[i] = Tuple.Create(rect, num);
+                        points[i] = (rect, num);
 
                         // Add lines-changed-labels
                         if (!_lineLabels.ContainsKey(author))
                         {
-                            _lineLabels.Add(author, new List<Tuple<PointF, int>>());
+                            _lineLabels.Add(author, new List<(PointF, int)>());
                         }
 
                         if (rect.Height > LinesFontSize * 1.5)
                         {
-                            _lineLabels[author].Add(
-                                Tuple.Create(
-                                    new PointF(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2)),
-                                    num));
+                            var adjustedPoint = new PointF(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2));
+
+                            _lineLabels[author].Add((adjustedPoint, num));
                         }
                     }
 
