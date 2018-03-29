@@ -15,7 +15,6 @@ namespace GitCommands.Repository
     {
         private static AsyncLazy<RepositoryHistory> _repositoryHistory;
         private static RepositoryHistory _remoteRepositoryHistory;
-        private static BindingList<RepositoryCategory> _repositoryCategories;
 
         public static Task<RepositoryHistory> LoadRepositoryHistoryAsync()
         {
@@ -44,7 +43,6 @@ namespace GitCommands.Repository
             }
 
             repositoryHistory.MaxCount = size;
-            AssignRepositoryHistoryFromCategories(repositoryHistory, null);
 
             // migration from old version (move URL history to _remoteRepositoryHistory)
             if (AppSettings.GetString("history remote", null) == null)
@@ -104,50 +102,6 @@ namespace GitCommands.Repository
                 }
 
                 return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory(size));
-            }
-        }
-
-        private static void AssignRepositoryHistoryFromCategories(RepositoryHistory repositoryHistory, string path)
-        {
-            foreach (Repository repo in repositoryHistory.Repositories)
-            {
-                if (path == null || path.Equals(repo.Path, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    Repository catRepo = FindFirstCategoryRepository(repo.Path);
-                    if (catRepo != null)
-                    {
-                        repo.Assign(catRepo);
-                    }
-                }
-            }
-        }
-
-        private static void AssignRepositoryHistoryFromCategories(string path)
-        {
-            AssignRepositoryHistoryFromCategories(RepositoryHistory, path);
-        }
-
-        private static Repository FindFirstCategoryRepository(string path)
-        {
-            return RepositoryCategories
-                .SelectMany(category => category.Repositories)
-                .FirstOrDefault(repo => repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        public static BindingList<RepositoryCategory> RepositoryCategories
-        {
-            get
-            {
-                if (_repositoryCategories == null)
-                {
-                    object setting = AppSettings.GetString("repositories", null);
-                    if (setting != null)
-                    {
-                        _repositoryCategories = DeserializeRepositories(setting.ToString());
-                    }
-                }
-
-                return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>());
             }
         }
 
@@ -264,15 +218,11 @@ namespace GitCommands.Repository
                 AppSettings.SetString("history remote", SerializeHistoryIntoXml(_remoteRepositoryHistory));
             }
 
-            if (_repositoryCategories != null)
-            {
-                AppSettings.SetString("repositories", SerializeRepositories(_repositoryCategories));
-            }
-        }
-
-        public static void AddCategory(string title)
-        {
-            RepositoryCategories.Add(new RepositoryCategory { Description = title });
+            // TODO: address later to provide a migration path
+            //  if (_repositoryCategories != null)
+            //  {
+            //      AppSettings.SetString("repositories", SerializeRepositories(_repositoryCategories));
+            //  }
         }
 
         public static void AddMostRecentRepository(string repo)
@@ -284,7 +234,6 @@ namespace GitCommands.Repository
             else
             {
                 RepositoryHistory.AddMostRecentRepository(repo);
-                AssignRepositoryHistoryFromCategories(repo);
             }
         }
     }

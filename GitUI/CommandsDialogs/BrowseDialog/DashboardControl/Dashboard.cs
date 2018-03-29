@@ -36,12 +36,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComponent();
             Translate();
 
-            RecentRepositories.DashboardItemClick += dashboardItem_Click;
-            RecentRepositories.RepositoryRemoved += RecentRepositories_RepositoryRemoved;
-            RecentRepositories.DisableContextMenu();
-            RecentRepositories.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
-            ////Repositories.RepositoryCategories.ListChanged += new ListChangedEventHandler(RepositoryCategories_ListChanged);
-
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
             {
@@ -55,55 +49,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        private static void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
-        {
-            var repository = e.Repository;
-            if (repository != null)
-            {
-                Repositories.RepositoryHistory.RemoveRepository(repository);
-            }
-        }
-
         private void Dashboard_Load(object sender, EventArgs e)
         {
-            DonateCategory.Dock = DockStyle.Top;
-
-            // Show buttons
-            CommonActions.DisableContextMenu();
-            var openItem = new DashboardItem(Resources.IconRepoOpen, _openRepository.Text);
-            openItem.Click += openItem_Click;
-            CommonActions.AddItem(openItem);
-
-            var cloneItem = new DashboardItem(Resources.IconCloneRepoGit, _cloneRepository.Text);
-            cloneItem.Click += cloneItem_Click;
-            CommonActions.AddItem(cloneItem);
-
-            foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
-            {
-                IRepositoryHostPlugin gitHoster = el;
-                var di = new DashboardItem(Resources.IconCloneRepoGithub, string.Format(_cloneFork.Text, el.Description));
-                di.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
-                CommonActions.AddItem(di);
-            }
-
-            var createItem = new DashboardItem(Resources.IconRepoCreate, _createRepository.Text);
-            createItem.Click += createItem_Click;
-            CommonActions.AddItem(createItem);
-
-            DonateCategory.DisableContextMenu();
-            var gitHubItem = new DashboardItem(Resources.develop.ToBitmap(), _develop.Text);
-            gitHubItem.Click += GitHubItem_Click;
-            DonateCategory.AddItem(gitHubItem);
-            var donateItem = new DashboardItem(Resources.dollar.ToBitmap(), _donate.Text);
-            donateItem.Click += DonateItem_Click;
-            DonateCategory.AddItem(donateItem);
-            var translateItem = new DashboardItem(Resources.EditItem, _translate.Text);
-            translateItem.Click += TranslateItem_Click;
-            DonateCategory.AddItem(translateItem);
-            var issuesItem = new DashboardItem(Resources.bug, _issues.Text);
-            issuesItem.Click += IssuesItem_Click;
-            DonateCategory.AddItem(issuesItem);
-
             //
             // create Show current branch menu item and add to Dashboard menu
             //
@@ -163,16 +110,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void AddDashboardEntry(RepositoryCategory entry)
         {
-            var dashboardCategory = new DashboardCategory(entry.Description, entry);
-            groupLayoutPanel.Controls.Add(dashboardCategory);
-
-            dashboardCategory.DashboardItemClick += dashboardItem_Click;
-            dashboardCategory.DashboardCategoryChanged += dashboardCategory_DashboardCategoryChanged;
-        }
-
-        private void dashboardCategory_DashboardCategoryChanged(object sender, EventArgs e)
-        {
-            Refresh();
         }
 
         public override void Refresh()
@@ -191,23 +128,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // Make sure the dashboard is only initialized once
             if (!_initialized)
             {
-                // Remove favorites
-                var categories = (from DashboardCategory i in groupLayoutPanel.Controls
-                                  select i).ToList();
-                groupLayoutPanel.Controls.Clear();
-                foreach (var category in categories)
-                {
-                    category.DashboardCategoryChanged -= dashboardCategory_DashboardCategoryChanged;
-                    category.DashboardItemClick -= dashboardItem_Click;
-                    category.Clear();
-                }
-
-                // Show favorites
-                foreach (var category in Repositories.RepositoryCategories)
-                {
-                    AddDashboardEntry(category);
-                }
-
                 _initialized = true;
             }
 
@@ -215,24 +135,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             commonSplitContainer.Panel2MinSize = 1;
             splitContainer7.Panel1MinSize = 1;
             splitContainer7.Panel2MinSize = 1;
-
-            RecentRepositories.Clear();
-
-            var filteredRecentRepositoryHistory = new RepositoryCategory
-            {
-                Description = Repositories.RepositoryHistory.Description
-            };
-
-            foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
-            {
-                if (!Repositories.RepositoryCategories.Any(c => c.Repositories.Any(r => r.Path != null && r.Path.Equals(repository.Path, StringComparison.CurrentCultureIgnoreCase))))
-                {
-                    repository.RepositoryType = RepositoryType.History;
-                    filteredRecentRepositoryHistory.Repositories.Add(repository);
-                }
-            }
-
-            RecentRepositories.RepositoryCategory = filteredRecentRepositoryHistory;
 
             pictureBox1.BringToFront();
         }
@@ -247,103 +149,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void SetSplitterPositions()
         {
-            _splitterManager.AddSplitter(commonSplitContainer, "commonSplitContainer", Math.Max(2, (int)(CommonActions.Height * 1.2)));
-            _splitterManager.AddSplitter(splitContainer7, "splitContainer7", Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
             _splitterManager.AddSplitter(mainSplitContainer, "mainSplitContainer", 315);
             _splitterManager.RestoreSplitters();
         }
 
-        private static void TranslateItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
-        }
-
-        private static void GitHubItem_Click(object sender, EventArgs e)
-        {
-            Process.Start(@"http://github.com/gitextensions/gitextensions");
-        }
-
-        private static void IssuesItem_Click(object sender, EventArgs e)
-        {
-            Process.Start(@"http://github.com/gitextensions/gitextensions/issues");
-        }
-
-        private void dashboardItem_Click(object sender, EventArgs e)
-        {
-            if (!(sender is DashboardItem label) || string.IsNullOrEmpty(label.Path))
-            {
-                return;
-            }
-
-            // Open urls in browser, but open directories in GitExtensions
-            if (Regex.IsMatch(label.Path,
-                              @"^(?#Protocol)(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?#Username:Password)(?:\w+:\w+@)?(?#Subdomains)(?:(?:[-\w]+\.)+(?#TopLevel Domains)(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum|travel|[a-z]{2}))(?#Port)(?::[\d]{1,5})?(?#Directories)(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?#Query)(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?#Anchor)(?:#(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)?$"))
-            {
-                Process.Start(label.Path);
-            }
-            else
-            {
-                OpenPath(label.Path);
-            }
-        }
-
-        private void OpenPath(string path)
-        {
-            GitModule module = new GitModule(path);
-
-            if (!module.IsValidGitWorkingDir())
-            {
-                DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
-                    _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                if (dialogResult == DialogResult.Cancel)
-                {
-                    return;
-                }
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    Repositories.RepositoryHistory.RemoveRecentRepository(path);
-                    Refresh();
-                    return;
-                }
-            }
-
-            Repositories.AddMostRecentRepository(module.WorkingDir);
-            OnModuleChanged(this, new GitModuleEventArgs(module));
-        }
-
-        private void openItem_Click(object sender, EventArgs e)
-        {
-            GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
-            if (module != null)
-            {
-                OnModuleChanged(this, new GitModuleEventArgs(module));
-            }
-        }
-
-        private void cloneItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
-        }
-
-        private void createItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
-        }
-
-        private static void DonateItem_Click(object sender, EventArgs e)
-        {
-            Process.Start(FormDonate.DonationUrl);
-        }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormDashboardEditor())
-            {
-                frm.ShowDialog(this);
-            }
-
             Refresh();
         }
 

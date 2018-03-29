@@ -654,18 +654,6 @@
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.Designer.cs">
-      <DependentUpon>DashboardCategory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.Designer.cs">
-      <DependentUpon>DashboardEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -887,12 +875,6 @@
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.Designer.cs">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.Designer.cs">
-      <DependentUpon>FormDashboardEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormDeleteBranch.cs">
       <SubType>Form</SubType>
@@ -1359,14 +1341,6 @@
       <DependentUpon>Dashboard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.resx">
-      <DependentUpon>DashboardCategory.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.resx">
-      <DependentUpon>DashboardEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.resx">
       <DependentUpon>DashboardItem.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1502,10 +1476,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.resx">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.resx">
-      <DependentUpon>FormDashboardEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormDeleteBranch.resx">
