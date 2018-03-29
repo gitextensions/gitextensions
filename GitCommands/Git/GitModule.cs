@@ -8,7 +8,6 @@ using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
