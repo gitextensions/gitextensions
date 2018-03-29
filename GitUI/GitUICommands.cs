@@ -309,7 +309,7 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IEnumerable<string> selectedFiles = null)
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IReadOnlyList<string> selectedFiles = null)
         {
             bool Action()
             {

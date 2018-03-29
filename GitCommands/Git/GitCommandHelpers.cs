@@ -581,7 +581,7 @@ namespace GitCommands
             return args.ToString();
         }
 
-        public static string StashSaveCmd(bool untracked, bool keepIndex, string message, IEnumerable<string> selectedFiles)
+        public static string StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
         {
             var isPartialStash = selectedFiles != null && selectedFiles.Any();
 
