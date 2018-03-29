@@ -2784,7 +2784,6 @@ namespace GitUI.CommandsDialogs
                         _terminal = new ConEmuControl
                         {
                             Dock = DockStyle.Fill,
-                            AutoStartInfo = null,
                             IsStatusbarVisible = false
                         });
                 }
@@ -2871,7 +2870,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                _terminal.Start(startinfo);
+                _terminal.Start(startinfo, ThreadHelper.JoinableTaskFactory);
             };
         }
 
@@ -2909,10 +2908,10 @@ namespace GitUI.CommandsDialogs
             // Clear terminal line by sending 'backspace' characters
             for (int i = 0; i < 10000; i++)
             {
-                _terminal.RunningSession.WriteInputText("\b");
+                _terminal.RunningSession.WriteInputTextAsync("\b");
             }
 
-            _terminal.RunningSession.WriteInputText(command + Environment.NewLine);
+            _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
         }
 
         /// <summary>
