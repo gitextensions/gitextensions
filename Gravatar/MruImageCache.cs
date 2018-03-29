@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Gravatar
 {
@@ -23,9 +24,9 @@ namespace Gravatar
         private readonly ConcurrentDictionary<string, Entry> _entryByFileName = new ConcurrentDictionary<string, Entry>();
         private readonly IImageCache _inner;
 
-        public MruImageCache(IImageCache inner)
+        public MruImageCache([NotNull] IImageCache inner)
         {
-            _inner = inner;
+            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
         }
 
         event EventHandler IImageCache.Invalidated
@@ -36,6 +37,16 @@ namespace Gravatar
 
         void IImageCache.AddImage(string imageFileName, Image image)
         {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             _inner.AddImage(imageFileName, image);
             UpdateEntry(imageFileName, image);
         }
@@ -48,12 +59,22 @@ namespace Gravatar
 
         Task IImageCache.DeleteImageAsync(string imageFileName)
         {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
             _entryByFileName.TryRemove(imageFileName, out _);
             return _inner.DeleteImageAsync(imageFileName);
         }
 
         Image IImageCache.GetImage(string imageFileName)
         {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
             if (_entryByFileName.TryGetValue(imageFileName, out var entry))
             {
                 entry.LastAccesedAt = DateTime.UtcNow;
@@ -65,6 +86,11 @@ namespace Gravatar
 
         async Task<Image> IImageCache.GetImageAsync(string imageFileName)
         {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
             if (_entryByFileName.TryGetValue(imageFileName, out var entry))
             {
                 entry.LastAccesedAt = DateTime.UtcNow;
@@ -78,8 +104,18 @@ namespace Gravatar
             return image;
         }
 
-        private void UpdateEntry(string imageFileName, Image image)
+        private void UpdateEntry([NotNull] string imageFileName, [NotNull] Image image)
         {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
             _entryByFileName[imageFileName] = new Entry(imageFileName, image);
 
             if (_entryByFileName.Count > CleanAtSize)
@@ -108,11 +144,11 @@ namespace Gravatar
 
         private sealed class Entry
         {
-            public string FileName { get; }
-            public Image Image { get; }
+            [NotNull] public string FileName { get; }
+            [NotNull] public Image Image { get; }
             public DateTime LastAccesedAt { get; set; }
 
-            public Entry(string fileName, Image image)
+            public Entry([NotNull] string fileName, [NotNull] Image image)
             {
                 FileName = fileName;
                 Image = image;
