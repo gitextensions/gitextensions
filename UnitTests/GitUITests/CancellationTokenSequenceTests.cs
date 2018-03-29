@@ -5,12 +5,12 @@ using NUnit.Framework;
 namespace GitUITests
 {
     [TestFixture]
-    public sealed class CancellableSequenceTests
+    public sealed class CancellationTokenSequenceTests
     {
         [Test]
         public void Next_cancels_previous_token()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             var token1 = sequence.Next();
 
@@ -25,7 +25,7 @@ namespace GitUITests
         [Test]
         public void Next_throws_if_disposed()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             sequence.Dispose();
 
@@ -35,13 +35,13 @@ namespace GitUITests
         [Test]
         public void Cancel_cancels_previous_token()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             var token = sequence.Next();
 
             Assert.False(token.IsCancellationRequested);
 
-            sequence.Cancel();
+            sequence.CancelCurrent();
 
             Assert.True(token.IsCancellationRequested);
         }
@@ -49,30 +49,30 @@ namespace GitUITests
         [Test]
         public void Cancel_is_idempotent()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             var token = sequence.Next();
 
             Assert.False(token.IsCancellationRequested);
 
-            sequence.Cancel();
-            sequence.Cancel();
-            sequence.Cancel();
-            sequence.Cancel();
+            sequence.CancelCurrent();
+            sequence.CancelCurrent();
+            sequence.CancelCurrent();
+            sequence.CancelCurrent();
         }
 
         [Test]
         public void Cancel_does_not_throw_if_no_token_yet_issued()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
-            sequence.Cancel();
+            sequence.CancelCurrent();
         }
 
         [Test]
         public void Dispose_cancels_previous_token()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             var token = sequence.Next();
 
@@ -86,7 +86,7 @@ namespace GitUITests
         [Test]
         public void Dispose_is_idempotent()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             sequence.Next();
 
@@ -99,7 +99,7 @@ namespace GitUITests
         [Test]
         public void Dispose_does_not_throw_if_no_token_yet_issued()
         {
-            var sequence = new CancellableSequence();
+            var sequence = new CancellationTokenSequence();
 
             sequence.Dispose();
         }

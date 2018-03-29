@@ -63,7 +63,7 @@ namespace GitCommands.Statistics
             public DataPoint data;
         }
 
-        private readonly CancellableSequence _cancellableSequence = new CancellableSequence();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IGitModule _module;
 
         public ImpactLoader(IGitModule module)
@@ -82,18 +82,18 @@ namespace GitCommands.Statistics
             if (disposing)
             {
                 Stop();
-                _cancellableSequence.Dispose();
+                _cancellationTokenSequence.Dispose();
             }
         }
 
         public void Stop()
         {
-            _cancellableSequence.Cancel();
+            _cancellationTokenSequence.CancelCurrent();
         }
 
         public void Execute()
         {
-            var token = _cancellableSequence.Next();
+            var token = _cancellationTokenSequence.Next();
 
             JoinableTask[] tasks = GetTasks(token);
 

@@ -39,7 +39,7 @@ namespace GitCommands
 
         public event EventHandler<AsyncErrorEventArgs> LoadingError;
 
-        private readonly CancellableSequence _cancellationSequence = new CancellableSequence();
+        private readonly CancellationTokenSequence _cancellationSequence = new CancellationTokenSequence();
 
         private int _disposed;
 
@@ -170,7 +170,7 @@ namespace GitCommands
                 throw new ObjectDisposedException(nameof(AsyncLoader));
             }
 
-            _cancellationSequence.Cancel();
+            _cancellationSequence.CancelCurrent();
         }
 
         public void Dispose()

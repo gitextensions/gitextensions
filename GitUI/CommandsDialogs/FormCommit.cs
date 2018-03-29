@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs
         private bool _shouldReloadCommitTemplates = true;
         private readonly AsyncLoader _unstagedLoader;
         private readonly bool _useFormCommitMessage;
-        private readonly CancellableSequence _interactiveAddSequence = new CancellableSequence();
+        private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
         private string _userName = "";
         private string _userEmail = "";
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));

@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
 
-        private readonly CancellableSequence _submodulesStatusSequence = new CancellableSequence();
+        private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private BuildReportTabPageExtension _buildReportTabPageExtension;
         private string _diffTabPageTitleBase = "";
 
