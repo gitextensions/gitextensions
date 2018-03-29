@@ -54,6 +54,10 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\PSTaskDialog.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\ResourceManager.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.VisualStudio.Threading.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.VisualStudio.Validation.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
