@@ -8,6 +8,7 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using Gravatar;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -37,6 +38,7 @@ namespace GitUI
             _gravatarService = new GravatarService(_avatarCache);
         }
 
+        [CanBeNull]
         [Browsable(false)]
         public string Email { get; private set; }
 
@@ -69,24 +71,34 @@ namespace GitUI
 
             Size = _gravatarImg.Size = size;
 
-            if (!AppSettings.ShowAuthorGravatar || string.IsNullOrEmpty(Email))
+            var email = Email;
+
+            if (!AppSettings.ShowAuthorGravatar || string.IsNullOrWhiteSpace(email))
             {
                 RefreshImage(Resources.User);
                 return;
             }
 
-            var image = await _gravatarService.GetAvatarAsync(Email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
+            // TODO protect against out-of-order results here
+            var image = await _gravatarService.GetAvatarAsync(email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
 
             RefreshImage(image);
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
+            var email = Email;
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return;
+            }
+
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(
                     async () =>
                     {
-                        await _gravatarService.DeleteAvatarAsync(Email).ConfigureAwait(true);
+                        await _gravatarService.DeleteAvatarAsync(email).ConfigureAwait(true);
                         await UpdateGravatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();

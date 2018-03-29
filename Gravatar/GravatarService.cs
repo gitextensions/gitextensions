@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;

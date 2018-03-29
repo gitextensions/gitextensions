@@ -51,9 +51,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 gravatar = Resources.User;
 
                 // kick off download operation, will likely display the avatar during the next round of repaint
-                _gravatarService
-                    .GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType)
-                    .FileAndForget();
+                if (!string.IsNullOrWhiteSpace(revision.AuthorEmail))
+                {
+                    _gravatarService
+                        .GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType)
+                        .FileAndForget();
+                }
             }
 
             Column.Width = e.CellBounds.Height;
