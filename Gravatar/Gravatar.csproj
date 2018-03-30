@@ -67,6 +67,7 @@
     <Compile Include="DefaultImageType.cs" />
     <Compile Include="GravatarService.cs" />
     <Compile Include="IImageCache.cs" />
+    <Compile Include="MruCache.cs" />
     <Compile Include="MruImageCache.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace GravatarTests
 {
     [TestFixture]
-    public class MruImageCacheTests : IDisposable
+    public sealed class MruImageCacheTests : IDisposable
     {
         private readonly Image _img1 = new Bitmap(16, 16);
         private readonly Image _img2 = new Bitmap(16, 16);
@@ -33,7 +33,7 @@ namespace GravatarTests
             _inner.GetImageAsync("img3").Returns(Task.FromResult(_img3));
             _inner.GetImageAsync("img4").Returns(Task.FromResult(_img4));
 
-            _cache = new MruImageCache(_inner, cleanAtSize: 3, cleanToSize: 1);
+            _cache = new MruImageCache(_inner, capacity: 3);
         }
 
         public void Dispose()
