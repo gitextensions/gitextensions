@@ -16,7 +16,7 @@ namespace GitUI
     public partial class GravatarControl : GitExtensionsControl
     {
         private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _gravatarService;
+        private readonly IAvatarService _avatarService;
 
         public GravatarControl()
         {
@@ -35,7 +35,7 @@ namespace GitUI
             // And in memory...
             _avatarCache = new MruImageCache(persistentCache);
 
-            _gravatarService = new GravatarService(_avatarCache);
+            _avatarService = new AvatarService(_avatarCache);
         }
 
         [CanBeNull]
@@ -80,7 +80,7 @@ namespace GitUI
             }
 
             // TODO protect against out-of-order results here
-            var image = await _gravatarService.GetAvatarAsync(email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
+            var image = await _avatarService.GetAvatarAsync(email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
 
             RefreshImage(image);
         }
@@ -98,7 +98,7 @@ namespace GitUI
                 .RunAsync(
                     async () =>
                     {
-                        await _gravatarService.DeleteAvatarAsync(email).ConfigureAwait(true);
+                        await _avatarService.DeleteAvatarAsync(email).ConfigureAwait(true);
                         await UpdateGravatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();
@@ -149,7 +149,7 @@ namespace GitUI
 
         private void noImageGeneratorToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            var defaultImageType = _gravatarService.GetDefaultImageType(AppSettings.GravatarDefaultImageType);
+            var defaultImageType = _avatarService.GetDefaultImageType(AppSettings.GravatarDefaultImageType);
             ToolStripMenuItem selectedItem = null;
             foreach (ToolStripMenuItem menu in noImageGeneratorToolStripMenuItem.DropDownItems)
             {
