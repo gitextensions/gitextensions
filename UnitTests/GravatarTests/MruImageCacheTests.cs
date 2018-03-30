@@ -67,7 +67,7 @@ namespace GravatarTests
         [TestCase("\t")]
         public void AddImage_throws_if_filename_not_supplied(string fileName)
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(fileName));
+            Assert.ThrowsAsync<ArgumentException>(() => _cache.GetImageAsync(fileName));
         }
 
         [Test]
@@ -206,7 +206,7 @@ namespace GravatarTests
         [Test]
         public void GetImageAsync_throws_if_filename_not_supplied()
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(null));
+            Assert.ThrowsAsync<ArgumentException>(() => _cache.GetImageAsync(null));
         }
 
         [Test]
@@ -248,7 +248,7 @@ namespace GravatarTests
         [TestCase("\t")]
         public void DeleteImage_should_throw_if_filename_not_supplied(string fileName)
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.DeleteImageAsync(fileName));
+            Assert.ThrowsAsync<ArgumentException>(() => _cache.DeleteImageAsync(fileName));
         }
     }
 }
