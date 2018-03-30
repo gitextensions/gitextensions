@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
+using Microsoft.Win32.SafeHandles;
 
 namespace GitUI
 {
@@ -17,30 +20,27 @@ namespace GitUI
 
         static DpiUtil()
         {
-            var hdc = GetDC(IntPtr.Zero);
-
-            try
+            using (var hdc = GetDC(IntPtr.Zero))
             {
-                const int LOGPIXELSX = 88;
-                const int LOGPIXELSY = 90;
+                try
+                {
+                    const int LOGPIXELSX = 88;
+                    const int LOGPIXELSY = 90;
 
-                DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
-                DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+                    DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
+                    DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
 
-                ScaleX = DpiX / 96.0;
-                ScaleY = DpiY / 96.0;
-            }
-            catch
-            {
-                DpiX = 96;
-                DpiY = 96;
+                    ScaleX = DpiX / 96.0;
+                    ScaleY = DpiY / 96.0;
+                }
+                catch
+                {
+                    DpiX = 96;
+                    DpiY = 96;
 
-                ScaleX = 1.0;
-                ScaleY = 1.0;
-            }
-            finally
-            {
-                ReleaseDC(IntPtr.Zero, hdc);
+                    ScaleX = 1.0;
+                    ScaleY = 1.0;
+                }
             }
         }
 
@@ -70,12 +70,31 @@ namespace GitUI
         }
 
         [DllImport("gdi32.dll")]
-        private static extern int GetDeviceCaps(IntPtr hdc, int index);
+        private static extern int GetDeviceCaps(DeviceContextSafeHandle hdc, int index);
 
         [DllImport("user32.dll")]
-        private static extern IntPtr GetDC(IntPtr hwnd);
+        private static extern DeviceContextSafeHandle GetDC(IntPtr hwnd);
 
         [DllImport("user32.dll")]
         private static extern int ReleaseDC(IntPtr hwnd, IntPtr deviceContextHandle);
+
+        [UsedImplicitly]
+        private sealed class DeviceContextSafeHandle : SafeHandleZeroOrMinusOneIsInvalid
+        {
+            /// <summary>
+            /// Called by P/Invoke.
+            /// </summary>
+            public DeviceContextSafeHandle()
+                : base(ownsHandle: true)
+            {
+            }
+
+            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+            protected override bool ReleaseHandle()
+            {
+                ReleaseDC(IntPtr.Zero, handle);
+                return true;
+            }
+        }
     }
 }
