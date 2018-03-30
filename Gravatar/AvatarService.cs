@@ -33,20 +33,20 @@ namespace Gravatar
         DefaultImageType GetDefaultImageType([NotNull] string imageType);
     }
 
-    public class GravatarService : IAvatarService
+    public sealed class AvatarService : IAvatarService
     {
         private readonly IImageCache _cache;
         private readonly IImageNameProvider _avatarImageNameProvider;
 
         private const string GitHubPrivateEmailSuffix = "@users.noreply.github.com";
 
-        public GravatarService(IImageCache imageCache, IImageNameProvider avatarImageNameProvider)
+        public AvatarService(IImageCache imageCache, IImageNameProvider avatarImageNameProvider)
         {
             _cache = imageCache;
             _avatarImageNameProvider = avatarImageNameProvider;
         }
 
-        public GravatarService(IImageCache imageCache)
+        public AvatarService(IImageCache imageCache)
             : this(imageCache, new AvatarImageNameProvider())
         {
         }

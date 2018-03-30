@@ -7,13 +7,12 @@ using GitUI;
 using Gravatar;
 using GravatarTests.Properties;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GravatarTests
 {
     [TestFixture]
-    public class GravatarServiceTests
+    public sealed class AvatarServiceTests
     {
         private const string Email = "x@x.com";
         private IImageCache _cache;
@@ -27,7 +26,7 @@ namespace GravatarTests
             _avatarImageNameProvider = Substitute.For<IImageNameProvider>();
             _avatarImageNameProvider.Get(Email).Returns($"{Email}.png");
 
-            _service = new GravatarService(_cache, _avatarImageNameProvider);
+            _service = new AvatarService(_cache, _avatarImageNameProvider);
         }
 
         [Test]

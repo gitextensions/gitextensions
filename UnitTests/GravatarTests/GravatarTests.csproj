@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="AvatarImageNameProviderTests.cs" />
     <Compile Include="DirectoryImageCacheTests.cs" />
-    <Compile Include="GravatarServiceTests.cs" />
+    <Compile Include="AvatarServiceTests.cs" />
     <Compile Include="MruCacheTests.cs" />
     <Compile Include="MruImageCacheTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

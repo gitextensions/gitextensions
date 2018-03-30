@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class AvatarColumnProvider : ColumnProvider
     {
         private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _gravatarService;
+        private readonly IAvatarService _avatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
 
         public AvatarColumnProvider(RevisionDataGridView revisionGridView)
@@ -30,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             _avatarImageNameProvider = new AvatarImageNameProvider();
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarCache.Invalidated += (s, e) => revisionGridView.Invalidate();
-            _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
+            _avatarService = new AvatarService(_avatarCache, _avatarImageNameProvider);
         }
 
         public override void Refresh() => Column.Visible = AppSettings.ShowAuthorAvatarColumn;
@@ -44,16 +44,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var imageName = _avatarImageNameProvider.Get(revision.AuthorEmail);
 
-            var gravatar = _avatarCache.GetImage(imageName);
+            var image = _avatarCache.GetImage(imageName);
 
-            if (gravatar == null)
+            if (image == null)
             {
-                gravatar = Resources.User;
+                image = Resources.User;
 
                 // kick off download operation, will likely display the avatar during the next round of repaint
                 if (!string.IsNullOrWhiteSpace(revision.AuthorEmail))
                 {
-                    _gravatarService
+                    _avatarService
                         .GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType)
                         .FileAndForget();
                 }
@@ -73,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var container = e.Graphics.BeginContainer();
             e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            e.Graphics.DrawImage(gravatar, rect);
+            e.Graphics.DrawImage(image, rect);
             e.Graphics.EndContainer(container);
 
             e.Graphics.FillRectangle(style.backBrush, rect.Left, rect.Top, 2, 1);
