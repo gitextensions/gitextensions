@@ -64,22 +64,25 @@ namespace GitCommandsTests
             Assert.AreEqual("", result.Lines.Last().Text);
         }
 
-        [Test]
-        public void UnescapeOctalCodePoints_handles_octal_codes()
+        [TestCase(null, "")]
+        [TestCase("", "")]
+        [TestCase(" ", " ")]
+        [TestCase("Hello, World!", "Hello, World!")]
+        [TestCase(@"\353\221\220\353\213\244.txt", "두다.txt")] // escaped octal code points (Korean Hangul in this case)
+        [TestCase(@"Invalid byte \777.txt", @"Invalid byte \777.txt")] // 777 is an invalid byte, which is omitted from the output
+        [TestCase(@"\353\221\220\353\213\244 \777.txt", @"두다 \777.txt")] // valid and invalid in the same string
+        [TestCase(@"\353\221\220\353\213\244\777.txt", @"\353\221\220\353\213\244\777.txt")] // valid and invalid in the same string
+        public void UnescapeOctalCodePoints_handles_octal_codes(string input, string expected)
         {
-            Assert.AreEqual("", GitModule.UnescapeOctalCodePoints(null));
-            Assert.AreEqual("", GitModule.UnescapeOctalCodePoints(""));
-            Assert.AreEqual(" ", GitModule.UnescapeOctalCodePoints(" "));
-            Assert.AreEqual("Hello, World!", GitModule.UnescapeOctalCodePoints("Hello, World!"));
+            Assert.AreEqual(expected, GitModule.UnescapeOctalCodePoints(input));
+        }
 
-            // escaped octal code points (Korean Hangul in this case)
-            Assert.AreEqual("두다.txt", GitModule.UnescapeOctalCodePoints(@"\353\221\220\353\213\244.txt"));
+        [Test]
+        public void UnescapeOctalCodePoints_returns_same_string_if_nothing_to_escape()
+        {
+            // If nothing was escaped in the original string, the same string instance is returned.
+            const string s = "Hello, World!";
 
-            // 777 is an invalid byte, which is omitted from the output
-            Assert.AreEqual(@"Invalid byte \777.txt", GitModule.UnescapeOctalCodePoints(@"Invalid byte \777.txt"));
-
-            // If nothing was escaped in the original string, the same string instance is returned
-            var s = "Hello, World!".ToUpper();
             Assert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
         }
     }
