@@ -37,7 +37,7 @@ namespace GitUI.UserControls
 
         public override void AppendMessageFreeThreaded(string text)
         {
-            _terminal.RunningSession?.WriteOutputText(text);
+            _terminal.RunningSession?.WriteOutputTextAsync(text);
         }
 
         public override void KillProcess()
@@ -57,7 +57,6 @@ namespace GitUI.UserControls
             _terminal = new ConEmuControl
             {
                 Dock = DockStyle.Fill,
-                AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
                 IsStatusbarVisible = false
             };
 
@@ -125,7 +124,7 @@ namespace GitUI.UserControls
                 };
             startinfo.IsEchoingConsoleCommandLine = true;
 
-            _terminal.Start(startinfo);
+            _terminal.Start(startinfo, ThreadHelper.JoinableTaskFactory);
         }
     }
 
