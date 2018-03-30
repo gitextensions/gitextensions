@@ -9,13 +9,12 @@ using FluentAssertions;
 using Gravatar;
 using GravatarTests.Properties;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace GravatarTests
 {
     [TestFixture]
-    public class DirectoryImageCacheTests
+    public sealed class DirectoryImageCacheTests
     {
         private const string FileName = "aa.jpg";
         private readonly string _folderPath = @"C:\Users\user\AppData\Roaming\GitExtensions\GitExtensions\Images";
