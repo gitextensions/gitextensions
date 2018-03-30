@@ -68,7 +68,7 @@ namespace GitUI
         private SolidBrush _authoredRevisionsBrush;
         private Brush _filledItemBrush; // disposable brush
         private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _gravatarService;
+        private readonly IAvatarService _avatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IFullPathResolver _fullPathResolver;
@@ -134,7 +134,7 @@ namespace GitUI
             _avatarImageNameProvider = new AvatarImageNameProvider();
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarCache.Invalidated += (s, e) => Revisions.Invalidate();
-            _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
+            _avatarService = new AvatarService(_avatarCache, _avatarImageNameProvider);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
 
@@ -1861,7 +1861,7 @@ namespace GitUI
                             // kick off download operation, will likely display the avatar during the next round of repaint
                             if (!string.IsNullOrWhiteSpace(revision.AuthorEmail))
                             {
-                                _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
+                                _avatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
                             }
                         }
 

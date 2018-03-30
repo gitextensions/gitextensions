@@ -19,7 +19,7 @@ namespace GitUI
     /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
-        private readonly IAvatarService _gravatarService;
+        private readonly IAvatarService _avatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _fildFilePredicateProvider;
@@ -32,7 +32,7 @@ namespace GitUI
                 () => InvokeEvent(null, PostRepositoryChanged));
 
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
-            _gravatarService = new GravatarService(avatarCache);
+            _avatarService = new AvatarService(avatarCache);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _fildFilePredicateProvider = new FindFilePredicateProvider();
         }
@@ -196,7 +196,7 @@ namespace GitUI
 
         public void CacheAvatar([NotNull] string email)
         {
-            _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
+            _avatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
 
         public Icon FormIcon => GitExtensionsForm.ApplicationIcon;
