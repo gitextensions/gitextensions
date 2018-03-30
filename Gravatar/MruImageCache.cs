@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,22 +17,13 @@ namespace Gravatar
     /// </remarks>
     public sealed class MruImageCache : IImageCache
     {
-        private readonly int _cleanAtSize;
-        private readonly int _cleanToSize;
-
-        private readonly ConcurrentDictionary<string, Entry> _entryByFileName = new ConcurrentDictionary<string, Entry>();
+        private readonly MruCache<string, Image> _cache;
         private readonly IImageCache _inner;
 
-        public MruImageCache([NotNull] IImageCache inner, int cleanAtSize = 30, int cleanToSize = 25)
+        public MruImageCache([NotNull] IImageCache inner, int capacity = 30)
         {
-            if (cleanToSize >= cleanAtSize)
-            {
-                throw new ArgumentException($"{nameof(cleanAtSize)} must be less than {nameof(cleanToSize)}.");
-            }
-
             _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-            _cleanToSize = cleanToSize;
-            _cleanAtSize = cleanAtSize;
+            _cache = new MruCache<string, Image>(capacity);
         }
 
         event EventHandler IImageCache.Invalidated
@@ -55,12 +45,12 @@ namespace Gravatar
             }
 
             _inner.AddImage(imageFileName, image);
-            UpdateEntry(imageFileName, image);
+            _cache.Add(imageFileName, image);
         }
 
         Task IImageCache.ClearAsync()
         {
-            _entryByFileName.Clear();
+            _cache.Clear();
             return _inner.ClearAsync();
         }
 
@@ -71,7 +61,7 @@ namespace Gravatar
                 throw new ArgumentException(nameof(imageFileName));
             }
 
-            _entryByFileName.TryRemove(imageFileName, out _);
+            _cache.TryRemove(imageFileName, out _);
             return _inner.DeleteImageAsync(imageFileName);
         }
 
@@ -82,17 +72,16 @@ namespace Gravatar
                 throw new ArgumentException(nameof(imageFileName));
             }
 
-            if (_entryByFileName.TryGetValue(imageFileName, out var entry))
+            if (_cache.TryGetValue(imageFileName, out var image))
             {
-                entry.LastAccesedAt = DateTime.UtcNow;
-                return entry.Image;
+                return image;
             }
 
-            var image = _inner.GetImage(imageFileName);
+            image = _inner.GetImage(imageFileName);
 
             if (image != null)
             {
-                UpdateEntry(imageFileName, image);
+                _cache.Add(imageFileName, image);
             }
 
             return image;
@@ -105,67 +94,19 @@ namespace Gravatar
                 throw new ArgumentException(nameof(imageFileName));
             }
 
-            if (_entryByFileName.TryGetValue(imageFileName, out var entry))
+            if (_cache.TryGetValue(imageFileName, out var image))
             {
-                entry.LastAccesedAt = DateTime.UtcNow;
-                return entry.Image;
+                return image;
             }
 
-            var image = await _inner.GetImageAsync(imageFileName);
+            image = await _inner.GetImageAsync(imageFileName);
 
             if (image != null)
             {
-                UpdateEntry(imageFileName, image);
+                _cache.Add(imageFileName, image);
             }
 
             return image;
-        }
-
-        private void UpdateEntry([NotNull] string imageFileName, [NotNull] Image image)
-        {
-            if (string.IsNullOrWhiteSpace(imageFileName))
-            {
-                throw new ArgumentException(nameof(imageFileName));
-            }
-
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
-
-            _entryByFileName[imageFileName] = new Entry(imageFileName, image);
-
-            if (_entryByFileName.Count > _cleanAtSize)
-            {
-                RemoveOldEntries();
-            }
-
-            void RemoveOldEntries()
-            {
-                // Build list of all entries, sorted by their last access times
-                var sortedEntries = _entryByFileName.Values.OrderBy(e => e.LastAccesedAt).ToList();
-
-                // The first items in that sorted list are the oldest ones.
-                // Take as many as we need to remove, and remove them from the dictionary.
-                foreach (var entry in sortedEntries.Take(_entryByFileName.Count - _cleanToSize))
-                {
-                    _entryByFileName.TryRemove(entry.FileName, out _);
-                }
-            }
-        }
-
-        private sealed class Entry
-        {
-            [NotNull] public string FileName { get; }
-            [NotNull] public Image Image { get; }
-            public DateTime LastAccesedAt { get; set; }
-
-            public Entry([NotNull] string fileName, [NotNull] Image image)
-            {
-                FileName = fileName;
-                Image = image;
-                LastAccesedAt = DateTime.UtcNow;
-            }
         }
     }
 }
