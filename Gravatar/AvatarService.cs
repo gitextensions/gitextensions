@@ -40,15 +40,10 @@ namespace Gravatar
 
         private const string GitHubPrivateEmailSuffix = "@users.noreply.github.com";
 
-        public AvatarService(IImageCache imageCache, IImageNameProvider avatarImageNameProvider)
+        public AvatarService(IImageCache imageCache, IImageNameProvider avatarImageNameProvider = null)
         {
             _cache = imageCache;
-            _avatarImageNameProvider = avatarImageNameProvider;
-        }
-
-        public AvatarService(IImageCache imageCache)
-            : this(imageCache, new AvatarImageNameProvider())
-        {
+            _avatarImageNameProvider = avatarImageNameProvider ?? new AvatarImageNameProvider();
         }
 
         async Task<Image> IAvatarService.GetAvatarAsync(string email, int imageSize, string defaultImageType)
