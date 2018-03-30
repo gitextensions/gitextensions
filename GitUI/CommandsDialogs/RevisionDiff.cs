@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs
             _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
             DiffFiles.FilterVisible = true;
-            DiffFiles.DescribeRevision = DescribeRevision;
+            DiffFiles.DescribeRevision = sha1 => DescribeRevision(sha1);
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.DiffFont;
             ReloadHotkeys();
@@ -153,12 +153,7 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad();
         }
 
-        private string DescribeRevision(string sha1)
-        {
-            return DescribeRevision(sha1, 0);
-        }
-
-        private string DescribeRevision(string sha1, int maxLength)
+        private string DescribeRevision(string sha1, int maxLength = 0)
         {
             if (sha1.IsNullOrEmpty())
             {
