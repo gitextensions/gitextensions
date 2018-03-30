@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
@@ -45,12 +43,20 @@ namespace Gravatar
             }
 
             _inner.AddImage(imageFileName, image);
-            _cache.Add(imageFileName, image);
+
+            lock (_cache)
+            {
+                _cache.Add(imageFileName, image);
+            }
         }
 
         Task IImageCache.ClearAsync()
         {
-            _cache.Clear();
+            lock (_cache)
+            {
+                _cache.Clear();
+            }
+
             return _inner.ClearAsync();
         }
 
@@ -61,7 +67,11 @@ namespace Gravatar
                 throw new ArgumentException(nameof(imageFileName));
             }
 
-            _cache.TryRemove(imageFileName, out _);
+            lock (_cache)
+            {
+                _cache.TryRemove(imageFileName, out _);
+            }
+
             return _inner.DeleteImageAsync(imageFileName);
         }
 
@@ -72,19 +82,22 @@ namespace Gravatar
                 throw new ArgumentException(nameof(imageFileName));
             }
 
-            if (_cache.TryGetValue(imageFileName, out var image))
+            lock (_cache)
             {
+                if (_cache.TryGetValue(imageFileName, out var cachedImage))
+                {
+                    return cachedImage;
+                }
+
+                var image = _inner.GetImage(imageFileName);
+
+                if (image != null)
+                {
+                    _cache.Add(imageFileName, image);
+                }
+
                 return image;
             }
-
-            image = _inner.GetImage(imageFileName);
-
-            if (image != null)
-            {
-                _cache.Add(imageFileName, image);
-            }
-
-            return image;
         }
 
         async Task<Image> IImageCache.GetImageAsync(string imageFileName)
@@ -94,19 +107,25 @@ namespace Gravatar
                 throw new ArgumentException(nameof(imageFileName));
             }
 
-            if (_cache.TryGetValue(imageFileName, out var image))
+            lock (_cache)
             {
+                if (_cache.TryGetValue(imageFileName, out var cachedImage))
+                {
+                    return cachedImage;
+                }
+            }
+
+            var image = await _inner.GetImageAsync(imageFileName);
+
+            lock (_cache)
+            {
+                if (image != null)
+                {
+                    _cache.Add(imageFileName, image);
+                }
+
                 return image;
             }
-
-            image = await _inner.GetImageAsync(imageFileName);
-
-            if (image != null)
-            {
-                _cache.Add(imageFileName, image);
-            }
-
-            return image;
         }
     }
 }
