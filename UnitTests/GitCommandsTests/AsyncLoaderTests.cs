@@ -276,10 +276,10 @@ namespace GitCommandsTests
             loader.Dispose();
 
             // Any use after dispose should throw
-            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(() => { }, () => { }));
-            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(() => 1, i => { }));
-            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(_ => { }, () => { }));
-            Assert.ThrowsAsync<ObjectDisposedException>(async () => await loader.LoadAsync(_ => 1, i => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => { }, () => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => 1, i => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => { }, () => { }));
+            Assert.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => 1, i => { }));
             Assert.Throws<ObjectDisposedException>(() => loader.Cancel());
         }
     }

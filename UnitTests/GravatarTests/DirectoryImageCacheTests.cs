@@ -47,7 +47,7 @@ namespace GravatarTests
         [TestCase("\t")]
         public void AddImage_should_throw_if_filename_not_supplied(string fileName)
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(fileName));
+            Assert.ThrowsAsync<ArgumentException>(() => _cache.GetImageAsync(fileName));
 
             _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
@@ -156,10 +156,7 @@ namespace GravatarTests
             _file.When(x => x.Delete(Arg.Any<string>()))
                 .Do(x => throw new DivideByZeroException());
 
-            Func<Task> act = async () =>
-            {
-                await _cache.ClearAsync();
-            };
+            Func<Task> act = () => _cache.ClearAsync();
             act.Should().NotThrow();
         }
 
@@ -168,7 +165,7 @@ namespace GravatarTests
         [TestCase("\t")]
         public void DeleteImage_should_throw_if_filename_not_supplied(string fileName)
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.DeleteImageAsync(fileName));
+            Assert.ThrowsAsync<ArgumentException>(() => _cache.DeleteImageAsync(fileName));
 
             _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
@@ -213,10 +210,7 @@ namespace GravatarTests
             _file.When(x => x.Delete(Arg.Any<string>()))
                 .Do(x => throw new DivideByZeroException());
 
-            Func<Task> act = async () =>
-            {
-                await _cache.DeleteImageAsync(FileName);
-            };
+            Func<Task> act = () => _cache.DeleteImageAsync(FileName);
             act.Should().NotThrow();
         }
 
@@ -231,7 +225,7 @@ namespace GravatarTests
         [Test]
         public void GetImage_throws_if_filename_not_supplied()
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await _cache.GetImageAsync(null));
+            Assert.ThrowsAsync<ArgumentException>(() => _cache.GetImageAsync(null));
 
             _ = _fileInfo.DidNotReceive().LastWriteTime;
         }
@@ -265,10 +259,7 @@ namespace GravatarTests
             _fileInfo.Exists.Returns(true);
             _fileInfo.LastWriteTime.Returns(x => throw new DivideByZeroException());
 
-            Func<Task> act = async () =>
-            {
-                await _cache.GetImageAsync(FileName);
-            };
+            Func<Task> act = () => _cache.GetImageAsync(FileName);
             act.Should().NotThrow();
         }
     }

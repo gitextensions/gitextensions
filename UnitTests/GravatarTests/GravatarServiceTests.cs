@@ -42,10 +42,8 @@ namespace GravatarTests
             image.Should().Be(avatar);
             Received.InOrder(() =>
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await _cache.Received(1).GetImageAsync($"{Email}.png");
-                });
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    () => _cache.Received(1).GetImageAsync($"{Email}.png"));
             });
             _cache.DidNotReceive().AddImage(Arg.Any<string>(), Arg.Any<Image>());
         }
@@ -76,10 +74,8 @@ namespace GravatarTests
 
             Received.InOrder(() =>
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await _cache.Received(1).DeleteImageAsync($"{Email}.png");
-                });
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    () => _cache.Received(1).DeleteImageAsync($"{Email}.png"));
             });
         }
 
