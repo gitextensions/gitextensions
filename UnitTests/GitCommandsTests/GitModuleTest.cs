@@ -76,7 +76,7 @@ namespace GitCommandsTests
             Assert.AreEqual("두다.txt", GitModule.UnescapeOctalCodePoints(@"\353\221\220\353\213\244.txt"));
 
             // 777 is an invalid byte, which is omitted from the output
-            Assert.AreEqual("Invalid byte .txt", GitModule.UnescapeOctalCodePoints(@"Invalid byte \777.txt"));
+            Assert.AreEqual(@"Invalid byte \777.txt", GitModule.UnescapeOctalCodePoints(@"Invalid byte \777.txt"));
 
             // If nothing was escaped in the original string, the same string instance is returned
             var s = "Hello, World!".ToUpper();

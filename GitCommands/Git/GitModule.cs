@@ -3714,7 +3714,7 @@ namespace GitCommands
                     {
                         // Octal values greater than 377 overflow a single byte.
                         // These should not be present in the input string.
-                        return "";
+                        return match.Value;
                     }
                 });
         }
