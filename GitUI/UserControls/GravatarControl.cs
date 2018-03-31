@@ -58,6 +58,9 @@ namespace GitUI
 
             // resize our control (I'm not using AutoSize for a reason)
             var size = new Size(AppSettings.AuthorImageSize, AppSettings.AuthorImageSize);
+
+            DpiUtil.Scale(ref size);
+
             Size = _gravatarImg.Size = size;
 
             if (!AppSettings.ShowAuthorGravatar || string.IsNullOrEmpty(Email))
@@ -66,7 +69,8 @@ namespace GitUI
                 return;
             }
 
-            var image = await _gravatarService.GetAvatarAsync(Email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
+            var image = await _gravatarService.GetAvatarAsync(Email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
+
             RefreshImage(image);
         }
 

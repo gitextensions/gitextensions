@@ -394,6 +394,7 @@
     <Compile Include="UserControls\ConsoleOutputControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DpiUtil.cs" />
     <Compile Include="UserControls\EditboxBasedConsoleOutputControl.cs">
       <SubType>Component</SubType>
     </Compile>

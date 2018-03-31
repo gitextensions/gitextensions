@@ -236,8 +236,7 @@ namespace GitUI
                 return;
             }
 
-            int deviceDpi = GetCurrentDeviceDpi();
-            float scale = 1.0f * deviceDpi / position.DeviceDpi;
+            float scale = (float)DpiUtil.DpiX / position.DeviceDpi;
 
             StartPosition = FormStartPosition.Manual;
             if (FormBorderStyle == FormBorderStyle.Sizable ||
@@ -303,20 +302,6 @@ namespace GitUI
             }
         }
 
-        public int GetCurrentDeviceDpi()
-        {
-#if TARGETING_DOTNET47
-            int deviceDpi = DeviceDpi;
-#else
-            int deviceDpi;
-            using (Graphics g = CreateGraphics())
-            {
-                deviceDpi = (int)g.DpiX;
-            }
-#endif
-            return deviceDpi;
-        }
-
         private static WindowPositionList _windowPositionList;
 
         /// <summary>
@@ -356,8 +341,7 @@ namespace GitUI
                     }
                 }
 
-                int deviceDpi = GetCurrentDeviceDpi();
-                var position = new WindowPosition(rectangle, deviceDpi, formWindowState, name);
+                var position = new WindowPosition(rectangle, DpiUtil.DpiX, formWindowState, name);
                 _windowPositionList.AddOrUpdate(position);
                 _windowPositionList.Save();
             }

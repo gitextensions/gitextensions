@@ -18,20 +18,6 @@ namespace ResourceManager
             Load += GitExtensionsControl_Load;
         }
 
-        public int GetCurrentDeviceDpi()
-        {
-#if TARGETING_DOTNET47
-            int deviceDpi = DeviceDpi;
-#else
-            int deviceDpi;
-            using (Graphics g = CreateGraphics())
-            {
-                deviceDpi = (int)g.DpiX;
-            }
-#endif
-            return deviceDpi;
-        }
-
         [Browsable(false)] // because we always read from settings
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override Font Font
