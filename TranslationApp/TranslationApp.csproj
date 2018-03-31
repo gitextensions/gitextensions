@@ -40,10 +40,6 @@
     <DocumentationFile>..\GitExtensions\bin\Release\TranslationApp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>

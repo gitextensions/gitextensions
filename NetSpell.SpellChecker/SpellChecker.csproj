@@ -7,8 +7,6 @@
     <ProjectGuid>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>NetSpell.SpellChecker</AssemblyName>
@@ -20,8 +18,6 @@
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
     <RootNamespace>NetSpell.SpellChecker</RootNamespace>
-    <StartupObject>
-    </StartupObject>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -37,7 +33,6 @@
     <DocumentationFile>bin\Debug\NetSpell.SpellChecker.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -59,7 +54,6 @@
     <DocumentationFile>bin\Release\NetSpell.SpellChecker.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
     <NoWarn>
     </NoWarn>
     <Optimize>true</Optimize>

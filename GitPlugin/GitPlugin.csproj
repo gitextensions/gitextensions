@@ -7,9 +7,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E996BE2D-B07D-472D-9D74-3EA2D48EF269}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <StartupObject>
-    </StartupObject>
-    <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>GitPlugin</AssemblyName>
     <RootNamespace>GitPlugin</RootNamespace>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -208,10 +205,6 @@
     <AL EmbedResources="$(ProjectDir)Properties\Resources.resources" Culture="en-US" OutputAssembly="$(TargetDir)en-US\GitPlugin.resources.dll" />
     <Message Text="Done with the Custom Step." />
   </Target>
-  <ProjectExtensions>
-    <VisualStudio>
-    </VisualStudio>
-  </ProjectExtensions>
   <Import Project="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
