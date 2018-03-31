@@ -35,6 +35,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void FetchData()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             _backgroundLoaderTokenSource.Cancel();
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
@@ -48,7 +50,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     var includeSubmodules = cbIncludeSubmodules.Checked;
 
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    await TaskScheduler.Default;
 
                     var text = GenerateText(Module, includeSubmodules, token);
 
@@ -59,7 +61,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         CommitCount.Text = text;
                         Loading.Visible = false;
                     }
-                });
+                })
+                .FileAndForget();
         }
 
         private static string GenerateText(GitModule module, bool includeSubmodules, CancellationToken token)
@@ -70,19 +73,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (includeSubmodules)
             {
+                token.ThrowIfCancellationRequested();
+
                 var submodules = module.GetSubmodulesLocalPaths();
 
                 foreach (var submoduleName in submodules)
                 {
-                    if (token.IsCancellationRequested)
-                    {
-                        return "";
-                    }
+                    token.ThrowIfCancellationRequested();
 
                     var submodule = module.GetSubmodule(submoduleName);
 
                     if (submodule.IsValidGitWorkingDir())
                     {
+                        token.ThrowIfCancellationRequested();
+
                         var (submoduleItems, _) = CommitCounter.GroupAllCommitsByContributor(submodule);
 
                         foreach (var (name, count) in submoduleItems)
