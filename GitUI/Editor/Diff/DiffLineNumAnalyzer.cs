@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GitCommands;
-using PatchApply;
+using GitCommands.Patches;
+using JetBrains.Annotations;
 
 namespace GitUI.Editor.Diff
 {
@@ -25,7 +26,8 @@ namespace GitUI.Editor.Diff
                 Math.Max(diffLine.LeftLineNum, diffLine.RightLineNum));
         }
 
-        public Result Analyze(string diffContent)
+        [NotNull]
+        public Result Analyze([NotNull] string diffContent)
         {
             var ret = new Result();
             var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);

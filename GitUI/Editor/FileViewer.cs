@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Patches;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using GitUI.Hotkey;
-using PatchApply;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -335,6 +336,7 @@ namespace GitUI.Editor
             ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        [NotNull]
         public string GetExtraDiffArguments()
         {
             var diffArguments = new StringBuilder();
@@ -463,13 +465,13 @@ namespace GitUI.Editor
             Reset(true, true, true);
         }
 
-        public void ViewPatch(Patch patch)
+        public void ViewPatch([CanBeNull] Patch patch)
         {
             string text = patch != null ? patch.Text : "";
             ViewPatch(text);
         }
 
-        public void ViewPatch(string text)
+        public void ViewPatch([NotNull] string text)
         {
             ResetForDiff();
             _internalFileViewer.SetText(text, isDiff: true);

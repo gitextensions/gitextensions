@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Git;
+using GitCommands.Patches;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -76,6 +77,7 @@ namespace GitCommands
             };
         }
 
+        [NotNull]
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -910,7 +912,7 @@ namespace GitCommands
         [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
-            PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
             string text = patch != null ? patch.Text : "";
             return GetSubmoduleStatus(text, module, fileName);
         }

@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
+using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using PatchApply;
 using SmartFormat;
 
 namespace GitCommands
@@ -478,7 +478,8 @@ namespace GitCommands
             }
         }
 
-        public static string FindGitWorkingDir(string startDir)
+        [NotNull]
+        public static string FindGitWorkingDir([CanBeNull] string startDir)
         {
             if (string.IsNullOrEmpty(startDir))
             {
@@ -497,10 +498,12 @@ namespace GitCommands
                 dir = PathUtil.GetDirectoryName(dir);
             }
             while (!string.IsNullOrEmpty(dir));
+
             return startDir;
         }
 
-        private static Process StartProccess(string fileName, string arguments, string workingDir, bool showConsole)
+        [NotNull]
+        private static Process StartProccess([NotNull] string fileName, [NotNull] string arguments, [NotNull] string workingDir, bool showConsole)
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
 
@@ -535,6 +538,7 @@ namespace GitCommands
             return startProcess;
         }
 
+        [NotNull]
         public string StripAnsiCodes(string input)
         {
             // The following does return the original string if no ansi codes are found
@@ -579,6 +583,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, console window is hidden
         /// </summary>
+        [CanBeNull]
         public static Process RunExternalCmdDetached(string fileName, string arguments, string workingDir)
         {
             try
@@ -596,6 +601,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, console window is hidden
         /// </summary>
+        [CanBeNull]
         public Process RunExternalCmdDetached(string cmd, string arguments)
         {
             return RunExternalCmdDetached(cmd, arguments, WorkingDir);
@@ -604,6 +610,7 @@ namespace GitCommands
         /// <summary>
         /// Run git command, console window is hidden, redirect output
         /// </summary>
+        [NotNull]
         public Process RunGitCmdDetached(string arguments, Encoding encoding = null)
         {
             if (encoding == null)
@@ -617,6 +624,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, cache results, console window is hidden, wait for exit, redirect output
         /// </summary>
+        [NotNull]
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCacheableCmd(string cmd, string arguments = "", Encoding encoding = null)
         {
@@ -2375,7 +2383,12 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string firstRevision, string secondRevision, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult, bool isTracked = true)
+        [CanBeNull]
+        public Patch GetSingleDiff(
+            [CanBeNull] string firstRevision, [CanBeNull] string secondRevision,
+            [CanBeNull] string fileName, [CanBeNull] string oldFileName,
+            [NotNull] string extraDiffArguments, [NotNull] Encoding encoding,
+            bool cacheResult, bool isTracked = true)
         {
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -2396,7 +2409,6 @@ namespace GitCommands
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
             }
 
-            var patchManager = new PatchManager();
             var arguments = string.Format(DiffCommandWithStandardArgs + "{0} -M -C {1}", extraDiffArguments, diffOptions);
             cacheResult = cacheResult &&
                 !secondRevision.IsArtificial() &&
@@ -2408,23 +2420,25 @@ namespace GitCommands
                 ? RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding)
                 : RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
 
-            patchManager.LoadPatch(patch, encoding);
+            var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
-            return GetPatch(patchManager, fileName, oldFileName);
+            return GetPatch(patches, fileName, oldFileName);
         }
 
-        private static Patch GetPatch(PatchManager patchManager, string fileName, string oldFileName)
+        [CanBeNull]
+        private static Patch GetPatch([NotNull, ItemNotNull] IReadOnlyList<Patch> patches, [CanBeNull] string fileName, [CanBeNull] string oldFileName)
         {
-            foreach (Patch p in patchManager.Patches)
+            foreach (Patch p in patches)
             {
-                if (fileName == p.FileNameB &&
-                    (fileName == p.FileNameA || oldFileName == p.FileNameA))
+                if (fileName == p.FileNameB && (fileName == p.FileNameA || oldFileName == p.FileNameA))
                 {
                     return p;
                 }
             }
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+            return patches.Count != 0
+                ? patches[patches.Count - 1]
+                : null;
         }
 
         public string GetStatusText(bool untracked)
@@ -2673,10 +2687,9 @@ namespace GitCommands
             }
 
             string result = RunGitCmd(args, LosslessEncoding);
-            var patchManager = new PatchManager();
-            patchManager.LoadPatch(result, encoding);
+            var patches = PatchProcessor.CreatePatchesFromString(result, encoding).ToList();
 
-            return GetPatch(patchManager, fileName, oldFileName);
+            return GetPatch(patches, fileName, oldFileName);
         }
 
         private string GetFileContents(string path)
@@ -3662,64 +3675,54 @@ namespace GitCommands
             return false;
         }
 
-        public static string UnquoteFileName(string fileName)
+        private static readonly Regex _escapedOctalCodePointRegex = new Regex(@"(\\([0-7]{3}))+", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Unescapes any octal code points embedded within <paramref name="s"/>.
+        /// </summary>
+        /// <remarks>
+        /// If no portions of <paramref name="s"/> contain escaped data, then <paramref name="s"/> is returned.
+        /// <para />
+        /// If <paramref name="s"/> is <c>null</c> then an empty string is returned.
+        /// </remarks>
+        /// <example>
+        /// <code>UnescapeOctalCodePoints(@"\353\221\220\353\213\244") == "두다"</code>
+        /// </example>
+        /// <param name="s">The string to unescape.</param>
+        /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
+        [NotNull]
+        public static string UnescapeOctalCodePoints([CanBeNull] string s)
         {
-            if (fileName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(s))
             {
-                return fileName;
+                return s ?? string.Empty;
             }
 
-            char[] chars = fileName.ToCharArray();
-            var blist = new List<byte>();
-            int i = 0;
-            StringBuilder sb = new StringBuilder();
-            while (i < chars.Length)
-            {
-                char c = chars[i];
-                if (c == '\\')
+            return _escapedOctalCodePointRegex.Replace(
+                s,
+                match =>
                 {
-                    // there should be 3 digits
-                    if (chars.Length >= i + 3)
+                    try
                     {
-                        string octNumber = "" + chars[i + 1] + chars[i + 2] + chars[i + 3];
-
-                        try
-                        {
-                            int code = Convert.ToInt32(octNumber, 8);
-                            blist.Add((byte)code);
-                            i += 4;
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        return SystemEncoding.GetString(
+                            match.Groups[2]
+                                .Captures.Cast<Capture>()
+                                .Select(c => Convert.ToByte(c.Value, 8))
+                                .ToArray());
                     }
-                }
-                else
-                {
-                    if (blist.Count > 0)
+                    catch (OverflowException)
                     {
-                        sb.Append(SystemEncoding.GetString(blist.ToArray()));
-                        blist.Clear();
+                        // Octal values greater than 377 overflow a single byte.
+                        // These should not be present in the input string.
+                        return match.Value;
                     }
-
-                    sb.Append(c);
-                    i++;
-                }
-            }
-
-            if (blist.Count > 0)
-            {
-                sb.Append(SystemEncoding.GetString(blist.ToArray()));
-                blist.Clear();
-            }
-
-            return sb.ToString();
+                });
         }
 
         public static string ReEncodeFileNameFromLossless(string fileName)
         {
             fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
-            return UnquoteFileName(fileName);
+            return UnescapeOctalCodePoints(fileName);
         }
 
         public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
@@ -3804,6 +3807,7 @@ namespace GitCommands
         /// diff part is raw data in file's original encoding
         /// s should be encoded in LosslessEncoding
         /// </summary>
+        [ContractAnnotation("s:null=>null")]
         public string ReEncodeShowString(string s)
         {
             if (s.IsNullOrEmpty())
@@ -3929,7 +3933,6 @@ namespace GitCommands
                 filePath,
                 AppSettings.OmitUninterestingDiff ? "--cc" : "-c -p");
 
-            var patchManager = new PatchManager();
             var patch = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
 
             if (string.IsNullOrWhiteSpace(patch))
@@ -3937,8 +3940,8 @@ namespace GitCommands
                 return "";
             }
 
-            patchManager.LoadPatch(patch, encoding);
-            return GetPatch(patchManager, filePath, filePath).Text;
+            var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
+            return GetPatch(patches, filePath, filePath).Text;
         }
 
         public bool HasLfsSupport()

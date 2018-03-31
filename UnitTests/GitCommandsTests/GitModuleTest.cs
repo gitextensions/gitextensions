@@ -63,5 +63,27 @@ namespace GitCommandsTests
             Assert.AreEqual("e3268019c66da7534414e9562ececdee5d455b1b", result.Lines.Last().Commit.ObjectId);
             Assert.AreEqual("", result.Lines.Last().Text);
         }
+
+        [TestCase(null, "")]
+        [TestCase("", "")]
+        [TestCase(" ", " ")]
+        [TestCase("Hello, World!", "Hello, World!")]
+        [TestCase(@"\353\221\220\353\213\244.txt", "두다.txt")] // escaped octal code points (Korean Hangul in this case)
+        [TestCase(@"Invalid byte \777.txt", @"Invalid byte \777.txt")] // 777 is an invalid byte, which is omitted from the output
+        [TestCase(@"\353\221\220\353\213\244 \777.txt", @"두다 \777.txt")] // valid and invalid in the same string
+        [TestCase(@"\353\221\220\353\213\244\777.txt", @"\353\221\220\353\213\244\777.txt")] // valid and invalid in the same string
+        public void UnescapeOctalCodePoints_handles_octal_codes(string input, string expected)
+        {
+            Assert.AreEqual(expected, GitModule.UnescapeOctalCodePoints(input));
+        }
+
+        [Test]
+        public void UnescapeOctalCodePoints_returns_same_string_if_nothing_to_escape()
+        {
+            // If nothing was escaped in the original string, the same string instance is returned.
+            const string s = "Hello, World!";
+
+            Assert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
+        }
     }
 }

@@ -6,8 +6,8 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Patches;
 using GitUI.UserControls;
-using PatchApply;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

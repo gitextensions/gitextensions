@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using GitCommands;
+using GitCommands.Patches;
 using JetBrains.Annotations;
 using ResourceManager.CommitDataRenders;
 
@@ -105,7 +106,7 @@ namespace ResourceManager
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
+        public static string ProcessSubmodulePatch(GitModule module, string fileName, Patch patch)
         {
             string text = patch?.Text;
             var status = GitCommandHelpers.GetSubmoduleStatus(text, module, fileName);

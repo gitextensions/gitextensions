@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-namespace PatchApply
+namespace GitCommands.Patches
 {
     [DebuggerDisplay("PatchFile( {" + nameof(Subject) + "} )")]
     public class PatchFile

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using GitCommands;
+using GitCommands.Patches;
 using ICSharpCode.TextEditor.Document;
-using PatchApply;
+using JetBrains.Annotations;
 
 namespace GitUI.Editor.Diff
 {
@@ -17,7 +18,8 @@ namespace GitUI.Editor.Diff
         {
         }
 
-        public static bool IsCombinedDiff(string diff)
+        [ContractAnnotation("diff:null=>false")]
+        public static bool IsCombinedDiff([CanBeNull] string diff)
         {
             return PatchProcessor.IsCombinedDiff(diff);
         }
