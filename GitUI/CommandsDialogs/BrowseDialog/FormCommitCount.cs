@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,67 +50,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                    string text = "";
-
-                    var dict = new Dictionary<string, HashSet<string>>();
-                    var (items, _) = CommitCounter.GroupAllCommitsByContributor(Module);
-
-                    if (includeSubmodules)
-                    {
-                        var submodules = Module.GetSubmodulesLocalPaths();
-
-                        foreach (var submoduleName in submodules)
-                        {
-                            GitModule submodule = Module.GetSubmodule(submoduleName);
-                            if (submodule.IsValidGitWorkingDir())
-                            {
-                                var (submoduleItems, _) = CommitCounter.GroupAllCommitsByContributor(submodule);
-                                foreach (var (name, count) in submoduleItems)
-                                {
-                                    if (!dict.ContainsKey(name))
-                                    {
-                                        dict.Add(name, new HashSet<string>());
-                                    }
-
-                                    dict[name].Add(submodule.SubmoduleName);
-                                    if (items.ContainsKey(name))
-                                    {
-                                        items[name] += count;
-                                    }
-                                    else
-                                    {
-                                        items.Add(name, count);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    var sortedItems = from pair in items
-                        orderby pair.Value descending
-                        select pair;
-
-                    foreach (var (name, count) in sortedItems)
-                    {
-                        string submodulesList = "";
-                        if (dict.ContainsKey(name))
-                        {
-                            var sub = dict[name];
-                            if (sub.Count == 1)
-                            {
-                                foreach (var item in dict[name])
-                                {
-                                    submodulesList = " [" + item + "]";
-                                }
-                            }
-                            else
-                            {
-                                submodulesList = " [" + sub.Count + " submodules]";
-                            }
-                        }
-
-                        text += string.Format("{0,6} - {1}{2}\r\n", count, name, submodulesList);
-                    }
+                    var text = GenerateText(Module, includeSubmodules, token);
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
@@ -119,6 +60,77 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         Loading.Visible = false;
                     }
                 });
+        }
+
+        private static string GenerateText(GitModule module, bool includeSubmodules, CancellationToken token)
+        {
+            var text = new StringBuilder();
+            var submodulesByName = new Dictionary<string, HashSet<string>>();
+            var (countByName, _) = CommitCounter.GroupAllCommitsByContributor(module);
+
+            if (includeSubmodules)
+            {
+                var submodules = module.GetSubmodulesLocalPaths();
+
+                foreach (var submoduleName in submodules)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        return "";
+                    }
+
+                    var submodule = module.GetSubmodule(submoduleName);
+
+                    if (submodule.IsValidGitWorkingDir())
+                    {
+                        var (submoduleItems, _) = CommitCounter.GroupAllCommitsByContributor(submodule);
+
+                        foreach (var (name, count) in submoduleItems)
+                        {
+                            if (!submodulesByName.ContainsKey(name))
+                            {
+                                submodulesByName.Add(name, new HashSet<string>());
+                            }
+
+                            submodulesByName[name].Add(submodule.SubmoduleName);
+
+                            if (countByName.ContainsKey(name))
+                            {
+                                countByName[name] += count;
+                            }
+                            else
+                            {
+                                countByName.Add(name, count);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var (name, count) in countByName.OrderByDescending(pair => pair.Value))
+            {
+                text.AppendFormat("{0,6} - {1}", count, name);
+
+                if (submodulesByName.TryGetValue(name, out var sub))
+                {
+                    text.Append(" [");
+
+                    if (sub.Count == 1)
+                    {
+                        text.Append(sub.Single());
+                    }
+                    else
+                    {
+                        text.Append(sub.Count).Append(" submodules");
+                    }
+
+                    text.Append("]");
+                }
+
+                text.AppendLine();
+            }
+
+            return text.ToString();
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
