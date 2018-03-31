@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Statistics;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormCommitCount : GitModuleForm
     {
+        private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
+
         public FormCommitCount(GitUICommands commands)
             : base(commands)
         {
@@ -28,69 +34,98 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void FetchData()
         {
-            Loading.Visible = true;
+            _backgroundLoaderTokenSource.Cancel();
+            _backgroundLoaderTokenSource = new CancellationTokenSource();
+            var token = _backgroundLoaderTokenSource.Token;
 
-            CommitCount.Text = "";
-            var dict = new Dictionary<string, HashSet<string>>();
-            var (items, _) = CommitCounter.GroupAllCommitsByContributor(Module);
-            if (cbIncludeSubmodules.Checked)
-            {
-                var submodules = Module.GetSubmodulesLocalPaths();
-
-                foreach (var submoduleName in submodules)
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    GitModule submodule = Module.GetSubmodule(submoduleName);
-                    if (submodule.IsValidGitWorkingDir())
-                    {
-                        var (submoduleItems, _) = CommitCounter.GroupAllCommitsByContributor(submodule);
-                        foreach (var (name, count) in submoduleItems)
-                        {
-                            if (!dict.ContainsKey(name))
-                            {
-                                dict.Add(name, new HashSet<string>());
-                            }
+                    Loading.Visible = true;
 
-                            dict[name].Add(submodule.SubmoduleName);
-                            if (items.ContainsKey(name))
+                    CommitCount.Text = "";
+
+                    var includeSubmodules = cbIncludeSubmodules.Checked;
+
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                    string text = "";
+
+                    var dict = new Dictionary<string, HashSet<string>>();
+                    var (items, _) = CommitCounter.GroupAllCommitsByContributor(Module);
+
+                    if (includeSubmodules)
+                    {
+                        var submodules = Module.GetSubmodulesLocalPaths();
+
+                        foreach (var submoduleName in submodules)
+                        {
+                            GitModule submodule = Module.GetSubmodule(submoduleName);
+                            if (submodule.IsValidGitWorkingDir())
                             {
-                                items[name] += count;
+                                var (submoduleItems, _) = CommitCounter.GroupAllCommitsByContributor(submodule);
+                                foreach (var (name, count) in submoduleItems)
+                                {
+                                    if (!dict.ContainsKey(name))
+                                    {
+                                        dict.Add(name, new HashSet<string>());
+                                    }
+
+                                    dict[name].Add(submodule.SubmoduleName);
+                                    if (items.ContainsKey(name))
+                                    {
+                                        items[name] += count;
+                                    }
+                                    else
+                                    {
+                                        items.Add(name, count);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    var sortedItems = from pair in items
+                        orderby pair.Value descending
+                        select pair;
+
+                    foreach (var (name, count) in sortedItems)
+                    {
+                        string submodulesList = "";
+                        if (dict.ContainsKey(name))
+                        {
+                            var sub = dict[name];
+                            if (sub.Count == 1)
+                            {
+                                foreach (var item in dict[name])
+                                {
+                                    submodulesList = " [" + item + "]";
+                                }
                             }
                             else
                             {
-                                items.Add(name, count);
+                                submodulesList = " [" + sub.Count + " submodules]";
                             }
                         }
+
+                        text += string.Format("{0,6} - {1}{2}\r\n", count, name, submodulesList);
                     }
-                }
-            }
 
-            var sortedItems = from pair in items
-                              orderby pair.Value descending
-                              select pair;
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
-            foreach (var (name, count) in sortedItems)
-            {
-                string submodulesList = "";
-                if (dict.ContainsKey(name))
-                {
-                    var sub = dict[name];
-                    if (sub.Count == 1)
+                    if (!token.IsCancellationRequested)
                     {
-                        foreach (var item in dict[name])
-                        {
-                            submodulesList = " [" + item + "]";
-                        }
+                        CommitCount.Text = text;
+                        Loading.Visible = false;
                     }
-                    else
-                    {
-                        submodulesList = " [" + sub.Count + " submodules]";
-                    }
-                }
+                });
+        }
 
-                CommitCount.Text += string.Format("{0,6} - {1}{2}\r\n", count, name, submodulesList);
-            }
-
-            Loading.Visible = false;
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _backgroundLoaderTokenSource.Cancel();
+            _backgroundLoaderTokenSource.Dispose();
+            base.OnFormClosed(e);
         }
     }
 }
