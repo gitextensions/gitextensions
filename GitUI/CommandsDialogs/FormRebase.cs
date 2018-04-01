@@ -237,17 +237,15 @@ namespace GitUI.CommandsDialogs
                 string rebaseCmd;
                 if (chkSpecificRange.Checked && !string.IsNullOrWhiteSpace(txtFrom.Text) && !string.IsNullOrWhiteSpace(cboTo.Text))
                 {
-                    rebaseCmd = GitCommandHelpers.RebaseRangeCmd(
-                        txtFrom.Text, cboTo.Text, Branches.Text,
-                        chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked);
+                    rebaseCmd = GitCommandHelpers.RebaseCmd(
+                        cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
+                        chkAutosquash.Checked, chkStash.Checked, txtFrom.Text, Branches.Text);
                 }
                 else
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         Branches.Text, chkInteractive.Checked,
-                        chkPreserveMerges.Checked, chkAutosquash.Checked,
-                        chkStash.Checked);
+                        chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked);
                 }
 
                 var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);

@@ -332,6 +332,7 @@ namespace GitCommands
             return GitRevision.Sha1HashRegex.IsMatch(value);
         }
 
+        [ContractAnnotation("branch:null=>null")]
         public static string GetFullBranchName(string branch)
         {
             if (branch == null)
@@ -380,45 +381,40 @@ namespace GitCommands
 
         public static string SubmoduleSyncCmd(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            var args = new ArgumentBuilder
             {
-                return "submodule sync";
-            }
+                "submodule sync",
+                name?.Trim().QuoteNE()
+            };
 
-            return "submodule sync \"" + name.Trim() + "\"";
+            return args.ToString();
         }
 
         public static string AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
         {
-            remotePath = remotePath.ToPosixPath();
-            localPath = localPath.ToPosixPath();
-
-            if (!string.IsNullOrEmpty(branch))
+            var args = new ArgumentBuilder
             {
-                branch = " -b \"" + branch.Trim() + "\"";
-            }
+                "submodule add",
+                { force, "-f" },
+                { !string.IsNullOrEmpty(branch), $"-b \"{branch?.Trim()}\"" },
+                remotePath.ToPosixPath().Quote(),
+                localPath.ToPosixPath().Quote()
+            };
 
-            var forceCmd = force ? " -f" : string.Empty;
-
-            return "submodule add" + forceCmd + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
+            return args.ToString();
         }
 
         public static string RevertCmd(string commit, bool autoCommit, int parentIndex)
         {
-            var cmd = new StringBuilder("revert ");
-            if (!autoCommit)
+            var args = new ArgumentBuilder
             {
-                cmd.Append("--no-commit ");
-            }
+                "revert",
+                { !autoCommit, "--no-commit" },
+                { parentIndex > 0, $"-m {parentIndex}" },
+                commit
+            };
 
-            if (parentIndex > 0)
-            {
-                cmd.AppendFormat("-m {0} ", parentIndex);
-            }
-
-            cmd.Append(commit);
-
-            return cmd.ToString();
+            return args.ToString();
         }
 
         public static string ResetSoftCmd(string commit)
@@ -434,11 +430,6 @@ namespace GitCommands
         public static string ResetHardCmd(string commit)
         {
             return "reset --hard \"" + commit + "\"";
-        }
-
-        public static string CloneCmd(string fromPath, string toPath)
-        {
-            return CloneCmd(fromPath, toPath, false, false, string.Empty, null, null, false);
         }
 
         /// <summary>
@@ -457,63 +448,41 @@ namespace GitCommands
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
         /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
-        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, bool? isSingleBranch, bool lfs)
+        public static string CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, [CanBeNull] string branch = "", int? depth = null, bool? isSingleBranch = null, bool lfs = false)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
-            var to = toPath.ToPosixPath();
-            var options = new List<string> { "-v" };
-            if (central)
+
+            var args = new ArgumentBuilder
             {
-                options.Add("--bare");
-            }
+                { lfs, "lfs" },
+                "clone",
+                "-v",
+                { central, "--bare" },
+                { initSubmodules, "--recurse-submodules" },
+                { depth != null, $"--depth {depth}" },
+                { isSingleBranch == true, "--single-branch" },
+                { isSingleBranch == false, "--no-single-branch" },
+                "--progress",
+                { branch == null, "--no-checkout" },
+                { !string.IsNullOrEmpty(branch), $"--branch {branch}" },
+                from.Trim().Quote(),
+                toPath.ToPosixPath().Trim().Quote()
+            };
 
-            if (initSubmodules)
-            {
-                options.Add("--recurse-submodules");
-            }
-
-            if (depth.HasValue)
-            {
-                options.Add("--depth " + depth);
-            }
-
-            if (isSingleBranch.HasValue)
-            {
-                options.Add(isSingleBranch.Value ? "--single-branch" : "--no-single-branch");
-            }
-
-            options.Add("--progress");
-            if (branch == null)
-            {
-                options.Add("--no-checkout");
-            }
-            else if (branch != "")
-            {
-                options.Add("--branch " + branch);
-            }
-
-            options.Add(string.Format("\"{0}\"", from.Trim()));
-            options.Add(string.Format("\"{0}\"", to.Trim()));
-
-            var command = lfs ? "lfs clone " : "clone ";
-
-            return command + string.Join(" ", options.ToArray());
+            return args.ToString();
         }
 
         public static string CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)
         {
-            string args = "";
-            switch (changesAction)
+            var args = new ArgumentBuilder
             {
-                case LocalChangesAction.Merge:
-                    args = " --merge";
-                    break;
-                case LocalChangesAction.Reset:
-                    args = " --force";
-                    break;
-            }
+                "checkout",
+                { changesAction == LocalChangesAction.Merge, "--merge" },
+                { changesAction == LocalChangesAction.Reset, "--force" },
+                branchOrRevisionName.Quote()
+            };
 
-            return string.Format("checkout{0} \"{1}\"", args, branchOrRevisionName);
+            return args.ToString();
         }
 
         /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
@@ -528,39 +497,35 @@ namespace GitCommands
         /// <param name="files">Files to remove. Fileglobs can be given to remove matching files.</param>
         public static string RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
         {
-            string file = ".";
-            if (files.Any())
+            var args = new ArgumentBuilder
             {
-                file = string.Join(" ", files);
-            }
+                "rm",
+                { force, "--force" },
+                { isRecursive, "-r" },
+                { files.Length == 0, "." },
+                files
+            };
 
-            return string.Format("rm {0} {1} {2}",
-                force ? "--force" : string.Empty,
-                isRecursive ? "-r" : string.Empty,
-                file);
+            return args.ToString();
         }
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
-            var cmd = checkout
-                ? $"checkout -b \"{branchName.Trim()}\""
-                : $"branch \"{branchName.Trim()}\"";
+            var args = new ArgumentBuilder
+            {
+                { checkout, "checkout -b", "branch" },
+                branchName.Trim().Quote(),
+                revision?.Trim().QuoteNE()
+            };
 
-            return revision.IsNullOrWhiteSpace()
-                ? cmd
-                : $"{cmd} \"{revision}\"";
+            return args.ToString();
         }
 
         public static string MergedBranches(bool includeRemote = false)
         {
-            if (includeRemote)
-            {
-                return "branch -a --merged";
-            }
-            else
-            {
-                return "branch --merged";
-            }
+            return includeRemote
+                ? "branch -a --merged"
+                : "branch --merged";
         }
 
         /// <summary>Un-sets the git SSH command path.</summary>
@@ -595,73 +560,43 @@ namespace GitCommands
             }.ToString();
         }
 
-        public static string PushTagCmd(string path, string tag, bool all,
-            ForcePushOptions force = ForcePushOptions.DoNotForce)
+        public static string PushTagCmd(string path, string tag, bool all, ForcePushOptions force = ForcePushOptions.DoNotForce)
         {
-            path = path.ToPosixPath();
-
-            tag = tag.Replace(" ", "");
-
-            var sforce = GetForcePushArgument(force);
-
-            var sprogressOption = "";
-            if (VersionInUse.PushCanAskForProgress)
+            if (!all && string.IsNullOrWhiteSpace(tag))
             {
-                sprogressOption = "--progress ";
+                // TODO this is probably an error
+                return "";
             }
 
-            var options = string.Concat(sforce, sprogressOption);
-
-            if (all)
+            var args = new ArgumentBuilder
             {
-                return "push " + options + "\"" + path.Trim() + "\" --tags";
-            }
+                "push",
+                force,
+                { VersionInUse.PushCanAskForProgress, "--progress" },
+                path.ToPosixPath().Trim().Quote(),
+                { all, "--tags" },
+                { !all, $"tag {tag.Replace(" ", "")}" }
+            };
 
-            if (!string.IsNullOrEmpty(tag))
-            {
-                return "push " + options + "\"" + path.Trim() + "\" tag " + tag;
-            }
-
-            return "";
+            return args.ToString();
         }
 
-        public static string GetForcePushArgument(ForcePushOptions force)
-        {
-            var sforce = "";
-            if (force == ForcePushOptions.Force)
-            {
-                sforce = "-f ";
-            }
-            else if (force == ForcePushOptions.ForceWithLease)
-            {
-                sforce = "--force-with-lease ";
-            }
-
-            return sforce;
-        }
-
-        public static string StashSaveCmd(bool untracked, bool keepIndex, string message, IEnumerable<string> selectedFiles)
+        public static string StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
         {
             var isPartialStash = selectedFiles != null && selectedFiles.Any();
-            var cmd = isPartialStash ? "stash push" : "stash save";
-            if (untracked && VersionInUse.StashUntrackedFilesSupported)
+
+            var args = new ArgumentBuilder
             {
-                cmd += " -u";
-            }
+                "stash",
+                { isPartialStash, "push", "save" },
+                { untracked && VersionInUse.StashUntrackedFilesSupported, "-u" },
+                { keepIndex, "--keep-index" },
+                message.QuoteNE(),
+                { isPartialStash, "--" },
+                { isPartialStash, selectedFiles }
+            };
 
-            if (keepIndex)
-            {
-                cmd += " --keep-index";
-            }
-
-            cmd = cmd.Combine(" ", message.QuoteNE());
-
-            if (isPartialStash)
-            {
-                cmd += " -- " + string.Join(" ", selectedFiles);
-            }
-
-            return cmd;
+            return args.ToString();
         }
 
         public static string ContinueRebaseCmd()
@@ -681,28 +616,25 @@ namespace GitCommands
 
         public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
         {
-            var bisectCommand = GetBisectCommand(bisectOption);
-            if (revisions.Length == 0)
+            var args = new ArgumentBuilder
             {
-                return bisectCommand;
-            }
+                "bisect",
+                bisectOption,
+                revisions
+            };
 
-            return string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
+            return args.ToString();
         }
 
         private static string GetBisectCommand(GitBisectOption bisectOption)
         {
-            switch (bisectOption)
+            var args = new ArgumentBuilder
             {
-                case GitBisectOption.Good:
-                    return "bisect good";
-                case GitBisectOption.Bad:
-                    return "bisect bad";
-                case GitBisectOption.Skip:
-                    return "bisect skip";
-                default:
-                    throw new NotSupportedException(string.Format("Bisect option {0} is not supported", bisectOption));
-            }
+                "bisect",
+                bisectOption
+            };
+
+            return args.ToString();
         }
 
         public static string StopBisectCmd()
@@ -710,65 +642,27 @@ namespace GitCommands
             return "bisect reset";
         }
 
-        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
+        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash, string from = null, string onto = null)
         {
-            StringBuilder sb = new StringBuilder("rebase ");
-
-            if (interactive)
+            if (from == null ^ onto == null)
             {
-                sb.Append(" -i ");
-                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
+                throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
 
-            if (preserveMerges)
+            var args = new ArgumentBuilder
             {
-                sb.Append("--preserve-merges ");
-            }
+                "rebase",
+                { interactive, "-i" },
+                { interactive && autosquash, "--autosquash" },
+                { interactive && !autosquash, "--no-autosquash" },
+                { preserveMerges, "--preserve-merges" },
+                { autostash, "--autostash" },
+                from.QuoteNE(),
+                branch.Quote(),
+                { onto != null, $"--onto {onto}" }
+            };
 
-            if (autostash)
-            {
-                sb.Append("--autostash ");
-            }
-
-            sb.Append('"');
-            sb.Append(branch);
-            sb.Append('"');
-
-            return sb.ToString();
-        }
-
-        public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
-        {
-            StringBuilder sb = new StringBuilder("rebase ");
-
-            if (interactive)
-            {
-                sb.Append(" -i ");
-                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
-            }
-
-            if (preserveMerges)
-            {
-                sb.Append("--preserve-merges ");
-            }
-
-            if (autostash)
-            {
-                sb.Append("--autostash ");
-            }
-
-            sb.Append('"')
-              .Append(from)
-              .Append("\" ");
-
-            sb.Append('"')
-              .Append(branch)
-              .Append("\"");
-
-            sb.Append(" --onto ")
-              .Append(onto);
-
-            return sb.ToString();
+            return args.ToString();
         }
 
         public static string AbortRebaseCmd()
@@ -791,122 +685,61 @@ namespace GitCommands
             return "am --3way --abort";
         }
 
-        public static string PatchCmd(string patchFile)
+        [NotNull]
+        public static string ApplyMailboxPatchCmd(bool ignoreWhiteSpace, string patchFile = null)
         {
-            if (IsDiffFile(patchFile))
+            var args = new ArgumentBuilder
             {
-                return "apply \"" + patchFile.ToPosixPath() + "\"";
-            }
-            else
-            {
-                return "am --3way --signoff \"" + patchFile.ToPosixPath() + "\"";
-            }
+                "am",
+                "--3way",
+                "--signoff",
+                { ignoreWhiteSpace, "--ignore-whitespace" },
+                patchFile?.ToPosixPath().Quote()
+            };
+
+            return args.ToString();
         }
 
-        public static string PatchCmdIgnoreWhitespace(string patchFile)
+        [NotNull]
+        public static string ApplyDiffPatchCmd(bool ignoreWhiteSpace, [NotNull] string patchFile)
         {
-            if (IsDiffFile(patchFile))
+            var args = new ArgumentBuilder
             {
-                return "apply --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
-            }
-            else
-            {
-                return "am --3way --signoff --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
-            }
-        }
+                "apply",
+                { ignoreWhiteSpace, "--ignore-whitespace" },
+                patchFile.ToPosixPath().Quote()
+            };
 
-        public static string PatchDirCmd()
-        {
-            return "am --3way --signoff";
-        }
-
-        public static string PatchDirCmdIgnoreWhitespace()
-        {
-            return PatchDirCmd() + " --ignore-whitespace";
+            return args.ToString();
         }
 
         public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored, string paths = null)
         {
-            string command = "clean";
-
-            if (directories)
+            var args = new ArgumentBuilder
             {
-                command += " -d";
-            }
+                "clean",
+                { directories, "-d" },
+                { !nonignored && !ignored, "-x" },
+                { ignored, "-X" },
+                { dryrun, "--dry-run" },
+                { !dryrun, "-f" },
+                paths
+            };
 
-            if (!nonignored && !ignored)
-            {
-                command += " -x";
-            }
-
-            if (ignored)
-            {
-                command += " -X";
-            }
-
-            if (dryrun)
-            {
-                command += " --dry-run";
-            }
-
-            if (!dryrun)
-            {
-                command += " -f";
-            }
-
-            if (!paths.IsNullOrWhiteSpace())
-            {
-                command += " " + paths;
-            }
-
-            return command;
+            return args.ToString();
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
-            StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
-
-            switch (untrackedFiles)
+            var args = new ArgumentBuilder
             {
-                case UntrackedFilesMode.Default:
-                    stringBuilder.Append(" --untracked-files");
-                    break;
-                case UntrackedFilesMode.No:
-                    stringBuilder.Append(" --untracked-files=no");
-                    break;
-                case UntrackedFilesMode.Normal:
-                    stringBuilder.Append(" --untracked-files=normal");
-                    break;
-                case UntrackedFilesMode.All:
-                    stringBuilder.Append(" --untracked-files=all");
-                    break;
-            }
+                "status --porcelain -z",
+                untrackedFiles,
+                ignoreSubmodules,
+                { !excludeIgnoredFiles, "--ignored" }
+            };
 
-            switch (ignoreSubmodules)
-            {
-                case IgnoreSubmodulesMode.Default:
-                    stringBuilder.Append(" --ignore-submodules");
-                    break;
-                case IgnoreSubmodulesMode.None:
-                    stringBuilder.Append(" --ignore-submodules=none");
-                    break;
-                case IgnoreSubmodulesMode.Untracked:
-                    stringBuilder.Append(" --ignore-submodules=untracked");
-                    break;
-                case IgnoreSubmodulesMode.Dirty:
-                    stringBuilder.Append(" --ignore-submodules=dirty");
-                    break;
-                case IgnoreSubmodulesMode.All:
-                    stringBuilder.Append(" --ignore-submodules=all");
-                    break;
-            }
-
-            if (!excludeIgnoredFiles)
-            {
-                stringBuilder.Append(" --ignored");
-            }
-
-            return stringBuilder.ToString();
+            return args.ToString();
         }
 
         [CanBeNull]
@@ -1233,47 +1066,22 @@ namespace GitCommands
 
         public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string message, int? log)
         {
-            StringBuilder command = new StringBuilder("merge");
+            // TODO Quote should escape any " characters, at least for usages like the below
 
-            if (!allowFastForward)
+            var args = new ArgumentBuilder
             {
-                command.Append(" --no-ff");
-            }
+                "merge",
+                { !allowFastForward, "--no-ff" },
+                { !string.IsNullOrEmpty(strategy), $"--strategy={strategy}" },
+                { squash, "--squash" },
+                { noCommit, "--no-commit" },
+                { allowUnrelatedHistories, "--allow-unrelated-histories" },
+                { !string.IsNullOrEmpty(message), $"-m {message.Quote()}" },
+                { log != null, $"--log={log}" },
+                branch
+            };
 
-            if (!string.IsNullOrEmpty(strategy))
-            {
-                command.Append(" --strategy=");
-                command.Append(strategy);
-            }
-
-            if (squash)
-            {
-                command.Append(" --squash");
-            }
-
-            if (noCommit)
-            {
-                command.Append(" --no-commit");
-            }
-
-            if (allowUnrelatedHistories)
-            {
-                command.Append(" --allow-unrelated-histories");
-            }
-
-            if (!string.IsNullOrEmpty(message))
-            {
-                command.AppendFormat(" -m {0}", message.Quote());
-            }
-
-            if (log.HasValue)
-            {
-                command.AppendFormat(" --log={0}", log.Value);
-            }
-
-            command.Append(" ");
-            command.Append(branch);
-            return command.ToString();
+            return args.ToString();
         }
 
         public static string GetFileExtension(string fileName)
@@ -1284,25 +1092,6 @@ namespace GitCommands
             }
 
             return null;
-        }
-
-        // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
-        // only looks at start, as all we want is to tell from automail format
-        // returns false on any problem, never throws
-        private static bool IsDiffFile(string path)
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    string line = sr.ReadLine();
-                    return line.StartsWith("diff ") || line.StartsWith("Index: ");
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         // returns " --find-renames=..." according to app settings

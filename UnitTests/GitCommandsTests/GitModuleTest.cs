@@ -10,6 +10,7 @@ namespace GitCommandsTests
     public class GitModuleTest
     {
         private GitModule _gitModule;
+
         [SetUp]
         public void SetUp()
         {
@@ -84,6 +85,110 @@ namespace GitCommandsTests
             const string s = "Hello, World!";
 
             Assert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
+        }
+
+        [Test]
+        public void FetchCmd()
+        {
+            // TODO test case where this is false
+            Assert.IsTrue(GitCommandHelpers.VersionInUse.FetchCanAskForProgress);
+
+            Assert.AreEqual(
+                "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
+                _gitModule.FetchCmd("remote", "remotebranch", "localbranch"));
+            Assert.AreEqual(
+                "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
+                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true));
+            Assert.AreEqual(
+                "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
+                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null));
+            Assert.AreEqual(
+                "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
+                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true));
+            Assert.AreEqual(
+                "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune",
+                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", prune: true));
+        }
+
+        [Test]
+        public void PushAllCmd()
+        {
+            // TODO test case where this is false
+            Assert.IsTrue(GitCommandHelpers.VersionInUse.PushCanAskForProgress);
+
+            Assert.AreEqual(
+                "push --progress --all \"remote\"",
+                _gitModule.PushAllCmd("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push -f --progress --all \"remote\"",
+                _gitModule.PushAllCmd("remote", ForcePushOptions.Force, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push --force-with-lease --progress --all \"remote\"",
+                _gitModule.PushAllCmd("remote", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push -u --progress --all \"remote\"",
+                _gitModule.PushAllCmd("remote", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push --recurse-submodules=check --progress --all \"remote\"",
+                _gitModule.PushAllCmd("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1));
+            Assert.AreEqual(
+                "push --recurse-submodules=on-demand --progress --all \"remote\"",
+                _gitModule.PushAllCmd("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2));
+        }
+
+        [Test]
+        public void PushCmd()
+        {
+            Assert.AreEqual(
+                "push --progress \"remote\" from-branch",
+                _gitModule.PushCmd("remote", "from-branch", null, ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push --progress \"remote\" from-branch:refs/heads/to-branch",
+                _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push -f --progress \"remote\" from-branch:refs/heads/to-branch",
+                _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.Force, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push --force-with-lease --progress \"remote\" from-branch:refs/heads/to-branch",
+                _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push -u --progress \"remote\" from-branch:refs/heads/to-branch",
+                _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0));
+            Assert.AreEqual(
+                "push --recurse-submodules=check --progress \"remote\" from-branch:refs/heads/to-branch",
+                _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1));
+            Assert.AreEqual(
+                "push --recurse-submodules=on-demand --progress \"remote\" from-branch:refs/heads/to-branch",
+                _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2));
+        }
+
+        [Test]
+        public void CommitCmd()
+        {
+            Assert.AreEqual(
+                "commit -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false));
+            Assert.AreEqual(
+                "commit --amend -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: true));
+            Assert.AreEqual(
+                "commit --signoff -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, signOff: true));
+            Assert.AreEqual(
+                "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, author: "foo"));
+            Assert.AreEqual(
+                "commit",
+                _gitModule.CommitCmd(amend: false, useExplicitCommitMessage: false));
+            Assert.AreEqual(
+                "commit --no-verify -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, noVerify: true));
+            Assert.AreEqual(
+                "commit -S -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, gpgSign: true));
+            Assert.AreEqual(
+                "commit -Skey -F \"COMMITMESSAGE\"",
+                _gitModule.CommitCmd(amend: false, gpgSign: true, gpgKeyId: "key"));
         }
     }
 }
