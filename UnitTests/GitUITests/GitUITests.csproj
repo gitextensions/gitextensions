@@ -62,6 +62,7 @@
     <Compile Include="SplitterManagerTest.cs" />
     <Compile Include="ThreadHelperTests.cs" />
     <Compile Include="TranslationTest.cs" />
+    <Compile Include="UITest.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlightingFixture.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControlFixture.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzerFixture.cs" />

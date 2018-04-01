@@ -126,24 +126,6 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             });
         }
 
-        private static async Task WaitForIdleAsync()
-        {
-            var idleCompletionSource = new TaskCompletionSource<VoidResult>();
-            Application.Idle += HandleApplicationIdle;
-
-            // Queue an event to make sure we don't stall if the application was already idle
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            await Task.Yield();
-
-            await idleCompletionSource.Task;
-            Application.Idle -= HandleApplicationIdle;
-
-            void HandleApplicationIdle(object sender, EventArgs e)
-            {
-                idleCompletionSource.TrySetResult(default);
-            }
-        }
-
         private void RunFormCommitTest(Action<FormCommit> testDriver, CommitKind commitKind = CommitKind.Normal)
         {
             RunFormCommitTest(
@@ -157,55 +139,28 @@ namespace GitUITests.CommandsDialogs.CommitDialog
 
         private void RunFormCommitTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
-            var asyncTest = ThreadHelper.JoinableTaskFactory.RunAsync(TestWrapperAsync);
-            try
-            {
-                switch (commitKind)
+            UITest.RunForm(
+                () =>
                 {
-                case CommitKind.Normal:
-                    Assert.True(_commands.StartCommitDialog());
-                    break;
+                    switch (commitKind)
+                    {
+                    case CommitKind.Normal:
+                        Assert.True(_commands.StartCommitDialog());
+                        break;
 
-                case CommitKind.Squash:
-                    Assert.True(_commands.StartSquashCommitDialog(owner: null, _moduleTestHelper.Module.GetRevision("HEAD")));
-                    break;
+                    case CommitKind.Squash:
+                        Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
+                        break;
 
-                case CommitKind.Fixup:
-                    Assert.True(_commands.StartFixupCommitDialog(owner: null, _moduleTestHelper.Module.GetRevision("HEAD")));
-                    break;
+                    case CommitKind.Fixup:
+                        Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
+                        break;
 
-                default:
-                    throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
-                }
-            }
-            finally
-            {
-                asyncTest.Join();
-            }
-
-            return;
-
-            // Local functions
-            async Task TestWrapperAsync()
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                await WaitForIdleAsync();
-
-                var formCommit = Application.OpenForms.OfType<FormCommit>().Single();
-
-                try
-                {
-                    await testDriverAsync(formCommit);
-                }
-                finally
-                {
-                    formCommit.Close();
-                }
-            }
-        }
-
-        private readonly struct VoidResult
-        {
+                    default:
+                        throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
+                    }
+                },
+                testDriverAsync);
         }
     }
 }
