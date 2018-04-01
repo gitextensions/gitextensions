@@ -16,6 +16,10 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Default debugging command starts GitExtensions browsing this repository -->
+    <StartArguments>browse "$(MSBuildThisFileDirectory).."</StartArguments>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
