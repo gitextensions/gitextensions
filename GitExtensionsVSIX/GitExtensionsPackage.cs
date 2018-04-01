@@ -30,6 +30,7 @@ namespace GitExtensionsVSIX
     [Guid(PackageGuids.guidGitExtensionsPackageString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideBindingPath]
     public sealed class GitExtensionsPackage : Package
     {
         #region Package Members
