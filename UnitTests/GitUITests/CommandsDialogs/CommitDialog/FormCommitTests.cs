@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using CommonTestUtils;
-using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
@@ -16,8 +12,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
     public class FormCommitTests
     {
         // Created once for the fixture
-        private GitModuleTestHelper _moduleTestHelper;
-        private string _commitHash;
+        private ReferenceRepository _referenceRepository;
 
         // Created once for each test
         private GitUICommands _commands;
@@ -25,48 +20,28 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [SetUp]
         public void SetUp()
         {
-            if (_moduleTestHelper == null)
+            if (_referenceRepository == null)
             {
-                _moduleTestHelper = new GitModuleTestHelper();
-
-                using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-                {
-                    _moduleTestHelper.CreateRepoFile("A.txt", "A");
-                    repository.Index.Add("A.txt");
-
-                    var message = "A commit message";
-                    var author = new LibGit2Sharp.Signature("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
-                    var committer = author;
-                    var options = new LibGit2Sharp.CommitOptions();
-                    var commit = repository.Commit(message, author, committer, options);
-                    _commitHash = commit.Id.Sha;
-                }
+                _referenceRepository = new ReferenceRepository();
             }
             else
             {
-                // Undo potential impact from earlier tests
-                using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
-                {
-                    var options = new LibGit2Sharp.CheckoutOptions();
-                    repository.Reset(LibGit2Sharp.ResetMode.Hard, (LibGit2Sharp.Commit)repository.Lookup(_commitHash, LibGit2Sharp.ObjectType.Commit), options);
-                    repository.RemoveUntrackedFiles();
-                }
+                _referenceRepository.Reset();
             }
 
-            CommitHelper.SetCommitMessage(_moduleTestHelper.Module, commitMessageText: null, amendCommit: false);
-
-            _commands = new GitUICommands(_moduleTestHelper.Module);
+            _commands = new GitUICommands(_referenceRepository.Module);
         }
 
         [TearDown]
         public void TearDown()
         {
+            _commands = null;
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _moduleTestHelper.Dispose();
+            _referenceRepository.Dispose();
         }
 
         [Test]
