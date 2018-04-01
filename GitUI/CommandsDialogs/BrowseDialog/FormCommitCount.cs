@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.ThrowIfNotOnUIThread();
 
             _backgroundLoaderTokenSource.Cancel();
+            _backgroundLoaderTokenSource.Dispose();
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
 
