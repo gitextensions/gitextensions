@@ -7,33 +7,11 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E996BE2D-B07D-472D-9D74-3EA2D48EF269}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <StartupObject>
-    </StartupObject>
-    <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>GitPlugin</AssemblyName>
     <RootNamespace>GitPlugin</RootNamespace>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>GitPluginKey.pfx</AssemblyOriginatorKeyFile>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -74,9 +52,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
@@ -140,23 +116,6 @@
     <None Include="GitPluginKey.pfx" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitPluginShared\GitPluginShared.csproj">
@@ -246,10 +205,6 @@
     <AL EmbedResources="$(ProjectDir)Properties\Resources.resources" Culture="en-US" OutputAssembly="$(TargetDir)en-US\GitPlugin.resources.dll" />
     <Message Text="Done with the Custom Step." />
   </Target>
-  <ProjectExtensions>
-    <VisualStudio>
-    </VisualStudio>
-  </ProjectExtensions>
   <Import Project="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
