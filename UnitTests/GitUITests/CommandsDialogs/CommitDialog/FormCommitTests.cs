@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
-using Path = System.IO.Path;
 
 namespace GitUITests.CommandsDialogs.CommitDialog
 {
@@ -47,7 +46,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [Test]
         public void PreserveCommitMessageOnReopen()
         {
-            var generatedCommitMessage = Path.GetRandomFileName();
+            var generatedCommitMessage = Guid.NewGuid().ToString();
 
             RunFormCommitTest(formCommit =>
             {
@@ -65,7 +64,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [TestCase(CommitKind.Squash)]
         public void DoNotPreserveCommitMessageOnReopenFromSpecialCommit(CommitKind commitKind)
         {
-            var generatedCommitMessage = Path.GetRandomFileName();
+            var generatedCommitMessage = Guid.NewGuid().ToString();
 
             RunFormCommitTest(
                 formCommit =>
@@ -85,7 +84,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [Test]
         public void SelectMessageFromHistory()
         {
-            var generatedCommitMessage = Path.GetRandomFileName();
+            var generatedCommitMessage = Guid.NewGuid().ToString();
 
             RunFormCommitTest(formCommit =>
             {
