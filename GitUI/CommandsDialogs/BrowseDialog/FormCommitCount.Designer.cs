@@ -81,7 +81,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.cbIncludeSubmodules.TabIndex = 0;
             this.cbIncludeSubmodules.Text = "Include submodules";
             this.cbIncludeSubmodules.UseVisualStyleBackColor = true;
-            this.cbIncludeSubmodules.CheckedChanged += new System.EventHandler(this.cbIncludeSubmodules_CheckedChanged);
             // 
             // panel2
             // 
@@ -103,7 +102,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.Name = "FormCommitCount";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit count";
-            this.Load += new System.EventHandler(this.FormCommitCountLoad);
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

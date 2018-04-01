@@ -21,16 +21,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             InitializeComponent();
             Loading.Image = Properties.Resources.loadingpanel;
             Translate();
-        }
 
-        private void FormCommitCountLoad(object sender, EventArgs e)
-        {
-            FetchData();
-        }
-
-        private void cbIncludeSubmodules_CheckedChanged(object sender, EventArgs e)
-        {
-            FetchData();
+            Load += delegate { FetchData(); };
+            cbIncludeSubmodules.CheckedChanged += delegate { FetchData(); };
         }
 
         private void FetchData()
