@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
@@ -87,7 +88,7 @@ namespace GitUIPluginInterfaces
 
         IGitModule GitModule { get; }
         string GitCommand(string arguments);
-        string CommandLineCommand(string cmd, string arguments);
+        Task<string> CommandLineCommandAsync(string cmd, string arguments);
         IGitRemoteCommand CreateRemoteCommand();
         void CacheAvatar(string email);
         Icon FormIcon { get; }

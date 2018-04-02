@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
@@ -14,11 +15,11 @@ namespace Gerrit
     {
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
-        public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
+        public static async Task<string> RunGerritCommandAsync([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
         {
             var fetchUrl = GetFetchUrl(module, remote);
 
-            return RunGerritCommand(owner, module, command, fetchUrl, remote, stdIn);
+            return await RunGerritCommandAsync(owner, module, command, fetchUrl, remote, stdIn).ConfigureAwait(false);
         }
 
         public static Uri GetFetchUrl(IGitModule module, string remote)
@@ -30,7 +31,7 @@ namespace Gerrit
             return new Uri(fetchUrlLine.Split(new[] { ':' }, 2)[1].Trim());
         }
 
-        public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string command, [NotNull] Uri fetchUrl, [NotNull] string remote, byte[] stdIn)
+        public static async Task<string> RunGerritCommandAsync([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string command, [NotNull] Uri fetchUrl, [NotNull] string remote, byte[] stdIn)
         {
             if (owner == null)
             {
@@ -99,11 +100,11 @@ namespace Gerrit
             sb.Append(command);
             sb.Append("\"");
 
-            return module.RunCmd(
+            return await module.RunCmdAsync(
                 sshCmd,
                 sb.ToString(),
-                null,
-                stdIn);
+                encoding: null,
+                stdIn).ConfigureAwait(false);
         }
 
         public static void StartAgent([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string remote)

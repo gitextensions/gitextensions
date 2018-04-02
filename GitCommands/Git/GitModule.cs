@@ -667,9 +667,9 @@ namespace GitCommands
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
+        public async Task<string> RunCmdAsync(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            return RunCmdResult(cmd, arguments, encoding, stdInput).GetString();
+            return await Task.FromResult(RunCmdResult(cmd, arguments, encoding, stdInput).GetString()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -677,7 +677,10 @@ namespace GitCommands
         /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            return RunCmd(AppSettings.GitCommand, arguments, encoding, stdInput);
+            return ThreadHelper.JoinableTaskFactory.Run(() =>
+            {
+                return RunCmdAsync(AppSettings.GitCommand, arguments, encoding, stdInput);
+            });
         }
 
         /// <summary>
@@ -708,16 +711,16 @@ namespace GitCommands
         /// <summary>
         /// Run batch file, console window is hidden, wait for exit, redirect output
         /// </summary>
-        public string RunBatchFile(string batchFile)
+        public async Task<string> RunBatchFileAsync(string batchFile)
         {
             string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
             using (var writer = new StreamWriter(tempFileName))
             {
-                writer.WriteLine("@prompt $G");
-                writer.Write(batchFile);
+                await writer.WriteLineAsync("@prompt $G").ConfigureAwait(false);
+                await writer.WriteAsync(batchFile).ConfigureAwait(false);
             }
 
-            string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
+            string result = await RunCmdAsync("cmd.exe", "/C \"" + tempFileName + "\"").ConfigureAwait(false);
             File.Delete(tempFileName);
             return result;
         }
@@ -1098,7 +1101,7 @@ namespace GitCommands
                 };
 
                 string args = "";
-                string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(RunCmd("which", termEmuCmd)));
+                string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync("which", termEmuCmd))));
 
                 if (string.IsNullOrEmpty(cmd))
                 {
@@ -2334,7 +2337,7 @@ namespace GitCommands
 
             var patch = cacheResult
                 ? RunCacheableCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding)
-                : RunCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding);
+                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), LosslessEncoding));
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
@@ -3099,7 +3102,7 @@ namespace GitCommands
 
             var tree = GitRevision.IsFullSha1Hash(id)
                 ? RunCacheableCmd(AppSettings.GitCommand, args.ToString(), SystemEncoding)
-                : RunCmd(AppSettings.GitCommand, args.ToString(), SystemEncoding);
+                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), SystemEncoding));
 
             return _gitTreeParser.Parse(tree);
         }
@@ -3566,7 +3569,7 @@ namespace GitCommands
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             const string arguments = "x";
-            var output = RunCmd(cmd, arguments);
+            var output = ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(cmd, arguments));
             var lines = output.Split('\n');
             if (lines.Length >= 2)
             {
