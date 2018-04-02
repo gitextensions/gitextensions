@@ -15,11 +15,14 @@ namespace CommonTestUtils
     public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
     {
         private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
+        private ExceptionDispatchInfo _threadException;
 
         public ActionTargets Targets => ActionTargets.Test;
 
         public void BeforeTest(ITest test)
         {
+            Application.ThreadException += HandleApplicationThreadException;
+
             IList apartmentState = null;
             for (var scope = test; scope != null; scope = scope.Parent)
             {
@@ -49,12 +52,28 @@ namespace CommonTestUtils
 
         public void AfterTest(ITest test)
         {
-            ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
-            ThreadHelper.JoinableTaskContext = null;
-            if (_denyExecutionSynchronizationContext != null)
+            try
             {
-                SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
-                _denyExecutionSynchronizationContext.ThrowIfSwitchOccurred();
+                ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
+                ThreadHelper.JoinableTaskContext = null;
+                if (_denyExecutionSynchronizationContext != null)
+                {
+                    SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
+                    _denyExecutionSynchronizationContext.ThrowIfSwitchOccurred();
+                }
+            }
+            finally
+            {
+                Application.ThreadException -= HandleApplicationThreadException;
+                _threadException?.Throw();
+            }
+        }
+
+        private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            if (_threadException == null)
+            {
+                _threadException = ExceptionDispatchInfo.Capture(e.Exception);
             }
         }
 
