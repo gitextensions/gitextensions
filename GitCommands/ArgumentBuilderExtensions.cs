@@ -98,11 +98,17 @@ namespace GitCommands
         /// <summary>
         /// Adds the git argument syntax for members of the <see cref="ForcePushOptions"/> enum.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="option"/> is <c>null</c> then no argument is added.
+        /// </remarks>
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-        /// <param name="option">The enum member to add to the builder.</param>
-        public static void Add(this ArgumentBuilder builder, ForcePushOptions option)
+        /// <param name="option">The enum member to add to the builder, or <c>null</c>.</param>
+        public static void Add(this ArgumentBuilder builder, ForcePushOptions? option)
         {
-            builder.Add(GetArgument());
+            if (option.HasValue)
+            {
+                builder.Add(GetArgument());
+            }
 
             string GetArgument()
             {
@@ -123,11 +129,17 @@ namespace GitCommands
         /// <summary>
         /// Adds the git argument syntax for members of the <see cref="UntrackedFilesMode"/> enum.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="mode"/> is <c>null</c> then no argument is added.
+        /// </remarks>
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-        /// <param name="mode">The enum member to add to the builder.</param>
-        public static void Add(this ArgumentBuilder builder, UntrackedFilesMode mode)
+        /// <param name="mode">The enum member to add to the builder, or <c>null</c>.</param>
+        public static void Add(this ArgumentBuilder builder, UntrackedFilesMode? mode)
         {
-            builder.Add(GetArgument());
+            if (mode.HasValue)
+            {
+                builder.Add(GetArgument());
+            }
 
             string GetArgument()
             {
@@ -150,11 +162,17 @@ namespace GitCommands
         /// <summary>
         /// Adds the git argument syntax for members of the <see cref="IgnoreSubmodulesMode"/> enum.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="mode"/> is <c>null</c> then no argument is added.
+        /// </remarks>
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-        /// <param name="mode">The enum member to add to the builder.</param>
-        public static void Add(this ArgumentBuilder builder, IgnoreSubmodulesMode mode)
+        /// <param name="mode">The enum member to add to the builder, or <c>null</c>.</param>
+        public static void Add(this ArgumentBuilder builder, IgnoreSubmodulesMode? mode)
         {
-            builder.Add(GetArgument());
+            if (mode.HasValue)
+            {
+                builder.Add(GetArgument());
+            }
 
             string GetArgument()
             {
@@ -179,11 +197,17 @@ namespace GitCommands
         /// <summary>
         /// Adds the git argument syntax for members of the <see cref="GitBisectOption"/> enum.
         /// </summary>
+        /// <remarks>
+        /// If <paramref name="option"/> is <c>null</c> then no argument is added.
+        /// </remarks>
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-        /// <param name="option">The enum member to add to the builder.</param>
-        public static void Add(this ArgumentBuilder builder, GitBisectOption option)
+        /// <param name="option">The enum member to add to the builder, or <c>null</c>.</param>
+        public static void Add(this ArgumentBuilder builder, GitBisectOption? option)
         {
-            builder.Add(GetArgument());
+            if (option.HasValue)
+            {
+                builder.Add(GetArgument());
+            }
 
             string GetArgument()
             {

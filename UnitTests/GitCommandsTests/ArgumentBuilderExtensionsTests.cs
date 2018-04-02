@@ -205,14 +205,14 @@ namespace GitCommandsTests
             Test<IgnoreSubmodulesMode>();
             Test<GitBisectOption>();
 
-            void Test<T>()
+            void Test<T>() where T : struct
             {
                 var method = typeof(ArgumentBuilderExtensions).GetMethod(
                     nameof(ArgumentBuilderExtensions.Add),
                     new[]
                     {
                         typeof(ArgumentBuilder),
-                        typeof(T)
+                        typeof(T?)
                     });
 
                 Assert.NotNull(method);
@@ -221,6 +221,11 @@ namespace GitCommandsTests
                 {
                     var args = new ArgumentBuilder();
 
+                    // Passing null should not modify the arguments
+                    method.Invoke(null, new object[] { args, default(T?) });
+                    Assert.AreEqual("", args.ToString());
+
+                    // Passing a member should not throw (though might not modify the arguments)
                     Assert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
                 }
             }
