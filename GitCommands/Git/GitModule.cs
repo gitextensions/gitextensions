@@ -2582,7 +2582,7 @@ namespace GitCommands
         ///  including any untracked files or directories; excluding submodules.</summary>
         public bool IsDirtyDir()
         {
-            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
+            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.All).Count > 0;
         }
 
         public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
