@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormCommitCount : GitModuleForm
     {
-        private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
         public FormCommitCount(GitUICommands commands)
             : base(commands)
@@ -32,14 +32,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            _backgroundLoaderTokenSource.Cancel();
-            _backgroundLoaderTokenSource.Dispose();
-            _backgroundLoaderTokenSource = new CancellationTokenSource();
-            var token = _backgroundLoaderTokenSource.Token;
-
-            Loading.Visible = true;
+            var token = _cancellationTokenSequence.Next();
 
             CommitCount.Text = "";
+            Loading.Visible = true;
 
             var includeSubmodules = cbIncludeSubmodules.Checked;
 
@@ -49,7 +45,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
-            if (!token.IsCancellationRequested)
+            if (!token.IsCancellationRequested && !IsDisposed)
             {
                 CommitCount.Text = text;
                 Loading.Visible = false;
@@ -130,8 +126,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            _backgroundLoaderTokenSource.Cancel();
-            _backgroundLoaderTokenSource.Dispose();
+            _cancellationTokenSequence.Dispose();
             base.OnFormClosed(e);
         }
     }
