@@ -88,9 +88,12 @@ namespace Gravatar
                 {
                     return cachedImage;
                 }
+            }
 
-                var image = _inner.GetImage(imageFileName);
+            var image = _inner.GetImage(imageFileName);
 
+            lock (_cache)
+            {
                 if (image != null)
                 {
                     _cache.Add(imageFileName, image);
