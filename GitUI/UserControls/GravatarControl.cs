@@ -24,6 +24,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
+
             noneToolStripMenuItem.Tag = DefaultImageType.None;
             identiconToolStripMenuItem.Tag = DefaultImageType.Identicon;
             monsterIdToolStripMenuItem.Tag = DefaultImageType.MonsterId;
@@ -120,7 +122,7 @@ namespace GitUI
             }
         }
 
-        private void ClearImagecacheToolStripMenuItemClick(object sender, EventArgs e)
+        private void ClearCache()
         {
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(
@@ -140,14 +142,7 @@ namespace GitUI
             {
                 AppSettings.GravatarDefaultImageType = type.ToString();
 
-                ThreadHelper.JoinableTaskFactory
-                    .RunAsync(
-                        async () =>
-                        {
-                            await _avatarCache.ClearAsync().ConfigureAwait(true);
-                            await UpdateGravatarAsync().ConfigureAwait(false);
-                        })
-                    .FileAndForget();
+                ClearCache();
             }
         }
 
