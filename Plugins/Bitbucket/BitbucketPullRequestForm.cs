@@ -140,6 +140,7 @@ namespace Bitbucket
                 };
                 var pullRequest = new CreatePullRequestRequest(_settings, info);
                 var response = await pullRequest.SendAsync();
+                await this.SwitchToMainThreadAsync();
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
@@ -218,6 +219,7 @@ namespace Bitbucket
             {
                 var commit = await GetCommitInfoAsync((Repository)ddlRepositorySource.SelectedValue,
                                                     ddlBranchSource.SelectedValue.ToString());
+                await this.SwitchToMainThreadAsync();
 
                 ddlBranchSource.Tag = commit;
                 UpdateCommitInfo(lblCommitInfoSource, commit);
@@ -237,6 +239,7 @@ namespace Bitbucket
             {
                 var commit = await GetCommitInfoAsync((Repository)ddlRepositoryTarget.SelectedValue,
                                                     ddlBranchTarget.SelectedValue.ToString());
+                await this.SwitchToMainThreadAsync();
 
                 ddlBranchTarget.Tag = commit;
                 UpdateCommitInfo(lblCommitInfoTarget, commit);
