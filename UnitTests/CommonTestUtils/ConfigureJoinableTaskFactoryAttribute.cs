@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Windows.Forms;
 using GitUI;
@@ -12,6 +14,8 @@ namespace CommonTestUtils
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
     public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
     {
+        private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
+
         public ActionTargets Targets => ActionTargets.Test;
 
         public void BeforeTest(ITest test)
@@ -28,6 +32,8 @@ namespace CommonTestUtils
 
             if (!apartmentState.Contains(ApartmentState.STA))
             {
+                _denyExecutionSynchronizationContext = new DenyExecutionSynchronizationContext(SynchronizationContext.Current);
+                ThreadHelper.JoinableTaskContext = new JoinableTaskContext(_denyExecutionSynchronizationContext.MainThread, _denyExecutionSynchronizationContext);
                 return;
             }
 
@@ -45,6 +51,94 @@ namespace CommonTestUtils
         {
             ThreadHelper.JoinableTaskContext?.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync());
             ThreadHelper.JoinableTaskContext = null;
+            if (_denyExecutionSynchronizationContext != null)
+            {
+                SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
+                _denyExecutionSynchronizationContext.ThrowIfSwitchOccurred();
+            }
+        }
+
+        private class DenyExecutionSynchronizationContext : SynchronizationContext
+        {
+            private readonly SynchronizationContext _underlyingContext;
+            private readonly Thread _mainThread;
+            private readonly StrongBox<ExceptionDispatchInfo> _failedTransfer;
+
+            public DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext)
+                : this(underlyingContext, mainThread: null, failedTransfer: null)
+            {
+            }
+
+            private DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext, Thread mainThread, StrongBox<ExceptionDispatchInfo> failedTransfer)
+            {
+                _underlyingContext = underlyingContext;
+                _mainThread = mainThread ?? new Thread(MainThreadStart);
+                _failedTransfer = failedTransfer ?? new StrongBox<ExceptionDispatchInfo>();
+            }
+
+            internal SynchronizationContext UnderlyingContext => _underlyingContext;
+
+            internal Thread MainThread => _mainThread;
+
+            private void MainThreadStart() => throw new InvalidOperationException("This thread should never be started.");
+
+            internal void ThrowIfSwitchOccurred()
+            {
+                if (_failedTransfer.Value == null)
+                {
+                    return;
+                }
+
+                _failedTransfer.Value.Throw();
+            }
+
+            public override void Post(SendOrPostCallback d, object state)
+            {
+                try
+                {
+                    if (_failedTransfer.Value == null)
+                    {
+                        ThrowFailedTransferExceptionForCapture();
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                    _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
+                }
+
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+                (_underlyingContext ?? new SynchronizationContext()).Post(d, state);
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
+            }
+
+            public override void Send(SendOrPostCallback d, object state)
+            {
+                try
+                {
+                    if (_failedTransfer.Value == null)
+                    {
+                        ThrowFailedTransferExceptionForCapture();
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                    _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
+                }
+
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+                (_underlyingContext ?? new SynchronizationContext()).Send(d, state);
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
+            }
+
+            public override SynchronizationContext CreateCopy()
+            {
+                return new DenyExecutionSynchronizationContext(_underlyingContext.CreateCopy(), _mainThread, _failedTransfer);
+            }
+
+            private void ThrowFailedTransferExceptionForCapture()
+            {
+                throw new InvalidOperationException("Tests cannot use SwitchToMainThreadAsync unless they are marked with ApartmentState.STA.");
+            }
         }
     }
 }
