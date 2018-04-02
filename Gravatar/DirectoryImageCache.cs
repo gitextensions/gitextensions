@@ -31,8 +31,10 @@ namespace Gravatar
         {
         }
 
+        /// <inheritdoc />
         public event EventHandler Invalidated;
 
+        /// <inheritdoc />
         void IImageCache.AddImage(string imageFileName, Image image)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -67,6 +69,7 @@ namespace Gravatar
             OnInvalidated();
         }
 
+        /// <inheritdoc />
         async Task IImageCache.ClearAsync()
         {
             if (!_fileSystem.Directory.Exists(_cachePath))
@@ -92,6 +95,7 @@ namespace Gravatar
             OnInvalidated();
         }
 
+        /// <inheritdoc />
         async Task IImageCache.DeleteImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -118,6 +122,7 @@ namespace Gravatar
             OnInvalidated();
         }
 
+        /// <inheritdoc />
         Image IImageCache.GetImage(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -145,6 +150,7 @@ namespace Gravatar
             }
         }
 
+        /// <inheritdoc />
         async Task<Image> IImageCache.GetImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))

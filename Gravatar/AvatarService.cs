@@ -45,16 +45,17 @@ namespace Gravatar
             _avatarImageNameProvider = avatarImageNameProvider ?? new AvatarImageNameProvider();
         }
 
+        /// <inheritdoc />
         async Task<Image> IAvatarService.GetAvatarAsync(string email, int imageSize, string defaultImageType)
         {
-            if (email == null)
+            if (string.IsNullOrWhiteSpace(email))
             {
-                throw new ArgumentNullException(nameof(email));
+                throw new ArgumentException(nameof(email));
             }
 
-            if (defaultImageType == null)
+            if (string.IsNullOrWhiteSpace(defaultImageType))
             {
-                throw new ArgumentNullException(nameof(defaultImageType));
+                throw new ArgumentException(nameof(defaultImageType));
             }
 
             var imageFileName = _avatarImageNameProvider.Get(email);
@@ -79,6 +80,7 @@ namespace Gravatar
             return image;
         }
 
+        /// <inheritdoc />
         async Task IAvatarService.DeleteAvatarAsync(string email)
         {
             if (email == null)
@@ -91,6 +93,7 @@ namespace Gravatar
             await _cache.DeleteImageAsync(imageFileName);
         }
 
+        /// <inheritdoc />
         DefaultImageType IAvatarService.GetDefaultImageType(string imageType)
         {
             if (imageType == null)

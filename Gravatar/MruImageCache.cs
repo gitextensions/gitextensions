@@ -24,12 +24,14 @@ namespace Gravatar
             _cache = new MruCache<string, Image>(capacity);
         }
 
+        /// <inheritdoc />
         event EventHandler IImageCache.Invalidated
         {
             add => _inner.Invalidated += value;
             remove => _inner.Invalidated -= value;
         }
 
+        /// <inheritdoc />
         void IImageCache.AddImage(string imageFileName, Image image)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -50,6 +52,7 @@ namespace Gravatar
             }
         }
 
+        /// <inheritdoc />
         Task IImageCache.ClearAsync()
         {
             lock (_cache)
@@ -60,6 +63,7 @@ namespace Gravatar
             return _inner.ClearAsync();
         }
 
+        /// <inheritdoc />
         Task IImageCache.DeleteImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -75,6 +79,7 @@ namespace Gravatar
             return _inner.DeleteImageAsync(imageFileName);
         }
 
+        /// <inheritdoc />
         Image IImageCache.GetImage(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
@@ -103,6 +108,7 @@ namespace Gravatar
             }
         }
 
+        /// <inheritdoc />
         async Task<Image> IImageCache.GetImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
