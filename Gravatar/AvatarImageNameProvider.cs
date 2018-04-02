@@ -20,6 +20,7 @@ namespace Gravatar
     /// </summary>
     public sealed class AvatarImageNameProvider : IImageNameProvider
     {
+        /// <inheritdoc />
         string IImageNameProvider.Get(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
