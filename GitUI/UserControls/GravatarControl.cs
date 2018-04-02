@@ -14,6 +14,7 @@ namespace GitUI
 {
     public partial class GravatarControl : GitExtensionsControl
     {
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IImageCache _avatarCache;
         private readonly IAvatarService _avatarService;
 
@@ -78,10 +79,13 @@ namespace GitUI
                 return;
             }
 
-            // TODO protect against out-of-order results here
+            var token = _cancellationTokenSequence.Next();
             var image = await _avatarService.GetAvatarAsync(email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
 
-            RefreshImage(image);
+            if (!token.IsCancellationRequested)
+            {
+                RefreshImage(image);
+            }
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
