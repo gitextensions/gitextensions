@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs
         private bool _shouldReloadCommitTemplates = true;
         private readonly AsyncLoader _unstagedLoader;
         private readonly bool _useFormCommitMessage;
-        private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
+        private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
         private string _userName = "";
         private string _userEmail = "";
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
@@ -3057,8 +3057,7 @@ namespace GitUI.CommandsDialogs
 
             if (gitProcess != null)
             {
-                _interactiveAddBashCloseWaitCts.Cancel();
-                _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
+                var token = _interactiveAddSequence.Next();
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
@@ -3066,8 +3065,8 @@ namespace GitUI.CommandsDialogs
                     await gitProcess.WaitForExitAsync().ConfigureAwait(false);
                     gitProcess.Dispose();
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_interactiveAddBashCloseWaitCts.Token);
-                    if (!_interactiveAddBashCloseWaitCts.Token.IsCancellationRequested)
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                    if (!token.IsCancellationRequested)
                     {
                         RescanChanges();
                     }
@@ -3120,12 +3119,7 @@ namespace GitUI.CommandsDialogs
             if (disposing)
             {
                 _unstagedLoader.Dispose();
-                if (_interactiveAddBashCloseWaitCts != null)
-                {
-                    _interactiveAddBashCloseWaitCts.Cancel();
-                    _interactiveAddBashCloseWaitCts.Dispose();
-                    _interactiveAddBashCloseWaitCts = null;
-                }
+                _interactiveAddSequence.Dispose();
 
                 if (components != null)
                 {
