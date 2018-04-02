@@ -2571,7 +2571,7 @@ namespace GitCommands
             return GetAllChangedFilesWithSubmodulesStatus().Where(x => !x.IsStaged).ToArray();
         }
 
-        public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = 0)
+        public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunGitCmd(command);
@@ -2582,7 +2582,7 @@ namespace GitCommands
         ///  including any untracked files or directories; excluding submodules.</summary>
         public bool IsDirtyDir()
         {
-            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
+            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.All).Count > 0;
         }
 
         public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
