@@ -641,6 +641,9 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "status --porcelain -z --untracked-files --ignore-submodules=all",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All));
+            Assert.AreEqual(
+                "status --porcelain -z --untracked-files",
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default));
         }
 
         [Test]
