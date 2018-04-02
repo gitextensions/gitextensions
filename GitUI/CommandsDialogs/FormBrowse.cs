@@ -943,14 +943,21 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateStashCount()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (AppSettings.ShowStashCount)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    return AsyncLoader.DoAsync(() => Module.GetStashes().Count,
-                        (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
-                            result != 1 ? _stashPlural.Text : _stashSingular.Text));
-                });
+                    await TaskScheduler.Default;
+
+                    var result = Module.GetStashes().Count;
+
+                    await this.SwitchToMainThreadAsync();
+
+                    toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
+                            result != 1 ? _stashPlural.Text : _stashSingular.Text);
+                }).FileAndForget();
             }
             else
             {
@@ -960,6 +967,8 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForMergeConflicts()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             bool validWorkingDir = Module.IsValidGitWorkingDir();
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
@@ -1006,44 +1015,46 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                return AsyncLoader.DoAsync(
-                    () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                            !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
-                    (result) =>
-                    {
-                        if (result)
-                        {
-                            if (_warning == null)
-                            {
-                                _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                                _warning.Click += WarningClick;
-                                statusStrip.Items.Add(_warning);
-                            }
-                        }
-                        else
-                        {
-                            if (_warning != null)
-                            {
-                                _warning.Click -= WarningClick;
-                                statusStrip.Items.Remove(_warning);
-                                _warning = null;
-                            }
-                        }
+                await TaskScheduler.Default;
 
-                        // Only show status strip when there are status items on it.
-                        // There is always a close (x) button, do not count first item.
-                        if (statusStrip.Items.Count > 1)
-                        {
-                            statusStrip.Show();
-                        }
-                        else
-                        {
-                            statusStrip.Hide();
-                        }
-                    });
-            });
+                var result = validWorkingDir
+                    && Module.InTheMiddleOfConflictedMerge()
+                    && !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\");
+
+                await this.SwitchToMainThreadAsync();
+
+                if (result)
+                {
+                    if (_warning == null)
+                    {
+                        _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
+                        _warning.Click += WarningClick;
+                        statusStrip.Items.Add(_warning);
+                    }
+                }
+                else
+                {
+                    if (_warning != null)
+                    {
+                        _warning.Click -= WarningClick;
+                        statusStrip.Items.Remove(_warning);
+                        _warning = null;
+                    }
+                }
+
+                // Only show status strip when there are status items on it.
+                // There is always a close (x) button, do not count first item.
+                if (statusStrip.Items.Count > 1)
+                {
+                    statusStrip.Show();
+                }
+                else
+                {
+                    statusStrip.Hide();
+                }
+            }).FileAndForget();
         }
 
         private void RebaseClick(object sender, EventArgs e)
