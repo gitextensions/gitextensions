@@ -132,10 +132,11 @@ namespace GitUI.UserControls
                     }).FileAndForget();
                 };
 
+                var startCmd = AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionStartTimestamp, isStart: true);
                 process.Exited += (sender, args) =>
                 {
                     DateTime executionEndTimestamp = DateTime.Now;
-                    AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                    AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp, startCmd: startCmd);
                 };
 
                 process.Start();

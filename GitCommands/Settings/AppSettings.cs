@@ -54,7 +54,7 @@ namespace GitCommands
                 }
                 else
                 {
-                    // Make applicationdatapath version independent
+                    // Make ApplicationDataPath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
             });
@@ -1470,6 +1470,12 @@ namespace GitCommands
         {
             get => GetEnum("BranchOrderingCriteria", GitRefsOrder.ByLastAccessDate);
             set => SetEnum("BranchOrderingCriteria", value);
+        }
+
+        public static bool EnhancedGitLog
+        {
+            get => GetBool("EnhancedGitLog", false);
+            set => SetBool("EnhancedGitLog", value);
         }
 
         public static string GetGitExtensionsFullPath()

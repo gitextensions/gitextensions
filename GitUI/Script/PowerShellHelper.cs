@@ -22,12 +22,13 @@ namespace GitUI.Script
                 UseShellExecute = false
             };
 
+            var startCmd = AppSettings.GitLog.Log(filename + " " + psarguments, executionStartTimestamp, executionStartTimestamp, isStart: true);
             var startProcess = Process.Start(startInfo);
 
             startProcess.Exited += (sender, args) =>
             {
                 var executionEndTimestamp = DateTime.Now;
-                AppSettings.GitLog.Log(filename + " " + psarguments, executionStartTimestamp, executionEndTimestamp);
+                AppSettings.GitLog.Log(filename + " " + psarguments, executionStartTimestamp, executionEndTimestamp, startCmd: startCmd);
             };
         }
     }

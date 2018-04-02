@@ -19,8 +19,27 @@ namespace GitCommands.Logging
             }
         }
 
-        public void Log(string command, DateTime executionStartTimestamp, DateTime executionEndTimestamp)
+        /// <summary>
+        /// Add the command to the log fifo queue
+        /// </summary>
+        /// <param name="command">The (Git) command to log</param>
+        /// <param name="executionStartTimestamp">The start time for the command</param>
+        /// <param name="executionEndTimestamp">The end time for the command, ignored if this is start of a command</param>
+        /// <param name="startCmd">The log entry for the start command, to be able to identify start/end pairs</param>
+        /// <returns>The log entry reference, null if not added</returns>
+        public CommandLogEntry Log(string command, DateTime executionStartTimestamp, DateTime executionEndTimestamp, CommandLogEntry startCmd = null, bool isStart = false)
         {
+            if (!AppSettings.EnhancedGitLog)
+            {
+                if (isStart)
+                {
+                    return null;
+                }
+
+                startCmd = null;
+            }
+
+            CommandLogEntry commandLogEntry = null;
             lock (_logQueue)
             {
                 if (_logQueue.Count >= LogLimit)
@@ -28,11 +47,12 @@ namespace GitCommands.Logging
                     _logQueue.Dequeue();
                 }
 
-                var commandLogEntry = new CommandLogEntry(command, executionStartTimestamp, executionEndTimestamp);
+                commandLogEntry = new CommandLogEntry(command, executionStartTimestamp, executionEndTimestamp, startCmd, isStart);
                 _logQueue.Enqueue(commandLogEntry);
             }
 
             CommandsChanged?.Invoke(this, EventArgs.Empty);
+            return commandLogEntry;
         }
 
         public override string ToString()
