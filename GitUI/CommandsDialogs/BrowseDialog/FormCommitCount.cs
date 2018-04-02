@@ -24,9 +24,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             Load += delegate { FetchData(); };
             cbIncludeSubmodules.CheckedChanged += delegate { FetchData(); };
+
+            void FetchData() => ThreadHelper.JoinableTaskFactory.RunAsync(FetchDataAsync).FileAndForget();
         }
 
-        private void FetchData()
+        private async Task FetchDataAsync()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -35,28 +37,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    Loading.Visible = true;
+            Loading.Visible = true;
 
-                    CommitCount.Text = "";
+            CommitCount.Text = "";
 
-                    var includeSubmodules = cbIncludeSubmodules.Checked;
+            var includeSubmodules = cbIncludeSubmodules.Checked;
 
-                    await TaskScheduler.Default;
+            await TaskScheduler.Default;
 
-                    var text = GenerateText(Module, includeSubmodules, token);
+            var text = GenerateText(Module, includeSubmodules, token);
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
-                    if (!token.IsCancellationRequested)
-                    {
-                        CommitCount.Text = text;
-                        Loading.Visible = false;
-                    }
-                })
-                .FileAndForget();
+            if (!token.IsCancellationRequested)
+            {
+                CommitCount.Text = text;
+                Loading.Visible = false;
+            }
         }
 
         private static string GenerateText(GitModule module, bool includeSubmodules, CancellationToken token)
