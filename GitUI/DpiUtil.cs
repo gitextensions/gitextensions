@@ -69,6 +69,16 @@ namespace GitUI
             size.Height = (int)(size.Height * ScaleY);
         }
 
+        /// <summary>
+        /// Returns a scaled copy of measurement <paramref name="i"/> which has
+        /// equivalent length on screen at the current DPI at the original would
+        /// at 96 DPI.
+        /// </summary>
+        public static int Scale(int i)
+        {
+            return (int)Math.Round(i * ScaleX);
+        }
+
         [DllImport("gdi32.dll")]
         private static extern int GetDeviceCaps(DeviceContextSafeHandle hdc, int index);
 
