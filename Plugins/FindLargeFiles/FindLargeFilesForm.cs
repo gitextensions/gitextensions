@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -57,7 +58,11 @@ namespace FindLargeFiles
                     {
                         d.LastCommitDate = date;
                         _list.Add(d.SHA, d);
-                        BranchesGrid.Invoke((Action)(() => { _gitObjects.Add(d); }));
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await BranchesGrid.SwitchToMainThreadAsync();
+                            _gitObjects.Add(d);
+                        });
                     }
                     else if (!curGitObject.Commit.Contains(commit))
                     {
@@ -66,7 +71,11 @@ namespace FindLargeFiles
                             curGitObject.LastCommitDate = date;
                         }
 
-                        BranchesGrid.Invoke((Action)(() => { _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject)); }));
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await BranchesGrid.SwitchToMainThreadAsync();
+                            _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject));
+                        });
                         curGitObject.Commit.Add(commit);
                     }
                 }
@@ -78,7 +87,11 @@ namespace FindLargeFiles
                     foreach (var pack in packFiles)
                     {
                         string[] objects = _gitCommands.RunGitCmd(string.Concat("verify-pack -v ", pack)).Split('\n');
-                        pbRevisions.Invoke((Action)(() => pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length)));
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await pbRevisions.SwitchToMainThreadAsync();
+                            pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
+                        });
                         foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
                         {
                             string[] dataFields = gitobj.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -87,15 +100,27 @@ namespace FindLargeFiles
                                 if (int.TryParse(dataFields[3], out var compressedSize))
                                 {
                                     curGitObject.CompressedSizeInBytes = compressedSize;
-                                    BranchesGrid.Invoke((Action)(() => { _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject)); }));
+                                    ThreadHelper.JoinableTaskFactory.Run(async () =>
+                                    {
+                                        await BranchesGrid.SwitchToMainThreadAsync();
+                                        _gitObjects.ResetItem(_gitObjects.IndexOf(curGitObject));
+                                    });
                                 }
                             }
                         }
                     }
                 }
 
-                pbRevisions.Invoke((Action)(() => pbRevisions.Hide()));
-                BranchesGrid.Invoke((Action)(() => BranchesGrid.ReadOnly = false));
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await pbRevisions.SwitchToMainThreadAsync();
+                    pbRevisions.Hide();
+                });
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await BranchesGrid.SwitchToMainThreadAsync();
+                    BranchesGrid.ReadOnly = false;
+                });
             }
             catch
             {
@@ -117,7 +142,11 @@ namespace FindLargeFiles
             int thresholdSize = (int)(threshold * 1024 * 1024);
             for (int i = 0; i < _revList.Length; i++)
             {
-                pbRevisions.Invoke((Action)(() => pbRevisions.Value = i));
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    await pbRevisions.SwitchToMainThreadAsync();
+                    pbRevisions.Value = i;
+                });
                 string rev = _revList[i];
                 string[] objects = _gitCommands.RunGitCmd(string.Concat("ls-tree -zrl ", rev)).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string objData in objects)

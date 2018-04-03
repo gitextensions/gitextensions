@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using GitCommands;
@@ -79,41 +80,38 @@ namespace GitUI
             return _errorOccurred;
         }
 
-        public void SetProgress(string text)
+        public async Task SetProgressAsync(string text)
         {
             // This has to happen on the UI thread
-            BeginInvoke((SendOrPostCallback)Method, this);
+            await this.SwitchToMainThreadAsync();
 
-            void Method(object o)
+            int index = text.LastIndexOf('%');
+            if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
             {
-                int index = text.LastIndexOf('%');
-                if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
+                if (ProgressBar.Style != ProgressBarStyle.Blocks)
                 {
-                    if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                    {
-                        ProgressBar.Style = ProgressBarStyle.Blocks;
-                    }
-
-                    ProgressBar.Value = Math.Min(100, progressValue);
-
-                    if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                    {
-                        try
-                        {
-                            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                            TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                        }
-                        catch (InvalidOperationException)
-                        {
-                        }
-                    }
+                    ProgressBar.Style = ProgressBarStyle.Blocks;
                 }
 
-                // Show last progress message in the title, unless it's showin in the control body already
-                if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+                ProgressBar.Value = Math.Min(100, progressValue);
+
+                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                 {
-                    Text = text;
+                    try
+                    {
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                        TaskbarManager.Instance.SetProgressValue(progressValue, 100);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
                 }
+            }
+
+            // Show last progress message in the title, unless it's showin in the control body already
+            if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+            {
+                Text = text;
             }
         }
 
