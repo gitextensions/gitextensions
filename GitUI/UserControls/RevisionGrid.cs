@@ -2072,7 +2072,7 @@ namespace GitUI
                     var moduleRef = Module;
                     ThreadHelper.JoinableTaskFactory.RunAsync(() =>
                     {
-                        return LoadIsMultilineMessageInfoAsync(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef);
+                        return LoadIsMultilineMessageInfoAsync(revision, columnIndex, e.RowIndex, Revisions.RowCount);
                     }).FileAndForget();
                 }
 
@@ -2092,7 +2092,7 @@ namespace GitUI
         }
 
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
-        private async Task LoadIsMultilineMessageInfoAsync(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule module)
+        private async Task LoadIsMultilineMessageInfoAsync(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
         {
             await TaskScheduler.Default;
 
