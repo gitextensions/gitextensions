@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -35,13 +37,9 @@ namespace GitCommands
 
         public event EventHandler Exited;
         public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
-        public event EventHandler<AsyncErrorEventArgs> Error
-        {
-            add => _backgroundLoader.LoadingError += value;
-            remove => _backgroundLoader.LoadingError -= value;
-        }
+        public event EventHandler<AsyncErrorEventArgs> Error;
 
-        private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly GitModule _module;
 
         [CanBeNull] private Dictionary<string, List<IGitRef>> _refs;
@@ -65,18 +63,33 @@ namespace GitCommands
             _module = module;
         }
 
-        /// <value>Refs loaded during the last call to <see cref="ProcessGitLog"/>.</value>
+        /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
         public IEnumerable<IGitRef> LatestRefs => _refs?.SelectMany(p => p.Value) ?? Enumerable.Empty<IGitRef>();
 
         public void Execute()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => _backgroundLoader.LoadAsync(ProcessGitLog, ProcessGitLogExecuted));
+            ThreadHelper.JoinableTaskFactory
+                .RunAsync(ExecuteAsync)
+                .FileAndForget(
+                    ex =>
+                    {
+                        var args = new AsyncErrorEventArgs(ex);
+                        Error?.Invoke(this, args);
+                        return !args.Handled;
+                    });
         }
 
-        private void ProcessGitLog(CancellationToken token)
+        private async Task ExecuteAsync()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var token = _cancellationTokenSequence.Next();
+
             RevisionCount = 0;
             Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
+
+            await TaskScheduler.Default;
+
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             const string fullFormat =
@@ -147,6 +160,16 @@ namespace GitCommands
 
                 DataReceived(data);
             }
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+
+            if (!token.IsCancellationRequested)
+            {
+                FinishRevision();
+                _previousFileName = null;
+
+                Exited?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private static IEnumerable<string> ReadDataBlocks(StreamReader reader)
@@ -190,14 +213,6 @@ namespace GitCommands
             {
                 yield return incompleteBlock.ToString();
             }
-        }
-
-        private void ProcessGitLogExecuted()
-        {
-            FinishRevision();
-            _previousFileName = null;
-
-            Exited?.Invoke(this, EventArgs.Empty);
         }
 
         private IReadOnlyList<IGitRef> GetRefs()
@@ -333,7 +348,7 @@ namespace GitCommands
 
         public void Dispose()
         {
-            _backgroundLoader.Dispose();
+            _cancellationTokenSequence.Dispose();
         }
 
         private enum ReadStep
