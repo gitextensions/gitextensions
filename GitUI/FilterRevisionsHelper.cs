@@ -48,7 +48,20 @@ namespace GitUI
                 Name = "diffContainsToolStripMenuItem",
                 Text = "Diff contains (SLOW)"
             };
-            _diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
+            _diffContainsToolStripMenuItem.Click += (sender, e) =>
+            {
+                if (_diffContainsToolStripMenuItem.Checked)
+                {
+                    _commitFilterToolStripMenuItem.Checked = false;
+                    _committerToolStripMenuItem.Checked = false;
+                    _authorToolStripMenuItem.Checked = false;
+                    _hashToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    _commitFilterToolStripMenuItem.Checked = true;
+                }
+            };
 
             _hashToolStripMenuItem = new ToolStripMenuItem
             {
@@ -74,10 +87,16 @@ namespace GitUI
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
             label.Click += delegate { ApplyFilter(); };
-            _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
-            _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
-            _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
-            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += RevisionGridShowFirstParentsToggled;
+            _NO_TRANSLATE_textBox.Leave += delegate { ApplyFilter(); };
+            _NO_TRANSLATE_textBox.KeyPress += (sender, e) =>
+            {
+                if (e.KeyChar == (char)Keys.Enter)
+                {
+                    ApplyFilter();
+                }
+            };
+            _NO_TRANSLATE_showFirstParentButton.Click += delegate { _NO_TRANSLATE_revisionGrid.ShowFirstParent(); };
+            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += delegate { _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent; };
         }
 
         public void SetFilter(string filter)
@@ -129,44 +148,6 @@ namespace GitUI
             _NO_TRANSLATE_revisionGrid.InMemFilterIgnoreCase = true;
             _NO_TRANSLATE_revisionGrid.Visible = true;
             _NO_TRANSLATE_revisionGrid.ForceRefreshRevisions();
-        }
-
-        private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
-        {
-            ApplyFilter();
-        }
-
-        private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                ApplyFilter();
-            }
-        }
-
-        private void ToolStripShowFirstParentButtonClick(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
-        }
-
-        private void RevisionGridShowFirstParentsToggled(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
-        }
-
-        private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_diffContainsToolStripMenuItem.Checked)
-            {
-                _commitFilterToolStripMenuItem.Checked = false;
-                _committerToolStripMenuItem.Checked = false;
-                _authorToolStripMenuItem.Checked = false;
-                _hashToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                _commitFilterToolStripMenuItem.Checked = true;
-            }
         }
 
         public void Dispose()

@@ -341,7 +341,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                     Text = "Show first parents",
                     Image = Properties.Resources.IconShowFirstParent,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFirstParent),
-                    ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null),
+                    ExecuteAction = () => _revisionGrid.ShowFirstParent(),
                     IsCheckedFunc = () => AppSettings.ShowFirstParent
                 },
                 new MenuCommand
