@@ -27,6 +27,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using Gravatar;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -1018,25 +1019,7 @@ namespace GitUI
             }
         }
 
-        private class RevisionGraphInMemFilterOr : RevisionGraphInMemFilter
-        {
-            private readonly RevisionGraphInMemFilter _filter1;
-            private readonly RevisionGraphInMemFilter _filter2;
-
-            public RevisionGraphInMemFilterOr(RevisionGraphInMemFilter filter1,
-                                              RevisionGraphInMemFilter filter2)
-            {
-                _filter1 = filter1;
-                _filter2 = filter2;
-            }
-
-            public override bool PassThru(GitRevision rev)
-            {
-                return _filter1.PassThru(rev) || _filter2.PassThru(rev);
-            }
-        }
-
-        private class RevisionGridInMemFilter : RevisionGraphInMemFilter
+        private sealed class RevisionGridInMemFilter
         {
             private readonly string _authorFilter;
             private readonly Regex _authorFilterRegex;
@@ -1047,7 +1030,7 @@ namespace GitUI
             private readonly string _shaFilter;
             private readonly Regex _shaFilterRegex;
 
-            public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
+            private RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
                 SetUpVars(authorFilter, out _authorFilter, out _authorFilterRegex, ignoreCase);
                 SetUpVars(committerFilter, out _committerFilter, out _committerFilterRegex, ignoreCase);
@@ -1083,7 +1066,7 @@ namespace GitUI
                        ((regex != null) && (value != null) && regex.IsMatch(value));
             }
 
-            public override bool PassThru(GitRevision rev)
+            public bool Predicate(GitRevision rev)
             {
                 return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
                        CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
@@ -1091,6 +1074,7 @@ namespace GitUI
                         (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
             }
 
+            [CanBeNull]
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
                                                                  string committerFilter,
                                                                  string messageFilter,
@@ -1261,26 +1245,35 @@ namespace GitUI
                     _refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
                 }
 
-                RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
-                                                                                                   _revisionFilter.GetInMemCommitterFilter(),
-                                                                                                   _revisionFilter.GetInMemMessageFilter(),
-                                                                                                   _revisionFilter.GetIgnoreCase());
-                RevisionGridInMemFilter filterBarIMF = RevisionGridInMemFilter.CreateIfNeeded(InMemAuthorFilter,
-                                                                                              InMemCommitterFilter,
-                                                                                              InMemMessageFilter,
-                                                                                              InMemFilterIgnoreCase);
-                RevisionGraphInMemFilter revGraphIMF;
-                if (revisionFilterIMF != null && filterBarIMF != null)
+                var formFilter = RevisionGridInMemFilter.CreateIfNeeded(
+                    _revisionFilter.GetInMemAuthorFilter(),
+                    _revisionFilter.GetInMemCommitterFilter(),
+                    _revisionFilter.GetInMemMessageFilter(),
+                    _revisionFilter.GetIgnoreCase());
+
+                var toolStripFilter = RevisionGridInMemFilter.CreateIfNeeded(
+                    InMemAuthorFilter,
+                    InMemCommitterFilter,
+                    InMemMessageFilter,
+                    InMemFilterIgnoreCase);
+
+                Func<GitRevision, bool> predicate;
+                if (formFilter != null && toolStripFilter != null)
                 {
-                    revGraphIMF = new RevisionGraphInMemFilterOr(revisionFilterIMF, filterBarIMF);
+                    // either or
+                    predicate = r => formFilter.Predicate(r) || toolStripFilter.Predicate(r);
                 }
-                else if (revisionFilterIMF != null)
+                else if (formFilter != null)
                 {
-                    revGraphIMF = revisionFilterIMF;
+                    predicate = formFilter.Predicate;
+                }
+                else if (toolStripFilter != null)
+                {
+                    predicate = toolStripFilter.Predicate;
                 }
                 else
                 {
-                    revGraphIMF = filterBarIMF;
+                    predicate = null;
                 }
 
                 _revisionGraphCommand = new RevisionGraph(Module)
@@ -1289,12 +1282,13 @@ namespace GitUI
                     RefsOptions = _refFilterOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
                     PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
-                    InMemFilter = revGraphIMF
+                    RevisionPredicate = predicate
                 };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
                 _revisionGraphCommand.Execute();
+
                 LoadRevisions();
                 SetRevisionsLayout();
                 ResetNavigationHistory();

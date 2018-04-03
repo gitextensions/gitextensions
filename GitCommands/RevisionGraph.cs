@@ -26,11 +26,6 @@ namespace GitCommands
         SimplifyByDecoration = 256 // --simplify-by-decoration
     }
 
-    public abstract class RevisionGraphInMemFilter
-    {
-        public abstract bool PassThru(GitRevision rev);
-    }
-
     public sealed class RevisionGraph : IDisposable
     {
         private static readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
@@ -53,13 +48,15 @@ namespace GitCommands
         private ReadStep _nextStep = ReadStep.Commit;
         private GitRevision _revision;
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
-        public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
         private string _previousFileName;
 
         public string RevisionFilter { get; set; } = string.Empty;
         public string PathFilter { get; set; } = string.Empty;
         public string BranchFilter { get; set; } = string.Empty;
+
+        [CanBeNull]
+        public Func<GitRevision, bool> RevisionPredicate { get; set; }
 
         public int RevisionCount { get; private set; }
 
@@ -249,7 +246,7 @@ namespace GitCommands
                 }
 
                 if (_revision.Guid.Trim(_hexChars).Length == 0 &&
-                    (InMemFilter == null || InMemFilter.PassThru(_revision)))
+                    (RevisionPredicate == null || RevisionPredicate(_revision)))
                 {
                     // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
                     // Full commit message is used in InMemFilter but later it's not needed
