@@ -40,7 +40,7 @@ namespace GitCommands
         }
 
         public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
-        public event EventHandler BeginUpdate;
+
         public int RevisionCount { get; set; }
 
         public bool ShaOnly { get; set; }
@@ -165,7 +165,6 @@ namespace GitCommands
             }
 
             _previousFileName = null;
-            BeginUpdate?.Invoke(this, EventArgs.Empty);
 
             _nextStep = ReadStep.Commit;
             foreach (string data in ReadDataBlocks(p.StandardOutput))
