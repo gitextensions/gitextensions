@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using GitUI;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -48,7 +49,7 @@ namespace GitCommands
         private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
         private readonly GitModule _module;
 
-        private Dictionary<string, List<IGitRef>> _refs;
+        [CanBeNull] private Dictionary<string, List<IGitRef>> _refs;
         private ReadStep _nextStep = ReadStep.Commit;
         private GitRevision _revision;
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
@@ -66,6 +67,9 @@ namespace GitCommands
         {
             _module = module;
         }
+
+        /// <value>Refs loaded during the last call to <see cref="ProcessGitLog"/>.</value>
+        public IEnumerable<IGitRef> LatestRefs => _refs?.SelectMany(p => p.Value) ?? Enumerable.Empty<IGitRef>();
 
         public void Execute()
         {
@@ -224,19 +228,6 @@ namespace GitCommands
             }
 
             return result;
-        }
-
-        /// <returns>Refs loaded while the latest processing of git log</returns>
-        public IEnumerable<IGitRef> LatestRefs()
-        {
-            if (_refs == null)
-            {
-                return Enumerable.Empty<IGitRef>();
-            }
-            else
-            {
-                return _refs.SelectMany(entry => entry.Value);
-            }
         }
 
         private void FinishRevision()
