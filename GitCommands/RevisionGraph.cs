@@ -31,7 +31,7 @@ namespace GitCommands
         private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
 
         public event EventHandler Exited;
-        public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
+        public event Action<GitRevision> Updated;
         public event EventHandler<AsyncErrorEventArgs> Error;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
@@ -97,7 +97,7 @@ namespace GitCommands
             var token = _cancellationTokenSequence.Next();
 
             RevisionCount = 0;
-            Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
+            Updated?.Invoke(null);
 
             await TaskScheduler.Default;
 
@@ -244,7 +244,7 @@ namespace GitCommands
                 _revision.Body = null;
 
                 RevisionCount++;
-                Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(_revision));
+                Updated?.Invoke(_revision);
             }
         }
 
@@ -252,16 +252,5 @@ namespace GitCommands
         {
             _cancellationTokenSequence.Dispose();
         }
-    }
-
-    public sealed class RevisionGraphUpdatedEventArgs : EventArgs
-    {
-        public RevisionGraphUpdatedEventArgs([CanBeNull] GitRevision revision)
-        {
-            Revision = revision;
-        }
-
-        [CanBeNull]
-        public GitRevision Revision { get; }
     }
 }
