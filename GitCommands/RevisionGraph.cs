@@ -153,6 +153,9 @@ namespace GitCommands
                 return;
             }
 
+            // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
+            var stringPool = new ObjectPool<string>(StringComparer.Ordinal, capacity: 256);
+
             foreach (var logItem in p.StandardOutput.ReadNullTerminatedLines())
             {
                 if (token.IsCancellationRequested)
@@ -160,7 +163,7 @@ namespace GitCommands
                     break;
                 }
 
-                ProcessLogItem(logItem);
+                ProcessLogItem(logItem, stringPool);
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
@@ -198,7 +201,7 @@ namespace GitCommands
             return result;
         }
 
-        private void ProcessLogItem(string s)
+        private void ProcessLogItem(string s, ObjectPool<string> stringPool)
         {
             s = GitModule.ReEncodeString(s, GitModule.LosslessEncoding, _module.LogOutputEncoding);
 
@@ -210,7 +213,7 @@ namespace GitCommands
                 return;
             }
 
-            var encoding = match.Groups["encoding"].Value;
+            var encoding = stringPool.Intern(match.Groups["encoding"].Value);
 
             _revision = new GitRevision(null)
             {
@@ -218,11 +221,11 @@ namespace GitCommands
                 Guid = match.Groups["objectid"].Value,
                 ParentGuids = match.Groups["parent"].Captures.OfType<Capture>().Select(c => c.Value).ToArray(),
                 TreeGuid = match.Groups["tree"].Value,
-                Author = match.Groups["authorname"].Value,
-                AuthorEmail = match.Groups["authoremail"].Value,
+                Author = stringPool.Intern(match.Groups["authorname"].Value),
+                AuthorEmail = stringPool.Intern(match.Groups["authoremail"].Value),
                 AuthorDate = DateTimeUtils.ParseUnixTime(match.Groups["authordate"].Value),
-                Committer = match.Groups["committername"].Value,
-                CommitterEmail = match.Groups["committeremail"].Value,
+                Committer = stringPool.Intern(match.Groups["committername"].Value),
+                CommitterEmail = stringPool.Intern(match.Groups["committeremail"].Value),
                 CommitDate = DateTimeUtils.ParseUnixTime(match.Groups["commitdate"].Value),
                 MessageEncoding = encoding,
                 Subject = _module.ReEncodeCommitMessage(match.Groups["subject"].Value, encoding),
