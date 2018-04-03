@@ -1220,7 +1220,7 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!AppSettings.ShowGitNotes && (_refFilterOptions & (RefFilterOptions.All | RefFilterOptions.Boundary)) == (RefFilterOptions.All | RefFilterOptions.Boundary))
+                if (!AppSettings.ShowGitNotes && _refFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
                 {
                     _refFilterOptions |= RefFilterOptions.ShowGitNotes;
                 }
