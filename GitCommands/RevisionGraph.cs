@@ -76,7 +76,7 @@ namespace GitCommands
             ThreadHelper.JoinableTaskFactory.RunAsync(() => _backgroundLoader.LoadAsync(ProcessGitLog, ProcessGitLogExecuted));
         }
 
-        private void ProcessGitLog(CancellationToken taskState)
+        private void ProcessGitLog(CancellationToken token)
         {
             RevisionCount = 0;
             Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
@@ -133,7 +133,7 @@ namespace GitCommands
 
             Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
 
-            if (taskState.IsCancellationRequested)
+            if (token.IsCancellationRequested)
             {
                 return;
             }
@@ -143,7 +143,7 @@ namespace GitCommands
             _nextStep = ReadStep.Commit;
             foreach (string data in ReadDataBlocks(p.StandardOutput))
             {
-                if (taskState.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
                     break;
                 }
