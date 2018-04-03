@@ -167,6 +167,7 @@ namespace GitUI.CommandsDialogs
             _useFormCommitMessage = AppSettings.UseFormCommitMessage;
 
             InitializeComponent();
+
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
 
@@ -228,6 +229,12 @@ namespace GitUI.CommandsDialogs
             {
                 gpgSignCommitToolStripComboBox.SelectedIndex = 0;
             }
+
+            ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = false;
+            ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
+
+            ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowImageMargin = false;
+            ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
         }
 
         private void ConfigureMessageBox()
@@ -2017,20 +2024,31 @@ namespace GitUI.CommandsDialogs
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            commitMessageToolStripMenuItem.DropDownItems.Clear();
-
             var msg = AppSettings.LastCommitMessage;
+            var maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
 
-            var prevMsgs = Module.GetPreviousCommitMessages(AppSettings.CommitDialogNumberOfPreviousMessages);
+            var prevMsgs = Module.GetPreviousCommitMessages(maxCount)
+                .Select(message => message.TrimEnd('\n'))
+                .ToList();
 
             if (!prevMsgs.Contains(msg))
             {
-                prevMsgs = new[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
+                // If the list is already full
+                if (prevMsgs.Count == maxCount)
+                {
+                    // Remove the last item
+                    prevMsgs.RemoveAt(maxCount - 1);
+                }
+
+                // Insert the last commit message as the first entry
+                prevMsgs.Insert(0, msg);
             }
 
-            foreach (var localLastCommitMessage in prevMsgs)
+            commitMessageToolStripMenuItem.DropDownItems.Clear();
+
+            foreach (var prevMsg in prevMsgs)
             {
-                AddCommitMessageToMenu(localLastCommitMessage);
+                AddCommitMessageToMenu(prevMsg);
             }
 
             commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
@@ -2038,29 +2056,37 @@ namespace GitUI.CommandsDialogs
                 toolStripMenuItem1,
                 generateListOfChangesInSubmodulesChangesToolStripMenuItem
             });
-        }
 
-        private void AddCommitMessageToMenu(string commitMessage)
-        {
-            if (string.IsNullOrEmpty(commitMessage))
+            void AddCommitMessageToMenu(string commitMessage)
             {
-                return;
-            }
+                const int maxLabelLength = 50;
 
-            var toolStripItem =
-                new ToolStripMenuItem
+                string label;
+
+                if (commitMessage.Length <= maxLabelLength)
+                {
+                    label = commitMessage;
+                }
+                else
+                {
+                    var newlineIndex = commitMessage.IndexOf('\n');
+
+                    if (newlineIndex != -1 && newlineIndex <= maxLabelLength)
+                    {
+                        label = commitMessage.Substring(0, newlineIndex);
+                    }
+                    else
+                    {
+                        label = commitMessage.ShortenTo(maxLabelLength);
+                    }
+                }
+
+                commitMessageToolStripMenuItem.DropDownItems.Add(new ToolStripMenuItem
                 {
                     Tag = commitMessage,
-                    Text =
-                        commitMessage.Substring(
-                            0,
-                            Math.Min(
-                                                    Math.Min(50, commitMessage.Length),
-                                                    commitMessage.Contains("\n") ? commitMessage.IndexOf('\n') : 99)) +
-                        "..."
-                };
-
-            commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
+                    Text = label
+                });
+            }
         }
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -2929,76 +2955,74 @@ namespace GitUI.CommandsDialogs
             FilenameToClipboardToolStripMenuItemClick(sender, e);
         }
 
-        private void commitTemplatesConfigtoolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var frm = new FormCommitTemplateSettings())
-            {
-                frm.ShowDialog(this);
-            }
-
-            _shouldReloadCommitTemplates = true;
-        }
-
         private void LoadCommitTemplates()
         {
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
-            var fromSettings = CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>().Where(t => !t.Name.IsNullOrEmpty()).ToArray();
-            var commitTemplates = _commitTemplateManager.RegisteredTemplates
-               .Union(new[] { (CommitTemplateItem)null })
-               .Union(fromSettings)
-               .Union(fromSettings.Length > 0 ? new[] { (CommitTemplateItem)null } : Array.Empty<CommitTemplateItem>())
-               .ToArray();
-
-            if (commitTemplates.Length > 0)
+            // Add registered templates
+            foreach (var item in _commitTemplateManager.RegisteredTemplates)
             {
-                foreach (CommitTemplateItem item in commitTemplates)
+                CreateToolStripItem(item);
+            }
+
+            AddSeparator();
+
+            // Add templates from settings
+            foreach (var item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
+            {
+                CreateToolStripItem(item);
+            }
+
+            AddSeparator();
+
+            // Add a settings item
+            AddSettingsItem();
+
+            return;
+
+            void CreateToolStripItem(CommitTemplateItem item)
+            {
+                if (string.IsNullOrEmpty(item.Name))
                 {
-                    if (item == null)
+                    return;
+                }
+
+                var toolStripItem = new ToolStripMenuItem(item.Name);
+                toolStripItem.Click += (s, e) =>
+                {
+                    try
                     {
-                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                        Message.Text = item.Text;
+                        Message.Focus();
                     }
-                    else
+                    catch
                     {
-                        AddTemplateCommitMessageToMenu(item, item.Name);
                     }
+                };
+                commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+            }
+
+            void AddSeparator()
+            {
+                if (commitTemplatesToolStripMenuItem.DropDownItems.Count != 0)
+                {
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
                 }
             }
 
-            var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
-            toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
-        }
-
-        private void AddTemplateCommitMessageToMenu(CommitTemplateItem item, string name)
-        {
-            if (string.IsNullOrEmpty(name))
+            void AddSettingsItem()
             {
-                return;
-            }
-
-            var toolStripItem =
-                new ToolStripMenuItem
+                var settingsItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
+                settingsItem.Click += (s, e) =>
                 {
-                    Tag = item,
-                    Text = name
+                    using (var frm = new FormCommitTemplateSettings())
+                    {
+                        frm.ShowDialog(this);
+                    }
+
+                    _shouldReloadCommitTemplates = true;
                 };
-
-            toolStripItem.Click += commitTemplatesToolStripMenuItem_Clicked;
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
-        }
-
-        private void commitTemplatesToolStripMenuItem_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                ToolStripMenuItem item = (ToolStripMenuItem)sender;
-                CommitTemplateItem templateItem = (CommitTemplateItem)item.Tag;
-                Message.Text = templateItem.Text;
-                Message.Focus();
-            }
-            catch
-            {
+                commitTemplatesToolStripMenuItem.DropDownItems.Add(settingsItem);
             }
         }
 

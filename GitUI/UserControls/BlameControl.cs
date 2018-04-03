@@ -376,7 +376,7 @@ namespace GitUI.Blame
 
             string commit = _blame.Lines[line].Commit.ObjectId;
             int originalLine = _blame.Lines[line].OriginLineNumber;
-            GitBlame blame = Module.Blame(_fileName, commit + "^", originalLine + ",+1", _encoding);
+            GitBlame blame = Module.Blame(_fileName, commit + "^", _encoding, originalLine + ",+1");
             if (blame.Lines.Count > 0)
             {
                 var revision = blame.Lines[0].Commit.ObjectId;

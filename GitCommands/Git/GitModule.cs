@@ -2865,12 +2865,12 @@ namespace GitCommands
             ByCommitDateDescending
         }
 
-        public ICollection<string> GetMergedBranches(bool includeRemote = false)
+        public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
         {
             return RunGitCmd(GitCommandHelpers.MergedBranches(includeRemote)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public ICollection<string> GetMergedRemoteBranches()
+        public IReadOnlyList<string> GetMergedRemoteBranches()
         {
             const string remoteBranchPrefixForMergedBranches = "remotes/";
             const string refsPrefix = "refs/";
@@ -2883,7 +2883,8 @@ namespace GitCommands
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))
-                .Where(b => !string.IsNullOrEmpty(GitCommandHelpers.GetRemoteName(b, remotes))).ToList();
+                .Where(b => !string.IsNullOrEmpty(GitCommandHelpers.GetRemoteName(b, remotes)))
+                .ToList();
         }
 
         private string GetTree(bool tags, bool branches)
@@ -3101,12 +3102,7 @@ namespace GitCommands
             return _gitTreeParser.Parse(tree);
         }
 
-        public GitBlame Blame(string filename, string from, Encoding encoding)
-        {
-            return Blame(filename, from, null, encoding);
-        }
-
-        public GitBlame Blame(string fileName, string from, string lines, Encoding encoding)
+        public GitBlame Blame(string fileName, string from, Encoding encoding, string lines = null)
         {
             var args = new ArgumentBuilder
             {
@@ -3396,12 +3392,7 @@ namespace GitCommands
             return null;
         }
 
-        public IEnumerable<string> GetPreviousCommitMessages(int count)
-        {
-            return GetPreviousCommitMessages("HEAD", count);
-        }
-
-        public IEnumerable<string> GetPreviousCommitMessages(string revision, int count)
+        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
         {
             const string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
             string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
