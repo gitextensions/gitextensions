@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using JetBrains.Annotations;
@@ -12,43 +13,50 @@ namespace GitCommands
         public static IEnumerable<string> ReadNullTerminatedLines([NotNull] this StreamReader reader, int bufferSize = 4096)
         {
             var buffer = new char[bufferSize];
-            var incompleteBlock = new StringBuilder();
+            var accumulator = new StringBuilder();
 
             while (true)
             {
-                int bytesRead = reader.ReadBlock(buffer, 0, bufferSize);
+                var charsRead = reader.ReadBlock(buffer, 0, bufferSize);
 
-                if (bytesRead == 0)
+                if (charsRead == 0)
                 {
                     break;
                 }
 
-                string bufferString = new string(buffer, 0, bytesRead);
-                string[] dataBlocks = bufferString.Split('\0');
+                var fromIndex = 0;
 
-                if (dataBlocks.Length > 1)
+                while (fromIndex < charsRead)
                 {
-                    // There are at least two blocks, so we can return the first one
-                    incompleteBlock.Append(dataBlocks[0]);
-                    yield return incompleteBlock.ToString();
-                    incompleteBlock.Clear();
+                    var nullIndex = Array.IndexOf(buffer, '\0', fromIndex, charsRead - fromIndex);
+
+                    if (nullIndex == -1)
+                    {
+                        var count = charsRead - fromIndex;
+                        accumulator.Append(buffer, fromIndex, count);
+                        break;
+                    }
+
+                    if (accumulator.Length == 0)
+                    {
+                        var count = nullIndex - fromIndex;
+                        yield return count == 0 ? "" : new string(buffer, fromIndex, count);
+                    }
+                    else
+                    {
+                        var count = nullIndex - fromIndex;
+                        accumulator.Append(buffer, fromIndex, count);
+                        yield return accumulator.ToString();
+                        accumulator.Clear();
+                    }
+
+                    fromIndex = nullIndex + 1;
                 }
-
-                int lastDataBlockIndex = dataBlocks.Length - 1;
-
-                // Return all the blocks until the last one
-                for (int i = 1; i < lastDataBlockIndex; i++)
-                {
-                    yield return dataBlocks[i];
-                }
-
-                // Append the beginning of the last block
-                incompleteBlock.Append(dataBlocks[lastDataBlockIndex]);
             }
 
-            if (incompleteBlock.Length > 0)
+            if (accumulator.Length != 0)
             {
-                yield return incompleteBlock.ToString();
+                yield return accumulator.ToString();
             }
         }
     }
