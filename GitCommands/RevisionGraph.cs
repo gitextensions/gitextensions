@@ -72,16 +72,7 @@ namespace GitCommands
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _backgroundLoader.Dispose();
-            }
+            _backgroundLoader.Dispose();
         }
 
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
