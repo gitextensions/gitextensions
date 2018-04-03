@@ -62,6 +62,7 @@
     <Compile Include="ArgumentBuilderTests.cs" />
     <Compile Include="Git\GitDescribeProviderTests.cs" />
     <Compile Include="Git\GitRefNameTests.cs" />
+    <Compile Include="StreamReaderExtensionsTests.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
