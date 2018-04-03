@@ -36,11 +36,10 @@ namespace GitCommands
         public event EventHandler<AsyncErrorEventArgs> Error
         {
             add => _backgroundLoader.LoadingError += value;
-
             remove => _backgroundLoader.LoadingError -= value;
         }
 
-        public event EventHandler Updated;
+        public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
         public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
 
