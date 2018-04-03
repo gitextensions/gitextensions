@@ -80,7 +80,7 @@ namespace GitUI
         private string _lastQuickSearchString = string.Empty;
         private Label _quickSearchLabel;
         private string _quickSearchString;
-        private RevisionGraph _revisionGraphCommand;
+        private RevisionGraph _revisionGraph;
 
         public BuildServerWatcher BuildServerWatcher { get; private set; }
 
@@ -1276,7 +1276,7 @@ namespace GitUI
                     predicate = null;
                 }
 
-                _revisionGraphCommand = new RevisionGraph(Module)
+                _revisionGraph = new RevisionGraph(Module)
                 {
                     BranchFilter = BranchFilter,
                     RefsOptions = _refFilterOptions,
@@ -1284,10 +1284,10 @@ namespace GitUI
                     PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
                     RevisionPredicate = predicate
                 };
-                _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
-                _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
-                _revisionGraphCommand.Error += _revisionGraphCommand_Error;
-                _revisionGraphCommand.Execute();
+                _revisionGraph.Updated += GitGetCommitsCommandUpdated;
+                _revisionGraph.Exited += GitGetCommitsCommandExited;
+                _revisionGraph.Error += _revisionGraphCommand_Error;
+                _revisionGraph.Execute();
 
                 LoadRevisions();
                 SetRevisionsLayout();
@@ -1396,17 +1396,17 @@ namespace GitUI
 
         private void DisposeRevisionGraphCommand()
         {
-            if (_revisionGraphCommand != null)
+            if (_revisionGraph != null)
             {
-                LatestRefs = _revisionGraphCommand.LatestRefs;
+                LatestRefs = _revisionGraph.LatestRefs;
 
                 // Dispose command, it is not needed anymore
-                _revisionGraphCommand.Updated -= GitGetCommitsCommandUpdated;
-                _revisionGraphCommand.Exited -= GitGetCommitsCommandExited;
-                _revisionGraphCommand.Error -= _revisionGraphCommand_Error;
+                _revisionGraph.Updated -= GitGetCommitsCommandUpdated;
+                _revisionGraph.Exited -= GitGetCommitsCommandExited;
+                _revisionGraph.Error -= _revisionGraphCommand_Error;
 
-                _revisionGraphCommand.Dispose();
-                _revisionGraphCommand = null;
+                _revisionGraph.Dispose();
+                _revisionGraph = null;
             }
         }
 
@@ -1414,7 +1414,7 @@ namespace GitUI
         {
             _isLoading = false;
 
-            if (_revisionGraphCommand.RevisionCount == 0 &&
+            if (_revisionGraph.RevisionCount == 0 &&
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
@@ -1530,7 +1530,7 @@ namespace GitUI
 
         private void LoadRevisions()
         {
-            if (_revisionGraphCommand == null)
+            if (_revisionGraph == null)
             {
                 return;
             }
@@ -3631,7 +3631,7 @@ namespace GitUI
 
         private void ToggleHighlightSelectedBranch()
         {
-            if (_revisionGraphCommand != null)
+            if (_revisionGraph != null)
             {
                 MessageBox.Show(_cannotHighlightSelectedBranch.Text);
                 return;
