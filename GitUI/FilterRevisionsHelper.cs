@@ -4,7 +4,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public class FilterRevisionsHelper : IDisposable
+    internal sealed class FilterRevisionsHelper : IDisposable
     {
         private readonly ToolStripTextBox _NO_TRANSLATE_textBox;
         private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
@@ -176,20 +176,11 @@ namespace GitUI
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _commitFilterToolStripMenuItem.Dispose();
-                _committerToolStripMenuItem.Dispose();
-                _authorToolStripMenuItem.Dispose();
-                _diffContainsToolStripMenuItem.Dispose();
-                _hashToolStripMenuItem.Dispose();
-            }
+            _commitFilterToolStripMenuItem.Dispose();
+            _committerToolStripMenuItem.Dispose();
+            _authorToolStripMenuItem.Dispose();
+            _diffContainsToolStripMenuItem.Dispose();
+            _hashToolStripMenuItem.Dispose();
         }
     }
 }
