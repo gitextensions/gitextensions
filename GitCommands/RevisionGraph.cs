@@ -38,7 +38,6 @@ namespace GitCommands
         private readonly GitModule _module;
 
         [CanBeNull] private Dictionary<string, List<IGitRef>> _refs;
-        private GitRevision _revision;
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private string _selectedBranchName;
 
@@ -215,7 +214,7 @@ namespace GitCommands
 
             var encoding = stringPool.Intern(match.Groups["encoding"].Value);
 
-            _revision = new GitRevision(null)
+            var revision = new GitRevision(null)
             {
                 // TODO use ObjectId (when merged) and parse directly from underlying string, avoiding copy
                 Guid = match.Groups["objectid"].Value,
@@ -232,19 +231,19 @@ namespace GitCommands
                 Body = _module.ReEncodeCommitMessage(match.Groups["body"].Value, encoding)
             };
 
-            if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
+            if (_refs.TryGetValue(revision.Guid, out var gitRefs))
             {
-                _revision.Refs.AddRange(gitRefs);
+                revision.Refs.AddRange(gitRefs);
             }
 
-            if (RevisionPredicate == null || RevisionPredicate(_revision))
+            if (RevisionPredicate == null || RevisionPredicate(revision))
             {
                 // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
                 // Full commit message is used in InMemFilter but later it's not needed
-                _revision.Body = null;
+                revision.Body = null;
 
                 RevisionCount++;
-                Updated?.Invoke(_revision);
+                Updated?.Invoke(revision);
             }
         }
 
