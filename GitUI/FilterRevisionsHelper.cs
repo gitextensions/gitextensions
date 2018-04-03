@@ -73,7 +73,7 @@ namespace GitUI
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
-            label.Click += ToolStripLabelClick;
+            label.Click += delegate { ApplyFilter(); };
             _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
             _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
             _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
@@ -133,20 +133,15 @@ namespace GitUI
 
         private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
         {
-            ToolStripLabelClick(sender, e);
+            ApplyFilter();
         }
 
         private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                ToolStripLabelClick(null, null);
+                ApplyFilter();
             }
-        }
-
-        private void ToolStripLabelClick(object sender, EventArgs e)
-        {
-            ApplyFilter();
         }
 
         private void ToolStripShowFirstParentButtonClick(object sender, EventArgs e)
