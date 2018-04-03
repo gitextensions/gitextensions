@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using GitUI;
 using NUnit.Framework;
@@ -124,13 +125,23 @@ namespace GitUITests
                 var completionTokenSource = new CancellationTokenSource();
                 var completionToken = completionTokenSource.Token;
                 var winnerByIndex = new int[threadCount];
+                Thread[] threads = new Thread[threadCount];
+                ExceptionDispatchInfo threadException = null;
 
                 for (var i = 0; i < threadCount; i++)
                 {
-                    new Thread(ThreadMethod).Start(i);
+                    threads[i] = new Thread(ThreadMethod);
+                    threads[i].Start(i);
                 }
 
                 Assert.True(countdown.Wait(TimeSpan.FromSeconds(10)), "Test should have completed within a reasonable amount of time");
+
+                for (var i = 0; i < threadCount; i++)
+                {
+                    threads[i].Join();
+                }
+
+                threadException?.Throw();
 
                 Assert.AreEqual(loopCount, completedCount);
 
@@ -146,29 +157,36 @@ namespace GitUITests
 
                 void ThreadMethod(object o)
                 {
-                    while (true)
+                    try
                     {
-                        barrier.SignalAndWait();
-
-                        if (completionToken.IsCancellationRequested)
+                        while (true)
                         {
-                            return;
+                            barrier.SignalAndWait();
+
+                            if (completionToken.IsCancellationRequested)
+                            {
+                                return;
+                            }
+
+                            var token = sequence.Next();
+
+                            barrier.SignalAndWait();
+
+                            if (!token.IsCancellationRequested)
+                            {
+                                Interlocked.Increment(ref completedCount);
+                                Interlocked.Increment(ref winnerByIndex[(int)o]);
+                            }
+
+                            if (countdown.Signal())
+                            {
+                                completionTokenSource.Cancel();
+                            }
                         }
-
-                        var token = sequence.Next();
-
-                        barrier.SignalAndWait();
-
-                        if (!token.IsCancellationRequested)
-                        {
-                            Interlocked.Increment(ref completedCount);
-                            Interlocked.Increment(ref winnerByIndex[(int)o]);
-                        }
-
-                        if (countdown.Signal())
-                        {
-                            completionTokenSource.Cancel();
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        threadException = ExceptionDispatchInfo.Capture(e);
                     }
                 }
             }
