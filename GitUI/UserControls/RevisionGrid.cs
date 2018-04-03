@@ -2955,7 +2955,7 @@ namespace GitUI
 
         private string[] _currentCheckoutParents;
 
-        private void UpdateGraph(GitRevision rev)
+        private void UpdateGraph([CanBeNull] GitRevision rev)
         {
             if (rev == null)
             {

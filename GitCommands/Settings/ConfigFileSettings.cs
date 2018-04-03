@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
@@ -81,7 +82,7 @@ namespace GitCommands.Settings
             return SettingsCache.GetValues(setting);
         }
 
-        public void SetValue(string setting, string value)
+        public void SetValue(string setting, [CanBeNull] string value)
         {
             if (value.IsNullOrEmpty())
             {
@@ -92,7 +93,7 @@ namespace GitCommands.Settings
             SetString(setting, value);
         }
 
-        public void SetPathValue(string setting, string value)
+        public void SetPathValue(string setting, [NotNull] string value)
         {
             SetValue(setting, ConfigSection.FixPath(value));
         }
@@ -121,6 +122,7 @@ namespace GitCommands.Settings
             SettingsCache.RemoveConfigSection(configSectionName, performSave);
         }
 
+        [CanBeNull]
         public Encoding FilesEncoding
         {
             get => GetEncoding("i18n.filesEncoding");
@@ -128,10 +130,13 @@ namespace GitCommands.Settings
             set => SetEncoding("i18n.filesEncoding", value);
         }
 
+        [CanBeNull]
         public Encoding CommitEncoding => GetEncoding("i18n.commitEncoding");
 
+        [CanBeNull]
         public Encoding LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
 
+        [CanBeNull]
         private Encoding GetEncoding(string settingName)
         {
             Encoding result;
@@ -159,7 +164,7 @@ namespace GitCommands.Settings
             return result;
         }
 
-        private void SetEncoding(string settingName, Encoding encoding)
+        private void SetEncoding(string settingName, [CanBeNull] Encoding encoding)
         {
             SetValue(settingName, encoding?.HeaderName);
         }

@@ -256,11 +256,12 @@ namespace GitCommands
 
     public sealed class RevisionGraphUpdatedEventArgs : EventArgs
     {
-        public RevisionGraphUpdatedEventArgs(GitRevision revision)
+        public RevisionGraphUpdatedEventArgs([CanBeNull] GitRevision revision)
         {
             Revision = revision;
         }
 
+        [CanBeNull]
         public GitRevision Revision { get; }
     }
 }
