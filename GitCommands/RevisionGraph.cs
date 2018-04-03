@@ -138,68 +138,35 @@ namespace GitCommands
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            var arguments = new StringBuilder("log -z ");
-
-            arguments.AppendFormat(" --pretty=format:\"{0}\"", ShaOnly ? shaOnlyFormat : fullFormat);
-
-            arguments.Append(AppSettings.OrderRevisionByDate ? " --date-order" : " --topo-order");
-
-            if (AppSettings.ShowReflogReferences)
+            var arguments = new ArgumentBuilder
             {
-                arguments.Append(" --reflog");
-            }
-
-            if (RefsOptions.HasFlag(RefsFiltringOptions.All))
-            {
-                arguments.Append(" --all");
-            }
-            else
-            {
-                if (RefsOptions.HasFlag(RefsFiltringOptions.Branches))
+                "log",
+                "-z",
+                $"--pretty=format:\"{(ShaOnly ? shaOnlyFormat : fullFormat)}\"",
+                { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
+                { AppSettings.ShowReflogReferences, "--reflog" },
                 {
-                    if (!string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1)
+                    RefsOptions.HasFlag(RefsFiltringOptions.All),
+                    "--all",
+                    new ArgumentBuilder
                     {
-                        arguments.Append(" --branches=" + BranchFilter);
-                    }
-                }
-
-                if (RefsOptions.HasFlag(RefsFiltringOptions.Remotes))
-                {
-                    arguments.Append(" --remotes");
-                }
-
-                if (RefsOptions.HasFlag(RefsFiltringOptions.Tags))
-                {
-                    arguments.Append(" --tags");
-                }
-            }
-
-            if (RefsOptions.HasFlag(RefsFiltringOptions.Boundary))
-            {
-                arguments.Append(" --boundary");
-            }
-
-            if (RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes))
-            {
-                arguments.Append(" --not --glob=notes --not");
-            }
-
-            if (RefsOptions.HasFlag(RefsFiltringOptions.NoMerges))
-            {
-                arguments.Append(" --no-merges");
-            }
-
-            if (RefsOptions.HasFlag(RefsFiltringOptions.FirstParent))
-            {
-                arguments.Append(" --first-parent");
-            }
-
-            if (RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration))
-            {
-                arguments.Append(" --simplify-by-decoration");
-            }
-
-            arguments.AppendFormat(" {0} -- {1}", RevisionFilter, PathFilter);
+                        {
+                            RefsOptions.HasFlag(RefsFiltringOptions.Branches) && !string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1,
+                            "--branches=" + BranchFilter
+                        },
+                        { RefsOptions.HasFlag(RefsFiltringOptions.Remotes), "--remotes" },
+                        { RefsOptions.HasFlag(RefsFiltringOptions.Tags), "--tags" },
+                    }.ToString()
+                },
+                { RefsOptions.HasFlag(RefsFiltringOptions.Boundary), "--boundary" },
+                { RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes), "--not --glob=notes --not" },
+                { RefsOptions.HasFlag(RefsFiltringOptions.NoMerges), "--no-merges" },
+                { RefsOptions.HasFlag(RefsFiltringOptions.FirstParent), "--first-parent" },
+                { RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration), "--simplify-by-decoration" },
+                RevisionFilter,
+                "--",
+                PathFilter
+            };
 
             Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
 

@@ -1499,22 +1499,15 @@ namespace GitUI
 
         private string[] GetAllParents(string initRevision)
         {
-            var revListParams = "rev-list ";
-            if (AppSettings.OrderRevisionByDate)
+            var args = new ArgumentBuilder
             {
-                revListParams += "--date-order ";
-            }
-            else
-            {
-                revListParams += "--topo-order ";
-            }
+                "rev-list",
+                { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
+                { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count=\"{AppSettings.MaxRevisionGraphCommits}\" " },
+                initRevision
+            };
 
-            if (AppSettings.MaxRevisionGraphCommits > 0)
-            {
-                revListParams += string.Format("--max-count=\"{0}\" ", AppSettings.MaxRevisionGraphCommits);
-            }
-
-            return Module.ReadGitOutputLines(revListParams + initRevision).ToArray();
+            return Module.ReadGitOutputLines(args.ToString()).ToArray();
         }
 
         private int SearchRevision(string initRevision)
