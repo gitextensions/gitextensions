@@ -2067,52 +2067,12 @@ namespace GitUI
             }
             else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
             {
-                if (revision.Body == null && !revision.IsArtificial)
-                {
-                    var moduleRef = Module;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-                    {
-                        return LoadIsMultilineMessageInfoAsync(revision, columnIndex, e.RowIndex, Revisions.RowCount);
-                    }).FileAndForget();
-                }
-
-                if (revision.Body != null)
-                {
-                    e.Value = revision.Body.TrimEnd().Contains("\n") ? MultilineMessageIndicator : "";
-                }
-                else
-                {
-                    e.Value = "";
-                }
+                e.Value = revision.HasMultiLineMessage ? MultilineMessageIndicator : "";
             }
             else
             {
                 e.FormattingApplied = false;
             }
-        }
-
-        /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
-        private async Task LoadIsMultilineMessageInfoAsync(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
-        {
-            await TaskScheduler.Default;
-
-            // code taken from CommitInfo.cs
-            CommitData commitData = _commitDataManager.CreateFromRevision(revision);
-
-            if (revision.Body == null)
-            {
-                _commitDataManager.UpdateBody(commitData, out _);
-                revision.Body = commitData.Body;
-            }
-
-            // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
-            await this.SwitchToMainThreadAsync();
-            if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
-            {
-                return;
-            }
-
-            Revisions.InvalidateCell(colIndex, rowIndex);
         }
 
         private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)

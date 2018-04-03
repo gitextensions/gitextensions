@@ -70,6 +70,7 @@ namespace GitCommands
         // Count for artificial commits (could be changed to object lists)
         public string SubjectCount { get; set; }
         public string Body { get; set; }
+        public bool HasMultiLineMessage { get; set; }
 
         // UTF-8 when is null or empty
         public string MessageEncoding { get; set; }

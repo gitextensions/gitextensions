@@ -231,6 +231,8 @@ namespace GitCommands
                 Body = _module.ReEncodeCommitMessage(match.Groups["body"].Value, encoding)
             };
 
+            revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
+
             if (_refs.TryGetValue(revision.Guid, out var gitRefs))
             {
                 revision.Refs.AddRange(gitRefs);
