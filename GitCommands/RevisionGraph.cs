@@ -32,56 +32,39 @@ namespace GitCommands
 
     public sealed class RevisionGraph : IDisposable
     {
+        private static readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
+        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
+
+        private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
+
         public event EventHandler Exited;
+        public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
         public event EventHandler<AsyncErrorEventArgs> Error
         {
             add => _backgroundLoader.LoadingError += value;
             remove => _backgroundLoader.LoadingError -= value;
         }
 
-        public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
-
-        public int RevisionCount { get; set; }
-
-        private readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
-
-        private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
-
-        private Dictionary<string, List<IGitRef>> _refs;
-
-        private enum ReadStep
-        {
-            Commit,
-            CommitSubject,
-            CommitBody,
-            FileName,
-        }
-
-        private ReadStep _nextStep = ReadStep.Commit;
-
-        private GitRevision _revision;
-
         private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
-
         private readonly GitModule _module;
 
-        public RevisionGraph(GitModule module)
-        {
-            _module = module;
-        }
-
-        public void Dispose()
-        {
-            _backgroundLoader.Dispose();
-        }
-
+        private Dictionary<string, List<IGitRef>> _refs;
+        private ReadStep _nextStep = ReadStep.Commit;
+        private GitRevision _revision;
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         public string RevisionFilter = string.Empty;
         public string PathFilter = string.Empty;
         public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
-        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
+        private string _previousFileName;
+
+        public int RevisionCount { get; private set; }
+
+        public RevisionGraph(GitModule module)
+        {
+            _module = module;
+        }
 
         public void Execute()
         {
@@ -255,8 +238,6 @@ namespace GitCommands
             }
         }
 
-        private string _previousFileName;
-
         private void FinishRevision()
         {
             if (_revision != null && _revision.Guid == null)
@@ -359,6 +340,19 @@ namespace GitCommands
             }
 
             _nextStep++;
+        }
+
+        public void Dispose()
+        {
+            _backgroundLoader.Dispose();
+        }
+
+        private enum ReadStep
+        {
+            Commit,
+            CommitSubject,
+            CommitBody,
+            FileName,
         }
     }
 
