@@ -52,12 +52,13 @@ namespace GitCommands
         private ReadStep _nextStep = ReadStep.Commit;
         private GitRevision _revision;
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
-        public string RevisionFilter = string.Empty;
-        public string PathFilter = string.Empty;
-        public string BranchFilter = string.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
         private string _previousFileName;
+
+        public string RevisionFilter { get; set; } = string.Empty;
+        public string PathFilter { get; set; } = string.Empty;
+        public string BranchFilter { get; set; } = string.Empty;
 
         public int RevisionCount { get; private set; }
 
