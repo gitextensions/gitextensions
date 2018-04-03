@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
@@ -151,7 +149,7 @@ namespace GitCommands
             _previousFileName = null;
 
             _nextStep = ReadStep.Commit;
-            foreach (string data in ReadDataBlocks(p.StandardOutput))
+            foreach (string data in p.StandardOutput.ReadNullTerminatedLines())
             {
                 if (token.IsCancellationRequested)
                 {
@@ -169,49 +167,6 @@ namespace GitCommands
                 _previousFileName = null;
 
                 Exited?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        private static IEnumerable<string> ReadDataBlocks(StreamReader reader)
-        {
-            const int bufferSize = 4 * 1024;
-            char[] buffer = new char[bufferSize];
-
-            StringBuilder incompleteBlock = new StringBuilder();
-            while (true)
-            {
-                int bytesRead = reader.ReadBlock(buffer, 0, bufferSize);
-                if (bytesRead == 0)
-                {
-                    break;
-                }
-
-                string bufferString = new string(buffer, 0, bytesRead);
-                string[] dataBlocks = bufferString.Split('\0');
-
-                if (dataBlocks.Length > 1)
-                {
-                    // There are at least two blocks, so we can return the first one
-                    incompleteBlock.Append(dataBlocks[0]);
-                    yield return incompleteBlock.ToString();
-                    incompleteBlock.Clear();
-                }
-
-                int lastDataBlockIndex = dataBlocks.Length - 1;
-
-                // Return all the blocks until the last one
-                for (int i = 1; i < lastDataBlockIndex; i++)
-                {
-                    yield return dataBlocks[i];
-                }
-
-                // Append the beginning of the last block
-                incompleteBlock.Append(dataBlocks[lastDataBlockIndex]);
-            }
-
-            if (incompleteBlock.Length > 0)
-            {
-                yield return incompleteBlock.ToString();
             }
         }
 

@@ -143,6 +143,7 @@
     <Compile Include="Settings\SettingsCache.cs" />
     <Compile Include="Settings\SettingsContainer.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
+    <Compile Include="StreamReaderExtensions.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
     <Compile Include="ExternalLinks\ExternalLink.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
