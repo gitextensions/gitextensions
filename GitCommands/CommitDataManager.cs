@@ -187,7 +187,7 @@ namespace GitCommands
             // Do not cache this command, since notes can be added
             data = GetModule().RunGitCmd(arguments, GitModule.LosslessEncoding);
 
-            if (GitModule.IsGitErrorMessage(data) || !data.Contains(commitId))
+            if (GitModule.IsGitErrorMessage(data))
             {
                 error = "Cannot find commit " + commitId;
                 return false;
