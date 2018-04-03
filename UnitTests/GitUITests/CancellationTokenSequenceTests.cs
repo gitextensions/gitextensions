@@ -112,25 +112,20 @@ namespace GitUITests
         {
             const int loopCount = 10000;
 
-            // Assume hyperthreading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
-            var coreCount = Math.Max(1, Environment.ProcessorCount / 2);
-
-            if (coreCount == 1)
-            {
-                Assert.Inconclusive("This test requires more than one processor to run.");
-            }
+            var logicalProcessorCount = Environment.ProcessorCount;
+            var threadCount = Math.Max(2, logicalProcessorCount);
 
             using (var sequence = new CancellationTokenSequence())
-            using (var barrier = new Barrier(coreCount))
-            using (var countdown = new CountdownEvent(loopCount * coreCount))
+            using (var barrier = new Barrier(threadCount))
+            using (var countdown = new CountdownEvent(loopCount * threadCount))
             {
                 var completedCount = 0;
 
                 var completionTokenSource = new CancellationTokenSource();
                 var completionToken = completionTokenSource.Token;
-                var winnerByIndex = new int[coreCount];
+                var winnerByIndex = new int[threadCount];
 
-                for (var i = 0; i < coreCount; i++)
+                for (var i = 0; i < threadCount; i++)
                 {
                     new Thread(ThreadMethod).Start(i);
                 }
@@ -140,6 +135,14 @@ namespace GitUITests
                 Assert.AreEqual(loopCount, completedCount);
 
                 Console.Out.WriteLine("Winner by index: " + string.Join(",", winnerByIndex));
+
+                // Assume hyperthreading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
+                if (logicalProcessorCount <= 2)
+                {
+                    Assert.Inconclusive("This test requires more than one physical processor to run.");
+                }
+
+                return;
 
                 void ThreadMethod(object o)
                 {
