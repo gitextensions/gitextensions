@@ -153,7 +153,8 @@ namespace GitCommands.Repository
             return repositories;
         }
 
-        private static string SerializeHistoryIntoXml(RepositoryHistory history)
+        // TODO: make it internal to test, before refactoring it out
+        internal static string SerializeHistoryIntoXml(RepositoryHistory history)
         {
             try
             {
@@ -168,7 +169,8 @@ namespace GitCommands.Repository
             }
         }
 
-        private static RepositoryHistory DeserializeHistoryFromXml(string xml)
+        // TODO: make it internal to test, before refactoring it out
+        internal static RepositoryHistory DeserializeHistoryFromXml(string xml)
         {
             if (string.IsNullOrEmpty(xml))
             {
