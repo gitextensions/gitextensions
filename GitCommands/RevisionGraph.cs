@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -28,10 +28,7 @@ namespace GitCommands
 
     public sealed class RevisionGraph : IDisposable
     {
-        private static readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
         private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
-
-        private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
         public event EventHandler Exited;
         public event EventHandler<RevisionGraphUpdatedEventArgs> Updated;
@@ -41,11 +38,9 @@ namespace GitCommands
         private readonly GitModule _module;
 
         [CanBeNull] private Dictionary<string, List<IGitRef>> _refs;
-        private ReadStep _nextStep = ReadStep.Commit;
         private GitRevision _revision;
         public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private string _selectedBranchName;
-        private string _previousFileName;
 
         public string RevisionFilter { get; set; } = string.Empty;
         public string PathFilter { get; set; } = string.Empty;
@@ -77,6 +72,24 @@ namespace GitCommands
                     });
         }
 
+        private static readonly Regex _commitRegex = new Regex(@"
+                ^
+                (?<objectid>[0-9a-f]{40})\n
+                ((?<parent>[0-9a-f]{40})\ ?)*\n # note root commits have no parent
+                (?<tree>[0-9a-f]{40})\n
+                (?<authorname>[^\n]+)\n
+                (?<authoremail>[^\n]+)\n
+                (?<authordate>\d+)\n
+                (?<committername>[^\n]+)\n
+                (?<committeremail>[^\n]+)\n
+                (?<commitdate>\d+)\n
+                (?<encoding>[^\n]*)\n
+                (?<subject>.+)
+                (\n+(?<body>(.|\n)*))?
+                $
+            ",
+            RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+
         private async Task ExecuteAsync()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -91,7 +104,6 @@ namespace GitCommands
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             const string fullFormat =
-                /* <COMMIT>                */ CommitBegin + "%n" +
                 /* Hash                    */ "%H%n" +
                 /* Parents                 */ "%P%n" +
                 /* Tree                    */ "%T%n" +
@@ -100,14 +112,9 @@ namespace GitCommands
                 /* Author Date             */ "%at%n" +
                 /* Committer Name          */ "%cN%n" +
                 /* Committer Email         */ "%cE%n" +
-                /* Committer Date          */ "%ct%n" +
-                /* Commit message encoding */ "%e%x00" + // there is a bug: git does not recode commit message when format is given
-                /* Commit Subject          */ "%s%x00" +
-                /* Commit Body             */ "%B%x00";
-
-            // NOTE:
-            // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
-            // the filename is the next line after the commit-format defined above.
+                /* Commit Date             */ "%ct%n" +
+                /* Commit message encoding */ "%e%n" + // there is a bug: git does not recode commit message when format is given
+                /* Commit Body             */ "%B";
 
             var arguments = new ArgumentBuilder
             {
@@ -146,26 +153,20 @@ namespace GitCommands
                 return;
             }
 
-            _previousFileName = null;
-
-            _nextStep = ReadStep.Commit;
-            foreach (string data in p.StandardOutput.ReadNullTerminatedLines())
+            foreach (var logItem in p.StandardOutput.ReadNullTerminatedLines())
             {
                 if (token.IsCancellationRequested)
                 {
                     break;
                 }
 
-                DataReceived(data);
+                ProcessLogItem(logItem);
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
             if (!token.IsCancellationRequested)
             {
-                FinishRevision();
-                _previousFileName = null;
-
                 Exited?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -197,121 +198,56 @@ namespace GitCommands
             return result;
         }
 
-        private void FinishRevision()
+        private void ProcessLogItem(string s)
         {
-            if (_revision != null && _revision.Guid == null)
+            s = GitModule.ReEncodeString(s, GitModule.LosslessEncoding, _module.LogOutputEncoding);
+
+            var match = _commitRegex.Match(s);
+
+            if (!match.Success || match.Index != 0)
             {
-                _revision = null;
+                Debug.Fail("Commit regex did not match");
+                return;
             }
 
-            if (_revision != null)
+            var encoding = match.Groups["encoding"].Value;
+
+            _revision = new GitRevision(null)
             {
-                if (_revision.Name == null)
-                {
-                    _revision.Name = _previousFileName;
-                }
-                else
-                {
-                    _previousFileName = _revision.Name;
-                }
+                // TODO use ObjectId (when merged) and parse directly from underlying string, avoiding copy
+                Guid = match.Groups["objectid"].Value,
+                ParentGuids = match.Groups["parent"].Captures.OfType<Capture>().Select(c => c.Value).ToArray(),
+                TreeGuid = match.Groups["tree"].Value,
+                Author = match.Groups["authorname"].Value,
+                AuthorEmail = match.Groups["authoremail"].Value,
+                AuthorDate = DateTimeUtils.ParseUnixTime(match.Groups["authordate"].Value),
+                Committer = match.Groups["committername"].Value,
+                CommitterEmail = match.Groups["committeremail"].Value,
+                CommitDate = DateTimeUtils.ParseUnixTime(match.Groups["commitdate"].Value),
+                MessageEncoding = encoding,
+                Subject = _module.ReEncodeCommitMessage(match.Groups["subject"].Value, encoding),
+                Body = _module.ReEncodeCommitMessage(match.Groups["body"].Value, encoding)
+            };
 
-                if (_revision.Guid.Trim(_hexChars).Length == 0 &&
-                    (RevisionPredicate == null || RevisionPredicate(_revision)))
-                {
-                    // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
-                    // Full commit message is used in InMemFilter but later it's not needed
-                    _revision.Body = null;
-
-                    RevisionCount++;
-                    Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(_revision));
-                }
-            }
-        }
-
-        private void DataReceived(string data)
-        {
-            if (data.StartsWith(CommitBegin))
+            if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
             {
-                // a new commit finalizes the last revision
-                FinishRevision();
-                _nextStep = ReadStep.Commit;
+                _revision.Refs.AddRange(gitRefs);
             }
 
-            switch (_nextStep)
+            if (RevisionPredicate == null || RevisionPredicate(_revision))
             {
-                case ReadStep.Commit:
-                    data = GitModule.ReEncodeString(data, GitModule.LosslessEncoding, _module.LogOutputEncoding);
+                // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
+                // Full commit message is used in InMemFilter but later it's not needed
+                _revision.Body = null;
 
-                    string[] lines = data.Split('\n');
-                    Debug.Assert(lines.Length == 11, "lines.Length == 11");
-                    Debug.Assert(lines[0] == CommitBegin, "lines[0] == CommitBegin");
-
-                    _revision = new GitRevision(lines[1]);
-
-                    if (_refs.TryGetValue(_revision.Guid, out var gitRefs))
-                    {
-                        _revision.Refs.AddRange(gitRefs);
-                    }
-
-                    // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
-                    _revision.ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    _revision.TreeGuid = lines[3];
-
-                    _revision.Author = lines[4];
-                    _revision.AuthorEmail = lines[5];
-                    {
-                        if (DateTimeUtils.TryParseUnixTime(lines[6], out var dateTime))
-                        {
-                            _revision.AuthorDate = dateTime;
-                        }
-                    }
-
-                    _revision.Committer = lines[7];
-                    _revision.CommitterEmail = lines[8];
-                    {
-                        if (DateTimeUtils.TryParseUnixTime(lines[9], out var dateTime))
-                        {
-                            _revision.CommitDate = dateTime;
-                        }
-                    }
-
-                    _revision.MessageEncoding = lines[10];
-                    break;
-
-                case ReadStep.CommitSubject:
-                    _revision.Subject = _module.ReEncodeCommitMessage(data, _revision.MessageEncoding);
-                    break;
-
-                case ReadStep.CommitBody:
-                    _revision.Body = _module.ReEncodeCommitMessage(data, _revision.MessageEncoding);
-                    break;
-
-                case ReadStep.FileName:
-                    if (!string.IsNullOrEmpty(data))
-                    {
-                        // Git adds \n between the format string (ends with \0 in our case)
-                        // and the first file name. So, we need to remove it from the file name.
-                        data = GitModule.ReEncodeFileNameFromLossless(data);
-                        _revision.Name = data.TrimStart('\n');
-                    }
-
-                    break;
+                RevisionCount++;
+                Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(_revision));
             }
-
-            _nextStep++;
         }
 
         public void Dispose()
         {
             _cancellationTokenSequence.Dispose();
-        }
-
-        private enum ReadStep
-        {
-            Commit,
-            CommitSubject,
-            CommitBody,
-            FileName,
         }
     }
 
