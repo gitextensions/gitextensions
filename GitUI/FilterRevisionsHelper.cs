@@ -18,56 +18,46 @@ namespace GitUI
 
         private readonly Form _NO_TRANSLATE_form;
 
-        public FilterRevisionsHelper()
+        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
         {
-            _commitFilterToolStripMenuItem = new ToolStripMenuItem();
-            _committerToolStripMenuItem = new ToolStripMenuItem();
-            _authorToolStripMenuItem = new ToolStripMenuItem();
-            _diffContainsToolStripMenuItem = new ToolStripMenuItem();
-            _hashToolStripMenuItem = new ToolStripMenuItem();
+            _commitFilterToolStripMenuItem = new ToolStripMenuItem
+            {
+                Checked = true,
+                CheckOnClick = true,
+                Name = "commitToolStripMenuItem1",
+                Text = "Commit message and hash"
+            };
 
-            //
-            // commitToolStripMenuItem1
-            //
-            _commitFilterToolStripMenuItem.Checked = true;
-            _commitFilterToolStripMenuItem.CheckOnClick = true;
-            _commitFilterToolStripMenuItem.Name = "commitToolStripMenuItem1";
-            _commitFilterToolStripMenuItem.Text = "Commit message and hash";
+            _committerToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "committerToolStripMenuItem",
+                Text = "Committer"
+            };
 
-            //
-            // committerToolStripMenuItem
-            //
-            _committerToolStripMenuItem.CheckOnClick = true;
-            _committerToolStripMenuItem.Name = "committerToolStripMenuItem";
-            _committerToolStripMenuItem.Text = "Committer";
+            _authorToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "authorToolStripMenuItem",
+                Text = "Author"
+            };
 
-            //
-            // authorToolStripMenuItem
-            //
-            _authorToolStripMenuItem.CheckOnClick = true;
-            _authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            _authorToolStripMenuItem.Text = "Author";
-
-            //
-            // diffContainsToolStripMenuItem
-            //
-            _diffContainsToolStripMenuItem.CheckOnClick = true;
-            _diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
-            _diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
+            _diffContainsToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "diffContainsToolStripMenuItem",
+                Text = "Diff contains (SLOW)"
+            };
             _diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
 
-            //
-            // hashToolStripMenuItem
-            //
-            _hashToolStripMenuItem.CheckOnClick = true;
-            _hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            _hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            _hashToolStripMenuItem.Text = "Hash";
-        }
+            _hashToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "hashToolStripMenuItem",
+                Size = new System.Drawing.Size(216, 24),
+                Text = "Hash"
+            };
 
-        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
-            : this()
-        {
             _NO_TRANSLATE_textBox = textBox;
             _NO_TRANSLATE_revisionGrid = revisionGrid;
             _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
