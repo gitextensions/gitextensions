@@ -72,7 +72,7 @@ namespace GitUI
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
-        private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
         private bool _initialLoad = true;
         private string _initialSelectedRevision;
@@ -1236,29 +1236,29 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!AppSettings.ShowGitNotes && (_refsOptions & (RefsFiltringOptions.All | RefsFiltringOptions.Boundary)) == (RefsFiltringOptions.All | RefsFiltringOptions.Boundary))
+                if (!AppSettings.ShowGitNotes && (_refFilterOptions & (RefFilterOptions.All | RefFilterOptions.Boundary)) == (RefFilterOptions.All | RefFilterOptions.Boundary))
                 {
-                    _refsOptions |= RefsFiltringOptions.ShowGitNotes;
+                    _refFilterOptions |= RefFilterOptions.ShowGitNotes;
                 }
 
                 if (AppSettings.ShowGitNotes)
                 {
-                    _refsOptions &= ~RefsFiltringOptions.ShowGitNotes;
+                    _refFilterOptions &= ~RefFilterOptions.ShowGitNotes;
                 }
 
                 if (!AppSettings.ShowMergeCommits)
                 {
-                    _refsOptions |= RefsFiltringOptions.NoMerges;
+                    _refFilterOptions |= RefFilterOptions.NoMerges;
                 }
 
                 if (AppSettings.ShowFirstParent)
                 {
-                    _refsOptions |= RefsFiltringOptions.FirstParent;
+                    _refFilterOptions |= RefFilterOptions.FirstParent;
                 }
 
                 if (AppSettings.ShowSimplifyByDecoration)
                 {
-                    _refsOptions |= RefsFiltringOptions.SimplifyByDecoration;
+                    _refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
                 }
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
@@ -1286,7 +1286,7 @@ namespace GitUI
                 _revisionGraphCommand = new RevisionGraph(Module)
                 {
                     BranchFilter = BranchFilter,
-                    RefsOptions = _refsOptions,
+                    RefsOptions = _refFilterOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
                     PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
                     InMemFilter = revGraphIMF
@@ -2501,17 +2501,17 @@ namespace GitUI
 
             if (!AppSettings.BranchFilterEnabled)
             {
-                _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+                _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
             }
             else if (AppSettings.ShowCurrentBranchOnly)
             {
-                _refsOptions = 0;
+                _refFilterOptions = 0;
             }
             else
             {
-                _refsOptions = BranchFilter.Length > 0
+                _refFilterOptions = BranchFilter.Length > 0
                                ? 0
-                               : RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+                               : RefFilterOptions.All | RefFilterOptions.Boundary;
             }
 
             MenuCommands.TriggerMenuChanged(); // apply checkboxes changes also to FormBrowse main menu

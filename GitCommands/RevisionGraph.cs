@@ -11,7 +11,7 @@ using GitUIPluginInterfaces;
 namespace GitCommands
 {
     [Flags]
-    public enum RefsFiltringOptions
+    public enum RefFilterOptions
     {
         Branches = 1,              // --branches
         Remotes = 2,               // --remotes
@@ -97,7 +97,7 @@ namespace GitCommands
             }
         }
 
-        public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         public string RevisionFilter = string.Empty;
         public string PathFilter = string.Empty;
         public string BranchFilter = string.Empty;
@@ -107,10 +107,10 @@ namespace GitCommands
 
         public void Execute()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => _backgroundLoader.LoadAsync(ProccessGitLog, ProccessGitLogExecuted));
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => _backgroundLoader.LoadAsync(ProcessGitLog, ProcessGitLogExecuted));
         }
 
-        private void ProccessGitLog(CancellationToken taskState)
+        private void ProcessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
             Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
@@ -146,23 +146,23 @@ namespace GitCommands
                 { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
                 { AppSettings.ShowReflogReferences, "--reflog" },
                 {
-                    RefsOptions.HasFlag(RefsFiltringOptions.All),
+                    RefsOptions.HasFlag(RefFilterOptions.All),
                     "--all",
                     new ArgumentBuilder
                     {
                         {
-                            RefsOptions.HasFlag(RefsFiltringOptions.Branches) && !string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1,
+                            RefsOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1,
                             "--branches=" + BranchFilter
                         },
-                        { RefsOptions.HasFlag(RefsFiltringOptions.Remotes), "--remotes" },
-                        { RefsOptions.HasFlag(RefsFiltringOptions.Tags), "--tags" },
+                        { RefsOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                        { RefsOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
                     }.ToString()
                 },
-                { RefsOptions.HasFlag(RefsFiltringOptions.Boundary), "--boundary" },
-                { RefsOptions.HasFlag(RefsFiltringOptions.ShowGitNotes), "--not --glob=notes --not" },
-                { RefsOptions.HasFlag(RefsFiltringOptions.NoMerges), "--no-merges" },
-                { RefsOptions.HasFlag(RefsFiltringOptions.FirstParent), "--first-parent" },
-                { RefsOptions.HasFlag(RefsFiltringOptions.SimplifyByDecoration), "--simplify-by-decoration" },
+                { RefsOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                { RefsOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                { RefsOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                { RefsOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
+                { RefsOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
                 RevisionFilter,
                 "--",
                 PathFilter
@@ -233,7 +233,7 @@ namespace GitCommands
             }
         }
 
-        private void ProccessGitLogExecuted()
+        private void ProcessGitLogExecuted()
         {
             FinishRevision();
             _previousFileName = null;
