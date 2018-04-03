@@ -43,16 +43,6 @@ namespace GitCommands
         public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
 
-        public class RevisionGraphUpdatedEventArgs : EventArgs
-        {
-            public RevisionGraphUpdatedEventArgs(GitRevision revision)
-            {
-                Revision = revision;
-            }
-
-            public readonly GitRevision Revision;
-        }
-
         public bool ShaOnly { get; set; }
 
         private readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
@@ -385,5 +375,15 @@ namespace GitCommands
 
             _nextStep++;
         }
+    }
+
+    public sealed class RevisionGraphUpdatedEventArgs : EventArgs
+    {
+        public RevisionGraphUpdatedEventArgs(GitRevision revision)
+        {
+            Revision = revision;
+        }
+
+        public GitRevision Revision { get; }
     }
 }

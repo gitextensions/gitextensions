@@ -1376,7 +1376,7 @@ namespace GitUI
             e.Handled = true;
         }
 
-        private void GitGetCommitsCommandUpdated(object sender, RevisionGraph.RevisionGraphUpdatedEventArgs e)
+        private void GitGetCommitsCommandUpdated(object sender, RevisionGraphUpdatedEventArgs e)
         {
             UpdateGraph(e.Revision);
         }
