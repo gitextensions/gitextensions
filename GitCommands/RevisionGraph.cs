@@ -43,8 +43,6 @@ namespace GitCommands
 
         public int RevisionCount { get; set; }
 
-        public bool ShaOnly { get; set; }
-
         private readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
 
         private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
@@ -105,13 +103,10 @@ namespace GitCommands
             Updated?.Invoke(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
-            const string shaOnlyFormat =
-                /* <COMMIT>       */ CommitBegin + "%n" +
-                /* Hash           */ "%H%n" +
-                /* Parents        */ "%P%n";
-
             const string fullFormat =
-                shaOnlyFormat +
+                /* <COMMIT>                */ CommitBegin + "%n" +
+                /* Hash                    */ "%H%n" +
+                /* Parents                 */ "%P%n" +
                 /* Tree                    */ "%T%n" +
                 /* Author Name             */ "%aN%n" +
                 /* Author Email            */ "%aE%n" +
@@ -131,7 +126,7 @@ namespace GitCommands
             {
                 "log",
                 "-z",
-                $"--pretty=format:\"{(ShaOnly ? shaOnlyFormat : fullFormat)}\"",
+                $"--pretty=format:\"{fullFormat}\"",
                 { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
                 { AppSettings.ShowReflogReferences, "--reflog" },
                 {
