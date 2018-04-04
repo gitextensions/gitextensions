@@ -20,6 +20,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+
+            typeDataGridViewTextBoxColumn.DataPropertyName = nameof(Patch.ChangeType);
+            File.DataPropertyName = nameof(Patch.FileType);
         }
 
         public void LoadPatch(string patch)
