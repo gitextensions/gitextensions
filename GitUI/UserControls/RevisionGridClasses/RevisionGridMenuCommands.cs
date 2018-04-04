@@ -81,7 +81,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
-            return new List<MenuCommand>
+            return new[]
             {
                 new MenuCommand
                 {
@@ -163,7 +163,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private IEnumerable<MenuCommand> CreateViewMenuCommands()
         {
-            return new List<MenuCommand>
+            return new[]
             {
                 // the first three MenuCommands just reuse (the currently rather
                 // convoluted) logic from RevisionGrid.
