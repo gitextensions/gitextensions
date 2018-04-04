@@ -23,55 +23,83 @@ namespace GitUI
             _controlDisposed = new ConditionalWeakTable<IComponent, StrongBox<CancellationToken>>();
         }
 
-        public static ControlMainThreadAwaitable SwitchToMainThreadAsync(this ToolStripItem control)
+        public static ControlMainThreadAwaitable SwitchToMainThreadAsync(this ToolStripItem control, CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken), disposable: null, cancellationToken);
+            }
+
             if (control.IsDisposed)
             {
-                return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_preCancelledToken), _preCancelledToken);
+                return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_preCancelledToken), disposable: null, _preCancelledToken);
             }
 
             var disposedCancellationToken = ToolStripItemDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
+            CancellationTokenSource cancellationTokenSource = null;
+            if (cancellationToken.CanBeCanceled)
+            {
+                cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disposedCancellationToken, cancellationToken);
+                disposedCancellationToken = cancellationTokenSource.Token;
+            }
+
             var mainThreadAwaiter = ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(disposedCancellationToken);
-            return new ControlMainThreadAwaitable(mainThreadAwaiter, disposedCancellationToken);
+            return new ControlMainThreadAwaitable(mainThreadAwaiter, cancellationTokenSource, disposedCancellationToken);
         }
 
-        public static ControlMainThreadAwaitable SwitchToMainThreadAsync(this Control control)
+        public static ControlMainThreadAwaitable SwitchToMainThreadAsync(this Control control, CancellationToken cancellationToken = default)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken), disposable: null, cancellationToken);
+            }
+
             if (control.IsDisposed)
             {
-                return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_preCancelledToken), _preCancelledToken);
+                return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_preCancelledToken), disposable: null, _preCancelledToken);
             }
 
             var disposedCancellationToken = ControlIsDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
+            CancellationTokenSource cancellationTokenSource = null;
+            if (cancellationToken.CanBeCanceled)
+            {
+                cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disposedCancellationToken, cancellationToken);
+                disposedCancellationToken = cancellationTokenSource.Token;
+            }
+
             var mainThreadAwaiter = ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(disposedCancellationToken);
-            return new ControlMainThreadAwaitable(mainThreadAwaiter, disposedCancellationToken);
+            return new ControlMainThreadAwaitable(mainThreadAwaiter, cancellationTokenSource, disposedCancellationToken);
         }
 
         public struct ControlMainThreadAwaitable
         {
             private readonly JoinableTaskFactory.MainThreadAwaitable _awaitable;
+            private readonly IDisposable _disposable;
             private readonly CancellationToken _cancellationToken;
 
-            internal ControlMainThreadAwaitable(JoinableTaskFactory.MainThreadAwaitable awaitable, CancellationToken cancellationToken)
+            internal ControlMainThreadAwaitable(JoinableTaskFactory.MainThreadAwaitable awaitable, IDisposable disposable, CancellationToken cancellationToken)
             {
                 _awaitable = awaitable;
+                _disposable = disposable;
                 _cancellationToken = cancellationToken;
             }
 
             public ControlMainThreadAwaiter GetAwaiter()
             {
-                return new ControlMainThreadAwaiter(_awaitable.GetAwaiter(), _cancellationToken);
+                return new ControlMainThreadAwaiter(_awaitable.GetAwaiter(), _disposable, _cancellationToken);
             }
         }
 
         public struct ControlMainThreadAwaiter : INotifyCompletion
         {
             private readonly JoinableTaskFactory.MainThreadAwaiter _awaiter;
+            private readonly IDisposable _disposable;
             private readonly CancellationToken _cancellationToken;
 
-            internal ControlMainThreadAwaiter(JoinableTaskFactory.MainThreadAwaiter awaiter, CancellationToken cancellationToken)
+            internal ControlMainThreadAwaiter(JoinableTaskFactory.MainThreadAwaiter awaiter, IDisposable disposable, CancellationToken cancellationToken)
             {
                 _awaiter = awaiter;
+                _disposable = disposable;
                 _cancellationToken = cancellationToken;
             }
 
@@ -81,12 +109,19 @@ namespace GitUI
 
             public void GetResult()
             {
-                _awaiter.GetResult();
+                try
+                {
+                    _awaiter.GetResult();
 
-                // The default MainThreadAwaiter only throws an exception if we fail to reach the main thread. This call
-                // ensures we always cancel the continuation if we somehow reach the UI thread after the control was
-                // disposed.
-                _cancellationToken.ThrowIfCancellationRequested();
+                    // The default MainThreadAwaiter only throws an exception if we fail to reach the main thread. This
+                    // call ensures we always cancel the continuation if we somehow reach the UI thread after the
+                    // control was disposed.
+                    _cancellationToken.ThrowIfCancellationRequested();
+                }
+                finally
+                {
+                    _disposable?.Dispose();
+                }
             }
         }
 
