@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
@@ -77,6 +78,43 @@ namespace GitUI
         public static int Scale(int i)
         {
             return (int)Math.Round(i * ScaleX);
+        }
+
+        public static Point Scale(Point point)
+        {
+            return new Point(
+                (int)(point.X * ScaleX),
+                (int)(point.Y * ScaleY));
+        }
+
+        [NotNull]
+        public static Image Scale([NotNull] Image image)
+        {
+            const string dpiScaled = "__DPI_SCALED__";
+
+            if (!IsNonStandard || image.Tag as string == dpiScaled)
+            {
+                return image;
+            }
+
+            var size = Scale(new Size(image.Width, image.Height));
+            var bitmap = new Bitmap(size.Width, size.Height);
+
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                // NearestNeighbor is better for 200% and above
+                // http://blogs.msdn.com/b/visualstudio/archive/2014/03/19/improving-high-dpi-support-for-visual-studio-2013.aspx
+
+                g.InterpolationMode = ScaleX >= 2
+                    ? InterpolationMode.NearestNeighbor
+                    : InterpolationMode.HighQualityBicubic;
+
+                g.DrawImage(image, new Rectangle(Point.Empty, size));
+            }
+
+            bitmap.Tag = dpiScaled;
+
+            return bitmap;
         }
 
         [DllImport("gdi32.dll")]
