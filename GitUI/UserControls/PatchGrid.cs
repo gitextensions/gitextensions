@@ -15,19 +15,11 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-            Patches.CellPainting += Patches_CellPainting;
+
             FileName.Width = DpiUtil.Scale(50);
             authorDataGridViewTextBoxColumn.Width = DpiUtil.Scale(140);
             dateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(160);
             Status.Width = DpiUtil.Scale(80);
-        }
-
-        private static void Patches_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-        }
-
-        private static void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
