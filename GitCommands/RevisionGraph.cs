@@ -163,14 +163,14 @@ namespace GitCommands
             // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
             var stringPool = new ObjectPool<string>(StringComparer.Ordinal, capacity: 256);
 
-            foreach (var logItem in p.StandardOutput.ReadNullTerminatedLines())
+            foreach (var logItemBytes in p.StandardOutput.BaseStream.ReadNullTerminatedChunks())
             {
                 if (token.IsCancellationRequested)
                 {
                     break;
                 }
 
-                ProcessLogItem(logItem, stringPool);
+                ProcessLogItem(logItemBytes, stringPool);
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
@@ -211,9 +211,9 @@ namespace GitCommands
             return refs;
         }
 
-        private void ProcessLogItem(string s, ObjectPool<string> stringPool)
+        private void ProcessLogItem(byte[] logItemBytes, ObjectPool<string> stringPool)
         {
-            s = GitModule.ReEncodeString(s, GitModule.LosslessEncoding, _module.LogOutputEncoding);
+            var s = _module.LogOutputEncoding.GetString(logItemBytes);
 
             var match = _commitRegex.Match(s);
 

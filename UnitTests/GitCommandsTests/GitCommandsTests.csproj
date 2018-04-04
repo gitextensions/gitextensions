@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="ArgumentBuilderExtensionsTests.cs" />
+    <Compile Include="ArrayExtensionsTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Git\GitDescribeProviderTests.cs" />
     <Compile Include="Git\GitRefNameTests.cs" />
     <Compile Include="ObjectPoolTests.cs" />
-    <Compile Include="StreamReaderExtensionsTests.cs" />
+    <Compile Include="StreamExtensionsTests.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
