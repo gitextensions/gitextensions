@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using GitUI;
 using NUnit.Framework;
 
@@ -108,7 +110,7 @@ namespace GitUITests
 
         [Test]
         [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
-        public void Concurrent_callers_to_Next_only_result_in_one_non_cancelled_token_being_issued()
+        public async Task Concurrent_callers_to_Next_only_result_in_one_non_cancelled_token_being_issued()
         {
             const int loopCount = 10000;
 
@@ -125,16 +127,20 @@ namespace GitUITests
                 var completionToken = completionTokenSource.Token;
                 var winnerByIndex = new int[threadCount];
 
-                for (var i = 0; i < threadCount; i++)
-                {
-                    new Thread(ThreadMethod).Start(i);
-                }
+                var tasks = Enumerable
+                    .Range(0, threadCount)
+                    .Select(i => Task.Run(() => ThreadMethod(i)))
+                    .ToList();
 
-                Assert.True(countdown.Wait(TimeSpan.FromSeconds(10)), "Test should have completed within a reasonable amount of time");
+                Assert.True(
+                    countdown.Wait(TimeSpan.FromSeconds(10)),
+                    "Test should have completed within a reasonable amount of time");
+
+                await Task.WhenAll(tasks);
 
                 Assert.AreEqual(loopCount, completedCount);
 
-                Console.Out.WriteLine("Winner by index: " + string.Join(",", winnerByIndex));
+                await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
 
                 // Assume hyperthreading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
                 if (logicalProcessorCount <= 2)
@@ -144,7 +150,7 @@ namespace GitUITests
 
                 return;
 
-                void ThreadMethod(object o)
+                void ThreadMethod(int i)
                 {
                     while (true)
                     {
@@ -162,7 +168,7 @@ namespace GitUITests
                         if (!token.IsCancellationRequested)
                         {
                             Interlocked.Increment(ref completedCount);
-                            Interlocked.Increment(ref winnerByIndex[(int)o]);
+                            Interlocked.Increment(ref winnerByIndex[i]);
                         }
 
                         if (countdown.Signal())
