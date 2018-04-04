@@ -38,6 +38,11 @@ namespace DeleteUnusedBranches
         public DeleteUnusedBranchesForm()
         {
             InitializeComponent();
+
+            deleteDataGridViewCheckBoxColumn.Width = DpiUtil.Scale(50);
+            dateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(175);
+            Author.Width = DpiUtil.Scale(91);
+
             Translate();
         }
 

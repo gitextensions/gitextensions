@@ -15,6 +15,13 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             : base(commands)
         {
             InitializeComponent();
+            Path.Width = DpiUtil.Scale(35);
+            Type.Width = DpiUtil.Scale(37);
+            Branch.Width = DpiUtil.Scale(46);
+            Sha1.Width = DpiUtil.Scale(37);
+            IsDeleted.Width = DpiUtil.Scale(50);
+            Open.Width = DpiUtil.Scale(39);
+            Delete.Width = DpiUtil.Scale(44);
             Worktrees.AutoGenerateColumns = false;
             Translate();
         }

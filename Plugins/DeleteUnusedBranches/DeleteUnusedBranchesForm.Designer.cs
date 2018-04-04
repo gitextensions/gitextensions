@@ -139,7 +139,6 @@
             this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
             this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
             this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
-            this.deleteDataGridViewCheckBoxColumn.Width = 50;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -161,7 +160,6 @@
             this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.Width = 175;
             // 
             // Author
             // 
@@ -173,7 +171,6 @@
             this.Author.HeaderText = "Last author";
             this.Author.Name = "Author";
             this.Author.ReadOnly = true;
-            this.Author.Width = 91;
             // 
             // Message
             // 

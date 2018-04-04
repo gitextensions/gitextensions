@@ -77,7 +77,6 @@
             this.FileName.HeaderText = "Name";
             this.FileName.Name = "FileName";
             this.FileName.ReadOnly = true;
-            this.FileName.Width = 50;
             // 
             // subjectDataGridViewTextBoxColumn
             // 
@@ -93,7 +92,6 @@
             this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
             this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
             this.authorDataGridViewTextBoxColumn.ReadOnly = true;
-            this.authorDataGridViewTextBoxColumn.Width = 140;
             // 
             // dateDataGridViewTextBoxColumn
             // 
@@ -102,7 +100,6 @@
             this.dateDataGridViewTextBoxColumn.HeaderText = "Date";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.Width = 160;
             // 
             // Status
             // 
@@ -111,7 +108,6 @@
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
-            this.Status.Width = 80;
             // 
             // PatchGrid
             // 

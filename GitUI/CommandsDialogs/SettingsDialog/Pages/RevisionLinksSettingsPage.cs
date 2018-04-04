@@ -10,7 +10,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public RevisionLinksSettingsPage()
         {
             InitializeComponent();
-            Text = @"Revision links";
+            CaptionCol.Width = DpiUtil.Scale(150);
+            Text = "Revision links";
             Translate();
             LinksGrid.AutoGenerateColumns = false;
         }

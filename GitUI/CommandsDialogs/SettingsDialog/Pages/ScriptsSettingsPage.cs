@@ -58,6 +58,7 @@ Current Branch:
         public ScriptsSettingsPage()
         {
             InitializeComponent();
+            HotkeyCommandIdentifier.Width = DpiUtil.Scale(39);
             Text = "Scripts";
             Translate();
         }

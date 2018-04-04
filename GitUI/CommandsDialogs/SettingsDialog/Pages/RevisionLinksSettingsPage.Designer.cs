@@ -204,7 +204,6 @@
             this.CaptionCol.DataPropertyName = "Caption";
             this.CaptionCol.HeaderText = "Caption";
             this.CaptionCol.Name = "CaptionCol";
-            this.CaptionCol.Width = 150;
             // 
             // URICol
             // 

@@ -172,14 +172,12 @@
             this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
             this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
             this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            this.pathDataGridViewTextBoxColumn.Width = 150;
             // 
             // Title
             // 
             this.Title.DataPropertyName = "Title";
             this.Title.HeaderText = "Title";
             this.Title.Name = "Title";
-            this.Title.Width = 150;
             // 
             // descriptionDataGridViewTextBoxColumn
             // 
