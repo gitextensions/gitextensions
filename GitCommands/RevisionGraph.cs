@@ -30,6 +30,24 @@ namespace GitCommands
     {
         private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
 
+        private static readonly Regex _commitRegex = new Regex(@"
+                ^
+                (?<objectid>[0-9a-f]{40})\n
+                ((?<parent>[0-9a-f]{40})\ ?)*\n # note root commits have no parent
+                (?<tree>[0-9a-f]{40})\n
+                (?<authorname>[^\n]+)\n
+                (?<authoremail>[^\n]+)\n
+                (?<authordate>\d+)\n
+                (?<committername>[^\n]+)\n
+                (?<committeremail>[^\n]+)\n
+                (?<commitdate>\d+)\n
+                (?<encoding>[^\n]*)\n
+                (?<subject>.+)
+                (\n+(?<body>(.|\n)*))?
+                $
+            ",
+            RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+
         public event EventHandler Exited;
         public event Action<GitRevision> Updated;
         public event EventHandler<AsyncErrorEventArgs> Error;
@@ -70,24 +88,6 @@ namespace GitCommands
                         return !args.Handled;
                     });
         }
-
-        private static readonly Regex _commitRegex = new Regex(@"
-                ^
-                (?<objectid>[0-9a-f]{40})\n
-                ((?<parent>[0-9a-f]{40})\ ?)*\n # note root commits have no parent
-                (?<tree>[0-9a-f]{40})\n
-                (?<authorname>[^\n]+)\n
-                (?<authoremail>[^\n]+)\n
-                (?<authordate>\d+)\n
-                (?<committername>[^\n]+)\n
-                (?<committeremail>[^\n]+)\n
-                (?<commitdate>\d+)\n
-                (?<encoding>[^\n]*)\n
-                (?<subject>.+)
-                (\n+(?<body>(.|\n)*))?
-                $
-            ",
-            RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
         private async Task ExecuteAsync()
         {
