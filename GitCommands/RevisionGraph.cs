@@ -183,10 +183,13 @@ namespace GitCommands
 
         private IReadOnlyList<IGitRef> GetRefs()
         {
-            var result = _module.GetRefs(true);
-            bool validWorkingDir = _module.IsValidGitWorkingDir();
-            _selectedBranchName = validWorkingDir ? _module.GetSelectedBranch() : string.Empty;
-            var selectedRef = result.FirstOrDefault(head => head.Name == _selectedBranchName);
+            var refs = _module.GetRefs(true);
+
+            _selectedBranchName = _module.IsValidGitWorkingDir()
+                ? _module.GetSelectedBranch()
+                : "";
+
+            var selectedRef = refs.FirstOrDefault(head => head.Name == _selectedBranchName);
 
             if (selectedRef != null)
             {
@@ -194,10 +197,10 @@ namespace GitCommands
 
                 var localConfigFile = _module.LocalConfigFile;
 
-                var selectedHeadMergeSource =
-                    result.FirstOrDefault(head => head.IsRemote
-                                        && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
-                                        && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
+                var selectedHeadMergeSource = refs.FirstOrDefault(
+                    head => head.IsRemote
+                         && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
+                         && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
 
                 if (selectedHeadMergeSource != null)
                 {
@@ -205,7 +208,7 @@ namespace GitCommands
                 }
             }
 
-            return result;
+            return refs;
         }
 
         private void ProcessLogItem(string s, ObjectPool<string> stringPool)

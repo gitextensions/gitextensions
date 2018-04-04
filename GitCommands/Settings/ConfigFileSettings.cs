@@ -126,7 +126,6 @@ namespace GitCommands.Settings
         public Encoding FilesEncoding
         {
             get => GetEncoding("i18n.filesEncoding");
-
             set => SetEncoding("i18n.filesEncoding", value);
         }
 
@@ -139,29 +138,29 @@ namespace GitCommands.Settings
         [CanBeNull]
         private Encoding GetEncoding(string settingName)
         {
-            Encoding result;
-
             string encodingName = GetValue(settingName);
 
             if (string.IsNullOrEmpty(encodingName))
             {
-                result = null;
-            }
-            else if (!AppSettings.AvailableEncodings.TryGetValue(encodingName, out result))
-            {
-                try
-                {
-                    result = Encoding.GetEncoding(encodingName);
-                }
-                catch (ArgumentException)
-                {
-                    Debug.WriteLine("Unsupported encoding set in git config file: {0}\n" +
-                        "Please check the setting {1} in config file.", encodingName, settingName);
-                    result = null;
-                }
+                return null;
             }
 
-            return result;
+            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out var result))
+            {
+                return result;
+            }
+
+            try
+            {
+                return Encoding.GetEncoding(encodingName);
+            }
+            catch (ArgumentException)
+            {
+                Debug.WriteLine(
+                    "Unsupported encoding set in git config file: {0}\n" +
+                    "Please check the setting {1} in config file.", encodingName, settingName);
+                return null;
+            }
         }
 
         private void SetEncoding(string settingName, [CanBeNull] Encoding encoding)
