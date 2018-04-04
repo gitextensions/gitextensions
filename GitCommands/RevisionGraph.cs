@@ -28,7 +28,7 @@ namespace GitCommands
 
     public sealed class RevisionGraph : IDisposable
     {
-        private static readonly char[] ShellGlobCharacters = { '?', '*', '[' };
+        private static readonly char[] _shellGlobCharacters = { '?', '*', '[' };
 
         private static readonly Regex _commitRegex = new Regex(@"
                 ^
@@ -54,23 +54,31 @@ namespace GitCommands
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly GitModule _module;
+        private readonly RefFilterOptions _refFilterOptions;
+        private readonly string _branchFilter;
+        private readonly string _revisionFilter;
+        private readonly string _pathFilter;
+        [CanBeNull] private readonly Func<GitRevision, bool> _revisionPredicate;
 
         [CanBeNull] private Dictionary<string, List<IGitRef>> _refs;
-        public RefFilterOptions RefsOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private string _selectedBranchName;
-
-        public string RevisionFilter { get; set; } = string.Empty;
-        public string PathFilter { get; set; } = string.Empty;
-        public string BranchFilter { get; set; } = string.Empty;
-
-        [CanBeNull]
-        public Func<GitRevision, bool> RevisionPredicate { get; set; }
 
         public int RevisionCount { get; private set; }
 
-        public RevisionGraph(GitModule module)
+        public RevisionGraph(
+            GitModule module,
+            RefFilterOptions refFilterOptions,
+            string branchFilter,
+            string revisionFilter,
+            string pathFilter,
+            [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
             _module = module;
+            _refFilterOptions = refFilterOptions;
+            _branchFilter = branchFilter;
+            _revisionFilter = revisionFilter;
+            _pathFilter = pathFilter;
+            _revisionPredicate = revisionPredicate;
         }
 
         /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
@@ -123,26 +131,26 @@ namespace GitCommands
                 { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
                 { AppSettings.ShowReflogReferences, "--reflog" },
                 {
-                    RefsOptions.HasFlag(RefFilterOptions.All),
+                    _refFilterOptions.HasFlag(RefFilterOptions.All),
                     "--all",
                     new ArgumentBuilder
                     {
                         {
-                            RefsOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(BranchFilter) && BranchFilter.IndexOfAny(ShellGlobCharacters) != -1,
-                            "--branches=" + BranchFilter
+                            _refFilterOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(_branchFilter) && _branchFilter.IndexOfAny(_shellGlobCharacters) != -1,
+                            "--branches=" + _branchFilter
                         },
-                        { RefsOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                        { RefsOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                        { _refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                        { _refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
                     }.ToString()
                 },
-                { RefsOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                { RefsOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
-                { RefsOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                { RefsOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
-                { RefsOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
-                RevisionFilter,
+                { _refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                { _refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                { _refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                { _refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
+                { _refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
+                _revisionFilter,
                 "--",
-                PathFilter
+                _pathFilter
             };
 
             Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
@@ -238,7 +246,7 @@ namespace GitCommands
                 revision.Refs.AddRange(gitRefs);
             }
 
-            if (RevisionPredicate == null || RevisionPredicate(revision))
+            if (_revisionPredicate == null || _revisionPredicate(revision))
             {
                 // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
                 // Full commit message is used in InMemFilter but later it's not needed

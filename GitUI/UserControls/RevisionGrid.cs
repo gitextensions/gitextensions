@@ -1276,14 +1276,12 @@ namespace GitUI
                     predicate = null;
                 }
 
-                _revisionGraph = new RevisionGraph(Module)
-                {
-                    BranchFilter = BranchFilter,
-                    RefsOptions = _refFilterOptions,
-                    RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
-                    PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
-                    RevisionPredicate = predicate
-                };
+                _revisionGraph = new RevisionGraph(
+                    Module,
+                    _refFilterOptions,
+                    BranchFilter,
+                    _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
+                    _revisionFilter.GetPathFilter() + FixedPathFilter, predicate);
                 _revisionGraph.Updated += UpdateGraph;
                 _revisionGraph.Exited += GitGetCommitsCommandExited;
                 _revisionGraph.Error += _revisionGraphCommand_Error;
