@@ -122,6 +122,7 @@
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
+    <Compile Include="Repository\RepositoryManager.cs" />
     <Compile Include="Repository\RepositoryDescriptionProvider.cs" />
     <Compile Include="Repository\RepositoryStorage.cs" />
     <Compile Include="Repository\RepositoryXmlSerialiser.cs" />
@@ -189,7 +190,6 @@
     <Compile Include="Patches\Patch.cs" />
     <Compile Include="Patches\PatchFile.cs" />
     <Compile Include="Patches\PatchManager.cs" />
-    <Compile Include="Repository\Repositories.cs" />
     <Compile Include="Repository\RepositoryHistory.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using GitUI.Properties;
-using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -183,7 +179,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         }
                     }
 
-                    Repositories.AddMostRecentRepository(module.WorkingDir);
+                    RepositoryManager.AddMostRecentRepository(module.WorkingDir);
                     OnModuleChanged(this, new GitModuleEventArgs(module));
                 }
 

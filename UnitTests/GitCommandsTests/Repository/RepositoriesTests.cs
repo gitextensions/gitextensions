@@ -59,7 +59,7 @@ namespace GitCommandsTests.Repository
   <CategoryType>Repositories</CategoryType>
 </RepositoryHistory>";
 
-            var history = Repositories.DeserializeHistoryFromXml(settingHistoryValue);
+            var history = RepositoryManager.DeserializeHistoryFromXml(settingHistoryValue);
 
             history.Repositories.Count.Should().Be(10);
             history.Repositories[0].Path.Should().Be(@"C:\Development\gitextensions\");
@@ -101,7 +101,7 @@ namespace GitCommandsTests.Repository
   <CategoryType>Repositories</CategoryType>
 </RepositoryHistory>";
 
-            var history = Repositories.DeserializeHistoryFromXml(settingHistoryValue);
+            var history = RepositoryManager.DeserializeHistoryFromXml(settingHistoryValue);
 
             history.Repositories.Count.Should().Be(5);
             history.Repositories[0].Path.Should().Be(@"https://github.com/RussKie/gitextensions.github.io.git");
@@ -127,7 +127,7 @@ namespace GitCommandsTests.Repository
                 Anchor = GitCommands.Repository.Repository.RepositoryAnchor.LessRecent,
             });
 
-            var xml1 = Repositories.SerializeHistoryIntoXml(history);
+            var xml1 = RepositoryManager.SerializeHistoryIntoXml(history);
 
             // HACK: original type RepositoryHistory had a Description field set to "Recent Repositories" text
             // remove it
@@ -154,7 +154,7 @@ namespace GitCommandsTests.Repository
                 Anchor = GitCommands.Repository.Repository.RepositoryAnchor.LessRecent,
             });
 
-            var xml1 = Repositories.SerializeHistoryIntoXml(history);
+            var xml1 = RepositoryManager.SerializeHistoryIntoXml(history);
 
             // HACK: original type RepositoryHistory had a Description field set to "Recent Repositories" text
             // remove it

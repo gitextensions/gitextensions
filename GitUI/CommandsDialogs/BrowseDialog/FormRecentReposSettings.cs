@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
             if (mustResizeRepositriesHistory)
             {
-                Repositories.RepositoryHistory.MaxCount = AppSettings.RecentRepositoriesHistorySize;
+                RepositoryManager.RepositoryHistory.MaxCount = AppSettings.RecentRepositoriesHistorySize;
             }
         }
 
@@ -107,7 +107,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             try
             {
-                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(RepositoryManager.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
             finally
             {
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (GetSelectedRepo(sender, out var repo))
             {
-                Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
+                RepositoryManager.RepositoryHistory.Repositories.Remove(repo.Repo);
                 RefreshRepos();
             }
         }

@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 }
             }
 
-            directories.AddRange(Repositories.RepositoryHistory.Repositories.Select(r => r.Path));
+            directories.AddRange(RepositoryManager.RepositoryHistory.Repositories.Select(r => r.Path));
 
             if (directories.Count == 0)
             {
@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
                 _choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-                Repositories.AddMostRecentRepository(_choosenModule.WorkingDir);
+                RepositoryManager.AddMostRecentRepository(_choosenModule.WorkingDir);
                 Close();
             }
             else

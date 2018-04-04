@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             else
             {
-                var hist = Repositories.RepositoryHistory;
+                var hist = RepositoryManager.RepositoryHistory;
                 var lastRepo = hist.Repositories.FirstOrDefault();
                 if (!string.IsNullOrEmpty(lastRepo?.Path))
                 {

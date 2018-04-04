@@ -1281,7 +1281,7 @@ namespace GitCommands
                 SettingsContainer.LockedAction(() =>
                 {
                     SshPath = SshPathLocatorInstance.Find(GitBinDir);
-                    Repositories.SaveSettings();
+                    RepositoryManager.SaveSettings();
 
                     SettingsContainer.Save();
                 });

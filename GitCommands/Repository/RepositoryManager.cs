@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.Repository
 {
-    public static class Repositories
+    public static class RepositoryManager
     {
         private static readonly IRepositoryStorage RepositoryStorage = new RepositoryStorage();
         private static AsyncLazy<RepositoryHistory> _repositoryHistory;

@@ -396,7 +396,7 @@ namespace GitUI.CommandsDialogs
 
             if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
             {
-                Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
+                RepositoryManager.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
             }
 
             var source = CalculateSource();
@@ -804,7 +804,7 @@ namespace GitUI.CommandsDialogs
         private void FillPullSourceDropDown()
         {
             string prevUrl = comboBoxPullSource.Text;
-            comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
+            comboBoxPullSource.DataSource = RepositoryManager.RemoteRepositoryHistory.Repositories;
             comboBoxPullSource.DisplayMember = nameof(Repository.Path);
             comboBoxPullSource.Text = prevUrl;
         }

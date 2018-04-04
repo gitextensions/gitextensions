@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
 
         private void DirectoryDropDown(object sender, EventArgs e)
         {
-            Directory.DataSource = Repositories.RepositoryHistory.Repositories;
+            Directory.DataSource = RepositoryManager.RepositoryHistory.Repositories;
             Directory.DisplayMember = nameof(Repository.Path);
         }
 
@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs
 
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
-            Repositories.AddMostRecentRepository(Directory.Text);
+            RepositoryManager.AddMostRecentRepository(Directory.Text);
 
             Close();
         }

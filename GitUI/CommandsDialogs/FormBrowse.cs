@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
                 repoObjectsTree.UICommandsSource = this;
             }
 
-            var recentRepos = Repositories.RepositoryHistory;
+            var recentRepos = RepositoryManager.RepositoryHistory;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
@@ -717,16 +717,16 @@ namespace GitUI.CommandsDialogs
         private void RefreshWorkingDirCombo()
         {
             Repository r = null;
-            if (Repositories.RepositoryHistory.Repositories.Count > 0)
+            if (RepositoryManager.RepositoryHistory.Repositories.Count > 0)
             {
-                r = Repositories.RepositoryHistory.Repositories[0];
+                r = RepositoryManager.RepositoryHistory.Repositories[0];
             }
 
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
 
             if (r == null || !r.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
             {
-                Repositories.AddMostRecentRepository(Module.WorkingDir);
+                RepositoryManager.AddMostRecentRepository(Module.WorkingDir);
             }
 
             using (var graphics = CreateGraphics())
@@ -736,7 +736,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_Workingdir.Font,
                     Graphics = graphics
                 };
-                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
+                splitter.SplitRecentRepos(RepositoryManager.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
 
                 RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
 
@@ -1615,7 +1615,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            if (Repositories.RepositoryHistory.Repositories.Count == 0)
+            if (RepositoryManager.RepositoryHistory.Repositories.Count == 0)
             {
                 recentToolStripMenuItem.Enabled = false;
                 return;
@@ -1624,7 +1624,7 @@ namespace GitUI.CommandsDialogs
             recentToolStripMenuItem.Enabled = true;
             recentToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (var historyItem in Repositories.RepositoryHistory.Repositories)
+            foreach (var historyItem in RepositoryManager.RepositoryHistory.Repositories)
             {
                 if (string.IsNullOrEmpty(historyItem.Path))
                 {
@@ -1654,7 +1654,7 @@ namespace GitUI.CommandsDialogs
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Repositories.RepositoryHistory.RemoveRecentRepository(path);
+                    RepositoryManager.RepositoryHistory.RemoveRecentRepository(path);
                     return;
                 }
                 else if (dialogResult == DialogResult.Cancel)
@@ -1676,8 +1676,8 @@ namespace GitUI.CommandsDialogs
 
         private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
         {
-            Repositories.RepositoryHistory.Repositories.Clear();
-            Repositories.SaveSettings();
+            RepositoryManager.RepositoryHistory.Repositories.Clear();
+            RepositoryManager.SaveSettings();
 
             // Force clear recent repositories list from dashboard.
             _dashboard?.ShowRecentRepositories();
@@ -1761,7 +1761,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_Workingdir.Font,
                     Graphics = graphics
                 };
-                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(RepositoryManager.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
 
             foreach (RecentRepoInfo repo in mostRecentRepos)
@@ -1818,7 +1818,7 @@ namespace GitUI.CommandsDialogs
 
             if (Module.IsValidGitWorkingDir())
             {
-                Repositories.AddMostRecentRepository(Module.WorkingDir);
+                RepositoryManager.AddMostRecentRepository(Module.WorkingDir);
                 AppSettings.RecentWorkingDir = module.WorkingDir;
                 ChangeTerminalActiveFolder(Module.WorkingDir);
 

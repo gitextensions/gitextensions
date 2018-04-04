@@ -226,7 +226,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                Repositories.AddMostRecentRepository(dirTo);
+                RepositoryManager.AddMostRecentRepository(dirTo);
 
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillFromDropDown()
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
+            System.ComponentModel.BindingList<Repository> repos = RepositoryManager.RemoteRepositoryHistory.Repositories;
             if (_NO_TRANSLATE_From.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();
@@ -300,7 +300,7 @@ namespace GitUI.CommandsDialogs
 
         private void ToDropDown(object sender, EventArgs e)
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
+            System.ComponentModel.BindingList<Repository> repos = RepositoryManager.RepositoryHistory.Repositories;
             if (_NO_TRANSLATE_To.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();

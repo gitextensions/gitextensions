@@ -198,7 +198,7 @@ Inactive remote is completely invisible to git.");
             // and changes in one of the bound control automatically get reflected
             // in the other control, which causes rather frustrating UX.
             // to address that, re-create binding lists for each individual control
-            var repos = Repositories.RemoteRepositoryHistory.Repositories.OrderBy(x => x.Path);
+            var repos = RepositoryManager.RemoteRepositoryHistory.Repositories.OrderBy(x => x.Path);
             try
             {
                 // to stop the flicker binding the lists and
@@ -365,14 +365,14 @@ Inactive remote is completely invisible to git.");
                         FireRemoteRenamedEvent(new RemoteRenamedEventArgs(_selectedRemote.Name, remote));
                     }
 
-                    var remotes = Repositories.RemoteRepositoryHistory.Repositories;
+                    var remotes = RepositoryManager.RemoteRepositoryHistory.Repositories;
                     RemoteUpdate(remotes, _selectedRemote?.Url, remoteUrl);
                     if (checkBoxSepPushUrl.Checked)
                     {
                         RemoteUpdate(remotes, _selectedRemote?.PushUrl, remotePushUrl);
                     }
 
-                    Repositories.SaveSettings();
+                    RepositoryManager.SaveSettings();
                 }
 
                 // if the user has just created a fresh new remote

@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void FillDefaultCloneDestinationDropDown()
         {
-            var historicPaths = Repositories.RepositoryHistory.Repositories
+            var historicPaths = RepositoryManager.RepositoryHistory.Repositories
                                            .Select(GetParentPath())
                                            .Where(x => !string.IsNullOrEmpty(x))
                                            .Distinct(StringComparer.CurrentCultureIgnoreCase)
