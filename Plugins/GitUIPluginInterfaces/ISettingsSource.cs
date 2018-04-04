@@ -15,13 +15,12 @@ namespace GitUIPluginInterfaces
         {
             return GetValue<bool?>(name, null, x =>
             {
-                var val = x.ToString().ToLower();
-                if (val == "true")
+                if (string.Equals(x, "true", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
 
-                if (val == "false")
+                if (string.Equals(x, "false", StringComparison.OrdinalIgnoreCase))
                 {
                     return false;
                 }
