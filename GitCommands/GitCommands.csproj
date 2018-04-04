@@ -110,6 +110,7 @@
     <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
     <Compile Include="Git\LongShaProvider.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
+    <Compile Include="Git\GitRefName.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchesCmd.cs" />

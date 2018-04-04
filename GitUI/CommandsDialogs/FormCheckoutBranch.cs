@@ -443,7 +443,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                _remoteName = GitCommandHelpers.GetRemoteName(branch, Module.GetRemotes(false));
+                _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemotes(false));
                 _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch);
                 var remoteBranchName = _remoteName.Length > 0 ? branch.Substring(_remoteName.Length + 1) : branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);

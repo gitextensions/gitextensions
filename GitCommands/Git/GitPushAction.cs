@@ -95,8 +95,8 @@ namespace GitCommands
         /// ref even when the update is not a fast-forward.</param>
         public GitPushAction(string source, string destination, bool force = false)
         {
-            _localBranch = GitCommandHelpers.GetFullBranchName(source);
-            _remoteBranch = GitCommandHelpers.GetFullBranchName(destination);
+            _localBranch = GitRefName.GetFullBranchName(source);
+            _remoteBranch = GitRefName.GetFullBranchName(destination);
             _force = force;
         }
 
@@ -104,7 +104,7 @@ namespace GitCommands
         /// <param name="branch">Remote branch to delete.</param>
         public static GitPushAction DeleteRemoteBranch(string branch)
         {
-            branch = GitCommandHelpers.GetFullBranchName(branch);
+            branch = GitRefName.GetFullBranchName(branch);
             return new GitPushAction(null, branch);
         }
 
