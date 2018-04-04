@@ -43,13 +43,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             var text = GenerateText(Module, includeSubmodules, token);
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+            await this.SwitchToMainThreadAsync(token);
 
-            if (!token.IsCancellationRequested && !IsDisposed)
-            {
-                CommitCount.Text = text;
-                Loading.Visible = false;
-            }
+            CommitCount.Text = text;
+            Loading.Visible = false;
         }
 
         private static string GenerateText(GitModule module, bool includeSubmodules, CancellationToken token)

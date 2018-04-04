@@ -3089,11 +3089,8 @@ namespace GitUI.CommandsDialogs
                     await gitProcess.WaitForExitAsync().ConfigureAwait(false);
                     gitProcess.Dispose();
 
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-                    if (!token.IsCancellationRequested)
-                    {
-                        RescanChanges();
-                    }
+                    await this.SwitchToMainThreadAsync(token);
+                    RescanChanges();
                 });
             }
         }

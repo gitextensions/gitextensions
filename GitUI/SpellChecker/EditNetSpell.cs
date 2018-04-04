@@ -229,8 +229,7 @@ namespace GitUI.SpellChecker
                     async () =>
                     {
                         var words = await _autoCompleteListTask.GetValueAsync();
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
-                        _autoCompleteCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                        await this.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
 
                         _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
                     });

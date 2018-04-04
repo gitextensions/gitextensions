@@ -2658,8 +2658,7 @@ namespace GitUI.CommandsDialogs
 
                 // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
                 // CreateSubmoduleMenuItem to update images with submodule status.
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancelToken);
-                cancelToken.ThrowIfCancellationRequested();
+                await this.SwitchToMainThreadAsync(cancelToken);
 
                 if (result == null)
                 {
