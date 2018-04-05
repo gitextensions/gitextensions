@@ -1,3 +1,5 @@
+I was not able to find an [open](https://github.com/gitextensions/gitextensions/issues?q=is%3Aopen) or [closed](https://github.com/gitextensions/gitextensions/issues?q=is%3Aclosed) issue matching what I'm seeing
+
 **Do you want to request a *feature* or report a *bug*?**
 
 **What is the current behavior?**
