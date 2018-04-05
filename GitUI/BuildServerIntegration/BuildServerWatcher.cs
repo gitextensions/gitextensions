@@ -48,42 +48,39 @@ namespace GitUI.BuildServerIntegration
             BuildStatusMessageColumnIndex = -1;
         }
 
-        public void LaunchBuildServerInfoFetchOperation()
+        public async Task LaunchBuildServerInfoFetchOperationAsync()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await TaskScheduler.Default;
 
             CancelBuildStatusFetchOperation();
 
             var launchToken = _launchCancellation.Next();
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    var buildServerAdapter = await GetBuildServerAdapterAsync();
+            var buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
 
-                    await _revisions.SwitchToMainThreadAsync(launchToken);
+            await _revisions.SwitchToMainThreadAsync(launchToken);
 
-                    DisposeBuildServerAdapter();
-                    _buildServerAdapter = buildServerAdapter;
-                    UpdateUI();
+            DisposeBuildServerAdapter();
+            _buildServerAdapter = buildServerAdapter;
+            UpdateUI();
 
-                    await TaskScheduler.Default;
+            await TaskScheduler.Default;
 
-                    if (buildServerAdapter == null || launchToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
+            if (buildServerAdapter == null || launchToken.IsCancellationRequested)
+            {
+                return;
+            }
 
-                    var scheduler = NewThreadScheduler.Default;
+            var scheduler = NewThreadScheduler.Default;
 
-                    // Run this first as it (may) force start queries
-                    var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
+            // Run this first as it (may) force start queries
+            var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
-                    var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-                    var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
-                    var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+            var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+            var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+            var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
 
-                    var cancellationToken = new CompositeDisposable
+            var cancellationToken = new CompositeDisposable
                     {
                         fullDayObservable.OnErrorResumeNext(fullObservable)
                                          .OnErrorResumeNext(Observable.Empty<BuildInfo>()
@@ -102,12 +99,10 @@ namespace GitUI.BuildServerIntegration
                                                .Subscribe(OnBuildInfoUpdate)
                     };
 
-                    await _revisions.SwitchToMainThreadAsync(launchToken);
+            await _revisions.SwitchToMainThreadAsync(launchToken);
 
-                    CancelBuildStatusFetchOperation();
-                    _buildStatusCancellationToken = cancellationToken;
-                })
-                .FileAndForget();
+            CancelBuildStatusFetchOperation();
+            _buildStatusCancellationToken = cancellationToken;
         }
 
         public void CancelBuildStatusFetchOperation()
@@ -317,50 +312,49 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        private Task<IBuildServerAdapter> GetBuildServerAdapterAsync()
+        private async Task<IBuildServerAdapter> GetBuildServerAdapterAsync()
         {
-            return Task.Run(() =>
+            await TaskScheduler.Default;
+
+            if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
             {
-                if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
-                {
-                    return null;
-                }
-
-                var buildServerType = Module.EffectiveSettings.BuildServer.Type.ValueOrDefault;
-                if (string.IsNullOrEmpty(buildServerType))
-                {
-                    return null;
-                }
-
-                var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
-
-                if (export != null)
-                {
-                    try
-                    {
-                        var canBeLoaded = export.Metadata.CanBeLoaded;
-                        if (!canBeLoaded.IsNullOrEmpty())
-                        {
-                            Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
-                            return null;
-                        }
-
-                        var buildServerAdapter = export.Value;
-
-                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
-                        return buildServerAdapter;
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        Debug.Write(ex);
-
-                        // Invalid arguments, do not return a build server adapter
-                    }
-                }
-
                 return null;
-            });
+            }
+
+            var buildServerType = Module.EffectiveSettings.BuildServer.Type.ValueOrDefault;
+            if (string.IsNullOrEmpty(buildServerType))
+            {
+                return null;
+            }
+
+            var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+            var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
+
+            if (export != null)
+            {
+                try
+                {
+                    var canBeLoaded = export.Metadata.CanBeLoaded;
+                    if (!canBeLoaded.IsNullOrEmpty())
+                    {
+                        Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
+                        return null;
+                    }
+
+                    var buildServerAdapter = export.Value;
+
+                    buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
+                    return buildServerAdapter;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Debug.Write(ex);
+
+                    // Invalid arguments, do not return a build server adapter
+                }
+            }
+
+            return null;
         }
 
         private void UpdateUI()

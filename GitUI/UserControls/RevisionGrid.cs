@@ -1427,18 +1427,18 @@ namespace GitUI
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(() =>
-                                      {
-                                          UpdateGraph(null);
-                                          Loading.Visible = false;
-                                          _isRefreshingRevisions = false;
-                                          SelectInitialRevision();
-                                          if (ShowBuildServerInfo)
-                                          {
-                                              BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
-                                          }
-                                      })
-                    .FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await this.SwitchToMainThreadAsync();
+                    UpdateGraph(null);
+                    Loading.Visible = false;
+                    _isRefreshingRevisions = false;
+                    SelectInitialRevision();
+                    if (ShowBuildServerInfo)
+                    {
+                        await BuildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
+                    }
+                }).FileAndForget();
             }
 
             DisposeRevisionGraphCommand();
