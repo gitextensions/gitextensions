@@ -97,7 +97,8 @@ namespace GitUI.BuildServerIntegration
                     };
 
                     _buildStatusCancellationToken = cancellationToken;
-                });
+                })
+                .FileAndForget();
         }
 
         public void CancelBuildStatusFetchOperation()
