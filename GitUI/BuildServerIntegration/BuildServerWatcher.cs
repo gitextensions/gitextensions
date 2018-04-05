@@ -19,6 +19,7 @@ using GitUI.RevisionGridClasses;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BuildServerIntegration
 {
@@ -33,6 +34,7 @@ namespace GitUI.BuildServerIntegration
 
         private IDisposable _buildStatusCancellationToken;
         private IBuildServerAdapter _buildServerAdapter;
+        private CancellationTokenSequence _launchCancellation = new CancellationTokenSequence();
 
         private readonly object _buildServerCredentialsLock = new object();
         private readonly IRepoNameExtractor _repoNameExtractor;
@@ -52,18 +54,22 @@ namespace GitUI.BuildServerIntegration
 
             CancelBuildStatusFetchOperation();
 
-            DisposeBuildServerAdapter();
+            var launchToken = _launchCancellation.Next();
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    _buildServerAdapter = await GetBuildServerAdapterAsync();
+                    var buildServerAdapter = await GetBuildServerAdapterAsync();
 
-                    await _revisions.SwitchToMainThreadAsync();
+                    await _revisions.SwitchToMainThreadAsync(launchToken);
 
+                    DisposeBuildServerAdapter();
+                    _buildServerAdapter = buildServerAdapter;
                     UpdateUI();
 
-                    if (_buildServerAdapter == null)
+                    await TaskScheduler.Default;
+
+                    if (buildServerAdapter == null || launchToken.IsCancellationRequested)
                     {
                         return;
                     }
@@ -71,11 +77,11 @@ namespace GitUI.BuildServerIntegration
                     var scheduler = NewThreadScheduler.Default;
 
                     // Run this first as it (may) force start queries
-                    var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
+                    var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
-                    var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-                    var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
-                    var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+                    var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+                    var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+                    var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
 
                     var cancellationToken = new CompositeDisposable
                     {
@@ -96,6 +102,9 @@ namespace GitUI.BuildServerIntegration
                                                .Subscribe(OnBuildInfoUpdate)
                     };
 
+                    await _revisions.SwitchToMainThreadAsync(launchToken);
+
+                    CancelBuildStatusFetchOperation();
                     _buildStatusCancellationToken = cancellationToken;
                 })
                 .FileAndForget();
@@ -387,6 +396,8 @@ namespace GitUI.BuildServerIntegration
                 CancelBuildStatusFetchOperation();
 
                 DisposeBuildServerAdapter();
+
+                _launchCancellation.Dispose();
             }
         }
 
