@@ -1,7 +1,6 @@
+![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Bin/Logo/git-extensions-logo-final.svg) 
+
 # Git Extensions
-
- 
-
 
 ## Overview
 
