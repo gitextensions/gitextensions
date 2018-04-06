@@ -468,25 +468,6 @@ namespace GitUI.CommandsDialogs
                 .FileAndForget();
         }
 
-        private bool _pluginsLoaded;
-        private void LoadPluginsInPluginMenu()
-        {
-            if (_pluginsLoaded)
-            {
-                return;
-            }
-
-            foreach (var plugin in LoadedPlugins.Plugins)
-            {
-                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
-            }
-
-            _pluginsLoaded = true;
-            UpdatePluginMenu(Module.IsValidGitWorkingDir());
-        }
-
         /// <summary>
         ///   Execute plugin
         /// </summary>
@@ -518,10 +499,25 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var plugin in LoadedPlugins.Plugins)
             {
+                // Add the plugin to the Plugins menu
+                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                item.Click += ItemClick;
+                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
+
+                // Allow the plugin to perform any self-registration actions
                 plugin.Register(UICommands);
             }
 
             UICommands.RaisePostRegisterPlugin(this);
+
+            // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
+            _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
+            if (RepoHosts.GitHosters.Count == 1)
+            {
+                _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+            }
+
+            UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
 
         private void UnregisterPlugins()
@@ -612,13 +608,6 @@ namespace GitUI.CommandsDialogs
                 commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
                 _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-
-                // Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-                _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
-                if (RepoHosts.GitHosters.Count == 1)
-                {
-                    _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-                }
 
                 _filterBranchHelper.InitToolStripBranchFilter();
 
@@ -1916,11 +1905,6 @@ namespace GitUI.CommandsDialogs
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
         {
             statusStrip.Hide();
-        }
-
-        private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            LoadPluginsInPluginMenu();
         }
 
         private void BisectClick(object sender, EventArgs e)

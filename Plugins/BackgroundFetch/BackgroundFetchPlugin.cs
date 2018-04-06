@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitUIPluginInterfaces;
@@ -7,6 +8,7 @@ using ResourceManager;
 
 namespace BackgroundFetch
 {
+    [Export(typeof(IGitPlugin))]
     public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
     {
         public BackgroundFetchPlugin()

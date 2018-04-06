@@ -4,6 +4,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
@@ -38,6 +39,29 @@ namespace GitUIPluginInterfaces
             }
         }
 
+        public static IEnumerable<Lazy<T>> GetExports<T>()
+        {
+            var ret = new List<Lazy<T>>();
+            foreach (var container in GetCompositionContainers())
+            {
+                try
+                {
+                    var exps = container.GetExports<T>();
+                    ret.AddRange(exps);
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Trace.TraceError("GetExports() failed {0}", string.Join(Environment.NewLine, ex.LoaderExceptions.Select(r => r.ToString())));
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Failed to get exports, {0}", ex);
+                }
+            }
+
+            return ret;
+        }
+
         public static IEnumerable<Lazy<T, TMetadataView>> GetExports<T, TMetadataView>()
         {
             var ret = new List<Lazy<T, TMetadataView>>();
@@ -48,7 +72,7 @@ namespace GitUIPluginInterfaces
                     var exps = container.GetExports<T, TMetadataView>();
                     ret.AddRange(exps);
                 }
-                catch (System.Reflection.ReflectionTypeLoadException ex)
+                catch (ReflectionTypeLoadException ex)
                 {
                     Trace.TraceError("GetExports() failed {0}", string.Join(Environment.NewLine, ex.LoaderExceptions.Select(r => r.ToString())));
                 }

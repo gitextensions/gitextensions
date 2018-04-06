@@ -1,8 +1,10 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.ComponentModel.Composition;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitImpact
 {
+    [Export(typeof(IGitPlugin))]
     public class GitImpactPlugin : GitPluginBase, IGitPluginForRepository
     {
         public GitImpactPlugin()

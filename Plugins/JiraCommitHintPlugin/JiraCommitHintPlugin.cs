@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using ResourceManager;
 
 namespace JiraCommitHintPlugin
 {
+    [Export(typeof(IGitPlugin))]
     public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
     {
         private static readonly string EnablePluginLabel = new TranslationString("Jira hint plugin enabled").Text;

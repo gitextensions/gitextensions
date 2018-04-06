@@ -1,8 +1,10 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.ComponentModel.Composition;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace ProxySwitcher
 {
+    [Export(typeof(IGitPlugin))]
     public class ProxySwitcherPlugin : GitPluginBase
     {
         public readonly StringSetting Username = new StringSetting("Username", string.Empty);
