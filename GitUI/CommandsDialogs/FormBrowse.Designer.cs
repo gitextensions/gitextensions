@@ -589,10 +589,7 @@ namespace GitUI.CommandsDialogs
             this.CommitInfoTabControl.Controls.Add(this.DiffTabPage);
             this.CommitInfoTabControl.Controls.Add(this.GpgInfoTabPage);
             this.CommitInfoTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitInfoTabControl.ItemSize = new System.Drawing.Size(47, 24);
-            this.CommitInfoTabControl.Location = new System.Drawing.Point(0, 0);
             this.CommitInfoTabControl.Name = "CommitInfoTabControl";
-            this.CommitInfoTabControl.Padding = new System.Drawing.Point(8, 4);
             this.CommitInfoTabControl.SelectedIndex = 0;
             this.CommitInfoTabControl.Size = new System.Drawing.Size(923, 290);
             this.CommitInfoTabControl.TabIndex = 0;

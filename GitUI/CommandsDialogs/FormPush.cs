@@ -111,6 +111,8 @@ namespace GitUI.CommandsDialogs
                 _remoteManager = new GitRemoteManager(() => Module);
                 Init();
             }
+
+            this.AdjustForDpiScaling();
         }
 
         /// <summary>

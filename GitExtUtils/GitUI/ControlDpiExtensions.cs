@@ -52,14 +52,25 @@ namespace GitUI
                         break;
                     }
 
+                    case TabControl tabControl:
+                    {
+                        tabControl.Padding = DpiUtil.Scale(tabControl.Padding);
+                        EnqueueChildren();
+                        break;
+                    }
+
                     default:
                     {
-                        foreach (Control child in next.Controls)
-                        {
-                            queue.Enqueue(child);
-                        }
-
+                        EnqueueChildren();
                         break;
+                    }
+                }
+
+                void EnqueueChildren()
+                {
+                    foreach (Control child in next.Controls)
+                    {
+                        queue.Enqueue(child);
                     }
                 }
             }

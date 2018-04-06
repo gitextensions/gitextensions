@@ -163,19 +163,22 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             // set tab page images
+            CommitInfoTabControl.ImageList = new ImageList
             {
-                var imageList = new ImageList();
-                CommitInfoTabControl.ImageList = imageList;
-                imageList.ColorDepth = ColorDepth.Depth8Bit;
-                imageList.Images.Add(Resources.IconCommit);
-                imageList.Images.Add(Resources.IconFileTree);
-                imageList.Images.Add(Resources.IconDiff);
-                imageList.Images.Add(Resources.IconKey);
-                CommitInfoTabControl.TabPages[0].ImageIndex = 0;
-                CommitInfoTabControl.TabPages[1].ImageIndex = 1;
-                CommitInfoTabControl.TabPages[2].ImageIndex = 2;
-                CommitInfoTabControl.TabPages[3].ImageIndex = 3;
-            }
+                ColorDepth = ColorDepth.Depth8Bit,
+                ImageSize = DpiUtil.Scale(new Size(16, 16)),
+                Images =
+                {
+                    Resources.IconCommit,
+                    Resources.IconFileTree,
+                    Resources.IconDiff,
+                    Resources.IconKey
+                }
+            };
+            CommitInfoTabControl.TabPages[0].ImageIndex = 0;
+            CommitInfoTabControl.TabPages[1].ImageIndex = 1;
+            CommitInfoTabControl.TabPages[2].ImageIndex = 2;
+            CommitInfoTabControl.TabPages[3].ImageIndex = 3;
 
             if (!AppSettings.ShowGpgInformation.ValueOrDefault)
             {
@@ -302,6 +305,8 @@ namespace GitUI.CommandsDialogs
 
             FillTerminalTab();
             ManageWorktreeSupport();
+
+            this.AdjustForDpiScaling();
         }
 
         private void LayoutRevisionInfo()
