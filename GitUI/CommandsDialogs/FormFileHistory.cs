@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
                 // remove the working directory and now we have a properly cased file name.
-                fileName = longPath.ToString().Substring(Module.WorkingDir.Length);
+                fileName = longPath.ToString().Substring(Module.WorkingDir.Length).ToPosixPath();
             }
 
             if (fileName.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
