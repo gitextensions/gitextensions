@@ -3606,12 +3606,12 @@ namespace GitCommands
         /// </example>
         /// <param name="s">The string to unescape.</param>
         /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
-        [NotNull]
+        [ContractAnnotation("s:null=>null")]
         public static string UnescapeOctalCodePoints([CanBeNull] string s)
         {
-            if (string.IsNullOrWhiteSpace(s))
+            if (s == null)
             {
-                return s ?? string.Empty;
+                return null;
             }
 
             return _escapedOctalCodePointRegex.Replace(
