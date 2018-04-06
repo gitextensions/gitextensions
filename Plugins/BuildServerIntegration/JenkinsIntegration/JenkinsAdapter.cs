@@ -187,12 +187,12 @@ namespace JenkinsIntegration
 
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            return Observable.Create<BuildInfo>(
-                async (observer, cancellationToken) =>
+            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
                     return scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken));
-                });
+                }).Task);
         }
 
         private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
