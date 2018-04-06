@@ -1,22 +1,56 @@
-# Contributing to Git Extensions
+﻿# Contributing to Git Extensions
 
-## How to contribute code
+GitExtensions is a project with a long history, made possible by [hundreds of contributors](https://github.com/gitextensions/gitextensions/graphs/contributors).
 
-* Login in github (you need an account)
-* Fork the main repository from [github](http://github.com/gitextensions/gitextensions)
-* Read [Project workflow](https://github.com/gitextensions/gitextensions/wiki/Project-Workflow) and [Coding guide](https://github.com/gitextensions/gitextensions/wiki#coding-guide)
-* Push your changes to your fork
-* Create a pull request
+We welcome contributions including:
 
-## How to debug GitExtensions
+- Ideas for improvements
+- Bug reports
+- Bug fixes
+- New features
 
-The installer is build using WiX. You need to install WiX when you want to build the installer. This can be downloaded here: [http://wixtoolset.org/](http://wixtoolset.org/). If you do not want to build the installer, just open the solution and ignore the warning.
+To help the project maintainers be as effective as possible, please follow some simple guidelines.
 
-* Open the solution file (GitExtensions.sln)
-* Hit F5 to compile and run GitExtensions
+## Reporting Issues
 
-## How to create the installer
+[Search the issue tracker](https://github.com/gitextensions/gitextensions/issues?&q=) for an
+existing or closely related issue before creating a new one. Be sure to include closed issues
+in your search.
 
-* Download and install WiX [http://wixtoolset.org/](http://wixtoolset.org/)
-* Run Setup\\BuildInstallers.cmd to build the installers
+If an open issue already exists, read through the discussion. If you can add something helpful, do so.
+Add a 👍 if you'd like to see it prioritised. Subscribe to the issue for updates.
 
+If a closed issue already exists and the issue was addressed, you may like to try one of the
+[CI builds](https://github.com/gitextensions/gitextensions/wiki/CI-Builds).
+
+If no issue exists, create one. Complete the template, and add any further information that
+could be relevant.
+
+## Pull Requests
+
+Want to contribute some code? Great! In addition to the regular GitHub Pull Request workflow,
+you'll want to browse the [wiki](https://github.com/gitextensions/gitextensions/wiki).
+
+Good places to start contributing include:
+
+- Open [bugs](https://github.com/gitextensions/gitextensions/labels/bugs)
+- Open issues marked [good first issue](https://github.com/gitextensions/gitextensions/labels/good%20first%20issue)
+- Open issues marked [help wanted](https://github.com/gitextensions/gitextensions/labels/help%20wanted)
+
+It's a good idea to mention that you're picking something up by commenting on its issue.
+
+If no issue exists, create one before making a PR. This creates the opportunity to discuss
+the issue before you spend time on its implementation. You will likely be more effective
+this way, and have a greater chance of satisfaction in the end.
+
+Pull requests will be reviewed by one or more team members. To improve the chance of your
+pull request being merged, your contribution should be as easy to review as possible.
+Specifically:
+
+- Be focussed in scope
+- Be comprised of clear commits (use interactive rebase to tidy things up if needed)
+- Include a clear description of the changes and why they should be made
+- Be consistent with the current code style
+
+When filing a pull request, you should be prepared to answer questions about your changes
+and to perform additional work on the changes in response to review feedback.
