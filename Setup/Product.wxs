@@ -33,11 +33,6 @@
           <Directory Id="DirConEmu" Name="ConEmu" />
         </Directory>
       </Directory>
-      <Directory Id="PersonalFolder">
-        <Directory Id="VS2010" Name="Visual Studio 2010" />
-        <Directory Id="VS2012" Name="Visual Studio 2012" />
-        <Directory Id="VS2013" Name="Visual Studio 2013" />
-      </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
       </Directory>
@@ -46,12 +41,6 @@
         <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
       </Component>
     </Directory>
-    <?define VsVersions = 2010;2012;2013?>
-    <?foreach VsVersion in $(var.VsVersions)?>
-    <Property Id="VS$(var.VsVersion)INSTFOLDER">
-      <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
-    </Property>
-    <?endforeach ?>
     <PropertyRef Id="VS2015DEVENV" />
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="gitextensions.ico" Guid="*">
@@ -562,77 +551,6 @@
     <ComponentGroup Id="Component.ConEmuFiles">
           <ComponentRef Id="File.CER00" /><ComponentRef Id="File.CER01" /><ComponentRef Id="File.CER03" /><ComponentRef Id="File.CER04" /><ComponentRef Id="File.CER05" /><ComponentRef Id="File.CER06" /><ComponentRef Id="File.CER07" /><ComponentRef Id="File.CER08" /><ComponentRef Id="File.CER09" /><ComponentRef Id="File.CER10" />
     </ComponentGroup>
-    <?foreach VsVersion in $(var.VsVersions)?>
-    <DirectoryRef Id="VS$(var.VsVersion)">
-      <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
-        <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
-          <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugin\bin\$(var.Configuration)\GitPlugin.AddIn" />
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
-        </Component>
-        <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
-          <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugin\bin\$(var.Configuration)\GitPlugin.dll" />
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
-        </Component>
-        <Component Id="VS$(var.VsVersion)_GitPluginShared.dll" Guid="*">
-          <File Id="VS$(var.VsVersion)_GitPluginShared.dll" Source="..\GitPlugin\bin\$(var.Configuration)\GitPluginShared.dll" />
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPluginShared.dll" On="uninstall" />
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPluginShared.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
-        </Component>
-        <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
-          <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
-            <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugin\bin\$(var.Configuration)\en-US\GitPlugin.resources.dll" />
-            <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
-          </Component>
-        </Directory>
-      </Directory>
-    </DirectoryRef>
-    <?endforeach ?>
-
-    <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
-        <Binary Id="BinRemoveVSAddInCommands" SourceFile="RemoveVSAddInCommands.vbs"/>
-        <CustomAction Id='RemoveVS2010AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2010AddInCommands"
-            Return="check"/>
-        <CustomAction Id='RemoveVS2012AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2012AddInCommands"
-            Return="check"/>
-        <CustomAction Id='RemoveVS2013AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2013AddInCommands"
-            Return="check"/>
-        <CustomAction Id="UninstallGitExtensions"
-            FileKey="GitExtensions.exe"
-            ExeCommand="uninstall"
-            Return="check" />
-
-    <InstallExecuteSequence>
-      <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
-              all the following conditions are true:
-              - The setup has already been run
-              - It is not an upgrade
-              - Visual Studio is installed
-              - The add-in feature state (!feature-state) for the Visual Studio version is installed (3 = INSTALLSTATE_LOCAL). See:
-                Conditional Statement Syntax (http://msdn.microsoft.com/en-us/library/aa368012.aspx)
-            -->
-            <Custom Action="RemoveVS2010AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2010INSTFOLDER
-                                     AND !VS2010FeatureId=3</Custom>
-
-            <Custom Action="RemoveVS2012AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2012INSTFOLDER
-                                     AND !VS2012FeatureId=3</Custom>
-
-            <Custom Action="RemoveVS2013AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2013INSTFOLDER
-                                     AND !VS2013FeatureId=3</Custom>
-
-            <Custom Action="UninstallGitExtensions"
-                After="InstallInitialize">(REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE)</Custom>
-    </InstallExecuteSequence>
 
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="GitExtensions.newstartmenu" Guid="*">
@@ -907,15 +825,6 @@
         <ComponentRef Id="Path" />
       </Feature>
       <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
-        <?foreach VsVersion in $(var.VsVersions)?>
-        <Feature Id="VS$(var.VsVersion)FeatureId" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-          <Condition Level="2">NOT VS$(var.VsVersion)INSTFOLDER</Condition>
-          <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
-          <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
-          <ComponentRef Id="VS$(var.VsVersion)_GitPluginShared.dll" />
-          <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
-        </Feature>
-        <?endforeach ?>
         <Feature Id="VS2015FeatureId" Title="Visual Studio 2015/2017 integration" Level="1">
           <Condition Level="2">NOT VS2015DEVENV</Condition>
           <ComponentRef Id="VS2015_VSIX" />
