@@ -3635,30 +3635,30 @@ namespace GitCommands
                 });
         }
 
-        public static string ReEncodeFileNameFromLossless(string fileName)
+        [ContractAnnotation("fileName:null=>null")]
+        public static string ReEncodeFileNameFromLossless([CanBeNull] string fileName)
         {
             fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
             return UnescapeOctalCodePoints(fileName);
         }
 
-        public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
+        [ContractAnnotation("s:null=>null")]
+        public static string ReEncodeString([CanBeNull] string s, [NotNull] Encoding fromEncoding, [NotNull] Encoding toEncoding)
         {
-            if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
+            if (s == null || fromEncoding.HeaderName == toEncoding.HeaderName)
             {
                 return s;
             }
-            else
-            {
-                byte[] bytes = fromEncoding.GetBytes(s);
-                s = toEncoding.GetString(bytes);
-                return s;
-            }
+
+            var bytes = fromEncoding.GetBytes(s);
+            return toEncoding.GetString(bytes);
         }
 
         /// <summary>
         /// reencodes string from GitCommandHelpers.LosslessEncoding to toEncoding
         /// </summary>
-        public static string ReEncodeStringFromLossless(string s, Encoding toEncoding)
+        [ContractAnnotation("s:null=>null")]
+        public static string ReEncodeStringFromLossless([CanBeNull] string s, [CanBeNull] Encoding toEncoding)
         {
             if (toEncoding == null)
             {
@@ -3668,7 +3668,8 @@ namespace GitCommands
             return ReEncodeString(s, LosslessEncoding, toEncoding);
         }
 
-        public string ReEncodeStringFromLossless(string s)
+        [ContractAnnotation("s:null=>null")]
+        public string ReEncodeStringFromLossless([CanBeNull] string s)
         {
             return ReEncodeStringFromLossless(s, LogOutputEncoding);
         }
@@ -3676,7 +3677,7 @@ namespace GitCommands
         // there was a bug: Git before v1.8.4 did not recode commit message when format is given
         // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
         // characters could be replaced by replacement character while reencoding to LogOutputEncoding
-        public string ReEncodeCommitMessage(string s, string toEncodingName)
+        public string ReEncodeCommitMessage(string s, [CanBeNull] string toEncodingName)
         {
             bool isABug = !GitCommandHelpers.VersionInUse.LogFormatRecodesCommitMessage;
 
