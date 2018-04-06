@@ -142,34 +142,28 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.Visible = true;
 
-            _asyncLoader.LoadAsync(() => BuildFilter(FileName), (filter) =>
+            if (string.IsNullOrEmpty(FileName))
             {
-                if (filter == null)
-                {
-                    return;
-                }
-
-                FileChanges.FixedRevisionFilter = filter.RevisionFilter;
-                FileChanges.FixedPathFilter = filter.PathFilter;
-                FileChanges.FiltredFileName = FileName;
-                FileChanges.AllowGraphWithFilter = true;
-                FileChanges.Load();
-            });
-        }
-
-        private class FixedFilterTuple
-        {
-            public string RevisionFilter;
-            public string PathFilter;
-        }
-
-        private FixedFilterTuple BuildFilter(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return null;
+                return;
             }
 
+            _asyncLoader.LoadAsync(
+                () => BuildFilter(FileName),
+                filter =>
+                {
+                    var (revisionFilter, pathFilter) = BuildFilter(FileName);
+
+                    FileChanges.FixedRevisionFilter = revisionFilter;
+                    FileChanges.FixedPathFilter = pathFilter;
+                    FileChanges.FiltredFileName = FileName;
+                    FileChanges.AllowGraphWithFilter = true;
+
+                    FileChanges.Load();
+                });
+        }
+
+        private (string revisionFilter, string pathFilter) BuildFilter(string fileName)
+        {
             // Replace windows path separator to Linux path separator.
             // This is needed to keep the file history working when started from file tree in
             // browse dialog.
@@ -202,7 +196,7 @@ namespace GitUI.CommandsDialogs
 
             FileName = fileName;
 
-            var res = new FixedFilterTuple { PathFilter = $" \"{fileName}\"" };
+            var res = (revisionFilter: (string)null, pathFilter: $" \"{fileName}\"");
 
             if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
@@ -242,24 +236,24 @@ namespace GitUI.CommandsDialogs
                 while (line != null);
 
                 // here we need --name-only to get the previous filenames in the revision graph
-                res.PathFilter = listOfFileNames.ToString();
-                res.RevisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
+                res.pathFilter = listOfFileNames.ToString();
+                res.revisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
             }
             else if (AppSettings.FollowRenamesInFileHistory)
             {
                 // history of a directory
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                res.RevisionFilter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                res.revisionFilter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
             }
             else
             {
                 // rename following disabled
-                res.RevisionFilter = " --parents";
+                res.revisionFilter = " --parents";
             }
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.RevisionFilter = string.Concat(" --full-history --simplify-merges ", res.RevisionFilter);
+                res.revisionFilter = string.Concat(" --full-history --simplify-merges ", res.revisionFilter);
             }
 
             return res;

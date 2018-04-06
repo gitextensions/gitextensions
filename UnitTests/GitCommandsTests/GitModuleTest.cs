@@ -65,7 +65,7 @@ namespace GitCommandsTests
             Assert.AreEqual("", result.Lines.Last().Text);
         }
 
-        [TestCase(null, "")]
+        [TestCase(null, null)]
         [TestCase("", "")]
         [TestCase(" ", " ")]
         [TestCase("Hello, World!", "Hello, World!")]
