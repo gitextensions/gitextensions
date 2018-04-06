@@ -43,6 +43,8 @@ namespace GitUI
             {
                 KeepDialogOpen.Hide();
             }
+
+            this.AdjustForDpiScaling();
         }
 
         public FormStatus(Action<FormStatus> process, Action<FormStatus> abort)

@@ -26,6 +26,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             _defaultRemoteBranch = defaultRemoteBranch;
+            this.AdjustForDpiScaling();
         }
 
         private void FormDeleteRemoteBranchLoad(object sender, EventArgs e)

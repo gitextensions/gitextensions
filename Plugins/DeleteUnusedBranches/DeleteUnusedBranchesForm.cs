@@ -35,8 +35,13 @@ namespace DeleteUnusedBranches
         private readonly IGitPlugin _gitPlugin;
         private CancellationTokenSource _refreshCancellation;
 
-        public DeleteUnusedBranchesForm()
+        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
         {
+            _settings = settings;
+            _gitCommands = gitCommands;
+            _gitUiCommands = gitUiCommands;
+            _gitPlugin = gitPlugin;
+
             InitializeComponent();
 
             deleteDataGridViewCheckBoxColumn.Width = DpiUtil.Scale(50);
@@ -44,16 +49,10 @@ namespace DeleteUnusedBranches
             Author.Width = DpiUtil.Scale(91);
 
             Translate();
-        }
-
-        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
-            : this()
-        {
-            _settings = settings;
-            _gitCommands = gitCommands;
-            _gitUiCommands = gitUiCommands;
-            _gitPlugin = gitPlugin;
             imgLoading.Image = Resources.loadingpanel;
+
+            this.AdjustForDpiScaling();
+
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 

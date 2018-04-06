@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             _defaultBranch = defaultBranch;
+            this.AdjustForDpiScaling();
         }
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)

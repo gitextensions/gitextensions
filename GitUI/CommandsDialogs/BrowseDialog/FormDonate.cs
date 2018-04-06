@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             InitializeComponent();
             Translate();
+            this.AdjustForDpiScaling();
         }
 
         private void PictureBox1Click(object sender, EventArgs e)
