@@ -32,17 +32,6 @@ namespace Gerrit
             Translate();
         }
 
-        public async Task PushAndShowDialogWhenFailedAsync(IWin32Window owner = null)
-        {
-            await this.SwitchToMainThreadAsync();
-
-            if (!(await DownloadChangeAsync(owner)))
-            {
-                await this.SwitchToMainThreadAsync();
-                ShowDialog(owner);
-            }
-        }
-
         private void DownloadClick(object sender, EventArgs e)
         {
             if (ThreadHelper.JoinableTaskFactory.Run(() => DownloadChangeAsync(this)))
