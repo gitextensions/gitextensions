@@ -108,7 +108,6 @@ namespace GitUI.CommandsDialogs
             // 
             // typeDataGridViewTextBoxColumn
             // 
-            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
             this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
             this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
             this.typeDataGridViewTextBoxColumn.ReadOnly = true;
@@ -116,7 +115,6 @@ namespace GitUI.CommandsDialogs
             // 
             // File
             // 
-            this.File.DataPropertyName = "File";
             this.File.HeaderText = "Type";
             this.File.Name = "File";
             this.File.ReadOnly = true;
