@@ -142,13 +142,13 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.Visible = true;
 
+            if (string.IsNullOrEmpty(FileName))
+            {
+                return;
+            }
+
             _asyncLoader.LoadAsync(() => BuildFilter(FileName), (filter) =>
             {
-                if (filter == null)
-                {
-                    return;
-                }
-
                 FileChanges.FixedRevisionFilter = filter.RevisionFilter;
                 FileChanges.FixedPathFilter = filter.PathFilter;
                 FileChanges.FiltredFileName = FileName;
@@ -165,11 +165,6 @@ namespace GitUI.CommandsDialogs
 
         private FixedFilterTuple BuildFilter(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return null;
-            }
-
             // Replace windows path separator to Linux path separator.
             // This is needed to keep the file history working when started from file tree in
             // browse dialog.
