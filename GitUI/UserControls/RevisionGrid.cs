@@ -3704,19 +3704,6 @@ namespace GitUI
             }
         }
 
-        public void GoToRef(string refName, bool showNoRevisionMsg)
-        {
-            string revisionGuid = Module.RevParse(refName);
-            if (!string.IsNullOrEmpty(revisionGuid))
-            {
-                SetSelectedRevision(new GitRevision(revisionGuid));
-            }
-            else if (showNoRevisionMsg)
-            {
-                MessageBox.Show((ParentForm as IWin32Window) ?? this, _noRevisionFoundError.Text);
-            }
-        }
-
         internal Keys GetShortcutKeys(Commands cmd)
         {
             return GetShortcutKeys((int)cmd);
