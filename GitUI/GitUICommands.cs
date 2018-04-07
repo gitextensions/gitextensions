@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
@@ -178,9 +179,9 @@ namespace GitUI
             return Module.RunGitCmd(arguments);
         }
 
-        public string CommandLineCommand(string cmd, string arguments)
+        public async Task<string> CommandLineCommandAsync(string cmd, string arguments)
         {
-            return Module.RunCmd(cmd, arguments);
+            return await Module.RunCmdAsync(cmd, arguments).ConfigureAwait(false);
         }
 
         private bool RequiresValidWorkingDir(object owner)

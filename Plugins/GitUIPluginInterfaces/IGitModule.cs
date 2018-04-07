@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GitUIPluginInterfaces
 {
@@ -48,14 +49,14 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
+        Task<string> RunCmdAsync(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
         /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         CmdResult RunCmdResult(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null);
 
-        string RunBatchFile(string batchFile);
+        Task<string> RunBatchFileAsync(string batchFile);
 
         /// <summary>
         /// Determines whether the given repository has index.lock file.

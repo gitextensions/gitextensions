@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var listWorktree = UICommands.CommandLineCommand("git", "worktree list --porcelain");
+            var listWorktree = ThreadHelper.JoinableTaskFactory.Run(() => UICommands.CommandLineCommandAsync("git", "worktree list --porcelain"));
             var worktreesLines = listWorktree.Split('\n').GetEnumerator();
             _worktrees = new List<WorkTree>();
             WorkTree currentWorktree = null;
