@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private void FormAddSubmoduleShown(object sender, EventArgs e)
         {
             Directory.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            Directory.DisplayMember = "Path";
+            Directory.DisplayMember = nameof(Repository.Path);
             Directory.Text = "";
             LocalPath.Text = "";
         }
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                 heads.AddRange(module.GetRefs(false));
             }
 
-            Branch.DisplayMember = "Name";
+            Branch.DisplayMember = nameof(IGitRef.Name);
             Branch.DataSource = heads;
         }
 

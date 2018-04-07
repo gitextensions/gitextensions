@@ -209,7 +209,6 @@
             // 
             this.ddlRepositorySource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlRepositorySource.DisplayMember = "DisplayName";
             this.ddlRepositorySource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlRepositorySource.Enabled = false;
             this.ddlRepositorySource.FormattingEnabled = true;
@@ -223,7 +222,6 @@
             // 
             this.ddlBranchSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlBranchSource.DisplayMember = "DisplayName";
             this.ddlBranchSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlBranchSource.FormattingEnabled = true;
             this.ddlBranchSource.Location = new System.Drawing.Point(128, 58);
@@ -246,7 +244,6 @@
             // 
             this.ddlBranchTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlBranchTarget.DisplayMember = "DisplayName";
             this.ddlBranchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlBranchTarget.FormattingEnabled = true;
             this.ddlBranchTarget.Location = new System.Drawing.Point(127, 58);
@@ -274,7 +271,6 @@
             // 
             this.ddlRepositoryTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlRepositoryTarget.DisplayMember = "DisplayName";
             this.ddlRepositoryTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlRepositoryTarget.Enabled = false;
             this.ddlRepositoryTarget.FormattingEnabled = true;

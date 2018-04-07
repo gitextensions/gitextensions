@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(remotes).ToList();
-            _NO_TRANSLATE_Remotes.DisplayMember = "Name";
+            _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
@@ -262,7 +262,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                Branches.DisplayMember = "LocalName";
+                Branches.DisplayMember = nameof(IGitRef.LocalName);
 
                 ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
                 _heads.Insert(0, GitRef.NoHead(Module));
@@ -804,7 +804,7 @@ namespace GitUI.CommandsDialogs
         {
             string prevUrl = comboBoxPullSource.Text;
             comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            comboBoxPullSource.DisplayMember = "Path";
+            comboBoxPullSource.DisplayMember = nameof(Repository.Path);
             comboBoxPullSource.Text = prevUrl;
         }
 

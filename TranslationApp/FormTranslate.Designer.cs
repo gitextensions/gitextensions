@@ -232,7 +232,6 @@ namespace TranslationApp
             // 
             // translateCategories
             // 
-            this.translateCategories.DisplayMember = "Name";
             this.translateCategories.Dock = System.Windows.Forms.DockStyle.Fill;
             this.translateCategories.FormattingEnabled = true;
             this.translateCategories.ItemHeight = 23;

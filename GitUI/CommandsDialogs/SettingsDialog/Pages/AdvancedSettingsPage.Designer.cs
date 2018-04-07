@@ -259,7 +259,6 @@
             // 
             // cboAutoNormaliseSymbol
             // 
-            this.cboAutoNormaliseSymbol.DisplayMember = "Key";
             this.cboAutoNormaliseSymbol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboAutoNormaliseSymbol.Enabled = false;
             this.cboAutoNormaliseSymbol.FormattingEnabled = true;
@@ -267,7 +266,6 @@
             this.cboAutoNormaliseSymbol.Name = "cboAutoNormaliseSymbol";
             this.cboAutoNormaliseSymbol.Size = new System.Drawing.Size(81, 21);
             this.cboAutoNormaliseSymbol.TabIndex = 8;
-            this.cboAutoNormaliseSymbol.ValueMember = "Value";
             // 
             // tooltip
             // 

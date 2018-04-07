@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.TextUpdate -= RemotesUpdated;
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = UserGitRemotes;
-            _NO_TRANSLATE_Remotes.DisplayMember = "Name";
+            _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
 
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
@@ -639,7 +639,7 @@ namespace GitUI.CommandsDialogs
         {
             string prevUrl = PushDestination.Text;
             PushDestination.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            PushDestination.DisplayMember = "Path";
+            PushDestination.DisplayMember = nameof(Repository.Path);
             PushDestination.Text = prevUrl;
         }
 
@@ -647,7 +647,7 @@ namespace GitUI.CommandsDialogs
         {
             var curBranch = _NO_TRANSLATE_Branch.Text;
 
-            _NO_TRANSLATE_Branch.DisplayMember = "Name";
+            _NO_TRANSLATE_Branch.DisplayMember = nameof(IGitRef.Name);
             _NO_TRANSLATE_Branch.Items.Clear();
             _NO_TRANSLATE_Branch.Items.Add(AllRefs);
             _NO_TRANSLATE_Branch.Items.Add(HeadText);

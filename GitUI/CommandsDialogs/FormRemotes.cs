@@ -204,11 +204,11 @@ Inactive remote is completely invisible to git.");
                 Remotes.BeginUpdate();
 
                 Url.DataSource = repos.ToList();
-                Url.DisplayMember = "Path";
+                Url.DisplayMember = nameof(Repository.Path);
                 Url.SelectedItem = null;
 
                 comboBoxPushUrl.DataSource = repos.ToList();
-                comboBoxPushUrl.DisplayMember = "Path";
+                comboBoxPushUrl.DisplayMember = nameof(Repository.Path);
                 comboBoxPushUrl.SelectedItem = null;
 
                 BindRemotes(preselectRemote);
@@ -227,7 +227,7 @@ Inactive remote is completely invisible to git.");
 
             RemoteRepositoryCombo.Sorted = false;
             RemoteRepositoryCombo.DataSource = new[] { new GitRemote() }.Union(UserGitRemotes).ToList();
-            RemoteRepositoryCombo.DisplayMember = "Name";
+            RemoteRepositoryCombo.DisplayMember = nameof(GitRemote.Name);
 
             RemoteBranches.AutoGenerateColumns = false;
             RemoteBranches.SelectionChanged -= RemoteBranchesSelectionChanged;

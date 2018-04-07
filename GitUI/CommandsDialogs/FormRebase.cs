@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
 
             var refs = Module.GetRefs(true, true).OfType<GitRef>().ToList();
             Branches.DataSource = refs;
-            Branches.DisplayMember = "Name";
+            Branches.DisplayMember = nameof(GitRef.Name);
 
             if (_defaultBranch != null)
             {
@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
 
             refs = Module.GetRefs(false, true).OfType<GitRef>().ToList();
             cboTo.DataSource = refs;
-            cboTo.DisplayMember = "Name";
+            cboTo.DisplayMember = nameof(GitRef.Name);
 
             cboTo.Text = _defaultToBranch ?? selectedHead;
 

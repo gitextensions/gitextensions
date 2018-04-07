@@ -87,7 +87,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _pullReqTargetsCB
             // 
-            this._pullReqTargetsCB.DisplayMember = "DisplayData";
             this._pullReqTargetsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._pullReqTargetsCB.FormattingEnabled = true;
             this._pullReqTargetsCB.Location = new System.Drawing.Point(141, 12);

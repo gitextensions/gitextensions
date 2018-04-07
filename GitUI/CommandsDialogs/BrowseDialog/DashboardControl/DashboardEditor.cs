@@ -33,13 +33,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private bool _bChangingDataSource;
 
-        public void Initialize()
+        private void Initialize()
         {
             _bChangingDataSource = true;
             _NO_TRANSLATE_Categories.DataSource = null;
             _NO_TRANSLATE_Categories.DataSource = Repositories.RepositoryCategories;
             _bChangingDataSource = false;
-            _NO_TRANSLATE_Categories.DisplayMember = "Description";
+            _NO_TRANSLATE_Categories.DisplayMember = nameof(RepositoryCategory.Description);
         }
 
         private void Categories_SelectedIndexChanged(object sender, EventArgs e)

@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             var effectiveLinkDefinitions = _externalLinksManager.GetEffectiveSettings();
 
             _NO_TRANSLATE_Categories.DataSource = null;
-            _NO_TRANSLATE_Categories.DisplayMember = "Name";
+            _NO_TRANSLATE_Categories.DisplayMember = nameof(ExternalLinkDefinition.Name);
             _NO_TRANSLATE_Categories.DataSource = effectiveLinkDefinitions;
         }
 

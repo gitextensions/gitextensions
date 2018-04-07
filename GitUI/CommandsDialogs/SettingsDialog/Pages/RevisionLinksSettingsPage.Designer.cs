@@ -159,7 +159,6 @@
             // 
             // _NO_TRANSLATE_Categories
             // 
-            this._NO_TRANSLATE_Categories.DisplayMember = "Name";
             this._NO_TRANSLATE_Categories.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Categories.FormattingEnabled = true;
             this._NO_TRANSLATE_Categories.IntegralHeight = false;

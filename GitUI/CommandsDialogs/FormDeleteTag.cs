@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -17,7 +18,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormDeleteTagLoad(object sender, EventArgs e)
         {
-            Tags.DisplayMember = "Name";
+            Tags.DisplayMember = nameof(IGitRef.Name);
             Tags.DataSource = Module.GetRefs(true, false);
             Tags.Text = Tag as string;
             remotesComboboxControl1.SelectedRemote = Module.GetCurrentRemote();

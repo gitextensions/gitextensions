@@ -61,6 +61,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Translate();
+
+            cmbSettings.DisplayMember = nameof(HotkeySettings.Name);
         }
 
         #region Methods

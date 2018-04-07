@@ -37,14 +37,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             InitializeComponent();
             Translate();
             _prevTitle = _titleTB.Text;
+            _pullReqTargetsCB.DisplayMember = nameof(IHostedRemote.DisplayData);
         }
 
         private void CreatePullRequestForm_Load(object sender, EventArgs e)
-        {
-            Init();
-        }
-
-        private void Init()
         {
             _createBtn.Enabled = false;
             _yourBranchesCB.Text = _strLoading.Text;
@@ -57,7 +53,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     if (foreignHostedRemotes.Length == 0)
                     {
                         MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
-                            _strPleaseCloneGitHubRep.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                              _strPleaseCloneGitHubRep.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Close();
                         return;
                     }

@@ -37,6 +37,8 @@ namespace TranslationApp
         {
             InitializeComponent();
             Translate();
+
+            translateCategories.DisplayMember = nameof(TranslationCategory.Name);
         }
 
         private void FormTranslate_Load(object sender, EventArgs e)

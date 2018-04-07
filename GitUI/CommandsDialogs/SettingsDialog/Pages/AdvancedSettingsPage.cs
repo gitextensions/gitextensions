@@ -16,6 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 new { Key = "-", Value = "-" },
                 new { Key = "(none)", Value = "" },
             };
+            cboAutoNormaliseSymbol.DisplayMember = "Key";
+            cboAutoNormaliseSymbol.ValueMember = "Value";
             cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
             cboAutoNormaliseSymbol.SelectedIndex = 0;
         }
