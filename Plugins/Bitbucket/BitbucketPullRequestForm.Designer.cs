@@ -34,7 +34,6 @@
             this.lblDescription = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
-            this.GridColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtTitle = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblSourceRepository = new System.Windows.Forms.Label();
@@ -153,13 +152,6 @@
             this.btnCreate.Text = "Create";
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.BtnCreateClick);
-            // 
-            // GridColumnName
-            // 
-            this.GridColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.GridColumnName.DataPropertyName = "Slug";
-            this.GridColumnName.HeaderText = "Name";
-            this.GridColumnName.Name = "GridColumnName";
             // 
             // txtTitle
             // 
@@ -726,7 +718,6 @@
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GridColumnName;
         private System.Windows.Forms.Label lblSourceRepository;
         private System.Windows.Forms.GroupBox groupBoxSource;
         private System.Windows.Forms.GroupBox groupBoxTarget;
