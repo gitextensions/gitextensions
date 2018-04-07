@@ -14,6 +14,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Revision links";
             Translate();
             LinksGrid.AutoGenerateColumns = false;
+            CaptionCol.DataPropertyName = nameof(ExternalLinkFormat.Caption);
+            URICol.DataPropertyName = nameof(ExternalLinkFormat.Format);
         }
 
         protected override void SettingsToPage()

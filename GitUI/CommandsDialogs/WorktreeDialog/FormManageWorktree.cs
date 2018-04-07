@@ -24,6 +24,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Delete.Width = DpiUtil.Scale(44);
             Worktrees.AutoGenerateColumns = false;
             Translate();
+
+            Path.DataPropertyName = nameof(WorkTree.Path);
+            Type.DataPropertyName = nameof(WorkTree.Type);
+            Branch.DataPropertyName = nameof(WorkTree.Branch);
+            Sha1.DataPropertyName = nameof(WorkTree.Sha1);
+            IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)

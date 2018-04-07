@@ -25,6 +25,10 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+
+            Sha.DataPropertyName = nameof(RefLine.Sha);
+            Ref.DataPropertyName = nameof(RefLine.Ref);
+            Action.DataPropertyName = nameof(RefLine.Action);
         }
 
         private void FormReflog_Load(object sender, EventArgs e)

@@ -135,7 +135,6 @@
             // deleteDataGridViewCheckBoxColumn
             // 
             this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.deleteDataGridViewCheckBoxColumn.DataPropertyName = "Delete";
             this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
             this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
             this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
@@ -143,7 +142,6 @@
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.nameDataGridViewTextBoxColumn.FillWeight = 2F;
@@ -155,7 +153,6 @@
             // dateDataGridViewTextBoxColumn
             // 
             this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
             this.dateDataGridViewTextBoxColumn.FillWeight = 300F;
             this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
@@ -164,7 +161,6 @@
             // Author
             // 
             this.Author.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Author.DataPropertyName = "Author";
             dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.Author.DefaultCellStyle = dataGridViewCellStyle2;
             this.Author.FillWeight = 2F;
@@ -175,7 +171,6 @@
             // Message
             // 
             this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Message.DataPropertyName = "Message";
             this.Message.HeaderText = "Last message";
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;

@@ -51,6 +51,12 @@ namespace DeleteUnusedBranches
             Translate();
             imgLoading.Image = Resources.loadingpanel;
 
+            deleteDataGridViewCheckBoxColumn.DataPropertyName = nameof(Branch.Delete);
+            nameDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Name);
+            dateDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Date);
+            Author.DataPropertyName = nameof(Branch.Author);
+            Message.DataPropertyName = nameof(Branch.Message);
+
             this.AdjustForDpiScaling();
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());

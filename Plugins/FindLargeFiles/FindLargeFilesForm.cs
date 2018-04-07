@@ -34,6 +34,14 @@ namespace FindLargeFiles
 
             Translate();
 
+            sHADataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.SHA);
+            pathDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Path);
+            sizeDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Size);
+            CompressedSize.DataPropertyName = nameof(GitObject.CompressedSize);
+            commitCountDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.CommitCount);
+            lastCommitDateDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.LastCommitDate);
+            dataGridViewCheckBoxColumn1.DataPropertyName = nameof(GitObject.Delete);
+
             _threshold = threshold;
             _gitUiCommands = gitUiEventArgs;
             _gitCommands = gitUiEventArgs?.GitModule;

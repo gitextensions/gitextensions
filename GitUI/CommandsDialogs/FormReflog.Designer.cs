@@ -187,7 +187,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Sha
             // 
-            this.Sha.DataPropertyName = "Sha";
             this.Sha.HeaderText = "SHA-1";
             this.Sha.Name = "Sha";
             this.Sha.ReadOnly = true;
@@ -195,7 +194,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Ref
             // 
-            this.Ref.DataPropertyName = "Ref";
             this.Ref.HeaderText = "Ref";
             this.Ref.Name = "Ref";
             this.Ref.ReadOnly = true;
@@ -203,7 +201,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Action
             // 
-            this.Action.DataPropertyName = "Action";
             this.Action.HeaderText = "Action";
             this.Action.Name = "Action";
             this.Action.ReadOnly = true;

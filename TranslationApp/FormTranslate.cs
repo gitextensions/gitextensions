@@ -39,6 +39,12 @@ namespace TranslationApp
             Translate();
 
             translateCategories.DisplayMember = nameof(TranslationCategory.Name);
+
+            categoryDataGridViewTextBoxColumn.DataPropertyName = nameof(TranslationItemWithCategory.Category);
+            nameDataGridViewTextBoxColumn.DataPropertyName = nameof(TranslationItemWithCategory.Name);
+            propertyDataGridViewTextBoxColumn.DataPropertyName = nameof(TranslationItemWithCategory.Property);
+            neutralValueDataGridViewTextBoxColumn.DataPropertyName = nameof(TranslationItemWithCategory.NeutralValue);
+            translatedValueDataGridViewTextBoxColumn.DataPropertyName = nameof(TranslationItemWithCategory.TranslatedValue);
         }
 
         private void FormTranslate_Load(object sender, EventArgs e)

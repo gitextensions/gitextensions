@@ -99,6 +99,10 @@ Inactive remote is completely invisible to git.");
 
             Application.Idle += application_Idle;
 
+            BranchName.DataPropertyName = nameof(IGitRef.LocalName);
+            RemoteCombo.DataPropertyName = nameof(IGitRef.TrackingRemote);
+            MergeWith.DataPropertyName = nameof(IGitRef.MergeWith);
+
             this.AdjustForDpiScaling();
         }
 

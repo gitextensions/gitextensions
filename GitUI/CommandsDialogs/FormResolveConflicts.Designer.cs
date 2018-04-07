@@ -126,14 +126,12 @@ namespace GitUI.CommandsDialogs
             // FileName
             // 
             this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FileName.DataPropertyName = "FileName";
             this.FileName.HeaderText = "Filename";
             this.FileName.Name = "FileName";
             this.FileName.ReadOnly = true;
             // 
             // authorDataGridViewTextBoxColumn1
             // 
-            this.authorDataGridViewTextBoxColumn1.DataPropertyName = "Author";
             this.authorDataGridViewTextBoxColumn1.HeaderText = "Author";
             this.authorDataGridViewTextBoxColumn1.Name = "authorDataGridViewTextBoxColumn1";
             this.authorDataGridViewTextBoxColumn1.ReadOnly = true;

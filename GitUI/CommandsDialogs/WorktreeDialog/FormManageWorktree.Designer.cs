@@ -85,7 +85,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // Path
             // 
             this.Path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Path.DataPropertyName = "Path";
             this.Path.HeaderText = "Path";
             this.Path.Name = "Path";
             this.Path.ReadOnly = true;
@@ -94,7 +93,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // Type
             // 
             this.Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Type.DataPropertyName = "Type";
             this.Type.HeaderText = "Type";
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
@@ -103,7 +101,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // Branch
             // 
             this.Branch.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Branch.DataPropertyName = "Branch";
             this.Branch.HeaderText = "Branch";
             this.Branch.Name = "Branch";
             this.Branch.ReadOnly = true;
@@ -112,7 +109,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // Sha1
             // 
             this.Sha1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Sha1.DataPropertyName = "Sha1";
             this.Sha1.HeaderText = "SHA-1";
             this.Sha1.Name = "Sha1";
             this.Sha1.ReadOnly = true;
@@ -121,7 +117,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // IsDeleted
             // 
             this.IsDeleted.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.IsDeleted.DataPropertyName = "IsDeleted";
             this.IsDeleted.HeaderText = "Deleted";
             this.IsDeleted.Name = "IsDeleted";
             this.IsDeleted.ReadOnly = true;

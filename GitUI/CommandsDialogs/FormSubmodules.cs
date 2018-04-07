@@ -24,6 +24,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            nameDataGridViewTextBoxColumn.DataPropertyName = nameof(GitSubmoduleInfo.Name);
+            Status.DataPropertyName = nameof(GitSubmoduleInfo.Status);
             gitSubmoduleBindingSource.DataSource = _modules;
         }
 

@@ -637,21 +637,18 @@ namespace GitUI.CommandsDialogs
             // 
             // BranchName
             // 
-            this.BranchName.DataPropertyName = "LocalName";
             this.BranchName.HeaderText = "Local branch name";
             this.BranchName.Name = "BranchName";
             this.BranchName.ReadOnly = true;
             // 
             // RemoteCombo
             // 
-            this.RemoteCombo.DataPropertyName = "TrackingRemote";
             this.RemoteCombo.HeaderText = "Remote repository";
             this.RemoteCombo.Name = "RemoteCombo";
             this.RemoteCombo.ReadOnly = true;
             // 
             // MergeWith
             // 
-            this.MergeWith.DataPropertyName = "MergeWith";
             this.MergeWith.HeaderText = "Default merge with";
             this.MergeWith.Name = "MergeWith";
             this.MergeWith.ReadOnly = true;

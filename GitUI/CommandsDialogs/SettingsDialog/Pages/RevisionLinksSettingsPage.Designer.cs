@@ -199,14 +199,12 @@
             // 
             // CaptionCol
             // 
-            this.CaptionCol.DataPropertyName = "Caption";
             this.CaptionCol.HeaderText = "Caption";
             this.CaptionCol.Name = "CaptionCol";
             // 
             // URICol
             // 
             this.URICol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.URICol.DataPropertyName = "Format";
             this.URICol.HeaderText = "URI";
             this.URICol.Name = "URICol";
             // 

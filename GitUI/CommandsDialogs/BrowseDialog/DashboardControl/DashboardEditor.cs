@@ -18,6 +18,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             Translate();
             Initialize();
+
+            pathDataGridViewTextBoxColumn.DataPropertyName = nameof(Repository.Path);
+            Title.DataPropertyName = nameof(Repository.Title);
+            descriptionDataGridViewTextBoxColumn.DataPropertyName = nameof(Repository.Description);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
