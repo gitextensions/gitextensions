@@ -2503,34 +2503,34 @@ namespace GitUI.CommandsDialogs
             return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.Modified;
         }
 
-        private static void GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
+        private static async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
         {
-            Task.Factory.StartNew(() =>
+            await TaskScheduler.Default;
+            cancelToken.ThrowIfCancellationRequested();
+
+            var submodule = new GitModule(info.Path);
+            var supermodule = submodule.SuperprojectModule;
+            var submoduleName = submodule.GetCurrentSubmoduleLocalPath();
+
+            info.Status = null;
+
+            if (string.IsNullOrEmpty(submoduleName) || supermodule == null)
             {
-                var submodule = new GitModule(info.Path);
-                var supermodule = submodule.SuperprojectModule;
-                var submoduleName = submodule.GetCurrentSubmoduleLocalPath();
+                return;
+            }
 
-                info.Status = null;
+            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
+            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+            {
+                submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
+            }
 
-                if (string.IsNullOrEmpty(submoduleName) || supermodule == null)
-                {
-                    return;
-                }
-
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
-                if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-                {
-                    submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
-                }
-
-                if (submoduleStatus != null)
-                {
-                    info.Status = submoduleStatus.Status;
-                    info.IsDirty = submoduleStatus.IsDirty;
-                    info.Text += submoduleStatus.AddedAndRemovedString();
-                }
-            }, cancelToken, TaskCreationOptions.AttachedToParent, TaskScheduler.Default);
+            if (submoduleStatus != null)
+            {
+                info.Status = submoduleStatus.Status;
+                info.IsDirty = submoduleStatus.IsDirty;
+                info.Text += submoduleStatus.AddedAndRemovedString();
+            }
         }
 
         private void UpdateSubmodulesList()
@@ -2568,7 +2568,7 @@ namespace GitUI.CommandsDialogs
 
                     var smi = new SubmoduleInfo { Text = name, Path = path };
                     result.OurSubmodules.Add(smi);
-                    GetSubmoduleStatusAsync(smi, cancelToken);
+                    GetSubmoduleStatusAsync(smi, cancelToken).FileAndForget();
                 }
 
                 if (threadModule.SuperprojectModule != null)
@@ -2584,7 +2584,7 @@ namespace GitUI.CommandsDialogs
                         }
 
                         result.TopProject = new SubmoduleInfo { Text = name, Path = supersuperproject.WorkingDir };
-                        GetSubmoduleStatusAsync(result.TopProject, cancelToken);
+                        GetSubmoduleStatusAsync(result.TopProject, cancelToken).FileAndForget();
                     }
 
                     {
@@ -2607,7 +2607,7 @@ namespace GitUI.CommandsDialogs
                         }
 
                         result.Superproject = new SubmoduleInfo { Text = name, Path = threadModule.SuperprojectModule.WorkingDir };
-                        GetSubmoduleStatusAsync(result.Superproject, cancelToken);
+                        GetSubmoduleStatusAsync(result.Superproject, cancelToken).FileAndForget();
                     }
 
                     var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName);
@@ -2635,7 +2635,7 @@ namespace GitUI.CommandsDialogs
 
                             var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
                             result.SuperSubmodules.Add(smi);
-                            GetSubmoduleStatusAsync(smi, cancelToken);
+                            GetSubmoduleStatusAsync(smi, cancelToken).FileAndForget();
                         }
                     }
                 }
