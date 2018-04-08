@@ -24,7 +24,6 @@ namespace GitUI
 
                 return _uiCommands;
             }
-
             protected set
             {
                 GitUICommands oldCommands = _uiCommands;
@@ -34,7 +33,7 @@ namespace GitUI
         }
 
         /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
-        public bool IsUICommandsInitialized => _uiCommands != null;
+        protected bool IsUICommandsInitialized => _uiCommands != null;
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
@@ -46,12 +45,12 @@ namespace GitUI
         {
         }
 
-        public GitModuleForm(GitUICommands commands)
+        protected GitModuleForm(GitUICommands commands)
             : this(true, commands)
         {
         }
 
-        public GitModuleForm(bool enablePositionRestore, GitUICommands commands)
+        protected GitModuleForm(bool enablePositionRestore, GitUICommands commands)
             : base(enablePositionRestore)
         {
             UICommands = commands;
