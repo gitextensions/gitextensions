@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -12,10 +13,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file:");
         private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file:");
         private readonly TranslationString _error = new TranslationString("Error");
-        private bool _hasChanges;
-        private string _fileName;
 
-        public FormEditor(GitUICommands commands, string fileName, bool showWarning)
+        [CanBeNull] private string _fileName;
+
+        private bool _hasChanges;
+
+        public FormEditor([NotNull] GitUICommands commands, [CanBeNull] string fileName, bool showWarning)
             : base(commands)
         {
             InitializeComponent();

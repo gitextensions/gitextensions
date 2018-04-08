@@ -29,7 +29,7 @@ namespace GitUI
         public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo BrowseRepo { get; set; }
 
-        public GitUICommands(GitModule module)
+        public GitUICommands([NotNull] GitModule module)
         {
             Module = module;
             _commitTemplateManager = new CommitTemplateManager(module);
