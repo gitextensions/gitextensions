@@ -249,6 +249,8 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\GitHighlightingStrategyBase.cs" />
+    <Compile Include="Editor\RebaseTodoHighlightingStrategy.cs" />
     <Compile Include="FindFilePredicateProvider.cs" />
     <Compile Include="Properties\MsVsImages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -276,6 +278,7 @@
     <Compile Include="Editor\Diff\DiffViewerLineNumberCtrl.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelper.cs" />
     <Compile Include="Editor\Diff\LineSegmentGetter.cs" />
+    <Compile Include="Editor\CommitMessageHighlightingStrategy.cs" />
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
