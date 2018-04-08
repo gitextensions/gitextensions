@@ -3732,11 +3732,10 @@ namespace GitUI
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var baseCommit = Module.RevParse(form.BranchName);
-                    using (var diffForm = new FormDiff(UICommands, this, baseCommit, headCommit.Guid,
-                        form.BranchName, headCommit.Subject))
-                    {
-                        diffForm.ShowDialog(this);
-                    }
+                    var diffForm = new FormDiff(UICommands, this, baseCommit, headCommit.Guid,
+                        form.BranchName, headCommit.Subject);
+                    diffForm.Show();
+                    diffForm.ShowInTaskbar = true;
                 }
             }
         }
@@ -3746,11 +3745,10 @@ namespace GitUI
             var baseCommit = GetSelectedRevisions().First();
             var headBranch = Module.GetSelectedBranch();
             var headBranchName = Module.RevParse(headBranch);
-            using (var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
-                baseCommit.Subject, headBranch))
-            {
-                diffForm.ShowDialog(this);
-            }
+            var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
+                baseCommit.Subject, headBranch);
+            diffForm.Show();
+            diffForm.ShowInTaskbar = true;
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3768,11 +3766,10 @@ namespace GitUI
             }
 
             var headCommit = GetSelectedRevisions().First();
-            using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
-                _baseCommitToCompare.Subject, headCommit.Subject))
-            {
-                diffForm.ShowDialog(this);
-            }
+            var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
+                _baseCommitToCompare.Subject, headCommit.Subject);
+            diffForm.Show();
+            diffForm.ShowInTaskbar = true;
         }
 
         private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
