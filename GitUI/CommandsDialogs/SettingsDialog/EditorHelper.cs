@@ -6,11 +6,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public static class EditorHelper
     {
         [NotNull]
-        public static object[] GetEditors()
+        public static string FileEditorCommand
+            => $"\"{AppSettings.GetGitExtensionsFullPath()}\" fileeditor";
+
+        [NotNull]
+        public static string[] GetEditors()
         {
-            return new object[]
+            return new[]
             {
-                "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor",
+                FileEditorCommand,
                 "vi",
                 "notepad",
                 GetNotepadPP(),
