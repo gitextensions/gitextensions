@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "notepad",
                 GetNotepadPP(),
                 GetSublimeText3(),
-                GetVsCode(),
+                GetVsCode()
             };
         }
 
@@ -41,13 +41,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private static string GetEditorCommandLine(string editorName, string executableName, string commandLineParameter, params string[] installFolders)
         {
             string exec = MergeToolsHelper.FindFileInFolders(executableName, installFolders);
+
             if (string.IsNullOrEmpty(exec))
             {
                 exec = editorName;
             }
             else
             {
-                exec = "\"" + exec + "\"";
+                exec = $"\"{exec}\"";
             }
 
             return exec + commandLineParameter;

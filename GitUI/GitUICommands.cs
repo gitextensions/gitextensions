@@ -1675,7 +1675,7 @@ namespace GitUI
 
         private static Dictionary<string, string> InitializeArguments(string[] args)
         {
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            var arguments = new Dictionary<string, string>();
 
             for (int i = 2; i < args.Length; i++)
             {

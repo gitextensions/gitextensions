@@ -483,8 +483,7 @@ namespace GitUI.Editor
 
         public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null)
         {
-            string text = patch != null ? patch.Text : "";
-            ViewPatch(text, openWithDifftool);
+            ViewPatch(patch?.Text ?? "", openWithDifftool);
         }
 
         public void ViewPatch([NotNull] string text, [CanBeNull] Action openWithDifftool)

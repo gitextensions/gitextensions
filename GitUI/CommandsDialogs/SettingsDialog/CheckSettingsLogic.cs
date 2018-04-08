@@ -43,6 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private bool SolveEditor()
         {
             string editor = CommonLogic.GetGlobalEditor();
+
             if (string.IsNullOrEmpty(editor))
             {
                 GlobalConfigFileSettings.SetPathValue("core.editor", "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor");
