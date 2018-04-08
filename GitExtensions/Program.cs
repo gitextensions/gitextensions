@@ -131,7 +131,8 @@ namespace GitExtensions
 
         private static string GetWorkingDir(string[] args)
         {
-            string workingDir = string.Empty;
+            var workingDir = "";
+
             if (args.Length >= 3)
             {
                 // there is bug in .net
@@ -164,6 +165,19 @@ namespace GitExtensions
                 if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
                 {
                     workingDir = AppSettings.RecentWorkingDir;
+                }
+            }
+
+            if (workingDir == "")
+            {
+                // If no working dir is yet found, try to find one relative to the current working directory.
+                // This allows the `fileeditor` command to discover repository configuration which is
+                // required for core.commentChar support.
+                var cwd = Environment.CurrentDirectory;
+                var gitDir = GitModule.FindGitWorkingDir(cwd);
+                if (GitModule.IsValidGitWorkingDir(gitDir))
+                {
+                    workingDir = gitDir;
                 }
             }
 
