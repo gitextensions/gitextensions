@@ -488,7 +488,7 @@ namespace GitUI
             // 
             this.compareToBranchToolStripMenuItem.Name = "compareToBranchToolStripMenuItem";
             this.compareToBranchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareToBranchToolStripMenuItem.Text = "Compare to branch";
+            this.compareToBranchToolStripMenuItem.Text = "Compare to branch...";
             this.compareToBranchToolStripMenuItem.Click += new System.EventHandler(this.CompareToBranchToolStripMenuItem_Click);
             // 
             // compareWithCurrentBranchToolStripMenuItem
