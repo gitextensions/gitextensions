@@ -59,17 +59,12 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int command)
         {
-            if (ExecuteScriptCommand(command))
+            if (Script.ScriptRunner.ExecuteScriptCommand(this, Module, command))
             {
                 return true;
             }
 
             return base.ExecuteCommand(command);
-        }
-
-        protected bool ExecuteScriptCommand(int command)
-        {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
         }
     }
 }
