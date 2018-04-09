@@ -997,18 +997,7 @@ namespace GitUI
 
         public GitRevision GetCurrentRevision()
         {
-            var revision = Module.GetRevision(CurrentCheckout, true);
-            var refs = Module.GetRefs(true, true);
-
-            foreach (var gitRef in refs)
-            {
-                if (gitRef.Guid == revision.Guid)
-                {
-                    revision.Refs.Add(gitRef);
-                }
-            }
-
-            return revision;
+            return Module.GetRevision(CurrentCheckout, shortFormat: true, loadRefs: true);
         }
 
         public void RefreshRevisions()
@@ -1732,7 +1721,6 @@ namespace GitUI
                     }
 
                     float offset = baseOffset;
-                    var gitRefs = revision.Refs;
 
                     drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
 
@@ -1754,27 +1742,29 @@ namespace GitUI
                         }
                     }
 
-                    if (gitRefs.Any())
+                    if (revision.Refs.Count != 0)
                     {
-                        gitRefs.Sort((left, right) =>
-                                       {
-                                           if (left.IsTag != right.IsTag)
-                                           {
-                                               return right.IsTag.CompareTo(left.IsTag);
-                                           }
+                        var gitRefs = revision.Refs.ToList();
+                        gitRefs.Sort(
+                            (left, right) =>
+                            {
+                                if (left.IsTag != right.IsTag)
+                                {
+                                    return right.IsTag.CompareTo(left.IsTag);
+                                }
 
-                                           if (left.IsRemote != right.IsRemote)
-                                           {
-                                               return left.IsRemote.CompareTo(right.IsRemote);
-                                           }
+                                if (left.IsRemote != right.IsRemote)
+                                {
+                                    return left.IsRemote.CompareTo(right.IsRemote);
+                                }
 
-                                           if (left.Selected != right.Selected)
-                                           {
-                                               return right.Selected.CompareTo(left.Selected);
-                                           }
+                                if (left.Selected != right.Selected)
+                                {
+                                    return right.Selected.CompareTo(left.Selected);
+                                }
 
-                                           return left.Name.CompareTo(right.Name);
-                                       });
+                                return left.Name.CompareTo(right.Name);
+                            });
 
                         foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || AppSettings.ShowRemoteBranches)))
                         {

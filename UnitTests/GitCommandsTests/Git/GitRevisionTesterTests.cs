@@ -123,8 +123,7 @@ namespace GitCommandsTests.Git
         {
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
-            var revision = new GitRevision("");
-            revision.Refs.Add(gitRef);
+            var revision = new GitRevision("") { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().BeTrue();
         }
@@ -138,8 +137,7 @@ namespace GitCommandsTests.Git
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
 
-            var revision = new GitRevision("0011223344");
-            revision.Refs.Add(gitRef);
+            var revision = new GitRevision("0011223344") { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().Be(expected);
         }

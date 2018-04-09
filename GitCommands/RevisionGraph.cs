@@ -246,7 +246,7 @@ namespace GitCommands
 
             if (_refs.TryGetValue(revision.Guid, out var gitRefs))
             {
-                revision.Refs.AddRange(gitRefs);
+                revision.Refs = gitRefs;
             }
 
             if (_revisionPredicate == null || _revisionPredicate(revision))

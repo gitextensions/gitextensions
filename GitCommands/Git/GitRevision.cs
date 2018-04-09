@@ -35,7 +35,7 @@ namespace GitCommands
             SubjectCount = "";
         }
 
-        public List<IGitRef> Refs { get; } = new List<IGitRef>();
+        public IReadOnlyList<IGitRef> Refs { get; set; } = Array.Empty<IGitRef>();
 
         // TODO seems inconsistent that this can be null, yet Refs is never null
         [CanBeNull, ItemNotNull]

@@ -1192,7 +1192,7 @@ namespace GitCommands
             return message.ToString();
         }
 
-        public GitRevision GetRevision(string commit, bool shortFormat = false)
+        public GitRevision GetRevision(string commit, bool shortFormat = false, bool loadRefs = false)
         {
             const string formatString =
                 /* Hash           */ "%H%n" +
@@ -1220,6 +1220,7 @@ namespace GitCommands
                 CommitDate = DateTimeUtils.ParseUnixTime(lines[8]),
                 MessageEncoding = lines[9]
             };
+
             if (shortFormat)
             {
                 revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
@@ -1231,6 +1232,13 @@ namespace GitCommands
                 // commit message is not reencoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
                 revision.Subject = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
+            }
+
+            if (loadRefs)
+            {
+                revision.Refs = GetRefs(tags: true, branches: true)
+                    .Where(r => r.Guid == revision.Guid)
+                    .ToList();
             }
 
             return revision;
@@ -1248,7 +1256,7 @@ namespace GitCommands
             var parentsRevisions = new GitRevision[parents.Length];
             for (int i = 0; i < parents.Length; i++)
             {
-                parentsRevisions[i] = GetRevision(parents[i], true);
+                parentsRevisions[i] = GetRevision(parents[i], shortFormat: true);
             }
 
             return parentsRevisions;

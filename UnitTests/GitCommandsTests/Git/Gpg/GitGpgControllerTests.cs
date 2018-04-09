@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GitCommands;
@@ -61,14 +62,14 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision("");
-
             string gitRefCompleteName = "refs/tags/FirstTag^{}";
 
-            for (int i = 0; i < numberOfTags; i++)
+            var revision = new GitRevision("")
             {
-                revision.Refs.Add(new GitRef(_module(), guid, gitRefCompleteName));
-            }
+                Refs = Enumerable.Range(0, numberOfTags)
+                    .Select(_ => new GitRef(_module(), guid, gitRefCompleteName))
+                    .ToList()
+            };
 
             var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
@@ -82,10 +83,9 @@ namespace GitCommandsTests.Git.Gpg
         {
             var guid = Guid.NewGuid().ToString("N");
 
-            GitRevision revision = new GitRevision(guid);
+            var gitRef = new GitRef(_module(), guid, "refs/tags/FirstTag^{}");
 
-            GitRef gitRef = new GitRef(_module(), guid, "refs/tags/FirstTag^{}");
-            revision.Refs.Add(gitRef);
+            var revision = new GitRevision(guid) { Refs = new[] { gitRef } };
 
             _module().RunGitCmd($"verify-tag --raw {gitRef.LocalName}").Returns(gitCmdReturn);
 
@@ -126,46 +126,47 @@ namespace GitCommandsTests.Git.Gpg
         public void Validate_GetTagVerifyMessage(int usefulTagRefNumber, string expected)
         {
             var guid = Guid.NewGuid().ToString("N");
+            var revision = new GitRevision(guid);
 
-            GitRevision revision = new GitRevision(guid);
-
-            GitRef gitRef;
-            string gitRefCompleteName;
             switch (usefulTagRefNumber)
             {
                 case 0:
+                {
                     // Tag but not dereference
-                    gitRefCompleteName = "refs/tags/TagName";
-                    gitRef = new GitRef(_module(), guid, gitRefCompleteName);
-                    revision.Refs.Add(gitRef);
+                    var gitRef = new GitRef(_module(), guid, "refs/tags/TagName");
+                    revision.Refs = new[] { gitRef };
 
                     _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns("");
 
                     break;
+                }
+
                 case 1:
+                {
                     // One tag that's also IsDereference == true
-                    gitRefCompleteName = "refs/tags/TagName^{}";
-                    gitRef = new GitRef(_module(), guid, gitRefCompleteName);
-                    revision.Refs.Add(gitRef);
+                    var gitRef = new GitRef(_module(), guid, "refs/tags/TagName^{}");
+                    revision.Refs = new[] { gitRef };
 
                     _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns(gitRef.LocalName);
 
                     break;
+                }
+
                 case 2:
+                {
                     // Two tag that's also IsDereference == true
-                    gitRefCompleteName = "refs/tags/FirstTag^{}";
-                    gitRef = new GitRef(_module(), guid, gitRefCompleteName);
-                    revision.Refs.Add(gitRef);
+                    var gitRef1 = new GitRef(_module(), guid, "refs/tags/FirstTag^{}");
+                    revision.Refs = new[] { gitRef1 };
 
-                    _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns(gitRef.LocalName);
+                    _module().RunGitCmd($"verify-tag  {gitRef1.LocalName}").Returns(gitRef1.LocalName);
 
-                    gitRefCompleteName = "refs/tags/SecondTag^{}";
-                    gitRef = new GitRef(_module(), guid, gitRefCompleteName);
-                    revision.Refs.Add(gitRef);
+                    var gitRef2 = new GitRef(_module(), guid, "refs/tags/SecondTag^{}");
+                    revision.Refs = new[] { gitRef1, gitRef2 };
 
-                    _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns(gitRef.LocalName);
+                    _module().RunGitCmd($"verify-tag  {gitRef2.LocalName}").Returns(gitRef2.LocalName);
 
                     break;
+                }
             }
 
             var actual = _gpgController.GetTagVerifyMessage(revision);
