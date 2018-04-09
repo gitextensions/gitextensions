@@ -9,7 +9,7 @@ We welcome contributions including:
 - Bug fixes
 - New features
 
-To help the project maintainers be as effective as possible, please follow some simple guidelines.
+To help the project maintainers be as effective as possible, please follow the simple guidelines below.
 
 ## Reporting Issues
 
@@ -24,12 +24,12 @@ If a closed issue already exists and the issue was addressed, you may like to tr
 [CI builds](https://github.com/gitextensions/gitextensions/wiki/CI-Builds).
 
 If no issue exists, create one. Complete the template, and add any further information that
-could be relevant.
+could be relevant such as steps to reproduce, stack traces, screenshots, git/OS version, etc.
 
 ## Pull Requests
 
 Want to contribute some code? Great! In addition to the regular GitHub Pull Request workflow,
-you'll want to browse the [wiki](https://github.com/gitextensions/gitextensions/wiki).
+you'll want to browse our [wiki](https://github.com/gitextensions/gitextensions/wiki).
 
 Good places to start contributing include:
 
@@ -50,6 +50,7 @@ Specifically:
 - Be focussed in scope
 - Be comprised of clear commits (use interactive rebase to tidy things up if needed)
 - Include a clear description of the changes and why they should be made
+- Be accompanied by unit tests
 - Be consistent with the current code style
 
 When filing a pull request, you should be prepared to answer questions about your changes
