@@ -67,7 +67,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            bool isArtificial = commitData.Guid.IsArtificial();
+            bool isArtificial = commitData.Guid.IsArtificial;
             bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
@@ -94,7 +94,7 @@ namespace ResourceManager.CommitDataRenders
                     header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate)));
                 }
 
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + WebUtility.HtmlEncode(commitData.Guid));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + WebUtility.HtmlEncode(commitData.Guid.ToString()));
             }
 
             if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)

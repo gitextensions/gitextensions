@@ -3710,10 +3710,10 @@ namespace GitUI
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
-            string revisionGuid = Module.RevParse(refName);
-            if (!string.IsNullOrEmpty(revisionGuid))
+            var revisionGuid = Module.RevParse(refName);
+            if (revisionGuid != null)
             {
-                SetSelectedRevision(new GitRevision(revisionGuid));
+                SetSelectedRevision(new GitRevision(revisionGuid.ToString()));
             }
             else if (showNoRevisionMsg)
             {
@@ -3735,7 +3735,7 @@ namespace GitUI
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    var baseCommit = Module.RevParse(form.BranchName);
+                    var baseCommit = Module.RevParse(form.BranchName)?.ToString() ?? "";
                     using (var diffForm = new FormDiff(UICommands, this, baseCommit, headCommit.Guid,
                         form.BranchName, headCommit.Subject))
                     {
@@ -3749,7 +3749,7 @@ namespace GitUI
         {
             var baseCommit = GetSelectedRevisions().First();
             var headBranch = Module.GetSelectedBranch();
-            var headBranchName = Module.RevParse(headBranch);
+            var headBranchName = Module.RevParse(headBranch)?.ToString() ?? "";
             using (var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
                 baseCommit.Subject, headBranch))
             {

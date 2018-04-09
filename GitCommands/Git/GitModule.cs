@@ -3434,16 +3434,24 @@ namespace GitCommands
             return "";
         }
 
-        public string RevParse(string revisionExpression)
+        [CanBeNull]
+        public ObjectId? RevParse(string revisionExpression)
         {
-            string revparseCommand = string.Format("rev-parse \"{0}~0\"", revisionExpression);
-            var result = RunGitCmdResult(revparseCommand);
-            return result.ExitCode == 0 ? result.StdOutput.Split('\n')[0] : "";
+            var result = RunGitCmdResult($"rev-parse \"{revisionExpression}~0\"");
+
+            return result.ExitCode == 0 && ObjectId.TryParse(result.StdOutput, offset: 0, out var objectId)
+                ? objectId
+                : (ObjectId?)null;
         }
 
-        public string GetMergeBase(string a, string b)
+        [CanBeNull]
+        public ObjectId? GetMergeBase(string a, string b)
         {
-            return RunGitCmd("merge-base " + a + " " + b).TrimEnd();
+            var output = RunGitCmd($"merge-base {a} {b}");
+
+            return ObjectId.TryParse(output, offset: 0, out var objectId)
+                ? objectId
+                : (ObjectId?)null;
         }
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
@@ -3458,7 +3466,7 @@ namespace GitCommands
                 return SubmoduleStatus.Unknown;
             }
 
-            string baseCommit = GetMergeBase(commit, oldCommit);
+            string baseCommit = GetMergeBase(commit, oldCommit).ToString();
             if (baseCommit == oldCommit)
             {
                 return SubmoduleStatus.FastForward;
@@ -3537,7 +3545,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="branchName">Branch name to test.</param>
         /// <returns>Well formed branch name.</returns>
-        [NotNull]
+        [CanBeNull]
         private string FormatBranchName([NotNull] string branchName)
         {
             if (branchName == null)
@@ -3546,9 +3554,10 @@ namespace GitCommands
             }
 
             string fullBranchName = GitRefName.GetFullBranchName(branchName);
-            if (string.IsNullOrEmpty(RevParse(fullBranchName)))
+
+            if (RevParse(fullBranchName) == null)
             {
-                fullBranchName = branchName;
+                return branchName;
             }
 
             return fullBranchName;
