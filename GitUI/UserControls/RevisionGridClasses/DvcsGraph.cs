@@ -1220,9 +1220,9 @@ namespace GitUI.RevisionGridClasses
         {
             var childrenIds = new List<string>();
 
-            // We do not need a lock here since we load the data from the first commit and walkt through all
+            // We do not need a lock here since we load the data from the first commit and walk through all
             // parents. Children are always loaded, since we start at the newest commit.
-            // With lock, loading the commit info slows down terrible.
+            // With lock, loading the commit info slows down terribly.
             if (_graphData.Nodes.TryGetValue(guid, out var node))
             {
                 foreach (var descendant in node.Descendants)

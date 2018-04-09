@@ -92,7 +92,7 @@ namespace GitCommands
         /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
         /// </summary>
         /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
-        /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
+        /// was provided the string <see cref="LogFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
         [NotNull]
         internal CommitData CreateFromFormattedData([NotNull] string data)

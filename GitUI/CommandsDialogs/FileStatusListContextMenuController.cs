@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -35,7 +36,9 @@ namespace GitUI.CommandsDialogs
             LocalExists = localExists;
         }
 
+        [CanBeNull]
         public GitRevision SelectedRevision { get; }
+        [CanBeNull]
         public IEnumerable<string> SelectedItemParentRevs { get; }
         public bool AllAreNew { get; }
         public bool AllAreDeleted { get; }

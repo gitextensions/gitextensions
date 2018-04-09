@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using GitCommands.Git.Extensions;
@@ -119,7 +120,7 @@ namespace GitCommands
 
         public bool HasParent => ParentGuids != null && ParentGuids.Count > 0;
 
-        public string FirstParentGuid => HasParent ? ParentGuids[0] : null;
+        public string FirstParentGuid => ParentGuids?.FirstOrDefault();
 
         public event PropertyChangedEventHandler PropertyChanged;
 

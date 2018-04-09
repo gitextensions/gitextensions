@@ -1125,31 +1125,20 @@ namespace GitUI
         public void SetDiffs(GitRevision selectedRev = null, GitRevision parentRev = null, IReadOnlyList<GitItemStatus> items = null)
         {
             Revision = selectedRev;
-
-            if (parentRev == null)
-            {
-                parentRev = new GitRevision("");
-            }
-
-            IGitItemsWithParents dictionary = items == null
+            GitItemStatusesWithParents = items == null
                 ? null
-                : new GitItemsWithParents { { parentRev, items } };
-
-            GitItemStatusesWithParents = dictionary;
+                : new GitItemsWithParents
+                {
+                    { parentRev ?? new GitRevision(""), items }
+                };
         }
 
         public void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
-            if (revisions == null || revisions.Count == 0)
-            {
-                Revision = null;
-            }
-            else
-            {
-                Revision = revisions[0];
-            }
+            Revision = revisions?.FirstOrDefault();
 
             var dictionary = new GitItemsWithParents();
+
             if (Revision != null)
             {
                 GitRevision[] parentRevs;
@@ -1167,7 +1156,7 @@ namespace GitUI
                 {
                     // No parent, will set "" as parent
                     var rev = new GitRevision("");
-                    dictionary.Add(rev, Module.GetTreeFiles(Revision.TreeGuid, true));
+                    dictionary.Add(rev, Module.GetTreeFiles(Revision.TreeGuid, full: true));
                 }
                 else
                 {

@@ -265,13 +265,14 @@ namespace GitUI.CommandsDialogs
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
 
-            var selectionInfo = new ContextMenuDiffToolInfo(_headRevision, selectedItemParentRevs,
+            return new ContextMenuDiffToolInfo(
+                _headRevision,
+                selectedItemParentRevs,
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
                 firstParentsValid: _firstParentIsValid,
                 localExists: localExists);
-            return selectionInfo;
         }
 
         private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

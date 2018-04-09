@@ -9,8 +9,10 @@ namespace GitCommands
     {
         public CommitData(ObjectId guid,
             string treeGuid, IReadOnlyList<string> parentGuids,
-            string author, DateTime authorDate,
-            string committer, DateTime commitDate,
+            string author,
+            DateTime authorDate,
+            string committer,
+            DateTime commitDate,
             string body)
         {
             Guid = guid;
@@ -20,7 +22,6 @@ namespace GitCommands
             AuthorDate = authorDate.ToDateTimeOffset();
             Committer = committer;
             CommitDate = commitDate.ToDateTimeOffset();
-
             Body = body;
         }
 

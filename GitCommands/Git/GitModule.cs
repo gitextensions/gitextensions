@@ -1203,15 +1203,20 @@ namespace GitCommands
                 /* Author Date    */ "%at%n" +
                 /* Committer Name */ "%cN%n" +
                 /* Committer EMail*/ "%cE%n" +
-                /* Committer Date */ "%ct%n";
-            const string messageFormat = "%e%n%B%nNotes:%n%-N";
-            string cmd = "log -n1 --format=format:" + formatString + (shortFormat ? "%e%n%s" : messageFormat) + " " + commit;
-            var revInfo = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
+                /* Committer Date */ "%ct%n" +
+                /* Encoding       */ "%e%n";
+
+            var format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
+
+            var revInfo = RunCacheableCmd(AppSettings.GitCommand, $"log -n1 --format=format:{format} {commit}", LosslessEncoding);
+
+            // TODO improve parsing to reduce temporary string (see similar code in RevisionGraph)
             string[] lines = revInfo.Split('\n');
+
             var revision = new GitRevision(lines[0])
             {
                 TreeGuid = lines[1],
-                ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
+                ParentGuids = lines[2].Split(' '),
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
