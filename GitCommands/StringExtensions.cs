@@ -232,5 +232,15 @@ namespace System
 
             return str.Substring(0, maxLength - 3) + "...";
         }
+
+        /// <summary>
+        /// Uses the method IndexOf to check if the <paramref name="other"/> is contained inside the <paramref name="str"/>
+        /// </summary>
+        /// <returns>true if the <paramref name="other"/> is inside of <paramref name="str"/></returns>
+        public static bool Contains([NotNull]this string str, [NotNull] string other,
+            StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase)
+        {
+            return str.IndexOf(other, stringComparison) != -1;
+        }
     }
 }
