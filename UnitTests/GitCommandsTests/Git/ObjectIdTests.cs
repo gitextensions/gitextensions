@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Git
@@ -186,6 +188,29 @@ namespace GitCommandsTests.Git
             Assert.AreNotEqual(
                 ObjectId.UnstagedId.GetHashCode(),
                 ObjectId.IndexId.GetHashCode());
+        }
+
+        private const string NonHexAscii = "0123456789abcdefghijklmnopqrstuvwxyz";
+        private const string HexAscii = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
+
+        [TestCase(HexAscii, 0, "000102030405060708090a0b0c0d0e0f10111213")]
+        [TestCase(HexAscii, 1, "00102030405060708090a0b0c0d0e0f101112131")]
+        [TestCase(HexAscii, 2, "0102030405060708090a0b0c0d0e0f1011121314")]
+        [TestCase(HexAscii, 3, "102030405060708090a0b0c0d0e0f10111213141")]
+        [TestCase(HexAscii, 26, "0d0e0f101112131415161718191a1b1c1d1e1f20")]
+        [TestCase(HexAscii, 27, null)]
+        [TestCase(HexAscii, -1, null)]
+        [TestCase(NonHexAscii, 0, null)]
+        public void TryParseAsciiHexBytes_works_as_expected(string source, int offset, [CanBeNull] string expected)
+        {
+            var sourceBytes = Encoding.ASCII.GetBytes(source);
+
+            Assert.AreEqual(expected != null, ObjectId.TryParseAsciiHexBytes(sourceBytes, offset, out var id));
+
+            if (expected != null)
+            {
+                Assert.AreEqual(ObjectId.Parse(expected), id);
+            }
         }
     }
 }

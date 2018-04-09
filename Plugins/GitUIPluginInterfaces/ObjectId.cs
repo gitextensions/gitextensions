@@ -232,6 +232,72 @@ namespace GitUIPluginInterfaces
                                    bytes[index++]);
         }
 
+        /// <summary>
+        /// Parses an <see cref="ObjectId"/> from ASCII <paramref name="bytes"/> at the given <paramref name="index"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>Unlike <see cref="Parse(byte[],int)"/> which reads raw bytes, this method reads human-readable
+        /// ASCII-encoded bytes, which are more verbose. Several git commands emit them in this form.</para>
+        /// <para>For parsing to succeed, there must be 40 bytes in <paramref name="bytes"/> starting at <paramref name="index"/>.</para>
+        /// </remarks>
+        /// <param name="bytes">The byte array to parse from.</param>
+        /// <param name="index">The index within <paramref name="bytes"/> to commence parsing from.</param>
+        /// <returns>The parsed <see cref="ObjectId"/>.</returns>
+        [MustUseReturnValue]
+        public static bool TryParseAsciiHexBytes([NotNull] byte[] bytes, int index, out ObjectId objectId)
+        {
+            if (index < 0 || index > bytes.Length - Sha1CharCount)
+            {
+                objectId = default;
+                return false;
+            }
+
+            var success = true;
+
+            var i1 = HexAsciiBytesToUInt32(index);
+            var i2 = HexAsciiBytesToUInt32(index + 8);
+            var i3 = HexAsciiBytesToUInt32(index + 16);
+            var i4 = HexAsciiBytesToUInt32(index + 24);
+            var i5 = HexAsciiBytesToUInt32(index + 32);
+
+            if (success)
+            {
+                objectId = new ObjectId(i1, i2, i3, i4, i5);
+                return true;
+            }
+
+            objectId = default;
+            return false;
+
+            uint HexAsciiBytesToUInt32(int j)
+            {
+                return (uint)(HexAsciiByteToInt(bytes[j]) << 28 |
+                              HexAsciiByteToInt(bytes[j + 1]) << 24 |
+                              HexAsciiByteToInt(bytes[j + 2]) << 20 |
+                              HexAsciiByteToInt(bytes[j + 3]) << 16 |
+                              HexAsciiByteToInt(bytes[j + 4]) << 12 |
+                              HexAsciiByteToInt(bytes[j + 5]) << 8 |
+                              HexAsciiByteToInt(bytes[j + 6]) << 4 |
+                              HexAsciiByteToInt(bytes[j + 7]));
+            }
+
+            int HexAsciiByteToInt(byte b)
+            {
+                if (b >= '0' && b <= '9')
+                {
+                    return b - 48;
+                }
+
+                if (b >= 'a' && b <= 'f')
+                {
+                    return b - 87;
+                }
+
+                success = false;
+                return -1;
+            }
+        }
+
         #endregion
 
         /// <summary>
