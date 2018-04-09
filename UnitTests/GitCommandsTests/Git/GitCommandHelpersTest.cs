@@ -266,7 +266,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void GetSubmoduleNamesFromDiffTest()
         {
-            GitModule testModule = new GitModule("D:\\Test\\SuperProject");
+            GitModule testModule = new GitModule("C:\\Test\\SuperProject");
 
             // Submodule name without spaces in the name
 
