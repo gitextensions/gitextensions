@@ -26,6 +26,12 @@ namespace FindLargeFiles
         public FindLargeFilesForm(float threshold, GitUIBaseEventArgs gitUiEventArgs)
         {
             InitializeComponent();
+
+            sHADataGridViewTextBoxColumn.Width = DpiUtil.Scale(54);
+            sizeDataGridViewTextBoxColumn.Width = DpiUtil.Scale(52);
+            commitCountDataGridViewTextBoxColumn.Width = DpiUtil.Scale(88);
+            lastCommitDateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(103);
+
             Translate();
 
             _threshold = threshold;

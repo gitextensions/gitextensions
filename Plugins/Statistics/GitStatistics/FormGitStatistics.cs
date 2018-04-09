@@ -69,6 +69,8 @@ namespace GitStatistics
             TotalLinesOfTestCode.Font = TotalLinesOfCode.Font;
             TotalCommits.Font = TotalLinesOfCode.Font;
             LoadingLabel.Font = TotalLinesOfCode.Font;
+
+            this.AdjustForDpiScaling();
         }
 
         private void FormGitStatisticsSizeChanged(object sender, EventArgs e)

@@ -12,6 +12,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         public DashboardEditor()
         {
             InitializeComponent();
+
+            pathDataGridViewTextBoxColumn.Width = DpiUtil.Scale(150);
+            Title.Width = DpiUtil.Scale(150);
+
             Translate();
             Initialize();
         }

@@ -44,6 +44,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
+            this.AdjustForDpiScaling();
         }
 
         public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)

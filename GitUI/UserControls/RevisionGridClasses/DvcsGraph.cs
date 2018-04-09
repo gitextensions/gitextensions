@@ -52,9 +52,9 @@ namespace GitUI.RevisionGridClasses
 
         #endregion
 
-        private int _nodeDimension = 10;
-        private int _laneWidth = 13;
-        private int _laneLineWidth = 2;
+        private int _nodeDimension = DpiUtil.Scale(10);
+        private int _laneWidth = DpiUtil.Scale(13);
+        private int _laneLineWidth = DpiUtil.Scale(2);
         private const int MaxLanes = 40;
 
         private Pen _whiteBorderPen;
@@ -99,9 +99,9 @@ namespace GitUI.RevisionGridClasses
         public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight)
         {
             RowTemplate.Height = rowHeight;
-            _nodeDimension = nodeDimension;
-            _laneWidth = laneWidth;
-            _laneLineWidth = laneLineWidth;
+            _nodeDimension = DpiUtil.Scale(nodeDimension);
+            _laneWidth = DpiUtil.Scale(laneWidth);
+            _laneLineWidth = DpiUtil.Scale(laneLineWidth);
 
             dataGrid_Resize(null, null);
         }

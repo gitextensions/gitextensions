@@ -83,6 +83,12 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+
+            NewColumn.Width = DpiUtil.Scale(97);
+            PushColumn.Width = DpiUtil.Scale(36);
+            ForceColumn.Width = DpiUtil.Scale(101);
+            DeleteColumn.Width = DpiUtil.Scale(108);
+
             Translate();
 
             if (!GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
@@ -105,6 +111,8 @@ namespace GitUI.CommandsDialogs
                 _remoteManager = new GitRemoteManager(() => Module);
                 Init();
             }
+
+            this.AdjustForDpiScaling();
         }
 
         /// <summary>

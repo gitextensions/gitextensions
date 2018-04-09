@@ -98,6 +98,8 @@ Inactive remote is completely invisible to git.");
             Remotes.Groups.AddRange(new[] { _lvgEnabled, _lvgDisabled });
 
             Application.Idle += application_Idle;
+
+            this.AdjustForDpiScaling();
         }
 
         /// <summary>

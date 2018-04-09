@@ -187,7 +187,7 @@ namespace GitUI
         {
             public MaskPanel()
             {
-                Image = Properties.Resources.loadingpanel;
+                Image = DpiUtil.Scale(Properties.Resources.loadingpanel);
                 SizeMode = PictureBoxSizeMode.CenterImage;
                 BackColor = SystemColors.AppWorkspace;
             }

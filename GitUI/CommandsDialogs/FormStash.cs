@@ -38,6 +38,7 @@ namespace GitUI.CommandsDialogs
             Loading.Image = Properties.Resources.loadingpanel;
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
+            this.AdjustForDpiScaling();
         }
 
         private void ViewExtraDiffArgumentsChanged(object sender, EventArgs e)

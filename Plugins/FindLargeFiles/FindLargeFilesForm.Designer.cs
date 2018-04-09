@@ -83,7 +83,6 @@
             this.sHADataGridViewTextBoxColumn.HeaderText = "SHA";
             this.sHADataGridViewTextBoxColumn.Name = "sHADataGridViewTextBoxColumn";
             this.sHADataGridViewTextBoxColumn.ReadOnly = true;
-            this.sHADataGridViewTextBoxColumn.Width = 54;
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -100,7 +99,6 @@
             this.sizeDataGridViewTextBoxColumn.HeaderText = "Size";
             this.sizeDataGridViewTextBoxColumn.Name = "sizeDataGridViewTextBoxColumn";
             this.sizeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sizeDataGridViewTextBoxColumn.Width = 52;
             // 
             // CompressedSize
             // 
@@ -116,7 +114,6 @@
             this.commitCountDataGridViewTextBoxColumn.HeaderText = "Commit count";
             this.commitCountDataGridViewTextBoxColumn.Name = "commitCountDataGridViewTextBoxColumn";
             this.commitCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.commitCountDataGridViewTextBoxColumn.Width = 88;
             // 
             // lastCommitDateDataGridViewTextBoxColumn
             // 
@@ -125,7 +122,6 @@
             this.lastCommitDateDataGridViewTextBoxColumn.HeaderText = "Last commit date";
             this.lastCommitDateDataGridViewTextBoxColumn.Name = "lastCommitDateDataGridViewTextBoxColumn";
             this.lastCommitDateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.lastCommitDateDataGridViewTextBoxColumn.Width = 103;
             // 
             // dataGridViewCheckBoxColumn1
             // 

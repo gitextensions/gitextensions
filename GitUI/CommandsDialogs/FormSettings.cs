@@ -122,6 +122,8 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.GotoPage(initalPage);
             settingsTreeView.ResumeLayout();
+
+            this.AdjustForDpiScaling();
         }
 
         public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initalPage = null)

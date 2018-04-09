@@ -99,7 +99,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Path.Name = "Path";
             this.Path.ReadOnly = true;
             this.Path.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Path.Width = 35;
             // 
             // Type
             // 
@@ -109,7 +108,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Type.Width = 37;
             // 
             // Branch
             // 
@@ -119,7 +117,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Branch.Name = "Branch";
             this.Branch.ReadOnly = true;
             this.Branch.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Branch.Width = 46;
             // 
             // Sha1
             // 
@@ -129,7 +126,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Sha1.Name = "Sha1";
             this.Sha1.ReadOnly = true;
             this.Sha1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Sha1.Width = 37;
             // 
             // IsDeleted
             // 
@@ -139,7 +135,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.IsDeleted.Name = "IsDeleted";
             this.IsDeleted.ReadOnly = true;
             this.IsDeleted.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.IsDeleted.Width = 50;
             // 
             // Open
             // 
@@ -149,7 +144,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Open.Name = "Open";
             this.Open.ReadOnly = true;
             this.Open.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Open.Width = 39;
             // 
             // Delete
             // 
@@ -161,7 +155,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Delete.Name = "Delete";
             this.Delete.ReadOnly = true;
             this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Delete.Width = 44;
             // 
             // buttonClose
             // 

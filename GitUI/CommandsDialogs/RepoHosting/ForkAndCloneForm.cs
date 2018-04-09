@@ -43,6 +43,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
+            this.AdjustForDpiScaling();
         }
 
         private void ForkAndCloneForm_Load(object sender, EventArgs e)

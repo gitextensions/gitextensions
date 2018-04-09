@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitFlow.Properties;
+using GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -249,7 +250,7 @@ namespace GitFlow
 
         private bool RunCommand(string commandText)
         {
-            pbResultCommand.Image = Resource.StatusHourglass;
+            pbResultCommand.Image = DpiUtil.Scale(Resource.StatusHourglass);
             ShowToolTip(pbResultCommand, "running command : git " + commandText);
             ForceRefresh(pbResultCommand);
             lblRunCommand.Text = "git " + commandText;
@@ -267,14 +268,14 @@ namespace GitFlow
             var resultText = Regex.Replace(result.GetString(), @"\r\n?|\n", Environment.NewLine);
             if (result.ExitCode == 0)
             {
-                pbResultCommand.Image = Resource.success;
+                pbResultCommand.Image = DpiUtil.Scale(Resource.success);
                 ShowToolTip(pbResultCommand, resultText);
                 DisplayHead();
                 txtResult.Text = resultText;
             }
             else
             {
-                pbResultCommand.Image = Resource.error;
+                pbResultCommand.Image = DpiUtil.Scale(Resource.error);
                 ShowToolTip(pbResultCommand, "error: " + resultText);
                 txtResult.Text = resultText;
             }

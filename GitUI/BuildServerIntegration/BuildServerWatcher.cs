@@ -254,7 +254,7 @@ namespace GitUI.BuildServerIntegration
                 var buildStatusImageColumn = new DataGridViewImageColumn
                 {
                     AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                    Width = 16,
+                    Width = DpiUtil.Scale(16),
                     ReadOnly = true,
                     Resizable = DataGridViewTriState.False,
                     SortMode = DataGridViewColumnSortMode.NotSortable

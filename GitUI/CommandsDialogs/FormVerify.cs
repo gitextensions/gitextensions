@@ -39,6 +39,13 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+
+            columnIsLostObjectSelected.Width = DpiUtil.Scale(20);
+            columnDate.Width = DpiUtil.Scale(56);
+            columnType.Width = DpiUtil.Scale(58);
+            columnAuthor.Width = DpiUtil.Scale(150);
+            columnHash.Width = DpiUtil.Scale(80);
+
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
             Translate();

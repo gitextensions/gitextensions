@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -48,6 +47,8 @@ namespace Bitbucket
             lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests",
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
             toolTipLink.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
+
+            this.AdjustForDpiScaling();
         }
 
         private void BitbucketPullRequestFormLoad(object sender, EventArgs e)

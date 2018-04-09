@@ -286,7 +286,6 @@
             this.columnIsLostObjectSelected.HeaderText = "";
             this.columnIsLostObjectSelected.MinimumWidth = 20;
             this.columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
-            this.columnIsLostObjectSelected.Width = 20;
             // 
             // columnDate
             // 
@@ -295,7 +294,6 @@
             this.columnDate.HeaderText = "Date";
             this.columnDate.Name = "columnDate";
             this.columnDate.ReadOnly = true;
-            this.columnDate.Width = 56;
             // 
             // columnType
             // 
@@ -304,7 +302,6 @@
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
             this.columnType.ReadOnly = true;
-            this.columnType.Width = 58;
             // 
             // columnSubject
             // 
@@ -323,7 +320,6 @@
             this.columnAuthor.HeaderText = "Author";
             this.columnAuthor.Name = "columnAuthor";
             this.columnAuthor.ReadOnly = true;
-            this.columnAuthor.Width = 150;
             // 
             // columnHash
             // 
@@ -331,7 +327,6 @@
             this.columnHash.HeaderText = "Hash";
             this.columnHash.Name = "columnHash";
             this.columnHash.ReadOnly = true;
-            this.columnHash.Width = 80;
             // 
             // FormVerify
             // 

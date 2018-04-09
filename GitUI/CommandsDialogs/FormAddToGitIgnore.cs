@@ -38,6 +38,8 @@ namespace GitUI.CommandsDialogs
             }
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+
+            this.AdjustForDpiScaling();
         }
 
         private string ExcludeFile

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -36,20 +37,22 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             _asyncLoader = new AsyncLoader();
 
-            // set tab page images
+            tabControl1.ImageList = new ImageList
             {
-                var imageList = new ImageList();
-                tabControl1.ImageList = imageList;
-                imageList.ColorDepth = ColorDepth.Depth8Bit;
-                imageList.Images.Add(Properties.Resources.IconCommit);
-                imageList.Images.Add(Properties.Resources.IconViewFile);
-                imageList.Images.Add(Properties.Resources.IconDiff);
-                imageList.Images.Add(Properties.Resources.IconBlame);
-                tabControl1.TabPages[0].ImageIndex = 0;
-                tabControl1.TabPages[1].ImageIndex = 1;
-                tabControl1.TabPages[2].ImageIndex = 2;
-                tabControl1.TabPages[3].ImageIndex = 3;
-            }
+                ColorDepth = ColorDepth.Depth8Bit,
+                ImageSize = DpiUtil.Scale(new Size(16, 16)),
+                Images =
+                {
+                    Properties.Resources.IconCommit,
+                    Properties.Resources.IconViewFile,
+                    Properties.Resources.IconDiff,
+                    Properties.Resources.IconBlame
+                }
+            };
+            tabControl1.TabPages[0].ImageIndex = 0;
+            tabControl1.TabPages[1].ImageIndex = 1;
+            tabControl1.TabPages[2].ImageIndex = 2;
+            tabControl1.TabPages[3].ImageIndex = 3;
 
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
@@ -63,6 +66,8 @@ namespace GitUI.CommandsDialogs
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _longShaProvider = new LongShaProvider(() => Module);
+
+            this.AdjustForDpiScaling();
         }
 
         public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)

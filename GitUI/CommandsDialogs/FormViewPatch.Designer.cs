@@ -111,14 +111,12 @@ namespace GitUI.CommandsDialogs
             this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
             this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
             this.typeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.typeDataGridViewTextBoxColumn.Width = 70;
             // 
             // File
             // 
             this.File.HeaderText = "Type";
             this.File.Name = "File";
             this.File.ReadOnly = true;
-            this.File.Width = 50;
             // 
             // patchBindingSource
             // 

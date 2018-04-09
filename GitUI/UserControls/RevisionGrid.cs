@@ -185,9 +185,13 @@ namespace GitUI
             Revisions.ColumnHeadersVisible = false;
             Revisions.IdColumn.Visible = AppSettings.ShowIds;
 
-            IsMessageMultilineDataGridViewColumn.Width = 25;
+            IsMessageMultilineDataGridViewColumn.Width = DpiUtil.Scale(25);
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
             IsMessageMultilineDataGridViewColumn.Resizable = DataGridViewTriState.False;
+
+            GraphDataGridViewColumn.Width = DpiUtil.Scale(70);
+            AuthorDataGridViewColumn.Width = DpiUtil.Scale(150);
+            DateDataGridViewColumn.Width = DpiUtil.Scale(135);
 
             HotkeysEnabled = true;
             try
