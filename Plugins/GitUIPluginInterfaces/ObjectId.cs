@@ -48,7 +48,7 @@ namespace GitUIPluginInterfaces
         public bool IsArtificial => this == UnstagedId || this == IndexId;
 
         private const int Sha1ByteCount = 20;
-        private const int Sha1CharCount = 40;
+        public const int Sha1CharCount = 40;
 
         #region Parsing
 

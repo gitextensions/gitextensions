@@ -32,18 +32,17 @@ namespace GitCommands
 
         private static readonly Regex _commitRegex = new Regex(@"
                 ^
-                (?<objectid>[0-9a-f]{40})\n
-                ((?<parent>[0-9a-f]{40})\ ?)*\n # note root commits have no parent
-                (?<tree>[0-9a-f]{40})\n
-                (?<authorname>[^\n]+)\n
-                (?<authoremail>[^\n]+)\n
-                (?<authordate>\d+)\n
-                (?<committername>[^\n]+)\n
-                (?<committeremail>[^\n]+)\n
-                (?<commitdate>\d+)\n
-                (?<encoding>[^\n]*)\n
-                (?<subject>.+)
-                (\n+(?<body>(.|\n)*))?
+                ([^\n]+)\n   # 1 authorname
+                ([^\n]+)\n   # 2 authoremail
+                (\d+)\n      # 3 authordate
+                ([^\n]+)\n   # 4 committername
+                ([^\n]+)\n   # 5 committeremail
+                (\d+)\n      # 6 commitdate
+                ([^\n]*)\n   # 7 encoding
+                (.+)         # 8 subject
+                (\n+
+                  ((.|\n)*)  # 10 body
+                )?
                 $
             ",
             RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
@@ -111,9 +110,9 @@ namespace GitCommands
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             const string fullFormat =
-                /* Hash                    */ "%H%n" +
+                /* Hash                    */ "%H" +
+                /* Tree                    */ "%T" +
                 /* Parents                 */ "%P%n" +
-                /* Tree                    */ "%T%n" +
                 /* Author Name             */ "%aN%n" +
                 /* Author Email            */ "%aE%n" +
                 /* Author Date             */ "%at%n" +
@@ -213,7 +212,40 @@ namespace GitCommands
 
         private void ProcessLogItem(byte[] logItemBytes, ObjectPool<string> stringPool)
         {
-            var s = _module.LogOutputEncoding.GetString(logItemBytes);
+            if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, 0, out var objectId) ||
+                !ObjectId.TryParseAsciiHexBytes(logItemBytes, ObjectId.Sha1CharCount, out var treeId))
+            {
+                return;
+            }
+
+            var parentIds = new List<ObjectId>(capacity: 1);
+            var parentIdOffset = ObjectId.Sha1CharCount * 2;
+
+            while (parentIdOffset < logItemBytes.Length - 1)
+            {
+                var b = logItemBytes[parentIdOffset];
+
+                if (b == '\n')
+                {
+                    parentIdOffset++;
+                    break;
+                }
+
+                if (b == ' ')
+                {
+                    parentIdOffset++;
+                }
+
+                if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, parentIdOffset, out var parentId))
+                {
+                    return;
+                }
+
+                parentIds.Add(parentId);
+                parentIdOffset += ObjectId.Sha1CharCount;
+            }
+
+            var s = _module.LogOutputEncoding.GetString(logItemBytes, parentIdOffset, logItemBytes.Length - parentIdOffset);
 
             var match = _commitRegex.Match(s);
 
@@ -223,23 +255,28 @@ namespace GitCommands
                 return;
             }
 
-            var encoding = stringPool.Intern(match.Groups["encoding"].Value);
+            var encoding = stringPool.Intern(match.Groups[7 /*encoding*/].Value);
 
             var revision = new GitRevision(null)
             {
-                // TODO use ObjectId (when merged) and parse directly from underlying string, avoiding copy
-                Guid = match.Groups["objectid"].Value,
-                ParentGuids = match.Groups["parent"].Captures.OfType<Capture>().Select(c => c.Value).ToArray(),
-                TreeGuid = match.Groups["tree"].Value,
-                Author = stringPool.Intern(match.Groups["authorname"].Value),
-                AuthorEmail = stringPool.Intern(match.Groups["authoremail"].Value),
-                AuthorDate = DateTimeUtils.ParseUnixTime(match.Groups["authordate"].Value),
-                Committer = stringPool.Intern(match.Groups["committername"].Value),
-                CommitterEmail = stringPool.Intern(match.Groups["committeremail"].Value),
-                CommitDate = DateTimeUtils.ParseUnixTime(match.Groups["commitdate"].Value),
+                // TODO are we really sure we can't make Revision.Guid an ObjectId?
+                Guid = objectId.ToString(),
+
+                // TODO take IReadOnlyList<ObjectId> instead
+                ParentGuids = parentIds.Select(p => p.ToString()).ToArray(),
+
+                // TODO take ObjectId instead
+                TreeGuid = treeId.ToString(),
+
+                Author = stringPool.Intern(match.Groups[1 /*authorname*/].Value),
+                AuthorEmail = stringPool.Intern(match.Groups[2 /*authoremail*/].Value),
+                AuthorDate = DateTimeUtils.ParseUnixTime(match.Groups[3 /*authordate*/].Value),
+                Committer = stringPool.Intern(match.Groups[4 /*committername*/].Value),
+                CommitterEmail = stringPool.Intern(match.Groups[5 /*committeremail*/].Value),
+                CommitDate = DateTimeUtils.ParseUnixTime(match.Groups[6 /*commitdate*/].Value),
                 MessageEncoding = encoding,
-                Subject = _module.ReEncodeCommitMessage(match.Groups["subject"].Value, encoding),
-                Body = _module.ReEncodeCommitMessage(match.Groups["body"].Value, encoding)
+                Subject = _module.ReEncodeCommitMessage(match.Groups[8 /*subject*/].Value, encoding),
+                Body = _module.ReEncodeCommitMessage(match.Groups[10 /*body*/].Value, encoding)
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
