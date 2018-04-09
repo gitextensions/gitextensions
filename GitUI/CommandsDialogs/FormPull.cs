@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Remote;
 using GitCommands.Repository;
 using GitUI.Properties;
@@ -595,7 +596,7 @@ namespace GitUI.CommandsDialogs
 
             curRemoteBranch = Branches.Text;
 
-            if (GitModule.IsDetachedHead(_branch))
+            if (DetachedHeadParser.IsDetachedHead(_branch))
             {
                 curLocalBranch = null;
                 return true;

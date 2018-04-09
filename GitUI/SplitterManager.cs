@@ -53,6 +53,7 @@ namespace GitUI
             private string SizeSettingsKey => SettingName + "_Size";
             private string DistanceSettingsKey => SettingName + "_Distance";
             private string FontSizeSettingsKey => SettingName + "_FontSize";
+            private string Panel1CollapsedSettingsKey => SettingName + "_Panel1Collapsed";
             private float? _latestFontSize;
 
             private int SplitterSize => (Splitter.Orientation == Orientation.Horizontal)
@@ -93,6 +94,8 @@ namespace GitUI
                 }
 
                 AdjustToCurrentFontSize();
+
+                Splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
             }
 
             public void AdjustToCurrentFontSize()
@@ -131,6 +134,7 @@ namespace GitUI
                 settings.SetInt(SizeSettingsKey, SplitterSize);
                 settings.SetInt(DistanceSettingsKey, Splitter.SplitterDistance);
                 settings.SetFloat(FontSizeSettingsKey, Splitter.Font.Size);
+                settings.SetBool(Panel1CollapsedSettingsKey, Splitter.Panel1Collapsed);
             }
 
             private void SetSplitterDistance(float distance)

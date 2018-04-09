@@ -136,6 +136,8 @@
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
+    <Compile Include="CommandsDialogs\RemoteChangedEventArgs.cs" />
+    <Compile Include="CommandsDialogs\RemoteRenamedEventArgs.cs" />
     <Compile Include="CommandsDialogs\RevisionDiff.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -203,6 +205,13 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SearchWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SearchWindow.Designer.cs">
+      <DependentUpon>SearchWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
     <Compile Include="CommandsDialogs\RevisionGpgInfo.cs">
       <SubType>UserControl</SubType>
@@ -266,6 +275,11 @@
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="FindFilePredicateProvider.cs" />
+    <Compile Include="Properties\MsVsImages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MsVsImages.resx</DependentUpon>
+    </Compile>
     <Compile Include="RevisionDiffInfoProvider.cs" />
     <Compile Include="RevisionDiffKind.cs" />
     <Compile Include="FormStatusOutputLog.cs" />
@@ -329,8 +343,14 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="RepoHosts.cs" />
+    <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
@@ -386,6 +406,7 @@
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\MainThreadScheduler.cs" />
+    <Compile Include="UserControls\PathFormatter.cs" />
     <Compile Include="UserControls\NativeListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -535,8 +556,6 @@
     </Compile>
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="MouseWheelRedirector.cs" />
-    <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
-    <Compile Include="UserControls\PathFormatter.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -677,15 +696,12 @@
     <Compile Include="Plugin\LoadPlugins.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Custom.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Script\ScriptRunner.cs" />
+    <Compile Include="BranchTreePanel\RepoObjectsTree.ContextActions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\CheckSettingsLogic.cs" />
@@ -1094,11 +1110,11 @@
     <Compile Include="UserControls\RevisionGrid.Designer.cs">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SearchWindow.cs">
-      <SubType>Form</SubType>
+    <Compile Include="CommandsDialogs\SearchControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\SearchWindow.Designer.cs">
-      <DependentUpon>SearchWindow.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\SearchControl.Designer.cs">
+      <DependentUpon>SearchControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
@@ -1112,6 +1128,24 @@
     </Compile>
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Branches.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Designer.cs">
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Remotes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Tags.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\WarningToolStripItem.cs">
       <SubType>Component</SubType>
@@ -1169,6 +1203,9 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
+      <DependentUpon>SearchWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfo.resx">
       <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
     </EmbeddedResource>
@@ -1225,6 +1262,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\MsVsImages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MsVsImages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
       <DependentUpon>BranchSelector.cs</DependentUpon>
@@ -1610,9 +1652,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
       <LogicalName>GitUI.Properties.Resources.resources</LogicalName>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
@@ -1621,12 +1663,15 @@
     <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
-      <DependentUpon>SearchWindow.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\SearchControl.resx">
+      <DependentUpon>SearchControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\FolderBrowserButton.resx">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BranchTreePanel\RepoObjectsTree.resx">
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1958,6 +2003,13 @@
     <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
     <Content Include="Resources\Icons\ignore_whitespaces.png" />
     <Content Include="Resources\Icons\increase.png" />
+    <None Include="Resources\Icons\VS2017Images\BranchRemote_16x.png" />
+    <None Include="Resources\Icons\VS2017Images\Branch_16x.png" />
+    <None Include="Resources\Icons\VS2017Images\CollapseAll_16x.png" />
+    <None Include="Resources\Icons\VS2017Images\ExpandAll_16x.png" />
+    <None Include="Resources\Icons\VS2017Images\Folder_grey_16x.png" />
+    <None Include="Resources\Icons\VS2017Images\Repository_16x.png" />
+    <None Include="Resources\Icons\VS2017Images\Tag_16x.png" />
     <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Resources\Icons\tag_error.png" />
     <Content Include="Resources\Icons\tag_ok.png" />

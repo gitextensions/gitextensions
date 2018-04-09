@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitUIPluginInterfaces;
 
-namespace GitCommands
+namespace GitCommands.Git
 {
     public sealed class GitDeleteRemoteBranchesCmd : GitCommand
     {
         private readonly string _remote;
-        private readonly List<IGitRef> _branches;
+        private readonly List<string> _branches;
 
-        public GitDeleteRemoteBranchesCmd(string remote, IEnumerable<IGitRef> branches)
+        public GitDeleteRemoteBranchesCmd(string remote, IEnumerable<string> branchLocalNames)
         {
             if (string.IsNullOrEmpty(remote))
             {
                 throw new ArgumentNullException(nameof(remote));
             }
 
-            if (branches == null)
+            if (branchLocalNames == null)
             {
-                throw new ArgumentNullException(nameof(branches));
+                throw new ArgumentNullException(nameof(branchLocalNames));
             }
 
             _remote = remote;
-            _branches = branches.ToList();
-
-            if (_branches.Any(b => b.Remote != _remote))
-            {
-                throw new ArgumentException($"Branch remote mismatch. Branch {_branches.First(b => b.Remote != _remote).CompleteName} does not belong to remote {remote}");
-            }
+            _branches = branchLocalNames.ToList();
         }
 
         public override string GitComandName()
@@ -42,7 +36,7 @@ namespace GitCommands
 
             foreach (var branch in _branches)
             {
-                yield return " :\"" + branch.LocalName + "\"";
+                yield return " :\"" + branch + "\"";
             }
         }
 

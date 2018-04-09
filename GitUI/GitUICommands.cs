@@ -162,6 +162,10 @@ namespace GitUI
         public event EventHandler<GitUIBaseEventArgs> PreSparseWorkingCopy;
         public event EventHandler<GitUIPostActionEventArgs> PostSparseWorkingCopy;
 
+        public EventHandler<RemoteChangedEventArgs> RemoteDeleted;
+        public EventHandler<RemoteRenamedEventArgs> RemoteRenamed;
+        public EventHandler<RemoteChangedEventArgs> RemoteAdded;
+
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
@@ -264,15 +268,20 @@ namespace GitUI
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
         {
-            return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
-                {
-                    using (var form = new FormDeleteBranch(this, branch))
-                    {
-                        form.ShowDialog(owner);
-                    }
+            return StartDeleteBranchDialog(owner, new string[] { branch });
+        }
 
-                    return true;
-                });
+        public bool StartDeleteBranchDialog(IWin32Window owner, IEnumerable<string> branches)
+        {
+            return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
+            {
+                using (var form = new FormDeleteBranch(this, branches))
+                {
+                    form.ShowDialog(owner);
+                }
+
+                return true;
+            });
         }
 
         public bool StartDeleteRemoteBranchDialog(IWin32Window owner, string remoteBranch)
@@ -286,11 +295,6 @@ namespace GitUI
 
                     return true;
                 });
-        }
-
-        public bool StartDeleteBranchDialog(string branch)
-        {
-            return StartDeleteBranchDialog(null, branch);
         }
 
         public bool StartCheckoutRevisionDialog(IWin32Window owner, string revision = null)
