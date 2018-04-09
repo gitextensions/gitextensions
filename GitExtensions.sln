@@ -166,7 +166,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 		GitExtensions.ruleset = GitExtensions.ruleset
 		GitExtensionsTest.ruleset = GitExtensionsTest.ruleset
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		LICENSE.md = LICENSE.md
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -176,6 +178,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{472B72D9
 		Build\vs-threading.MainThreadAssertingMethods.txt = Build\vs-threading.MainThreadAssertingMethods.txt
 		Build\vs-threading.MainThreadSwitchingMethods.txt = Build\vs-threading.MainThreadSwitchingMethods.txt
 		Build\vs-threading.TypesRequiringMainThread.txt = Build\vs-threading.TypesRequiringMainThread.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A6B-4005-41DC-BFAC-59F936DF33AA}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
 Global
@@ -754,6 +762,7 @@ Global
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
 		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{472B72D9-9336-4C8B-A199-300F0CA7669E} = {C5855184-8571-4AD0-A373-B98215BA56CA}
+		{17FD2A6B-4005-41DC-BFAC-59F936DF33AA} = {C5855184-8571-4AD0-A373-B98215BA56CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

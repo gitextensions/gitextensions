@@ -1,4 +1,11 @@
-I was not able to find an [open](https://github.com/gitextensions/gitextensions/issues?q=is%3Aopen) or [closed](https://github.com/gitextensions/gitextensions/issues?q=is%3Aclosed) issue matching what I'm seeing
+<!--
+IMPORTANT
+
+Before creating an issue, be sure to search existing issues, both open AND closed,
+to see whether someone else has already reported your issue.
+
+Please also read CONTRIBUTING.md.
+-->
 
 **Do you want to request a *feature* or report a *bug*?**
 
