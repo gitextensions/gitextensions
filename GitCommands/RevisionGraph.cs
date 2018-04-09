@@ -265,8 +265,7 @@ namespace GitCommands
                 // TODO take IReadOnlyList<ObjectId> instead
                 ParentGuids = parentIds.Select(p => p.ToString()).ToArray(),
 
-                // TODO take ObjectId instead
-                TreeGuid = treeId.ToString(),
+                TreeGuid = treeId,
 
                 Author = stringPool.Intern(match.Groups[1 /*authorname*/].Value),
                 AuthorEmail = stringPool.Intern(match.Groups[2 /*authoremail*/].Value),

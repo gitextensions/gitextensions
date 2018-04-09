@@ -7,8 +7,10 @@ namespace GitCommands
 {
     public sealed class CommitData
     {
-        public CommitData(ObjectId guid,
-            string treeGuid, IReadOnlyList<string> parentGuids,
+        public CommitData(
+            ObjectId guid,
+            ObjectId treeGuid,
+            IReadOnlyList<string> parentGuids,
             string author,
             DateTime authorDate,
             string committer,
@@ -26,7 +28,7 @@ namespace GitCommands
         }
 
         public ObjectId Guid { get; }
-        public string TreeGuid { get; }
+        public ObjectId TreeGuid { get; }
         public IReadOnlyList<string> ParentGuids { get; }
         public string Author { get; }
         public DateTimeOffset AuthorDate { get; }

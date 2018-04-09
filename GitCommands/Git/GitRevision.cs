@@ -42,7 +42,7 @@ namespace GitCommands
         [CanBeNull, ItemNotNull]
         public IReadOnlyList<string> ParentGuids { get; set; }
 
-        public string TreeGuid { get; set; }
+        public ObjectId TreeGuid { get; set; }
 
         public string Author { get; set; }
         public string AuthorEmail { get; set; }

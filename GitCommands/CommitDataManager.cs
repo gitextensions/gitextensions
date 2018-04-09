@@ -134,7 +134,7 @@ namespace GitCommands
             var guid = ObjectId.Parse(lines[0]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            var treeGuid = lines[1];
+            var treeGuid = ObjectId.Parse(lines[1]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
             var parentGuids = lines[2].Split(' ');

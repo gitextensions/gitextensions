@@ -23,7 +23,7 @@ namespace ResourceManagerTests.CommitDataRenders
         public void Setup()
         {
             var commitGuid = ObjectId.Random();
-            var treeGuid = Guid.NewGuid().ToString("N");
+            var treeGuid = ObjectId.Random();
             var parentGuid1 = Guid.NewGuid().ToString("N");
             var parentGuid2 = Guid.NewGuid().ToString("N");
             var authorTime = DateTime.UtcNow.AddDays(-3);

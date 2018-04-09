@@ -91,8 +91,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -118,8 +119,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = "John Doe <John.Doe@test.com>";
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -146,8 +148,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -174,8 +177,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -205,8 +209,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 _parentHashes.AsReadOnly(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -234,8 +239,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse(artificialGuid),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse(artificialGuid),
+                ObjectId.Random(),
                 _childrenHashes.AsReadOnly(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -266,8 +272,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -293,8 +300,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = "John Doe <John.Doe@test.com>";
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -321,8 +329,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
-            var data = new CommitData(ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");

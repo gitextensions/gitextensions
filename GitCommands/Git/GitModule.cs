@@ -1215,7 +1215,7 @@ namespace GitCommands
 
             var revision = new GitRevision(lines[0])
             {
-                TreeGuid = lines[1],
+                TreeGuid = ObjectId.Parse(lines[1]),
                 ParentGuids = lines[2].Split(' '),
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
@@ -2438,18 +2438,20 @@ namespace GitCommands
 
             // shows untracked files
             string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
-            if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
+
+            if (ObjectId.TryParse(untrackedTreeHash, out var treeId))
             {
-                var files = GetTreeFiles(untrackedTreeHash, true);
+                var files = GetTreeFiles(treeId, full: true);
+
                 resultCollection.AddRange(files);
             }
 
             return resultCollection;
         }
 
-        public IReadOnlyList<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
+        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full)
         {
-            var tree = GetTree(treeGuid, full);
+            var tree = GetTree(treeGuid.ToString(), full);
 
             var list = tree
                 .Select(file => new GitItemStatus

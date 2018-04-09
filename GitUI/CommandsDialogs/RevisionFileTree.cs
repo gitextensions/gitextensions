@@ -283,7 +283,7 @@ See the changes in the commit form.");
 
         private IEnumerable<string> FindFileMatches(string name)
         {
-            var candidates = Module.GetFullTree(_revision.TreeGuid);
+            var candidates = Module.GetFullTree(_revision.TreeGuid.ToString());
             var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate);
