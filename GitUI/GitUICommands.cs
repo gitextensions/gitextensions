@@ -1493,6 +1493,17 @@ namespace GitUI
             }
         }
 
+        public FormDiff ShowFormDiff(bool firstParentIsValid, string baseCommitSha,
+            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        {
+            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha,
+                headCommitSha, baseCommitDisplayStr, headCommitDisplayStr);
+            diffForm.Show();
+            diffForm.ShowInTaskbar = true;
+
+            return diffForm;
+        }
+
         public bool StartPushDialog()
         {
             return StartPushDialog(false);
