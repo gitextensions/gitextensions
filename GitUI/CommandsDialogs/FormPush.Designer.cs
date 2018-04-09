@@ -444,21 +444,18 @@
             // LocalColumn
             // 
             this.LocalColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LocalColumn.DataPropertyName = "Local";
             this.LocalColumn.HeaderText = "Local Branch";
             this.LocalColumn.Name = "LocalColumn";
             // 
             // RemoteColumn
             // 
             this.RemoteColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.RemoteColumn.DataPropertyName = "Remote";
             this.RemoteColumn.HeaderText = "Remote Branch";
             this.RemoteColumn.Name = "RemoteColumn";
             // 
             // NewColumn
             // 
             this.NewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.NewColumn.DataPropertyName = "New";
             this.NewColumn.HeaderText = "New at Remote";
             this.NewColumn.Name = "NewColumn";
             this.NewColumn.ReadOnly = true;
@@ -466,21 +463,18 @@
             // PushColumn
             // 
             this.PushColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.PushColumn.DataPropertyName = "Push";
             this.PushColumn.HeaderText = "Push";
             this.PushColumn.Name = "PushColumn";
             // 
             // ForceColumn
             // 
             this.ForceColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ForceColumn.DataPropertyName = "Force";
             this.ForceColumn.HeaderText = "Push (Force Rewind)";
             this.ForceColumn.Name = "ForceColumn";
             // 
             // DeleteColumn
             // 
             this.DeleteColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.DeleteColumn.DataPropertyName = "Delete";
             this.DeleteColumn.HeaderText = "Delete Remote Branch";
             this.DeleteColumn.Name = "DeleteColumn";
             // 

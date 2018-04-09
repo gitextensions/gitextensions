@@ -21,6 +21,12 @@ namespace GitUI.CommandsDialogs
     {
         private const string HeadText = "HEAD";
         private const string AllRefs = "[ All ]";
+        private const string LocalColumnName = "Local";
+        private const string RemoteColumnName = "Remote";
+        private const string NewColumnName = "New";
+        private const string PushColumnName = "Push";
+        private const string ForceColumnName = "Force";
+        private const string DeleteColumnName = "Delete";
         private string _currentBranchName;
         private GitRemote _currentBranchRemote;
         private bool _candidateForRebasingMergeCommit;
@@ -208,7 +214,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.TextUpdate -= RemotesUpdated;
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = UserGitRemotes;
-            _NO_TRANSLATE_Remotes.DisplayMember = "Name";
+            _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
 
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
@@ -399,17 +405,17 @@ namespace GitUI.CommandsDialogs
                 var pushActions = new List<GitPushAction>();
                 foreach (DataRow row in _branchTable.Rows)
                 {
-                    var push = Convert.ToBoolean(row["Push"]);
-                    var force = Convert.ToBoolean(row["Force"]);
-                    var delete = Convert.ToBoolean(row["Delete"]);
+                    var push = Convert.ToBoolean(row[PushColumnName]);
+                    var force = Convert.ToBoolean(row[ForceColumnName]);
+                    var delete = Convert.ToBoolean(row[DeleteColumnName]);
 
                     if (push || force)
                     {
-                        pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
+                        pushActions.Add(new GitPushAction(row[LocalColumnName].ToString(), row[RemoteColumnName].ToString(), force));
                     }
                     else if (delete)
                     {
-                        pushActions.Add(GitPushAction.DeleteRemoteBranch(row["Remote"].ToString()));
+                        pushActions.Add(GitPushAction.DeleteRemoteBranch(row[RemoteColumnName].ToString()));
                     }
                 }
 
@@ -639,7 +645,7 @@ namespace GitUI.CommandsDialogs
         {
             string prevUrl = PushDestination.Text;
             PushDestination.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            PushDestination.DisplayMember = "Path";
+            PushDestination.DisplayMember = nameof(Repository.Path);
             PushDestination.Text = prevUrl;
         }
 
@@ -647,7 +653,7 @@ namespace GitUI.CommandsDialogs
         {
             var curBranch = _NO_TRANSLATE_Branch.Text;
 
-            _NO_TRANSLATE_Branch.DisplayMember = "Name";
+            _NO_TRANSLATE_Branch.DisplayMember = nameof(IGitRef.Name);
             _NO_TRANSLATE_Branch.Items.Clear();
             _NO_TRANSLATE_Branch.Items.Add(AllRefs);
             _NO_TRANSLATE_Branch.Items.Add(HeadText);
@@ -891,15 +897,20 @@ namespace GitUI.CommandsDialogs
         private void UpdateMultiBranchView()
         {
             _branchTable = new DataTable();
-            _branchTable.Columns.Add("Local", typeof(string));
-            _branchTable.Columns.Add("Remote", typeof(string));
-            _branchTable.Columns.Add("New", typeof(string));
-            _branchTable.Columns.Add("Push", typeof(bool));
-            _branchTable.Columns.Add("Force", typeof(bool));
-            _branchTable.Columns.Add("Delete", typeof(bool));
+            _branchTable.Columns.Add(LocalColumnName, typeof(string));
+            _branchTable.Columns.Add(RemoteColumnName, typeof(string));
+            _branchTable.Columns.Add(NewColumnName, typeof(string));
+            _branchTable.Columns.Add(PushColumnName, typeof(bool));
+            _branchTable.Columns.Add(ForceColumnName, typeof(bool));
+            _branchTable.Columns.Add(DeleteColumnName, typeof(bool));
             _branchTable.ColumnChanged += BranchTable_ColumnChanged;
-            var bs = new BindingSource { DataSource = _branchTable };
-            BranchGrid.DataSource = bs;
+            LocalColumn.DataPropertyName = LocalColumnName;
+            RemoteColumn.DataPropertyName = RemoteColumnName;
+            NewColumn.DataPropertyName = NewColumnName;
+            PushColumn.DataPropertyName = PushColumnName;
+            ForceColumn.DataPropertyName = ForceColumnName;
+            DeleteColumn.DataPropertyName = DeleteColumnName;
+            BranchGrid.DataSource = new BindingSource { DataSource = _branchTable };
 
             if (_selectedRemote == null)
             {
@@ -976,9 +987,9 @@ namespace GitUI.CommandsDialogs
             foreach (var head in localHeads)
             {
                 DataRow row = _branchTable.NewRow();
-                row["Force"] = false;
-                row["Delete"] = false;
-                row["Local"] = head.Name;
+                row[ForceColumnName] = false;
+                row[DeleteColumnName] = false;
+                row[LocalColumnName] = head.Name;
 
                 string remoteName;
                 if (head.Remote == remote)
@@ -990,10 +1001,10 @@ namespace GitUI.CommandsDialogs
                     remoteName = head.Name;
                 }
 
-                row["Remote"] = remoteName;
+                row[RemoteColumnName] = remoteName;
                 bool knownAtRemote = remoteBranches.Contains(remoteName);
-                row["New"] = knownAtRemote ? _no.Text : _yes.Text;
-                row["Push"] = knownAtRemote;
+                row[NewColumnName] = knownAtRemote ? _no.Text : _yes.Text;
+                row[PushColumnName] = knownAtRemote;
 
                 _branchTable.Rows.Add(row);
             }
@@ -1005,12 +1016,12 @@ namespace GitUI.CommandsDialogs
                 if (localHeads.All(h => h.Name != head.LocalName))
                 {
                     DataRow row = _branchTable.NewRow();
-                    row["Local"] = null;
-                    row["Remote"] = remoteHead.LocalName;
-                    row["New"] = _no.Text;
-                    row["Push"] = false;
-                    row["Force"] = false;
-                    row["Delete"] = false;
+                    row[LocalColumnName] = null;
+                    row[RemoteColumnName] = remoteHead.LocalName;
+                    row[NewColumnName] = _no.Text;
+                    row[PushColumnName] = false;
+                    row[ForceColumnName] = false;
+                    row[DeleteColumnName] = false;
                     _branchTable.Rows.Add(row);
                 }
             }
@@ -1020,22 +1031,40 @@ namespace GitUI.CommandsDialogs
 
         private static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
         {
-            if (e.Column.ColumnName == "Push" && (bool)e.ProposedValue)
+            switch (e.Column.ColumnName)
             {
-                e.Row["Force"] = false;
-                e.Row["Delete"] = false;
-            }
+                case PushColumnName:
+                {
+                    if ((bool)e.ProposedValue)
+                    {
+                        e.Row[ForceColumnName] = false;
+                        e.Row[DeleteColumnName] = false;
+                    }
 
-            if (e.Column.ColumnName == "Force" && (bool)e.ProposedValue)
-            {
-                e.Row["Push"] = false;
-                e.Row["Delete"] = false;
-            }
+                    break;
+                }
 
-            if (e.Column.ColumnName == "Delete" && (bool)e.ProposedValue)
-            {
-                e.Row["Push"] = false;
-                e.Row["Force"] = false;
+                case ForceColumnName:
+                {
+                    if ((bool)e.ProposedValue)
+                    {
+                        e.Row[PushColumnName] = false;
+                        e.Row[DeleteColumnName] = false;
+                    }
+
+                    break;
+                }
+
+                case DeleteColumnName:
+                {
+                    if ((bool)e.ProposedValue)
+                    {
+                        e.Row[PushColumnName] = false;
+                        e.Row[ForceColumnName] = false;
+                    }
+
+                    break;
+                }
             }
         }
 

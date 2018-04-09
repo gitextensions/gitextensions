@@ -29,6 +29,10 @@ namespace Bitbucket
             InitializeComponent();
             Translate();
 
+            // NOTE ddlBranchSource and ddlBranchTarget both have string items so do not need a display member
+            ddlRepositorySource.DisplayMember = nameof(Repository.DisplayName);
+            ddlRepositoryTarget.DisplayMember = nameof(Repository.DisplayName);
+
             _settings = Settings.Parse(gitUiCommands.GitModule, settings, plugin);
             if (_settings == null)
             {
@@ -85,7 +89,7 @@ namespace Bitbucket
 
                 await this.SwitchToMainThreadAsync();
                 lbxPullRequests.DataSource = pullReqs;
-                lbxPullRequests.DisplayMember = "DisplayName";
+                lbxPullRequests.DisplayMember = nameof(PullRequest.DisplayName);
             }).FileAndForget();
         }
 

@@ -51,6 +51,13 @@ namespace GitUI.CommandsDialogs
             Translate();
             Warnings.AutoGenerateColumns = false;
 
+            columnIsLostObjectSelected.DataPropertyName = "IsSelected"; // TODO this property is not on the bound type
+            columnDate.DataPropertyName = nameof(LostObject.Date);
+            columnType.DataPropertyName = nameof(LostObject.RawType);
+            columnSubject.DataPropertyName = nameof(LostObject.Subject);
+            columnAuthor.DataPropertyName = nameof(LostObject.Author);
+            columnHash.DataPropertyName = nameof(LostObject.Hash);
+
             if (commands != null)
             {
                 _gitTagController = new GitTagController(commands);

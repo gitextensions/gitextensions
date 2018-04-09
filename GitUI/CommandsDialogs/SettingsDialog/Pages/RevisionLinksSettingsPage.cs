@@ -14,6 +14,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Revision links";
             Translate();
             LinksGrid.AutoGenerateColumns = false;
+            CaptionCol.DataPropertyName = nameof(ExternalLinkFormat.Caption);
+            URICol.DataPropertyName = nameof(ExternalLinkFormat.Format);
         }
 
         protected override void SettingsToPage()
@@ -49,7 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             var effectiveLinkDefinitions = _externalLinksManager.GetEffectiveSettings();
 
             _NO_TRANSLATE_Categories.DataSource = null;
-            _NO_TRANSLATE_Categories.DisplayMember = "Name";
+            _NO_TRANSLATE_Categories.DisplayMember = nameof(ExternalLinkDefinition.Name);
             _NO_TRANSLATE_Categories.DataSource = effectiveLinkDefinitions;
         }
 

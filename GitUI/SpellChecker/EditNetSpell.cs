@@ -67,6 +67,8 @@ namespace GitUI.SpellChecker
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
             TextBoxFont = TextBox.Font;
 
+            AutoComplete.DisplayMember = nameof(AutoCompleteWord.Word);
+
             _wordAtCursorExtractor = new WordAtCursorExtractor();
         }
 

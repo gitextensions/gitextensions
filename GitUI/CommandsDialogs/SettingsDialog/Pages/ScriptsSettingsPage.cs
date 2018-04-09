@@ -61,6 +61,11 @@ Current Branch:
             HotkeyCommandIdentifier.Width = DpiUtil.Scale(39);
             Text = "Scripts";
             Translate();
+
+            HotkeyCommandIdentifier.DataPropertyName = nameof(ScriptInfo.HotkeyCommandIdentifier);
+            EnabledColumn.DataPropertyName = nameof(ScriptInfo.Enabled);
+            OnEvent.DataPropertyName = nameof(ScriptInfo.OnEvent);
+            AskConfirmation.DataPropertyName = nameof(ScriptInfo.AskConfirmation);
         }
 
         public override bool IsInstantSavePage => true;

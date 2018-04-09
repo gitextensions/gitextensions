@@ -72,14 +72,12 @@
             // FileName
             // 
             this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.FileName.DataPropertyName = "Name";
             this.FileName.HeaderText = "Name";
             this.FileName.Name = "FileName";
             this.FileName.ReadOnly = true;
             // 
             // subjectDataGridViewTextBoxColumn
             // 
-            this.subjectDataGridViewTextBoxColumn.DataPropertyName = "Subject";
             this.subjectDataGridViewTextBoxColumn.HeaderText = "Subject";
             this.subjectDataGridViewTextBoxColumn.Name = "subjectDataGridViewTextBoxColumn";
             this.subjectDataGridViewTextBoxColumn.ReadOnly = true;
@@ -87,7 +85,6 @@
             // authorDataGridViewTextBoxColumn
             // 
             this.authorDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
             this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
             this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
             this.authorDataGridViewTextBoxColumn.ReadOnly = true;
@@ -95,7 +92,6 @@
             // dateDataGridViewTextBoxColumn
             // 
             this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
             this.dateDataGridViewTextBoxColumn.HeaderText = "Date";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             this.dateDataGridViewTextBoxColumn.ReadOnly = true;
@@ -103,7 +99,6 @@
             // Status
             // 
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Status.DataPropertyName = "Status";
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;

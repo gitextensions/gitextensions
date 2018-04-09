@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
         private void DirectoryDropDown(object sender, EventArgs e)
         {
             Directory.DataSource = Repositories.RepositoryHistory.Repositories;
-            Directory.DisplayMember = "Path";
+            Directory.DisplayMember = nameof(Repository.Path);
         }
 
         private void InitClick(object sender, EventArgs e)

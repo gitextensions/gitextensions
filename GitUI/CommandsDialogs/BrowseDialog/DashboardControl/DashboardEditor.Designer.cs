@@ -169,20 +169,17 @@
             // 
             // pathDataGridViewTextBoxColumn
             // 
-            this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
             this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
             this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
             // 
             // Title
             // 
-            this.Title.DataPropertyName = "Title";
             this.Title.HeaderText = "Title";
             this.Title.Name = "Title";
             // 
             // descriptionDataGridViewTextBoxColumn
             // 
             this.descriptionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
             this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
             // 

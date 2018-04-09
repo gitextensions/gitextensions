@@ -159,7 +159,6 @@
             // 
             // _NO_TRANSLATE_Categories
             // 
-            this._NO_TRANSLATE_Categories.DisplayMember = "Name";
             this._NO_TRANSLATE_Categories.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Categories.FormattingEnabled = true;
             this._NO_TRANSLATE_Categories.IntegralHeight = false;
@@ -200,14 +199,12 @@
             // 
             // CaptionCol
             // 
-            this.CaptionCol.DataPropertyName = "Caption";
             this.CaptionCol.HeaderText = "Caption";
             this.CaptionCol.Name = "CaptionCol";
             // 
             // URICol
             // 
             this.URICol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.URICol.DataPropertyName = "Format";
             this.URICol.HeaderText = "URI";
             this.URICol.Name = "URICol";
             // 

@@ -39,6 +39,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             InitializeComponent();
             Translate();
+            _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
             _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -62,11 +63,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _fileStatusList.SelectedIndexChanged += _fileStatusList_SelectedIndexChanged;
             _discussionWB.DocumentCompleted += _discussionWB_DocumentCompleted;
 
-            Init();
-        }
-
-        private void Init()
-        {
             _isFirstLoad = true;
 
             this.Mask();

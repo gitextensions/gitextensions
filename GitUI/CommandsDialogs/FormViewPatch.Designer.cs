@@ -101,7 +101,6 @@ namespace GitUI.CommandsDialogs
             // FileNameA
             // 
             this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FileNameA.DataPropertyName = "FileNameA";
             this.FileNameA.HeaderText = "Filename";
             this.FileNameA.Name = "FileNameA";
             this.FileNameA.ReadOnly = true;

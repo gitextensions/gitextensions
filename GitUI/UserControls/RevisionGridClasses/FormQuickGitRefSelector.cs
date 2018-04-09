@@ -19,6 +19,8 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             InitializeComponent();
             Translate();
+
+            lbxRefs.DisplayMember = nameof(DisplyGitRef.Label);
         }
 
         /// <summary>

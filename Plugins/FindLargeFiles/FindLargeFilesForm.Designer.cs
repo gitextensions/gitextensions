@@ -79,7 +79,6 @@
             // sHADataGridViewTextBoxColumn
             // 
             this.sHADataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.sHADataGridViewTextBoxColumn.DataPropertyName = "SHA";
             this.sHADataGridViewTextBoxColumn.HeaderText = "SHA";
             this.sHADataGridViewTextBoxColumn.Name = "sHADataGridViewTextBoxColumn";
             this.sHADataGridViewTextBoxColumn.ReadOnly = true;
@@ -87,7 +86,6 @@
             // pathDataGridViewTextBoxColumn
             // 
             this.pathDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
             this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
             this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
             this.pathDataGridViewTextBoxColumn.ReadOnly = true;
@@ -95,14 +93,12 @@
             // sizeDataGridViewTextBoxColumn
             // 
             this.sizeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.sizeDataGridViewTextBoxColumn.DataPropertyName = "Size";
             this.sizeDataGridViewTextBoxColumn.HeaderText = "Size";
             this.sizeDataGridViewTextBoxColumn.Name = "sizeDataGridViewTextBoxColumn";
             this.sizeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // CompressedSize
             // 
-            this.CompressedSize.DataPropertyName = "CompressedSize";
             this.CompressedSize.HeaderText = "Compressed size";
             this.CompressedSize.Name = "CompressedSize";
             this.CompressedSize.ReadOnly = true;
@@ -110,7 +106,6 @@
             // commitCountDataGridViewTextBoxColumn
             // 
             this.commitCountDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.commitCountDataGridViewTextBoxColumn.DataPropertyName = "CommitCount";
             this.commitCountDataGridViewTextBoxColumn.HeaderText = "Commit count";
             this.commitCountDataGridViewTextBoxColumn.Name = "commitCountDataGridViewTextBoxColumn";
             this.commitCountDataGridViewTextBoxColumn.ReadOnly = true;
@@ -118,14 +113,12 @@
             // lastCommitDateDataGridViewTextBoxColumn
             // 
             this.lastCommitDateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.lastCommitDateDataGridViewTextBoxColumn.DataPropertyName = "LastCommitDate";
             this.lastCommitDateDataGridViewTextBoxColumn.HeaderText = "Last commit date";
             this.lastCommitDateDataGridViewTextBoxColumn.Name = "lastCommitDateDataGridViewTextBoxColumn";
             this.lastCommitDateDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // dataGridViewCheckBoxColumn1
             // 
-            this.dataGridViewCheckBoxColumn1.DataPropertyName = "Delete";
             this.dataGridViewCheckBoxColumn1.HeaderText = "Delete";
             this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
             this.dataGridViewCheckBoxColumn1.ReadOnly = true;

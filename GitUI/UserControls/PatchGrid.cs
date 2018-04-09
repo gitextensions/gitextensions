@@ -15,6 +15,11 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            FileName.DataPropertyName = nameof(PatchFile.Name);
+            subjectDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Subject);
+            authorDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Author);
+            dateDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Date);
+            Status.DataPropertyName = nameof(PatchFile.Status);
 
             FileName.Width = DpiUtil.Scale(50);
             authorDataGridViewTextBoxColumn.Width = DpiUtil.Scale(140);
@@ -29,16 +34,11 @@ namespace GitUI
 
         public void Initialize()
         {
-            IReadOnlyList<PatchFile> patchFiles;
+            var patchFiles = Module.InTheMiddleOfInteractiveRebase()
+                ? Module.GetInteractiveRebasePatchFiles()
+                : Module.GetRebasePatchFiles();
 
-            if (Module.InTheMiddleOfInteractiveRebase())
-            {
-                Patches.DataSource = patchFiles = Module.GetInteractiveRebasePatchFiles();
-            }
-            else
-            {
-                Patches.DataSource = patchFiles = Module.GetRebasePatchFiles();
-            }
+            Patches.DataSource = patchFiles;
 
             if (patchFiles.Any())
             {

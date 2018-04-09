@@ -84,8 +84,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     list =>
                     {
                         comboBoxTags.Text = string.Empty;
-                        GitRefsToDataSource(comboBoxTags, list);
-                        comboBoxTags.DisplayMember = "LocalName";
+                        comboBoxTags.DataSource = list;
+                        comboBoxTags.DisplayMember = nameof(IGitRef.LocalName);
                         SetSelectedRevisionByFocusedControl();
                     });
             });
@@ -101,16 +101,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     list =>
                     {
                         comboBoxBranches.Text = string.Empty;
-                        GitRefsToDataSource(comboBoxBranches, list);
-                        comboBoxBranches.DisplayMember = "LocalName";
+                        comboBoxBranches.DataSource = list;
+                        comboBoxBranches.DisplayMember = nameof(IGitRef.LocalName);
                         SetSelectedRevisionByFocusedControl();
                     });
             });
-        }
-
-        private static void GitRefsToDataSource(ComboBox cb, IReadOnlyList<IGitRef> refs)
-        {
-            cb.DataSource = refs;
         }
 
         private static IReadOnlyList<IGitRef> DataSourceToGitRefs(ComboBox cb)

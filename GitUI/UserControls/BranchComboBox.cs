@@ -18,7 +18,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            branches.DisplayMember = "Name";
+            branches.DisplayMember = nameof(IGitRef.Name);
         }
 
         private IReadOnlyList<IGitRef> _branchesToSelect;

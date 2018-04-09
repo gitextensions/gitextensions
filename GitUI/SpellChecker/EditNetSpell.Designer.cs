@@ -67,7 +67,6 @@
             // AutoComplete
             // 
             this.AutoComplete.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.AutoComplete.DisplayMember = "Word";
             this.AutoComplete.FormattingEnabled = true;
             this.AutoComplete.ItemHeight = 15;
             this.AutoComplete.Location = new System.Drawing.Point(167, 243);

@@ -282,7 +282,6 @@
             // columnIsLostObjectSelected
             // 
             this.columnIsLostObjectSelected.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnIsLostObjectSelected.DataPropertyName = "IsSelected";
             this.columnIsLostObjectSelected.HeaderText = "";
             this.columnIsLostObjectSelected.MinimumWidth = 20;
             this.columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
@@ -290,7 +289,6 @@
             // columnDate
             // 
             this.columnDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnDate.DataPropertyName = "Date";
             this.columnDate.HeaderText = "Date";
             this.columnDate.Name = "columnDate";
             this.columnDate.ReadOnly = true;
@@ -298,7 +296,6 @@
             // columnType
             // 
             this.columnType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.columnType.DataPropertyName = "RawType";
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
             this.columnType.ReadOnly = true;
@@ -306,7 +303,6 @@
             // columnSubject
             // 
             this.columnSubject.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.columnSubject.DataPropertyName = "Subject";
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.columnSubject.DefaultCellStyle = dataGridViewCellStyle1;
@@ -316,14 +312,12 @@
             // 
             // columnAuthor
             // 
-            this.columnAuthor.DataPropertyName = "Author";
             this.columnAuthor.HeaderText = "Author";
             this.columnAuthor.Name = "columnAuthor";
             this.columnAuthor.ReadOnly = true;
             // 
             // columnHash
             // 
-            this.columnHash.DataPropertyName = "Hash";
             this.columnHash.HeaderText = "Hash";
             this.columnHash.Name = "columnHash";
             this.columnHash.ReadOnly = true;
