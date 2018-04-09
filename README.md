@@ -2,10 +2,11 @@
 
 # Git Extensions
 
-## Overview
+Git Extensions is a standalone UI tool for managing git repositories.
 
-Git Extensions is a standalone UI tool for managing git repositories.<br />
-It also integrates with Windows Explorer and Microsoft Visual Studio (2010/2012/2013/2015/2017). For more information please check out our website [http://gitextensions.github.io/](http://gitextensions.github.io/) or [download the latest version](https://github.com/gitextensions/gitextensions/releases/latest) and give it a try.
+It also integrates with Windows Explorer and Microsoft Visual Studio (2010/2012/2013/2015/2017).
+
+For more information please [check out our website](https://gitextensions.github.io/) or [download the latest version](https://github.com/gitextensions/gitextensions/releases/latest) and give it a try.
 
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="Github Releases (latest)"></a>
 
@@ -17,7 +18,7 @@ The work has been split into two streams:
 
 #### Version 3.0x
 
-This stream contains the code for the new major version with a number of significant changes - both to the app and the codebase.
+This stream contains the code for the new major version with a number of significant changes&mdash;both to the app and the codebase.
 For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
 
 <table>
@@ -103,22 +104,21 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
     <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="/pmiossec" class="author text-inherit">@pmiossec</a></td>
     <td><a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
       NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.</td>
-  </tr></table>
-
-
+  </tr>
+</table>
 
 
 ## Shoutouts
- * Special thanks to JetBRAINS for [Resharper](https://www.jetbrains.com/resharper/) licenses.
+ * Special thanks to JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.
 
 
 ## Links
 
-* Website: [http://gitextensions.github.io/](http://gitextensions.github.io/)
-* Source code: [http://github.com/gitextensions/gitextensions](http://github.com/gitextensions/gitextensions)
-* Online manual: [https://git-extensions-documentation.readthedocs.org/en/latest/](https://git-extensions-documentation.readthedocs.org/en/latest/)
-* Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
-* Wiki: [https://github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
-* Gitter chat: [https://gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
-* Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
+* Website: [gitextensions.github.io](https://gitextensions.github.io/)
+* Source code: [github.com/gitextensions/gitextensions](https://github.com/gitextensions/gitextensions)
+* Online manual: [git-extensions-documentation.readthedocs.org](https://git-extensions-documentation.readthedocs.org/en/latest/)
+* Issue tracker: [github.com/gitextensions/gitextensions/issues](https://github.com/gitextensions/gitextensions/issues)
+* Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
+* Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+* Mailing list: [groups.google.com/group/gitextensions](https://groups.google.com/group/gitextensions)
 
