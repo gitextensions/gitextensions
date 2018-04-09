@@ -64,7 +64,6 @@
     <Compile Include="ArgumentBuilderTests.cs" />
     <Compile Include="Git\GitDescribeProviderTests.cs" />
     <Compile Include="Git\GitRefNameTests.cs" />
-    <Compile Include="ObjectPoolTests.cs" />
     <Compile Include="StreamExtensionsTests.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.cs" />
     <Compile Include="SshPathLocatorTest.cs" />
     <Compile Include="StringExtensionTests.cs" />
+    <Compile Include="StringPoolTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />

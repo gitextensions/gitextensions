@@ -28,6 +28,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Debug\GitCommands.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +40,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\GitCommands.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -105,7 +107,6 @@
     <Compile Include="Git\Tag\GitTagController.cs" />
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
-    <Compile Include="ObjectPool.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Settings\SettingsContainer.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="StreamExtensions.cs" />
+    <Compile Include="StringPool.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
     <Compile Include="ExternalLinks\ExternalLink.cs" />
     <Compile Include="Git\GitBisectOption.cs" />

@@ -160,7 +160,7 @@ namespace GitCommands
             }
 
             // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
-            var stringPool = new ObjectPool<string>(StringComparer.Ordinal, capacity: 256);
+            var stringPool = new StringPool();
 
             foreach (var logItemBytes in p.StandardOutput.BaseStream.ReadNullTerminatedChunks())
             {
@@ -210,7 +210,7 @@ namespace GitCommands
             return refs;
         }
 
-        private void ProcessLogItem(byte[] logItemBytes, ObjectPool<string> stringPool)
+        private void ProcessLogItem(byte[] logItemBytes, StringPool stringPool)
         {
             if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, 0, out var objectId) ||
                 !ObjectId.TryParseAsciiHexBytes(logItemBytes, ObjectId.Sha1CharCount, out var treeId))
@@ -255,7 +255,7 @@ namespace GitCommands
                 return;
             }
 
-            var encoding = stringPool.Intern(match.Groups[7 /*encoding*/].Value);
+            var encoding = stringPool.Intern(s, match.Groups[7 /*encoding*/]);
 
             var revision = new GitRevision(null)
             {
@@ -267,11 +267,11 @@ namespace GitCommands
 
                 TreeGuid = treeId,
 
-                Author = stringPool.Intern(match.Groups[1 /*authorname*/].Value),
-                AuthorEmail = stringPool.Intern(match.Groups[2 /*authoremail*/].Value),
+                Author = stringPool.Intern(s, match.Groups[1 /*authorname*/]),
+                AuthorEmail = stringPool.Intern(s, match.Groups[2 /*authoremail*/]),
                 AuthorDate = DateTimeUtils.ParseUnixTime(match.Groups[3 /*authordate*/].Value),
-                Committer = stringPool.Intern(match.Groups[4 /*committername*/].Value),
-                CommitterEmail = stringPool.Intern(match.Groups[5 /*committeremail*/].Value),
+                Committer = stringPool.Intern(s, match.Groups[4 /*committername*/]),
+                CommitterEmail = stringPool.Intern(s, match.Groups[5 /*committeremail*/]),
                 CommitDate = DateTimeUtils.ParseUnixTime(match.Groups[6 /*commitdate*/].Value),
                 MessageEncoding = encoding,
                 Subject = _module.ReEncodeCommitMessage(match.Groups[8 /*subject*/].Value, encoding),
