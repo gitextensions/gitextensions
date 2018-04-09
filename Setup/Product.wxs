@@ -254,7 +254,7 @@
         <File Source="..\Plugins\ReleaseNotesGenerator\bin\$(var.Configuration)\ReleaseNotesGenerator.dll" />
       </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll" />
+        <File Source="..\Plugins\Gerrit\bin\$(var.Configuration)\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="JiraCommitHintPlugin.dll" Guid="*">
         <File Source="..\Plugins\JiraCommitHintPlugin\bin\$(var.Configuration)\JiraCommitHintPlugin.dll" />
@@ -323,9 +323,6 @@
       </Component>
       <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.TeamFoundation.Core.WebApi.dll" />
-      </Component>
-      <Component Id="Microsoft.VisualStudio.Services.Client.Interactive.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.VisualStudio.Services.Client.Interactive.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.VisualStudio.Services.Common.dll" />
@@ -770,7 +767,6 @@
           <ComponentRef Id="Microsoft.TeamFoundation.Build2.WebApi.dll" />
           <ComponentRef Id="Microsoft.TeamFoundation.Common.dll" />
           <ComponentRef Id="Microsoft.TeamFoundation.Core.WebApi.dll" />
-          <ComponentRef Id="Microsoft.VisualStudio.Services.Client.Interactive.dll" />
           <ComponentRef Id="Microsoft.VisualStudio.Services.Common.dll" />
           <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
           <ComponentRef Id="System.Net.Http.Formatting.dll" />
