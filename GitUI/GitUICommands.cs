@@ -1472,6 +1472,27 @@ namespace GitUI
             StartFileHistoryDialog(fileName, null);
         }
 
+        public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
+        {
+            // Note: Order in revisions is that first clicked is last in array
+
+            string error = RevisionDiffInfoProvider.Get(revisions, diffKind,
+                out var extraDiffArgs, out var firstRevision, out var secondRevision);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(owner, error);
+            }
+            else
+            {
+                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    MessageBox.Show(owner, output);
+                }
+            }
+        }
+
         public bool StartPushDialog()
         {
             return StartPushDialog(false);

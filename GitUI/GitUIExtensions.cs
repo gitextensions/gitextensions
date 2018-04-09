@@ -16,27 +16,6 @@ namespace GitUI
 {
     public static class GitUIExtensions
     {
-        public static void OpenWithDifftool(this RevisionGrid grid, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
-        {
-            // Note: Order in revisions is that first clicked is last in array
-
-            string error = RevisionDiffInfoProvider.Get(revisions, diffKind,
-                out var extraDiffArgs, out var firstRevision, out var secondRevision);
-
-            if (!string.IsNullOrEmpty(error))
-            {
-                MessageBox.Show(grid, error);
-            }
-            else
-            {
-                string output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
-                if (!string.IsNullOrEmpty(output))
-                {
-                    MessageBox.Show(grid, output);
-                }
-            }
-        }
-
         [CanBeNull]
         private static Patch GetItemPatch(
             [NotNull] GitModule module,
