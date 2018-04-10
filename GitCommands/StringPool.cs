@@ -146,22 +146,46 @@ namespace GitCommands
                 throw new InvalidOperationException("Index and length extend beyond end of source string.");
             }
 
+            fixed (char* pc = comparand)
             fixed (char* ps = source)
-            fixed (char* pc = source)
             {
+                // Create writeable pointers to equivalent positions in each string
                 var c = pc;
-                var s = ps + index;
+                var s = &ps[index];
 
-                while (len-- > 0)
+                // Loop every 10 characters (20 bytes each loop)
+                while (len >= 10)
                 {
-                    if (*c++ != *s++)
+                    // Compare an int by int, 5 times
+                    if (*(int*)c != *(int*)s ||
+                        *(int*)(c + 2) != *(int*)(s + 2) ||
+                        *(int*)(c + 4) != *(int*)(s + 4) ||
+                        *(int*)(c + 6) != *(int*)(s + 6) ||
+                        *(int*)(c + 8) != *(int*)(s + 8))
                     {
                         return false;
                     }
-                }
-            }
 
-            return true;
+                    // Update the pointers.
+                    // We delay this (rather than using ++ inline) to avoid
+                    // CPU stall on flushing writes.
+                    c += 10;
+                    s += 10;
+                    len -= 10;
+                }
+
+                // Loop every 2 characters (4 bytes)
+                while (len > 1 && *(int*)c == *(int*)s)
+                {
+                    // Compare int by int (4 bytes each loop)
+                    c += 2;
+                    s += 2;
+                    len -= 2;
+                }
+
+                // If last byte has odd index, check it too
+                return len == 0 || (len == 1 && *c == *s);
+            }
         }
 
         [Pure]
@@ -172,28 +196,43 @@ namespace GitCommands
                 throw new InvalidOperationException("Index and length extend beyond end of string.");
             }
 
-            // Implementation from https://referencesource.microsoft.com/#mscorlib/system/string.cs,827
+            // Slightly modified version of https://referencesource.microsoft.com/#mscorlib/system/string.cs,827
 
+            // Pin the object
             fixed (char* src = str)
             {
-                int hash1 = 5381;
-                int hash2 = hash1;
+                // Accumulators
+                var hash1 = 0x1505;
+                var hash2 = hash1;
 
-                char* s = src + index;
-                char* end = s + length;
+                // Pointer to the first character of the hash
+                var s = src + index;
+
+                // Pointer to the last character of the hash
+                var end = s + length;
+
+                var rem = length % 2;
+
+                // If there are an odd number of items, ignore the last one for now
+                end -= rem;
+
+                // Walk characters, alternating between hash1 and hash2
                 while (s < end)
                 {
+                    // Add character to hash 1
                     hash1 = ((hash1 << 5) + hash1) ^ *s++;
 
-                    if (s == end)
-                    {
-                        break;
-                    }
-
+                    // Add character to hash 2
                     hash2 = ((hash2 << 5) + hash2) ^ *s++;
                 }
 
-                return hash1 + (hash2 * 1566083941);
+                if (rem == 1)
+                {
+                    hash1 = ((hash1 << 5) + hash1) ^ *s;
+                }
+
+                // Combine the two hashes for the final hash
+                return hash2 + (hash1 * 0x5D588B65);
             }
         }
 
