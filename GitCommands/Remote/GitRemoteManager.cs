@@ -75,7 +75,7 @@ namespace GitCommands.Remote
             foreach (var remoteHead in moduleRefs)
             {
                 if (!remoteHead.IsRemote ||
-                    !StringExtensions.Contains(remoteHead.Name, remoteName))
+                    !remoteHead.Name.Contains(remoteName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     continue;
                 }
@@ -84,7 +84,7 @@ namespace GitCommands.Remote
                 {
                     if (localHead.IsRemote ||
                         !string.IsNullOrEmpty(localHead.GetTrackingRemote(localConfig)) ||
-                        !StringExtensions.Contains(remoteHead.Name, localHead.Name))
+                        !remoteHead.Name.Contains(localHead.Name, StringComparison.InvariantCultureIgnoreCase))
                     {
                         continue;
                     }

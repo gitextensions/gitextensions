@@ -234,11 +234,16 @@ namespace System
         }
 
         /// <summary>
-        /// Uses the method IndexOf to check if the <paramref name="other"/> is contained inside the <paramref name="str"/>
+        /// Returns a value indicating whether the <paramref name="other"/> occurs within <paramref name="str"/>.
         /// </summary>
-        /// <returns>true if the <paramref name="other"/> is inside of <paramref name="str"/></returns>
+        /// <param name="other">The string to seek. </param>
+        /// <param name="stringComparison">The Comparison type</param>
+        /// <returns>
+        /// true if the <paramref name="other"/> parameter occurs within <paramref name="str"/>,
+        /// or if <paramref name="other"/> is the empty string (""); otherwise, false.
+        /// </returns>
         public static bool Contains([NotNull]this string str, [NotNull] string other,
-            StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase)
+            StringComparison stringComparison)
         {
             return str.IndexOf(other, stringComparison) != -1;
         }

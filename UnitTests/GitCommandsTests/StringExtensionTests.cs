@@ -25,7 +25,7 @@ namespace GitCommandsTests
         [TestCase("Hello World", "ldi", false)]
         public void Contains_works_as_expected(string str, string other, bool expected)
         {
-            Assert.AreEqual(expected, str.Contains(other));
+            Assert.AreEqual(expected, str.Contains(other, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
