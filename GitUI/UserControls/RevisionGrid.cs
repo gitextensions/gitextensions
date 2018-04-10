@@ -3575,10 +3575,11 @@ namespace GitUI
                 return;
             }
 
-            var revisions = GetSelectedRevisions();
-            if (revisions.Count > 0)
+            var revision = GetSelectedRevisions().FirstOrDefault();
+
+            if (revision != null)
             {
-                HighlightBranch(revisions[0].Guid);
+                HighlightBranch(revision.Guid);
                 Refresh();
             }
         }
