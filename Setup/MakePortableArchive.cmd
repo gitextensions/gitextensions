@@ -272,6 +272,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 
 :create_archive
 set nuget=..\.nuget\nuget.exe
-%nuget% install ..\.nuget\packages.config -OutputDirectory ..\packages
-%szip% a -tzip %normal% GitExtensions
+%nuget% install ..\.nuget\packages.config -OutputDirectory ..\packages -Verbosity Quiet
+%szip% a -tzip -bsp0 %normal% GitExtensions
 IF ERRORLEVEL 1 EXIT /B 1
