@@ -972,6 +972,14 @@ namespace GitUI
                 .ToList();
         }
 
+        public bool IsFirstParentValid()
+        {
+            var revisions = GetSelectedRevisions();
+
+            // Parents to First (A) are only known if A is explicitly selected (there is no explicit search for parents to parents of a single selected revision)
+            return revisions != null && revisions.Count > 1;
+        }
+
         public IReadOnlyList<string> GetRevisionChildren(string revision)
         {
             return Revisions.GetRevisionChildren(revision);
@@ -3736,11 +3744,8 @@ namespace GitUI
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var baseCommit = Module.RevParse(form.BranchName);
-                    using (var diffForm = new FormDiff(UICommands, this, baseCommit, headCommit.Guid,
-                        form.BranchName, headCommit.Subject))
-                    {
-                        diffForm.ShowDialog(this);
-                    }
+                    UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit, headCommit.Guid,
+                        form.BranchName, headCommit.Subject);
                 }
             }
         }
@@ -3750,11 +3755,8 @@ namespace GitUI
             var baseCommit = GetSelectedRevisions().First();
             var headBranch = Module.GetSelectedBranch();
             var headBranchName = Module.RevParse(headBranch);
-            using (var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
-                baseCommit.Subject, headBranch))
-            {
-                diffForm.ShowDialog(this);
-            }
+            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.Guid, headBranchName,
+                baseCommit.Subject, headBranch);
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3772,11 +3774,8 @@ namespace GitUI
             }
 
             var headCommit = GetSelectedRevisions().First();
-            using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
-                _baseCommitToCompare.Subject, headCommit.Subject))
-            {
-                diffForm.ShowDialog(this);
-            }
+            UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.Guid, headCommit.Guid,
+                _baseCommitToCompare.Subject, headCommit.Subject);
         }
 
         private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)

@@ -365,7 +365,7 @@ namespace GitUI.CommandsDialogs
                 ? selectedRevisions[0].Name
                 : null;
 
-            FileChanges.OpenWithDifftool(selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
+            UICommands.OpenWithDifftool(this, selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -487,7 +487,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
+            UICommands.OpenWithDifftool(this, FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)

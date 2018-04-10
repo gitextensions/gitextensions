@@ -572,7 +572,7 @@ namespace GitUI.CommandsDialogs
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
                 var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
-                _revisionGrid.OpenWithDifftool(revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
+                UICommands.OpenWithDifftool(this, revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }
 
@@ -584,16 +584,12 @@ namespace GitUI.CommandsDialogs
             IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
-            var revisions = _revisionGrid.GetSelectedRevisions();
-
-            // Parents to First (A) are only known if A is explicitly selected (there is no explicit search for parents to parents of a single selected revision)
-            bool firstParentsValid = revisions != null && revisions.Count > 1;
 
             var selectionInfo = new ContextMenuDiffToolInfo(DiffFiles.Revision, selectedItemParentRevs,
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
-                firstParentsValid: firstParentsValid,
+                firstParentsValid: _revisionGrid.IsFirstParentValid(),
                 localExists: localExists);
             return selectionInfo;
         }
