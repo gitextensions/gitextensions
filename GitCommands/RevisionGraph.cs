@@ -107,7 +107,17 @@ namespace GitCommands
 
             await TaskScheduler.Default;
 
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
 
             const string fullFormat =
                 /* Hash                    */ "%H" +
