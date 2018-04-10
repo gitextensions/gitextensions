@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using JetBrains.Annotations;
@@ -9,7 +10,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class SearchControl<T> : UserControl, IDisposable where T : class
     {
-        private readonly Func<string, IReadOnlyList<T>> _getCandidates;
+        private readonly Func<string, IEnumerable<T>> _getCandidates;
         private readonly Action<Size> _onSizeChanged;
         private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
         private bool _isUpdatingTextFromCode = false;
@@ -22,7 +23,7 @@ namespace GitUI.CommandsDialogs
             set => txtSearchBox.Text = value;
         }
 
-        public SearchControl([NotNull]Func<string, IReadOnlyList<T>> getCandidates, Action<Size> onSizeChanged)
+        public SearchControl([NotNull]Func<string, IEnumerable<T>> getCandidates, Action<Size> onSizeChanged)
         {
             InitializeComponent();
             txtSearchBox.LostFocus += TxtSearchBoxOnLostFocus;
@@ -58,20 +59,20 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Visible = false;
         }
 
-        private void SearchForCandidates(IReadOnlyList<T> candidates)
+        private void SearchForCandidates(IEnumerable<T> candidates)
         {
             var selectionStart = txtSearchBox.SelectionStart;
             var selectionLength = txtSearchBox.SelectionLength;
             listBoxSearchResult.BeginUpdate();
             listBoxSearchResult.Items.Clear();
 
-            for (int i = 0; i < candidates.Count && i < 20; i++)
+            foreach (var candidate in candidates.Take(20))
             {
-                listBoxSearchResult.Items.Add(candidates[i]);
+                listBoxSearchResult.Items.Add(candidate);
             }
 
             listBoxSearchResult.EndUpdate();
-            if (candidates.Count > 0)
+            if (listBoxSearchResult.Items.Count > 0)
             {
                 listBoxSearchResult.SelectedIndex = 0;
             }
