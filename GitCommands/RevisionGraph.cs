@@ -152,24 +152,25 @@ namespace GitCommands
                 _pathFilter
             };
 
-            Process p = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding);
-
-            if (token.IsCancellationRequested)
-            {
-                return;
-            }
-
-            // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
-            var stringPool = new StringPool();
-
-            foreach (var logItemBytes in p.StandardOutput.BaseStream.ReadNullTerminatedChunks())
+            using (var process = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding))
             {
                 if (token.IsCancellationRequested)
                 {
-                    break;
+                    return;
                 }
 
-                ProcessLogItem(logItemBytes, stringPool);
+                // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
+                var stringPool = new StringPool();
+
+                foreach (var logItemBytes in process.StandardOutput.BaseStream.ReadNullTerminatedChunks())
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    ProcessLogItem(logItemBytes, stringPool);
+                }
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
