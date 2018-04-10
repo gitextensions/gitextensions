@@ -4,6 +4,7 @@ using SmartFormat;
 
 namespace ResourceManager
 {
+    /// <summary>Contains common string literals which are translated.</summary>
     public class Strings : Translate
     {
         // public only because of FormTranslate
@@ -12,26 +13,15 @@ namespace ResourceManager
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static Strings _instance;
+        private static Lazy<Strings> _instance = new Lazy<Strings>();
 
-        private static Strings Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new Strings();
-                }
-
-                return _instance;
-            }
-        }
+        public static Strings Instance => _instance.Value;
 
         public static void Reinit()
         {
-            if (_instance != null)
+            if (_instance.IsValueCreated)
             {
-                _instance = new Strings();
+                _instance = new Lazy<Strings>();
             }
         }
 
@@ -94,6 +84,10 @@ namespace ResourceManager
         {
             return Instance._loadingData.Text;
         }
+
+        public static readonly TranslationString BranchesText = new TranslationString("Branches");
+        public static readonly TranslationString RemotesText = new TranslationString("Remotes");
+        public static readonly TranslationString TagsText = new TranslationString("Tags");
 
         public static string GetUninterestingDiffOmitted()
         {

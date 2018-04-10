@@ -310,7 +310,8 @@ namespace GitUI.Hotkey
                     Hk(RevisionGrid.Commands.SelectAsBaseToCompare, Keys.Control | Keys.L),
                     Hk(RevisionGrid.Commands.CompareToBase, Keys.Control | Keys.R),
                     Hk(RevisionGrid.Commands.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
-                    Hk(RevisionGrid.Commands.CreateFixupCommit, Keys.Control | Keys.X)),
+                    Hk(RevisionGrid.Commands.CreateFixupCommit, Keys.Control | Keys.X),
+                    Hk(RevisionGrid.Commands.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C)),
                 new HotkeySettings(
                     FileViewer.HotkeySettingsName,
                     Hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
