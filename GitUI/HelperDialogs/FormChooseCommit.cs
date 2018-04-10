@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls.RevisionGridClasses;
+using GitUIPluginInterfaces;
 
 namespace GitUI.HelperDialogs
 {
@@ -38,7 +37,6 @@ namespace GitUI.HelperDialogs
         }
 
         public GitRevision SelectedRevision { get; private set; }
-        private Dictionary<string, string> _parents;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -76,7 +74,10 @@ namespace GitUI.HelperDialogs
 
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            revisionGrid.SetSelectedRevision(new GitRevision(_parents[((LinkLabel)sender).Text]));
+            var linkLabel = (LinkLabel)sender;
+            var parentId = (ObjectId)linkLabel.Tag;
+
+            revisionGrid.SetSelectedRevision(parentId.ToString());
         }
 
         private void revisionGrid_SelectionChanged(object sender, EventArgs e)
@@ -97,13 +98,25 @@ namespace GitUI.HelperDialogs
                 return;
             }
 
-            _parents = SelectedRevision.ParentGuids.ToDictionary(p => GitRevision.ToShortSha(p), p => p);
-            linkLabelParent.Text = _parents.Keys.ElementAt(0);
+            var parents = SelectedRevision.ParentGuids;
 
-            linkLabelParent2.Visible = _parents.Count > 1;
-            if (linkLabelParent2.Visible)
+            if (parents == null || parents.Count == 0)
             {
-                linkLabelParent2.Text = _parents.Keys.ElementAt(1);
+                return;
+            }
+
+            linkLabelParent.Tag = parents[0];
+            linkLabelParent.Text = GitRevision.ToShortSha(parents[0]);
+
+            if (parents.Count > 1)
+            {
+                linkLabelParent2.Visible = true;
+                linkLabelParent2.Tag = parents[1];
+                linkLabelParent2.Text = GitRevision.ToShortSha(parents[1]);
+            }
+            else
+            {
+                linkLabelParent2.Visible = false;
             }
         }
     }
