@@ -12,6 +12,9 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+
+    <!-- Disable the automatic inclusion of Microsoft.VisualStudio.Threading since Visual Studio has a specific version. -->
+    <EnableVisualStudioThreading>false</EnableVisualStudioThreading>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

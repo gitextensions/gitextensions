@@ -13,6 +13,9 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>GitPluginKey.pfx</AssemblyOriginatorKeyFile>
     <TargetFrameworkProfile />
+
+    <!-- Disable the automatic inclusion of Microsoft.VisualStudio.Threading since Visual Studio has a specific version. -->
+    <EnableVisualStudioThreading>false</EnableVisualStudioThreading>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

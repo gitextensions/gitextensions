@@ -20,6 +20,9 @@
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+
+    <!-- Disable the automatic inclusion of Microsoft.VisualStudio.Threading since Visual Studio has a specific version. -->
+    <EnableVisualStudioThreading>false</EnableVisualStudioThreading>
   </PropertyGroup>
   <PropertyGroup>
     <!-- Common debugging support -->
