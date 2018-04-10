@@ -2136,13 +2136,13 @@ namespace GitUI
             return arguments;
         }
 
-        private IReadOnlyList<string> FindFileMatches(string name)
+        private IEnumerable<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree("HEAD");
 
             var predicate = _fildFilePredicateProvider.Get(name, Module.WorkingDir);
 
-            return candidates.Where(predicate).ToList();
+            return candidates.Where(predicate);
         }
 
         private void Commit(Dictionary<string, string> arguments)

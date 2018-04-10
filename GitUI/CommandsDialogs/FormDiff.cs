@@ -199,10 +199,10 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            IReadOnlyList<GitItemStatus> FindDiffFilesMatches(string name)
+            IEnumerable<GitItemStatus> FindDiffFilesMatches(string name)
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
-                return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
+                return candidates.Where(item => predicate(item.Name) || predicate(item.OldName));
             }
 
             GitItemStatus selectedItem;

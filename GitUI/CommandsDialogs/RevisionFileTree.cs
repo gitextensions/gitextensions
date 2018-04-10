@@ -237,12 +237,12 @@ See the changes in the commit form.");
             base.OnRuntimeLoad(e);
         }
 
-        private IReadOnlyList<string> FindFileMatches(string name)
+        private IEnumerable<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
             var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
-            return candidates.Where(predicate).ToList();
+            return candidates.Where(predicate);
         }
 
         private void OnItemActivated()

@@ -8,7 +8,8 @@ namespace GitUI.CommandsDialogs
     public partial class SearchWindow<T> : Form where T : class
     {
         private readonly SearchControl<T> _searchControl;
-        public SearchWindow(Func<string, IReadOnlyList<T>> getCandidates)
+
+        public SearchWindow(Func<string, IEnumerable<T>> getCandidates)
         {
             InitializeComponent();
             _searchControl = new SearchControl<T>(getCandidates, OnChildSizeChanged);
