@@ -7,8 +7,6 @@ coverage:
       default: false
     patch:
       default: false
-  ignore:
-    - "*.Designer.cs"
 
 comment:
   layout: "diff"
