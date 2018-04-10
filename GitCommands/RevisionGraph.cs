@@ -162,6 +162,9 @@ namespace GitCommands
                 _pathFilter
             };
 
+            var sw = Stopwatch.StartNew();
+            var revisionCount = 0;
+
             using (var process = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding))
             {
                 if (token.IsCancellationRequested)
@@ -179,8 +182,12 @@ namespace GitCommands
                         break;
                     }
 
+                    revisionCount++;
+
                     ProcessLogItem(logItemBytes, stringPool);
                 }
+
+                Trace.WriteLine($"**** PROCESSED {revisionCount} ALL REVISIONS IN {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. Pool count {stringPool.Count}");
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
