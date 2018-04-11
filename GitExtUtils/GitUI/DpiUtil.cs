@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using Microsoft.Win32.SafeHandles;
 
-namespace GitUI
+namespace GitExtUtils.GitUI
 {
     /// <summary>
     /// Utility class related to DPI settings, primarily used for scaling dimensions on high-DPI displays.
@@ -16,8 +16,8 @@ namespace GitUI
         public static int DpiX { get; }
         public static int DpiY { get; }
 
-        public static double ScaleX { get; }
-        public static double ScaleY { get; }
+        public static float ScaleX { get; }
+        public static float ScaleY { get; }
 
         static DpiUtil()
         {
@@ -31,16 +31,16 @@ namespace GitUI
                     DpiX = GetDeviceCaps(hdc, LOGPIXELSX);
                     DpiY = GetDeviceCaps(hdc, LOGPIXELSY);
 
-                    ScaleX = DpiX / 96.0;
-                    ScaleY = DpiY / 96.0;
+                    ScaleX = DpiX / 96.0f;
+                    ScaleY = DpiY / 96.0f;
                 }
                 catch
                 {
                     DpiX = 96;
                     DpiY = 96;
 
-                    ScaleX = 1.0;
-                    ScaleY = 1.0;
+                    ScaleX = 1.0f;
+                    ScaleY = 1.0f;
                 }
             }
         }

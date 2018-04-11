@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;

@@ -10,6 +10,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remote;
 using GitCommands.Repository;
+using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;

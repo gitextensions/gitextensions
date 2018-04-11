@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;

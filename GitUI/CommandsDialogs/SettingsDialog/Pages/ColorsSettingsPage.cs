@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
