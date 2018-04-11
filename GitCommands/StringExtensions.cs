@@ -232,5 +232,20 @@ namespace System
 
             return str.Substring(0, maxLength - 3) + "...";
         }
+
+        /// <summary>
+        /// Returns a value indicating whether the <paramref name="other"/> occurs within <paramref name="str"/>.
+        /// </summary>
+        /// <param name="other">The string to seek. </param>
+        /// <param name="stringComparison">The Comparison type</param>
+        /// <returns>
+        /// true if the <paramref name="other"/> parameter occurs within <paramref name="str"/>,
+        /// or if <paramref name="other"/> is the empty string (""); otherwise, false.
+        /// </returns>
+        public static bool Contains([NotNull]this string str, [NotNull] string other,
+            StringComparison stringComparison)
+        {
+            return str.IndexOf(other, stringComparison) != -1;
+        }
     }
 }
