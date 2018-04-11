@@ -34,14 +34,12 @@ namespace GitCommands
                 ^
                 ([^\n]+)\n   # 1 authorname
                 ([^\n]+)\n   # 2 authoremail
-                (\d+)\n      # 3 authordate
-                ([^\n]+)\n   # 4 committername
-                ([^\n]+)\n   # 5 committeremail
-                (\d+)\n      # 6 commitdate
-                ([^\n]*)\n   # 7 encoding
-                (.+)         # 8 subject
+                ([^\n]+)\n   # 3 committername
+                ([^\n]+)\n   # 4 committeremail
+                ([^\n]*)\n   # 5 encoding
+                (.+)         # 6 subject
                 (\n+
-                  ((.|\n)*)  # 10 body
+                  ((.|\n)*)  # 8 body
                 )?
                 $
             ",
@@ -123,12 +121,12 @@ namespace GitCommands
                 /* Hash                    */ "%H" +
                 /* Tree                    */ "%T" +
                 /* Parents                 */ "%P%n" +
+                /* Author Date             */ "%at%n" +
+                /* Commit Date             */ "%ct%n" +
                 /* Author Name             */ "%aN%n" +
                 /* Author Email            */ "%aE%n" +
-                /* Author Date             */ "%at%n" +
                 /* Committer Name          */ "%cN%n" +
                 /* Committer Email         */ "%cE%n" +
-                /* Commit Date             */ "%ct%n" +
                 /* Commit message encoding */ "%e%n" + // there is a bug: git does not recode commit message when format is given
                 /* Commit Body             */ "%B";
 
@@ -238,34 +236,63 @@ namespace GitCommands
                 return;
             }
 
-            var parentIds = new List<ObjectId>(capacity: 1);
-            var parentIdOffset = ObjectId.Sha1CharCount * 2;
+            var array = logItemBytes.Array;
 
-            while (parentIdOffset < logItemBytes.Count - 1)
+            var parentIds = new List<ObjectId>(capacity: 1);
+            var offset = logItemBytes.Offset + (ObjectId.Sha1CharCount * 2);
+            var lastOffset = logItemBytes.Offset + logItemBytes.Count;
+
+            while (true)
             {
-                var b = logItemBytes.Array[logItemBytes.Offset + parentIdOffset];
+                if (offset >= lastOffset - 21)
+                {
+                    return;
+                }
+
+                var b = array[offset];
 
                 if (b == '\n')
                 {
-                    parentIdOffset++;
+                    offset++;
                     break;
                 }
 
                 if (b == ' ')
                 {
-                    parentIdOffset++;
+                    offset++;
                 }
 
-                if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, parentIdOffset, out var parentId))
+                if (!ObjectId.TryParseAsciiHexBytes(array, offset, out var parentId))
                 {
+                    // TODO log this parse problem
                     return;
                 }
 
                 parentIds.Add(parentId);
-                parentIdOffset += ObjectId.Sha1CharCount;
+                offset += ObjectId.Sha1CharCount;
             }
 
-            var s = _module.LogOutputEncoding.GetString(logItemBytes.Array, logItemBytes.Offset + parentIdOffset, logItemBytes.Count - parentIdOffset);
+            var authorDate = ParseUnixDateTime();
+            var commitDate = ParseUnixDateTime();
+
+            DateTime ParseUnixDateTime()
+            {
+                long unixTime = 0;
+
+                while (true)
+                {
+                    var c = array[offset++];
+
+                    if (c == '\n')
+                    {
+                        return DateTimeUtils.UnixEpoch.AddTicks(unixTime * TimeSpan.TicksPerSecond).ToLocalTime();
+                    }
+
+                    unixTime = (unixTime * 10) + (c - '0');
+                }
+            }
+
+            var s = _module.LogOutputEncoding.GetString(array, offset, lastOffset - offset);
 
             var match = _commitRegex.Match(s);
 
@@ -275,7 +302,7 @@ namespace GitCommands
                 return;
             }
 
-            var encoding = stringPool.Intern(s, match.Groups[7 /*encoding*/]);
+            var encodingName = stringPool.Intern(s, match.Groups[5 /*encoding*/]);
 
             var revision = new GitRevision(null)
             {
@@ -289,13 +316,13 @@ namespace GitCommands
 
                 Author = stringPool.Intern(s, match.Groups[1 /*authorname*/]),
                 AuthorEmail = stringPool.Intern(s, match.Groups[2 /*authoremail*/]),
-                AuthorDate = DateTimeUtils.ParseUnixTime(s, match.Groups[3 /*authordate*/]),
-                Committer = stringPool.Intern(s, match.Groups[4 /*committername*/]),
-                CommitterEmail = stringPool.Intern(s, match.Groups[5 /*committeremail*/]),
-                CommitDate = DateTimeUtils.ParseUnixTime(s, match.Groups[6 /*commitdate*/]),
-                MessageEncoding = encoding,
-                Subject = _module.ReEncodeCommitMessage(match.Groups[8 /*subject*/].Value, encoding),
-                Body = _module.ReEncodeCommitMessage(match.Groups[10 /*body*/].Value, encoding)
+                AuthorDate = authorDate,
+                Committer = stringPool.Intern(s, match.Groups[3 /*committername*/]),
+                CommitterEmail = stringPool.Intern(s, match.Groups[4 /*committeremail*/]),
+                CommitDate = commitDate,
+                MessageEncoding = encodingName,
+                Subject = _module.ReEncodeCommitMessage(match.Groups[6 /*subject*/].Value, encodingName),
+                Body = _module.ReEncodeCommitMessage(match.Groups[8 /*body*/].Value, encodingName)
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
