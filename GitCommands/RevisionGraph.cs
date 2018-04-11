@@ -55,7 +55,7 @@ namespace GitCommands
         private readonly string _pathFilter;
         [CanBeNull] private readonly Func<GitRevision, bool> _revisionPredicate;
 
-        [CanBeNull] private Dictionary<string, List<IGitRef>> _refs;
+        [CanBeNull] private Dictionary<string, List<IGitRef>> _refsByObjectId;
         private string _selectedBranchName;
 
         public int RevisionCount { get; private set; }
@@ -77,7 +77,7 @@ namespace GitCommands
         }
 
         /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
-        public IEnumerable<IGitRef> LatestRefs => _refs?.SelectMany(p => p.Value) ?? Enumerable.Empty<IGitRef>();
+        public IEnumerable<IGitRef> LatestRefs => _refsByObjectId?.SelectMany(p => p.Value) ?? Enumerable.Empty<IGitRef>();
 
         public void Execute()
         {
@@ -108,7 +108,7 @@ namespace GitCommands
                 return;
             }
 
-            _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
+            _refsByObjectId = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             if (token.IsCancellationRequested)
             {
@@ -326,7 +326,7 @@ namespace GitCommands
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
 
-            if (_refs.TryGetValue(revision.Guid, out var gitRefs))
+            if (_refsByObjectId.TryGetValue(revision.Guid, out var gitRefs))
             {
                 revision.Refs = gitRefs;
             }
