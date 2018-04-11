@@ -298,6 +298,7 @@ namespace GitCommands
 
             if (encodingNameEndOffset == -1)
             {
+                // TODO log this error case
                 return;
             }
 
@@ -322,6 +323,7 @@ namespace GitCommands
 
             if (!match.Success || match.Index != 0)
             {
+                // TODO log this parse problem
                 Debug.Fail("Commit regex did not match");
                 return;
             }
