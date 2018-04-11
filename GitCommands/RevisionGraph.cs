@@ -37,10 +37,8 @@ namespace GitCommands
                 ([^\n]+)\n   # 3 committername
                 ([^\n]+)\n   # 4 committeremail
                 ([^\n]*)\n   # 5 encoding
-                (.+)         # 6 subject
-                (\n+
-                  ((.|\n)*)  # 8 body
-                )?
+                ([^\n]*)\n   # 6 subject
+                ((.|\n)*)    # 7 body
                 $
             ",
             RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
@@ -128,7 +126,8 @@ namespace GitCommands
                 /* Committer Name          */ "%cN%n" +
                 /* Committer Email         */ "%cE%n" +
                 /* Commit message encoding */ "%e%n" + // there is a bug: git does not recode commit message when format is given
-                /* Commit Body             */ "%B";
+                /* Commit subject          */ "%s%n" +
+                /* Commit body             */ "%b";
 
             var arguments = new ArgumentBuilder
             {
@@ -322,7 +321,7 @@ namespace GitCommands
                 CommitDate = commitDate,
                 MessageEncoding = encodingName,
                 Subject = _module.ReEncodeCommitMessage(match.Groups[6 /*subject*/].Value, encodingName),
-                Body = _module.ReEncodeCommitMessage(match.Groups[8 /*body*/].Value, encodingName)
+                Body = _module.ReEncodeCommitMessage(match.Groups[7 /*body*/].Value, encodingName)
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
