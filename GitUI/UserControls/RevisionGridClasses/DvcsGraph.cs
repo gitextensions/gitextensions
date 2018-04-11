@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 
 namespace GitUI.RevisionGridClasses
 {

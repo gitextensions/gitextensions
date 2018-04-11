@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands.ExternalLinks;
+using GitExtUtils.GitUI;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remote;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUI.UserControls;

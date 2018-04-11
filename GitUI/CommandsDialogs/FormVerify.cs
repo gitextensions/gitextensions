@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Tag;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using ResourceManager;
 

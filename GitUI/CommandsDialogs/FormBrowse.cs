@@ -14,6 +14,7 @@ using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.Repository;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
