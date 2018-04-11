@@ -114,18 +114,25 @@ namespace GitCommands
             token.ThrowIfCancellationRequested();
 
             const string fullFormat =
-                /* Hash                    */ "%H" +
-                /* Tree                    */ "%T" +
-                /* Parents                 */ "%P%n" +
-                /* Author Date             */ "%at%n" +
-                /* Commit Date             */ "%ct%n" +
-                /* Commit message encoding */ "%e%n" + // there is a bug: git does not recode commit message when format is given
-                /* Author Name             */ "%aN%n" +
-                /* Author Email            */ "%aE%n" +
-                /* Committer Name          */ "%cN%n" +
-                /* Committer Email         */ "%cE%n" +
-                /* Commit subject          */ "%s%n" +
-                /* Commit body             */ "%b";
+
+                // These header entries can all be decoded from the bytes directly.
+                // Each hash is 20 bytes long. There is always a
+
+                /* Object ID       */ "%H" +
+                /* Tree ID         */ "%T" +
+                /* Parent IDs      */ "%P%n" +
+                /* Author date     */ "%at%n" +
+                /* Commit date     */ "%ct%n" +
+                /* Encoding        */ "%e%n" +
+
+                // Items below here must be decoded as strings to support non-ASCII
+
+                /* Author name     */ "%aN%n" +
+                /* Author email    */ "%aE%n" +
+                /* Committer name  */ "%cN%n" +
+                /* Committer email */ "%cE%n" +
+                /* Commit subject  */ "%s%n" +
+                /* Commit body     */ "%b";
 
             var arguments = new ArgumentBuilder
             {
