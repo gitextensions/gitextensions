@@ -3721,37 +3721,10 @@ namespace GitCommands
         // characters could be replaced by replacement character while reencoding to LogOutputEncoding
         public string ReEncodeCommitMessage(string s, [CanBeNull] string toEncodingName)
         {
-            bool isABug = !GitCommandHelpers.VersionInUse.LogFormatRecodesCommitMessage;
-
             Encoding encoding;
             try
             {
-                if (isABug)
-                {
-                    if (toEncodingName.IsNullOrEmpty())
-                    {
-                        encoding = Encoding.UTF8;
-                    }
-                    else if (toEncodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        // no recoding is needed
-                        encoding = null;
-                    }
-                    else if (CpEncodingPattern.IsMatch(toEncodingName))
-                    {
-                        // Encodings written as e.g. "cp1251", which is not a supported encoding string
-                        encoding = Encoding.GetEncoding(int.Parse(toEncodingName.Substring(2)));
-                    }
-                    else
-                    {
-                        encoding = Encoding.GetEncoding(toEncodingName);
-                    }
-                }
-                else
-                {
-                    // bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
-                    encoding = LogOutputEncoding;
-                }
+                encoding = GetEncodingByGitName(toEncodingName);
             }
             catch (Exception)
             {
@@ -3759,6 +3732,38 @@ namespace GitCommands
             }
 
             return ReEncodeStringFromLossless(s, encoding);
+        }
+
+        public Encoding GetEncodingByGitName(string encodingName)
+        {
+            bool isABug = !GitCommandHelpers.VersionInUse.LogFormatRecodesCommitMessage;
+
+            if (isABug)
+            {
+                if (encodingName.IsNullOrEmpty())
+                {
+                    return Encoding.UTF8;
+                }
+                else if (encodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // no recoding is needed
+                    return null;
+                }
+                else if (CpEncodingPattern.IsMatch(encodingName))
+                {
+                    // Encodings written as e.g. "cp1251", which is not a supported encoding string
+                    return Encoding.GetEncoding(int.Parse(encodingName.Substring(2)));
+                }
+                else
+                {
+                    return Encoding.GetEncoding(encodingName);
+                }
+            }
+            else
+            {
+                // bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
+                return LogOutputEncoding;
+            }
         }
 
         /// <summary>

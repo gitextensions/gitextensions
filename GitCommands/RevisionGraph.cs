@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
@@ -36,9 +37,8 @@ namespace GitCommands
                 ([^\n]+)\n   # 2 authoremail
                 ([^\n]+)\n   # 3 committername
                 ([^\n]+)\n   # 4 committeremail
-                ([^\n]*)\n   # 5 encoding
-                ([^\n]*)\n   # 6 subject
-                ((.|\n)*)    # 7 body
+                ([^\n]*)\n   # 5 subject
+                ((.|\n)*)    # 6 body
                 $
             ",
             RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
@@ -121,11 +121,11 @@ namespace GitCommands
                 /* Parents                 */ "%P%n" +
                 /* Author Date             */ "%at%n" +
                 /* Commit Date             */ "%ct%n" +
+                /* Commit message encoding */ "%e%n" + // there is a bug: git does not recode commit message when format is given
                 /* Author Name             */ "%aN%n" +
                 /* Author Email            */ "%aE%n" +
                 /* Committer Name          */ "%cN%n" +
                 /* Committer Email         */ "%cE%n" +
-                /* Commit message encoding */ "%e%n" + // there is a bug: git does not recode commit message when format is given
                 /* Commit subject          */ "%s%n" +
                 /* Commit body             */ "%b";
 
@@ -291,7 +291,32 @@ namespace GitCommands
                 }
             }
 
-            var s = _module.LogOutputEncoding.GetString(array, offset, lastOffset - offset);
+            string encodingName;
+            Encoding encoding;
+
+            var encodingNameEndOffset = Array.IndexOf(array, (byte)'\n', offset);
+
+            if (encodingNameEndOffset == -1)
+            {
+                return;
+            }
+
+            if (offset == encodingNameEndOffset)
+            {
+                // No encoding specified
+                encoding = _module.LogOutputEncoding;
+                encodingName = null;
+            }
+            else
+            {
+                encodingName = _module.LogOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
+                encoding = _module.GetEncodingByGitName(encodingName);
+            }
+
+            offset = encodingNameEndOffset + 1;
+
+            // Finally, decode the names, email, subject and body strings using the required text encoding
+            var s = encoding.GetString(array, offset, lastOffset - offset);
 
             var match = _commitRegex.Match(s);
 
@@ -300,8 +325,6 @@ namespace GitCommands
                 Debug.Fail("Commit regex did not match");
                 return;
             }
-
-            var encodingName = stringPool.Intern(s, match.Groups[5 /*encoding*/]);
 
             var revision = new GitRevision(null)
             {
@@ -320,8 +343,8 @@ namespace GitCommands
                 CommitterEmail = stringPool.Intern(s, match.Groups[4 /*committeremail*/]),
                 CommitDate = commitDate,
                 MessageEncoding = encodingName,
-                Subject = _module.ReEncodeCommitMessage(match.Groups[6 /*subject*/].Value, encodingName),
-                Body = _module.ReEncodeCommitMessage(match.Groups[7 /*body*/].Value, encodingName)
+                Subject = match.Groups[5 /*subject*/].Value,
+                Body = match.Groups[6 /*body*/].Value
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
