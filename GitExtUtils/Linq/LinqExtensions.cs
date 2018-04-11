@@ -4,49 +4,6 @@ namespace System.Linq
 {
     public static class LinqExtensions
     {
-        /// <summary>
-        /// Creates a <see cref="Dictionary{TKey,TValue}"/> from an <see cref="IEnumerable{T}"/> according to a specified
-        /// <paramref name="keySelector"/> function.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <typeparam name="TKey">The type of the key returned by keySelector.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to create a <see cref="Dictionary{TKey,TValue}"/> from.</param>
-        /// <param name="keySelector">A function to extract a key from each element.</param>
-        /// <returns>A <see cref="Dictionary{TKey,TValue}"/> that contains keys and values.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="keySelector"/> is <c>null</c>
-        /// or <paramref name="keySelector"/> produces a key that is <c>null</c>.</exception>
-        public static Dictionary<TKey, List<TSource>> ToDictionaryOfList<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-        {
-            if (keySelector == null)
-            {
-                throw new ArgumentNullException(nameof(keySelector));
-            }
-
-            Dictionary<TKey, List<TSource>> result = new Dictionary<TKey, List<TSource>>();
-
-            foreach (TSource sourceElement in source)
-            {
-                TKey key = keySelector(sourceElement);
-
-                if (key == null)
-                {
-                    var ex = new ArgumentException("Key selector produced a key that is null. See exception data for source.", nameof(keySelector));
-                    ex.Data.Add("source", sourceElement);
-                    throw ex;
-                }
-
-                if (!result.TryGetValue(key, out var list))
-                {
-                    list = new List<TSource>();
-                    result[key] = list;
-                }
-
-                list.Add(sourceElement);
-            }
-
-            return result;
-        }
-
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
@@ -162,6 +119,46 @@ namespace System.Linq
             var temp = list[index1];
             list[index1] = list[index2];
             list[index2] = temp;
+        }
+
+        public static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> source)
+        {
+            if (source is IReadOnlyList<T> readOnlyList)
+            {
+                return readOnlyList;
+            }
+
+            if (source is ICollection<T> collection)
+            {
+                var count = collection.Count;
+
+                if (count == 0)
+                {
+                    return Array.Empty<T>();
+                }
+
+                var items = new T[count];
+                collection.CopyTo(items, 0);
+                return items;
+            }
+
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext())
+                {
+                    return Array.Empty<T>();
+                }
+
+                var list = new List<T>();
+
+                do
+                {
+                    list.Add(e.Current);
+                }
+                while (e.MoveNext());
+
+                return list;
+            }
         }
     }
 }

@@ -55,8 +55,7 @@ namespace GitCommands
         private readonly string _pathFilter;
         [CanBeNull] private readonly Func<GitRevision, bool> _revisionPredicate;
 
-        [CanBeNull] private Dictionary<string, List<IGitRef>> _refsByObjectId;
-        private string _selectedBranchName;
+        [CanBeNull] private ILookup<string, IGitRef> _refsByObjectId;
 
         public int RevisionCount { get; private set; }
 
@@ -77,7 +76,8 @@ namespace GitCommands
         }
 
         /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
-        public IEnumerable<IGitRef> LatestRefs => _refsByObjectId?.SelectMany(p => p.Value) ?? Enumerable.Empty<IGitRef>();
+        public IEnumerable<IGitRef> LatestRefs
+            => _refsByObjectId?.SelectMany(p => p) ?? Enumerable.Empty<IGitRef>();
 
         public void Execute()
         {
@@ -105,7 +105,11 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            _refsByObjectId = GetRefs().ToDictionaryOfList(head => head.Guid);
+            var branchName = _module.IsValidGitWorkingDir()
+                ? _module.GetSelectedBranch()
+                : "";
+
+            _refsByObjectId = GetRefs(branchName).ToLookup(head => head.Guid);
 
             token.ThrowIfCancellationRequested();
 
@@ -185,22 +189,17 @@ namespace GitCommands
             }
         }
 
-        private IReadOnlyList<IGitRef> GetRefs()
+        private IReadOnlyList<IGitRef> GetRefs(string branchName)
         {
             var refs = _module.GetRefs(true);
 
-            _selectedBranchName = _module.IsValidGitWorkingDir()
-                ? _module.GetSelectedBranch()
-                : "";
-
-            var selectedRef = refs.FirstOrDefault(head => head.Name == _selectedBranchName);
+            var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
 
             if (selectedRef != null)
             {
                 selectedRef.Selected = true;
 
                 var localConfigFile = _module.LocalConfigFile;
-
                 var selectedHeadMergeSource = refs.FirstOrDefault(
                     head => head.IsRemote
                          && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
@@ -338,11 +337,7 @@ namespace GitCommands
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
-
-            if (_refsByObjectId.TryGetValue(revision.Guid, out var gitRefs))
-            {
-                revision.Refs = gitRefs;
-            }
+            revision.Refs = _refsByObjectId[revision.Guid].ToReadOnlyList();
 
             if (_revisionPredicate == null || _revisionPredicate(revision))
             {
