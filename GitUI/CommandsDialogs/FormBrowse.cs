@@ -667,7 +667,7 @@ namespace GitUI.CommandsDialogs
                 // load custom user menu
                 LoadUserMenu();
 
-                repoObjectsTree.Reload();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
 
                 if (validWorkingDir)
                 {

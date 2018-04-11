@@ -24,6 +24,7 @@ namespace GitUI.BranchTreePanel
         private readonly ImageList _imageList = new ImageList();
         public RepoObjectsTree()
         {
+            _currentToken = _reloadCancellation.Next();
             InitializeComponent();
             InitImageList();
             InitiliazeSearchBox();
@@ -160,7 +161,8 @@ namespace GitUI.BranchTreePanel
             _rootNodes.Add(tree);
         }
 
-        private CancellationTokenSource _cancelledTokenSource;
+        private readonly CancellationTokenSequence _reloadCancellation = new CancellationTokenSequence();
+        private CancellationToken _currentToken;
         private TreeNode _tagTreeRootNode;
         private TagTree _tagTree;
         private RemoteBranchTree _remoteTree;
@@ -168,50 +170,31 @@ namespace GitUI.BranchTreePanel
         private bool _searchCriteriaChanged;
         private Task[] _tasks;
 
-        private void CancelBackgroundTasks()
+        private CancellationToken CancelBackgroundTasks()
         {
-            if (_cancelledTokenSource != null)
-            {
-                _cancelledTokenSource.Cancel();
-                _cancelledTokenSource.Dispose();
-                _cancelledTokenSource = null;
-                if (_tasks != null)
-                {
-                    Task.WaitAll(_tasks);
-                }
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-                _branchCriterionAutoCompletionSrc.Clear();
-            }
+            _currentToken = _reloadCancellation.Next();
 
-            _cancelledTokenSource = new CancellationTokenSource();
+            _branchCriterionAutoCompletionSrc.Clear();
+
+            return _currentToken;
         }
 
-        public void Reload()
+        public async Task ReloadAsync()
         {
-            CancelBackgroundTasks();
-            var token = _cancelledTokenSource.Token;
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var token = CancelBackgroundTasks();
+
+            // wait for prev tasks to not overload the computer
+            if (_tasks != null)
+            {
+                await Task.WhenAll(_tasks).ConfigureAwait(false);
+            }
+
+            await this.SwitchToMainThreadAsync(token);
             _tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
-            Task.Factory.ContinueWhenAll(_tasks,
-                t =>
-                {
-                    if (t.Any(r => r.Status != TaskStatus.RanToCompletion))
-                    {
-                        return;
-                    }
-
-                    if (token.IsCancellationRequested)
-                    {
-                        return;
-                    }
-
-                    BeginInvoke(new Action(() =>
-                    {
-                        var autoCompletionSrc = new AutoCompleteStringCollection();
-                        autoCompletionSrc.AddRange(
-                            _branchCriterionAutoCompletionSrc.ToArray());
-                    }));
-                }, _cancelledTokenSource.Token);
-            _tasks.ToList().ForEach(t => t.Start());
         }
 
         private void OnBtnSettingsClicked(object sender, EventArgs e)
@@ -225,8 +208,7 @@ namespace GitUI.BranchTreePanel
             if (showTagsToolStripMenuItem.Checked)
             {
                 AddTags();
-                var task = _rootNodes.Last().ReloadAsync(_cancelledTokenSource.Token);
-                task.Start(TaskScheduler.Default);
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => _rootNodes.Last().ReloadAsync(_currentToken)).FileAndForget();
             }
             else
             {

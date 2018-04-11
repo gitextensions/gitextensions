@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -74,17 +77,20 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.TreeView.SelectedNode = null;
             }
 
-            protected override void LoadNodes(System.Threading.CancellationToken token)
+            protected override async Task LoadNodesAsync(CancellationToken token)
             {
-                FillTagTree(Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName));
+                await TaskScheduler.Default;
+                token.ThrowIfCancellationRequested();
+                FillTagTree(Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName), token);
             }
 
-            private void FillTagTree(IEnumerable<IGitRef> tags)
+            private void FillTagTree(IEnumerable<IGitRef> tags, CancellationToken token)
             {
                 var nodes = new Dictionary<string, BaseBranchNode>();
                 var branchFullPaths = new List<string>();
                 foreach (var tag in tags)
                 {
+                    token.ThrowIfCancellationRequested();
                     var branchNode = new TagNode(this, tag.Name, tag);
                     var parent = branchNode.CreateRootNode(nodes,
                         (tree, parentPath) => new BasePathNode(tree, parentPath));
@@ -96,6 +102,7 @@ namespace GitUI.BranchTreePanel
                     branchFullPaths.Add(branchNode.FullPath);
                 }
 
+                token.ThrowIfCancellationRequested();
                 FireBranchAddedEvent(branchFullPaths);
             }
 
