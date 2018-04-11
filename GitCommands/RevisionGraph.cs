@@ -103,17 +103,11 @@ namespace GitCommands
 
             await TaskScheduler.Default;
 
-            if (token.IsCancellationRequested)
-            {
-                return;
-            }
+            token.ThrowIfCancellationRequested();
 
             _refsByObjectId = GetRefs().ToDictionaryOfList(head => head.Guid);
 
-            if (token.IsCancellationRequested)
-            {
-                return;
-            }
+            token.ThrowIfCancellationRequested();
 
             const string fullFormat =
                 /* Hash                    */ "%H" +
@@ -164,10 +158,7 @@ namespace GitCommands
 
             using (var process = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding))
             {
-                if (token.IsCancellationRequested)
-                {
-                    return;
-                }
+                token.ThrowIfCancellationRequested();
 
                 // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
                 var stringPool = new StringPool();
@@ -176,10 +167,7 @@ namespace GitCommands
 
                 foreach (var logItemBytes in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
                 {
-                    if (token.IsCancellationRequested)
-                    {
-                        break;
-                    }
+                    token.ThrowIfCancellationRequested();
 
                     revisionCount++;
 
