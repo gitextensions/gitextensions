@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace GitCommands
 {
@@ -24,6 +25,28 @@ namespace GitCommands
         public static DateTime ParseUnixTime(string unixTime)
         {
             return UnixEpoch.AddSeconds(long.Parse(unixTime)).ToLocalTime();
+        }
+
+        public static DateTime ParseUnixTime(string s, Capture capture) => ParseUnixTime(s, capture.Index, capture.Length);
+
+        public static DateTime ParseUnixTime(string s, int index, int count)
+        {
+            long unixTime = 0;
+
+            while (count-- > 0)
+            {
+                var c = s[index++];
+                var i = c - '0';
+
+                if (i < 0 || i > 9)
+                {
+                    throw new FormatException("Invalid character in unix time string.");
+                }
+
+                unixTime = (unixTime * 10) + i;
+            }
+
+            return UnixEpoch.AddTicks(unixTime * TimeSpan.TicksPerSecond).ToLocalTime();
         }
     }
 }

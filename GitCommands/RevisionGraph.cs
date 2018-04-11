@@ -289,10 +289,10 @@ namespace GitCommands
 
                 Author = stringPool.Intern(s, match.Groups[1 /*authorname*/]),
                 AuthorEmail = stringPool.Intern(s, match.Groups[2 /*authoremail*/]),
-                AuthorDate = DateTimeUtils.ParseUnixTime(match.Groups[3 /*authordate*/].Value),
+                AuthorDate = DateTimeUtils.ParseUnixTime(s, match.Groups[3 /*authordate*/]),
                 Committer = stringPool.Intern(s, match.Groups[4 /*committername*/]),
                 CommitterEmail = stringPool.Intern(s, match.Groups[5 /*committeremail*/]),
-                CommitDate = DateTimeUtils.ParseUnixTime(match.Groups[6 /*commitdate*/].Value),
+                CommitDate = DateTimeUtils.ParseUnixTime(s, match.Groups[6 /*commitdate*/]),
                 MessageEncoding = encoding,
                 Subject = _module.ReEncodeCommitMessage(match.Groups[8 /*subject*/].Value, encoding),
                 Body = _module.ReEncodeCommitMessage(match.Groups[10 /*body*/].Value, encoding)
