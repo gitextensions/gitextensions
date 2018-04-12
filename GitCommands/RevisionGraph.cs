@@ -197,7 +197,18 @@ namespace GitCommands
 
                     revisionCount++;
 
-                    ProcessLogItem(chunk, stringPool, logOutputEncoding);
+                    if (TryParseRevision(chunk, stringPool, logOutputEncoding, out var revision))
+                    {
+                        if (_revisionPredicate == null || _revisionPredicate(revision))
+                        {
+                            // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
+                            // Full commit message is used in InMemFilter but later it's not needed
+                            revision.Body = null;
+
+                            RevisionCount++;
+                            Updated?.Invoke(revision);
+                        }
+                    }
                 }
 
                 Trace.WriteLine($"**** PROCESSED {revisionCount} ALL REVISIONS IN {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. Pool count {stringPool.Count}");
@@ -232,50 +243,65 @@ namespace GitCommands
             }
         }
 
-        private void ProcessLogItem(ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding)
+        private bool TryParseRevision(ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
         {
+            // The 'chunk' of data contains a complete git log item, encoded.
+            // This method decodes that chunk and produces a revision object.
+
+            // All values which can be read directly from the byte array are arranged
+            // at the beginning of the chunk. The latter part of the chunk will require
+            // decoding as a string.
+
+            // The first 40 bytes are the revision ID and the tree ID back to back
             if (!ObjectId.TryParseAsciiHexBytes(chunk, 0, out var objectId) ||
                 !ObjectId.TryParseAsciiHexBytes(chunk, ObjectId.Sha1CharCount, out var treeId))
             {
-                return;
+                revision = default;
+                return false;
             }
 
             var array = chunk.Array;
-
-            var parentIds = new List<ObjectId>(capacity: 1);
             var offset = chunk.Offset + (ObjectId.Sha1CharCount * 2);
             var lastOffset = chunk.Offset + chunk.Count;
+
+            // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
+            var parentIds = new List<ObjectId>(capacity: 1);
 
             while (true)
             {
                 if (offset >= lastOffset - 21)
                 {
-                    return;
+                    revision = default;
+                    return false;
                 }
 
                 var b = array[offset];
 
                 if (b == '\n')
                 {
+                    // There are no more parent IDs
                     offset++;
                     break;
                 }
 
                 if (b == ' ')
                 {
+                    // We are starting a new parent ID
                     offset++;
                 }
 
                 if (!ObjectId.TryParseAsciiHexBytes(array, offset, out var parentId))
                 {
                     // TODO log this parse problem
-                    return;
+                    revision = default;
+                    return false;
                 }
 
                 parentIds.Add(parentId);
                 offset += ObjectId.Sha1CharCount;
             }
 
+            // Lines 2 and 3 are timestamps, as decimal ASCII seconds since the unix epoch, each terminated by `\n`
             var authorDate = ParseUnixDateTime();
             var commitDate = ParseUnixDateTime();
 
@@ -296,6 +322,7 @@ namespace GitCommands
                 }
             }
 
+            // Line is the name of the encoding used by git, or an empty string, terminated by `\n`
             string encodingName;
             Encoding encoding;
 
@@ -304,7 +331,8 @@ namespace GitCommands
             if (encodingNameEndOffset == -1)
             {
                 // TODO log this error case
-                return;
+                revision = default;
+                return false;
             }
 
             if (offset == encodingNameEndOffset)
@@ -330,10 +358,11 @@ namespace GitCommands
             {
                 // TODO log this parse problem
                 Debug.Fail("Commit regex did not match");
-                return;
+                revision = default;
+                return false;
             }
 
-            var revision = new GitRevision(null)
+            revision = new GitRevision(null)
             {
                 // TODO are we really sure we can't make Revision.Guid an ObjectId?
                 Guid = objectId.ToString(),
@@ -357,15 +386,7 @@ namespace GitCommands
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
             revision.Refs = _refsByObjectId[revision.Guid].AsReadOnlyList();
 
-            if (_revisionPredicate == null || _revisionPredicate(revision))
-            {
-                // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
-                // Full commit message is used in InMemFilter but later it's not needed
-                revision.Body = null;
-
-                RevisionCount++;
-                Updated?.Invoke(revision);
-            }
+            return true;
         }
 
         public void Dispose()
