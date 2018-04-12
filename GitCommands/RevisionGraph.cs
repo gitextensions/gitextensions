@@ -109,7 +109,9 @@ namespace GitCommands
                 ? _module.GetSelectedBranch()
                 : "";
 
-            _refsByObjectId = GetRefs(branchName).ToLookup(head => head.Guid);
+            var refs = _module.GetRefs(true);
+            UpdateSelectedRef(refs, branchName);
+            _refsByObjectId = refs.ToLookup(head => head.Guid);
 
             token.ThrowIfCancellationRequested();
 
@@ -200,10 +202,8 @@ namespace GitCommands
             }
         }
 
-        private IReadOnlyList<IGitRef> GetRefs(string branchName)
+        private void UpdateSelectedRef(IReadOnlyList<IGitRef> refs, string branchName)
         {
-            var refs = _module.GetRefs(true);
-
             var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
 
             if (selectedRef != null)
@@ -221,8 +221,6 @@ namespace GitCommands
                     selectedHeadMergeSource.SelectedHeadMergeSource = true;
                 }
             }
-
-            return refs;
         }
 
         private void ProcessLogItem(ArraySegment<byte> logItemBytes, StringPool stringPool, Encoding logOutputEncoding)
