@@ -49,11 +49,7 @@ namespace GitCommands.Repository
                 return desc;
             }
 
-            desc = RepositoryManager.RepositoryHistory.Repositories
-                                        .Where(repo => repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
-                                        .Select(repo => repo.Path)
-                                        .FirstOrDefault();
-            return desc ?? dirInfo.Name;
+            return dirInfo.Name;
         }
 
         /// <summary>

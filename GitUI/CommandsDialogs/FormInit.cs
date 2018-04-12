@@ -32,15 +32,15 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            Directory.Text = string.IsNullOrEmpty(dir)
-                ? AppSettings.DefaultCloneDestinationPath
-                : dir;
-        }
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
 
-        private void DirectoryDropDown(object sender, EventArgs e)
-        {
-            Directory.DataSource = RepositoryManager.RepositoryHistory.Repositories;
-            Directory.DisplayMember = nameof(Repository.Path);
+                await this.SwitchToMainThreadAsync();
+                Directory.DataSource = repositoryHistory.Repositories;
+                Directory.DisplayMember = nameof(Repository.Path);
+                Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
+            });
         }
 
         private void InitClick(object sender, EventArgs e)

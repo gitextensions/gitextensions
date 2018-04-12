@@ -10,14 +10,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
+        private RepositoryHistory _repositoryHistory;
+
         public FormRecentReposSettings()
             : base(true)
         {
             InitializeComponent();
             Translate();
-            LoadSettings();
-            RefreshRepos();
-            SetComboWidth();
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                _repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                LoadSettings();
+                RefreshRepos();
+                SetComboWidth();
+            });
         }
 
         private void LoadSettings()
@@ -42,8 +51,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
             if (mustResizeRepositriesHistory)
             {
-                RepositoryManager.RepositoryHistory.MaxCount = AppSettings.RecentRepositoriesHistorySize;
+                RepositoryManager.AdjustRecentHistorySize(AppSettings.RecentRepositoriesHistorySize);
             }
+
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.SaveRepositoryHistoryAsync(_repositoryHistory));
         }
 
         private string GetShorteningStrategy()
@@ -107,7 +118,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             try
             {
-                splitter.SplitRecentRepos(RepositoryManager.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(_repositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
             finally
             {
@@ -257,11 +268,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GetSelectedRepo(sender, out var repo))
+            if (!GetSelectedRepo(sender, out var repo))
             {
-                RepositoryManager.RepositoryHistory.Repositories.Remove(repo.Repo);
-                RefreshRepos();
+                return;
             }
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await RepositoryManager.RemoveRepositoryHistoryAsync(repo.Repo);
+
+                await this.SwitchToMainThreadAsync();
+                RefreshRepos();
+            });
         }
 
         private void listView_DrawItem(object sender, DrawListViewItemEventArgs e)

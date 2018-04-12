@@ -59,14 +59,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             else
             {
-                var hist = RepositoryManager.RepositoryHistory;
-                var lastRepo = hist.Repositories.FirstOrDefault();
-                if (!string.IsNullOrEmpty(lastRepo?.Path))
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    string p = lastRepo.Path.Trim('/', '\\');
+                    var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
 
-                    _destinationTB.Text = Path.GetDirectoryName(p);
-                }
+                    await this.SwitchToMainThreadAsync();
+                    var lastRepo = repositoryHistory.Repositories.FirstOrDefault();
+                    if (!string.IsNullOrEmpty(lastRepo?.Path))
+                    {
+                        string p = lastRepo.Path.Trim('/', '\\');
+                        _destinationTB.Text = Path.GetDirectoryName(p);
+                    }
+                });
             }
 
             Text = _gitHoster.Description + ": " + Text;

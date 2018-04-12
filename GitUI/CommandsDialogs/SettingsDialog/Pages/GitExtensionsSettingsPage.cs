@@ -13,16 +13,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Git Extensions";
             Translate();
-        }
 
-        private bool _loadedDefaultClone;
-        private void defaultCloneDropDown(object sender, EventArgs e)
-        {
-            if (!_loadedDefaultClone)
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                FillDefaultCloneDestinationDropDown();
-                _loadedDefaultClone = true;
-            }
+                var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                var historicPaths = repositoryHistory.Repositories
+                                                     .Select(GetParentPath())
+                                                     .Where(x => !string.IsNullOrEmpty(x))
+                                                     .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                                                     .ToArray();
+                cbDefaultCloneDestination.Items.AddRange(historicPaths);
+            });
         }
 
         protected override void SettingsToPage()
@@ -93,17 +96,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     SmtpServerPort.Text = "587";
                 }
             }
-        }
-
-        private void FillDefaultCloneDestinationDropDown()
-        {
-            var historicPaths = RepositoryManager.RepositoryHistory.Repositories
-                                           .Select(GetParentPath())
-                                           .Where(x => !string.IsNullOrEmpty(x))
-                                           .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                                           .ToArray();
-
-            cbDefaultCloneDestination.Items.AddRange(historicPaths);
         }
 
         private static Func<Repository, string> GetParentPath()

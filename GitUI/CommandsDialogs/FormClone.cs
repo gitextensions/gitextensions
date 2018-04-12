@@ -47,6 +47,15 @@ namespace GitUI.CommandsDialogs
             _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
             _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                _NO_TRANSLATE_To.DataSource = repositoryHistory.Repositories;
+                _NO_TRANSLATE_To.DisplayMember = nameof(Repository.Path);
+            });
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -294,19 +303,6 @@ namespace GitUI.CommandsDialogs
                 foreach (Repository repo in repos)
                 {
                     _NO_TRANSLATE_From.Items.Add(repo.Path);
-                }
-            }
-        }
-
-        private void ToDropDown(object sender, EventArgs e)
-        {
-            System.ComponentModel.BindingList<Repository> repos = RepositoryManager.RepositoryHistory.Repositories;
-            if (_NO_TRANSLATE_To.Items.Count != repos.Count)
-            {
-                _NO_TRANSLATE_To.Items.Clear();
-                foreach (Repository repo in repos)
-                {
-                    _NO_TRANSLATE_To.Items.Add(repo.Path);
                 }
             }
         }

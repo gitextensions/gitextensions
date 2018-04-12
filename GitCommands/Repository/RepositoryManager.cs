@@ -14,22 +14,12 @@ namespace GitCommands.Repository
     public static class RepositoryManager
     {
         private static readonly IRepositoryStorage RepositoryStorage = new RepositoryStorage();
-        private static AsyncLazy<RepositoryHistory> _repositoryHistory;
         private static AsyncLazy<RepositoryHistory> _repositoryRemoteHistory;
 
-        private static Task<RepositoryHistory> LoadRepositoryHistoryAsync()
+        public static async Task<RepositoryHistory> LoadRepositoryHistoryAsync()
         {
-            if (_repositoryHistory != null)
-            {
-                return _repositoryHistory.GetValueAsync();
-            }
+            await TaskScheduler.Default;
 
-            _repositoryHistory = new AsyncLazy<RepositoryHistory>(() => Task.Run(() => LoadRepositoryHistory()), ThreadHelper.JoinableTaskFactory);
-            return _repositoryHistory.GetValueAsync();
-        }
-
-        private static RepositoryHistory LoadRepositoryHistory()
-        {
             int size = AppSettings.RecentRepositoriesHistorySize;
             var repositoryHistory = new RepositoryHistory(size);
 
@@ -40,24 +30,16 @@ namespace GitCommands.Repository
             }
 
             repositoryHistory.Repositories = new BindingList<Repository>(history.ToList());
-
             return repositoryHistory;
         }
 
-        public static RepositoryHistory RepositoryHistory
+        public static Task RemoveRepositoryHistoryAsync(Repository repository)
         {
-            get
-            {
-                if (_repositoryHistory?.IsValueFactoryCompleted ?? false)
-                {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-                    return _repositoryHistory.GetValueAsync().Result;
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-                }
-
-                return ThreadHelper.JoinableTaskFactory.Run(() => LoadRepositoryHistoryAsync());
-            }
+            // TODO:
+            return Task.CompletedTask;
         }
+
+        // public static RepositoryHistory RepositoryHistory { get; set; }
 
         public static RepositoryHistory RemoteRepositoryHistory
         {
@@ -204,7 +186,7 @@ namespace GitCommands.Repository
             }
             else
             {
-                RepositoryHistory.AddMostRecentRepository(repo);
+                ////RepositoryHistory.AddMostRecentRepository(repo);
             }
         }
 
@@ -232,6 +214,17 @@ namespace GitCommands.Repository
 
             repositoryHistory.Repositories = new BindingList<Repository>(history.ToList());
             return repositoryHistory;
+        }
+
+        public static void AdjustRecentHistorySize(int recentRepositoriesHistorySize)
+        {
+            // TODO:
+        }
+
+        public static async Task SaveRepositoryHistoryAsync(RepositoryHistory repositoryHistory)
+        {
+            await TaskScheduler.Default;
+            RepositoryStorage.Save("history", repositoryHistory.Repositories);
         }
     }
 }

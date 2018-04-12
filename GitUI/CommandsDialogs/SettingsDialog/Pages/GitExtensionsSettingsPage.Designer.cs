@@ -198,7 +198,6 @@
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
             this.cbDefaultCloneDestination.Size = new System.Drawing.Size(832, 21);
             this.cbDefaultCloneDestination.TabIndex = 18;
-            this.cbDefaultCloneDestination.DropDown += new System.EventHandler(this.defaultCloneDropDown);
             // 
             // chkShowGitCommandLine
             // 
@@ -588,5 +587,5 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelEmailSettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSmtpServer;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistoryExact;
-	}
+    }
 }
