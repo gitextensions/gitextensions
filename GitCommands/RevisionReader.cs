@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -27,66 +27,59 @@ namespace GitCommands
         SimplifyByDecoration = 256 // --simplify-by-decoration
     }
 
-    public sealed class RevisionGraph : IDisposable
+    public sealed class RevisionReader : IDisposable
     {
-        private static readonly char[] _shellGlobCharacters = { '?', '*', '[' };
-
-        public event EventHandler Exited;
-        public event Action<GitRevision> Updated;
-        public event EventHandler<AsyncErrorEventArgs> Error;
-
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly GitModule _module;
-        private readonly RefFilterOptions _refFilterOptions;
-        private readonly string _branchFilter;
-        private readonly string _revisionFilter;
-        private readonly string _pathFilter;
-        [CanBeNull] private readonly Func<GitRevision, bool> _revisionPredicate;
 
         public int RevisionCount { get; private set; }
 
-        public RevisionGraph(
-            GitModule module,
+        /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
+        public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
+
+        public RevisionReader(GitModule module)
+        {
+            _module = module;
+        }
+
+        public IObservable<GitRevision> Execute(
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
             string pathFilter,
             [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
-            _module = module;
-            _refFilterOptions = refFilterOptions;
-            _branchFilter = branchFilter;
-            _revisionFilter = revisionFilter;
-            _pathFilter = pathFilter;
-            _revisionPredicate = revisionPredicate;
-        }
+            var subject = new ReplaySubject<GitRevision>();
 
-        /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
-        public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
-
-        public void Execute()
-        {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(ExecuteAsync)
+                .RunAsync(() => ExecuteAsync(subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
                 .FileAndForget(
                     ex =>
                     {
-                        var args = new AsyncErrorEventArgs(ex);
-                        Error?.Invoke(this, args);
-                        return !args.Handled;
+                        subject.OnError(ex);
+                        return false;
                     });
+
+            return subject;
         }
 
-        private async Task ExecuteAsync()
+        private async Task ExecuteAsync(
+            IObserver<GitRevision> subject,
+            RefFilterOptions refFilterOptions,
+            string branchFilter,
+            string revisionFilter,
+            string pathFilter,
+            [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
             var token = _cancellationTokenSequence.Next();
 
             RevisionCount = 0;
-            Updated?.Invoke(null);
 
             await TaskScheduler.Default;
+
+            subject.OnNext(null);
 
             token.ThrowIfCancellationRequested();
 
@@ -96,7 +89,7 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            LatestRefs = _module.GetRefs(true);
+            LatestRefs = _module.GetRefs();
             UpdateSelectedRef(LatestRefs, branchName);
             var refsByObjectId = LatestRefs.ToLookup(head => head.Guid);
 
@@ -123,6 +116,8 @@ namespace GitCommands
                 /* Commit subject  */ "%s%n" +
                 /* Commit body     */ "%b";
 
+            // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
+
             var arguments = new ArgumentBuilder
             {
                 "log",
@@ -131,32 +126,31 @@ namespace GitCommands
                 { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
                 { AppSettings.ShowReflogReferences, "--reflog" },
                 {
-                    _refFilterOptions.HasFlag(RefFilterOptions.All),
+                    refFilterOptions.HasFlag(RefFilterOptions.All),
                     "--all",
                     new ArgumentBuilder
                     {
                         {
-                            _refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                            !_branchFilter.IsNullOrWhiteSpace() &&
-                            _branchFilter.IndexOfAny(_shellGlobCharacters) != -1,
-                            "--branches=" + _branchFilter
+                            refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
+                            !branchFilter.IsNullOrWhiteSpace() &&
+                            branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
+                            "--branches=" + branchFilter
                         },
-                        { _refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                        { _refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
                     }.ToString()
                 },
-                { _refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                { _refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
-                { _refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                { _refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
-                { _refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
-                _revisionFilter,
+                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
+                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
+                revisionFilter,
                 "--",
-                _pathFilter
+                pathFilter
             };
 
             var sw = Stopwatch.StartNew();
-            var revisionCount = 0;
 
             // This property is relatively expensive to call for every revision, so
             // cache it for the duration of the loop.
@@ -175,11 +169,9 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    revisionCount++;
-
                     if (TryParseRevision(chunk, stringPool, logOutputEncoding, out var revision))
                     {
-                        if (_revisionPredicate == null || _revisionPredicate(revision))
+                        if (revisionPredicate == null || revisionPredicate(revision))
                         {
                             // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
                             // Full commit message is used in InMemFilter but later it's not needed
@@ -189,19 +181,20 @@ namespace GitCommands
                             revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
 
                             RevisionCount++;
-                            Updated?.Invoke(revision);
+
+                            subject.OnNext(revision);
                         }
                     }
                 }
 
-                Trace.WriteLine($"**** PROCESSED {revisionCount} ALL REVISIONS IN {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. Pool count {stringPool.Count}");
+                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {RevisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
             if (!token.IsCancellationRequested)
             {
-                Exited?.Invoke(this, EventArgs.Empty);
+                subject.OnCompleted();
             }
         }
 
@@ -344,8 +337,10 @@ namespace GitCommands
             var subject = reader.ReadLine();
             var body = reader.ReadToEnd();
 
-            if (!reader.CleanlyReadToEnd)
+            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
             {
+                // TODO log this parse error
+                Debug.Fail("Unable to read an entry from the log -- this should not happen");
                 revision = default;
                 return false;
             }
@@ -376,25 +371,31 @@ namespace GitCommands
             return true;
         }
 
+        public void Dispose()
+        {
+            _cancellationTokenSequence.Dispose();
+        }
+
+        #region Nested type: StringLineReader
+
+        /// <summary>
+        /// Simple type to walk along a string, line by line, without redundant allocations.
+        /// </summary>
         private struct StringLineReader
         {
             private readonly string _s;
             private int _index;
 
-            public bool CleanlyReadToEnd { get; private set; }
-
             public StringLineReader(string s)
             {
                 _s = s;
                 _index = 0;
-                CleanlyReadToEnd = false;
             }
 
             public string ReadLine(StringPool pool = null)
             {
                 if (_index == _s.Length)
                 {
-                    CleanlyReadToEnd = false;
                     return null;
                 }
 
@@ -408,11 +409,6 @@ namespace GitCommands
 
                 _index = endIndex + 1;
 
-                if (_index == _s.Length)
-                {
-                    CleanlyReadToEnd = true;
-                }
-
                 return pool != null
                     ? pool.Intern(_s, startIndex, endIndex - startIndex)
                     : _s.Substring(startIndex, endIndex - startIndex);
@@ -422,20 +418,15 @@ namespace GitCommands
             {
                 if (_index == _s.Length)
                 {
-                    CleanlyReadToEnd = false;
                     return null;
                 }
 
                 _index = _s.Length;
-                CleanlyReadToEnd = true;
 
                 return _s.Substring(_index);
             }
         }
 
-        public void Dispose()
-        {
-            _cancellationTokenSequence.Dispose();
-        }
+        #endregion
     }
 }

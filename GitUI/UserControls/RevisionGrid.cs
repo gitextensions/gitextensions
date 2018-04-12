@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -80,7 +82,9 @@ namespace GitUI
         private string _lastQuickSearchString = string.Empty;
         private Label _quickSearchLabel;
         private string _quickSearchString;
-        private RevisionGraph _revisionGraph;
+
+        private RevisionReader _revisionReader;
+        private IDisposable _revisionSubscription;
 
         public BuildServerWatcher BuildServerWatcher { get; private set; }
 
@@ -1131,7 +1135,7 @@ namespace GitUI
 
                 BuildServerWatcher.CancelBuildStatusFetchOperation();
 
-                DisposeRevisionGraphCommand();
+                DisposeRevisionReader();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
@@ -1265,17 +1269,21 @@ namespace GitUI
                     predicate = null;
                 }
 
-                _revisionGraph = new RevisionGraph(
-                    Module,
+                if (_revisionReader == null)
+                {
+                    _revisionReader = new RevisionReader(Module);
+                }
+
+                var revisions = _revisionReader.Execute(
                     _refFilterOptions,
                     BranchFilter,
                     _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
                     _revisionFilter.GetPathFilter() + FixedPathFilter,
                     predicate);
-                _revisionGraph.Updated += UpdateGraph;
-                _revisionGraph.Exited += GitGetCommitsCommandExited;
-                _revisionGraph.Error += _revisionGraphCommand_Error;
-                _revisionGraph.Execute();
+
+                _revisionSubscription?.Dispose();
+                _revisionSubscription = revisions
+                    .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
                 LoadRevisions();
                 SetRevisionsLayout();
@@ -1338,7 +1346,7 @@ namespace GitUI
             return result;
         }
 
-        private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
+        private void OnRevisionReaderError(Exception exception)
         {
             // This has to happen on the UI thread
             this.InvokeAsync(
@@ -1353,9 +1361,8 @@ namespace GitUI
                     })
                 .FileAndForget();
 
-            DisposeRevisionGraphCommand();
-            this.InvokeAsync(() => throw new AggregateException(e.Exception)).FileAndForget();
-            e.Handled = true;
+            DisposeRevisionReader();
+            this.InvokeAsync(() => throw new AggregateException(exception)).FileAndForget();
         }
 
         internal bool FilterIsApplied(bool inclBranchFilter)
@@ -1377,22 +1384,22 @@ namespace GitUI
                      string.IsNullOrEmpty(InMemMessageFilter));
         }
 
-        private void DisposeRevisionGraphCommand()
+        private void DisposeRevisionReader()
         {
-            if (_revisionGraph != null)
+            if (_revisionReader != null)
             {
-                LatestRefs = _revisionGraph.LatestRefs;
+                LatestRefs = _revisionReader.LatestRefs;
 
-                _revisionGraph.Dispose();
-                _revisionGraph = null;
+                _revisionReader.Dispose();
+                _revisionReader = null;
             }
         }
 
-        private void GitGetCommitsCommandExited(object sender, EventArgs e)
+        private void OnRevisionReadCompleted()
         {
             _isLoading = false;
 
-            if (_revisionGraph.RevisionCount == 0 &&
+            if (_revisionReader.RevisionCount == 0 &&
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
@@ -1414,7 +1421,7 @@ namespace GitUI
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await this.SwitchToMainThreadAsync();
-                    UpdateGraph(null);
+                    OnRevisionRead();
                     Loading.Visible = false;
                     _isRefreshingRevisions = false;
                     SelectInitialRevision();
@@ -1425,7 +1432,7 @@ namespace GitUI
                 }).FileAndForget();
             }
 
-            DisposeRevisionGraphCommand();
+            DisposeRevisionReader();
         }
 
         private void SelectInitialRevision()
@@ -1508,7 +1515,7 @@ namespace GitUI
 
         private void LoadRevisions()
         {
-            if (_revisionGraph == null)
+            if (_revisionReader == null)
             {
                 return;
             }
@@ -2893,7 +2900,7 @@ namespace GitUI
 
         private string[] _currentCheckoutParents;
 
-        private void UpdateGraph([CanBeNull] GitRevision rev)
+        private void OnRevisionRead([CanBeNull] GitRevision rev = null)
         {
             if (rev == null)
             {
@@ -3569,7 +3576,7 @@ namespace GitUI
 
         private void ToggleHighlightSelectedBranch()
         {
-            if (_revisionGraph != null)
+            if (_revisionReader != null)
             {
                 MessageBox.Show(_cannotHighlightSelectedBranch.Text);
                 return;
