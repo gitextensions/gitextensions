@@ -61,7 +61,14 @@ namespace GitUI.CommandsDialogs
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
-            FillFromDropDown();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                _NO_TRANSLATE_From.DataSource = repositoryHistory.Repositories;
+                _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
+            });
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
@@ -292,19 +299,6 @@ namespace GitUI.CommandsDialogs
             }
 
             ToTextUpdate(sender, e);
-        }
-
-        private void FillFromDropDown()
-        {
-            System.ComponentModel.BindingList<Repository> repos = RepositoryManager.RemoteRepositoryHistory.Repositories;
-            if (_NO_TRANSLATE_From.Items.Count != repos.Count)
-            {
-                _NO_TRANSLATE_To.Items.Clear();
-                foreach (Repository repo in repos)
-                {
-                    _NO_TRANSLATE_From.Items.Add(repo.Path);
-                }
-            }
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)

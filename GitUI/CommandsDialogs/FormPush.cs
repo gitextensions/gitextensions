@@ -642,14 +642,6 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void FillPushDestinationDropDown()
-        {
-            string prevUrl = PushDestination.Text;
-            PushDestination.DataSource = RepositoryManager.RemoteRepositoryHistory.Repositories;
-            PushDestination.DisplayMember = nameof(Repository.Path);
-            PushDestination.Text = prevUrl;
-        }
-
         private void UpdateBranchDropDown()
         {
             var curBranch = _NO_TRANSLATE_Branch.Text;
@@ -791,8 +783,18 @@ namespace GitUI.CommandsDialogs
 
             if (PushToUrl.Checked)
             {
-                FillPushDestinationDropDown();
-                BranchSelectedValueChanged(null, null);
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+
+                    await this.SwitchToMainThreadAsync();
+                    string prevUrl = PushDestination.Text;
+                    PushDestination.DataSource = repositoryHistory.Repositories;
+                    PushDestination.DisplayMember = nameof(Repository.Path);
+                    PushDestination.Text = prevUrl;
+
+                    BranchSelectedValueChanged(null, null);
+                });
             }
             else
             {
@@ -1035,37 +1037,37 @@ namespace GitUI.CommandsDialogs
             switch (e.Column.ColumnName)
             {
                 case PushColumnName:
-                {
-                    if ((bool)e.ProposedValue)
                     {
-                        e.Row[ForceColumnName] = false;
-                        e.Row[DeleteColumnName] = false;
-                    }
+                        if ((bool)e.ProposedValue)
+                        {
+                            e.Row[ForceColumnName] = false;
+                            e.Row[DeleteColumnName] = false;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
 
                 case ForceColumnName:
-                {
-                    if ((bool)e.ProposedValue)
                     {
-                        e.Row[PushColumnName] = false;
-                        e.Row[DeleteColumnName] = false;
-                    }
+                        if ((bool)e.ProposedValue)
+                        {
+                            e.Row[PushColumnName] = false;
+                            e.Row[DeleteColumnName] = false;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
 
                 case DeleteColumnName:
-                {
-                    if ((bool)e.ProposedValue)
                     {
-                        e.Row[PushColumnName] = false;
-                        e.Row[ForceColumnName] = false;
-                    }
+                        if ((bool)e.ProposedValue)
+                        {
+                            e.Row[PushColumnName] = false;
+                            e.Row[ForceColumnName] = false;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
 

@@ -18,6 +18,17 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         {
             InitializeComponent();
             Translate();
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                Directory.DataSource = repositoryHistory.Repositories;
+                Directory.DisplayMember = nameof(Repository.Path);
+                Directory.Text = "";
+                LocalPath.Text = "";
+            });
         }
 
         private void BrowseClick(object sender, EventArgs e)
@@ -50,14 +61,6 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private void DirectorySelectedIndexChanged(object sender, EventArgs e)
         {
             DirectoryTextUpdate(null, null);
-        }
-
-        private void FormAddSubmoduleShown(object sender, EventArgs e)
-        {
-            Directory.DataSource = RepositoryManager.RemoteRepositoryHistory.Repositories;
-            Directory.DisplayMember = nameof(Repository.Path);
-            Directory.Text = "";
-            LocalPath.Text = "";
         }
 
         private void BranchDropDown(object sender, EventArgs e)

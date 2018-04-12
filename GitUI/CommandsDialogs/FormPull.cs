@@ -801,14 +801,6 @@ namespace GitUI.CommandsDialogs
             FillFormTitle();
         }
 
-        private void FillPullSourceDropDown()
-        {
-            string prevUrl = comboBoxPullSource.Text;
-            comboBoxPullSource.DataSource = RepositoryManager.RemoteRepositoryHistory.Repositories;
-            comboBoxPullSource.DisplayMember = nameof(Repository.Path);
-            comboBoxPullSource.Text = prevUrl;
-        }
-
         private void FillFormTitle()
         {
             var format = Fetch.Checked
@@ -868,7 +860,16 @@ namespace GitUI.CommandsDialogs
             Merge.Enabled = true;
             Rebase.Enabled = true;
 
-            FillPullSourceDropDown();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                string prevUrl = comboBoxPullSource.Text;
+                comboBoxPullSource.DataSource = repositoryHistory.Repositories;
+                comboBoxPullSource.DisplayMember = nameof(Repository.Path);
+                comboBoxPullSource.Text = prevUrl;
+            });
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
