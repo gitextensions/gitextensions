@@ -1283,6 +1283,7 @@ namespace GitUI
 
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = revisions
+                    .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
                 LoadRevisions();
