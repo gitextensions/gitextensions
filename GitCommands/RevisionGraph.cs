@@ -31,46 +31,6 @@ namespace GitCommands
     {
         private static readonly char[] _shellGlobCharacters = { '?', '*', '[' };
 
-        private static readonly Regex _commitRegex = new Regex(@"
-                ^
-                ([^\n]+)\n   # 1 authorname
-                ([^\n]+)\n   # 2 authoremail
-                ([^\n]+)\n   # 3 committername
-                ([^\n]+)\n   # 4 committeremail
-                ([^\n]*)\n   # 5 subject
-                ((.|\n)*)    # 6 body
-                $
-            ",
-            RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-
-        private const int grpAuthorName = 1;
-        private const int grpAuthorEmail = 2;
-        private const int grpCommitterName = 3;
-        private const int grpCommitterEmail = 4;
-        private const int grpSubject = 5;
-        private const int grpBody = 6;
-
-        private const string fullFormat =
-
-            // These header entries can all be decoded from the bytes directly.
-            // Each hash is 20 bytes long. There is always a
-
-            /* Object ID       */ "%H" +
-            /* Tree ID         */ "%T" +
-            /* Parent IDs      */ "%P%n" +
-            /* Author date     */ "%at%n" +
-            /* Commit date     */ "%ct%n" +
-            /* Encoding        */ "%e%n" +
-
-            // Items below here must be decoded as strings to support non-ASCII
-
-            /* Author name     */ "%aN%n" +
-            /* Author email    */ "%aE%n" +
-            /* Committer name  */ "%cN%n" +
-            /* Committer email */ "%cE%n" +
-            /* Commit subject  */ "%s%n" +
-            /* Commit body     */ "%b";
-
         public event EventHandler Exited;
         public event Action<GitRevision> Updated;
         public event EventHandler<AsyncErrorEventArgs> Error;
@@ -82,8 +42,6 @@ namespace GitCommands
         private readonly string _revisionFilter;
         private readonly string _pathFilter;
         [CanBeNull] private readonly Func<GitRevision, bool> _revisionPredicate;
-
-        [CanBeNull] private ILookup<string, IGitRef> _refsByObjectId;
 
         public int RevisionCount { get; private set; }
 
@@ -104,8 +62,7 @@ namespace GitCommands
         }
 
         /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
-        public IEnumerable<IGitRef> LatestRefs
-            => _refsByObjectId?.SelectMany(p => p) ?? Enumerable.Empty<IGitRef>();
+        public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
 
         public void Execute()
         {
@@ -139,11 +96,32 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            var refs = _module.GetRefs(true);
-            UpdateSelectedRef(refs, branchName);
-            _refsByObjectId = refs.ToLookup(head => head.Guid);
+            LatestRefs = _module.GetRefs(true);
+            UpdateSelectedRef(LatestRefs, branchName);
+            var refsByObjectId = LatestRefs.ToLookup(head => head.Guid);
 
             token.ThrowIfCancellationRequested();
+
+            const string fullFormat =
+
+                // These header entries can all be decoded from the bytes directly.
+                // Each hash is 20 bytes long. There is always a
+
+                /* Object ID       */ "%H" +
+                /* Tree ID         */ "%T" +
+                /* Parent IDs      */ "%P%n" +
+                /* Author date     */ "%at%n" +
+                /* Commit date     */ "%ct%n" +
+                /* Encoding        */ "%e%n" +
+
+                // Items below here must be decoded as strings to support non-ASCII
+
+                /* Author name     */ "%aN%n" +
+                /* Author email    */ "%aE%n" +
+                /* Committer name  */ "%cN%n" +
+                /* Committer email */ "%cE%n" +
+                /* Commit subject  */ "%s%n" +
+                /* Commit body     */ "%b";
 
             var arguments = new ArgumentBuilder
             {
@@ -158,7 +136,9 @@ namespace GitCommands
                     new ArgumentBuilder
                     {
                         {
-                            _refFilterOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(_branchFilter) && _branchFilter.IndexOfAny(_shellGlobCharacters) != -1,
+                            _refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
+                            !_branchFilter.IsNullOrWhiteSpace() &&
+                            _branchFilter.IndexOfAny(_shellGlobCharacters) != -1,
                             "--branches=" + _branchFilter
                         },
                         { _refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
@@ -204,6 +184,9 @@ namespace GitCommands
                             // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
                             // Full commit message is used in InMemFilter but later it's not needed
                             revision.Body = null;
+
+                            // Look up any refs associate with this revision
+                            revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
 
                             RevisionCount++;
                             Updated?.Invoke(revision);
@@ -352,41 +335,102 @@ namespace GitCommands
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
 
-            var match = _commitRegex.Match(s);
+            var reader = new StringLineReader(s);
 
-            if (!match.Success || match.Index != 0)
+            var author = reader.ReadLine(stringPool);
+            var authorEmail = reader.ReadLine(stringPool);
+            var committer = reader.ReadLine(stringPool);
+            var committerEmail = reader.ReadLine(stringPool);
+            var subject = reader.ReadLine();
+            var body = reader.ReadToEnd();
+
+            if (!reader.CleanlyReadToEnd)
             {
-                // TODO log this parse problem
-                Debug.Fail("Commit regex did not match");
                 revision = default;
                 return false;
             }
 
+            var objectIdStr = objectId.ToString();
+
             revision = new GitRevision(null)
             {
                 // TODO are we really sure we can't make Revision.Guid an ObjectId?
-                Guid = objectId.ToString(),
+                Guid = objectIdStr,
 
                 // TODO take IReadOnlyList<ObjectId> instead
                 ParentGuids = parentIds.Select(p => p.ToString()).ToArray(),
 
                 TreeGuid = treeId,
-
-                Author = stringPool.Intern(s, match.Groups[grpAuthorName]),
-                AuthorEmail = stringPool.Intern(s, match.Groups[grpAuthorEmail]),
+                Author = author,
+                AuthorEmail = authorEmail,
                 AuthorDate = authorDate,
-                Committer = stringPool.Intern(s, match.Groups[grpCommitterName]),
-                CommitterEmail = stringPool.Intern(s, match.Groups[grpCommitterEmail]),
+                Committer = committer,
+                CommitterEmail = committerEmail,
                 CommitDate = commitDate,
                 MessageEncoding = encodingName,
-                Subject = match.Groups[grpSubject].Value,
-                Body = match.Groups[grpBody].Value
+                Subject = subject,
+                Body = body,
+                HasMultiLineMessage = !string.IsNullOrWhiteSpace(body)
             };
 
-            revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
-            revision.Refs = _refsByObjectId[revision.Guid].AsReadOnlyList();
-
             return true;
+        }
+
+        private struct StringLineReader
+        {
+            private readonly string _s;
+            private int _index;
+
+            public bool CleanlyReadToEnd { get; private set; }
+
+            public StringLineReader(string s)
+            {
+                _s = s;
+                _index = 0;
+                CleanlyReadToEnd = false;
+            }
+
+            public string ReadLine(StringPool pool = null)
+            {
+                if (_index == _s.Length)
+                {
+                    CleanlyReadToEnd = false;
+                    return null;
+                }
+
+                var startIndex = _index;
+                var endIndex = _s.IndexOf('\n', startIndex);
+
+                if (endIndex == -1)
+                {
+                    return ReadToEnd();
+                }
+
+                _index = endIndex + 1;
+
+                if (_index == _s.Length)
+                {
+                    CleanlyReadToEnd = true;
+                }
+
+                return pool != null
+                    ? pool.Intern(_s, startIndex, endIndex - startIndex)
+                    : _s.Substring(startIndex, endIndex - startIndex);
+            }
+
+            public string ReadToEnd()
+            {
+                if (_index == _s.Length)
+                {
+                    CleanlyReadToEnd = false;
+                    return null;
+                }
+
+                _index = _s.Length;
+                CleanlyReadToEnd = true;
+
+                return _s.Substring(_index);
+            }
         }
 
         public void Dispose()
