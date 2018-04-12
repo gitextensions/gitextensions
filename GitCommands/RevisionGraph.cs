@@ -43,6 +43,34 @@ namespace GitCommands
             ",
             RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
 
+        private const int grpAuthorName = 1;
+        private const int grpAuthorEmail = 2;
+        private const int grpCommitterName = 3;
+        private const int grpCommitterEmail = 4;
+        private const int grpSubject = 5;
+        private const int grpBody = 6;
+
+        private const string fullFormat =
+
+            // These header entries can all be decoded from the bytes directly.
+            // Each hash is 20 bytes long. There is always a
+
+            /* Object ID       */ "%H" +
+            /* Tree ID         */ "%T" +
+            /* Parent IDs      */ "%P%n" +
+            /* Author date     */ "%at%n" +
+            /* Commit date     */ "%ct%n" +
+            /* Encoding        */ "%e%n" +
+
+            // Items below here must be decoded as strings to support non-ASCII
+
+            /* Author name     */ "%aN%n" +
+            /* Author email    */ "%aE%n" +
+            /* Committer name  */ "%cN%n" +
+            /* Committer email */ "%cE%n" +
+            /* Commit subject  */ "%s%n" +
+            /* Commit body     */ "%b";
+
         public event EventHandler Exited;
         public event Action<GitRevision> Updated;
         public event EventHandler<AsyncErrorEventArgs> Error;
@@ -114,27 +142,6 @@ namespace GitCommands
             _refsByObjectId = refs.ToLookup(head => head.Guid);
 
             token.ThrowIfCancellationRequested();
-
-            const string fullFormat =
-
-                // These header entries can all be decoded from the bytes directly.
-                // Each hash is 20 bytes long. There is always a
-
-                /* Object ID       */ "%H" +
-                /* Tree ID         */ "%T" +
-                /* Parent IDs      */ "%P%n" +
-                /* Author date     */ "%at%n" +
-                /* Commit date     */ "%ct%n" +
-                /* Encoding        */ "%e%n" +
-
-                // Items below here must be decoded as strings to support non-ASCII
-
-                /* Author name     */ "%aN%n" +
-                /* Author email    */ "%aE%n" +
-                /* Committer name  */ "%cN%n" +
-                /* Committer email */ "%cE%n" +
-                /* Commit subject  */ "%s%n" +
-                /* Commit body     */ "%b";
 
             var arguments = new ArgumentBuilder
             {
@@ -334,15 +341,15 @@ namespace GitCommands
 
                 TreeGuid = treeId,
 
-                Author = stringPool.Intern(s, match.Groups[1 /*authorname*/]),
-                AuthorEmail = stringPool.Intern(s, match.Groups[2 /*authoremail*/]),
+                Author = stringPool.Intern(s, match.Groups[grpAuthorName]),
+                AuthorEmail = stringPool.Intern(s, match.Groups[grpAuthorEmail]),
                 AuthorDate = authorDate,
-                Committer = stringPool.Intern(s, match.Groups[3 /*committername*/]),
-                CommitterEmail = stringPool.Intern(s, match.Groups[4 /*committeremail*/]),
+                Committer = stringPool.Intern(s, match.Groups[grpCommitterName]),
+                CommitterEmail = stringPool.Intern(s, match.Groups[grpCommitterEmail]),
                 CommitDate = commitDate,
                 MessageEncoding = encodingName,
-                Subject = match.Groups[5 /*subject*/].Value,
-                Body = match.Groups[6 /*body*/].Value
+                Subject = match.Groups[grpSubject].Value,
+                Body = match.Groups[grpBody].Value
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
