@@ -137,7 +137,6 @@
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
-    <Compile Include="Repository\RepositoriesTests.cs" />
     <Compile Include="Repository\RepositoryStorageTests.cs" />
     <Compile Include="Repository\RepositoryXmlSerialiserTests.cs" />
     <Compile Include="SshPathLocatorTest.cs" />
