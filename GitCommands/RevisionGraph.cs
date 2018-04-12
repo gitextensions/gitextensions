@@ -191,13 +191,13 @@ namespace GitCommands
 
                 var buffer = new byte[4096];
 
-                foreach (var logItemBytes in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+                foreach (var chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
                 {
                     token.ThrowIfCancellationRequested();
 
                     revisionCount++;
 
-                    ProcessLogItem(logItemBytes, stringPool, logOutputEncoding);
+                    ProcessLogItem(chunk, stringPool, logOutputEncoding);
                 }
 
                 Trace.WriteLine($"**** PROCESSED {revisionCount} ALL REVISIONS IN {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. Pool count {stringPool.Count}");
@@ -232,19 +232,19 @@ namespace GitCommands
             }
         }
 
-        private void ProcessLogItem(ArraySegment<byte> logItemBytes, StringPool stringPool, Encoding logOutputEncoding)
+        private void ProcessLogItem(ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding)
         {
-            if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, 0, out var objectId) ||
-                !ObjectId.TryParseAsciiHexBytes(logItemBytes, ObjectId.Sha1CharCount, out var treeId))
+            if (!ObjectId.TryParseAsciiHexBytes(chunk, 0, out var objectId) ||
+                !ObjectId.TryParseAsciiHexBytes(chunk, ObjectId.Sha1CharCount, out var treeId))
             {
                 return;
             }
 
-            var array = logItemBytes.Array;
+            var array = chunk.Array;
 
             var parentIds = new List<ObjectId>(capacity: 1);
-            var offset = logItemBytes.Offset + (ObjectId.Sha1CharCount * 2);
-            var lastOffset = logItemBytes.Offset + logItemBytes.Count;
+            var offset = chunk.Offset + (ObjectId.Sha1CharCount * 2);
+            var lastOffset = chunk.Offset + chunk.Count;
 
             while (true)
             {
