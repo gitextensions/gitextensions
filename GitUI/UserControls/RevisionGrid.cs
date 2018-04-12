@@ -1359,15 +1359,16 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeAsync(() =>
-                                  {
-                                      Error.Visible = true;
-                                      ////Error.BringToFront();
-                                      NoGit.Visible = false;
-                                      NoCommits.Visible = false;
-                                      Revisions.Visible = false;
-                                      Loading.Visible = false;
-                                  })
+            this.InvokeAsync(
+                    () =>
+                    {
+                        Error.Visible = true;
+                        ////Error.BringToFront();
+                        NoGit.Visible = false;
+                        NoCommits.Visible = false;
+                        Revisions.Visible = false;
+                        Loading.Visible = false;
+                    })
                 .FileAndForget();
 
             DisposeRevisionGraphCommand();
@@ -1424,15 +1425,16 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(() =>
-                                      {
-                                          NoGit.Visible = false;
-                                          NoCommits.Visible = true;
-                                          ////NoCommits.BringToFront();
-                                          Revisions.Visible = false;
-                                          Loading.Visible = false;
-                                          _isRefreshingRevisions = false;
-                                      })
+                this.InvokeAsync(
+                        () =>
+                        {
+                            NoGit.Visible = false;
+                            NoCommits.Visible = true;
+                            ////NoCommits.BringToFront();
+                            Revisions.Visible = false;
+                            Loading.Visible = false;
+                            _isRefreshingRevisions = false;
+                        })
                     .FileAndForget();
             }
             else
@@ -1567,6 +1569,7 @@ namespace GitUI
             }
 
             _initialLoad = false;
+
             SelectionTimer.Enabled = false;
             SelectionTimer.Stop();
             SelectionTimer.Enabled = true;
@@ -2992,21 +2995,23 @@ namespace GitUI
                 }
             }
 
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
-
-            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
+            if (_filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
             {
-                CheckUncommitedChanged(filtredCurrentCheckout);
+                CheckUncommitedChanged(_filtredCurrentCheckout);
             }
 
-            var dataType = DvcsGraph.DataType.Normal;
-            if (rev.Guid == filtredCurrentCheckout)
+            DvcsGraph.DataType dataType;
+            if (rev.Guid == _filtredCurrentCheckout)
             {
                 dataType = DvcsGraph.DataType.Active;
             }
             else if (rev.Refs.Any())
             {
                 dataType = DvcsGraph.DataType.Special;
+            }
+            else
+            {
+                dataType = DvcsGraph.DataType.Normal;
             }
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
@@ -3023,6 +3028,7 @@ namespace GitUI
         {
             int staged = status.Count(item => item.IsStaged);
             int unstaged = status.Count - staged;
+
             if (unstagedRev != null)
             {
                 unstagedRev.SubjectCount = "(" + unstaged + ") ";
@@ -3033,14 +3039,9 @@ namespace GitUI
                 stagedRev.SubjectCount = "(" + staged + ") ";
             }
 
-            if (unstagedRev == null || stagedRev == null)
-            {
-                _artificialStatus = status;
-            }
-            else
-            {
-                _artificialStatus = null;
-            }
+            _artificialStatus = unstagedRev == null || stagedRev == null
+                ? status
+                : null;
 
             Revisions.Invalidate();
         }

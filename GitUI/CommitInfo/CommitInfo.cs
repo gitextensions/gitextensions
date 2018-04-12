@@ -189,8 +189,8 @@ namespace GitUI.CommitInfo
             }
 
             data.ChildrenGuids = _children;
-            var header = _commitDataHeaderRenderer.Render(data, CommandClick != null);
-            var body = _commitDataBodyRenderer.Render(data, CommandClick != null);
+            var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
+            var body = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(header);
             _RevisionHeader.Height = GetRevisionHeaderHeight();
