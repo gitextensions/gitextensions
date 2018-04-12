@@ -167,6 +167,10 @@ namespace GitCommands
             var sw = Stopwatch.StartNew();
             var revisionCount = 0;
 
+            // This property is relatively expensive to call for every revision, so
+            // cache it for the duration of the loop.
+            var logOutputEncoding = _module.LogOutputEncoding;
+
             using (var process = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding))
             {
                 token.ThrowIfCancellationRequested();
@@ -182,7 +186,7 @@ namespace GitCommands
 
                     revisionCount++;
 
-                    ProcessLogItem(logItemBytes, stringPool);
+                    ProcessLogItem(logItemBytes, stringPool, logOutputEncoding);
                 }
 
                 Trace.WriteLine($"**** PROCESSED {revisionCount} ALL REVISIONS IN {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. Pool count {stringPool.Count}");
@@ -221,7 +225,7 @@ namespace GitCommands
             return refs;
         }
 
-        private void ProcessLogItem(ArraySegment<byte> logItemBytes, StringPool stringPool)
+        private void ProcessLogItem(ArraySegment<byte> logItemBytes, StringPool stringPool, Encoding logOutputEncoding)
         {
             if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, 0, out var objectId) ||
                 !ObjectId.TryParseAsciiHexBytes(logItemBytes, ObjectId.Sha1CharCount, out var treeId))
@@ -299,12 +303,12 @@ namespace GitCommands
             if (offset == encodingNameEndOffset)
             {
                 // No encoding specified
-                encoding = _module.LogOutputEncoding;
+                encoding = logOutputEncoding;
                 encodingName = null;
             }
             else
             {
-                encodingName = _module.LogOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
+                encodingName = logOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
                 encoding = _module.GetEncodingByGitName(encodingName);
             }
 
