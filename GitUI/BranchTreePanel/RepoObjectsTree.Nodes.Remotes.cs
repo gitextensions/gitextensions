@@ -81,7 +81,9 @@ namespace GitUI.BranchTreePanel
                 var treeNode = FindRemoteRepoTreeNodeByName(orgName);
                 if (treeNode == null)
                 {
-                    throw new InvalidOperationException("Cannot rename a non-existing remote");
+                    // This may happen if attempting to save an inactive remote
+                    // which has been reactivated but not fetched/pulled
+                    return;
                 }
 
                 treeNode.Text = newName;
@@ -169,7 +171,8 @@ namespace GitUI.BranchTreePanel
                 var branch = FullPath.Substring(remote.Length + 1);
                 return new RemoteBranchInfo
                 {
-                    Remote = remote, BranchName = branch
+                    Remote = remote,
+                    BranchName = branch
                 };
             }
 
