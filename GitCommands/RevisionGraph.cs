@@ -355,7 +355,7 @@ namespace GitCommands
             };
 
             revision.HasMultiLineMessage = !string.IsNullOrWhiteSpace(revision.Body);
-            revision.Refs = _refsByObjectId[revision.Guid].ToReadOnlyList();
+            revision.Refs = _refsByObjectId[revision.Guid].AsReadOnlyList();
 
             if (_revisionPredicate == null || _revisionPredicate(revision))
             {
