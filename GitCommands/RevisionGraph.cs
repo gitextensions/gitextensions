@@ -137,6 +137,8 @@ namespace GitCommands
                 ? _module.GetSelectedBranch()
                 : "";
 
+            token.ThrowIfCancellationRequested();
+
             var refs = _module.GetRefs(true);
             UpdateSelectedRef(refs, branchName);
             _refsByObjectId = refs.ToLookup(head => head.Guid);
