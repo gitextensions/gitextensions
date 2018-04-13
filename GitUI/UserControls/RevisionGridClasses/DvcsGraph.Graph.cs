@@ -193,33 +193,36 @@ namespace GitUI.RevisionGridClasses
             {
                 for (int i = _processedNodes; i < AddedNodes.Count; i++)
                 {
-                    if (AddedNodes[i] == node)
+                    if (AddedNodes[i] != node)
                     {
-                        bool isChanged = false;
-                        while (i > _processedNodes)
-                        {
-                            // This only happens if we weren't in topo order
-                            if (Debugger.IsAttached)
-                            {
-                                Debugger.Break();
-                            }
-
-                            Node temp = AddedNodes[i];
-                            AddedNodes[i] = AddedNodes[i - 1];
-                            AddedNodes[i - 1] = temp;
-                            i--;
-                            isChanged = true;
-                        }
-
-                        // Signal that these rows have changed
-                        if (isChanged)
-                        {
-                            Updated?.Invoke();
-                        }
-
-                        _processedNodes++;
-                        break;
+                        continue;
                     }
+
+                    bool isChanged = false;
+
+                    while (i > _processedNodes)
+                    {
+                        // This only happens if we weren't in topo order
+                        if (Debugger.IsAttached)
+                        {
+                            Debugger.Break();
+                        }
+
+                        Node temp = AddedNodes[i];
+                        AddedNodes[i] = AddedNodes[i - 1];
+                        AddedNodes[i - 1] = temp;
+                        i--;
+                        isChanged = true;
+                    }
+
+                    // Signal that these rows have changed
+                    if (isChanged)
+                    {
+                        Updated?.Invoke();
+                    }
+
+                    _processedNodes++;
+                    break;
                 }
             }
 
