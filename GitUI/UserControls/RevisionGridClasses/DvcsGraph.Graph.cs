@@ -374,21 +374,26 @@ namespace GitUI.RevisionGridClasses
 
             public struct LaneInfo
             {
-                private List<Junction> _junctions;
-
-                public LaneInfo(int connectLane, Junction junction)
-                {
-                    ConnectLane = connectLane;
-                    _junctions = new List<Junction>(1) { junction };
-                }
+                private readonly List<Junction> _junctions;
 
                 public int ConnectLane { get; set; }
+
+                public LaneInfo(int connectLane, Junction junction)
+                    : this(connectLane, new List<Junction> { junction })
+                {
+                }
+
+                private LaneInfo(int connectLane, List<Junction> junctions)
+                {
+                    ConnectLane = connectLane;
+                    _junctions = junctions;
+                }
 
                 public IEnumerable<Junction> Junctions => _junctions;
 
                 public LaneInfo Clone()
                 {
-                    return new LaneInfo { ConnectLane = ConnectLane, _junctions = new List<Junction>(_junctions) };
+                    return new LaneInfo(ConnectLane, new List<Junction>(_junctions));
                 }
 
                 public void UnionWith(LaneInfo other)
