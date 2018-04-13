@@ -105,7 +105,7 @@ namespace GitCommands
                 /* Author email    */ "%aE%n" +
                 /* Committer name  */ "%cN%n" +
                 /* Committer email */ "%cE%n" +
-                /* Commit subject  */ "%s%n" +
+                /* Commit subject  */ "%s%n%n" +
                 /* Commit body     */ "%b";
 
             // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
@@ -225,6 +225,8 @@ namespace GitCommands
             // at the beginning of the chunk. The latter part of the chunk will require
             // decoding as a string.
 
+            #region Object ID, Tree ID, Parent IDs
+
             // The first 40 bytes are the revision ID and the tree ID back to back
             if (!ObjectId.TryParseAsciiHexBytes(chunk, 0, out var objectId) ||
                 !ObjectId.TryParseAsciiHexBytes(chunk, ObjectId.Sha1CharCount, out var treeId))
@@ -232,6 +234,8 @@ namespace GitCommands
                 revision = default;
                 return false;
             }
+
+            var objectIdStr = objectId.ToString();
 
             var array = chunk.Array;
             var offset = chunk.Offset + (ObjectId.Sha1CharCount * 2);
@@ -274,6 +278,10 @@ namespace GitCommands
                 offset += ObjectId.Sha1CharCount;
             }
 
+            #endregion
+
+            #region Timestamps
+
             // Lines 2 and 3 are timestamps, as decimal ASCII seconds since the unix epoch, each terminated by `\n`
             var authorDate = ParseUnixDateTime();
             var commitDate = ParseUnixDateTime();
@@ -294,6 +302,10 @@ namespace GitCommands
                     unixTime = (unixTime * 10) + (c - '0');
                 }
             }
+
+            #endregion
+
+            #region Encoding
 
             // Line is the name of the encoding used by git, or an empty string, terminated by `\n`
             string encodingName;
@@ -322,6 +334,10 @@ namespace GitCommands
 
             offset = encodingNameEndOffset + 1;
 
+            #endregion
+
+            #region Encoded string valies (names, emails, subject, body)
+
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
 
@@ -331,10 +347,13 @@ namespace GitCommands
             var authorEmail = reader.ReadLine(stringPool);
             var committer = reader.ReadLine(stringPool);
             var committerEmail = reader.ReadLine(stringPool);
-            var subject = reader.ReadLine();
+
+            // NOTE the convention is that the Body property contain a copy of Subject
+            // Therefore we read the subject twice
+            var subject = reader.ReadLine(advance: false);
             var body = reader.ReadToEnd();
 
-            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
+            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null || body == null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read an entry from the log -- this should not happen");
@@ -342,7 +361,7 @@ namespace GitCommands
                 return false;
             }
 
-            var objectIdStr = objectId.ToString();
+            #endregion
 
             revision = new GitRevision(null)
             {
@@ -389,7 +408,7 @@ namespace GitCommands
                 _index = 0;
             }
 
-            public string ReadLine(StringPool pool = null)
+            public string ReadLine(StringPool pool = null, bool advance = true)
             {
                 if (_index == _s.Length)
                 {
@@ -404,7 +423,10 @@ namespace GitCommands
                     return ReadToEnd();
                 }
 
-                _index = endIndex + 1;
+                if (advance)
+                {
+                    _index = endIndex + 1;
+                }
 
                 return pool != null
                     ? pool.Intern(_s, startIndex, endIndex - startIndex)
