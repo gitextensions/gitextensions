@@ -29,7 +29,7 @@ namespace GitUI.RevisionGridClasses
 
             public int CachedCount => _lanes.CachedCount;
 
-            public void ClearHighlightBranch()
+            private void ClearHighlightBranch()
             {
                 foreach (Node node in Nodes.Values)
                 {
@@ -56,7 +56,7 @@ namespace GitUI.RevisionGridClasses
                 return false;
             }
 
-            public void HighlightBranchRecursive(string id)
+            private void HighlightBranchRecursive(string id)
             {
                 if (Nodes.TryGetValue(id, out var startNode))
                 {

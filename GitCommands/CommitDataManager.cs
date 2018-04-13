@@ -95,7 +95,7 @@ namespace GitCommands
         /// was provided the string <see cref="CommitDataManager.LogFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
         [NotNull]
-        public CommitData CreateFromFormattedData([NotNull] string data)
+        internal CommitData CreateFromFormattedData([NotNull] string data)
         {
             if (data == null)
             {
