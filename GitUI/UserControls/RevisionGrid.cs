@@ -3014,7 +3014,7 @@ namespace GitUI
                 dataType = DvcsGraph.DataType.Normal;
             }
 
-            Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+            Revisions.Add(rev, dataType);
         }
 
         public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status)
@@ -3063,7 +3063,7 @@ namespace GitUI
                 Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
-            Revisions.Add(unstagedRev.Guid, unstagedRev.ParentGuids, DvcsGraph.DataType.Normal, unstagedRev);
+            Revisions.Add(unstagedRev, DvcsGraph.DataType.Normal);
 
             // Add index as virtual commit
             var stagedRev = new GitRevision(GitRevision.IndexGuid)
@@ -3077,7 +3077,7 @@ namespace GitUI
                 Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
-            Revisions.Add(stagedRev.Guid, stagedRev.ParentGuids, DvcsGraph.DataType.Normal, stagedRev);
+            Revisions.Add(stagedRev, DvcsGraph.DataType.Normal);
 
             if (_artificialStatus != null)
             {

@@ -294,11 +294,11 @@ namespace GitUI.RevisionGridClasses
         [Browsable(false)]
         public bool RevisionGraphVisible => GraphColumn.Visible;
 
-        public void Add(string id, IReadOnlyList<string> parentIds, DataType type, GitRevision data)
+        public void Add(GitRevision revision, DataType type)
         {
             lock (_graphData)
             {
-                _graphData.Add(id, parentIds, type, data);
+                _graphData.Add(revision, type);
             }
 
             UpdateData();

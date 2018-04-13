@@ -77,17 +77,19 @@ namespace GitUI.RevisionGridClasses
 
             public event Action Updated;
 
-            public void Add(string id, IReadOnlyList<string> parentIds, DataType type, GitRevision data)
+            public void Add(GitRevision revision, DataType type)
             {
+                var parentIds = revision.ParentGuids;
+
                 // If we haven't seen this node yet, create a new junction.
-                if (!GetNode(id, out var node) && (parentIds == null || parentIds.Count == 0))
+                if (!GetNode(revision.Guid, out var node) && (parentIds == null || parentIds.Count == 0))
                 {
                     var newJunction = new Junction(node, node);
                     _junctions.Add(newJunction);
                 }
 
                 _nodeCount++;
-                node.Data = data;
+                node.Data = revision;
                 node.DataType = type;
                 node.Index = AddedNodes.Count;
                 AddedNodes.Add(node);
