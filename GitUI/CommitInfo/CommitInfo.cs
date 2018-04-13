@@ -194,7 +194,7 @@ namespace GitUI.CommitInfo
             var body = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(header);
-            _RevisionHeader.Height = GetRevisionHeaderHeight();
+            _RevisionHeader.Height = _headerResize.Height;
             _revisionInfo = body;
 
             UpdateRevisionInfo();
@@ -225,11 +225,6 @@ namespace GitUI.CommitInfo
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.Guid)).FileAndForget();
             }
-        }
-
-        private int GetRevisionHeaderHeight()
-        {
-            return _headerResize.Height;
         }
 
         private async Task LoadSortedRefsAsync()
