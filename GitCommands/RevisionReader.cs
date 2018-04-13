@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 using GitUI;
@@ -30,40 +29,33 @@ namespace GitCommands
     public sealed class RevisionReader : IDisposable
     {
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
-        private readonly GitModule _module;
 
         public int RevisionCount { get; private set; }
 
         /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
         public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
 
-        public RevisionReader(GitModule module)
-        {
-            _module = module;
-        }
-
-        public IObservable<GitRevision> Execute(
+        public void Execute(
+            GitModule module,
+            IObserver<GitRevision> subject,
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
             string pathFilter,
             [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
-            var subject = new ReplaySubject<GitRevision>();
-
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
                 .FileAndForget(
                     ex =>
                     {
                         subject.OnError(ex);
                         return false;
                     });
-
-            return subject;
         }
 
         private async Task ExecuteAsync(
+            GitModule module,
             IObserver<GitRevision> subject,
             RefFilterOptions refFilterOptions,
             string branchFilter,
@@ -83,14 +75,14 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            var branchName = _module.IsValidGitWorkingDir()
-                ? _module.GetSelectedBranch()
+            var branchName = module.IsValidGitWorkingDir()
+                ? module.GetSelectedBranch()
                 : "";
 
             token.ThrowIfCancellationRequested();
 
-            LatestRefs = _module.GetRefs();
-            UpdateSelectedRef(LatestRefs, branchName);
+            LatestRefs = module.GetRefs();
+            UpdateSelectedRef(module, LatestRefs, branchName);
             var refsByObjectId = LatestRefs.ToLookup(head => head.Guid);
 
             token.ThrowIfCancellationRequested();
@@ -118,45 +110,15 @@ namespace GitCommands
 
             // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
 
-            var arguments = new ArgumentBuilder
-            {
-                "log",
-                "-z",
-                $"--pretty=format:\"{fullFormat}\"",
-                { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
-                { AppSettings.ShowReflogReferences, "--reflog" },
-                {
-                    refFilterOptions.HasFlag(RefFilterOptions.All),
-                    "--all",
-                    new ArgumentBuilder
-                    {
-                        {
-                            refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                            !branchFilter.IsNullOrWhiteSpace() &&
-                            branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
-                            "--branches=" + branchFilter
-                        },
-                        { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                        { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
-                    }.ToString()
-                },
-                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
-                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
-                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
-                revisionFilter,
-                "--",
-                pathFilter
-            };
+            var arguments = BuildArguments();
 
             var sw = Stopwatch.StartNew();
 
             // This property is relatively expensive to call for every revision, so
             // cache it for the duration of the loop.
-            var logOutputEncoding = _module.LogOutputEncoding;
+            var logOutputEncoding = module.LogOutputEncoding;
 
-            using (var process = _module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding))
+            using (var process = module.RunGitCmdDetached(arguments.ToString(), GitModule.LosslessEncoding))
             {
                 token.ThrowIfCancellationRequested();
 
@@ -169,7 +131,7 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(chunk, stringPool, logOutputEncoding, out var revision))
+                    if (TryParseRevision(module, chunk, stringPool, logOutputEncoding, out var revision))
                     {
                         if (revisionPredicate == null || revisionPredicate(revision))
                         {
@@ -196,9 +158,44 @@ namespace GitCommands
             {
                 subject.OnCompleted();
             }
+
+            ArgumentBuilder BuildArguments()
+            {
+                return new ArgumentBuilder
+                {
+                    "log",
+                    "-z",
+                    $"--pretty=format:\"{fullFormat}\"",
+                    { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
+                    { AppSettings.ShowReflogReferences, "--reflog" },
+                    {
+                        refFilterOptions.HasFlag(RefFilterOptions.All),
+                        "--all",
+                        new ArgumentBuilder
+                        {
+                            {
+                                refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
+                                !branchFilter.IsNullOrWhiteSpace() &&
+                                branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
+                                "--branches=" + branchFilter
+                            },
+                            { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                            { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                        }.ToString()
+                    },
+                    { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                    { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                    { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                    { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
+                    { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
+                    revisionFilter,
+                    "--",
+                    pathFilter
+                };
+            }
         }
 
-        private void UpdateSelectedRef(IReadOnlyList<IGitRef> refs, string branchName)
+        private static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> refs, string branchName)
         {
             var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
 
@@ -206,7 +203,7 @@ namespace GitCommands
             {
                 selectedRef.Selected = true;
 
-                var localConfigFile = _module.LocalConfigFile;
+                var localConfigFile = module.LocalConfigFile;
                 var selectedHeadMergeSource = refs.FirstOrDefault(
                     head => head.IsRemote
                          && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
@@ -219,7 +216,7 @@ namespace GitCommands
             }
         }
 
-        private bool TryParseRevision(ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
+        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -320,7 +317,7 @@ namespace GitCommands
             else
             {
                 encodingName = logOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
-                encoding = _module.GetEncodingByGitName(encodingName);
+                encoding = module.GetEncodingByGitName(encodingName);
             }
 
             offset = encodingNameEndOffset + 1;

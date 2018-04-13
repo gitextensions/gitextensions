@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -1269,22 +1270,25 @@ namespace GitUI
                     predicate = null;
                 }
 
+                var revisions = new Subject<GitRevision>();
+                _revisionSubscription?.Dispose();
+                _revisionSubscription = revisions
+                    .ObserveOn(ThreadPoolScheduler.Instance)
+                    .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
+
                 if (_revisionReader == null)
                 {
-                    _revisionReader = new RevisionReader(Module);
+                    _revisionReader = new RevisionReader();
                 }
 
-                var revisions = _revisionReader.Execute(
+                _revisionReader.Execute(
+                    Module,
+                    revisions,
                     _refFilterOptions,
                     BranchFilter,
                     _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
                     _revisionFilter.GetPathFilter() + FixedPathFilter,
                     predicate);
-
-                _revisionSubscription?.Dispose();
-                _revisionSubscription = revisions
-                    .ObserveOn(ThreadPoolScheduler.Instance)
-                    .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
                 LoadRevisions();
                 SetRevisionsLayout();
