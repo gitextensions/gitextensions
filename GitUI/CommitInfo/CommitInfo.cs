@@ -17,6 +17,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -212,7 +213,7 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.ShowAnnotatedTagsMessages)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision)).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
             }
 
             if (AppSettings.CommitInfoShowContainedInTags)
@@ -240,25 +241,25 @@ namespace GitUI.CommitInfo
             UpdateRevisionInfo();
         }
 
-        private async Task LoadAnnotatedTagInfoAsync(GitRevision revision)
+        private async Task LoadAnnotatedTagInfoAsync(IReadOnlyList<IGitRef> refs)
         {
             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-            _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
+            _annotatedTagsMessages = GetAnnotatedTagsMessages(refs);
 
             await this.SwitchToMainThreadAsync();
             UpdateRevisionInfo();
         }
 
-        private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
+        private IDictionary<string, string> GetAnnotatedTagsMessages(IReadOnlyList<IGitRef> refs)
         {
-            if (revision == null)
+            if (refs == null)
             {
                 return null;
             }
 
-            IDictionary<string, string> result = new Dictionary<string, string>();
+            var result = new Dictionary<string, string>();
 
-            foreach (GitRef gitRef in revision.Refs)
+            foreach (var gitRef in refs)
             {
                 #region Note on annotated tags
                 // Notice that for the annotated tags, gitRef's come in pairs because they're produced
