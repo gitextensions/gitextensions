@@ -10,13 +10,13 @@ namespace GitUI.RevisionGridClasses
     {
         private sealed class Graph
         {
-            public readonly List<Node> AddedNodes = new List<Node>();
+            public event Action Updated;
 
             private readonly List<Junction> _junctions = new List<Junction>();
             private readonly Lanes _lanes;
-
             private int _processedNodes;
 
+            public List<Node> AddedNodes { get; } = new List<Node>();
             public Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
             public int Count { get; private set; }
 
@@ -69,8 +69,6 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
             }
-
-            public event Action Updated;
 
             public void Add(GitRevision revision, DataTypes types)
             {
