@@ -35,8 +35,8 @@ namespace GitCommands
 
     public sealed class CommitDataManager : ICommitDataManager
     {
-        private const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
-        private const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
+        private const string CommitDataFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
+        private const string BodyAndNotesFormat = "%H%n%e%n%B%nNotes:%n%-N";
 
         private readonly Func<IGitModule> _getModule;
 
@@ -48,7 +48,7 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateBody(CommitData commitData, out string error)
         {
-            if (!TryGetCommitLog(commitData.Guid.ToString(), ShortLogFormat, out error, out var data))
+            if (!TryGetCommitLog(commitData.Guid.ToString(), BodyAndNotesFormat, out error, out var data))
             {
                 return;
             }
@@ -83,7 +83,7 @@ namespace GitCommands
         /// <inheritdoc />
         public CommitData GetCommitData(string sha1, out string error)
         {
-            return TryGetCommitLog(sha1, LogFormat, out error, out var info)
+            return TryGetCommitLog(sha1, CommitDataFormat, out error, out var info)
                 ? CreateFromFormattedData(info)
                 : null;
         }
@@ -92,7 +92,7 @@ namespace GitCommands
         /// Parses <paramref name="data"/> into a <see cref="CommitData"/> object.
         /// </summary>
         /// <param name="data">Data produced by a <c>git log</c> or <c>git show</c> command where <c>--format</c>
-        /// was provided the string <see cref="LogFormat"/>.</param>
+        /// was provided the string <see cref="CommitDataFormat"/>.</param>
         /// <returns>CommitData object populated with parsed info from git string.</returns>
         [NotNull]
         internal CommitData CreateFromFormattedData([NotNull] string data)
