@@ -32,7 +32,7 @@ namespace GitUI.RevisionGridClasses
         #region DataType enum
 
         [Flags]
-        public enum DataType
+        public enum DataTypes
         {
             Normal = 0,
             Active = 1,
@@ -294,11 +294,11 @@ namespace GitUI.RevisionGridClasses
         [Browsable(false)]
         public bool RevisionGraphVisible => GraphColumn.Visible;
 
-        public void Add(GitRevision revision, DataType type)
+        public void Add(GitRevision revision, DataTypes types)
         {
             lock (_graphData)
             {
-                _graphData.Add(revision, type);
+                _graphData.Add(revision, types);
             }
 
             UpdateData();
@@ -1295,7 +1295,7 @@ namespace GitUI.RevisionGridClasses
             public readonly List<Junction> Descendants = new List<Junction>();
             public readonly string Id;
             public GitRevision Data;
-            public DataType DataType;
+            public DataTypes DataTypes;
             public int InLane = int.MaxValue;
             public int Index = int.MaxValue;
 
@@ -1304,25 +1304,25 @@ namespace GitUI.RevisionGridClasses
                 Id = id;
             }
 
-            public bool IsActive => (DataType & DataType.Active) == DataType.Active;
+            public bool IsActive => (DataTypes & DataTypes.Active) == DataTypes.Active;
 
             public bool IsFiltered
             {
-                get { return (DataType & DataType.Filtered) == DataType.Filtered; }
+                get { return (DataTypes & DataTypes.Filtered) == DataTypes.Filtered; }
                 set
                 {
                     if (value)
                     {
-                        DataType |= DataType.Filtered;
+                        DataTypes |= DataTypes.Filtered;
                     }
                     else
                     {
-                        DataType &= ~DataType.Filtered;
+                        DataTypes &= ~DataTypes.Filtered;
                     }
                 }
             }
 
-            public bool IsSpecial => (DataType & DataType.Special) == DataType.Special;
+            public bool IsSpecial => (DataTypes & DataTypes.Special) == DataTypes.Special;
 
             public override string ToString()
             {
