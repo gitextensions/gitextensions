@@ -10,12 +10,6 @@ namespace GitUI.RevisionGridClasses
     {
         private sealed class Graph
         {
-            #region Delegates
-
-            public delegate void GraphUpdatedHandler(object sender);
-
-            #endregion
-
             public readonly List<Node> AddedNodes = new List<Node>();
 
             private readonly List<Junction> _junctions = new List<Junction>();
@@ -81,7 +75,7 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public event GraphUpdatedHandler Updated;
+            public event Action Updated;
 
             public void Add(string id, string[] parentIds, DataType type, GitRevision data)
             {
@@ -183,7 +177,7 @@ namespace GitUI.RevisionGridClasses
                     _lanes.CacheTo(lastLane);
 
                     // We need to signal the DvcsGraph object that it needs to redraw everything.
-                    Updated?.Invoke(this);
+                    Updated?.Invoke();
                 }
                 else
                 {
@@ -225,7 +219,7 @@ namespace GitUI.RevisionGridClasses
                         // Signal that these rows have changed
                         if (isChanged)
                         {
-                            Updated?.Invoke(this);
+                            Updated?.Invoke();
                         }
 
                         _processedNodes++;

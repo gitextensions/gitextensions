@@ -453,7 +453,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        private void graphData_Updated(object graph)
+        private void graphData_Updated()
         {
             // We have to post this since the thread owns a lock on GraphData that we'll
             // need in order to re-draw the graph.
