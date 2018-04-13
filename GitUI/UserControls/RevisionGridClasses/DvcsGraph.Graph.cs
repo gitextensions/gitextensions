@@ -242,7 +242,8 @@ namespace GitUI.RevisionGridClasses
 
             public IEnumerable<Node> GetRefs()
             {
-                var nodes = new List<Node>();
+                var nodes = new List<Node>(capacity: _junctions.Count);
+
                 foreach (Junction j in _junctions)
                 {
                     if (j.Youngest.Descendants.Count == 0 && !nodes.Contains(j.Youngest))
