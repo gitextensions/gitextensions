@@ -470,7 +470,7 @@ namespace GitUI.CommandsDialogs
                 bool refresh = plugin.Execute(eventArgs);
                 if (refresh)
                 {
-                    RefreshToolStripMenuItemClick(null, null);
+                    RefreshRevisions();
                 }
             }
         }
@@ -1406,7 +1406,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshButtonClick(object sender, EventArgs e)
         {
-            RefreshToolStripMenuItemClick(sender, e);
+            RefreshRevisions();
         }
 
         private void CommitcountPerUserToolStripMenuItemClick(object sender, EventArgs e)
