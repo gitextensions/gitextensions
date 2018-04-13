@@ -89,7 +89,7 @@ namespace GitUI.RevisionGridClasses
                 Oldest.Ancestors.Remove(this);
             }
 
-            public Junction Split(Node node)
+            public Junction SplitIntoJunctionWith(Node node)
             {
                 // The 'top' (Child->node) of the junction is retained by this.
                 // The 'bottom' (node->Parent) of the junction is returned.

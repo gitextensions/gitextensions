@@ -77,8 +77,7 @@ namespace GitUI.RevisionGridClasses
                 // If we haven't seen this node yet, create a new junction.
                 if (!GetNode(revision.Guid, out var node) && (parentIds == null || parentIds.Count == 0))
                 {
-                    var newJunction = new Junction(node, node);
-                    _junctions.Add(newJunction);
+                    _junctions.Add(new Junction(node, node));
                 }
 
                 Count++;
@@ -116,28 +115,23 @@ namespace GitUI.RevisionGridClasses
                     else if (node.Ancestors.Count == 1 && node.Ancestors[0].Youngest != node)
                     {
                         // The node is in the middle of a junction. We need to split it.
-                        Junction splitNode = node.Ancestors[0].Split(node);
-                        _junctions.Add(splitNode);
+                        _junctions.Add(node.Ancestors[0].SplitIntoJunctionWith(node));
 
                         // The node is a junction point. We are a new junction
-                        var junction = new Junction(node, parent);
-                        _junctions.Add(junction);
+                        _junctions.Add(new Junction(node, parent));
                     }
                     else if (parent.Descendants.Count == 1 && parent.Descendants[0].Oldest != parent)
                     {
                         // The parent is in the middle of a junction. We need to split it.
-                        Junction splitNode = parent.Descendants[0].Split(parent);
-                        _junctions.Add(splitNode);
+                        _junctions.Add(parent.Descendants[0].SplitIntoJunctionWith(parent));
 
                         // The node is a junction point. We are a new junction
-                        var junction = new Junction(node, parent);
-                        _junctions.Add(junction);
+                        _junctions.Add(new Junction(node, parent));
                     }
                     else
                     {
                         // The node is a junction point. We are a new junction
-                        var junction = new Junction(node, parent);
-                        _junctions.Add(junction);
+                        _junctions.Add(new Junction(node, parent));
                     }
                 }
 
@@ -394,8 +388,7 @@ namespace GitUI.RevisionGridClasses
 
                 public LaneInfo Clone()
                 {
-                    var other = new LaneInfo { ConnectLane = ConnectLane, _junctions = new List<Junction>(_junctions) };
-                    return other;
+                    return new LaneInfo { ConnectLane = ConnectLane, _junctions = new List<Junction>(_junctions) };
                 }
 
                 public void UnionWith(LaneInfo other)
