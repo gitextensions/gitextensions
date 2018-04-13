@@ -3005,7 +3005,7 @@ namespace GitUI
             {
                 dataType = DvcsGraph.DataType.Active;
             }
-            else if (rev.Refs.Any())
+            else if (rev.Refs.Count != 0)
             {
                 dataType = DvcsGraph.DataType.Special;
             }
