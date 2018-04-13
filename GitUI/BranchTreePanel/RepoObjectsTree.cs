@@ -195,6 +195,8 @@ namespace GitUI.BranchTreePanel
 
             await this.SwitchToMainThreadAsync(token);
             _tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
+
+            await Task.WhenAll(_tasks).ConfigureAwait(false);
         }
 
         private void OnBtnSettingsClicked(object sender, EventArgs e)
