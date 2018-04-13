@@ -29,53 +29,54 @@ namespace GitUI.RevisionGridClasses
 
             public int CachedCount => _lanes.CachedCount;
 
-            private void ClearHighlightBranch()
+            public void HighlightBranch(string startId)
             {
-                foreach (Node node in Nodes.Values)
+                ClearHighlights();
+                WalkBranchAndHighlightReachableNodes();
+                return;
+
+                void ClearHighlights()
                 {
-                    foreach (Junction junction in node.Ancestors)
+                    foreach (Node node in Nodes.Values)
                     {
-                        junction.HighLight = false;
+                        foreach (Junction junction in node.Ancestors)
+                        {
+                            junction.HighLight = false;
+                        }
                     }
                 }
-            }
 
-            public void HighlightBranch(string id)
-            {
-                ClearHighlightBranch();
-                HighlightBranchRecursive(id);
+                void WalkBranchAndHighlightReachableNodes()
+                {
+                    var stack = new Stack<string>();
+                    stack.Push(startId);
+
+                    while (stack.Count != 0)
+                    {
+                        var id = stack.Pop();
+
+                        if (!Nodes.TryGetValue(id, out var node))
+                        {
+                            continue;
+                        }
+
+                        foreach (var junction in node.Ancestors)
+                        {
+                            if (!junction.HighLight)
+                            {
+                                junction.HighLight = true;
+
+                                stack.Push(junction.Oldest.Id);
+                            }
+                        }
+                    }
+                }
             }
 
             public bool IsRevisionRelative(string guid)
             {
                 return Nodes.TryGetValue(guid, out var startNode)
                     && startNode.Ancestors.Any(a => a.IsRelative);
-            }
-
-            private void HighlightBranchRecursive(string startId)
-            {
-                var stack = new Stack<string>();
-                stack.Push(startId);
-
-                while (stack.Count != 0)
-                {
-                    var id = stack.Pop();
-
-                    if (!Nodes.TryGetValue(id, out var node))
-                    {
-                        continue;
-                    }
-
-                    foreach (var junction in node.Ancestors)
-                    {
-                        if (!junction.HighLight)
-                        {
-                            junction.HighLight = true;
-
-                            stack.Push(junction.Oldest.Id);
-                        }
-                    }
-                }
             }
 
             public void Add(GitRevision revision, DataTypes types)
