@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
@@ -116,38 +117,34 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode = treeNode;
             }
 
-            public Task ReloadAsync(CancellationToken token)
+            public async Task ReloadAsync(CancellationToken token)
             {
+                await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);
                 ClearNodes();
-                var task = new Task(() => LoadNodes(token), token);
 
-                void ContinuationAction(Task t)
+                await LoadNodesAsync(token).ConfigureAwait(false);
+
+                await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);
+                TreeViewNode.TreeView.BeginUpdate();
+                try
                 {
-                    TreeViewNode.TreeView.BeginUpdate();
-                    try
+                    FillTreeViewNode();
+                    if (TreeViewNode.TreeView.SelectedNode != null)
                     {
-                        FillTreeViewNode();
+                        TreeViewNode.TreeView.SelectedNode.EnsureVisible();
                     }
-                    finally
+                    else if (TreeViewNode.TreeView.Nodes.Count > 0)
                     {
-                        if (TreeViewNode.TreeView.SelectedNode != null)
-                        {
-                            TreeViewNode.TreeView.SelectedNode.EnsureVisible();
-                        }
-                        else if (TreeViewNode.TreeView.Nodes.Count > 0)
-                        {
-                            TreeViewNode.TreeView.Nodes[0].EnsureVisible();
-                        }
-
-                        TreeViewNode.TreeView.EndUpdate();
+                        TreeViewNode.TreeView.Nodes[0].EnsureVisible();
                     }
                 }
-
-                task.ContinueWith(ContinuationAction, token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.FromCurrentSynchronizationContext());
-                return task;
+                finally
+                {
+                    TreeViewNode.TreeView.EndUpdate();
+                }
             }
 
-            protected abstract void LoadNodes(CancellationToken token);
+            protected abstract Task LoadNodesAsync(CancellationToken token);
 
             protected virtual void ClearNodes()
             {
