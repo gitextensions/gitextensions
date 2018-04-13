@@ -1289,8 +1289,8 @@ namespace GitUI.RevisionGridClasses
                 Id = id;
             }
 
-            public bool IsActive => (DataTypes & DataTypes.Active) == DataTypes.Active;
-            public bool IsSpecial => (DataTypes & DataTypes.Special) == DataTypes.Special;
+            public bool IsActive => DataTypes.HasFlag(DataTypes.Active);
+            public bool IsSpecial => DataTypes.HasFlag(DataTypes.Special);
 
             public override string ToString()
             {
