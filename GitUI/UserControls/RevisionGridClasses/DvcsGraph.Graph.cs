@@ -13,18 +13,17 @@ namespace GitUI.RevisionGridClasses
             public readonly List<Node> AddedNodes = new List<Node>();
 
             private readonly List<Junction> _junctions = new List<Junction>();
-            public readonly Dictionary<string, Node> Nodes = new Dictionary<string, Node>();
             private readonly Lanes _lanes;
 
-            private int _nodeCount;
             private int _processedNodes;
+
+            public Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
+            public int Count { get; private set; }
 
             public Graph()
             {
                 _lanes = new Lanes(this);
             }
-
-            public int Count => _nodeCount;
 
             public ILaneRow this[int col] => _lanes[col];
 
@@ -88,7 +87,7 @@ namespace GitUI.RevisionGridClasses
                     _junctions.Add(newJunction);
                 }
 
-                _nodeCount++;
+                Count++;
                 node.Data = revision;
                 node.DataType = type;
                 node.Index = AddedNodes.Count;
@@ -193,7 +192,7 @@ namespace GitUI.RevisionGridClasses
                 _junctions.Clear();
                 Nodes.Clear();
                 _lanes.Clear();
-                _nodeCount = 0;
+                Count = 0;
             }
 
             public void ProcessNode(Node node)
