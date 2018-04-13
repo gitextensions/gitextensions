@@ -47,8 +47,7 @@ namespace GitUI.RevisionGridClasses
         public enum FilterType
         {
             None,
-            Highlight,
-            Hide,
+            Highlight
         }
 
         #endregion
@@ -111,7 +110,6 @@ namespace GitUI.RevisionGridClasses
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {
                 IsBackground = true,
-                Priority = ThreadPriority.Normal,
                 Name = "DvcsGraph.backgroundThread"
             };
             _backgroundThread.Start();
@@ -189,63 +187,6 @@ namespace GitUI.RevisionGridClasses
         {
             AuthorColumn.Visible = show;
             DateColumn.Visible = show;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
-        [DefaultValue(FilterType.None)]
-        [Category("Behavior")]
-        public FilterType FilterMode
-        {
-            get { return _filterMode; }
-            set
-            {
-                // TODO: We only need to rebuild the graph if switching to or from hide
-                if (_filterMode == value)
-                {
-                    return;
-                }
-
-                this.InvokeSync(() =>
-                    {
-                        lock (_backgroundEvent)
-                        {
-                            // Make sure the background thread isn't running
-                            lock (_backgroundThread)
-                            {
-                                _backgroundScrollTo = 0;
-                                _graphDataCount = 0;
-                            }
-
-                            lock (_graphData)
-                            {
-                                _filterMode = value;
-                                _graphData.IsFilter = (_filterMode & FilterType.Hide) == FilterType.Hide;
-                                RebuildGraph();
-                            }
-                        }
-                    });
-            }
-        }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Browsable(false)]
-        public object[] SelectedData
-        {
-            get
-            {
-                if (SelectedRows.Count == 0)
-                {
-                    return null;
-                }
-
-                var data = new object[SelectedRows.Count];
-                for (int i = 0; i < SelectedRows.Count; i++)
-                {
-                    data[i] = _graphData[i].Node.Data;
-                }
-
-                return data;
-            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
@@ -397,27 +338,6 @@ namespace GitUI.RevisionGridClasses
             }
 
             _filterMode = FilterType.None;
-        }
-
-        public void FilterClear()
-        {
-            lock (_graphData)
-            {
-                foreach (Node n in _graphData.Nodes.Values)
-                {
-                    n.IsFiltered = false;
-                }
-
-                _graphData.IsFilter = false;
-            }
-        }
-
-        public void Filter(string id)
-        {
-            lock (_graphData)
-            {
-                _graphData.Filter(id);
-            }
         }
 
         public bool RowIsRelative(int rowIndex)
@@ -1210,7 +1130,7 @@ namespace GitUI.RevisionGridClasses
                     finally
                     {
                         brushLineColorPen?.Dispose();
-                        ((IDisposable)brushLineColor)?.Dispose();
+                        brushLineColor?.Dispose();
                     }
                 }
             }

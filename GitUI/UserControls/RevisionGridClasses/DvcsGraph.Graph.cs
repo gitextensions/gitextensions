@@ -21,9 +21,7 @@ namespace GitUI.RevisionGridClasses
             private readonly List<Junction> _junctions = new List<Junction>();
             public readonly Dictionary<string, Node> Nodes = new Dictionary<string, Node>();
             private readonly Lanes _lanes;
-            private int _filterNodeCount;
 
-            private bool _isFilter;
             private int _nodeCount;
             private int _processedNodes;
 
@@ -32,65 +30,11 @@ namespace GitUI.RevisionGridClasses
                 _lanes = new Lanes(this);
             }
 
-            public bool IsFilter
-            {
-                get { return _isFilter; }
-                set
-                {
-                    _isFilter = value;
-                    _lanes.Clear();
-                    foreach (Node n in Nodes.Values)
-                    {
-                        n.InLane = int.MaxValue;
-                    }
-
-                    foreach (Junction j in _junctions)
-                    {
-                        j.CurrentState = Junction.State.Unprocessed;
-                    }
-
-                    // We need to signal the DvcsGraph object that it needs to
-                    // redraw everything.
-                    Updated?.Invoke(this);
-                }
-            }
-
-            public int Count
-            {
-                get
-                {
-                    if (IsFilter)
-                    {
-                        return _filterNodeCount;
-                    }
-
-                    return _nodeCount;
-                }
-            }
+            public int Count => _nodeCount;
 
             public ILaneRow this[int col] => _lanes[col];
 
             public int CachedCount => _lanes.CachedCount;
-
-            public void Filter(string id)
-            {
-                Node node = Nodes[id];
-
-                if (!node.IsFiltered)
-                {
-                    _filterNodeCount++;
-                    node.IsFiltered = true;
-                }
-
-                // Clear the filtered lane data.
-                // TODO: We could be smart and only clear items after Node[id]. The check
-                // below isn't valid, since it could be either the filtered or unfiltered
-                // lane...
-                ////if (node.InLane != int.MaxValue)
-                ////{
-                ////   filteredLanes.Clear();
-                ////}
-            }
 
             public void ClearHighlightBranch()
             {
@@ -254,16 +198,10 @@ namespace GitUI.RevisionGridClasses
                 Nodes.Clear();
                 _lanes.Clear();
                 _nodeCount = 0;
-                _filterNodeCount = 0;
             }
 
             public void ProcessNode(Node node)
             {
-                if (_isFilter)
-                {
-                    return;
-                }
-
                 for (int i = _processedNodes; i < AddedNodes.Count; i++)
                 {
                     if (AddedNodes[i] == node)
