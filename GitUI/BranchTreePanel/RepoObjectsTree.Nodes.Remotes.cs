@@ -61,9 +61,6 @@ namespace GitUI.BranchTreePanel
 
                     branchFullPaths.Add(remoteBranchNode.FullPath);
                 }
-
-                token.ThrowIfCancellationRequested();
-                FireBranchAddedEvent(branchFullPaths);
             }
 
             private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,

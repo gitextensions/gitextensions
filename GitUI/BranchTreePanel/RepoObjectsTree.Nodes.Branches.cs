@@ -280,9 +280,6 @@ namespace GitUI.BranchTreePanel
 
                     branchFullPaths.Add(localBranchNode.FullPath);
                 }
-
-                token.ThrowIfCancellationRequested();
-                FireBranchAddedEvent(branchFullPaths);
             }
 
             protected override void FillTreeViewNode()

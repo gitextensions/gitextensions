@@ -108,7 +108,6 @@ namespace GitUI.BranchTreePanel
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
             protected GitModule Module => UICommands.Module;
             public TreeNode TreeViewNode { get; }
-            public Action<List<string>> OnBranchesAdded;
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -154,11 +153,6 @@ namespace GitUI.BranchTreePanel
             protected virtual void FillTreeViewNode()
             {
                 Nodes.FillTreeViewNode(TreeViewNode);
-            }
-
-            protected void FireBranchAddedEvent(List<string> branchFullPaths)
-            {
-                OnBranchesAdded?.Invoke(branchFullPaths);
             }
         }
 
