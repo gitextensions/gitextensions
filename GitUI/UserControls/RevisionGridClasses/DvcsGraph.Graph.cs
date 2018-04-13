@@ -208,9 +208,7 @@ namespace GitUI.RevisionGridClasses
                             Debugger.Break();
                         }
 
-                        Node temp = AddedNodes[i];
-                        AddedNodes[i] = AddedNodes[i - 1];
-                        AddedNodes[i - 1] = temp;
+                        AddedNodes.Swap(i - 1, i);
                         i--;
                         isChanged = true;
                     }
