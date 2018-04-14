@@ -162,10 +162,6 @@ namespace GitUI
         public event EventHandler<GitUIBaseEventArgs> PreSparseWorkingCopy;
         public event EventHandler<GitUIPostActionEventArgs> PostSparseWorkingCopy;
 
-        public EventHandler<RemoteChangedEventArgs> RemoteDeleted;
-        public EventHandler<RemoteRenamedEventArgs> RemoteRenamed;
-        public EventHandler<RemoteChangedEventArgs> RemoteAdded;
-
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
@@ -1808,7 +1804,7 @@ namespace GitUI
         // Please update FormCommandlineHelp if you add or change commands
         private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
-            #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             switch (args[1])
             {
                 case "about":
@@ -1953,7 +1949,7 @@ namespace GitUI
 
                     break;
             }
-            #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
             Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
         }
