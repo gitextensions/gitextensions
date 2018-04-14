@@ -171,7 +171,6 @@ namespace GitUI.BranchTreePanel
         private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private bool _searchCriteriaChanged;
-        private Task[] _tasks;
 
         private CancellationToken CancelBackgroundTasks()
         {
@@ -188,14 +187,8 @@ namespace GitUI.BranchTreePanel
 
             var token = CancelBackgroundTasks();
 
-            // wait for prev tasks to not overload the computer
-            if (_tasks != null)
-            {
-                await Task.WhenAll(_tasks).ConfigureAwait(false);
-            }
-
-            await this.SwitchToMainThreadAsync(token);
-            _tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
+            var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
         private void OnBtnSettingsClicked(object sender, EventArgs e)
