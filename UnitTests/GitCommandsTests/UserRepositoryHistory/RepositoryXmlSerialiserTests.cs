@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ApprovalTests;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
@@ -68,18 +69,20 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public void Serialize_recent_repositories()
         {
-            var history = new RepositoryHistory();
-            history.AddRepository(new Repository(@"C:\Development\gitextensions\"));
-            history.AddRepository(new Repository(@"C:\Development\gitextensions\Externals\NBug\")
+            var history = new List<Repository>
             {
-                Anchor = Repository.RepositoryAnchor.MostRecent,
-            });
-            history.AddRepository(new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
-            {
-                Anchor = Repository.RepositoryAnchor.LessRecent,
-            });
+                new Repository(@"C:\Development\gitextensions\"),
+                new Repository(@"C:\Development\gitextensions\Externals\NBug\")
+                {
+                    Anchor = Repository.RepositoryAnchor.MostRecent,
+                },
+                new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
+                {
+                    Anchor = Repository.RepositoryAnchor.LessRecent,
+                }
+            };
 
-            var xml = _repositoryXmlSerialiser.Serialize(history.Repositories);
+            var xml = _repositoryXmlSerialiser.Serialize(history);
             Approvals.VerifyXml(xml);
         }
     }

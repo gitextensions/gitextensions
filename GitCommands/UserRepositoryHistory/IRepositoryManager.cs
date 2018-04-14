@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
@@ -16,26 +17,26 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>The current version of the history of user git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
         [ContractAnnotation("repositoryPath:null=>halt")]
-        Task<RepositoryHistory> AddAsMostRecentAsync(string repositoryPath);
+        Task<IList<Repository>> AddAsMostRecentAsync(string repositoryPath);
 
         /// <summary>
         /// Loads the history of user git repositories.
         /// </summary>
         /// <returns>The history of local git repositories.</returns>
-        Task<RepositoryHistory> LoadHistoryAsync();
+        Task<IList<Repository>> LoadHistoryAsync();
 
         /// <summary>
         /// Removes <paramref name="repositoryPath"/> from the history of user git repositories.
         /// </summary>
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the history of user git repositories after the update.</returns>
-        Task<RepositoryHistory> RemoveFromHistoryAsync(string repositoryPath);
+        Task<IList<Repository>> RemoveFromHistoryAsync(string repositoryPath);
 
         /// <summary>
         /// Loads the history of user git repositories.
         /// </summary>
         /// <param name="repositoryHistory">A collection of local git repositories.</param>
         /// <returns>An awaitable task.</returns>
-        Task SaveHistoryAsync(RepositoryHistory repositoryHistory);
+        Task SaveHistoryAsync(IEnumerable<Repository> repositoryHistory);
     }
 }

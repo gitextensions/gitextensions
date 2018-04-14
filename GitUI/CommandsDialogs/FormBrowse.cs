@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private BuildReportTabPageExtension _buildReportTabPageExtension;
-        private RepositoryHistory _repositoryHistory;
+        private IList<Repository> _repositoryHistory;
 
         private readonly FormBrowseMenus _formBrowseMenus;
         private ConEmuControl _terminal;
@@ -712,7 +712,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshWorkingDirCombo()
         {
-            if (!Module.WorkingDir.Equals(_repositoryHistory.Repositories.FirstOrDefault()?.Path, StringComparison.InvariantCultureIgnoreCase))
+            if (!Module.WorkingDir.Equals(_repositoryHistory.FirstOrDefault()?.Path, StringComparison.InvariantCultureIgnoreCase))
             {
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
@@ -726,7 +726,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_Workingdir.Font,
                     Graphics = graphics
                 };
-                splitter.SplitRecentRepos(_repositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
+                splitter.SplitRecentRepos(_repositoryHistory, mostRecentRepos, mostRecentRepos);
 
                 RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
 
@@ -1605,7 +1605,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            if (_repositoryHistory.Repositories.Count == 0)
+            if (_repositoryHistory.Count == 0)
             {
                 recentToolStripMenuItem.Enabled = false;
                 return;
@@ -1614,7 +1614,7 @@ namespace GitUI.CommandsDialogs
             recentToolStripMenuItem.Enabled = true;
             recentToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (var historyItem in _repositoryHistory.Repositories)
+            foreach (var historyItem in _repositoryHistory)
             {
                 if (string.IsNullOrEmpty(historyItem.Path))
                 {
@@ -1635,25 +1635,24 @@ namespace GitUI.CommandsDialogs
 
         private void ChangeWorkingDir(string path)
         {
-            GitModule module = new GitModule(path);
-
-            if (!module.IsValidGitWorkingDir())
+            var module = new GitModule(path);
+            if (module.IsValidGitWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
-                    _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    _repositoryHistory.RemoveRecentRepository(path);
-                    return;
-                }
-                else if (dialogResult == DialogResult.Cancel)
-                {
-                    return;
-                }
+                SetGitModule(this, new GitModuleEventArgs(module));
+                return;
             }
 
-            SetGitModule(this, new GitModuleEventArgs(module));
+            DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
+                                                        _directoryIsNotAValidRepositoryCaption.Text,
+                                                        MessageBoxButtons.YesNoCancel,
+                                                        MessageBoxIcon.Exclamation,
+                                                        MessageBoxDefaultButton.Button1);
+            if (dialogResult != DialogResult.Yes)
+            {
+                return;
+            }
+
+            _repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveFromHistoryAsync(path));
         }
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
@@ -1668,7 +1667,7 @@ namespace GitUI.CommandsDialogs
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                _repositoryHistory.Repositories.Clear();
+                _repositoryHistory = Array.Empty<Repository>();
                 await RepositoryHistoryManager.Locals.SaveHistoryAsync(_repositoryHistory);
 
                 await this.SwitchToMainThreadAsync();
@@ -1754,7 +1753,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_Workingdir.Font,
                     Graphics = graphics
                 };
-                splitter.SplitRecentRepos(_repositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(_repositoryHistory, mostRecentRepos, lessRecentRepos);
             }
 
             foreach (RecentRepoInfo repo in mostRecentRepos)

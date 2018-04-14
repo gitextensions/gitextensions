@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                 var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
-                Directory.DataSource = repositoryHistory.Repositories;
+                Directory.DataSource = repositoryHistory;
                 Directory.DisplayMember = nameof(Repository.Path);
                 Directory.Text = "";
                 LocalPath.Text = "";

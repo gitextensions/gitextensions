@@ -71,7 +71,7 @@ namespace GitCommands.UserRepositoryHistory
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(IReadOnlyList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
+        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
         {
             var orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
             var mostRecentRepos = new List<RecentRepoInfo>();

@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
                     await this.SwitchToMainThreadAsync();
-                    var lastRepo = repositoryHistory.Repositories.FirstOrDefault();
+                    var lastRepo = repositoryHistory.FirstOrDefault();
                     if (!string.IsNullOrEmpty(lastRepo?.Path))
                     {
                         string p = lastRepo.Path.Trim('/', '\\');

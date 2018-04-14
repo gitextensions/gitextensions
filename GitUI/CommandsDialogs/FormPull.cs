@@ -867,7 +867,7 @@ namespace GitUI.CommandsDialogs
 
                 await this.SwitchToMainThreadAsync();
                 string prevUrl = comboBoxPullSource.Text;
-                comboBoxPullSource.DataSource = repositoryHistory.Repositories;
+                comboBoxPullSource.DataSource = repositoryHistory;
                 comboBoxPullSource.DisplayMember = nameof(Repository.Path);
                 comboBoxPullSource.Text = prevUrl;
             });

@@ -180,7 +180,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="UserRepositoryHistory\Repository.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryCategory.cs" />
     <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
     <Compile Include="Git\GitPushAction.cs" />
@@ -193,7 +192,6 @@
     <Compile Include="Patches\Patch.cs" />
     <Compile Include="Patches\PatchFile.cs" />
     <Compile Include="Patches\PatchManager.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryHistory.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />

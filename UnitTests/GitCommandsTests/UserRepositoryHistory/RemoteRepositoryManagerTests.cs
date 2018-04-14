@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -39,8 +38,8 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Repositories.Count.Should().Be(5);
-            newHistory.Repositories[0].Path.Should().Be(repoToAdd);
+            newHistory.Count.Should().Be(5);
+            newHistory[0].Path.Should().Be(repoToAdd);
         }
 
         [Test]
@@ -59,8 +58,8 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Repositories.Count.Should().Be(5);
-            newHistory.Repositories[0].Path.Should().Be(repoToAdd);
+            newHistory.Count.Should().Be(5);
+            newHistory[0].Path.Should().Be(repoToAdd);
         }
 
         [Test]
@@ -80,9 +79,9 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Repositories.Count.Should().Be(6);
-            newHistory.Repositories[0].Path.Should().Be(repoToAdd);
-            newHistory.Repositories[4].Path.Should().Be(repoToAdd);
+            newHistory.Count.Should().Be(6);
+            newHistory[0].Path.Should().Be(repoToAdd);
+            newHistory[4].Path.Should().Be(repoToAdd);
         }
 
         [Test]
@@ -101,8 +100,8 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             var newHistory = await _manager.AddAsMostRecentAsync(repoToAdd);
 
-            newHistory.Repositories.Count.Should().Be(5);
-            newHistory.Repositories[0].Path.Should().Be(repoToAdd);
+            newHistory.Count.Should().Be(5);
+            newHistory[0].Path.Should().Be(repoToAdd);
             _repositoryStorage.DidNotReceive().Save(Key, Arg.Any<IList<Repository>>());
         }
 
@@ -110,23 +109,20 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveFromHistoryAsync_should_remove_if_exists()
         {
             const string repoToDelete = "path to delete";
-            var history = new RepositoryHistory
+            var history = new List<Repository>
             {
-                Repositories = new BindingList<Repository>
-                {
-                    new Repository("path1"),
-                    new Repository(repoToDelete),
-                    new Repository("path3"),
-                    new Repository("path4"),
-                    new Repository("path5"),
-                }
+                new Repository("path1"),
+                new Repository(repoToDelete),
+                new Repository("path3"),
+                new Repository("path4"),
+                new Repository("path5"),
             };
-            _repositoryStorage.Load(Key).Returns(x => history.Repositories);
+            _repositoryStorage.Load(Key).Returns(x => history);
 
             var newHistory = await _manager.RemoveFromHistoryAsync(repoToDelete);
 
-            newHistory.Repositories.Count.Should().Be(4);
-            newHistory.Repositories.Should().NotContain(repoToDelete);
+            newHistory.Count.Should().Be(4);
+            newHistory.Should().NotContain(repoToDelete);
 
             _repositoryStorage.Received(1).Load(Key);
             _repositoryStorage.Received(1).Save(Key, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));
@@ -136,23 +132,20 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveFromHistoryAsync_should_not_crash_if_not_exists()
         {
             const string repoToDelete = "path to delete";
-            var history = new RepositoryHistory
+            var history = new List<Repository>
             {
-                Repositories = new BindingList<Repository>
-                {
-                    new Repository("path1"),
-                    new Repository("path2"),
-                    new Repository("path3"),
-                    new Repository("path4"),
-                    new Repository("path5"),
-                }
+                new Repository("path1"),
+                new Repository("path2"),
+                new Repository("path3"),
+                new Repository("path4"),
+                new Repository("path5"),
             };
-            _repositoryStorage.Load(Key).Returns(x => history.Repositories);
+            _repositoryStorage.Load(Key).Returns(x => history);
 
             var newHistory = await _manager.RemoveFromHistoryAsync(repoToDelete);
 
-            newHistory.Repositories.Count.Should().Be(5);
-            newHistory.Repositories.Should().NotContain(repoToDelete);
+            newHistory.Count.Should().Be(5);
+            newHistory.Should().NotContain(repoToDelete);
 
             _repositoryStorage.Received(1).Load(Key);
             _repositoryStorage.DidNotReceive().Save(Key, Arg.Any<IEnumerable<Repository>>());
@@ -163,17 +156,13 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             const int size = 3;
             AppSettings.RecentRepositoriesHistorySize = size;
-
-            var history = new RepositoryHistory
+            var history = new List<Repository>
             {
-                Repositories = new BindingList<Repository>
-                {
-                    new Repository("path1"),
-                    new Repository("path2"),
-                    new Repository("path3"),
-                    new Repository("path4"),
-                    new Repository("path5"),
-                }
+                new Repository("path1"),
+                new Repository("path2"),
+                new Repository("path3"),
+                new Repository("path4"),
+                new Repository("path5"),
             };
 
             await _manager.SaveHistoryAsync(history);

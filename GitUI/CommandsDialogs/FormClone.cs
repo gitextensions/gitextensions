@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
                 var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
-                _NO_TRANSLATE_To.DataSource = repositoryHistory.Repositories;
+                _NO_TRANSLATE_To.DataSource = repositoryHistory;
                 _NO_TRANSLATE_To.DisplayMember = nameof(Repository.Path);
             });
         }
@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
                 var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
-                _NO_TRANSLATE_From.DataSource = repositoryHistory.Repositories;
+                _NO_TRANSLATE_From.DataSource = repositoryHistory;
                 _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
             });
 

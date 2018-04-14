@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
                 var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
-                Directory.DataSource = repositoryHistory.Repositories;
+                Directory.DataSource = repositoryHistory;
                 Directory.DisplayMember = nameof(Repository.Path);
                 Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
             });
