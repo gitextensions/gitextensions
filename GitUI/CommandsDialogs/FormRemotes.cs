@@ -356,15 +356,6 @@ Inactive remote is completely invisible to git.");
                 }
                 else
                 {
-                    if (_selectedRemote?.Name == null)
-                    {
-                        FireRemoteAddedEvent(new RemoteChangedEventArgs(remote));
-                    }
-                    else
-                    {
-                        FireRemoteRenamedEvent(new RemoteRenamedEventArgs(_selectedRemote.Name, remote));
-                    }
-
                     var remotes = Repositories.RemoteRepositoryHistory.Repositories;
                     RemoteUpdate(remotes, _selectedRemote?.Url, remoteUrl);
                     if (checkBoxSepPushUrl.Checked)
@@ -373,6 +364,15 @@ Inactive remote is completely invisible to git.");
                     }
 
                     Repositories.SaveSettings();
+
+                    if (_selectedRemote?.Name == null)
+                    {
+                        FireRemoteAddedEvent(new RemoteChangedEventArgs(remote));
+                    }
+                    else if (!string.Equals(_selectedRemote.Name, remote))
+                    {
+                        FireRemoteRenamedEvent(new RemoteRenamedEventArgs(_selectedRemote.Name, remote));
+                    }
                 }
 
                 // if the user has just created a fresh new remote
