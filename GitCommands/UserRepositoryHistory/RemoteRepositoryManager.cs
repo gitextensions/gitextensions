@@ -102,14 +102,33 @@ namespace GitCommands.UserRepositoryHistory
         }
 
         /// <summary>
-        /// Removes <paramref name="repository"/> from the history of remote git repositories in a persistent storage.
+        /// Removes <paramref name="repositoryPath"/> from the history of remote git repositories in a persistent storage.
         /// </summary>
-        /// <param name="repository">A repository to remove.</param>
-        /// <returns>An awaitable task.</returns>
-        public Task RemoveFromHistoryAsync(Repository repository)
+        /// <param name="repositoryPath">A repository path to remove.</param>
+        /// <returns>The current version of the history of remote git repositories after the update.</returns>
+        [ContractAnnotation("repositoryPath:null=>halt")]
+        public async Task<RepositoryHistory> RemoveFromHistoryAsync(string repositoryPath)
         {
-            // TODO:
-            return Task.CompletedTask;
+            if (string.IsNullOrWhiteSpace(repositoryPath))
+            {
+                throw new ArgumentException(nameof(repositoryPath));
+            }
+
+            await TaskScheduler.Default;
+            var repositoryHistory = await LoadHistoryAsync();
+            var repository = repositoryHistory.Repositories.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+            if (repository == null)
+            {
+                return repositoryHistory;
+            }
+
+            if (!repositoryHistory.Repositories.Remove(repository))
+            {
+                return repositoryHistory;
+            }
+
+            await SaveHistoryAsync(repositoryHistory);
+            return repositoryHistory;
         }
 
         /// <summary>

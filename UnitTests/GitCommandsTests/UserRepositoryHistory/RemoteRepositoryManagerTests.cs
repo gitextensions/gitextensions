@@ -107,6 +107,58 @@ namespace GitCommandsTests.UserRepositoryHistory
         }
 
         [Test]
+        public async Task RemoveFromHistoryAsync_should_remove_if_exists()
+        {
+            const string repoToDelete = "path to delete";
+            var history = new RepositoryHistory
+            {
+                Repositories = new BindingList<Repository>
+                {
+                    new Repository("path1"),
+                    new Repository(repoToDelete),
+                    new Repository("path3"),
+                    new Repository("path4"),
+                    new Repository("path5"),
+                }
+            };
+            _repositoryStorage.Load(Key).Returns(x => history.Repositories);
+
+            var newHistory = await _manager.RemoveFromHistoryAsync(repoToDelete);
+
+            newHistory.Repositories.Count.Should().Be(4);
+            newHistory.Repositories.Should().NotContain(repoToDelete);
+
+            _repositoryStorage.Received(1).Load(Key);
+            _repositoryStorage.Received(1).Save(Key, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));
+        }
+
+        [Test]
+        public async Task RemoveFromHistoryAsync_should_not_crash_if_not_exists()
+        {
+            const string repoToDelete = "path to delete";
+            var history = new RepositoryHistory
+            {
+                Repositories = new BindingList<Repository>
+                {
+                    new Repository("path1"),
+                    new Repository("path2"),
+                    new Repository("path3"),
+                    new Repository("path4"),
+                    new Repository("path5"),
+                }
+            };
+            _repositoryStorage.Load(Key).Returns(x => history.Repositories);
+
+            var newHistory = await _manager.RemoveFromHistoryAsync(repoToDelete);
+
+            newHistory.Repositories.Count.Should().Be(5);
+            newHistory.Repositories.Should().NotContain(repoToDelete);
+
+            _repositoryStorage.Received(1).Load(Key);
+            _repositoryStorage.DidNotReceive().Save(Key, Arg.Any<IEnumerable<Repository>>());
+        }
+
+        [Test]
         public async Task SaveHistoryAsync_should_trim_history_size()
         {
             const int size = 3;
@@ -126,7 +178,7 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             await _manager.SaveHistoryAsync(history);
 
-            _repositoryStorage.Received(1).Save("history remote", Arg.Is<IEnumerable<Repository>>(h => h.Count() == size));
+            _repositoryStorage.Received(1).Save(Key, Arg.Is<IEnumerable<Repository>>(h => h.Count() == size));
         }
     }
 }

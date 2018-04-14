@@ -25,11 +25,11 @@ namespace GitCommands.UserRepositoryHistory
         Task<RepositoryHistory> LoadHistoryAsync();
 
         /// <summary>
-        /// Removes <paramref name="repository"/> from the history of user git repositories.
+        /// Removes <paramref name="repositoryPath"/> from the history of user git repositories.
         /// </summary>
-        /// <param name="repository">A repository to remove.</param>
-        /// <returns>An awaitable task.</returns>
-        Task RemoveFromHistoryAsync(Repository repository);
+        /// <param name="repositoryPath">A repository path to remove.</param>
+        /// <returns>The current version of the history of user git repositories after the update.</returns>
+        Task<RepositoryHistory> RemoveFromHistoryAsync(string repositoryPath);
 
         /// <summary>
         /// Loads the history of user git repositories.
