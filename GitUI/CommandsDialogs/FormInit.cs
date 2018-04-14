@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 Directory.DataSource = repositoryHistory.Repositories;
@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             var path = Directory.Text;
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(path));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             Close();
         }
 

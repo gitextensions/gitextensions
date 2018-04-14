@@ -137,6 +137,8 @@
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
+    <Compile Include="UserRepositoryHistory\LocalRepositoryManagerTests.cs" />
+    <Compile Include="UserRepositoryHistory\RemoteRepositoryManagerTests.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryStorageTests.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.cs" />
     <Compile Include="SshPathLocatorTest.cs" />
@@ -188,6 +190,14 @@
     <Analyzer Include="..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.1.0-beta006\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.1.0-beta006\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UserRepositoryHistory\RepositoriesTests.Deserialize_recent_repositories.approved.txt" />
+    <Content Include="UserRepositoryHistory\RepositoriesTests.Deserialize_remote_repositories.approved.txt" />
+    <Content Include="UserRepositoryHistory\RepositoriesTests.Serialize_recent_repositories.approved.xml" />
+    <Content Include="UserRepositoryHistory\RepositoriesTests.Serialize_remote_repositories.approved.xml" />
+    <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories.approved.txt" />
+    <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

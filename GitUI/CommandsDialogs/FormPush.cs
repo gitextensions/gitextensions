@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
             if (PushToUrl.Checked)
             {
                 var path = PushDestination.Text;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentRemoteHistoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(path));
             }
 
             AppSettings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
@@ -786,7 +786,7 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    var repositoryHistory = await RepositoryManager.LoadRemoteHistoryAsync();
+                    var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
 
                     await this.SwitchToMainThreadAsync();
                     string prevUrl = PushDestination.Text;

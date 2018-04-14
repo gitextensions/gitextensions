@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 var historicPaths = repositoryHistory.Repositories

@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 _NO_TRANSLATE_To.DataSource = repositoryHistory.Repositories;
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRemoteHistoryAsync();
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 _NO_TRANSLATE_From.DataSource = repositoryHistory.Repositories;
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(dirTo));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo));
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);

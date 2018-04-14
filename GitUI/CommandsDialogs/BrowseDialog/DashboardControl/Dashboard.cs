@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         }
                     }
 
-                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(dir));
+                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dir));
                     OnModuleChanged(this, new GitModuleEventArgs(module));
                 }
 

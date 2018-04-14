@@ -122,7 +122,10 @@
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
-    <Compile Include="UserRepositoryHistory\RepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\LocalRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RemoteRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryHistoryManager.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryDescriptionProvider.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryStorage.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiser.cs" />

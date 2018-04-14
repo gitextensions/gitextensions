@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
                 }
             }).FileAndForget();
 
-            _repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.LoadLocalHistoryAsync());
+            _repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadHistoryAsync());
 
             RevisionGrid.GitModuleChanged += SetGitModule;
             RevisionGrid.OnToggleBranchTreePanelRequested = () => toggleBranchTreePanel_Click(null, null);
@@ -715,7 +715,7 @@ namespace GitUI.CommandsDialogs
             if (!Module.WorkingDir.Equals(_repositoryHistory.Repositories.FirstOrDefault()?.Path, StringComparison.InvariantCultureIgnoreCase))
             {
                 var path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             }
 
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
@@ -1669,7 +1669,7 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 _repositoryHistory.Repositories.Clear();
-                await RepositoryManager.SaveLocalHistoryAsync(_repositoryHistory);
+                await RepositoryHistoryManager.Locals.SaveHistoryAsync(_repositoryHistory);
 
                 await this.SwitchToMainThreadAsync();
                 _dashboard?.ShowRecentRepositories();
@@ -1812,7 +1812,7 @@ namespace GitUI.CommandsDialogs
             if (Module.IsValidGitWorkingDir())
             {
                 var path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
                 ChangeTerminalActiveFolder(path);
 
