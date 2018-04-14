@@ -101,9 +101,6 @@ namespace GitUI.BranchTreePanel
 
                     branchFullPaths.Add(branchNode.FullPath);
                 }
-
-                token.ThrowIfCancellationRequested();
-                FireBranchAddedEvent(branchFullPaths);
             }
 
             protected override void FillTreeViewNode()

@@ -20,7 +20,6 @@ namespace GitUI.BranchTreePanel
 
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private SearchControl<string> _txtBranchCriterion;
-        private readonly HashSet<string> _branchCriterionAutoCompletionSrc = new HashSet<string>();
         private readonly ImageList _imageList = new ImageList();
         public RepoObjectsTree()
         {
@@ -76,8 +75,40 @@ namespace GitUI.BranchTreePanel
 
         private IEnumerable<string> SearchForBranch(string arg)
         {
-            return _branchCriterionAutoCompletionSrc
+            return CollectFilterCandidates()
                 .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1);
+        }
+
+        private IEnumerable<string> CollectFilterCandidates()
+        {
+            var list = new List<string>();
+
+            foreach (TreeNode rootNode in treeMain.Nodes)
+            {
+                CollectFromNodes(rootNode.Nodes);
+            }
+
+            return list;
+
+            void CollectFromNodes(TreeNodeCollection nodes)
+            {
+                foreach (TreeNode node in nodes)
+                {
+                    if (node.Tag is BaseBranchNode branch)
+                    {
+                        if (branch.Nodes.Count == 0)
+                        {
+                            list.Add(branch.FullPath);
+                        }
+                    }
+                    else
+                    {
+                        list.Add(node.Text);
+                    }
+
+                    CollectFromNodes(node.Nodes);
+                }
+            }
         }
 
         private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -125,36 +156,8 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void AddBranchesToAutoCompletionSrc(List<string> branchPaths)
-        {
-            foreach (var branchFullPath in branchPaths)
-            {
-                AddBranchToAutoCompletionSrc(branchFullPath);
-            }
-        }
-
-        private void AddBranchToAutoCompletionSrc(string branchFullPath)
-        {
-            var lastPart = branchFullPath
-                    .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-                    .LastOrDefault();
-
-            _branchCriterionAutoCompletionSrc.Add(branchFullPath);
-
-            if (lastPart == null || lastPart == branchFullPath)
-            {
-                return;
-            }
-
-            if (!_branchCriterionAutoCompletionSrc.Contains(lastPart))
-            {
-                _branchCriterionAutoCompletionSrc.Add(lastPart);
-            }
-        }
-
         private void AddTree(Tree tree)
         {
-            tree.OnBranchesAdded += AddBranchesToAutoCompletionSrc;
             tree.TreeViewNode.SelectedImageKey = tree.TreeViewNode.ImageKey;
             tree.TreeViewNode.Tag = tree;
             treeMain.Nodes.Add(tree.TreeViewNode);
@@ -175,8 +178,6 @@ namespace GitUI.BranchTreePanel
             ThreadHelper.ThrowIfNotOnUIThread();
 
             _currentToken = _reloadCancellation.Next();
-
-            _branchCriterionAutoCompletionSrc.Clear();
 
             return _currentToken;
         }
