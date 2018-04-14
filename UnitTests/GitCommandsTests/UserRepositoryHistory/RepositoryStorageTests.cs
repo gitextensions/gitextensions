@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GitCommandsTests.Repository
+namespace GitCommandsTests.UserRepositoryHistory
 {
     [TestFixture]
     public class RepositoryStorageTests
@@ -51,16 +51,16 @@ namespace GitCommandsTests.Repository
         public void Load_should_return_collection()
         {
             AppSettings.SetString("a", "repos");
-            var history = new List<GitCommands.Repository.Repository>
+            var history = new List<Repository>
             {
-                new GitCommands.Repository.Repository(@"C:\Development\gitextensions\"),
-                new GitCommands.Repository.Repository(@"C:\Development\gitextensions\Externals\NBug\")
+                new Repository(@"C:\Development\gitextensions\"),
+                new Repository(@"C:\Development\gitextensions\Externals\NBug\")
                 {
-                    Anchor = GitCommands.Repository.Repository.RepositoryAnchor.MostRecent,
+                    Anchor = Repository.RepositoryAnchor.MostRecent,
                 },
-                new GitCommands.Repository.Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
+                new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
                 {
-                    Anchor = GitCommands.Repository.Repository.RepositoryAnchor.LessRecent,
+                    Anchor = Repository.RepositoryAnchor.LessRecent,
                 }
             };
             _repositorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);

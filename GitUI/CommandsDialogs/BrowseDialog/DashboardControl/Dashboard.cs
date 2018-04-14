@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         }
                     }
 
-                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(dir));
+                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(dir));
                     OnModuleChanged(this, new GitModuleEventArgs(module));
                 }
 

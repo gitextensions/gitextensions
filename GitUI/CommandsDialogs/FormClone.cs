@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+                var repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 _NO_TRANSLATE_To.DataSource = repositoryHistory.Repositories;
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+                var repositoryHistory = await RepositoryManager.LoadRemoteHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 _NO_TRANSLATE_From.DataSource = repositoryHistory.Repositories;
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(dirTo));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(dirTo));
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);

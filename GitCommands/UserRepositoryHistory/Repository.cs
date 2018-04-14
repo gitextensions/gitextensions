@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     [Serializable]
     public class Repository

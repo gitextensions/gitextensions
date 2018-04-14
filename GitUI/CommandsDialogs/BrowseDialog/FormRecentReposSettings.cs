@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                _repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+                _repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 LoadSettings();
@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var mustResizeRepositriesHistory = AppSettings.RecentRepositoriesHistorySize != (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
             AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
 
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.SaveRepositoryHistoryAsync(_repositoryHistory));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.SaveLocalHistoryAsync(_repositoryHistory));
         }
 
         private string GetShorteningStrategy()
@@ -271,7 +271,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                await RepositoryManager.RemoveRepositoryHistoryAsync(repo.Repo);
+                await RepositoryManager.RemoveFromHistoryAsync(repo.Repo);
 
                 await this.SwitchToMainThreadAsync();
                 RefreshRepos();

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using GitCommands.Git;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public interface IRepositoryDescriptionProvider
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public class RepositoryHistory : RepositoryCategory
     {

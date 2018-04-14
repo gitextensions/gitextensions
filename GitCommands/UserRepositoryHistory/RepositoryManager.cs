@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public static class RepositoryManager
     {
@@ -14,7 +14,7 @@ namespace GitCommands.Repository
 
         private static readonly IRepositoryStorage RepositoryStorage = new RepositoryStorage();
 
-        public static async Task<RepositoryHistory> LoadRepositoryHistoryAsync()
+        public static async Task<RepositoryHistory> LoadLocalHistoryAsync()
         {
             await TaskScheduler.Default;
 
@@ -31,13 +31,13 @@ namespace GitCommands.Repository
             return repositoryHistory;
         }
 
-        public static Task RemoveRepositoryHistoryAsync(Repository repository)
+        public static Task RemoveFromHistoryAsync(Repository repository)
         {
             // TODO:
             return Task.CompletedTask;
         }
 
-        public static async Task<RepositoryHistory> AddMostRecentRepositoryAsync(string repositoryPath)
+        public static async Task<RepositoryHistory> AddAsMostRecentLocalHistoryAsync(string repositoryPath)
         {
             if (PathUtil.IsUrl(repositoryPath))
             {
@@ -46,10 +46,10 @@ namespace GitCommands.Repository
             }
 
             repositoryPath = repositoryPath.ToNativePath().EnsureTrailingPathSeparator();
-            return await AddAsMostRecentRepositoryAsync(repositoryPath, LoadRepositoryHistoryAsync, SaveRepositoryHistoryAsync);
+            return await AddAsMostRecentRepositoryAsync(repositoryPath, LoadLocalHistoryAsync, SaveLocalHistoryAsync);
         }
 
-        public static async Task<RepositoryHistory> AddMostRecentRemoteRepositoryAsync(string repositoryPath)
+        public static async Task<RepositoryHistory> AddAsMostRecentRemoteHistoryAsync(string repositoryPath)
         {
             if (!PathUtil.IsUrl(repositoryPath))
             {
@@ -57,7 +57,7 @@ namespace GitCommands.Repository
                 throw new NotSupportedException();
             }
 
-            return await AddAsMostRecentRepositoryAsync(repositoryPath, LoadRepositoryRemoteHistoryAsync, SaveRepositoryRemoteHistoryAsync);
+            return await AddAsMostRecentRepositoryAsync(repositoryPath, LoadRemoteHistoryAsync, SaveRemoteHistoryAsync);
         }
 
         private static async Task<RepositoryHistory> AddAsMostRecentRepositoryAsync(string repositoryPath, Func<Task<RepositoryHistory>> loadRepositoryHistoryAsync, Func<RepositoryHistory, Task> saveRepositoryHistoryAsync)
@@ -93,7 +93,7 @@ namespace GitCommands.Repository
             return repositoryHistory;
         }
 
-        public static async Task<RepositoryHistory> LoadRepositoryRemoteHistoryAsync()
+        public static async Task<RepositoryHistory> LoadRemoteHistoryAsync()
         {
             await TaskScheduler.Default;
 
@@ -117,14 +117,14 @@ namespace GitCommands.Repository
             // TODO:
         }
 
-        public static async Task SaveRepositoryHistoryAsync(RepositoryHistory repositoryHistory)
+        public static async Task SaveLocalHistoryAsync(RepositoryHistory repositoryHistory)
         {
             await TaskScheduler.Default;
             AdjustRepositoryHistorySize(repositoryHistory.Repositories, AppSettings.RecentRepositoriesHistorySize);
             RepositoryStorage.Save(KeyRecentHistory, repositoryHistory.Repositories);
         }
 
-        public static async Task SaveRepositoryRemoteHistoryAsync(RepositoryHistory repositoryHistory)
+        public static async Task SaveRemoteHistoryAsync(RepositoryHistory repositoryHistory)
         {
             await TaskScheduler.Default;
 

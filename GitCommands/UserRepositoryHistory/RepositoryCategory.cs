@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public class RepositoryCategory
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+                var repositoryHistory = await RepositoryManager.LoadRemoteHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 Directory.DataSource = repositoryHistory.Repositories;

@@ -1,10 +1,10 @@
 ﻿using System;
 using ApprovalTests;
 using FluentAssertions;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using NUnit.Framework;
 
-namespace GitCommandsTests.Repository
+namespace GitCommandsTests.UserRepositoryHistory
 {
     [TestFixture]
     public class RepositoryXmlSerialiserTests
@@ -69,14 +69,14 @@ namespace GitCommandsTests.Repository
         public void Serialize_recent_repositories()
         {
             var history = new RepositoryHistory();
-            history.AddRepository(new GitCommands.Repository.Repository(@"C:\Development\gitextensions\"));
-            history.AddRepository(new GitCommands.Repository.Repository(@"C:\Development\gitextensions\Externals\NBug\")
+            history.AddRepository(new Repository(@"C:\Development\gitextensions\"));
+            history.AddRepository(new Repository(@"C:\Development\gitextensions\Externals\NBug\")
             {
-                Anchor = GitCommands.Repository.Repository.RepositoryAnchor.MostRecent,
+                Anchor = Repository.RepositoryAnchor.MostRecent,
             });
-            history.AddRepository(new GitCommands.Repository.Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
+            history.AddRepository(new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
             {
-                Anchor = GitCommands.Repository.Repository.RepositoryAnchor.LessRecent,
+                Anchor = Repository.RepositoryAnchor.LessRecent,
             });
 
             var xml = _repositoryXmlSerialiser.Serialize(history.Repositories);

@@ -1,5 +1,5 @@
 using System.Windows.Forms;
-using GitUI.CommandsDialogs.SettingsDialog;
+using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs
 {
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
             //
             // repositoryBindingSource
             //
-            this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
+            this.repositoryBindingSource.DataSource = typeof(Repository);
             //
             // scriptInfoBindingSource
             //

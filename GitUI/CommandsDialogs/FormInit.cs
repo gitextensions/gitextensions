@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+                var repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 Directory.DataSource = repositoryHistory.Repositories;
@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
             var path = Directory.Text;
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(path));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(path));
             Close();
         }
 

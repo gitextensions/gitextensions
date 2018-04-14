@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml.Serialization;
 using JetBrains.Annotations;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     /// <summary>
     /// Provides the ability to serialise and deserialise collections of user's git repositories.

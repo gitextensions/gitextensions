@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public class RecentRepoInfo
     {

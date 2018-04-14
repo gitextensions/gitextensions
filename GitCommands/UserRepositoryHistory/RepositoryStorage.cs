@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     /// <summary>
     /// Provides the ability to persist and retrieve collections of user's git repositories.

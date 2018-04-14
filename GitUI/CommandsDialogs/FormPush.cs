@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remote;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
             if (PushToUrl.Checked)
             {
                 var path = PushDestination.Text;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRemoteRepositoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentRemoteHistoryAsync(path));
             }
 
             AppSettings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
@@ -786,7 +786,7 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+                    var repositoryHistory = await RepositoryManager.LoadRemoteHistoryAsync();
 
                     await this.SwitchToMainThreadAsync();
                     string prevUrl = PushDestination.Text;

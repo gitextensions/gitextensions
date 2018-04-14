@@ -10,7 +10,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Remote;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -397,7 +397,7 @@ namespace GitUI.CommandsDialogs
             if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
             {
                 var path = comboBoxPullSource.Text;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRemoteRepositoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentRemoteHistoryAsync(path));
             }
 
             var source = CalculateSource();
@@ -863,7 +863,7 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRepositoryRemoteHistoryAsync();
+                var repositoryHistory = await RepositoryManager.LoadRemoteHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 string prevUrl = comboBoxPullSource.Text;

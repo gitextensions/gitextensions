@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryManager.LoadRepositoryHistoryAsync();
+                var repositoryHistory = await RepositoryManager.LoadLocalHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 var historicPaths = repositoryHistory.Repositories

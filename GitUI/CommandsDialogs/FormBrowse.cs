@@ -12,7 +12,7 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Gpg;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
                 }
             }).FileAndForget();
 
-            _repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.LoadRepositoryHistoryAsync());
+            _repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.LoadLocalHistoryAsync());
 
             RevisionGrid.GitModuleChanged += SetGitModule;
             RevisionGrid.OnToggleBranchTreePanelRequested = () => toggleBranchTreePanel_Click(null, null);
@@ -715,7 +715,7 @@ namespace GitUI.CommandsDialogs
             if (!Module.WorkingDir.Equals(_repositoryHistory.Repositories.FirstOrDefault()?.Path, StringComparison.InvariantCultureIgnoreCase))
             {
                 var path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(path));
             }
 
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
@@ -1669,7 +1669,7 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 _repositoryHistory.Repositories.Clear();
-                await RepositoryManager.SaveRepositoryHistoryAsync(_repositoryHistory);
+                await RepositoryManager.SaveLocalHistoryAsync(_repositoryHistory);
 
                 await this.SwitchToMainThreadAsync();
                 _dashboard?.ShowRecentRepositories();
@@ -1812,7 +1812,7 @@ namespace GitUI.CommandsDialogs
             if (Module.IsValidGitWorkingDir())
             {
                 var path = Module.WorkingDir;
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(path));
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddAsMostRecentLocalHistoryAsync(path));
                 AppSettings.RecentWorkingDir = path;
                 ChangeTerminalActiveFolder(path);
 
