@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
 
@@ -59,14 +59,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             else
             {
-                var hist = Repositories.RepositoryHistory;
-                var lastRepo = hist.Repositories.FirstOrDefault();
-                if (!string.IsNullOrEmpty(lastRepo?.Path))
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    string p = lastRepo.Path.Trim('/', '\\');
+                    var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
-                    _destinationTB.Text = Path.GetDirectoryName(p);
-                }
+                    await this.SwitchToMainThreadAsync();
+                    var lastRepo = repositoryHistory.FirstOrDefault();
+                    if (!string.IsNullOrEmpty(lastRepo?.Path))
+                    {
+                        string p = lastRepo.Path.Trim('/', '\\');
+                        _destinationTB.Text = Path.GetDirectoryName(p);
+                    }
+                });
             }
 
             Text = _gitHoster.Description + ": " + Text;

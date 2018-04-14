@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using GitCommands.Git;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public interface IRepositoryDescriptionProvider
     {
@@ -44,15 +44,12 @@ namespace GitCommands.Repository
             }
 
             string desc = ReadRepositoryDescription(repositoryDir);
-            if (desc.IsNullOrEmpty())
+            if (!string.IsNullOrWhiteSpace(desc))
             {
-                desc = Repositories.RepositoryHistory.Repositories
-                                        .Where(repo => repo.Path.Equals(repositoryDir, StringComparison.CurrentCultureIgnoreCase))
-                                        .Select(repo => repo.Title)
-                                        .FirstOrDefault();
+                return desc;
             }
 
-            return desc ?? dirInfo.Name;
+            return dirInfo.Name;
         }
 
         /// <summary>

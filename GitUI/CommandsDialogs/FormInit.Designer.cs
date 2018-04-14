@@ -58,7 +58,6 @@
             this.Directory.Name = "Directory";
             this.Directory.Size = new System.Drawing.Size(422, 31);
             this.Directory.TabIndex = 1;
-            this.Directory.DropDown += new System.EventHandler(this.DirectoryDropDown);
             // 
             // Browse
             // 

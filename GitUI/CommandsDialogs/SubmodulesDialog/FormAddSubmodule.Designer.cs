@@ -63,7 +63,7 @@
             // 
             // Directory
             // 
-            this.Directory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.Directory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
@@ -95,7 +95,7 @@
             // 
             // LocalPath
             // 
-            this.LocalPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.LocalPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LocalPath.Location = new System.Drawing.Point(144, 41);
             this.LocalPath.Name = "LocalPath";
@@ -113,7 +113,7 @@
             // 
             // Branch
             // 
-            this.Branch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.Branch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(144, 68);
@@ -152,7 +152,6 @@
             this.Name = "FormAddSubmodule";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add submodule";
-            this.Shown += new System.EventHandler(this.FormAddSubmoduleShown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

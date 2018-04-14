@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remote;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -194,35 +194,41 @@ Inactive remote is completely invisible to git.");
 
         private void InitialiseTabRemotes(string preselectRemote = null)
         {
-            // because the binding the same BindingList to multiple controls,
-            // and changes in one of the bound control automatically get reflected
-            // in the other control, which causes rather frustrating UX.
-            // to address that, re-create binding lists for each individual control
-            var repos = Repositories.RemoteRepositoryHistory.Repositories.OrderBy(x => x.Path);
-            try
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                // to stop the flicker binding the lists and
-                // when the selected remote is getting reset and then selected again
-                Url.BeginUpdate();
-                comboBoxPushUrl.BeginUpdate();
-                Remotes.BeginUpdate();
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
 
-                Url.DataSource = repos.ToList();
-                Url.DisplayMember = nameof(Repository.Path);
-                Url.SelectedItem = null;
+                await this.SwitchToMainThreadAsync();
+                try
+                {
+                    // because the binding the same BindingList to multiple controls,
+                    // and changes in one of the bound control automatically get reflected
+                    // in the other control, which causes rather frustrating UX.
+                    // to address that, re-create binding lists for each individual control
 
-                comboBoxPushUrl.DataSource = repos.ToList();
-                comboBoxPushUrl.DisplayMember = nameof(Repository.Path);
-                comboBoxPushUrl.SelectedItem = null;
+                    // to stop the flicker binding the lists and
+                    // when the selected remote is getting reset and then selected again
+                    Url.BeginUpdate();
+                    comboBoxPushUrl.BeginUpdate();
+                    Remotes.BeginUpdate();
 
-                BindRemotes(preselectRemote);
-            }
-            finally
-            {
-                Remotes.EndUpdate();
-                Url.EndUpdate();
-                comboBoxPushUrl.EndUpdate();
-            }
+                    Url.DataSource = repositoryHistory.ToList();
+                    Url.DisplayMember = nameof(Repository.Path);
+                    Url.SelectedItem = null;
+
+                    comboBoxPushUrl.DataSource = repositoryHistory.ToList();
+                    comboBoxPushUrl.DisplayMember = nameof(Repository.Path);
+                    comboBoxPushUrl.SelectedItem = null;
+
+                    BindRemotes(preselectRemote);
+                }
+                finally
+                {
+                    Remotes.EndUpdate();
+                    Url.EndUpdate();
+                    comboBoxPushUrl.EndUpdate();
+                }
+            });
         }
 
         private void InitialiseTabBehaviors()
@@ -275,7 +281,7 @@ Inactive remote is completely invisible to git.");
 
             if (remotes.All(r => r.Path != newRemoteUrl))
             {
-                remotes.Add(new Repository(newRemoteUrl, null, null));
+                remotes.Add(new Repository(newRemoteUrl));
             }
         }
 
@@ -365,14 +371,19 @@ Inactive remote is completely invisible to git.");
                         FireRemoteRenamedEvent(new RemoteRenamedEventArgs(_selectedRemote.Name, remote));
                     }
 
-                    var remotes = Repositories.RemoteRepositoryHistory.Repositories;
-                    RemoteUpdate(remotes, _selectedRemote?.Url, remoteUrl);
-                    if (checkBoxSepPushUrl.Checked)
+                    ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
-                        RemoteUpdate(remotes, _selectedRemote?.PushUrl, remotePushUrl);
-                    }
+                        var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
 
-                    Repositories.SaveSettings();
+                        await this.SwitchToMainThreadAsync();
+                        RemoteUpdate(repositoryHistory, _selectedRemote?.Url, remoteUrl);
+                        if (checkBoxSepPushUrl.Checked)
+                        {
+                            RemoteUpdate(repositoryHistory, _selectedRemote?.PushUrl, remotePushUrl);
+                        }
+
+                        await RepositoryHistoryManager.Remotes.SaveHistoryAsync(repositoryHistory);
+                    });
                 }
 
                 // if the user has just created a fresh new remote

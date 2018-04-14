@@ -122,7 +122,13 @@
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
-    <Compile Include="Repository\RepositoryDescriptionProvider.cs" />
+    <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\LocalRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RemoteRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryHistoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryDescriptionProvider.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryStorage.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiser.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
@@ -173,8 +179,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Repository\Repository.cs" />
-    <Compile Include="Repository\RepositoryCategory.cs" />
+    <Compile Include="UserRepositoryHistory\Repository.cs" />
     <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
     <Compile Include="Git\GitPushAction.cs" />
@@ -187,10 +192,6 @@
     <Compile Include="Patches\Patch.cs" />
     <Compile Include="Patches\PatchFile.cs" />
     <Compile Include="Patches\PatchManager.cs" />
-    <Compile Include="Repository\Repositories.cs" />
-    <Compile Include="Repository\RepositoryCategoryType.cs" />
-    <Compile Include="Repository\RepositoryHistory.cs" />
-    <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
@@ -206,7 +207,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="gitcommandkey.snk.pfx" />
-    <Compile Include="Repository\RecentRepoInfo.cs" />
+    <Compile Include="UserRepositoryHistory\RecentRepoInfo.cs" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

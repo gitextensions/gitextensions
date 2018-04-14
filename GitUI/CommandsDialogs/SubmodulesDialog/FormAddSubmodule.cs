@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -18,6 +18,17 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         {
             InitializeComponent();
             Translate();
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                Directory.DataSource = repositoryHistory;
+                Directory.DisplayMember = nameof(Repository.Path);
+                Directory.Text = "";
+                LocalPath.Text = "";
+            });
         }
 
         private void BrowseClick(object sender, EventArgs e)
@@ -50,14 +61,6 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private void DirectorySelectedIndexChanged(object sender, EventArgs e)
         {
             DirectoryTextUpdate(null, null);
-        }
-
-        private void FormAddSubmoduleShown(object sender, EventArgs e)
-        {
-            Directory.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            Directory.DisplayMember = nameof(Repository.Path);
-            Directory.Text = "";
-            LocalPath.Text = "";
         }
 
         private void BranchDropDown(object sender, EventArgs e)

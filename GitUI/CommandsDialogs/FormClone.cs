@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -47,12 +47,28 @@ namespace GitUI.CommandsDialogs
             _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
             _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                _NO_TRANSLATE_To.DataSource = repositoryHistory;
+                _NO_TRANSLATE_To.DisplayMember = nameof(Repository.Path);
+            });
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
-            FillFromDropDown();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                _NO_TRANSLATE_From.DataSource = repositoryHistory;
+                _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
+            });
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
@@ -226,8 +242,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                Repositories.AddMostRecentRepository(dirTo);
-
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo));
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);
@@ -283,32 +298,6 @@ namespace GitUI.CommandsDialogs
             }
 
             ToTextUpdate(sender, e);
-        }
-
-        private void FillFromDropDown()
-        {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
-            if (_NO_TRANSLATE_From.Items.Count != repos.Count)
-            {
-                _NO_TRANSLATE_To.Items.Clear();
-                foreach (Repository repo in repos)
-                {
-                    _NO_TRANSLATE_From.Items.Add(repo.Path);
-                }
-            }
-        }
-
-        private void ToDropDown(object sender, EventArgs e)
-        {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RepositoryHistory.Repositories;
-            if (_NO_TRANSLATE_To.Items.Count != repos.Count)
-            {
-                _NO_TRANSLATE_To.Items.Clear();
-                foreach (Repository repo in repos)
-                {
-                    _NO_TRANSLATE_To.Items.Add(repo.Path);
-                }
-            }
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)

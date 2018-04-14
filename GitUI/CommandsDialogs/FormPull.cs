@@ -10,7 +10,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Remote;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -396,7 +396,8 @@ namespace GitUI.CommandsDialogs
 
             if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
             {
-                Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
+                var path = comboBoxPullSource.Text;
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(path));
             }
 
             var source = CalculateSource();
@@ -801,14 +802,6 @@ namespace GitUI.CommandsDialogs
             FillFormTitle();
         }
 
-        private void FillPullSourceDropDown()
-        {
-            string prevUrl = comboBoxPullSource.Text;
-            comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            comboBoxPullSource.DisplayMember = nameof(Repository.Path);
-            comboBoxPullSource.Text = prevUrl;
-        }
-
         private void FillFormTitle()
         {
             var format = Fetch.Checked
@@ -868,7 +861,16 @@ namespace GitUI.CommandsDialogs
             Merge.Enabled = true;
             Rebase.Enabled = true;
 
-            FillPullSourceDropDown();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                string prevUrl = comboBoxPullSource.Text;
+                comboBoxPullSource.DataSource = repositoryHistory;
+                comboBoxPullSource.DisplayMember = nameof(Repository.Path);
+                comboBoxPullSource.Text = prevUrl;
+            });
         }
 
         private void AddRemoteClick(object sender, EventArgs e)

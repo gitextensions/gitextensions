@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace GitCommands.Repository
+namespace GitCommands.UserRepositoryHistory
 {
     public class RecentRepoInfo
     {
@@ -29,16 +29,11 @@ namespace GitCommands.Repository
                 Caption = Repo.Path;
             }
 
-            if (Repo.Title != null)
-            {
-                ShortName = Repo.Title;
-            }
-            else if (DirInfo != null)
+            if (DirInfo != null)
             {
                 ShortName = DirInfo.Name;
+                DirInfo = DirInfo.Parent;
             }
-
-            DirInfo = DirInfo?.Parent;
 
             DirName = DirInfo?.FullName ?? "";
         }
@@ -76,7 +71,7 @@ namespace GitCommands.Repository
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(IReadOnlyList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
+        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
         {
             var orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
             var mostRecentRepos = new List<RecentRepoInfo>();
@@ -238,10 +233,15 @@ namespace GitCommands.Repository
         private void AddToOrderedMiddleDots(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo)
         {
             DirectoryInfo dirInfo;
-
             try
             {
                 dirInfo = new DirectoryInfo(repoInfo.Repo.Path);
+                if (!string.Equals(dirInfo.FullName, repoInfo.Repo.Path, StringComparison.OrdinalIgnoreCase))
+                {
+                    // this is likely to happen when attempting to interpret windows paths on linux
+                    // e.g. dirInfo = DirectoryInfo("c:\\temp") -> dirInfo => /usr/home/temp
+                    dirInfo = null;
+                }
             }
             catch (Exception)
             {
@@ -251,18 +251,13 @@ namespace GitCommands.Repository
             if (dirInfo == null)
             {
                 repoInfo.Caption = repoInfo.Repo.Path;
-                if (repoInfo.Caption.IsNullOrEmpty())
-                {
-                    repoInfo.Caption = repoInfo.Repo.Title ?? string.Empty;
-                }
             }
             else
             {
                 string root = null;
                 string company = null;
                 string repository = null;
-                var workingDir = dirInfo.Name;
-
+                string workingDir = dirInfo.Name;
                 dirInfo = dirInfo.Parent;
                 if (dirInfo != null)
                 {

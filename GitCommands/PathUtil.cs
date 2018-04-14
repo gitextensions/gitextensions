@@ -49,6 +49,22 @@ namespace GitCommands
             return !Regex.IsMatch(fileName, @"^(\w+):\/\/([\S]+)");
         }
 
+        /// <summary>
+        /// A naive way to check whethere the given path is a URL by checking
+        /// whether it starts with either 'http', 'ssh' or 'git'.
+        /// </summary>
+        /// <param name="path">A path to check.</param>
+        /// <returns><see langword="true"/> if the given path starts with 'http', 'ssh' or 'git'; otherwise <see langword="false"/>.</returns>
+        [ContractAnnotation("path:null=>false")]
+        [Pure]
+        public static bool IsUrl(string path)
+        {
+            return !string.IsNullOrEmpty(path) &&
+                   (path.StartsWith("http", StringComparison.CurrentCultureIgnoreCase) ||
+                    path.StartsWith("git", StringComparison.CurrentCultureIgnoreCase) ||
+                    path.StartsWith("ssh", StringComparison.CurrentCultureIgnoreCase));
+        }
+
         [NotNull]
         public static string GetFileName([NotNull] string fileName)
         {

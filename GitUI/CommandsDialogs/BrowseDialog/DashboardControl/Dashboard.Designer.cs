@@ -30,10 +30,7 @@
         {
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.commonSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.CommonActions = new DashboardCategory();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.RecentRepositories = new DashboardCategory();
-            this.DonateCategory = new DashboardCategory();
             this.groupLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -96,7 +93,6 @@
             // commonSplitContainer.Panel1
             // 
             this.commonSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.commonSplitContainer.Panel1.Controls.Add(this.CommonActions);
             // 
             // commonSplitContainer.Panel2
             // 
@@ -105,19 +101,6 @@
             this.commonSplitContainer.SplitterDistance = 126;
             this.commonSplitContainer.SplitterWidth = 5;
             this.commonSplitContainer.TabIndex = 0;
-            // 
-            // CommonActions
-            // 
-            this.CommonActions.AutoSize = true;
-            this.CommonActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Location = new System.Drawing.Point(0, 0);
-            this.CommonActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.CommonActions.Name = "CommonActions";
-            this.CommonActions.RepositoryCategory = null;
-            this.CommonActions.Size = new System.Drawing.Size(129, 24);
-            this.CommonActions.TabIndex = 8;
-            this.CommonActions.Title = "Common Actions";
             // 
             // splitContainer7
             // 
@@ -131,43 +114,13 @@
             // splitContainer7.Panel1
             // 
             this.splitContainer7.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer7.Panel1.Controls.Add(this.RecentRepositories);
             // 
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer7.Panel2.Controls.Add(this.DonateCategory);
             this.splitContainer7.Size = new System.Drawing.Size(314, 492);
             this.splitContainer7.SplitterDistance = 412;
             this.splitContainer7.TabIndex = 0;
-            // 
-            // RecentRepositories
-            // 
-            this.RecentRepositories.AutoSize = true;
-            this.RecentRepositories.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
-            this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
-            this.RecentRepositories.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RecentRepositories.Name = "RecentRepositories";
-            this.RecentRepositories.RepositoryCategory = null;
-            this.RecentRepositories.Size = new System.Drawing.Size(314, 412);
-            this.RecentRepositories.TabIndex = 0;
-            this.RecentRepositories.Title = "Recent Repositories";
-            // 
-            // DonateCategory
-            // 
-            this.DonateCategory.AutoSize = true;
-            this.DonateCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
-            this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DonateCategory.Location = new System.Drawing.Point(0, 0);
-            this.DonateCategory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.DonateCategory.Name = "DonateCategory";
-            this.DonateCategory.RepositoryCategory = null;
-            this.DonateCategory.Size = new System.Drawing.Size(314, 76);
-            this.DonateCategory.TabIndex = 0;
-            this.DonateCategory.Title = "Contribute";
             // 
             // groupLayoutPanel
             // 
@@ -259,9 +212,6 @@
         private System.Windows.Forms.SplitContainer mainSplitContainer;
         private System.Windows.Forms.SplitContainer commonSplitContainer;
         private System.Windows.Forms.SplitContainer splitContainer7;
-        private DashboardCategory RecentRepositories;
-        private DashboardCategory CommonActions;
-        private DashboardCategory DonateCategory;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FlowLayoutPanel groupLayoutPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

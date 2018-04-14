@@ -1,0 +1,16 @@
+﻿<RepositoryHistory xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Repositories>
+    <Repository>
+      <Anchor>None</Anchor>
+      <Path>https://github.com/RussKie/gitextensions.git</Path>
+    </Repository>
+    <Repository>
+      <Anchor>MostRecent</Anchor>
+      <Path>https://github.com/gregsohl/gitextensions.git</Path>
+    </Repository>
+    <Repository>
+      <Anchor>LessRecent</Anchor>
+      <Path>https://github.com/EbenZhang/gitextensions.git</Path>
+    </Repository>
+  </Repositories>
+</RepositoryHistory>

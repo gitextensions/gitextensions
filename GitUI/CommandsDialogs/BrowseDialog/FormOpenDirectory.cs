@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -24,15 +24,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             InitializeComponent();
             Translate();
 
-            _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule);
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
-            Load.Select();
-
-            _NO_TRANSLATE_Directory.Focus();
-            _NO_TRANSLATE_Directory.Select();
+                await this.SwitchToMainThreadAsync();
+                _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule, repositoryHistory);
+                Load.Select();
+                _NO_TRANSLATE_Directory.Focus();
+                _NO_TRANSLATE_Directory.Select();
+            });
         }
 
-        private static IReadOnlyList<string> GetDirectories(GitModule currentModule)
+        private static IReadOnlyList<string> GetDirectories(GitModule currentModule, IEnumerable<Repository> repositoryHistory)
         {
             List<string> directories = new List<string>();
 
@@ -50,7 +54,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 }
             }
 
-            directories.AddRange(Repositories.RepositoryHistory.Repositories.Select(r => r.Path));
+            directories.AddRange(repositoryHistory.Select(r => r.Path));
 
             if (directories.Count == 0)
             {
@@ -84,7 +88,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
                 _choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-                Repositories.AddMostRecentRepository(_choosenModule.WorkingDir);
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(_choosenModule.WorkingDir));
                 Close();
             }
             else
@@ -119,6 +123,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception)
             {
+                // no-op
             }
         }
 
