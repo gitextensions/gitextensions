@@ -242,8 +242,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                RepositoryManager.AddMostRecentRepository(dirTo);
-
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(dirTo));
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
                     var clonedGitModule = new GitModule(dirTo);

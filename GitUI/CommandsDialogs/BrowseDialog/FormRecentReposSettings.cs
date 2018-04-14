@@ -49,10 +49,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             var mustResizeRepositriesHistory = AppSettings.RecentRepositoriesHistorySize != (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
             AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
-            if (mustResizeRepositriesHistory)
-            {
-                RepositoryManager.AdjustRecentHistorySize(AppSettings.RecentRepositoriesHistorySize);
-            }
 
             ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.SaveRepositoryHistoryAsync(_repositoryHistory));
         }

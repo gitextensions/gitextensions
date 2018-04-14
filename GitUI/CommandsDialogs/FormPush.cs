@@ -309,7 +309,8 @@ namespace GitUI.CommandsDialogs
 
             if (PushToUrl.Checked)
             {
-                RepositoryManager.AddMostRecentRepository(PushDestination.Text);
+                var path = PushDestination.Text;
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRemoteRepositoryAsync(path));
             }
 
             AppSettings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;

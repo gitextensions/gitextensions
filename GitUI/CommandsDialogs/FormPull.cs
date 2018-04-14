@@ -396,7 +396,8 @@ namespace GitUI.CommandsDialogs
 
             if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
             {
-                RepositoryManager.AddMostRecentRepository(comboBoxPullSource.Text);
+                var path = comboBoxPullSource.Text;
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRemoteRepositoryAsync(path));
             }
 
             var source = CalculateSource();

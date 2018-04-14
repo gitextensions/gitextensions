@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
                 _choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-                RepositoryManager.AddMostRecentRepository(_choosenModule.WorkingDir);
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(_choosenModule.WorkingDir));
                 Close();
             }
             else

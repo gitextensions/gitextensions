@@ -179,7 +179,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         }
                     }
 
-                    RepositoryManager.AddMostRecentRepository(module.WorkingDir);
+                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(dir));
                     OnModuleChanged(this, new GitModuleEventArgs(module));
                 }
 

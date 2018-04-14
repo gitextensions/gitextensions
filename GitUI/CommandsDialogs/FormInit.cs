@@ -68,8 +68,8 @@ namespace GitUI.CommandsDialogs
 
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
-            RepositoryManager.AddMostRecentRepository(Directory.Text);
-
+            var path = Directory.Text;
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryManager.AddMostRecentRepositoryAsync(path));
             Close();
         }
 
