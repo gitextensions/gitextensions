@@ -30,11 +30,6 @@ namespace GitUI.BranchTreePanel
                 _nodesList.Clear();
             }
 
-            public void Remove(Node node)
-            {
-                _nodesList.Remove(node);
-            }
-
             public IEnumerator<Node> GetEnumerator()
             {
                 var e = _nodesList.GetEnumerator();

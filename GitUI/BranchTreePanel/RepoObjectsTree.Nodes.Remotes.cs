@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,61 +78,6 @@ namespace GitUI.BranchTreePanel
                 base.FillTreeViewNode();
                 TreeViewNode.Expand();
             }
-
-            public void RenameRemote(string orgName, string newName)
-            {
-                var treeNode = FindRemoteRepoTreeNodeByName(orgName);
-                if (treeNode == null)
-                {
-                    throw new InvalidOperationException("Cannot rename a non-existing remote");
-                }
-
-                treeNode.Text = newName;
-                var remoteRepoNode = FindRemoteRepoNodeByName(orgName);
-                remoteRepoNode.ChangeName(newName);
-            }
-
-            private RemoteRepoNode FindRemoteRepoNodeByName(string remoteName)
-            {
-                foreach (var node in Nodes)
-                {
-                    if (node.DisplayText() != remoteName)
-                    {
-                        continue;
-                    }
-
-                    if (node is RemoteRepoNode remoteRepoNode)
-                    {
-                        return remoteRepoNode;
-                    }
-                }
-
-                return null;
-            }
-
-            private TreeNode FindRemoteRepoTreeNodeByName(string remoteName)
-            {
-                return TreeViewNode.Nodes.Cast<TreeNode>().FirstOrDefault(treeNode => treeNode.Text == remoteName);
-            }
-
-            public void DeleteRemote(string remoteName)
-            {
-                var treeNode = FindRemoteRepoTreeNodeByName(remoteName);
-                if (treeNode == null)
-                {
-                    return;
-                }
-
-                TreeViewNode.Nodes.Remove(treeNode);
-                var repoNode = FindRemoteRepoNodeByName(remoteName);
-                Nodes.Remove(repoNode);
-            }
-
-            public void AddRemote(string remoteName)
-            {
-                Nodes.AddNode(new RemoteRepoNode(this, remoteName));
-                Nodes.FillTreeViewNode(TreeViewNode);
-            }
         }
 
         private sealed class RemoteBranchNode : BaseBranchNode
@@ -173,7 +117,8 @@ namespace GitUI.BranchTreePanel
                 var branch = FullPath.Substring(remote.Length + 1);
                 return new RemoteBranchInfo
                 {
-                    Remote = remote, BranchName = branch
+                    Remote = remote,
+                    BranchName = branch
                 };
             }
 
@@ -257,11 +202,6 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.Repository_16x);
-            }
-
-            public void ChangeName(string newName)
-            {
-                Name = newName;
             }
         }
     }

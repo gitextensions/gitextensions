@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitUI.CommandsDialogs;
 
 namespace GitUI.BranchTreePanel
 {
@@ -72,7 +71,7 @@ namespace GitUI.BranchTreePanel
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
-            RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => PopupManageRemotesForm());
+            RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => PopupManageRemotesForm(remoteBranch.FullPath));
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
 
             RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
@@ -80,7 +79,7 @@ namespace GitUI.BranchTreePanel
             RegisterClick<TagNode>(mnuBtnCheckoutTag, tag => tag.Checkout());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
-            RegisterClick(mnuBtnManageRemotesFromRootNode, PopupManageRemotesForm);
+            RegisterClick(mnuBtnManageRemotesFromRootNode, () => PopupManageRemotesForm(remoteName: null));
         }
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
@@ -88,27 +87,9 @@ namespace GitUI.BranchTreePanel
             FilterBranchHelper.SetBranchFilter(branch.FullPath, refresh: true);
         }
 
-        private void PopupManageRemotesForm()
+        private void PopupManageRemotesForm(string remoteName)
         {
-            using (var form = new FormRemotes(UICommands))
-            {
-                form.ShowDialog(this);
-            }
-        }
-
-        private void OnRemoteAdded(object sender, RemoteChangedEventArgs args)
-        {
-            _remoteTree?.AddRemote(args.RemoteName);
-        }
-
-        private void OnRemoteRenamed(object sender, RemoteRenamedEventArgs args)
-        {
-            _remoteTree?.RenameRemote(args.OriginalName, args.NewName);
-        }
-
-        private void OnRemoteDeleted(object sender, RemoteChangedEventArgs args)
-        {
-            _remoteTree?.DeleteRemote(args.RemoteName);
+            UICommands.StartRemotesDialog(this, remoteName);
         }
     }
 }

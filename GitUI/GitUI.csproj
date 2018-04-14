@@ -136,8 +136,6 @@
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
-    <Compile Include="CommandsDialogs\RemoteChangedEventArgs.cs" />
-    <Compile Include="CommandsDialogs\RemoteRenamedEventArgs.cs" />
     <Compile Include="CommandsDialogs\RevisionDiff.cs">
       <SubType>UserControl</SubType>
     </Compile>

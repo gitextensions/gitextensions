@@ -362,15 +362,6 @@ Inactive remote is completely invisible to git.");
                 }
                 else
                 {
-                    if (_selectedRemote?.Name == null)
-                    {
-                        FireRemoteAddedEvent(new RemoteChangedEventArgs(remote));
-                    }
-                    else
-                    {
-                        FireRemoteRenamedEvent(new RemoteRenamedEventArgs(_selectedRemote.Name, remote));
-                    }
-
                     ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
@@ -421,20 +412,15 @@ Inactive remote is completely invisible to git.");
                 return;
             }
 
-            if (MessageBox.Show(
-                this,
-                _questionDeleteRemote.Text,
-                _questionDeleteRemoteCaption.Text,
-                MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this,
+                                _questionDeleteRemote.Text,
+                                _questionDeleteRemoteCaption.Text,
+                                MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 var output = _remoteManager.RemoveRemote(_selectedRemote);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(this, output, _gitMessage.Text);
-                }
-                else
-                {
-                    FireRemoteDeletedEvent(new RemoteChangedEventArgs(_selectedRemote.Name));
                 }
 
                 // Deleting a remote from the history list may be undesirable as
@@ -650,21 +636,6 @@ Inactive remote is completely invisible to git.");
             label2.Text = visible
                 ? _labelUrlAsFetch.Text
                 : _labelUrlAsFetchPush.Text;
-        }
-
-        private void FireRemoteDeletedEvent(RemoteChangedEventArgs args)
-        {
-            UICommands.RemoteDeleted?.Invoke(this, args);
-        }
-
-        private void FireRemoteRenamedEvent(RemoteRenamedEventArgs args)
-        {
-            UICommands.RemoteRenamed?.Invoke(this, args);
-        }
-
-        private void FireRemoteAddedEvent(RemoteChangedEventArgs args)
-        {
-            UICommands.RemoteAdded?.Invoke(this, args);
         }
     }
 }
