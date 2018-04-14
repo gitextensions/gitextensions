@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GitCommands;
@@ -108,6 +110,29 @@ namespace GitCommandsTests.UserRepositoryHistory
             newHistory.Repositories.Count.Should().Be(5);
             newHistory.Repositories[0].Path.Should().Be(repoToAdd);
             _repositoryStorage.DidNotReceive().Save(Key, Arg.Any<IList<Repository>>());
+        }
+
+        [Test]
+        public async Task SaveHistoryAsync_should_trim_history_size()
+        {
+            const int size = 3;
+            AppSettings.RecentRepositoriesHistorySize = size;
+
+            var history = new RepositoryHistory
+            {
+                Repositories = new BindingList<Repository>
+                {
+                    new Repository("path1"),
+                    new Repository("path2"),
+                    new Repository("path3"),
+                    new Repository("path4"),
+                    new Repository("path5"),
+                }
+            };
+
+            await _manager.SaveHistoryAsync(history);
+
+            _repositoryStorage.Received(1).Save("history", Arg.Is<IEnumerable<Repository>>(h => h.Count() == size));
         }
     }
 }

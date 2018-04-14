@@ -24,7 +24,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositories">A list of user's git repositories.</param>
         /// <returns>A serialised list of user's git repositories.</returns>
-        string Serialize(IList<Repository> repositories);
+        string Serialize(IEnumerable<Repository> repositories);
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>A serialised list of user's git repositories, if successful; otherwise <see langword="null"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
         [ContractAnnotation("repositories:null=>halt")]
-        public string Serialize([NotNull]IList<Repository> repositories)
+        public string Serialize([NotNull]IEnumerable<Repository> repositories)
         {
             if (repositories == null)
             {

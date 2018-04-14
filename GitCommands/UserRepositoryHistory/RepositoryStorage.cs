@@ -21,7 +21,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="key">A setting key which contains the persisted collection.</param>
         /// <param name="repositories">A collection of user's git repositories.</param>
-        void Save(string key, IList<Repository> repositories);
+        void Save(string key, IEnumerable<Repository> repositories);
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
         [ContractAnnotation("key:null=>halt;repositories:null=>halt")]
-        public void Save([NotNull]string key, [NotNull]IList<Repository> repositories)
+        public void Save([NotNull]string key, [NotNull]IEnumerable<Repository> repositories)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
