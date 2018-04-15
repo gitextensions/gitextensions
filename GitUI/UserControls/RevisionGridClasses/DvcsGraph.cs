@@ -1276,8 +1276,8 @@ namespace GitUI.RevisionGridClasses
 
         private sealed class Node
         {
-            public readonly List<Junction> Ancestors = new List<Junction>();
-            public readonly List<Junction> Descendants = new List<Junction>();
+            public readonly List<Junction> Ancestors = new List<Junction>(capacity: 2);
+            public readonly List<Junction> Descendants = new List<Junction>(capacity: 2);
             public readonly string Id;
             public GitRevision Data;
             public DataTypes DataTypes;
