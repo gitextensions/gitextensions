@@ -1210,82 +1210,82 @@ namespace GitUI.RevisionGridClasses
 
             // Reset the clip region
             wa.Clip = oldClip;
+
+            // Draw node
+            var nodeRect = new Rectangle(
+                wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
+                wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
+                _nodeDimension,
+                _nodeDimension);
+
+            Brush nodeBrush;
+
+            List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
+
+            bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+
+            bool drawNodeBorder = AppSettings.BranchBorders && highlight;
+
+            if (nodeColors.Count == 1)
             {
-                // Draw node
-                var nodeRect = new Rectangle(
-                    wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
-                    wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
-                    _nodeDimension,
-                    _nodeDimension);
-
-                Brush nodeBrush;
-
-                List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
-
-                bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
-                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
-
-                bool drawBorder = AppSettings.BranchBorders && highlight;
-
-                if (nodeColors.Count == 1)
+                nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
+                if (nodeColors[0] == _nonRelativeColor)
                 {
-                    nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
-                    if (nodeColors[0] == _nonRelativeColor)
-                    {
-                        drawBorder = false;
-                    }
+                    drawNodeBorder = false;
                 }
-                else
+            }
+            else
+            {
+                nodeBrush = new LinearGradientBrush(
+                    nodeRect, nodeColors[0], nodeColors[1],
+                    LinearGradientMode.Horizontal);
+                if (nodeColors.All(c => c == _nonRelativeColor))
                 {
-                    nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1],
-                                                        LinearGradientMode.Horizontal);
-                    if (nodeColors.All(c => c == _nonRelativeColor))
-                    {
-                        drawBorder = false;
-                    }
+                    drawNodeBorder = false;
                 }
+            }
 
-                if (_filterMode == FilterType.Highlight && row.Node.IsFiltered)
-                {
-                    Rectangle highlightRect = nodeRect;
-                    highlightRect.Inflate(2, 3);
-                    wa.FillRectangle(Brushes.Yellow, highlightRect);
-                    wa.DrawRectangle(Pens.Black, highlightRect);
-                }
+            if (_filterMode == FilterType.Highlight && row.Node.IsFiltered)
+            {
+                Rectangle highlightRect = nodeRect;
+                highlightRect.Inflate(2, 3);
+                wa.FillRectangle(Brushes.Yellow, highlightRect);
+                wa.DrawRectangle(Pens.Black, highlightRect);
+            }
 
-                if (row.Node.Data == null)
+            if (row.Node.Data == null)
+            {
+                wa.FillEllipse(Brushes.White, nodeRect);
+                using (var pen = new Pen(Color.Red, 2))
                 {
-                    wa.FillEllipse(Brushes.White, nodeRect);
-                    using (var pen = new Pen(Color.Red, 2))
-                    {
-                        wa.DrawEllipse(pen, nodeRect);
-                    }
+                    wa.DrawEllipse(pen, nodeRect);
                 }
-                else if (row.Node.IsActive)
+            }
+            else if (row.Node.IsActive)
+            {
+                wa.FillRectangle(nodeBrush, nodeRect);
+                nodeRect.Inflate(1, 1);
+                using (var pen = new Pen(Color.Black, 3))
                 {
-                    wa.FillRectangle(nodeBrush, nodeRect);
-                    nodeRect.Inflate(1, 1);
-                    using (var pen = new Pen(Color.Black, 3))
-                    {
-                        wa.DrawRectangle(pen, nodeRect);
-                    }
+                    wa.DrawRectangle(pen, nodeRect);
                 }
-                else if (row.Node.IsSpecial)
+            }
+            else if (row.Node.IsSpecial)
+            {
+                wa.FillRectangle(nodeBrush, nodeRect);
+                if (drawNodeBorder)
                 {
-                    wa.FillRectangle(nodeBrush, nodeRect);
-                    if (drawBorder)
-                    {
-                        wa.DrawRectangle(Pens.Black, nodeRect);
-                    }
+                    wa.DrawRectangle(Pens.Black, nodeRect);
                 }
-                else
+            }
+            else
+            {
+                wa.FillEllipse(nodeBrush, nodeRect);
+                if (drawNodeBorder)
                 {
-                    wa.FillEllipse(nodeBrush, nodeRect);
-                    if (drawBorder)
-                    {
-                        wa.DrawEllipse(Pens.Black, nodeRect);
-                    }
+                    wa.DrawEllipse(Pens.Black, nodeRect);
                 }
             }
 
