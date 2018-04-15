@@ -36,18 +36,7 @@ namespace GitUI.RevisionGridClasses
         {
             Normal = 0,
             Active = 1,
-            Special = 2,
-            Filtered = 4,
-        }
-
-        #endregion
-
-        #region FilterType enum
-
-        public enum FilterType
-        {
-            None,
-            Highlight
+            Special = 2
         }
 
         #endregion
@@ -90,7 +79,6 @@ namespace GitUI.RevisionGridClasses
         private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
         private int _cacheHead = -1; // The 'slot' that is the head of the circular bitmap
         private int _cacheHeadRow; // The node row that is in the head slot
-        private FilterType _filterMode = FilterType.None;
         private Bitmap _graphBitmap;
         private int _graphDataCount;
         private Graphics _graphWorkArea;
@@ -320,8 +308,6 @@ namespace GitUI.RevisionGridClasses
                 _graphDataCount = 0;
                 RebuildGraph();
             }
-
-            _filterMode = FilterType.None;
         }
 
         public bool RowIsRelative(int rowIndex)
@@ -1152,14 +1138,6 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            if (_filterMode == FilterType.Highlight && row.Node.IsFiltered)
-            {
-                Rectangle highlightRect = nodeRect;
-                highlightRect.Inflate(2, 3);
-                wa.FillRectangle(Brushes.Yellow, highlightRect);
-                wa.DrawRectangle(Pens.Black, highlightRect);
-            }
-
             if (row.Node.Data == null)
             {
                 wa.FillEllipse(Brushes.White, nodeRect);
@@ -1312,23 +1290,6 @@ namespace GitUI.RevisionGridClasses
             }
 
             public bool IsActive => (DataTypes & DataTypes.Active) == DataTypes.Active;
-
-            public bool IsFiltered
-            {
-                get { return (DataTypes & DataTypes.Filtered) == DataTypes.Filtered; }
-                set
-                {
-                    if (value)
-                    {
-                        DataTypes |= DataTypes.Filtered;
-                    }
-                    else
-                    {
-                        DataTypes &= ~DataTypes.Filtered;
-                    }
-                }
-            }
-
             public bool IsSpecial => (DataTypes & DataTypes.Special) == DataTypes.Special;
 
             public override string ToString()
