@@ -1276,13 +1276,14 @@ namespace GitUI.RevisionGridClasses
 
         private sealed class Node
         {
-            public readonly List<Junction> Ancestors = new List<Junction>(capacity: 2);
-            public readonly List<Junction> Descendants = new List<Junction>(capacity: 2);
-            public readonly string Id;
-            public GitRevision Data;
-            public DataTypes DataTypes;
-            public int InLane = int.MaxValue;
-            public int Index = int.MaxValue;
+            public List<Junction> Ancestors { get; } = new List<Junction>(capacity: 2);
+            public List<Junction> Descendants { get; } = new List<Junction>(capacity: 2);
+            public string Id { get; }
+
+            public GitRevision Data { get; set; }
+            public DataTypes DataTypes { get; set; }
+            public int InLane { get; set; } = int.MaxValue;
+            public int Index { get; set; } = int.MaxValue;
 
             public Node(string id)
             {
