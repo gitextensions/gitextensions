@@ -1246,30 +1246,30 @@ namespace GitUI.RevisionGridClasses
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Home)
+            switch (e.KeyData)
             {
-                if (RowCount != 0)
-                {
-                    ClearSelection();
-                    Rows[0].Selected = true;
-                    CurrentCell = Rows[0].Cells[1];
-                }
+                case Keys.Home:
+                    if (RowCount != 0)
+                    {
+                        ClearSelection();
+                        Rows[0].Selected = true;
+                        CurrentCell = Rows[0].Cells[1];
+                    }
 
-                return;
+                    break;
+                case Keys.End:
+                    if (RowCount != 0)
+                    {
+                        ClearSelection();
+                        Rows[RowCount - 1].Selected = true;
+                        CurrentCell = Rows[RowCount - 1].Cells[1];
+                    }
+
+                    break;
+                default:
+                    base.OnKeyDown(e);
+                    break;
             }
-            else if (e.KeyData == Keys.End)
-            {
-                if (RowCount != 0)
-                {
-                    ClearSelection();
-                    Rows[RowCount - 1].Selected = true;
-                    CurrentCell = Rows[RowCount - 1].Cells[1];
-                }
-
-                return;
-            }
-
-            base.OnKeyDown(e);
         }
 
         #region Nested type: Node
