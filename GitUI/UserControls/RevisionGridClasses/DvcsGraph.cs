@@ -1060,14 +1060,16 @@ namespace GitUI.RevisionGridClasses
                         Point c0, c1;
                         if (singleLane)
                         {
-                            c0 = c1 = Point.Empty;
+                            c0 = c1 = default;
                         }
                         else
                         {
-                            // Controls the curvature of cross-lane lines (0 = straight line, 1 = 90 degree turns)
-                            const float severity = 0.5f;
-                            c0 = new Point(x0, (int)((y0 * (1.0f - severity)) + (y1 * severity)));
-                            c1 = new Point(x1, (int)((y1 * (1.0f - severity)) + (y0 * severity)));
+                            // Left shifting int is fast equivalent of dividing by two,
+                            // thus computing the average of y0 and y1.
+                            var yMid = (y0 + y1) >> 1;
+
+                            c0 = new Point(x0, yMid);
+                            c1 = new Point(x1, yMid);
                         }
 
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
