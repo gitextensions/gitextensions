@@ -60,10 +60,6 @@ namespace GitUI
         private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
         private readonly TranslationString _strError = new TranslationString("Error");
 
-        private const int NodeDimension = 10;
-        private const int LaneWidth = 13;
-        private const int LaneLineWidth = 2;
-        private const int LaneSidePadding = 4;
         private const int MaxSuperprojectRefs = 4;
         private Brush _selectedItemBrush;
         private SolidBrush _authoredRevisionsBrush;
@@ -3458,7 +3454,7 @@ namespace GitUI
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, LaneSidePadding);
+                Revisions.SetRowHeight(_rowHeigth);
             }
             else
             {
@@ -3486,7 +3482,7 @@ namespace GitUI
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, LaneSidePadding);
+                Revisions.SetRowHeight(_rowHeigth);
             }
 
             // Hide graph column when there it is disabled OR when a filter is active
