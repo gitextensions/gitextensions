@@ -55,6 +55,7 @@ namespace GitUI.RevisionGridClasses
 
         private int _nodeDimension = DpiUtil.Scale(10);
         private int _laneWidth = DpiUtil.Scale(13);
+        private int _laneSidePadding = DpiUtil.Scale(4);
         private int _laneLineWidth = DpiUtil.Scale(2);
         private const int MaxLanes = 40;
 
@@ -97,11 +98,12 @@ namespace GitUI.RevisionGridClasses
         private int _visibleBottom;
         private int _visibleTop;
 
-        public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight)
+        public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight, int laneSidePadding)
         {
             RowTemplate.Height = rowHeight;
             _nodeDimension = DpiUtil.Scale(nodeDimension);
             _laneWidth = DpiUtil.Scale(laneWidth);
+            _laneSidePadding = DpiUtil.Scale(laneSidePadding);
             _laneLineWidth = DpiUtil.Scale(laneLineWidth);
 
             dataGrid_Resize(null, null);
@@ -769,7 +771,7 @@ namespace GitUI.RevisionGridClasses
 
                 if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
                 {
-                    GraphColumn.Width = _laneWidth * laneCount;
+                    GraphColumn.Width = (_laneWidth * laneCount) + (_laneSidePadding * 2);
                 }
             }
         }
@@ -1023,7 +1025,7 @@ namespace GitUI.RevisionGridClasses
 
                 // Get the x,y value of the current item's upper left in the cache
                 int curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
-                const int x = 0;
+                int x = _laneSidePadding;
                 int y = curCacheRow * _rowHeight;
 
                 var laneRect = new Rectangle(0, y, Width, _rowHeight);

@@ -63,6 +63,7 @@ namespace GitUI
         private const int NodeDimension = 10;
         private const int LaneWidth = 13;
         private const int LaneLineWidth = 2;
+        private const int LaneSidePadding = 4;
         private const int MaxSuperprojectRefs = 4;
         private Brush _selectedItemBrush;
         private SolidBrush _authoredRevisionsBrush;
@@ -3457,7 +3458,7 @@ namespace GitUI
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, LaneSidePadding);
             }
             else
             {
@@ -3485,7 +3486,7 @@ namespace GitUI
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, LaneSidePadding);
             }
 
             // Hide graph column when there it is disabled OR when a filter is active
