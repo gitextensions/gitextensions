@@ -73,6 +73,12 @@ namespace System.Linq
             return result;
         }
 
+        public static IEnumerable<TValue> SelectMany<TValue>(
+            this IEnumerable<IEnumerable<TValue>> source)
+        {
+            return source.SelectMany(i => i);
+        }
+
         public static string Join(this IEnumerable<string> source, string separator)
         {
             return string.Join(separator, source);

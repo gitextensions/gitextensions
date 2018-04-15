@@ -813,8 +813,16 @@ namespace GitUI.RevisionGridClasses
 
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
 
+        // This is the order to grab the colors in.
+        private static readonly int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
+
+        private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
+        private readonly Random _random = new Random();
+
         private Color GetJunctionColor(Junction junction)
         {
+            ThreadHelper.AssertOnUIThread();
+
             // Draw non-relative branches gray
             if (!junction.IsRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
             {
@@ -832,35 +840,21 @@ namespace GitUI.RevisionGridClasses
                 return AppSettings.GraphColor;
             }
 
-            // This is the order to grab the colors in.
-            int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
-
-            int colorIndex;
-            if (_junctionColors.TryGetValue(junction, out colorIndex))
+            // See if this junciton's colour has already been calculated
+            if (_junctionColors.TryGetValue(junction, out var colorIndex))
             {
                 return _possibleColors[colorIndex];
             }
 
-            // Get adjacent junctions
-            var adjacentJunctions = new List<Junction>();
-            var adjacentColors = new List<int>();
-            adjacentJunctions.AddRange(junction.Youngest.Ancestors);
-            adjacentJunctions.AddRange(junction.Youngest.Descendants);
-            adjacentJunctions.AddRange(junction.Oldest.Ancestors);
-            adjacentJunctions.AddRange(junction.Oldest.Descendants);
-            foreach (Junction peer in adjacentJunctions)
-            {
-                if (_junctionColors.TryGetValue(peer, out colorIndex))
-                {
-                    adjacentColors.Add(colorIndex);
-                }
-                else
-                {
-                    colorIndex = -1;
-                }
-            }
+            // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
+            // This is safe as we are always on the UI thread here.
+            _adjacentColors.Clear();
+            _adjacentColors.AddRange(
+                from peer in GetPeers().SelectMany()
+                where _junctionColors.TryGetValue(peer, out colorIndex)
+                select colorIndex);
 
-            if (adjacentColors.Count == 0)
+            if (_adjacentColors.Count == 0)
             {
                 // This is an end-point. We need to 'pick' a new color
                 colorIndex = 0;
@@ -868,12 +862,12 @@ namespace GitUI.RevisionGridClasses
             else
             {
                 // This is a parent branch, calculate new color based on parent branch
-                int start = adjacentColors[0];
+                int start = _adjacentColors[0];
                 int i;
                 for (i = 0; i < preferedColors.Length; i++)
                 {
                     colorIndex = (start + preferedColors[i]) % _possibleColors.Length;
-                    if (!adjacentColors.Contains(colorIndex))
+                    if (!_adjacentColors.Contains(colorIndex))
                     {
                         break;
                     }
@@ -881,13 +875,21 @@ namespace GitUI.RevisionGridClasses
 
                 if (i == preferedColors.Length)
                 {
-                    var r = new Random();
-                    colorIndex = r.Next(preferedColors.Length);
+                    colorIndex = _random.Next(preferedColors.Length);
                 }
             }
 
             _junctionColors[junction] = colorIndex;
             return _possibleColors[colorIndex];
+
+            // Get adjacent (peer) junctions
+            IEnumerable<IEnumerable<Junction>> GetPeers()
+            {
+                yield return junction.Youngest.Ancestors;
+                yield return junction.Youngest.Descendants;
+                yield return junction.Oldest.Ancestors;
+                yield return junction.Oldest.Descendants;
+            }
         }
 
         public override void Refresh()
