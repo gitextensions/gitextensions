@@ -62,7 +62,7 @@ namespace GitUI.RevisionGridClasses
         private Pen _blackBorderPen;
 
         private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
-        private readonly Dictionary<Junction, int> _junctionColors = new Dictionary<Junction, int>();
+        private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
 
         private readonly Graph _graphData = new Graph();
@@ -315,7 +315,7 @@ namespace GitUI.RevisionGridClasses
             lock (_graphData)
             {
                 SetRowCount(0);
-                _junctionColors.Clear();
+                _colorByJunction.Clear();
                 _graphData.Clear();
                 _graphDataCount = 0;
                 RebuildGraph();
@@ -744,7 +744,7 @@ namespace GitUI.RevisionGridClasses
             }
 
             // See if this junciton's colour has already been calculated
-            if (_junctionColors.TryGetValue(junction, out var colorIndex))
+            if (_colorByJunction.TryGetValue(junction, out var colorIndex))
             {
                 return _possibleColors[colorIndex];
             }
@@ -754,7 +754,7 @@ namespace GitUI.RevisionGridClasses
             _adjacentColors.Clear();
             _adjacentColors.AddRange(
                 from peer in GetPeers().SelectMany()
-                where _junctionColors.TryGetValue(peer, out colorIndex)
+                where _colorByJunction.TryGetValue(peer, out colorIndex)
                 select colorIndex);
 
             if (_adjacentColors.Count == 0)
@@ -782,7 +782,7 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            _junctionColors[junction] = colorIndex;
+            _colorByJunction[junction] = colorIndex;
             return _possibleColors[colorIndex];
 
             // Get adjacent (peer) junctions
