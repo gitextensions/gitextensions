@@ -989,7 +989,7 @@ namespace GitUI.RevisionGridClasses
             else
             {
                 // Item already in the cache
-                return CreateRectangle(neededRow, width);
+                return CreateRectangle();
             }
 
             if (RevisionGraphVisible)
@@ -1000,7 +1000,16 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            return CreateRectangle(neededRow, width);
+            return CreateRectangle();
+
+            Rectangle CreateRectangle()
+            {
+                return new Rectangle(
+                    0,
+                    ((_cacheHeadRow + neededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
+                    width,
+                    _rowHeight);
+            }
         }
 
         private bool DrawVisibleGraph(int start, int end)
@@ -1057,15 +1066,6 @@ namespace GitUI.RevisionGridClasses
             }
 
             return true;
-        }
-
-        private Rectangle CreateRectangle(int neededRow, int width)
-        {
-            return new Rectangle(
-                0,
-                ((_cacheHeadRow + neededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
-                width,
-                _rowHeight);
         }
 
         // end drawGraph
