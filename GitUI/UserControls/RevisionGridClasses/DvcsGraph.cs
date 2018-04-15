@@ -675,20 +675,6 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        // Color of non-relative branches.
-
-        private List<Color> GetJunctionColors(IEnumerable<Junction> junction)
-        {
-            var colors = junction.Select(GetJunctionColor).ToList();
-
-            if (colors.Count == 0)
-            {
-                colors.Add(Color.Black);
-            }
-
-            return colors;
-        }
-
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
         [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
         [Browsable(false)]
@@ -982,8 +968,12 @@ namespace GitUI.RevisionGridClasses
         // end drawGraph
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
+        private readonly List<Color> _junctionColors = new List<Color>(4);
+
         private bool DrawItem(Graphics wa, Graph.ILaneRow row)
         {
+            ThreadHelper.AssertOnUIThread();
+
             if (row == null || row.NodeLane == -1)
             {
                 return false;
@@ -1016,7 +1006,7 @@ namespace GitUI.RevisionGridClasses
                                      (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
                                      (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
-                    List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
+                    UpdateJunctionColors(laneInfo.Junctions);
 
                     // Create the brush for drawing the line
                     Brush brushLineColor = null;
@@ -1025,15 +1015,15 @@ namespace GitUI.RevisionGridClasses
                     {
                         bool drawBorder = highLight && AppSettings.BranchBorders; // hide border for "non-relatives"
 
-                        if (curColors.Count == 1 || !AppSettings.StripedBranchChange)
+                        if (_junctionColors.Count == 1 || !AppSettings.StripedBranchChange)
                         {
-                            if (curColors[0] != _nonRelativeColor)
+                            if (_junctionColors[0] != _nonRelativeColor)
                             {
-                                brushLineColor = new SolidBrush(curColors[0]);
+                                brushLineColor = new SolidBrush(_junctionColors[0]);
                             }
-                            else if (curColors.Count > 1 && curColors[1] != _nonRelativeColor)
+                            else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
                             {
-                                brushLineColor = new SolidBrush(curColors[1]);
+                                brushLineColor = new SolidBrush(_junctionColors[1]);
                             }
                             else
                             {
@@ -1043,7 +1033,7 @@ namespace GitUI.RevisionGridClasses
                         }
                         else
                         {
-                            Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
+                            Color lastRealColor = _junctionColors.LastOrDefault(c => c != _nonRelativeColor);
 
                             if (lastRealColor.IsEmpty)
                             {
@@ -1052,7 +1042,7 @@ namespace GitUI.RevisionGridClasses
                             }
                             else
                             {
-                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
+                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, _junctionColors[0], lastRealColor);
                             }
                         }
 
@@ -1131,7 +1121,7 @@ namespace GitUI.RevisionGridClasses
 
             Brush nodeBrush;
 
-            List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
+            UpdateJunctionColors(row.Node.Ancestors);
 
             bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
                              (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
@@ -1139,10 +1129,10 @@ namespace GitUI.RevisionGridClasses
 
             bool drawNodeBorder = AppSettings.BranchBorders && highlight;
 
-            if (nodeColors.Count == 1)
+            if (_junctionColors.Count == 1)
             {
-                nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
-                if (nodeColors[0] == _nonRelativeColor)
+                nodeBrush = new SolidBrush(highlight ? _junctionColors[0] : _nonRelativeColor);
+                if (_junctionColors[0] == _nonRelativeColor)
                 {
                     drawNodeBorder = false;
                 }
@@ -1150,9 +1140,9 @@ namespace GitUI.RevisionGridClasses
             else
             {
                 nodeBrush = new LinearGradientBrush(
-                    nodeRect, nodeColors[0], nodeColors[1],
+                    nodeRect, _junctionColors[0], _junctionColors[1],
                     LinearGradientMode.Horizontal);
-                if (nodeColors.All(c => c == _nonRelativeColor))
+                if (_junctionColors.All(c => c == _nonRelativeColor))
                 {
                     drawNodeBorder = false;
                 }
@@ -1203,6 +1193,19 @@ namespace GitUI.RevisionGridClasses
             nodeBrush.Dispose();
 
             return true;
+
+            void UpdateJunctionColors(IEnumerable<Junction> junction)
+            {
+                _junctionColors.Clear();
+
+                // Color of non-relative branches.
+                _junctionColors.AddRange(junction.Select(GetJunctionColor));
+
+                if (_junctionColors.Count == 0)
+                {
+                    _junctionColors.Add(Color.Black);
+                }
+            }
         }
 
         public void HighlightBranch(string id)
