@@ -182,9 +182,17 @@ namespace GitUI.BranchTreePanel
             ThreadHelper.ThrowIfNotOnUIThread();
 
             var token = CancelBackgroundTasks();
-
-            var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            Enabled = false;
+            try
+            {
+                var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
+                await Task.WhenAll(tasks).ConfigureAwait(false);
+            }
+            finally
+            {
+                await this.SwitchToMainThreadAsync(token);
+                Enabled = true;
+            }
         }
 
         private void OnBtnSettingsClicked(object sender, EventArgs e)
