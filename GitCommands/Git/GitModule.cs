@@ -2784,7 +2784,7 @@ namespace GitCommands
             return result;
         }
 
-        private CmdResult GetTreeFromRemoteRefsEx(string remote, bool tags, bool branches)
+        private CmdResult GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
         {
             if (tags && branches)
             {
@@ -2802,11 +2802,6 @@ namespace GitCommands
             }
 
             return new CmdResult();
-        }
-
-        private CmdResult GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
-        {
-            return GetTreeFromRemoteRefsEx(remote, tags, branches);
         }
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
