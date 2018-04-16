@@ -2806,8 +2806,29 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
-            var refList = GetRefList(tags, branches);
+            var refList = GetRefList();
+
             return ParseRefs(refList);
+
+            string GetRefList()
+            {
+                if (tags && branches)
+                {
+                    return RunGitCmd("show-ref --dereference", SystemEncoding);
+                }
+
+                if (tags)
+                {
+                    return RunGitCmd("show-ref --tags", SystemEncoding);
+                }
+
+                if (branches)
+                {
+                    return RunGitCmd(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
+                }
+
+                return "";
+            }
         }
 
         /// <param name="option">Ordery by date is slower.</param>
@@ -2878,26 +2899,6 @@ namespace GitCommands
                 .Select(b => string.Concat(refsPrefix, b))
                 .Where(b => !string.IsNullOrEmpty(GitRefName.GetRemoteName(b, remotes)))
                 .ToList();
-        }
-
-        private string GetRefList(bool tags, bool branches)
-        {
-            if (tags && branches)
-            {
-                return RunGitCmd("show-ref --dereference", SystemEncoding);
-            }
-
-            if (tags)
-            {
-                return RunGitCmd("show-ref --tags", SystemEncoding);
-            }
-
-            if (branches)
-            {
-                return RunGitCmd(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
-            }
-
-            return "";
         }
 
         [NotNull, ItemNotNull]
