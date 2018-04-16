@@ -93,14 +93,14 @@ namespace GitCommands.Patches
             }
             else
             {
-                Match match = Regex.Match(header, "--cc [\\\"]?(.*)[\\\"]?");
+                Match match = Regex.Match(header, "--(cc|combined) [\\\"]?(?<filenamea>.*)[\\\"]?");
 
                 if (!match.Success)
                 {
                     throw new FormatException("Invalid patch header: " + header);
                 }
 
-                fileNameA = match.Groups[1].Value.Trim();
+                fileNameA = match.Groups["filenamea"].Value.Trim();
                 fileNameB = null;
             }
 
