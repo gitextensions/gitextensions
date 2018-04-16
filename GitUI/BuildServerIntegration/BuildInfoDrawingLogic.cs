@@ -42,7 +42,7 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont)
+        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont, bool isSelected)
         {
             if (revision.BuildStatus == null)
             {
@@ -59,15 +59,15 @@ namespace GitUI.BuildServerIntegration
                 switch (revision.BuildStatus.Status)
                 {
                     case BuildInfo.BuildStatus.Success:
-                        return Color.DarkGreen;
+                        return isSelected ? Color.LightGreen : Color.DarkGreen;
                     case BuildInfo.BuildStatus.Failure:
-                        return Color.DarkRed;
+                        return isSelected ? Color.Red : Color.DarkRed;
                     case BuildInfo.BuildStatus.InProgress:
-                        return Color.Blue;
+                        return isSelected ? Color.LightBlue : Color.Blue;
                     case BuildInfo.BuildStatus.Unstable:
                         return Color.OrangeRed;
                     case BuildInfo.BuildStatus.Stopped:
-                        return Color.Gray;
+                        return isSelected ? Color.LightGray : Color.Gray;
                     default:
                         return foreColor;
                 }
