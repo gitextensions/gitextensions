@@ -2913,8 +2913,10 @@ namespace GitCommands
             // 69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master
             // 69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master
             // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
+            //
+            // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
 
-            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40}) (?<refname>.+)$", RegexOptions.Multiline);
+            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline);
 
             var matches = regex.Matches(tree);
 

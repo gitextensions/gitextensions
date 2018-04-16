@@ -200,8 +200,8 @@ namespace GitCommandsTests
             const string tree =
                 "69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master\n" +
                 "69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master\n" +
-                "5303e7114f1896c639dea0231fac522752cc44a2 refs/remotes/upstream/mono\n" +
-                "366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51\n";
+                "5303e7114f1896c639dea0231fac522752cc44a2\trefs/remotes/upstream/mono\n" +
+                "366dfba1abf6cb98d2934455713f3d190df2ba34\trefs/tags/2.51\n";
 
             var refs = _gitModule.GetTreeRefs(tree);
 
