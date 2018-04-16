@@ -8,19 +8,23 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using Gravatar;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
 {
     public partial class GravatarControl : GitExtensionsControl
     {
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _gravatarService;
+        private readonly IAvatarService _avatarService;
 
         public GravatarControl()
         {
             InitializeComponent();
             Translate();
+
+            clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
 
             noneToolStripMenuItem.Tag = DefaultImageType.None;
             identiconToolStripMenuItem.Tag = DefaultImageType.Identicon;
@@ -28,10 +32,16 @@ namespace GitUI
             wavatarToolStripMenuItem.Tag = DefaultImageType.Wavatar;
             retroToolStripMenuItem.Tag = DefaultImageType.Retro;
 
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
-            _gravatarService = new GravatarService(_avatarCache);
+            // We cache avatar images on disk...
+            var persistentCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+
+            // And in memory...
+            _avatarCache = new MruImageCache(persistentCache);
+
+            _avatarService = new AvatarService(_avatarCache);
         }
 
+        [CanBeNull]
         [Browsable(false)]
         public string Email { get; private set; }
 
@@ -64,24 +74,37 @@ namespace GitUI
 
             Size = _gravatarImg.Size = size;
 
-            if (!AppSettings.ShowAuthorGravatar || string.IsNullOrEmpty(Email))
+            var email = Email;
+
+            if (!AppSettings.ShowAuthorGravatar || string.IsNullOrWhiteSpace(email))
             {
                 RefreshImage(Resources.User);
                 return;
             }
 
-            var image = await _gravatarService.GetAvatarAsync(Email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
+            var token = _cancellationTokenSequence.Next();
+            var image = await _avatarService.GetAvatarAsync(email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
 
-            RefreshImage(image);
+            if (!token.IsCancellationRequested)
+            {
+                RefreshImage(image);
+            }
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
+            var email = Email;
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return;
+            }
+
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(
                     async () =>
                     {
-                        await _gravatarService.DeleteAvatarAsync(Email).ConfigureAwait(true);
+                        await _avatarService.DeleteAvatarAsync(email).ConfigureAwait(true);
                         await UpdateGravatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();
@@ -99,7 +122,7 @@ namespace GitUI
             }
         }
 
-        private void ClearImagecacheToolStripMenuItemClick(object sender, EventArgs e)
+        private void ClearCache()
         {
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(
@@ -114,26 +137,18 @@ namespace GitUI
         private void noImageService_Click(object sender, EventArgs e)
         {
             var tag = (sender as ToolStripMenuItem)?.Tag;
-            if (!(tag is DefaultImageType))
+
+            if (tag is DefaultImageType type)
             {
-                return;
+                AppSettings.GravatarDefaultImageType = type.ToString();
+
+                ClearCache();
             }
-
-            AppSettings.GravatarDefaultImageType = ((DefaultImageType)tag).ToString();
-
-            ThreadHelper.JoinableTaskFactory
-                .RunAsync(
-                    async () =>
-                    {
-                        await _avatarCache.ClearAsync().ConfigureAwait(true);
-                        await UpdateGravatarAsync().ConfigureAwait(false);
-                    })
-                .FileAndForget();
         }
 
         private void noImageGeneratorToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            var defaultImageType = _gravatarService.GetDefaultImageType(AppSettings.GravatarDefaultImageType);
+            var defaultImageType = _avatarService.GetDefaultImageType(AppSettings.GravatarDefaultImageType);
             ToolStripMenuItem selectedItem = null;
             foreach (ToolStripMenuItem menu in noImageGeneratorToolStripMenuItem.DropDownItems)
             {

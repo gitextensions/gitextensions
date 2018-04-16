@@ -93,16 +93,20 @@ namespace Gource
                 if (!authors.Contains(author))
                 {
                     authors.Add(author);
-                    string source = Path.Combine(AvatarsDir, email + ".png");
-                    GitUIArgs.GitUICommands.CacheAvatar(email);
-                    if (File.Exists(source))
+
+                    if (!string.IsNullOrWhiteSpace(email))
                     {
-                        try
+                        string source = Path.Combine(AvatarsDir, email + ".png");
+                        GitUIArgs.GitUICommands.CacheAvatar(email);
+                        if (File.Exists(source))
                         {
-                            File.Copy(source, Path.Combine(gourceAvatarsDir, author + ".png"), true);
-                        }
-                        catch (IOException)
-                        {
+                            try
+                            {
+                                File.Copy(source, Path.Combine(gourceAvatarsDir, author + ".png"), true);
+                            }
+                            catch (IOException)
+                            {
+                            }
                         }
                     }
                 }

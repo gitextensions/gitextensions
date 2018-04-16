@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -12,12 +12,12 @@ using NUnit.Framework;
 namespace GravatarTests
 {
     [TestFixture]
-    public class GravatarServiceTests
+    public sealed class AvatarServiceTests
     {
         private const string Email = "x@x.com";
         private IImageCache _cache;
         private IImageNameProvider _avatarImageNameProvider;
-        private GravatarService _service;
+        private IAvatarService _service;
 
         [SetUp]
         public void Setup()
@@ -26,7 +26,7 @@ namespace GravatarTests
             _avatarImageNameProvider = Substitute.For<IImageNameProvider>();
             _avatarImageNameProvider.Get(Email).Returns($"{Email}.png");
 
-            _service = new GravatarService(_cache, _avatarImageNameProvider);
+            _service = new AvatarService(_cache, _avatarImageNameProvider);
         }
 
         [Test]
@@ -34,19 +34,17 @@ namespace GravatarTests
         public async Task GetAvatarAsync_should_not_call_gravatar_if_exist_in_cache()
         {
             var avatar = Resources.User;
-            _cache.GetImageAsync(Arg.Any<string>(), null).Returns(avatar);
+            _cache.GetImageAsync(Arg.Any<string>()).Returns(avatar);
 
             var image = await _service.GetAvatarAsync(Email, 1, DefaultImageType.Identicon.ToString());
 
             image.Should().Be(avatar);
             Received.InOrder(() =>
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await _cache.Received(1).GetImageAsync($"{Email}.png", null);
-                });
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    () => _cache.Received(1).GetImageAsync($"{Email}.png"));
             });
-            await _cache.DidNotReceive().AddImageAsync(Arg.Any<string>(), Arg.Any<Stream>());
+            _cache.DidNotReceive().AddImage(Arg.Any<string>(), Arg.Any<Image>());
         }
 
         [Ignore("Need to abstract WebClient or replace with HttpClient")]
@@ -75,15 +73,20 @@ namespace GravatarTests
 
             Received.InOrder(() =>
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await _cache.Received(1).DeleteImageAsync($"{Email}.png");
-                });
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    () => _cache.Received(1).DeleteImageAsync($"{Email}.png"));
             });
         }
 
-        [TestCase(null)]
+        [Test]
+        public void GetDefaultImageType_should_throw_if_requested_type_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => _service.GetDefaultImageType(null));
+        }
+
         [TestCase("")]
+        [TestCase("  ")]
+        [TestCase("\t")]
         [TestCase("boo")]
         public void GetDefaultImageType_should_return_None_if_requested_type_invalid(string imageType)
         {

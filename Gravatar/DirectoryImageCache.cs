@@ -1,53 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Gravatar
 {
-    public interface IImageCache
-    {
-        /// <summary>
-        /// Occurs whenever the cache is invalidated.
-        /// </summary>
-        event EventHandler Invalidated;
-
-        /// <summary>
-        /// Adds the image to the cache from the supplied stream.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="imageStream">The stream which contains the image.</param>
-        Task AddImageAsync(string imageFileName, Stream imageStream);
-
-        /// <summary>
-        /// Clears the cache by deleting all images.
-        /// </summary>
-        Task ClearAsync();
-
-        /// <summary>
-        /// Deletes the specified image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        Task DeleteImageAsync(string imageFileName);
-
-        /// <summary>
-        /// Retrieves the image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        Image GetImage(string imageFileName, Bitmap defaultBitmap);
-
-        /// <summary>
-        /// Retrieves the image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap);
-    }
-
     public sealed class DirectoryImageCache : IImageCache
     {
         private const int DefaultCacheDays = 30;
@@ -71,21 +31,20 @@ namespace Gravatar
         {
         }
 
-        /// <summary>
-        /// Occurs whenever the cache is invalidated.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler Invalidated;
 
-        /// <summary>
-        /// Adds the image to the cache from the supplied stream.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="imageStream">The stream which contains the image.</param>
-        public async Task AddImageAsync(string imageFileName, Stream imageStream)
+        /// <inheritdoc />
+        void IImageCache.AddImage(string imageFileName, Image image)
         {
-            if (string.IsNullOrWhiteSpace(imageFileName) || imageStream == null)
+            if (string.IsNullOrWhiteSpace(imageFileName))
             {
-                return;
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
+            if (image == null)
+            {
+                throw new ArgumentNullException(nameof(image));
             }
 
             if (!_fileSystem.Directory.Exists(_cachePath))
@@ -96,9 +55,10 @@ namespace Gravatar
             try
             {
                 string file = Path.Combine(_cachePath, imageFileName);
+
                 using (var output = new FileStream(file, FileMode.Create))
                 {
-                    await imageStream.CopyToAsync(output);
+                    image.Save(output, ImageFormat.Png);
                 }
             }
             catch
@@ -106,13 +66,11 @@ namespace Gravatar
                 // do nothing
             }
 
-            OnInvalidated(EventArgs.Empty);
+            OnInvalidated();
         }
 
-        /// <summary>
-        /// Clears the cache by deleting all images.
-        /// </summary>
-        public async Task ClearAsync()
+        /// <inheritdoc />
+        async Task IImageCache.ClearAsync()
         {
             if (!_fileSystem.Directory.Exists(_cachePath))
             {
@@ -133,21 +91,20 @@ namespace Gravatar
                     }
                 }
             });
-            OnInvalidated(EventArgs.Empty);
+
+            OnInvalidated();
         }
 
-        /// <summary>
-        /// Deletes the specified image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        public async Task DeleteImageAsync(string imageFileName)
+        /// <inheritdoc />
+        async Task IImageCache.DeleteImageAsync(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
-                return;
+                throw new ArgumentException(nameof(imageFileName));
             }
 
             string file = Path.Combine(_cachePath, imageFileName);
+
             if (!_fileSystem.File.Exists(file))
             {
                 return;
@@ -162,23 +119,19 @@ namespace Gravatar
                 // do nothing
             }
 
-            OnInvalidated(EventArgs.Empty);
+            OnInvalidated();
         }
 
-        /// <summary>
-        /// Retrieves the image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        public Image GetImage(string imageFileName, Bitmap defaultBitmap)
+        /// <inheritdoc />
+        Image IImageCache.GetImage(string imageFileName)
         {
             if (string.IsNullOrWhiteSpace(imageFileName))
             {
-                return null;
+                throw new ArgumentException(nameof(imageFileName));
             }
 
             string file = Path.Combine(_cachePath, imageFileName);
+
             try
             {
                 if (HasExpired(file))
@@ -197,20 +150,21 @@ namespace Gravatar
             }
         }
 
-        /// <summary>
-        /// Retrieves the image from the cache.
-        /// </summary>
-        /// <param name="imageFileName">The image file name.</param>
-        /// <param name="defaultBitmap">The default image to return
-        /// if the requested image does not exist in the cache.</param>
-        public async Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap)
+        /// <inheritdoc />
+        async Task<Image> IImageCache.GetImageAsync(string imageFileName)
         {
-            return await Task.Run(() => GetImage(imageFileName, defaultBitmap));
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                throw new ArgumentException(nameof(imageFileName));
+            }
+
+            return await Task.Run(() => ((IImageCache)this).GetImage(imageFileName));
         }
 
-        private bool HasExpired(string fileName)
+        private bool HasExpired([NotNull] string fileName)
         {
             var file = _fileSystem.FileInfo.FromFileName(fileName);
+
             if (!file.Exists)
             {
                 return true;
@@ -219,10 +173,9 @@ namespace Gravatar
             return file.LastWriteTime < DateTime.Now.AddDays(-_cacheDays);
         }
 
-        private void OnInvalidated(EventArgs e)
+        private void OnInvalidated()
         {
-            var handler = Invalidated;
-            handler?.Invoke(this, e);
+            Invalidated?.Invoke(this, EventArgs.Empty);
         }
     }
 }
