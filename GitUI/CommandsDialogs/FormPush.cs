@@ -932,25 +932,24 @@ namespace GitUI.CommandsDialogs
                 if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
                 {
                     EnsurePageant(remote);
-                    var cmdGetBranchesFromRemote = "ls-remote --heads \"" + remote + "\"";
-                    using (var formProcess = new FormRemoteProcess(Module, cmdGetBranchesFromRemote)
+
+                    var formProcess = new FormRemoteProcess(Module, $"ls-remote --heads \"{remote}\"")
                     {
                         Remote = remote
-                    })
+                    };
+
+                    using (formProcess)
                     {
                         formProcess.ShowDialog(this);
+
                         if (formProcess.ErrorOccurred())
                         {
                             return;
                         }
 
-                        var processOutput = formProcess.GetOutputString();
-                        var cmdOutput = TakeCommandOutput(processOutput);
-                        remoteHeads = Module.GetTreeRefs(cmdOutput);
-                        if (remoteHeads == null)
-                        {
-                            return;
-                        }
+                        var tree = CleanCommandOutput(formProcess.GetOutputString());
+
+                        remoteHeads = Module.GetTreeRefs(tree);
                     }
                 }
                 else
@@ -964,18 +963,23 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            string TakeCommandOutput(string processOutput)
+            string CleanCommandOutput(string processOutput)
             {
-                // the command output consists of lines in the format:
-                // fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
-                int firstTabIdx = processOutput.IndexOf('\t');
-                if (firstTabIdx < 40)
-                {
-                    return string.Empty;
-                }
+                // Command output consists of lines of format:
+                //
+                //     <SHA1> \t <full-ref>
+                //
+                // Such as:
+                //
+                //     fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
 
-                var cmdOutput = processOutput.Substring(firstTabIdx - 40);
-                return cmdOutput;
+                int firstTabIdx = processOutput.IndexOf('\t');
+
+                return firstTabIdx == 40
+                    ? processOutput
+                    : firstTabIdx > 40
+                        ? processOutput.Substring(firstTabIdx - 40)
+                        : string.Empty;
             }
 
             void ProcessHeads(IReadOnlyList<IGitRef> remoteHeads)
@@ -986,25 +990,19 @@ namespace GitUI.CommandsDialogs
                 // Add all the local branches.
                 foreach (var head in localHeads)
                 {
-                    DataRow row = _branchTable.NewRow();
+                    var remoteName = head.Remote == remote
+                        ? head.MergeWith ?? head.Name
+                        : head.Name;
+                    var isKnownAtRemote = remoteBranches.Contains(remoteName);
+
+                    var row = _branchTable.NewRow();
+
                     row[ForceColumnName] = false;
                     row[DeleteColumnName] = false;
                     row[LocalColumnName] = head.Name;
-
-                    string remoteName;
-                    if (head.Remote == remote)
-                    {
-                        remoteName = head.MergeWith ?? head.Name;
-                    }
-                    else
-                    {
-                        remoteName = head.Name;
-                    }
-
                     row[RemoteColumnName] = remoteName;
-                    bool knownAtRemote = remoteBranches.Contains(remoteName);
-                    row[NewColumnName] = knownAtRemote ? _no.Text : _yes.Text;
-                    row[PushColumnName] = knownAtRemote;
+                    row[NewColumnName] = isKnownAtRemote ? _no.Text : _yes.Text;
+                    row[PushColumnName] = isKnownAtRemote;
 
                     _branchTable.Rows.Add(row);
                 }
@@ -1012,16 +1010,17 @@ namespace GitUI.CommandsDialogs
                 // Offer to delete all the left over remote branches.
                 foreach (var remoteHead in remoteHeads)
                 {
-                    var head = remoteHead;
-                    if (localHeads.All(h => h.Name != head.LocalName))
+                    if (localHeads.All(h => h.Name != remoteHead.LocalName))
                     {
-                        DataRow row = _branchTable.NewRow();
+                        var row = _branchTable.NewRow();
+
                         row[LocalColumnName] = null;
                         row[RemoteColumnName] = remoteHead.LocalName;
                         row[NewColumnName] = _no.Text;
                         row[PushColumnName] = false;
                         row[ForceColumnName] = false;
                         row[DeleteColumnName] = false;
+
                         _branchTable.Rows.Add(row);
                     }
                 }
