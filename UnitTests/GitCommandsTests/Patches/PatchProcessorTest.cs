@@ -143,7 +143,7 @@ index cdf8bebba,55ff37bb9..000000000
         {
             var header = reverse
                 ? "diff --git a/thisisatestb.txt b/thisisatesta.txt"
-                : "diff --git a/thisisatesta.txt b/thisisatestb.txt";
+                : "diff --git b/thisisatesta.txt a/thisisatestb.txt";
             const string index = "index 5e4dce2..5eb1e6f 100644";
             const string fileNameA = "thisisatesta.txt";
             const string fileNameB = "thisisatestb.txt";

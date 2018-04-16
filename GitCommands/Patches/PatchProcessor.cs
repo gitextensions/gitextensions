@@ -86,7 +86,8 @@ namespace GitCommands.Patches
             if (!isCombinedDiff)
             {
                 // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
-                Match match = Regex.Match(header, "^diff --git [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?$");
+                // diff --git b/Benchmarks/App.config a/Benchmarks/App.config
+                Match match = Regex.Match(header, "^diff --git [\\\"]?[abiwco12]/(.*)[\\\"]? [\\\"]?[abiwco12]/(.*)[\\\"]?$");
 
                 if (!match.Success)
                 {
