@@ -926,8 +926,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadMultiBranchViewData(string remote)
         {
-            Cursor = Cursors.AppStarting;
-            try
+            using (WaitCursorScope.Enter(Cursors.AppStarting))
             {
                 IReadOnlyList<IGitRef> remoteHeads;
                 if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
@@ -961,10 +960,6 @@ namespace GitUI.CommandsDialogs
                 }
 
                 ProcessHeads(remote, remoteHeads);
-            }
-            finally
-            {
-                Cursor = Cursors.Default;
             }
         }
 
