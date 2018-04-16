@@ -947,9 +947,9 @@ namespace GitUI.CommandsDialogs
                             return;
                         }
 
-                        var tree = CleanCommandOutput(formProcess.GetOutputString());
+                        var refList = CleanCommandOutput(formProcess.GetOutputString());
 
-                        remoteHeads = Module.GetTreeRefs(tree);
+                        remoteHeads = Module.ParseRefs(refList);
                     }
                 }
                 else
