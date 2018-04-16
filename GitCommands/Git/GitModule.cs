@@ -2763,7 +2763,7 @@ namespace GitCommands
 
             remote = remote.ToPosixPath();
 
-            result.CmdResult = GetTreeFromRemoteRefs(remote, tags, branches);
+            result.CmdResult = RunLsRemote();
 
             var tree = result.CmdResult.StdOutput;
 
@@ -2782,26 +2782,26 @@ namespace GitCommands
             }
 
             return result;
-        }
 
-        private CmdResult GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
-        {
-            if (tags && branches)
+            CmdResult RunLsRemote()
             {
-                return RunGitCmdResult("ls-remote --heads --tags \"" + remote + "\"");
-            }
+                if (tags && branches)
+                {
+                    return RunGitCmdResult($"ls-remote --heads --tags \"{remote}\"");
+                }
 
-            if (tags)
-            {
-                return RunGitCmdResult("ls-remote --tags \"" + remote + "\"");
-            }
+                if (tags)
+                {
+                    return RunGitCmdResult($"ls-remote --tags \"{remote}\"");
+                }
 
-            if (branches)
-            {
-                return RunGitCmdResult("ls-remote --heads \"" + remote + "\"");
-            }
+                if (branches)
+                {
+                    return RunGitCmdResult($"ls-remote --heads \"{remote}\"");
+                }
 
-            return new CmdResult();
+                return new CmdResult();
+            }
         }
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
