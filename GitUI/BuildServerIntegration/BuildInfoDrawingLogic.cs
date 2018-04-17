@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
@@ -12,21 +14,6 @@ namespace GitUI.BuildServerIntegration
 {
     internal static class BuildInfoDrawingLogic
     {
-        private static readonly Dictionary<BuildInfo.BuildStatus, Image> _imageByBuildStatus;
-
-        static BuildInfoDrawingLogic()
-        {
-            _imageByBuildStatus = new Dictionary<BuildInfo.BuildStatus, Image>
-            {
-                { BuildInfo.BuildStatus.Success, DpiUtil.Scale(Resources.BuildSuccessful) },
-                { BuildInfo.BuildStatus.Failure, DpiUtil.Scale(Resources.BuildFailed) },
-                { BuildInfo.BuildStatus.Unknown, DpiUtil.Scale(Resources.BuildCancelled) },
-                { BuildInfo.BuildStatus.InProgress, DpiUtil.Scale(Resources.Settings) },
-                { BuildInfo.BuildStatus.Unstable, DpiUtil.Scale(Resources.IconMixed) },
-                { BuildInfo.BuildStatus.Stopped, DpiUtil.Scale(Resources.BuildCancelled) },
-            };
-        }
-
         public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision)
         {
             if (revision.BuildStatus == null)
@@ -34,15 +21,39 @@ namespace GitUI.BuildServerIntegration
                 return;
             }
 
-            if (_imageByBuildStatus.TryGetValue(revision.BuildStatus.Status, out var image))
+            var size = DpiUtil.Scale(new Size(8, 8));
+
+            var location = new Point(
+                e.CellBounds.Left + ((e.CellBounds.Width - size.Width) / 2),
+                e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
+
+            var container = e.Graphics.BeginContainer();
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.FillEllipse(GetBrush(), new Rectangle(location, size));
+            e.Graphics.EndContainer(container);
+
+            Brush GetBrush()
             {
-                var size = DpiUtil.Scale(new Size(16, 16));
-                var location = new Point(e.CellBounds.Left, e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
-                e.Graphics.DrawImage(image, new Rectangle(location, size));
+                switch (revision.BuildStatus.Status)
+                {
+                    case BuildInfo.BuildStatus.Success:
+                        return Brushes.LightGreen;
+                    case BuildInfo.BuildStatus.Failure:
+                        return Brushes.Red;
+                    case BuildInfo.BuildStatus.InProgress:
+                        return Brushes.DodgerBlue;
+                    case BuildInfo.BuildStatus.Unstable:
+                        return Brushes.DarkOrange;
+                    case BuildInfo.BuildStatus.Stopped:
+                    case BuildInfo.BuildStatus.Unknown:
+                        return Brushes.Gray;
+                    default:
+                        throw new InvalidOperationException("Unsupported build status enum value.");
+                }
             }
         }
 
-        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont)
+        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont, bool isSelected)
         {
             if (revision.BuildStatus == null)
             {
@@ -59,17 +70,19 @@ namespace GitUI.BuildServerIntegration
                 switch (revision.BuildStatus.Status)
                 {
                     case BuildInfo.BuildStatus.Success:
-                        return Color.DarkGreen;
+                        return isSelected ? Color.LightGreen : Color.DarkGreen;
                     case BuildInfo.BuildStatus.Failure:
-                        return Color.DarkRed;
+                        return isSelected ? Color.Red : Color.DarkRed;
                     case BuildInfo.BuildStatus.InProgress:
-                        return Color.Blue;
+                        return isSelected ? Color.LightBlue : Color.Blue;
                     case BuildInfo.BuildStatus.Unstable:
                         return Color.OrangeRed;
                     case BuildInfo.BuildStatus.Stopped:
-                        return Color.Gray;
-                    default:
+                        return isSelected ? Color.LightGray : Color.Gray;
+                    case BuildInfo.BuildStatus.Unknown:
                         return foreColor;
+                    default:
+                        throw new InvalidOperationException("Unsupported build status enum value.");
                 }
             }
         }
