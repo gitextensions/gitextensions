@@ -661,8 +661,7 @@ namespace GitUI.CommandsDialogs
 
                 // load custom user menu
                 LoadUserMenu();
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
+                ReloadRepoObjectsTree();
 
                 if (validWorkingDir)
                 {
@@ -675,6 +674,21 @@ namespace GitUI.CommandsDialogs
                 }
 
                 UICommands.RaisePostBrowseInitialize(this);
+            }
+        }
+
+        private void ReloadRepoObjectsTree()
+        {
+            if (IsRepoObjectsTreeVisible())
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
+            }
+
+            return;
+
+            bool IsRepoObjectsTreeVisible()
+            {
+                return !MainSplitContainer.Panel1Collapsed;
             }
         }
 
@@ -2991,6 +3005,7 @@ namespace GitUI.CommandsDialogs
         private void toggleBranchTreePanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
+            ReloadRepoObjectsTree();
             RefreshBranchTreeToggleButtonState();
         }
 
