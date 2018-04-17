@@ -340,7 +340,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
-            if (UICommands.StartCommandLineProcessDialog(cmd, owner))
+            if (UICommands.StartCommandLineProcessDialog(owner, cmd))
             {
                 if (stash)
                 {

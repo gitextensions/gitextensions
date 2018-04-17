@@ -123,7 +123,7 @@ namespace GitUI
             return StartBatchFileProcessDialog(null, batchFile);
         }
 
-        public bool StartCommandLineProcessDialog(IGitCommand command, IWin32Window owner)
+        public bool StartCommandLineProcessDialog(IWin32Window owner, IGitCommand command)
         {
             var executed = command.AccessesRemote()
                 ? FormRemoteProcess.ShowDialog(owner, Module, command.ToLine())
