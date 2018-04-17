@@ -138,25 +138,10 @@ namespace GitUI
             return true;
         }
 
-        public bool StartCommandLineProcessDialog(string command, string arguments)
-        {
-            return StartCommandLineProcessDialog(null, command, arguments);
-        }
-
-        private bool StartGitCommandProcessDialog(IWin32Window owner, string arguments)
+        public bool StartGitCommandProcessDialog(IWin32Window owner, string arguments)
         {
             FormProcess.ShowDialog(owner, Module, arguments);
             return true;
-        }
-
-        public bool StartGitCommandProcessDialog(string arguments)
-        {
-            return StartGitCommandProcessDialog(null, arguments);
-        }
-
-        public bool StartBrowseDialog()
-        {
-            return StartBrowseDialog(null, "", null);
         }
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
@@ -1081,7 +1066,7 @@ namespace GitUI
             return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
-        private bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
+        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", string selectedCommit = null)
         {
             var form = new FormBrowse(this, filter, selectedCommit);
 
