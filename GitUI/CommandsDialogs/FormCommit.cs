@@ -463,7 +463,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if ((!_currentFilesList.SelectedItem.IsNew) && (!_currentFilesList.SelectedItem.IsRenamed))
                     {
-                        UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Name, null);
+                        UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Name);
                     }
                 }
 
@@ -2439,7 +2439,7 @@ namespace GitUI.CommandsDialogs
 
             if (list.SelectedItems.Count() == 1)
             {
-                UICommands.StartFileHistoryDialog(this, list.SelectedItem.Name, null);
+                UICommands.StartFileHistoryDialog(this, list.SelectedItem.Name);
             }
             else
             {
@@ -2814,7 +2814,7 @@ namespace GitUI.CommandsDialogs
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
             GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Name.EnsureTrailingPathSeparator()));
-            submodulCommands.StartCommitDialog(this, false);
+            submodulCommands.StartCommitDialog(this);
             Initialize();
         }
 

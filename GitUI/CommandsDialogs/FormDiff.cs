@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, false);
+                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision);
             }
         }
 

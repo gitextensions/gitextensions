@@ -1847,7 +1847,7 @@ namespace GitUI
                                               gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
                         drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
-                        offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
+                        offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
                     }
 
                     if (IsCardLayout())
@@ -2792,7 +2792,7 @@ namespace GitUI
             if (sender is ToolStripItem toolStripItem)
             {
                 string branch = toolStripItem.Text;
-                UICommands.StartCheckoutBranch(this, branch, false);
+                UICommands.StartCheckoutBranch(this, branch);
             }
         }
 

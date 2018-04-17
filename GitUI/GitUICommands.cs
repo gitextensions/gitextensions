@@ -487,7 +487,7 @@ namespace GitUI
 
         public bool StartPullDialogAndPullImmediately(IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false)
         {
-            return StartPullDialogAndPullImmediately(out var _, owner, remoteBranch, remote, fetchAll);
+            return StartPullDialogAndPullImmediately(out _, owner, remoteBranch, remote, fetchAll);
         }
 
         /// <param name="pullCompleted">true if pull completed with no errors</param>
@@ -1590,7 +1590,7 @@ namespace GitUI
                 }
             }
 
-            c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), null);
+            c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
         }
 
         private void RunSynchronizeCommand(Dictionary<string, string> arguments)

@@ -362,7 +362,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                UICommands.StartFileHistoryDialog(this, DiffFiles.SelectedItem.Name, DiffFiles.Revision, false);
+                UICommands.StartFileHistoryDialog(this, DiffFiles.SelectedItem.Name, DiffFiles.Revision);
             }
         }
 
@@ -530,7 +530,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision, false);
+                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision);
             }
         }
 
@@ -772,7 +772,7 @@ namespace GitUI.CommandsDialogs
             foreach (var name in submodules)
             {
                 GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
-                submodulCommands.StartCommitDialog(this, false);
+                submodulCommands.StartCommitDialog(this);
             }
 
             RefreshArtificial();

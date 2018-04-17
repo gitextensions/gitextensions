@@ -1601,7 +1601,7 @@ namespace GitUI.CommandsDialogs
 
         private void ManageStashesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartStashDialog(this, true);
+            UICommands.StartStashDialog(this);
         }
 
         private void CreateStashToolStripMenuItemClick(object sender, EventArgs e)
@@ -1988,7 +1988,7 @@ namespace GitUI.CommandsDialogs
         private void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-            UICommands.StartCheckoutBranch(this, toolStripItem.Text, false);
+            UICommands.StartCheckoutBranch(this, toolStripItem.Text);
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
