@@ -201,7 +201,7 @@ namespace GitUI
             _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
 
-        public bool StartBatchFileProcessDialog(object owner, string batchFile)
+        public bool StartBatchFileProcessDialog(IWin32Window owner, string batchFile)
         {
             string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
             using (var writer = new StreamWriter(tempFileName))
@@ -210,7 +210,7 @@ namespace GitUI
                 writer.Write(batchFile);
             }
 
-            FormProcess.ShowDialog(owner as IWin32Window, Module, "cmd.exe", "/C \"" + tempFileName + "\"");
+            FormProcess.ShowDialog(owner, Module, "cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return true;
         }
@@ -234,9 +234,9 @@ namespace GitUI
             return executed;
         }
 
-        public bool StartCommandLineProcessDialog(object owner, string command, string arguments)
+        public bool StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments)
         {
-            FormProcess.ShowDialog(owner as IWin32Window, Module, command, arguments);
+            FormProcess.ShowDialog(owner, Module, command, arguments);
             return true;
         }
 

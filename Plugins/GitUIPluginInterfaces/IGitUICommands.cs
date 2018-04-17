@@ -99,10 +99,10 @@ namespace GitUIPluginInterfaces
         /// </summary>
         ILockableNotifier RepoChangedNotifier { get; }
 
-        bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
+        bool StartCommandLineProcessDialog(IWin32Window ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(IGitCommand cmd, IWin32Window parentForm);
         bool StartCommandLineProcessDialog(string command, string arguments);
-        bool StartBatchFileProcessDialog(object ownerForm, string batchFile);
+        bool StartBatchFileProcessDialog(IWin32Window ownerForm, string batchFile);
         bool StartBatchFileProcessDialog(string batchFile);
 
         bool StartAddFilesDialog();
