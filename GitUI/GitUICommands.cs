@@ -398,7 +398,8 @@ namespace GitUI
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
         /// <returns>true if action was successfully done, false otherwise</returns>
         private bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo,
-            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<bool> action)
+            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent,
+            [InstantHandle] Func<bool> action)
         {
             bool actionDone = false;
             RepoChangedNotifier.Lock();
@@ -826,7 +827,7 @@ namespace GitUI
             return StartResetChangesDialog(owner, unstagedFiles, false);
         }
 
-        public bool StartResetChangesDialog(IWin32Window owner, IEnumerable<GitItemStatus> unstagedFiles, bool onlyUnstaged)
+        public bool StartResetChangesDialog(IWin32Window owner, IReadOnlyCollection<GitItemStatus> unstagedFiles, bool onlyUnstaged)
         {
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
@@ -968,6 +969,7 @@ namespace GitUI
                 {
                     bool repoChanged = false;
 
+                    // ReSharper disable once PossibleMultipleEnumeration
                     foreach (var r in revisions)
                     {
                         var frm = new FormCherryPick(this, r);

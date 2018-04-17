@@ -2342,13 +2342,13 @@ namespace GitUI.CommandsDialogs
 
         private void ResetClick(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, false);
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: false);
             Initialize();
         }
 
         private void ResetUnStagedClick(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, true);
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: true);
             Initialize();
         }
 
