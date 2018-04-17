@@ -1364,7 +1364,7 @@ namespace GitUI
 
             if (Application.MessageLoop)
             {
-                form.Show();
+                form.Show(owner);
             }
             else
             {
@@ -1594,7 +1594,7 @@ namespace GitUI
                                 gh =>
                                 {
                                     var frm = new ViewPullRequestsForm(this, gitHoster) { ShowInTaskbar = true };
-                                    frm.Show();
+                                    frm.Show(owner);
                                 });
         }
 
@@ -1629,7 +1629,7 @@ namespace GitUI
                         ShowInTaskbar = true
                     };
 
-                    form.Show();
+                    form.Show(owner);
                 });
         }
 
