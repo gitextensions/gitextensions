@@ -161,19 +161,15 @@ namespace GitCommands
 
                 if (_byNameMap.TryGetValue(name, out object o))
                 {
-                    if (o == null)
+                    switch (o)
                     {
-                        val = defaultValue;
-                        return false;
-                    }
-                    else if (o is T t)
-                    {
-                        val = t;
-                        return true;
-                    }
-                    else
-                    {
-                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                        case null:
+                            return false;
+                        case T t:
+                            val = t;
+                            return true;
+                        default:
+                            throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                     }
                 }
                 else
