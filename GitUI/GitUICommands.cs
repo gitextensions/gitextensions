@@ -123,13 +123,13 @@ namespace GitUI
             return StartBatchFileProcessDialog(null, batchFile);
         }
 
-        public bool StartCommandLineProcessDialog(IGitCommand cmd, IWin32Window parentForm)
+        public bool StartCommandLineProcessDialog(IGitCommand command, IWin32Window owner)
         {
-            var executed = cmd.AccessesRemote()
-                ? FormRemoteProcess.ShowDialog(parentForm, Module, cmd.ToLine())
-                : FormProcess.ShowDialog(parentForm, Module, cmd.ToLine());
+            var executed = command.AccessesRemote()
+                ? FormRemoteProcess.ShowDialog(owner, Module, command.ToLine())
+                : FormProcess.ShowDialog(owner, Module, command.ToLine());
 
-            if (executed && cmd.ChangesRepoState())
+            if (executed && command.ChangesRepoState())
             {
                 RepoChangedNotifier.Notify();
             }
