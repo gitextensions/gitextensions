@@ -19,17 +19,16 @@ namespace GitUI.BranchTreePanel
         public FilterBranchHelper FilterBranchHelper { private get; set; }
 
         private readonly List<Tree> _rootNodes = new List<Tree>();
+
         private SearchControl<string> _txtBranchCriterion;
-        private readonly ImageList _imageList = new ImageList();
+
         public RepoObjectsTree()
         {
             _currentToken = _reloadCancellation.Next();
             InitializeComponent();
             InitImageList();
-            InitiliazeSearchBox();
+            InitializeSearchBox();
             treeMain.PreviewKeyDown += OnPreviewKeyDown;
-
-            btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
             Translate();
 
@@ -45,32 +44,41 @@ namespace GitUI.BranchTreePanel
 
         private void InitImageList()
         {
-            _imageList.Images.Add(nameof(MsVsImages.Branch_16x), MsVsImages.Branch_16x);
-            _imageList.Images.Add(nameof(MsVsImages.Repository_16x), MsVsImages.Repository_16x);
-            _imageList.Images.Add(nameof(MsVsImages.BranchRemote_16x), MsVsImages.BranchRemote_16x);
-            _imageList.Images.Add(nameof(MsVsImages.Folder_grey_16x), MsVsImages.Folder_grey_16x);
-            _imageList.Images.Add(nameof(MsVsImages.Tag_16x), MsVsImages.Tag_16x);
-            treeMain.ImageList = _imageList;
+            treeMain.ImageList = new ImageList
+            {
+                Images =
+                {
+                    { nameof(MsVsImages.Branch_16x), MsVsImages.Branch_16x },
+                    { nameof(MsVsImages.Repository_16x), MsVsImages.Repository_16x },
+                    { nameof(MsVsImages.BranchRemote_16x), MsVsImages.BranchRemote_16x },
+                    { nameof(MsVsImages.Folder_grey_16x), MsVsImages.Folder_grey_16x },
+                    { nameof(MsVsImages.Tag_16x), MsVsImages.Tag_16x }
+                }
+            };
             treeMain.ImageKey = nameof(MsVsImages.Branch_16x);
             treeMain.SelectedImageKey = treeMain.ImageKey;
         }
 
-        private void InitiliazeSearchBox()
+        private void InitializeSearchBox()
         {
-            _txtBranchCriterion = new SearchControl<string>(SearchForBranch, i => { });
+            _txtBranchCriterion = new SearchControl<string>(SearchForBranch, i => { })
+            {
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                Name = "txtBranchCritierion",
+                TabIndex = 1,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0),
+                Height = 16
+            };
             _txtBranchCriterion.OnTextEntered += () =>
             {
                 OnBranchCriterionChanged(null, null);
                 OnBtnSearchClicked(null, null);
             };
-            _txtBranchCriterion.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            _txtBranchCriterion.Name = "txtBranchCritierion";
-            _txtBranchCriterion.TabIndex = 1;
             _txtBranchCriterion.TextChanged += OnBranchCriterionChanged;
-            _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
-            branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
-
             _txtBranchCriterion.PreviewKeyDown += OnPreviewKeyDown;
+            _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
+            branchSearchPanel.Controls.Add(_txtBranchCriterion, 0, 0);
         }
 
         private IEnumerable<string> SearchForBranch(string arg)
