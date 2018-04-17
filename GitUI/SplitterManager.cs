@@ -168,10 +168,10 @@ namespace GitUI
             /// </returns>
             private bool IsValidSplitterDistance(int distance)
             {
-                bool valid;
-                int limit = SplitterSize;
-                valid = (distance > Splitter.Panel1MinSize) && (distance < limit - Splitter.Panel2MinSize);
-                return valid;
+                var limit = SplitterSize;
+
+                return distance > Splitter.Panel1MinSize &&
+                       distance < limit - Splitter.Panel2MinSize;
             }
         }
     }
