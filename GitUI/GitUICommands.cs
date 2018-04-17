@@ -25,6 +25,10 @@ namespace GitUI
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _fildFilePredicateProvider;
 
+        public GitModule Module { get; private set; }
+        public ILockableNotifier RepoChangedNotifier { get; }
+        public IBrowseRepo BrowseRepo { get; set; }
+
         public GitUICommands(GitModule module)
         {
             Module = module;
@@ -42,6 +46,9 @@ namespace GitUI
             : this(new GitModule(workingDir))
         {
         }
+
+        public IGitModule GitModule => Module;
+        public Icon FormIcon => GitExtensionsForm.ApplicationIcon;
 
         #region IGitUICommands Members
 
@@ -166,9 +173,6 @@ namespace GitUI
 
         public event EventHandler<GitUIBaseEventArgs> PostRegisterPlugin;
 
-        public ILockableNotifier RepoChangedNotifier { get; }
-        public IBrowseRepo BrowseRepo { get; set; }
-
         #endregion
 
         public string GitCommand(string arguments)
@@ -196,8 +200,6 @@ namespace GitUI
         {
             _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
-
-        public Icon FormIcon => GitExtensionsForm.ApplicationIcon;
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {
@@ -1522,10 +1524,6 @@ namespace GitUI
         {
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
         }
-
-        public GitModule Module { get; private set; }
-
-        public IGitModule GitModule => Module;
 
         private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
         {
