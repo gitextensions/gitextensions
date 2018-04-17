@@ -670,7 +670,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                 {
-                    return _revisionGraphDrawStyle;
+                    return RevisionGraphDrawStyleEnum.HighlightSelected;
                 }
 
                 if (AppSettings.RevisionGraphDrawNonRelativesGray)
