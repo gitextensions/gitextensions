@@ -197,11 +197,14 @@ namespace GitCommands
         {
             get
             {
-                lock (_lock)
+                if (_effectiveSettings == null)
                 {
-                    if (_effectiveSettings == null)
+                    lock (_lock)
                     {
-                        _effectiveSettings = RepoDistSettings.CreateEffective(this);
+                        if (_effectiveSettings == null)
+                        {
+                            _effectiveSettings = RepoDistSettings.CreateEffective(this);
+                        }
                     }
                 }
 
@@ -219,11 +222,14 @@ namespace GitCommands
         {
             get
             {
-                lock (_lock)
+                if (_localSettings == null)
                 {
-                    if (_localSettings == null)
+                    lock (_lock)
                     {
-                        _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache);
+                        if (_localSettings == null)
+                        {
+                            _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache);
+                        }
                     }
                 }
 
@@ -236,11 +242,14 @@ namespace GitCommands
         {
             get
             {
-                lock (_lock)
+                if (_effectiveConfigFile == null)
                 {
-                    if (_effectiveConfigFile == null)
+                    lock (_lock)
                     {
-                        _effectiveConfigFile = ConfigFileSettings.CreateEffective(this);
+                        if (_effectiveConfigFile == null)
+                        {
+                            _effectiveConfigFile = ConfigFileSettings.CreateEffective(this);
+                        }
                     }
                 }
 
