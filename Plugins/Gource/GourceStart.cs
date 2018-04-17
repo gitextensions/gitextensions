@@ -9,7 +9,7 @@ namespace Gource
 {
     public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     {
-        public GourceStart(string pathToGource, GitUIBaseEventArgs gitUIArgs, string gourceArguments)
+        public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments)
         {
             InitializeComponent();
             Translate();
@@ -24,7 +24,7 @@ namespace Gource
             Arguments.Text = GourceArguments;
         }
 
-        private GitUIBaseEventArgs GitUIArgs { get; }
+        private GitUIEventArgs GitUIArgs { get; }
 
         public string PathToGource { get; set; }
 

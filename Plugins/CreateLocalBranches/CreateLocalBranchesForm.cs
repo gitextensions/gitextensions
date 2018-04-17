@@ -6,9 +6,9 @@ namespace CreateLocalBranches
 {
     public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsFormBase
     {
-        private readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIEventArgs _gitUiCommands;
 
-        public CreateLocalBranchesForm(GitUIBaseEventArgs gitUiCommands)
+        public CreateLocalBranchesForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();

@@ -54,7 +54,7 @@ namespace AutoCompileSubmodules
             gitUiCommands.PostUpdateSubmodules -= GitUiCommandsPostUpdateSubmodules;
         }
 
-        public override bool Execute(GitUIBaseEventArgs e)
+        public override bool Execute(GitUIEventArgs e)
         {
             // Only build when plugin is enabled
             if (string.IsNullOrEmpty(e.GitModule.WorkingDir))

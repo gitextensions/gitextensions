@@ -50,7 +50,7 @@ namespace Gource
             yield return _gourceArguments;
         }
 
-        public override bool Execute(GitUIBaseEventArgs eventArgs)
+        public override bool Execute(GitUIEventArgs eventArgs)
         {
             IGitModule gitUiCommands = eventArgs.GitModule;
             var ownerForm = eventArgs.OwnerForm;

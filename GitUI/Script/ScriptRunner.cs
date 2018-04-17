@@ -433,7 +433,7 @@ namespace GitUI.Script
                 {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands, argument);
+                        var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands);
                         return plugin.Execute(eventArgs);
                     }
                 }

@@ -52,13 +52,13 @@ namespace GitUI
 
         #region IGitUICommands Members
 
-        public event EventHandler<GitUIBaseEventArgs> PreCheckoutRevision;
+        public event EventHandler<GitUIEventArgs> PreCheckoutRevision;
         public event EventHandler<GitUIPostActionEventArgs> PostCheckoutRevision;
 
-        public event EventHandler<GitUIBaseEventArgs> PreCheckoutBranch;
+        public event EventHandler<GitUIEventArgs> PreCheckoutBranch;
         public event EventHandler<GitUIPostActionEventArgs> PostCheckoutBranch;
 
-        public event EventHandler<GitUIBaseEventArgs> PreCommit;
+        public event EventHandler<GitUIEventArgs> PreCommit;
         public event EventHandler<GitUIPostActionEventArgs> PostCommit;
 
         public event EventHandler<GitUIPostActionEventArgs> PostEditGitIgnore;
@@ -67,14 +67,14 @@ namespace GitUI
 
         public event EventHandler<GitUIPostActionEventArgs> PostUpdateSubmodules;
 
-        public event EventHandler<GitUIBaseEventArgs> PostBrowseInitialize;
+        public event EventHandler<GitUIEventArgs> PostBrowseInitialize;
 
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
-        public event EventHandler<GitUIBaseEventArgs> PostRepositoryChanged;
+        public event EventHandler<GitUIEventArgs> PostRepositoryChanged;
 
-        public event EventHandler<GitUIBaseEventArgs> PostRegisterPlugin;
+        public event EventHandler<GitUIEventArgs> PostRegisterPlugin;
 
         #endregion
 
@@ -260,7 +260,7 @@ namespace GitUI
         }
 
         public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir,
-            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<Form> provideForm)
+            EventHandler<GitUIEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent, Func<Form> provideForm)
         {
             if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
             {
@@ -301,7 +301,7 @@ namespace GitUI
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
         /// <returns>true if action was successfully done, false otherwise</returns>
         private bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo,
-            EventHandler<GitUIBaseEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent,
+            EventHandler<GitUIEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent,
             [InstantHandle] Func<bool> action)
         {
             bool actionDone = false;
@@ -1411,7 +1411,7 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
-        private bool InvokeEvent(IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
+        private bool InvokeEvent(IWin32Window ownerForm, [CanBeNull] EventHandler<GitUIEventArgs> gitUIEventHandler)
         {
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
         }
@@ -1425,7 +1425,7 @@ namespace GitUI
             }
         }
 
-        private bool InvokeEvent(object sender, IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
+        private bool InvokeEvent(object sender, IWin32Window ownerForm, [CanBeNull] EventHandler<GitUIEventArgs> gitUIEventHandler)
         {
             try
             {

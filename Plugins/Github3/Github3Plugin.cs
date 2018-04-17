@@ -104,7 +104,7 @@ namespace Github3
             }
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs gitUiCommands)
         {
             if (string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
             {

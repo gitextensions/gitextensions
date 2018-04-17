@@ -38,7 +38,7 @@ namespace ResourceManager
             SettingsContainer.SetSettingsSource(null);
         }
 
-        public abstract bool Execute(GitUIBaseEventArgs gitUiCommands);
+        public abstract bool Execute(GitUIEventArgs gitUiCommands);
 
         protected void Translate()
         {

@@ -58,7 +58,7 @@ namespace Gerrit
             _gitUiCommands = null;
         }
 
-        private void UpdateGerritMenuItems(object sender, GitUIBaseEventArgs e)
+        private void UpdateGerritMenuItems(object sender, GitUIEventArgs e)
         {
             if (!_initialized)
             {
@@ -415,7 +415,7 @@ namespace Gerrit
             return null;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs gitUiCommands)
         {
             using (var form = new FormPluginInformation())
             {

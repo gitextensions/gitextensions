@@ -14,7 +14,7 @@ namespace ReleaseNotesGenerator
             Translate();
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs gitUiCommands)
         {
             using (var form = new ReleaseNotesGeneratorForm(gitUiCommands))
             {

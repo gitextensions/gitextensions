@@ -29,7 +29,7 @@ namespace ProxySwitcher
             InitializeComponent();
         }
 
-        public ProxySwitcherForm(ProxySwitcherPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
+        public ProxySwitcherForm(ProxySwitcherPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();

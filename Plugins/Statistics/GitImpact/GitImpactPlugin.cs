@@ -15,7 +15,7 @@ namespace GitImpact
 
         #region IGitPlugin Members
 
-        public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
+        public override bool Execute(GitUIEventArgs gitUIEventArgs)
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
             {

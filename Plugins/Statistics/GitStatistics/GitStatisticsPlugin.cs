@@ -28,7 +28,7 @@ namespace GitStatistics
             yield return _ignoreSubmodules;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
+        public override bool Execute(GitUIEventArgs gitUIEventArgs)
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
             {

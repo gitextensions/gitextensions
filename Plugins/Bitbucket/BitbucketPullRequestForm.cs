@@ -24,7 +24,7 @@ namespace Bitbucket
         private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
-        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
+        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();

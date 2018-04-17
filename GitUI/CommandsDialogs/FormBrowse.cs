@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
+        private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions).FileAndForget();
         }

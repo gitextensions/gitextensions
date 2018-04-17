@@ -36,7 +36,7 @@ namespace DeleteUnusedBranches
             yield return _includeUnmergedBranchesFlag;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiArgs)
+        public override bool Execute(GitUIEventArgs gitUiArgs)
         {
             var settings = new DeleteUnusedBranchesFormSettings(
                 _daysOlderThan.ValueOrDefault(Settings),

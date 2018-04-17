@@ -1049,7 +1049,6 @@
       <DependentUpon>FormGitLog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitUICommands.cs" />
-    <Compile Include="GitUIEventArgs.cs" />
     <Compile Include="UserControls\GravatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

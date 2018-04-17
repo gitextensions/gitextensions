@@ -126,7 +126,7 @@ namespace BackgroundFetch
             base.Unregister(gitUiCommands);
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiArgs)
+        public override bool Execute(GitUIEventArgs gitUiArgs)
         {
             gitUiArgs.GitUICommands.StartSettingsDialog(this);
             return false;

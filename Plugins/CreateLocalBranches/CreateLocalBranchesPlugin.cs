@@ -13,7 +13,7 @@ namespace CreateLocalBranches
             Translate();
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs gitUiCommands)
         {
             using (var frm = new CreateLocalBranchesForm(gitUiCommands))
             {

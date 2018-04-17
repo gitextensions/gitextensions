@@ -7,12 +7,12 @@ namespace GitUIPluginInterfaces
     public interface IGitUICommands
     {
         event EventHandler<GitUIPostActionEventArgs> PostCommit;
-        event EventHandler<GitUIBaseEventArgs> PostRepositoryChanged;
+        event EventHandler<GitUIEventArgs> PostRepositoryChanged;
         event EventHandler<GitUIPostActionEventArgs> PostSettings;
         event EventHandler<GitUIPostActionEventArgs> PostUpdateSubmodules;
-        event EventHandler<GitUIBaseEventArgs> PostBrowseInitialize;
-        event EventHandler<GitUIBaseEventArgs> PostRegisterPlugin;
-        event EventHandler<GitUIBaseEventArgs> PreCommit;
+        event EventHandler<GitUIEventArgs> PostBrowseInitialize;
+        event EventHandler<GitUIEventArgs> PostRegisterPlugin;
+        event EventHandler<GitUIEventArgs> PreCommit;
 
         IGitModule GitModule { get; }
         string GitCommand(string arguments);
