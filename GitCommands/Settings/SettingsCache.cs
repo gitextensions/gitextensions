@@ -66,7 +66,7 @@ namespace GitCommands
 
         public void Import(IEnumerable<(string name, string value)> keyValuePairs)
         {
-                LockedAction(() =>
+            LockedAction(() =>
                 {
                     foreach (var (key, value) in keyValuePairs)
                     {
