@@ -1220,7 +1220,7 @@ namespace GitUI.CommandsDialogs
 
         private void InitNewRepositoryToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartInitializeDialog(this, SetGitModule);
+            UICommands.StartInitializeDialog(this, gitModuleChanged: SetGitModule);
         }
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
@@ -1256,7 +1256,14 @@ namespace GitUI.CommandsDialogs
                 Module.LastPullActionToFormPullAction();
             }
 
-            UICommands.StartPullDialog(this, isSilent);
+            if (isSilent)
+            {
+                UICommands.StartPullDialogAndPullImmediately(this);
+            }
+            else
+            {
+                UICommands.StartPullDialog(this);
+            }
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
@@ -2091,7 +2098,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
-                case Commands.QuickPull: UICommands.StartPullDialog(this, true); break;
+                case Commands.QuickPull: UICommands.StartPullDialogAndPullImmediately(this); break;
                 case Commands.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 case Commands.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
@@ -2324,7 +2331,7 @@ namespace GitUI.CommandsDialogs
 
             RefreshPullIcon();
 
-            UICommands.StartPullDialog(this, true, out _, true);
+            UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true);
 
             // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)

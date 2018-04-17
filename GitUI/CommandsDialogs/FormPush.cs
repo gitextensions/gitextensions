@@ -632,7 +632,8 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedRemote.Name, out var pullCompleted, false);
+                UICommands.StartPullDialogAndPullImmediately(out var pullCompleted, owner, _selectedRemoteBranchName, _selectedRemote.Name);
+
                 if (pullCompleted)
                 {
                     form.Retry();

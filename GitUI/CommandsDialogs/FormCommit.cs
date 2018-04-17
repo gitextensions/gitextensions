@@ -3154,7 +3154,7 @@ namespace GitUI.CommandsDialogs
 
         private void createBranchToolStripButton_Click(object sender, EventArgs e)
         {
-            var branchCreated = UICommands.StartCreateBranchDialog(this, null);
+            var branchCreated = UICommands.StartCreateBranchDialog(this);
             if (!branchCreated)
             {
                 return;
