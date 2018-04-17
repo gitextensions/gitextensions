@@ -1241,7 +1241,7 @@ namespace GitUI
             if (_lastUserInputTime == 0)
             {
                 long timerLastChanged = currentTime;
-                var timer = new System.Windows.Forms.Timer { Interval = 250 };
+                var timer = new Timer { Interval = 250 };
                 timer.Tick += (s, a) =>
                 {
                     if (NoUserInput(timerLastChanged))

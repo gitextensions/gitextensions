@@ -1401,7 +1401,7 @@ namespace GitUI
             StartFileHistoryDialog(null, fileName);
         }
 
-        public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
+        public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, RevisionDiffKind diffKind, bool isTracked)
         {
             // Note: Order in revisions is that first clicked is last in array
 

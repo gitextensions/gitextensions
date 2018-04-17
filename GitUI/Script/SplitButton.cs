@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using ContentAlignment = System.Drawing.ContentAlignment;
 
 /* Get the latest version of SplitButton at: http://wyday.com/splitbutton/
  *
@@ -533,45 +534,45 @@ namespace GitUI.Script
             }
         }
 
-        private static Rectangle OverlayObjectRect(ref Rectangle container, ref Size sizeOfObject, System.Drawing.ContentAlignment alignment)
+        private static Rectangle OverlayObjectRect(ref Rectangle container, ref Size sizeOfObject, ContentAlignment alignment)
         {
             int x, y;
 
             switch (alignment)
             {
-                case System.Drawing.ContentAlignment.TopLeft:
+                case ContentAlignment.TopLeft:
                     x = 4;
                     y = 4;
                     break;
-                case System.Drawing.ContentAlignment.TopCenter:
+                case ContentAlignment.TopCenter:
                     x = (container.Width - sizeOfObject.Width) / 2;
                     y = 4;
                     break;
-                case System.Drawing.ContentAlignment.TopRight:
+                case ContentAlignment.TopRight:
                     x = container.Width - sizeOfObject.Width - 4;
                     y = 4;
                     break;
-                case System.Drawing.ContentAlignment.MiddleLeft:
+                case ContentAlignment.MiddleLeft:
                     x = 4;
                     y = (container.Height - sizeOfObject.Height) / 2;
                     break;
-                case System.Drawing.ContentAlignment.MiddleCenter:
+                case ContentAlignment.MiddleCenter:
                     x = (container.Width - sizeOfObject.Width) / 2;
                     y = (container.Height - sizeOfObject.Height) / 2;
                     break;
-                case System.Drawing.ContentAlignment.MiddleRight:
+                case ContentAlignment.MiddleRight:
                     x = container.Width - sizeOfObject.Width - 4;
                     y = (container.Height - sizeOfObject.Height) / 2;
                     break;
-                case System.Drawing.ContentAlignment.BottomLeft:
+                case ContentAlignment.BottomLeft:
                     x = 4;
                     y = container.Height - sizeOfObject.Height - 4;
                     break;
-                case System.Drawing.ContentAlignment.BottomCenter:
+                case ContentAlignment.BottomCenter:
                     x = (container.Width - sizeOfObject.Width) / 2;
                     y = container.Height - sizeOfObject.Height - 4;
                     break;
-                case System.Drawing.ContentAlignment.BottomRight:
+                case ContentAlignment.BottomRight:
                     x = container.Width - sizeOfObject.Width - 4;
                     y = container.Height - sizeOfObject.Height - 4;
                     break;
@@ -710,75 +711,75 @@ namespace GitUI.Script
             imageRect = final_image_rect;
         }
 
-        private static HorizontalAlignment GetHorizontalAlignment(System.Drawing.ContentAlignment align)
+        private static HorizontalAlignment GetHorizontalAlignment(ContentAlignment align)
         {
             switch (align)
             {
-                case System.Drawing.ContentAlignment.BottomLeft:
-                case System.Drawing.ContentAlignment.MiddleLeft:
-                case System.Drawing.ContentAlignment.TopLeft:
+                case ContentAlignment.BottomLeft:
+                case ContentAlignment.MiddleLeft:
+                case ContentAlignment.TopLeft:
                     return HorizontalAlignment.Left;
-                case System.Drawing.ContentAlignment.BottomCenter:
-                case System.Drawing.ContentAlignment.MiddleCenter:
-                case System.Drawing.ContentAlignment.TopCenter:
+                case ContentAlignment.BottomCenter:
+                case ContentAlignment.MiddleCenter:
+                case ContentAlignment.TopCenter:
                     return HorizontalAlignment.Center;
-                case System.Drawing.ContentAlignment.BottomRight:
-                case System.Drawing.ContentAlignment.MiddleRight:
-                case System.Drawing.ContentAlignment.TopRight:
+                case ContentAlignment.BottomRight:
+                case ContentAlignment.MiddleRight:
+                case ContentAlignment.TopRight:
                     return HorizontalAlignment.Right;
             }
 
             return HorizontalAlignment.Left;
         }
 
-        private static VerticalAlignment GetVerticalAlignment(System.Drawing.ContentAlignment align)
+        private static VerticalAlignment GetVerticalAlignment(ContentAlignment align)
         {
             switch (align)
             {
-                case System.Drawing.ContentAlignment.TopLeft:
-                case System.Drawing.ContentAlignment.TopCenter:
-                case System.Drawing.ContentAlignment.TopRight:
+                case ContentAlignment.TopLeft:
+                case ContentAlignment.TopCenter:
+                case ContentAlignment.TopRight:
                     return VerticalAlignment.Top;
-                case System.Drawing.ContentAlignment.MiddleLeft:
-                case System.Drawing.ContentAlignment.MiddleCenter:
-                case System.Drawing.ContentAlignment.MiddleRight:
+                case ContentAlignment.MiddleLeft:
+                case ContentAlignment.MiddleCenter:
+                case ContentAlignment.MiddleRight:
                     return VerticalAlignment.Center;
-                case System.Drawing.ContentAlignment.BottomLeft:
-                case System.Drawing.ContentAlignment.BottomCenter:
-                case System.Drawing.ContentAlignment.BottomRight:
+                case ContentAlignment.BottomLeft:
+                case ContentAlignment.BottomCenter:
+                case ContentAlignment.BottomRight:
                     return VerticalAlignment.Bottom;
             }
 
             return VerticalAlignment.Top;
         }
 
-        private static Rectangle AlignInRectangle(Rectangle outer, Size inner, System.Drawing.ContentAlignment align)
+        private static Rectangle AlignInRectangle(Rectangle outer, Size inner, ContentAlignment align)
         {
             int x = 0;
             int y = 0;
 
-            if (align == System.Drawing.ContentAlignment.BottomLeft || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.TopLeft)
+            if (align == ContentAlignment.BottomLeft || align == ContentAlignment.MiddleLeft || align == ContentAlignment.TopLeft)
             {
                 x = outer.X;
             }
-            else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.TopCenter)
+            else if (align == ContentAlignment.BottomCenter || align == ContentAlignment.MiddleCenter || align == ContentAlignment.TopCenter)
             {
                 x = Math.Max(outer.X + ((outer.Width - inner.Width) / 2), outer.Left);
             }
-            else if (align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.MiddleRight || align == System.Drawing.ContentAlignment.TopRight)
+            else if (align == ContentAlignment.BottomRight || align == ContentAlignment.MiddleRight || align == ContentAlignment.TopRight)
             {
                 x = outer.Right - inner.Width;
             }
 
-            if (align == System.Drawing.ContentAlignment.TopCenter || align == System.Drawing.ContentAlignment.TopLeft || align == System.Drawing.ContentAlignment.TopRight)
+            if (align == ContentAlignment.TopCenter || align == ContentAlignment.TopLeft || align == ContentAlignment.TopRight)
             {
                 y = outer.Y;
             }
-            else if (align == System.Drawing.ContentAlignment.MiddleCenter || align == System.Drawing.ContentAlignment.MiddleLeft || align == System.Drawing.ContentAlignment.MiddleRight)
+            else if (align == ContentAlignment.MiddleCenter || align == ContentAlignment.MiddleLeft || align == ContentAlignment.MiddleRight)
             {
                 y = outer.Y + ((outer.Height - inner.Height) / 2);
             }
-            else if (align == System.Drawing.ContentAlignment.BottomCenter || align == System.Drawing.ContentAlignment.BottomRight || align == System.Drawing.ContentAlignment.BottomLeft)
+            else if (align == ContentAlignment.BottomCenter || align == ContentAlignment.BottomRight || align == ContentAlignment.BottomLeft)
             {
                 y = outer.Bottom - inner.Height;
             }
