@@ -172,25 +172,23 @@ namespace GitCommands
                             throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                     }
                 }
-                else
+
+                if (decode == null)
                 {
-                    if (decode == null)
-                    {
-                        throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
-                    }
-
-                    string s = GetValue(name);
-
-                    if (s == null)
-                    {
-                        val = defaultValue;
-                        return false;
-                    }
-
-                    val = decode(s);
-                    _byNameMap[name] = val;
-                    return true;
+                    throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
                 }
+
+                string s = GetValue(name);
+
+                if (s == null)
+                {
+                    val = defaultValue;
+                    return false;
+                }
+
+                val = decode(s);
+                _byNameMap[name] = val;
+                return true;
             });
             value = val;
             return result;
