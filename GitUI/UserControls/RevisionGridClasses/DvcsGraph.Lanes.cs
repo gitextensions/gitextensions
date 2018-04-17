@@ -726,7 +726,7 @@ namespace GitUI.RevisionGridClasses
             private struct Edge
             {
                 public readonly int Start;
-                public Graph.LaneInfo Data;
+                public readonly Graph.LaneInfo Data;
 
                 public Edge(Graph.LaneInfo data, int start)
                 {
