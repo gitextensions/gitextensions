@@ -5,11 +5,6 @@ namespace GitUIPluginInterfaces
 {
     public abstract class GitUIBaseEventArgs : CancelEventArgs
     {
-        protected GitUIBaseEventArgs(IGitUICommands gitUICommands, string arguments = null)
-            : this(null, gitUICommands, arguments)
-        {
-        }
-
         protected GitUIBaseEventArgs(IWin32Window ownerForm, IGitUICommands gitUICommands, string arguments = null)
             : base(false)
         {

@@ -93,7 +93,7 @@ namespace GitUI
                 Splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
             }
 
-            public void AdjustToCurrentFontSize()
+            private void AdjustToCurrentFontSize()
             {
                 if (_latestFontSize.Value != 0 && Splitter.Font.Size != 0)
                 {

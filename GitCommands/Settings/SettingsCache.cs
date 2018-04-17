@@ -26,7 +26,7 @@ namespace GitCommands
             });
         }
 
-        public T LockedAction<T>(Func<T> action)
+        protected T LockedAction<T>(Func<T> action)
         {
             lock (_byNameMap)
             {
@@ -55,7 +55,7 @@ namespace GitCommands
             LockedAction(SaveImpl);
         }
 
-        public void Load()
+        private void Load()
         {
             LockedAction(() =>
                 {

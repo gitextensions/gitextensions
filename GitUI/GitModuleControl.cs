@@ -8,12 +8,12 @@ namespace GitUI
 {
     /// <summary>Base class for a <see cref="UserControl"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
-    public class GitModuleControl : GitExtensionsControl
+    public abstract class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
 
         [Browsable(false)]
-        public bool UICommandsSourceParentSearch { get; }
+        private bool UICommandsSourceParentSearch { get; }
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
@@ -76,7 +76,7 @@ namespace GitUI
         [Browsable(false)]
         public GitModule Module => UICommands.Module;
 
-        public GitModuleControl()
+        protected GitModuleControl()
         {
             UICommandsSourceParentSearch = true;
         }
@@ -149,7 +149,7 @@ namespace GitUI
 
         /// <summary>Tries to run scripts identified by a <paramref name="command"/>
         /// and returns true if any executed.</summary>
-        protected bool ExecuteScriptCommand(int command)
+        private bool ExecuteScriptCommand(int command)
         {
             return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
         }
