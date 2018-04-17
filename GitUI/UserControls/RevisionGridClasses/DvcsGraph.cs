@@ -1009,8 +1009,8 @@ namespace GitUI.RevisionGridClasses
                     UpdateJunctionColors(laneInfo.Junctions);
 
                     // Create the brush for drawing the line
-                    Brush brushLineColor = null;
-                    Pen brushLineColorPen = null;
+                    Brush lineBrush = null;
+                    Pen linePen = null;
                     try
                     {
                         bool drawBorder = highLight && AppSettings.BranchBorders; // hide border for "non-relatives"
@@ -1019,16 +1019,16 @@ namespace GitUI.RevisionGridClasses
                         {
                             if (_junctionColors[0] != _nonRelativeColor)
                             {
-                                brushLineColor = new SolidBrush(_junctionColors[0]);
+                                lineBrush = new SolidBrush(_junctionColors[0]);
                             }
                             else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
                             {
-                                brushLineColor = new SolidBrush(_junctionColors[1]);
+                                lineBrush = new SolidBrush(_junctionColors[1]);
                             }
                             else
                             {
                                 drawBorder = false;
-                                brushLineColor = new SolidBrush(_nonRelativeColor);
+                                lineBrush = new SolidBrush(_nonRelativeColor);
                             }
                         }
                         else
@@ -1037,20 +1037,20 @@ namespace GitUI.RevisionGridClasses
 
                             if (lastRealColor.IsEmpty)
                             {
-                                brushLineColor = new SolidBrush(_nonRelativeColor);
+                                lineBrush = new SolidBrush(_nonRelativeColor);
                                 drawBorder = false;
                             }
                             else
                             {
-                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, _junctionColors[0], lastRealColor);
+                                lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, _junctionColors[0], lastRealColor);
                             }
                         }
 
                         // Precalculate line endpoints
-                        bool singleLane = laneInfo.ConnectLane == lane;
+                        bool sameLane = laneInfo.ConnectLane == lane;
                         int x0 = mid;
                         int y0 = top - 1;
-                        int x1 = singleLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
+                        int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
                         int y1 = top + _rowHeight;
 
                         Point p0 = new Point(x0, y0);
@@ -1058,8 +1058,10 @@ namespace GitUI.RevisionGridClasses
 
                         // Precalculate curve control points when needed
                         Point c0, c1;
-                        if (singleLane)
+                        if (sameLane)
                         {
+                            // We are drawing between two points in the same
+                            // lane, so there will be no curve
                             c0 = c1 = default;
                         }
                         else
@@ -1074,39 +1076,39 @@ namespace GitUI.RevisionGridClasses
 
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
                         {
-                            Pen penLine;
+                            Pen pen;
                             switch (i)
                             {
                                 case 0:
-                                    penLine = _whiteBorderPen;
+                                    pen = _whiteBorderPen;
                                     break;
                                 case 1:
-                                    penLine = _blackBorderPen;
+                                    pen = _blackBorderPen;
                                     break;
                                 default:
-                                    if (brushLineColorPen == null)
+                                    if (linePen == null)
                                     {
-                                        brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                        linePen = new Pen(lineBrush, _laneLineWidth);
                                     }
 
-                                    penLine = brushLineColorPen;
+                                    pen = linePen;
                                     break;
                             }
 
-                            if (singleLane)
+                            if (sameLane)
                             {
-                                wa.DrawLine(penLine, p0, p1);
+                                wa.DrawLine(pen, p0, p1);
                             }
                             else
                             {
-                                wa.DrawBezier(penLine, p0, c0, c1, p1);
+                                wa.DrawBezier(pen, p0, c0, c1, p1);
                             }
                         }
                     }
                     finally
                     {
-                        brushLineColorPen?.Dispose();
-                        brushLineColor?.Dispose();
+                        linePen?.Dispose();
+                        lineBrush?.Dispose();
                     }
                 }
             }
