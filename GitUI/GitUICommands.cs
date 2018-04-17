@@ -2170,20 +2170,5 @@ namespace GitUI
                 return e.Handled;
             }
         }
-
-        public override bool Equals(object obj)
-        {
-            return obj is GitUICommands other && Equals(other);
-        }
-
-        private bool Equals(GitUICommands other)
-        {
-            return Equals(Module, other.Module);
-        }
-
-        public override int GetHashCode()
-        {
-            return Module.GetHashCode();
-        }
     }
 }
