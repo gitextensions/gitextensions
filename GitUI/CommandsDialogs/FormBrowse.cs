@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    PluginLoader.Load();
+                    PluginRegistry.Initialize();
                 }
                 finally
                 {
@@ -504,7 +504,7 @@ namespace GitUI.CommandsDialogs
 
         private void RegisterPlugins()
         {
-            foreach (var plugin in LoadedPlugins.Plugins)
+            foreach (var plugin in PluginRegistry.Plugins)
             {
                 // Add the plugin to the Plugins menu
                 var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
@@ -518,10 +518,10 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostRegisterPlugin(this);
 
             // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-            _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
-            if (RepoHosts.GitHosters.Count == 1)
+            _repositoryHostsToolStripMenuItem.Visible = PluginRegistry.GitHosters.Count > 0;
+            if (PluginRegistry.GitHosters.Count == 1)
             {
-                _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+                _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Description;
             }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
@@ -529,7 +529,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnregisterPlugins()
         {
-            foreach (var plugin in LoadedPlugins.Plugins)
+            foreach (var plugin in PluginRegistry.Plugins)
             {
                 plugin.Unregister(UICommands);
             }
@@ -1989,9 +1989,9 @@ namespace GitUI.CommandsDialogs
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
         {
-            if (RepoHosts.GitHosters.Count > 0)
+            if (PluginRegistry.GitHosters.Count > 0)
             {
-                UICommands.StartCloneForkFromHoster(this, RepoHosts.GitHosters[0], SetGitModule);
+                UICommands.StartCloneForkFromHoster(this, PluginRegistry.GitHosters[0], SetGitModule);
                 UICommands.RepoChangedNotifier.Notify();
             }
             else
@@ -2002,7 +2002,7 @@ namespace GitUI.CommandsDialogs
 
         private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var repoHost = RepoHosts.TryGetGitHosterForModule(Module);
+            var repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
             if (repoHost == null)
             {
                 MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2014,7 +2014,7 @@ namespace GitUI.CommandsDialogs
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var repoHost = RepoHosts.TryGetGitHosterForModule(Module);
+            var repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
             if (repoHost == null)
             {
                 MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);

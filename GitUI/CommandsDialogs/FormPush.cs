@@ -766,7 +766,7 @@ namespace GitUI.CommandsDialogs
 
             Text = string.Concat(_pushCaption.Text, " (", Module.WorkingDir, ")");
 
-            var gitHoster = RepoHosts.TryGetGitHosterForModule(Module);
+            var gitHoster = PluginRegistry.TryGetGitHosterForModule(Module);
             _createPullRequestCB.Enabled = gitHoster != null;
         }
 

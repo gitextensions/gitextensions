@@ -429,7 +429,7 @@ namespace GitUI.Script
             if (command.StartsWith(PluginPrefix))
             {
                 command = command.Replace(PluginPrefix, "");
-                foreach (var plugin in Plugin.LoadedPlugins.Plugins)
+                foreach (var plugin in PluginRegistry.Plugins)
                 {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {

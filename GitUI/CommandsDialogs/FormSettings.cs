@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this), pluginsPageRef, true); // as root
-            foreach (var gitPlugin in LoadedPlugins.Plugins)
+            foreach (var gitPlugin in PluginRegistry.Plugins)
             {
                 var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(this, gitPlugin);
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
