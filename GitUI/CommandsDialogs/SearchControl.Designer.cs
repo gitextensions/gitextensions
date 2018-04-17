@@ -38,10 +38,9 @@
             // 
             // listBoxSearchResult
             // 
-            this.listBoxSearchResult.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left))));
             this.listBoxSearchResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBoxSearchResult.FormattingEnabled = true;
-            this.listBoxSearchResult.Location = new System.Drawing.Point(0, 20);
+            this.listBoxSearchResult.Location = new System.Drawing.Point(0, 22);
             this.listBoxSearchResult.Margin = new System.Windows.Forms.Padding(0);
             this.listBoxSearchResult.Name = "listBoxSearchResult";
             this.listBoxSearchResult.Size = new System.Drawing.Size(64, 15);
@@ -50,11 +49,15 @@
             // 
             // txtSearchBox
             // 
-            this.txtSearchBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSearchBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtSearchBox.Location = new System.Drawing.Point(0, 0);
             this.txtSearchBox.Margin = new System.Windows.Forms.Padding(0);
+            this.txtSearchBox.MinimumSize = new System.Drawing.Size(0, 22);
             this.txtSearchBox.Name = "txtSearchBox";
-            this.txtSearchBox.Size = new System.Drawing.Size(64, 20);
+            this.txtSearchBox.Size = new System.Drawing.Size(64, 22);
             this.txtSearchBox.TabIndex = 1;
             this.txtSearchBox.TextChanged += new System.EventHandler(this.txtSearchBox_TextChange);
             this.txtSearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchBox_KeyDown);

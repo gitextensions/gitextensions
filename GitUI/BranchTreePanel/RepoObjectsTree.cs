@@ -29,8 +29,6 @@ namespace GitUI.BranchTreePanel
             InitImageList();
             InitializeSearchBox();
             treeMain.PreviewKeyDown += OnPreviewKeyDown;
-
-            btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
             Translate();
 
@@ -63,20 +61,24 @@ namespace GitUI.BranchTreePanel
 
         private void InitializeSearchBox()
         {
-            _txtBranchCriterion = new SearchControl<string>(SearchForBranch, i => { });
+            _txtBranchCriterion = new SearchControl<string>(SearchForBranch, i => { })
+            {
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                Name = "txtBranchCritierion",
+                TabIndex = 1,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0),
+                Height = 16
+            };
             _txtBranchCriterion.OnTextEntered += () =>
             {
                 OnBranchCriterionChanged(null, null);
                 OnBtnSearchClicked(null, null);
             };
-            _txtBranchCriterion.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            _txtBranchCriterion.Name = "txtBranchCritierion";
-            _txtBranchCriterion.TabIndex = 1;
             _txtBranchCriterion.TextChanged += OnBranchCriterionChanged;
-            _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
-            branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
-
             _txtBranchCriterion.PreviewKeyDown += OnPreviewKeyDown;
+            _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
+            branchSearchPanel.Controls.Add(_txtBranchCriterion, 0, 0);
         }
 
         private IEnumerable<string> SearchForBranch(string arg)

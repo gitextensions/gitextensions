@@ -55,10 +55,10 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFetchCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnFetchOneBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnubtnReset = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnRebase = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnMergeBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnRebase = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnCreateBranchBasedOnRemoteBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnReset = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnubtnDeleteRemoteBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnFetchAllBranchesFromARemote = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,8 +73,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnManageRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.repoTreePanel = new System.Windows.Forms.TableLayoutPanel();
             this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.lblSearchBranch = new System.Windows.Forms.Label();
-            this.btnSearch = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,10 +94,11 @@ namespace GitUI.BranchTreePanel
             this.treeMain.ContextMenuStrip = this.menuMain;
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.FullRowSelect = true;
-            this.treeMain.Location = new System.Drawing.Point(3, 41);
+            this.treeMain.Location = new System.Drawing.Point(0, 26);
+            this.treeMain.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.treeMain.Name = "treeMain";
             this.treeMain.ShowNodeToolTips = true;
-            this.treeMain.Size = new System.Drawing.Size(294, 350);
+            this.treeMain.Size = new System.Drawing.Size(300, 350);
             this.treeMain.TabIndex = 3;
             this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
             // 
@@ -181,14 +180,14 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconFilter;
             this.mnubtnFilterRemoteBranchInRevisionGrid.Name = "mnubtnFilterRemoteBranchInRevisionGrid";
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(193, 22);
             this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "Show this branch only";
             // 
             // mnubtnBranchCheckout
             // 
             this.mnubtnBranchCheckout.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
             this.mnubtnBranchCheckout.Name = "mnubtnBranchCheckout";
-            this.mnubtnBranchCheckout.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnBranchCheckout.Size = new System.Drawing.Size(193, 22);
             this.mnubtnBranchCheckout.Text = "&Checkout";
             this.mnubtnBranchCheckout.ToolTipText = "Checkout this branch";
             // 
@@ -229,13 +228,13 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDeleteRemoteBranch,
             this.mnubtnFilterRemoteBranchInRevisionGrid});
             this.menuRemote.Name = "contextmenuRemote";
-            this.menuRemote.Size = new System.Drawing.Size(192, 280);
+            this.menuRemote.Size = new System.Drawing.Size(194, 280);
             // 
             // mnubtnRemoteBranchFetchAndCheckout
             // 
             this.mnubtnRemoteBranchFetchAndCheckout.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
             this.mnubtnRemoteBranchFetchAndCheckout.Name = "mnubtnRemoteBranchFetchAndCheckout";
-            this.mnubtnRemoteBranchFetchAndCheckout.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnRemoteBranchFetchAndCheckout.Size = new System.Drawing.Size(193, 22);
             this.mnubtnRemoteBranchFetchAndCheckout.Text = "&Fetch && Checkout";
             this.mnubtnRemoteBranchFetchAndCheckout.ToolTipText = "Checkout this branch";
             // 
@@ -243,14 +242,14 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnPullFromRemoteBranch.Image = global::GitUI.Properties.Resources.IconPull;
             this.mnubtnPullFromRemoteBranch.Name = "mnubtnPullFromRemoteBranch";
-            this.mnubtnPullFromRemoteBranch.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnPullFromRemoteBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnPullFromRemoteBranch.Text = "Fetch && Merge (&Pull)";
             // 
             // mnubtnFetchRebase
             // 
             this.mnubtnFetchRebase.Image = global::GitUI.Properties.Resources.IconRebase;
             this.mnubtnFetchRebase.Name = "mnubtnFetchRebase";
-            this.mnubtnFetchRebase.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnFetchRebase.Size = new System.Drawing.Size(193, 22);
             this.mnubtnFetchRebase.Text = "Fetch && Re&base";
             this.mnubtnFetchRebase.ToolTipText = "Fetch & Rebase current branch to this branch";
             // 
@@ -258,7 +257,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnFetchCreateBranch.Image = global::GitUI.Properties.MsVsImages.Branch_16x;
             this.mnubtnFetchCreateBranch.Name = "mnubtnFetchCreateBranch";
-            this.mnubtnFetchCreateBranch.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnFetchCreateBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnFetchCreateBranch.Text = "Fetc&h && Create Branch";
             this.mnubtnFetchCreateBranch.ToolTipText = "Fetch then create a local branch from the remote branch";
             // 
@@ -266,20 +265,20 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnFetchOneBranch.Image = global::GitUI.Properties.Resources.IconStage;
             this.mnubtnFetchOneBranch.Name = "mnubtnFetchOneBranch";
-            this.mnubtnFetchOneBranch.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnFetchOneBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnFetchOneBranch.Text = "Fe&tch";
             this.mnubtnFetchOneBranch.ToolTipText = "Fetch the new remote branch";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
             // 
             // mnubtnMergeBranch
             // 
             this.mnubtnMergeBranch.Image = global::GitUI.Properties.Resources.IconMerge;
             this.mnubtnMergeBranch.Name = "mnubtnMergeBranch";
-            this.mnubtnMergeBranch.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnMergeBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnMergeBranch.Text = "&Merge";
             this.mnubtnMergeBranch.ToolTipText = "Merge remote branch into current branch";
             // 
@@ -287,7 +286,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnRebase.Image = global::GitUI.Properties.Resources.IconRebase;
             this.mnubtnRebase.Name = "mnubtnRebase";
-            this.mnubtnRebase.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnRebase.Size = new System.Drawing.Size(193, 22);
             this.mnubtnRebase.Text = "&Rebase";
             this.mnubtnRebase.ToolTipText = "Rebase current branch to this branch";
             // 
@@ -295,7 +294,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnCreateBranchBasedOnRemoteBranch.Image = global::GitUI.Properties.MsVsImages.Branch_16x;
             this.mnubtnCreateBranchBasedOnRemoteBranch.Name = "mnubtnCreateBranchBasedOnRemoteBranch";
-            this.mnubtnCreateBranchBasedOnRemoteBranch.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnCreateBranchBasedOnRemoteBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnCreateBranchBasedOnRemoteBranch.Text = "Create &Branch...";
             this.mnubtnCreateBranchBasedOnRemoteBranch.ToolTipText = "Create a local branch from the remote branch";
             // 
@@ -303,20 +302,20 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnReset.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
             this.mnubtnReset.Name = "mnubtnReset";
-            this.mnubtnReset.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnReset.Size = new System.Drawing.Size(193, 22);
             this.mnubtnReset.Text = "Re&set";
             this.mnubtnReset.ToolTipText = "Reset current branch to here";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(190, 6);
             // 
             // mnubtnDeleteRemoteBranch
             // 
             this.mnubtnDeleteRemoteBranch.Image = global::GitUI.Properties.Resources.Delete;
             this.mnubtnDeleteRemoteBranch.Name = "mnubtnDeleteRemoteBranch";
-            this.mnubtnDeleteRemoteBranch.Size = new System.Drawing.Size(191, 22);
+            this.mnubtnDeleteRemoteBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnDeleteRemoteBranch.Text = "&Delete";
             this.mnubtnDeleteRemoteBranch.ToolTipText = "Delete the branch from the remote";
             // 
@@ -420,44 +419,19 @@ namespace GitUI.BranchTreePanel
             this.branchSearchPanel.AutoSize = true;
             this.branchSearchPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.branchSearchPanel.BackColor = System.Drawing.SystemColors.Control;
-            this.branchSearchPanel.ColumnCount = 4;
-            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.branchSearchPanel.ColumnCount = 3;
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.branchSearchPanel.Controls.Add(this.lblSearchBranch, 0, 0);
-            this.branchSearchPanel.Controls.Add(this.btnSearch, 2, 0);
-            this.branchSearchPanel.Controls.Add(this.btnSettings, 3, 0);
+            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.branchSearchPanel.Controls.Add(this.btnSettings, 2, 0);
             this.branchSearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.branchSearchPanel.Location = new System.Drawing.Point(3, 3);
+            this.branchSearchPanel.Location = new System.Drawing.Point(1, 1);
+            this.branchSearchPanel.Margin = new System.Windows.Forms.Padding(1, 1, 0, 0);
             this.branchSearchPanel.Name = "branchSearchPanel";
             this.branchSearchPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.branchSearchPanel.Size = new System.Drawing.Size(294, 32);
+            this.branchSearchPanel.Size = new System.Drawing.Size(299, 22);
             this.branchSearchPanel.TabIndex = 4;
-            // 
-            // lblSearchBranch
-            // 
-            this.lblSearchBranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblSearchBranch.AutoSize = true;
-            this.lblSearchBranch.Location = new System.Drawing.Point(3, 9);
-            this.lblSearchBranch.Name = "lblSearchBranch";
-            this.lblSearchBranch.Size = new System.Drawing.Size(44, 13);
-            this.lblSearchBranch.TabIndex = 0;
-            this.lblSearchBranch.Text = "Search:";
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnSearch.AutoSize = true;
-            this.btnSearch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSearch.Image = global::GitUI.Properties.Resources.IconFind;
-            this.btnSearch.Location = new System.Drawing.Point(233, 3);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Padding = new System.Windows.Forms.Padding(2);
-            this.btnSearch.Size = new System.Drawing.Size(26, 26);
-            this.btnSearch.TabIndex = 2;
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.OnBtnSearchClicked);
             // 
             // btnSettings
             // 
@@ -465,11 +439,14 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.AutoSize = true;
             this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSettings.ContextMenuStrip = this.menuSettings;
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.ForeColor = System.Drawing.SystemColors.Control;
             this.btnSettings.Image = global::GitUI.Properties.Resources.Settings;
-            this.btnSettings.Location = new System.Drawing.Point(265, 3);
+            this.btnSettings.Location = new System.Drawing.Point(277, 0);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Padding = new System.Windows.Forms.Padding(2);
-            this.btnSettings.Size = new System.Drawing.Size(26, 26);
+            this.btnSettings.Size = new System.Drawing.Size(22, 22);
             this.btnSettings.TabIndex = 3;
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.OnBtnSettingsClicked);
@@ -542,8 +519,6 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnDeleteTag;
         private TableLayoutPanel repoTreePanel;
         private TableLayoutPanel branchSearchPanel;
-        private Label lblSearchBranch;
-        private Button btnSearch;
         private Button btnSettings;
         private ContextMenuStrip menuSettings;
         private ToolStripMenuItem showTagsToolStripMenuItem;
