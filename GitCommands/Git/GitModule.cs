@@ -3648,6 +3648,7 @@ namespace GitCommands
         }
 
         [ContractAnnotation("fileName:null=>null")]
+        [ContractAnnotation("fileName:notnull=>notnull")]
         public static string ReEncodeFileNameFromLossless([CanBeNull] string fileName)
         {
             fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
@@ -3655,6 +3656,7 @@ namespace GitCommands
         }
 
         [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
         public static string ReEncodeString([CanBeNull] string s, [NotNull] Encoding fromEncoding, [NotNull] Encoding toEncoding)
         {
             if (s == null || fromEncoding.HeaderName == toEncoding.HeaderName)
@@ -3670,6 +3672,7 @@ namespace GitCommands
         /// reencodes string from GitCommandHelpers.LosslessEncoding to toEncoding
         /// </summary>
         [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
         public static string ReEncodeStringFromLossless([CanBeNull] string s, [CanBeNull] Encoding toEncoding)
         {
             if (toEncoding == null)
@@ -3681,6 +3684,7 @@ namespace GitCommands
         }
 
         [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
         public string ReEncodeStringFromLossless([CanBeNull] string s)
         {
             return ReEncodeStringFromLossless(s, LogOutputEncoding);
@@ -3737,6 +3741,7 @@ namespace GitCommands
         /// s should be encoded in LosslessEncoding
         /// </summary>
         [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
         public string ReEncodeShowString(string s)
         {
             if (s.IsNullOrEmpty())

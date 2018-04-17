@@ -120,11 +120,30 @@ namespace GitCommandsTests.Patches
             Assert.AreEqual(3, patches.Count(p => p.IsCombinedDiff));
         }
 
+        [Test]
+        public void TestCombinedDiff()
+        {
+            const string diff = @"diff --cc GitCommands/Patches/PatchProcessor.cs
+index ec3da25f4,5acc3b45b..000000000
+--- a/GitCommands/Patches/PatchProcessor.cs
++++ b/GitCommands/Patches/PatchProcessor.cs
+diff --combined UnitTests/GitCommandsTests/Patches/PatchProcessorTest.cs
+index cdf8bebba,55ff37bb9..000000000
+--- a/UnitTests/GitCommandsTests/Patches/PatchProcessorTest.cs
++++ b/UnitTests/GitCommandsTests/Patches/PatchProcessorTest.cs
+";
+
+            var patches = PatchProcessor.CreatePatchesFromString(diff, Encoding.UTF8).ToList();
+
+            Assert.AreEqual(2, patches.Count);
+            Assert.IsTrue(patches.All(p => p.IsCombinedDiff));
+        }
+
         private static TestPatch CreateSmallPatchExample(bool reverse = false)
         {
             var header = reverse
                 ? "diff --git a/thisisatestb.txt b/thisisatesta.txt"
-                : "diff --git a/thisisatesta.txt b/thisisatestb.txt";
+                : "diff --git b/thisisatesta.txt a/thisisatestb.txt";
             const string index = "index 5e4dce2..5eb1e6f 100644";
             const string fileNameA = "thisisatesta.txt";
             const string fileNameB = "thisisatestb.txt";
