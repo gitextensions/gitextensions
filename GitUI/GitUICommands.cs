@@ -1131,7 +1131,7 @@ namespace GitUI
         /// <param name="revision">Revision to create an archive from</param>
         /// <param name="revision2">Revision for differencial archive </param>
         /// <param name="path">Files path for archive</param>
-        public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, GitRevision revision2 = null, string path = null)
+        public bool StartArchiveDialog(IWin32Window owner, GitRevision revision = null, GitRevision revision2 = null, string path = null)
         {
             return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
                 {
@@ -1215,32 +1215,29 @@ namespace GitUI
             return StartRemotesDialog(null);
         }
 
-        private bool StartRebaseDialog(IWin32Window owner, string onto, bool interactive = false,
-            bool startRebaseImmediately = true)
-        {
-            return StartRebaseDialog(owner, string.Empty, null, onto, interactive, startRebaseImmediately);
-        }
-
         public bool StartRebase(IWin32Window owner, string onto)
         {
-            return StartRebaseDialog(owner, onto, interactive: false);
+            return StartRebaseDialog(owner, from: "", to: null, onto);
         }
 
         public bool StartTheContinueRebaseDialog(IWin32Window owner)
         {
-            return StartRebaseDialog(owner, onto: null,
-                interactive: false, startRebaseImmediately: false);
+            return StartRebaseDialog(owner, from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartInteractiveRebase(IWin32Window owner, string onto)
         {
-            return StartRebaseDialog(owner, onto, interactive: true);
+            return StartRebaseDialog(owner, from: "", to: null, onto, interactive: true);
         }
 
         public bool StartRebaseDialogWithAdvOptions(IWin32Window owner, string onto)
         {
-            return StartRebaseDialog(owner, onto,
-                interactive: false, startRebaseImmediately: false);
+            return StartRebaseDialog(owner, from: "", to: null, onto, interactive: false, startRebaseImmediately: false);
+        }
+
+        public bool StartRebaseDialog(IWin32Window owner, string onto)
+        {
+            return StartRebaseDialog(owner, from: "", to: null, onto, interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto,
@@ -1257,11 +1254,6 @@ namespace GitUI
             }
 
             return DoActionOnRepo(owner, true, true, PreRebase, PostRebase, Action);
-        }
-
-        public bool StartRebaseDialog(IWin32Window owner, string onto)
-        {
-            return StartRebaseDialog(owner, onto, interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartRenameDialog(IWin32Window owner, string branch)
@@ -1680,6 +1672,7 @@ namespace GitUI
         // Please update FormCommandlineHelp if you add or change commands
         private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
+            // TODO most of these calls should check return values and set the exit code accordingly
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             switch (args[1])
             {
