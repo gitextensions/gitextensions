@@ -52,119 +52,22 @@ namespace GitUI
 
         #region IGitUICommands Members
 
-        public event EventHandler<GitUIBaseEventArgs> PreBrowse;
-        public event EventHandler<GitUIBaseEventArgs> PostBrowse;
-
-        public event EventHandler<GitUIBaseEventArgs> PreDeleteBranch;
-        public event EventHandler<GitUIPostActionEventArgs> PostDeleteBranch;
-
         public event EventHandler<GitUIBaseEventArgs> PreCheckoutRevision;
         public event EventHandler<GitUIPostActionEventArgs> PostCheckoutRevision;
 
         public event EventHandler<GitUIBaseEventArgs> PreCheckoutBranch;
         public event EventHandler<GitUIPostActionEventArgs> PostCheckoutBranch;
 
-        public event EventHandler<GitUIBaseEventArgs> PreFileHistory;
-        public event EventHandler<GitUIPostActionEventArgs> PostFileHistory;
-
-        public event EventHandler<GitUIBaseEventArgs> PreCompareRevisions;
-        public event EventHandler<GitUIPostActionEventArgs> PostCompareRevisions;
-
-        public event EventHandler<GitUIBaseEventArgs> PreAddFiles;
-        public event EventHandler<GitUIPostActionEventArgs> PostAddFiles;
-
-        public event EventHandler<GitUIBaseEventArgs> PreCreateBranch;
-        public event EventHandler<GitUIPostActionEventArgs> PostCreateBranch;
-
-        public event EventHandler<GitUIBaseEventArgs> PreClone;
-        public event EventHandler<GitUIPostActionEventArgs> PostClone;
-
         public event EventHandler<GitUIBaseEventArgs> PreCommit;
         public event EventHandler<GitUIPostActionEventArgs> PostCommit;
 
-        public event EventHandler<GitUIBaseEventArgs> PreInitialize;
-        public event EventHandler<GitUIPostActionEventArgs> PostInitialize;
-
-        public event EventHandler<GitUIBaseEventArgs> PrePush;
-        public event EventHandler<GitUIPostActionEventArgs> PostPush;
-
-        public event EventHandler<GitUIBaseEventArgs> PrePull;
-        public event EventHandler<GitUIPostActionEventArgs> PostPull;
-
-        public event EventHandler<GitUIBaseEventArgs> PreViewPatch;
-        public event EventHandler<GitUIPostActionEventArgs> PostViewPatch;
-
-        public event EventHandler<GitUIBaseEventArgs> PreApplyPatch;
-        public event EventHandler<GitUIPostActionEventArgs> PostApplyPatch;
-
-        public event EventHandler<GitUIBaseEventArgs> PreFormatPatch;
-        public event EventHandler<GitUIPostActionEventArgs> PostFormatPatch;
-
-        public event EventHandler<GitUIBaseEventArgs> PreStash;
-        public event EventHandler<GitUIPostActionEventArgs> PostStash;
-
-        public event EventHandler<GitUIBaseEventArgs> PreResolveConflicts;
-        public event EventHandler<GitUIPostActionEventArgs> PostResolveConflicts;
-
-        public event EventHandler<GitUIBaseEventArgs> PreCherryPick;
-        public event EventHandler<GitUIPostActionEventArgs> PostCherryPick;
-
-        public event EventHandler<GitUIBaseEventArgs> PreRevertCommit;
-        public event EventHandler<GitUIPostActionEventArgs> PostRevertCommit;
-
-        public event EventHandler<GitUIBaseEventArgs> PreMergeBranch;
-        public event EventHandler<GitUIPostActionEventArgs> PostMergeBranch;
-
-        public event EventHandler<GitUIBaseEventArgs> PreCreateTag;
-        public event EventHandler<GitUIPostActionEventArgs> PostCreateTag;
-
-        public event EventHandler<GitUIBaseEventArgs> PreDeleteTag;
-        public event EventHandler<GitUIPostActionEventArgs> PostDeleteTag;
-
-        public event EventHandler<GitUIBaseEventArgs> PreEditGitIgnore;
         public event EventHandler<GitUIPostActionEventArgs> PostEditGitIgnore;
 
-        public event EventHandler<GitUIBaseEventArgs> PreSettings;
         public event EventHandler<GitUIPostActionEventArgs> PostSettings;
 
-        public event EventHandler<GitUIBaseEventArgs> PreArchive;
-        public event EventHandler<GitUIPostActionEventArgs> PostArchive;
-
-        public event EventHandler<GitUIBaseEventArgs> PreMailMap;
-        public event EventHandler<GitUIPostActionEventArgs> PostMailMap;
-
-        public event EventHandler<GitUIBaseEventArgs> PreVerifyDatabase;
-        public event EventHandler<GitUIPostActionEventArgs> PostVerifyDatabase;
-
-        public event EventHandler<GitUIBaseEventArgs> PreRemotes;
-        public event EventHandler<GitUIPostActionEventArgs> PostRemotes;
-
-        public event EventHandler<GitUIBaseEventArgs> PreRebase;
-        public event EventHandler<GitUIPostActionEventArgs> PostRebase;
-
-        public event EventHandler<GitUIBaseEventArgs> PreRename;
-        public event EventHandler<GitUIPostActionEventArgs> PostRename;
-
-        public event EventHandler<GitUIBaseEventArgs> PreSubmodulesEdit;
-        public event EventHandler<GitUIPostActionEventArgs> PostSubmodulesEdit;
-
-        public event EventHandler<GitUIBaseEventArgs> PreUpdateSubmodules;
         public event EventHandler<GitUIPostActionEventArgs> PostUpdateSubmodules;
 
-        public event EventHandler<GitUIBaseEventArgs> PreSyncSubmodules;
-        public event EventHandler<GitUIPostActionEventArgs> PostSyncSubmodules;
-
-        public event EventHandler<GitUIBaseEventArgs> PreBlame;
-        public event EventHandler<GitUIPostActionEventArgs> PostBlame;
-
-        public event EventHandler<GitUIBaseEventArgs> PreEditGitAttributes;
-        public event EventHandler<GitUIPostActionEventArgs> PostEditGitAttributes;
-
-        public event EventHandler<GitUIBaseEventArgs> PreBrowseInitialize;
         public event EventHandler<GitUIBaseEventArgs> PostBrowseInitialize;
-
-        public event EventHandler<GitUIBaseEventArgs> PreSparseWorkingCopy;
-        public event EventHandler<GitUIPostActionEventArgs> PostSparseWorkingCopy;
 
         /// <summary>
         /// listeners for changes being made to repository
@@ -268,7 +171,7 @@ namespace GitUI
 
         public bool StartDeleteBranchDialog(IWin32Window owner, IEnumerable<string> branches)
         {
-            return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
+            return DoActionOnRepo(owner, true, false, null, null, () =>
             {
                 using (var form = new FormDeleteBranch(this, branches))
                 {
@@ -482,7 +385,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreCompareRevisions, PostCompareRevisions, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartCompareRevisionsDialog()
@@ -492,7 +395,7 @@ namespace GitUI
 
         public bool StartAddFilesDialog(IWin32Window owner, string addFiles = null)
         {
-            return DoActionOnRepo(owner, true, true, PreAddFiles, PostAddFiles, () =>
+            return DoActionOnRepo(owner, true, true, null, null, () =>
             {
                 using (var form = new FormAddFiles(this, addFiles))
                 {
@@ -518,7 +421,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreCreateBranch, PostCreateBranch, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartCreateBranchDialog()
@@ -538,7 +441,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, false, false, PreClone, PostClone, Action);
+            return DoActionOnRepo(owner, false, false, null, null, Action);
         }
 
         public bool StartCloneDialog(IWin32Window owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged)
@@ -649,7 +552,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, false, true, PreInitialize, PostInitialize, Action);
+            return DoActionOnRepo(owner, false, true, null, null, Action);
         }
 
         public bool StartInitializeDialog(string dir)
@@ -689,7 +592,7 @@ namespace GitUI
                 }
             }
 
-            bool done = DoActionOnRepo(owner, true, true, PrePull, PostPull, Action);
+            bool done = DoActionOnRepo(owner, true, true, null, null, Action);
 
             pullCompleted = pulled;
 
@@ -738,7 +641,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, false, false, PreViewPatch, PostViewPatch, Action);
+            return DoActionOnRepo(owner, false, false, null, null, Action);
         }
 
         public bool StartViewPatchDialog(string patchFile)
@@ -768,7 +671,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, Action);
+            return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
         public void AddCommitTemplate(string key, Func<string> addingText)
@@ -793,7 +696,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreFormatPatch, PostFormatPatch, Action);
+            return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
         public bool StartFormatPatchDialog()
@@ -813,7 +716,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreStash, PostStash, Action);
+            return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
         public bool StartStashDialog()
@@ -912,7 +815,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreRevertCommit, PostRevertCommit, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit = true)
@@ -927,7 +830,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, true, PreResolveConflicts, PostResolveConflicts, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartResolveConflictsDialog(bool offerCommit)
@@ -950,7 +853,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
@@ -998,7 +901,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartCherryPickDialog()
@@ -1021,7 +924,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreMergeBranch, PostMergeBranch, Action);
+            return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
         /// <summary>Start Merge dialog, using the specified branch.</summary>
@@ -1041,7 +944,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreCreateTag, PostCreateTag, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartCreateTagDialog()
@@ -1059,7 +962,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreDeleteTag, PostDeleteTag, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartDeleteTagDialog()
@@ -1079,7 +982,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, Action);
+            return DoActionOnRepo(owner, true, false, null, PostEditGitIgnore, Action);
         }
 
         public bool StartEditGitIgnoreDialog(bool localExcludes)
@@ -1099,7 +1002,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, Action);
+            return DoActionOnRepo(owner, true, false, null, PostEditGitIgnore, Action);
         }
 
         public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initialPage = null)
@@ -1111,7 +1014,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, false, true, PreSettings, PostSettings, Action);
+            return DoActionOnRepo(owner, false, true, null, PostSettings, Action);
         }
 
         public bool StartSettingsDialog()
@@ -1133,7 +1036,7 @@ namespace GitUI
         /// <param name="path">Files path for archive</param>
         public bool StartArchiveDialog(IWin32Window owner, GitRevision revision = null, GitRevision revision2 = null, string path = null)
         {
-            return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
+            return DoActionOnRepo(owner, true, false, null, null, () =>
                 {
                     using (var form = new FormArchive(this))
                     {
@@ -1164,7 +1067,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreMailMap, PostMailMap, Action);
+            return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
         public bool StartMailMapDialog()
@@ -1185,7 +1088,7 @@ namespace GitUI
             }
 
             // TODO: move Notify to FormVerify and friends
-            return DoActionOnRepo(owner, true, true, PreVerifyDatabase, PostVerifyDatabase, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartVerifyDatabaseDialog()
@@ -1207,7 +1110,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, true, PreRemotes, PostRemotes, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartRemotesDialog()
@@ -1253,7 +1156,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, true, PreRebase, PostRebase, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartRenameDialog(IWin32Window owner, string branch)
@@ -1266,7 +1169,7 @@ namespace GitUI
                 }
             }
 
-            return DoActionOnRepo(owner, true, true, PreRename, PostRename, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartSubmodulesDialog(IWin32Window owner)
@@ -1281,7 +1184,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, true, PreSubmodulesEdit, PostSubmodulesEdit, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartSubmodulesDialog()
@@ -1296,7 +1199,7 @@ namespace GitUI
                 return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleUpdateCmd(""));
             }
 
-            return DoActionOnRepo(owner, true, true, PreUpdateSubmodules, PostUpdateSubmodules, Action);
+            return DoActionOnRepo(owner, true, true, null, PostUpdateSubmodules, Action);
         }
 
         public bool StartUpdateSubmodulesDialog()
@@ -1311,7 +1214,7 @@ namespace GitUI
                 return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleSyncCmd(""));
             }
 
-            return DoActionOnRepo(owner, true, true, PreSyncSubmodules, PostSyncSubmodules, Action);
+            return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
         public bool StartSyncSubmodulesDialog()
@@ -1351,11 +1254,6 @@ namespace GitUI
 
         private bool StartBrowseDialog(IWin32Window owner, string filter, string selectedCommit)
         {
-            if (!InvokeEvent(owner, PreBrowse))
-            {
-                return false;
-            }
-
             var form = new FormBrowse(this, filter, selectedCommit);
 
             if (Application.MessageLoop)
@@ -1367,7 +1265,6 @@ namespace GitUI
                 Application.Run(form);
             }
 
-            InvokeEvent(owner, PostBrowse);
             return true;
         }
 
@@ -1389,7 +1286,7 @@ namespace GitUI
                 return form;
             }
 
-            ShowModelessForm(owner, true, PreFileHistory, PostFileHistory, ProvideForm);
+            ShowModelessForm(owner, true, null, null, ProvideForm);
         }
 
         public void StartFileHistoryDialog(string fileName)
@@ -1460,7 +1357,7 @@ namespace GitUI
                 }
             }
 
-            bool done = DoActionOnRepo(owner, true, true, PrePush, PostPush, Action);
+            bool done = DoActionOnRepo(owner, true, true, null, null, Action);
 
             pushCompleted = pushed;
 
@@ -1474,7 +1371,7 @@ namespace GitUI
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile = null)
         {
-            return DoActionOnRepo(owner, true, false, PreApplyPatch, PostApplyPatch, () =>
+            return DoActionOnRepo(owner, true, false, null, null, () =>
                 {
                     using (var form = new FormApplyPatch(this))
                     {
@@ -1511,7 +1408,7 @@ namespace GitUI
                 return true;
             }
 
-            return DoActionOnRepo(owner, true, false, PreEditGitAttributes, PostEditGitAttributes, Action);
+            return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
         private bool InvokeEvent(IWin32Window ownerForm, EventHandler<GitUIBaseEventArgs> gitUIEventHandler)
@@ -1972,7 +1869,7 @@ namespace GitUI
                 }
             }
 
-            DoActionOnRepo(null, true, false, PreBlame, PostBlame, () =>
+            DoActionOnRepo(null, true, false, null, null, () =>
             {
                 using (var frm = new FormBlame(this, filenameFromBlame, null, initialLine))
                 {
@@ -2063,11 +1960,6 @@ namespace GitUI
             {
                 AppSettings.AutoStash = true;
             }
-        }
-
-        internal void RaisePreBrowseInitialize(IWin32Window owner)
-        {
-            InvokeEvent(owner, PreBrowseInitialize);
         }
 
         internal void RaisePostBrowseInitialize(IWin32Window owner)

@@ -556,8 +556,6 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                UICommands.RaisePreBrowseInitialize(this);
-
                 // check for updates
                 if (AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
                 {
