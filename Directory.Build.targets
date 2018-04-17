@@ -1,0 +1,11 @@
+<Project>
+
+  <ItemGroup Condition="'$(EnableStyleCopAnalyzers)' != 'false'">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(EnableVisualStudioThreading)' != 'false'">
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="15.6.46" />
+  </ItemGroup>
+
+</Project>
