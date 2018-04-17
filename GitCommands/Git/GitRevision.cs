@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using GitCommands.Git.Extensions;
 using GitUIPluginInterfaces;
@@ -56,7 +57,7 @@ namespace GitCommands
                 }
 
                 _buildStatus = value;
-                OnPropertyChanged(nameof(BuildStatus));
+                OnPropertyChanged();
             }
         }
 
@@ -115,7 +116,7 @@ namespace GitCommands
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
