@@ -1791,18 +1791,15 @@ namespace GitUI
             return new GitRemoteCommand(Module);
         }
 
-        private class GitRemoteCommand : IGitRemoteCommand
+        #region Nested class: GitRemoteCommand
+
+        private sealed class GitRemoteCommand : IGitRemoteCommand
         {
             public object OwnerForm { get; set; }
-
             public string Remote { get; set; }
-
             public string Title { get; set; }
-
             public string CommandText { get; set; }
-
             public bool ErrorOccurred { get; private set; }
-
             public string CommandOutput { get; private set; }
 
             private readonly GitModule _module;
@@ -1855,5 +1852,7 @@ namespace GitUI
                 return e.Handled;
             }
         }
+
+        #endregion
     }
 }
