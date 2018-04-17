@@ -415,7 +415,7 @@ namespace Gerrit
             return null;
         }
 
-        public override bool Execute(GitUIEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
             using (var form = new FormPluginInformation())
             {

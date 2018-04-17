@@ -54,7 +54,7 @@ namespace JiraCommitHintPlugin
             Description = description;
         }
 
-        public override bool Execute(GitUIEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
             if (_enabledSettings.ValueOrDefault(Settings))
             {

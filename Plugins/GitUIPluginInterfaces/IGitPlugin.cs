@@ -16,6 +16,6 @@ namespace GitUIPluginInterfaces
 
         void Unregister(IGitUICommands gitUiCommands);
 
-        bool Execute(GitUIEventArgs gitUiCommands);
+        bool Execute(GitUIEventArgs args);
     }
 }
