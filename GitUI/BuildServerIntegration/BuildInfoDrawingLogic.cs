@@ -1,9 +1,14 @@
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 
 namespace GitUI.BuildServerIntegration
 {
@@ -11,67 +16,74 @@ namespace GitUI.BuildServerIntegration
     {
         public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision)
         {
-            if (revision.BuildStatus != null)
+            if (revision.BuildStatus == null)
             {
-                Image buildStatusImage = null;
+                return;
+            }
 
+            var size = DpiUtil.Scale(new Size(8, 8));
+
+            var location = new Point(
+                e.CellBounds.Left + ((e.CellBounds.Width - size.Width) / 2),
+                e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
+
+            var container = e.Graphics.BeginContainer();
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.FillEllipse(GetBrush(), new Rectangle(location, size));
+            e.Graphics.EndContainer(container);
+
+            Brush GetBrush()
+            {
                 switch (revision.BuildStatus.Status)
                 {
                     case BuildInfo.BuildStatus.Success:
-                        buildStatusImage = Resources.BuildSuccessful;
-                        break;
+                        return Brushes.LightGreen;
                     case BuildInfo.BuildStatus.Failure:
-                        buildStatusImage = Resources.BuildFailed;
-                        break;
-                    case BuildInfo.BuildStatus.Unknown:
-                        buildStatusImage = Resources.BuildCancelled;
-                        break;
+                        return Brushes.Red;
                     case BuildInfo.BuildStatus.InProgress:
-                        buildStatusImage = Resources.Settings;
-                        break;
+                        return Brushes.DodgerBlue;
                     case BuildInfo.BuildStatus.Unstable:
-                        buildStatusImage = Resources.IconMixed;
-                        break;
+                        return Brushes.DarkOrange;
                     case BuildInfo.BuildStatus.Stopped:
-                        buildStatusImage = Resources.BuildCancelled;
-                        break;
-                }
-
-                if (buildStatusImage != null)
-                {
-                    e.Graphics.DrawImage(buildStatusImage, new Rectangle(e.CellBounds.Left, e.CellBounds.Top + 4, 16, 16));
+                    case BuildInfo.BuildStatus.Unknown:
+                        return Brushes.Gray;
+                    default:
+                        throw new InvalidOperationException("Unsupported build status enum value.");
                 }
             }
         }
 
-        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont)
+        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont, bool isSelected)
         {
-            if (revision.BuildStatus != null)
+            if (revision.BuildStatus == null)
             {
-                var buildStatusForeColor = foreColor;
+                return;
+            }
 
+            var color = GetColor();
+            var text = (string)e.FormattedValue;
+            var rect = RevisionGridUtils.GetCellRectangle(e);
+            RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, color, rect);
+
+            Color GetColor()
+            {
                 switch (revision.BuildStatus.Status)
                 {
                     case BuildInfo.BuildStatus.Success:
-                        buildStatusForeColor = Color.DarkGreen;
-                        break;
+                        return isSelected ? Color.LightGreen : Color.DarkGreen;
                     case BuildInfo.BuildStatus.Failure:
-                        buildStatusForeColor = Color.DarkRed;
-                        break;
+                        return isSelected ? Color.Red : Color.DarkRed;
                     case BuildInfo.BuildStatus.InProgress:
-                        buildStatusForeColor = Color.Blue;
-                        break;
+                        return isSelected ? Color.LightBlue : Color.Blue;
                     case BuildInfo.BuildStatus.Unstable:
-                        buildStatusForeColor = Color.OrangeRed;
-                        break;
+                        return Color.OrangeRed;
                     case BuildInfo.BuildStatus.Stopped:
-                        buildStatusForeColor = Color.Gray;
-                        break;
+                        return isSelected ? Color.LightGray : Color.Gray;
+                    case BuildInfo.BuildStatus.Unknown:
+                        return foreColor;
+                    default:
+                        throw new InvalidOperationException("Unsupported build status enum value.");
                 }
-
-                var text = (string)e.FormattedValue;
-                var rect = RevisionGridUtils.GetCellRectangle(e);
-                RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, buildStatusForeColor, rect);
             }
         }
 
@@ -87,7 +99,8 @@ namespace GitUI.BuildServerIntegration
             e.Value = GetBuildStatusMessageText(revision);
         }
 
-        private static string GetBuildStatusMessageText(GitRevision revision)
+        [NotNull]
+        private static string GetBuildStatusMessageText([NotNull] GitRevision revision)
         {
             if (string.IsNullOrEmpty(revision.BuildStatus?.Description))
             {

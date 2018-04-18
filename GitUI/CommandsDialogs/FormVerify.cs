@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Tag;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
@@ -39,10 +40,24 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+
+            columnIsLostObjectSelected.Width = DpiUtil.Scale(20);
+            columnDate.Width = DpiUtil.Scale(56);
+            columnType.Width = DpiUtil.Scale(58);
+            columnAuthor.Width = DpiUtil.Scale(150);
+            columnHash.Width = DpiUtil.Scale(80);
+
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
             Translate();
             Warnings.AutoGenerateColumns = false;
+
+            columnIsLostObjectSelected.DataPropertyName = "IsSelected"; // TODO this property is not on the bound type
+            columnDate.DataPropertyName = nameof(LostObject.Date);
+            columnType.DataPropertyName = nameof(LostObject.RawType);
+            columnSubject.DataPropertyName = nameof(LostObject.Subject);
+            columnAuthor.DataPropertyName = nameof(LostObject.Author);
+            columnHash.DataPropertyName = nameof(LostObject.Hash);
 
             if (commands != null)
             {

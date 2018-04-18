@@ -36,7 +36,6 @@
             // 
             // lbxRefs
             // 
-            this.lbxRefs.DisplayMember = "Label";
             this.lbxRefs.FormattingEnabled = true;
             this.lbxRefs.Items.AddRange(new object[] {
             "local1 (ref)",

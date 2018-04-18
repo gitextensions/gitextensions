@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_From
             // 
-            this._NO_TRANSLATE_From.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_From.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_From.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_From.FormattingEnabled = true;
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_To
             // 
-            this._NO_TRANSLATE_To.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_To.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_To.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_To.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
@@ -169,7 +169,6 @@ namespace GitUI.CommandsDialogs
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
             this._NO_TRANSLATE_To.Size = new System.Drawing.Size(379, 21);
             this._NO_TRANSLATE_To.TabIndex = 4;
-            this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
             this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
             // 
@@ -197,7 +196,7 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_NewDirectory
             // 
-            this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(128, 63);
             this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
@@ -218,7 +217,7 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_Branches
             // 
-            this._NO_TRANSLATE_Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Branches.FormattingEnabled = true;
             this._NO_TRANSLATE_Branches.Location = new System.Drawing.Point(128, 93);
@@ -255,7 +254,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Info
             // 
-            this.Info.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.Info.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Info.BackColor = System.Drawing.SystemColors.Info;
             this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -268,7 +267,7 @@ namespace GitUI.CommandsDialogs
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);

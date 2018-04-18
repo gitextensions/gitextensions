@@ -4,20 +4,29 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
+        private IList<Repository> _repositoryHistory;
+
         public FormRecentReposSettings()
             : base(true)
         {
             InitializeComponent();
             Translate();
-            LoadSettings();
-            RefreshRepos();
-            SetComboWidth();
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                _repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                LoadSettings();
+                RefreshRepos();
+                SetComboWidth();
+            });
         }
 
         private void LoadSettings()
@@ -37,13 +46,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             AppSettings.SortLessRecentRepos = sortLessRecentRepos.Checked;
             AppSettings.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
             AppSettings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
-
-            var mustResizeRepositriesHistory = AppSettings.RecentRepositoriesHistorySize != (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
             AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
-            if (mustResizeRepositriesHistory)
-            {
-                Repositories.RepositoryHistory.MaxCount = AppSettings.RecentRepositoriesHistorySize;
-            }
+
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveHistoryAsync(_repositoryHistory));
         }
 
         private string GetShorteningStrategy()
@@ -107,7 +112,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             try
             {
-                splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(_repositoryHistory, mostRecentRepos, lessRecentRepos);
             }
             finally
             {
@@ -257,11 +262,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GetSelectedRepo(sender, out var repo))
+            if (!GetSelectedRepo(sender, out var repo))
             {
-                Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
-                RefreshRepos();
+                return;
             }
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                _repositoryHistory = await RepositoryHistoryManager.Locals.RemoveFromHistoryAsync(repo.Repo.Path);
+
+                await this.SwitchToMainThreadAsync();
+                RefreshRepos();
+            });
         }
 
         private void listView_DrawItem(object sender, DrawListViewItemEventArgs e)

@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs
 
         private void RevisionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "BuildStatus")
+            if (e.PropertyName == nameof(GitRevision.BuildStatus))
             {
                 // Refresh the selected Git revision
                 FillBuildReport(_selectedGitRevision);

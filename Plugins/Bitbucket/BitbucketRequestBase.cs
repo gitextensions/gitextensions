@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -24,7 +25,7 @@ namespace Bitbucket
             Settings = settings;
         }
 
-        public BitbucketResponse<T> Send()
+        public async Task<BitbucketResponse<T>> SendAsync()
         {
             if (Settings.DisableSSL)
             {
@@ -53,7 +54,7 @@ namespace Bitbucket
             // XSRF check fails when approving/creating
             request.AddHeader("X-Atlassian-Token", "no-check");
 
-            var response = client.Execute(request);
+            var response = await client.ExecuteTaskAsync(request).ConfigureAwait(false);
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
                 return new BitbucketResponse<T>

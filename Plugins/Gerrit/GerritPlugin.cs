@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
 namespace Gerrit
 {
+    [Export(typeof(IGitPlugin))]
     public class GerritPlugin : GitPluginBase, IGitPluginForRepository
     {
         #region Translation
@@ -278,14 +282,16 @@ namespace Gerrit
 
             if (result == DialogResult.Yes)
             {
-                InstallCommitMsgHook();
+                ThreadHelper.JoinableTaskFactory.Run(InstallCommitMsgHookAsync);
             }
 
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        private void InstallCommitMsgHook()
+        private async Task InstallCommitMsgHookAsync()
         {
+            await _mainForm.SwitchToMainThreadAsync();
+
             var settings = GerritSettings.Load(_mainForm, _gitUiCommands.GitModule);
 
             if (settings == null)
@@ -301,13 +307,14 @@ namespace Gerrit
 
             try
             {
-                content = DownloadFromScp(settings);
+                content = await DownloadFromScpAsync(settings);
             }
             catch
             {
                 content = null;
             }
 
+            await _mainForm.SwitchToMainThreadAsync();
             if (content == null)
             {
                 MessageBox.Show(
@@ -327,18 +334,18 @@ namespace Gerrit
             }
         }
 
-        private string DownloadFromScp(GerritSettings settings)
+        private async Task<string> DownloadFromScpAsync(GerritSettings settings)
         {
             // This is a very quick and dirty "implementation" of the scp
             // protocol. By sending the 0's as input, we trigger scp to
             // send the file.
 
-            string content = GerritUtil.RunGerritCommand(
+            string content = await GerritUtil.RunGerritCommandAsync(
                 _mainForm,
                 _gitUiCommands.GitModule,
                 "scp -f hooks/commit-msg",
                 settings.DefaultRemote,
-                new byte[] { 0, 0, 0, 0, 0, 0, 0 });
+                new byte[] { 0, 0, 0, 0, 0, 0, 0 }).ConfigureAwait(false);
 
             // The first line of the output contains the file we're receiving
             // in a format like "C0755 4248 commit-msg".

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
+using GitExtUtils.GitUI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -19,7 +20,15 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+
+            typeDataGridViewTextBoxColumn.Width = DpiUtil.Scale(70);
+            File.Width = DpiUtil.Scale(50);
+
             Translate();
+
+            typeDataGridViewTextBoxColumn.DataPropertyName = nameof(Patch.ChangeType);
+            File.DataPropertyName = nameof(Patch.FileType);
+            FileNameA.DataPropertyName = nameof(Patch.FileNameA);
         }
 
         public void LoadPatch(string patch)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -86,7 +87,12 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
-        private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+        public static readonly char RefSeparator = '/';
+        public static readonly string RefSep = RefSeparator.ToString(CultureInfo.InvariantCulture);
+
+        private const char LineSeparator = '\n';
+        public static readonly char ActiveBranchIndicator = '*';
+
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
@@ -96,7 +102,7 @@ namespace GitCommands
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
 
-        public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
+        public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
 
         public GitModule(string workingdir)
@@ -304,11 +310,6 @@ namespace GitCommands
         /// Encoding for commit header (message, notes, author, committer, emails)
         /// </summary>
         public Encoding LogOutputEncoding => EffectiveConfigFile.LogOutputEncoding ?? CommitEncoding;
-
-        /// <summary>"(no branch)"</summary>
-        public static readonly string DetachedBranch = "(no branch)";
-
-        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
 
         public AppSettings.PullAction LastPullAction
         {
@@ -668,9 +669,9 @@ namespace GitCommands
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
+        public async Task<string> RunCmdAsync(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            return RunCmdResult(cmd, arguments, encoding, stdInput).GetString();
+            return await Task.FromResult(RunCmdResult(cmd, arguments, encoding, stdInput).GetString()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -678,7 +679,10 @@ namespace GitCommands
         /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            return RunCmd(AppSettings.GitCommand, arguments, encoding, stdInput);
+            return ThreadHelper.JoinableTaskFactory.Run(() =>
+            {
+                return RunCmdAsync(AppSettings.GitCommand, arguments, encoding, stdInput);
+            });
         }
 
         /// <summary>
@@ -709,16 +713,16 @@ namespace GitCommands
         /// <summary>
         /// Run batch file, console window is hidden, wait for exit, redirect output
         /// </summary>
-        public string RunBatchFile(string batchFile)
+        public async Task<string> RunBatchFileAsync(string batchFile)
         {
             string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
             using (var writer = new StreamWriter(tempFileName))
             {
-                writer.WriteLine("@prompt $G");
-                writer.Write(batchFile);
+                await writer.WriteLineAsync("@prompt $G").ConfigureAwait(false);
+                await writer.WriteAsync(batchFile).ConfigureAwait(false);
             }
 
-            string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
+            string result = await RunCmdAsync("cmd.exe", "/C \"" + tempFileName + "\"").ConfigureAwait(false);
             File.Delete(tempFileName);
             return result;
         }
@@ -1099,7 +1103,7 @@ namespace GitCommands
                 };
 
                 string args = "";
-                string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(RunCmd("which", termEmuCmd)));
+                string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync("which", termEmuCmd))));
 
                 if (string.IsNullOrEmpty(cmd))
                 {
@@ -1725,7 +1729,7 @@ namespace GitCommands
 
                 if (!string.IsNullOrEmpty(localBranch))
                 {
-                    branchArguments += ":" + GitCommandHelpers.GetFullBranchName(localBranch);
+                    branchArguments += ":" + GitRefName.GetFullBranchName(localBranch);
                 }
             }
 
@@ -1802,8 +1806,7 @@ namespace GitCommands
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
             fromBranch = FormatBranchName(fromBranch);
-
-            toBranch = GitCommandHelpers.GetFullBranchName(toBranch)?.Replace(" ", "");
+            toBranch = GitRefName.GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
             {
@@ -2336,7 +2339,7 @@ namespace GitCommands
 
             var patch = cacheResult
                 ? RunCacheableCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding)
-                : RunCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding);
+                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), LosslessEncoding));
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
@@ -2571,7 +2574,7 @@ namespace GitCommands
             return GetAllChangedFilesWithSubmodulesStatus().Where(x => !x.IsStaged).ToArray();
         }
 
-        public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = 0)
+        public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunGitCmd(command);
@@ -2582,7 +2585,7 @@ namespace GitCommands
         ///  including any untracked files or directories; excluding submodules.</summary>
         public bool IsDirtyDir()
         {
-            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
+            return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.All).Count > 0;
         }
 
         public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
@@ -2680,7 +2683,7 @@ namespace GitCommands
 
             if (!headFileContents.StartsWith("ref: "))
             {
-                return DetachedBranch;
+                return DetachedHeadParser.DetachedBranch;
             }
 
             const string prefix = "ref: refs/heads/";
@@ -2703,7 +2706,7 @@ namespace GitCommands
                 var result = RunGitCmdResult("symbolic-ref HEAD");
                 if (result.ExitCode == 1)
                 {
-                    return DetachedBranch;
+                    return DetachedHeadParser.DetachedBranch;
                 }
 
                 return result.StdOutput;
@@ -2721,12 +2724,7 @@ namespace GitCommands
         /// <summary>Indicates whether HEAD is not pointing to a branch.</summary>
         public bool IsDetachedHead()
         {
-            return IsDetachedHead(GetSelectedBranch());
-        }
-
-        public static bool IsDetachedHead(string branch)
-        {
-            return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
+            return DetachedHeadParser.IsDetachedHead(GetSelectedBranch());
         }
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
@@ -2865,12 +2863,12 @@ namespace GitCommands
             ByCommitDateDescending
         }
 
-        public ICollection<string> GetMergedBranches(bool includeRemote = false)
+        public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
         {
             return RunGitCmd(GitCommandHelpers.MergedBranches(includeRemote)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public ICollection<string> GetMergedRemoteBranches()
+        public IReadOnlyList<string> GetMergedRemoteBranches()
         {
             const string remoteBranchPrefixForMergedBranches = "remotes/";
             const string refsPrefix = "refs/";
@@ -2883,7 +2881,8 @@ namespace GitCommands
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))
-                .Where(b => !string.IsNullOrEmpty(GitCommandHelpers.GetRemoteName(b, remotes))).ToList();
+                .Where(b => !string.IsNullOrEmpty(GitRefName.GetRemoteName(b, remotes)))
+                .ToList();
         }
 
         private string GetTree(bool tags, bool branches)
@@ -2906,48 +2905,64 @@ namespace GitCommands
             return "";
         }
 
-        public IReadOnlyList<IGitRef> GetTreeRefs(string tree)
+        [NotNull, ItemNotNull]
+        public IReadOnlyList<IGitRef> GetTreeRefs([NotNull] string tree)
         {
-            var itemsStrings = tree.Split('\n');
+            // Parse lines of format:
+            //
+            // 69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master
+            // 69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master
+            // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
+
+            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40}) (?<refname>.+)$", RegexOptions.Multiline);
+
+            var matches = regex.Matches(tree);
 
             var gitRefs = new List<IGitRef>();
-            var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
-            var remotes = GetRemotes(false);
+            var headByRemote = new Dictionary<string, GitRef>();
 
-            foreach (var itemsString in itemsStrings)
+            foreach (Match match in matches)
             {
-                if (itemsString == null || itemsString.Length <= 42 || itemsString.StartsWith("error: "))
-                {
-                    continue;
-                }
+                var refName = match.Groups["refname"].Value;
+                var objectId = match.Groups["objectid"].Value;
+                var remoteName = GitRefName.GetRemoteName(refName);
+                var head = new GitRef(this, objectId, refName, remoteName);
 
-                var completeName = itemsString.Substring(41).Trim();
-                var guid = itemsString.Substring(0, 40);
-                if (GitRevision.IsFullSha1Hash(guid) && completeName.StartsWith("refs/"))
+                if (GitRefName.IsRemoteHead(refName))
                 {
-                    var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
-                    var head = new GitRef(this, guid, completeName, remoteName);
-                    if (DefaultHeadPattern.IsMatch(completeName))
-                    {
-                        defaultHeads[remoteName] = head;
-                    }
-                    else
-                    {
-                        gitRefs.Add(head);
-                    }
+                    headByRemote[remoteName] = head;
+                }
+                else
+                {
+                    gitRefs.Add(head);
                 }
             }
 
             // do not show default head if remote has a branch on the same commit
-            GitRef defaultHead;
-            foreach (var gitRef in gitRefs.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
+            foreach (var gitRef in gitRefs)
             {
-                defaultHeads.Remove(gitRef.Remote);
+                if (headByRemote.TryGetValue(gitRef.Remote, out var defaultHead) &&
+                    gitRef.Guid == defaultHead.Guid)
+                {
+                    headByRemote.Remove(gitRef.Remote);
+                }
             }
 
-            gitRefs.AddRange(defaultHeads.Values);
+            gitRefs.AddRange(headByRemote.Values);
 
             return gitRefs;
+        }
+
+        /// <summary>Gets the branch names, with the active branch, if applicable, listed first.
+        /// The active branch will be indicated by a "*", so ensure to Trim before processing.</summary>
+        public IEnumerable<string> GetBranchNames()
+        {
+            return RunGitCmd("branch", SystemEncoding)
+                .Split(LineSeparator)
+                .Where(branch => !string.IsNullOrWhiteSpace(branch)) // first is ""
+                .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator)) // * for current branch
+                .ThenBy(r => r)
+                .Select(line => line.Trim());
         }
 
         /// <summary>
@@ -3096,17 +3111,12 @@ namespace GitCommands
 
             var tree = GitRevision.IsFullSha1Hash(id)
                 ? RunCacheableCmd(AppSettings.GitCommand, args.ToString(), SystemEncoding)
-                : RunCmd(AppSettings.GitCommand, args.ToString(), SystemEncoding);
+                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), SystemEncoding));
 
             return _gitTreeParser.Parse(tree);
         }
 
-        public GitBlame Blame(string filename, string from, Encoding encoding)
-        {
-            return Blame(filename, from, null, encoding);
-        }
-
-        public GitBlame Blame(string fileName, string from, string lines, Encoding encoding)
+        public GitBlame Blame(string fileName, string from, Encoding encoding, string lines = null)
         {
             var args = new ArgumentBuilder
             {
@@ -3396,12 +3406,7 @@ namespace GitCommands
             return null;
         }
 
-        public IEnumerable<string> GetPreviousCommitMessages(int count)
-        {
-            return GetPreviousCommitMessages("HEAD", count);
-        }
-
-        public IEnumerable<string> GetPreviousCommitMessages(string revision, int count)
+        public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
         {
             const string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
             string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
@@ -3549,7 +3554,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(branchName));
             }
 
-            string fullBranchName = GitCommandHelpers.GetFullBranchName(branchName);
+            string fullBranchName = GitRefName.GetFullBranchName(branchName);
             if (string.IsNullOrEmpty(RevParse(fullBranchName)))
             {
                 fullBranchName = branchName;
@@ -3573,7 +3578,7 @@ namespace GitCommands
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             const string arguments = "x";
-            var output = RunCmd(cmd, arguments);
+            var output = ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(cmd, arguments));
             var lines = output.Split('\n');
             if (lines.Length >= 2)
             {
@@ -3613,12 +3618,12 @@ namespace GitCommands
         /// </example>
         /// <param name="s">The string to unescape.</param>
         /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
-        [NotNull]
+        [ContractAnnotation("s:null=>null")]
         public static string UnescapeOctalCodePoints([CanBeNull] string s)
         {
-            if (string.IsNullOrWhiteSpace(s))
+            if (s == null)
             {
-                return s ?? string.Empty;
+                return null;
             }
 
             return _escapedOctalCodePointRegex.Replace(
@@ -3642,30 +3647,33 @@ namespace GitCommands
                 });
         }
 
-        public static string ReEncodeFileNameFromLossless(string fileName)
+        [ContractAnnotation("fileName:null=>null")]
+        [ContractAnnotation("fileName:notnull=>notnull")]
+        public static string ReEncodeFileNameFromLossless([CanBeNull] string fileName)
         {
             fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
             return UnescapeOctalCodePoints(fileName);
         }
 
-        public static string ReEncodeString(string s, Encoding fromEncoding, Encoding toEncoding)
+        [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
+        public static string ReEncodeString([CanBeNull] string s, [NotNull] Encoding fromEncoding, [NotNull] Encoding toEncoding)
         {
-            if (s == null || fromEncoding.HeaderName.Equals(toEncoding.HeaderName))
+            if (s == null || fromEncoding.HeaderName == toEncoding.HeaderName)
             {
                 return s;
             }
-            else
-            {
-                byte[] bytes = fromEncoding.GetBytes(s);
-                s = toEncoding.GetString(bytes);
-                return s;
-            }
+
+            var bytes = fromEncoding.GetBytes(s);
+            return toEncoding.GetString(bytes);
         }
 
         /// <summary>
         /// reencodes string from GitCommandHelpers.LosslessEncoding to toEncoding
         /// </summary>
-        public static string ReEncodeStringFromLossless(string s, Encoding toEncoding)
+        [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
+        public static string ReEncodeStringFromLossless([CanBeNull] string s, [CanBeNull] Encoding toEncoding)
         {
             if (toEncoding == null)
             {
@@ -3675,7 +3683,9 @@ namespace GitCommands
             return ReEncodeString(s, LosslessEncoding, toEncoding);
         }
 
-        public string ReEncodeStringFromLossless(string s)
+        [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
+        public string ReEncodeStringFromLossless([CanBeNull] string s)
         {
             return ReEncodeStringFromLossless(s, LogOutputEncoding);
         }
@@ -3683,7 +3693,7 @@ namespace GitCommands
         // there was a bug: Git before v1.8.4 did not recode commit message when format is given
         // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
         // characters could be replaced by replacement character while reencoding to LogOutputEncoding
-        public string ReEncodeCommitMessage(string s, string toEncodingName)
+        public string ReEncodeCommitMessage(string s, [CanBeNull] string toEncodingName)
         {
             bool isABug = !GitCommandHelpers.VersionInUse.LogFormatRecodesCommitMessage;
 
@@ -3731,6 +3741,7 @@ namespace GitCommands
         /// s should be encoded in LosslessEncoding
         /// </summary>
         [ContractAnnotation("s:null=>null")]
+        [ContractAnnotation("s:notnull=>notnull")]
         public string ReEncodeShowString(string s)
         {
             if (s.IsNullOrEmpty())

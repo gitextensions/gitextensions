@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -36,20 +38,22 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             _asyncLoader = new AsyncLoader();
 
-            // set tab page images
+            tabControl1.ImageList = new ImageList
             {
-                var imageList = new ImageList();
-                tabControl1.ImageList = imageList;
-                imageList.ColorDepth = ColorDepth.Depth8Bit;
-                imageList.Images.Add(Properties.Resources.IconCommit);
-                imageList.Images.Add(Properties.Resources.IconViewFile);
-                imageList.Images.Add(Properties.Resources.IconDiff);
-                imageList.Images.Add(Properties.Resources.IconBlame);
-                tabControl1.TabPages[0].ImageIndex = 0;
-                tabControl1.TabPages[1].ImageIndex = 1;
-                tabControl1.TabPages[2].ImageIndex = 2;
-                tabControl1.TabPages[3].ImageIndex = 3;
-            }
+                ColorDepth = ColorDepth.Depth8Bit,
+                ImageSize = DpiUtil.Scale(new Size(16, 16)),
+                Images =
+                {
+                    Properties.Resources.IconCommit,
+                    Properties.Resources.IconViewFile,
+                    Properties.Resources.IconDiff,
+                    Properties.Resources.IconBlame
+                }
+            };
+            tabControl1.TabPages[0].ImageIndex = 0;
+            tabControl1.TabPages[1].ImageIndex = 1;
+            tabControl1.TabPages[2].ImageIndex = 2;
+            tabControl1.TabPages[3].ImageIndex = 3;
 
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
@@ -63,6 +67,8 @@ namespace GitUI.CommandsDialogs
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _longShaProvider = new LongShaProvider(() => Module);
+
+            this.AdjustForDpiScaling();
         }
 
         public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)
@@ -142,34 +148,28 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.Visible = true;
 
-            _asyncLoader.LoadAsync(() => BuildFilter(FileName), (filter) =>
+            if (string.IsNullOrEmpty(FileName))
             {
-                if (filter == null)
-                {
-                    return;
-                }
-
-                FileChanges.FixedRevisionFilter = filter.RevisionFilter;
-                FileChanges.FixedPathFilter = filter.PathFilter;
-                FileChanges.FiltredFileName = FileName;
-                FileChanges.AllowGraphWithFilter = true;
-                FileChanges.Load();
-            });
-        }
-
-        private class FixedFilterTuple
-        {
-            public string RevisionFilter;
-            public string PathFilter;
-        }
-
-        private FixedFilterTuple BuildFilter(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return null;
+                return;
             }
 
+            _asyncLoader.LoadAsync(
+                () => BuildFilter(FileName),
+                filter =>
+                {
+                    var (revisionFilter, pathFilter) = BuildFilter(FileName);
+
+                    FileChanges.FixedRevisionFilter = revisionFilter;
+                    FileChanges.FixedPathFilter = pathFilter;
+                    FileChanges.FiltredFileName = FileName;
+                    FileChanges.AllowGraphWithFilter = true;
+
+                    FileChanges.Load();
+                });
+        }
+
+        private (string revisionFilter, string pathFilter) BuildFilter(string fileName)
+        {
             // Replace windows path separator to Linux path separator.
             // This is needed to keep the file history working when started from file tree in
             // browse dialog.
@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
                 // remove the working directory and now we have a properly cased file name.
-                fileName = longPath.ToString().Substring(Module.WorkingDir.Length);
+                fileName = longPath.ToString().Substring(Module.WorkingDir.Length).ToPosixPath();
             }
 
             if (fileName.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
@@ -202,7 +202,7 @@ namespace GitUI.CommandsDialogs
 
             FileName = fileName;
 
-            var res = new FixedFilterTuple { PathFilter = $" \"{fileName}\"" };
+            var res = (revisionFilter: (string)null, pathFilter: $" \"{fileName}\"");
 
             if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
@@ -242,24 +242,24 @@ namespace GitUI.CommandsDialogs
                 while (line != null);
 
                 // here we need --name-only to get the previous filenames in the revision graph
-                res.PathFilter = listOfFileNames.ToString();
-                res.RevisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
+                res.pathFilter = listOfFileNames.ToString();
+                res.revisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
             }
             else if (AppSettings.FollowRenamesInFileHistory)
             {
                 // history of a directory
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                res.RevisionFilter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                res.revisionFilter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
             }
             else
             {
                 // rename following disabled
-                res.RevisionFilter = " --parents";
+                res.revisionFilter = " --parents";
             }
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.RevisionFilter = string.Concat(" --full-history --simplify-merges ", res.RevisionFilter);
+                res.revisionFilter = string.Concat(" --full-history --simplify-merges ", res.revisionFilter);
             }
 
             return res;
@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs
                 ? selectedRevisions[0].Name
                 : null;
 
-            FileChanges.OpenWithDifftool(selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
+            UICommands.OpenWithDifftool(this, selectedRevisions, FileName, orgFileName, RevisionDiffKind.DiffAB, true);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -488,7 +488,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
+            UICommands.OpenWithDifftool(this, FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)

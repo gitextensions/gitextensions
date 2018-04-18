@@ -63,3 +63,8 @@ http://www.iconfinder.com/browse/iconset/ledicons/, License:
     http://led24.de/iconset/ or http://led24.de/ would be appreciated.
     Follow us on twitter http://twitter.com/gasyoun or email leds24@gmail.com
     512 icons 20/05/2009
+
+Microsoft Visual Studio 2017 Images
+===================================
+All images in the GitUI/Resources/Icons/VS2017Images folder.
+See https://docs.microsoft.com/en-us/visualstudio/designers/the-visual-studio-image-library

@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
-using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
 
@@ -1281,8 +1280,6 @@ namespace GitCommands
                 SettingsContainer.LockedAction(() =>
                 {
                     SshPath = SshPathLocatorInstance.Find(GitBinDir);
-                    Repositories.SaveSettings();
-
                     SettingsContainer.Save();
                 });
             }

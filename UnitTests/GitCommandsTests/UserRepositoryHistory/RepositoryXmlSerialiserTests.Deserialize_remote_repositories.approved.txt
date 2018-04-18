@@ -1,0 +1,5 @@
+﻿path[0] = https://github.com/RussKie/gitextensions.github.io.git (None)
+path[1] = https://github.com/RussKie/gitextensions.git (None)
+path[2] = https://github.com/gregsohl/gitextensions.git (None)
+path[3] = https://github.com/gitextensions/gitextensions.git (None)
+path[4] = https://github.com/EbenZhang/gitextensions.git (None)

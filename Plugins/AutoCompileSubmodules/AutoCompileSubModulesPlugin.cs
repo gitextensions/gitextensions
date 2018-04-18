@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -7,6 +8,7 @@ using ResourceManager;
 
 namespace AutoCompileSubmodules
 {
+    [Export(typeof(IGitPlugin))]
     public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepository
     {
         private readonly TranslationString _doYouWantBuild =

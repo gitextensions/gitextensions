@@ -119,29 +119,24 @@
             // HotkeyCommandIdentifier
             // 
             this.HotkeyCommandIdentifier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.HotkeyCommandIdentifier.DataPropertyName = "HotkeyCommandIdentifier";
             this.HotkeyCommandIdentifier.HeaderText = "#";
             this.HotkeyCommandIdentifier.Name = "HotkeyCommandIdentifier";
             this.HotkeyCommandIdentifier.ReadOnly = true;
-            this.HotkeyCommandIdentifier.Width = 39;
             // 
             // EnabledColumn
             // 
-            this.EnabledColumn.DataPropertyName = "Enabled";
             this.EnabledColumn.HeaderText = "Enabled";
             this.EnabledColumn.Name = "EnabledColumn";
             this.EnabledColumn.ReadOnly = true;
             // 
             // OnEvent
             // 
-            this.OnEvent.DataPropertyName = "OnEvent";
             this.OnEvent.HeaderText = "OnEvent";
             this.OnEvent.Name = "OnEvent";
             this.OnEvent.ReadOnly = true;
             // 
             // AskConfirmation
             // 
-            this.AskConfirmation.DataPropertyName = "AskConfirmation";
             this.AskConfirmation.HeaderText = "Confirmation";
             this.AskConfirmation.Name = "AskConfirmation";
             this.AskConfirmation.ReadOnly = true;

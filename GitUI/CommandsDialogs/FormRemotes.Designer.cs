@@ -83,9 +83,6 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.UpdateBranch = new System.Windows.Forms.Button();
             this.Prune = new System.Windows.Forms.Button();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flpnlRemoteManagement.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -506,7 +503,6 @@ namespace GitUI.CommandsDialogs
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.ItemSize = new System.Drawing.Size(117, 24);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -641,21 +637,18 @@ namespace GitUI.CommandsDialogs
             // 
             // BranchName
             // 
-            this.BranchName.DataPropertyName = "LocalName";
             this.BranchName.HeaderText = "Local branch name";
             this.BranchName.Name = "BranchName";
             this.BranchName.ReadOnly = true;
             // 
             // RemoteCombo
             // 
-            this.RemoteCombo.DataPropertyName = "TrackingRemote";
             this.RemoteCombo.HeaderText = "Remote repository";
             this.RemoteCombo.Name = "RemoteCombo";
             this.RemoteCombo.ReadOnly = true;
             // 
             // MergeWith
             // 
-            this.MergeWith.DataPropertyName = "MergeWith";
             this.MergeWith.HeaderText = "Default merge with";
             this.MergeWith.Name = "MergeWith";
             this.MergeWith.ReadOnly = true;
@@ -768,26 +761,6 @@ namespace GitUI.CommandsDialogs
             this.Prune.UseVisualStyleBackColor = true;
             this.Prune.Click += new System.EventHandler(this.PruneClick);
             // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Branch";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // BName
-            // 
-            this.BName.DataPropertyName = "Name";
-            this.BName.HeaderText = "Name";
-            this.BName.Name = "BName";
-            this.BName.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -843,9 +816,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.Button UpdateBranch;
         private System.Windows.Forms.Button Prune;
         private System.Windows.Forms.Button LoadSSHKey;

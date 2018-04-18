@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using ApprovalTests.Reporters;
 using CommonTestUtils;
 
 // General Information about an assembly is controlled through the following
@@ -36,3 +37,4 @@ using CommonTestUtils;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: ConfigureJoinableTaskFactory]
+[assembly: UseReporter(typeof(DiffReporter))]

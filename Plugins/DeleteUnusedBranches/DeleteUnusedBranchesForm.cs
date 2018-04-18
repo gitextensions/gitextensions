@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeleteUnusedBranches.Properties;
+using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -35,20 +36,30 @@ namespace DeleteUnusedBranches
         private readonly IGitPlugin _gitPlugin;
         private CancellationTokenSource _refreshCancellation;
 
-        public DeleteUnusedBranchesForm()
-        {
-            InitializeComponent();
-            Translate();
-        }
-
         public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
-            : this()
         {
             _settings = settings;
             _gitCommands = gitCommands;
             _gitUiCommands = gitUiCommands;
             _gitPlugin = gitPlugin;
+
+            InitializeComponent();
+
+            deleteDataGridViewCheckBoxColumn.Width = DpiUtil.Scale(50);
+            dateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(175);
+            Author.Width = DpiUtil.Scale(91);
+
+            Translate();
             imgLoading.Image = Resources.loadingpanel;
+
+            deleteDataGridViewCheckBoxColumn.DataPropertyName = nameof(Branch.Delete);
+            nameDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Name);
+            dateDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Date);
+            Author.DataPropertyName = nameof(Branch.Author);
+            Message.DataPropertyName = nameof(Branch.Message);
+
+            this.AdjustForDpiScaling();
+
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 

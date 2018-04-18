@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -11,6 +12,7 @@ using ResourceManager;
 
 namespace Gource
 {
+    [Export(typeof(IGitPlugin))]
     public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     {
         #region Translation

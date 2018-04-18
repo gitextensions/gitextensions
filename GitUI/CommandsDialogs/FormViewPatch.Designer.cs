@@ -101,26 +101,21 @@ namespace GitUI.CommandsDialogs
             // FileNameA
             // 
             this.FileNameA.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FileNameA.DataPropertyName = "FileNameA";
             this.FileNameA.HeaderText = "Filename";
             this.FileNameA.Name = "FileNameA";
             this.FileNameA.ReadOnly = true;
             // 
             // typeDataGridViewTextBoxColumn
             // 
-            this.typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
             this.typeDataGridViewTextBoxColumn.HeaderText = "Change";
             this.typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
             this.typeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.typeDataGridViewTextBoxColumn.Width = 70;
             // 
             // File
             // 
-            this.File.DataPropertyName = "File";
             this.File.HeaderText = "Type";
             this.File.Name = "File";
             this.File.ReadOnly = true;
-            this.File.Width = 50;
             // 
             // patchBindingSource
             // 

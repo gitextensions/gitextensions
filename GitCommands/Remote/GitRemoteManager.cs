@@ -70,18 +70,21 @@ namespace GitCommands.Remote
         {
             var module = GetModule();
             var localConfig = module.LocalConfigFile;
+            var moduleRefs = module.GetRefs(tags: false, branches: true);
 
-            foreach (var remoteHead in module.GetRefs(true, true))
+            foreach (var remoteHead in moduleRefs)
             {
-                foreach (var localHead in module.GetRefs(true, true))
+                if (!remoteHead.IsRemote ||
+                    !remoteHead.Name.Contains(remoteName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (!remoteHead.IsRemote ||
-                        localHead.IsRemote ||
+                    continue;
+                }
+
+                foreach (var localHead in moduleRefs)
+                {
+                    if (localHead.IsRemote ||
                         !string.IsNullOrEmpty(localHead.GetTrackingRemote(localConfig)) ||
-                        remoteHead.IsTag ||
-                        localHead.IsTag ||
-                        !remoteHead.Name.ToLower().Contains(localHead.Name.ToLower()) ||
-                        !remoteHead.Name.ToLower().Contains(remoteName.ToLower()))
+                        !remoteHead.Name.Contains(localHead.Name, StringComparison.InvariantCultureIgnoreCase))
                     {
                         continue;
                     }

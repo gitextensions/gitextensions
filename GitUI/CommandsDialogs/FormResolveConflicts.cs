@@ -101,6 +101,9 @@ namespace GitUI.CommandsDialogs
             Translate();
             _offerCommit = offerCommit;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+
+            FileName.DataPropertyName = nameof(ConflictData.Filename);
+            authorDataGridViewTextBoxColumn1.DataPropertyName = "Author"; // TODO this property does not exist on the target type
         }
 
         private FormResolveConflicts()
@@ -148,7 +151,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 ConflictedFiles.DataSource = Module.GetConflicts();
-                ConflictedFiles.Columns[0].DataPropertyName = "Filename";
+                ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);
                 if (ConflictedFiles.Rows.Count > oldSelectedRow)
                 {
                     ConflictedFiles.Rows[oldSelectedRow].Selected = true;

@@ -41,15 +41,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonPruneWorktrees = new System.Windows.Forms.Button();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Worktrees)).BeginInit();
             this.SuspendLayout();
@@ -94,52 +85,42 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // Path
             // 
             this.Path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Path.DataPropertyName = "Path";
             this.Path.HeaderText = "Path";
             this.Path.Name = "Path";
             this.Path.ReadOnly = true;
             this.Path.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Path.Width = 35;
             // 
             // Type
             // 
             this.Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Type.DataPropertyName = "Type";
             this.Type.HeaderText = "Type";
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Type.Width = 37;
             // 
             // Branch
             // 
             this.Branch.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Branch.DataPropertyName = "Branch";
             this.Branch.HeaderText = "Branch";
             this.Branch.Name = "Branch";
             this.Branch.ReadOnly = true;
             this.Branch.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Branch.Width = 46;
             // 
             // Sha1
             // 
             this.Sha1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Sha1.DataPropertyName = "Sha1";
             this.Sha1.HeaderText = "SHA-1";
             this.Sha1.Name = "Sha1";
             this.Sha1.ReadOnly = true;
             this.Sha1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Sha1.Width = 37;
             // 
             // IsDeleted
             // 
             this.IsDeleted.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.IsDeleted.DataPropertyName = "IsDeleted";
             this.IsDeleted.HeaderText = "Deleted";
             this.IsDeleted.Name = "IsDeleted";
             this.IsDeleted.ReadOnly = true;
             this.IsDeleted.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.IsDeleted.Width = 50;
             // 
             // Open
             // 
@@ -149,7 +130,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Open.Name = "Open";
             this.Open.ReadOnly = true;
             this.Open.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Open.Width = 39;
             // 
             // Delete
             // 
@@ -161,7 +141,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Delete.Name = "Delete";
             this.Delete.ReadOnly = true;
             this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Delete.Width = 44;
             // 
             // buttonClose
             // 
@@ -185,83 +164,6 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.buttonPruneWorktrees.UseVisualStyleBackColor = true;
             this.buttonPruneWorktrees.Click += new System.EventHandler(this.buttonPruneWorktrees_Click);
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Type";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Type";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "Branch";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Branch";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "Sha1";
-            this.dataGridViewTextBoxColumn4.HeaderText = "SHA-1";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.ReadOnly = true;
-            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewCheckBoxColumn1
-            // 
-            this.dataGridViewCheckBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewCheckBoxColumn1.DataPropertyName = "IsDeleted";
-            this.dataGridViewCheckBoxColumn1.HeaderText = "Deleted";
-            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
-            this.dataGridViewCheckBoxColumn1.ReadOnly = true;
-            this.dataGridViewCheckBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dataGridViewImageColumn1
-            // 
-            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewImageColumn1.HeaderText = "Open";
-            this.dataGridViewImageColumn1.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
-            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
-            this.dataGridViewImageColumn1.ReadOnly = true;
-            this.dataGridViewImageColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // dataGridViewImageColumn2
-            // 
-            this.dataGridViewImageColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.dataGridViewImageColumn2.HeaderText = "Delete";
-            this.dataGridViewImageColumn2.Image = global::GitUI.Properties.Resources.Delete;
-            this.dataGridViewImageColumn2.Name = "dataGridViewImageColumn2";
-            this.dataGridViewImageColumn2.ReadOnly = true;
-            this.dataGridViewImageColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Branch";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // BName
-            // 
-            this.BName.DataPropertyName = "Name";
-            this.BName.HeaderText = "Name";
-            this.BName.Name = "BName";
-            this.BName.ReadOnly = true;
-            // 
             // FormManageWorktree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -284,19 +186,10 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         }
 
         #endregion
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.DataGridView Worktrees;
         private System.Windows.Forms.Button buttonPruneWorktrees;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
-        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
-        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Branch;

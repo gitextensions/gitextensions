@@ -1,3 +1,12 @@
+<!--
+IMPORTANT
+
+Before creating an issue, be sure to search existing issues, both open AND closed,
+to see whether someone else has already reported your issue.
+
+Please also read CONTRIBUTING.md.
+-->
+
 **Do you want to request a *feature* or report a *bug*?**
 
 **What is the current behavior?**

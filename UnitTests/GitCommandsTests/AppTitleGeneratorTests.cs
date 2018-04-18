@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 using NUnit.Framework;
 

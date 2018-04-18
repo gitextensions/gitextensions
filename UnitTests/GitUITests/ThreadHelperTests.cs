@@ -216,6 +216,24 @@ namespace GitUITests
             Assert.AreEqual(1, actual.InnerExceptions.Count);
         }
 
+        [Test]
+        [Apartment(ApartmentState.MTA)]
+        public void JoinableTaskFactoryConfiguredForMTA()
+        {
+            Assert.AreEqual(ApartmentState.MTA, Thread.CurrentThread.GetApartmentState());
+            Assert.Null(SynchronizationContext.Current);
+            Assert.NotNull(ThreadHelper.JoinableTaskContext);
+            Assert.NotNull(ThreadHelper.JoinableTaskFactory);
+            Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+        }
+
+        [Test]
+        [Apartment(ApartmentState.MTA)]
+        public async Task AllowAwaitForAsynchronousMTATest()
+        {
+            await Task.Yield();
+        }
+
         private static void JoinPendingOperations()
         {
             // Since we are testing a FileAndForget method, we need to join all pending operations before continuing.

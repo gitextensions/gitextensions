@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
 
@@ -222,23 +223,27 @@ See the changes in the commit form.");
 
             tvGitTree.ImageList = new ImageList(components)
             {
-                ColorDepth = ColorDepth.Depth32Bit
+                ColorDepth = ColorDepth.Depth32Bit,
+                ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
+                Images =
+                {
+                    Properties.Resources.New, // File
+                    Properties.Resources.Folder, // Folder
+                    Properties.Resources.IconFolderSubmodule // Submodule
+                }
             };
-            tvGitTree.ImageList.Images.Add(Properties.Resources.New); // File
-            tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); // Folder
-            tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); // Submodule
 
             GotFocus += (s, e1) => tvGitTree.Focus();
 
             base.OnRuntimeLoad(e);
         }
 
-        private IReadOnlyList<string> FindFileMatches(string name)
+        private IEnumerable<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
             var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
-            return candidates.Where(predicate).ToList();
+            return candidates.Where(predicate);
         }
 
         private void OnItemActivated()

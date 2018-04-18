@@ -23,6 +23,7 @@ cache:
 
 install:
 - cmd: git submodule update --init --recursive
+- cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd Setup
     python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%Dev@%APPVEYOR_REPO_COMMIT:~0,5%
@@ -53,7 +54,7 @@ test_script:
         -register:user `
         -returntargetcode `
         -hideskipped:All `
-        -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]*" `
+        -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]* -[nunit*]*" `
         -excludebyattribute:*.ExcludeFromCodeCoverage* `
         -excludebyfile:*\*Designer.cs `
         -output:"OpenCover.GitExtensions.xml" `

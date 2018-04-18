@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitCommands;
 using GitCommands.Settings;
 using JetBrains.Annotations;
 
@@ -16,6 +15,8 @@ namespace GitCommands.Patches
             InBody,
             OutsidePatch
         }
+
+        private static readonly Regex _patchHeaderRegex = new Regex("^diff --(?<type>git|cc|combined)\\s", RegexOptions.Compiled);
 
         /// <summary>
         /// Parses a patch file into individual <see cref="Patch"/> objects.
@@ -41,7 +42,7 @@ namespace GitCommands.Patches
             // skip email header
             for (; i < lines.Length; i++)
             {
-                if (IsStartOfANewPatch(lines[i], out _))
+                if (IsStartOfANewPatch(lines[i]))
                 {
                     break;
                 }
@@ -67,7 +68,9 @@ namespace GitCommands.Patches
 
             string header = lines[lineIndex];
 
-            if (!IsStartOfANewPatch(header, out var isCombinedDiff))
+            var headerMatch = _patchHeaderRegex.Match(header);
+
+            if (!headerMatch.Success)
             {
                 return null;
             }
@@ -78,10 +81,13 @@ namespace GitCommands.Patches
 
             string fileNameA, fileNameB;
 
+            var isCombinedDiff = headerMatch.Groups["type"].Value != "git";
+
             if (!isCombinedDiff)
             {
                 // diff --git a/GitCommands/CommitInformationTest.cs b/GitCommands/CommitInformationTest.cs
-                Match match = Regex.Match(header, " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
+                // diff --git b/Benchmarks/App.config a/Benchmarks/App.config
+                Match match = Regex.Match(header, "^diff --git [\\\"]?[abiwco12]/(.*)[\\\"]? [\\\"]?[abiwco12]/(.*)[\\\"]?$");
 
                 if (!match.Success)
                 {
@@ -93,14 +99,14 @@ namespace GitCommands.Patches
             }
             else
             {
-                Match match = Regex.Match(header, "--cc [\\\"]?(.*)[\\\"]?");
+                Match match = Regex.Match(header, "^diff --(cc|combined) [\\\"]?(?<filenamea>.*)[\\\"]?$");
 
                 if (!match.Success)
                 {
                     throw new FormatException("Invalid patch header: " + header);
                 }
 
-                fileNameA = match.Groups[1].Value.Trim();
+                fileNameA = match.Groups["filenamea"].Value.Trim();
                 fileNameB = null;
             }
 
@@ -122,7 +128,7 @@ namespace GitCommands.Patches
             {
                 var line = lines[i];
 
-                if (IsStartOfANewPatch(line, out _))
+                if (IsStartOfANewPatch(line))
                 {
                     lineIndex = i - 1;
                     done = true;
@@ -255,7 +261,7 @@ namespace GitCommands.Patches
             {
                 var line = lines[i];
 
-                if (IsStartOfANewPatch(line, out _))
+                if (IsStartOfANewPatch(line))
                 {
                     lineIndex = i - 1;
                     break;
@@ -294,10 +300,10 @@ namespace GitCommands.Patches
                    (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
-        private static bool IsStartOfANewPatch([NotNull] string input, out bool isCombinedDiff)
+        [Pure]
+        private static bool IsStartOfANewPatch([NotNull] string input)
         {
-            isCombinedDiff = IsCombinedDiff(input);
-            return isCombinedDiff || input.StartsWith("diff --git ");
+            return _patchHeaderRegex.IsMatch(input);
         }
     }
 }

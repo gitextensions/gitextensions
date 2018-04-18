@@ -28,6 +28,7 @@ namespace GitUI
         private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
         private readonly TranslationString _updateSubmodulesToo = new TranslationString("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
         private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
+        private readonly TranslationString _confirmDeleteRemoteBranch = new TranslationString("Do you want to delete the branch {0} from {1}?");
 
         // internal for FormTranslate
         internal MessageBoxes()
@@ -102,6 +103,12 @@ namespace GitUI
             }
 
             return result;
+        }
+
+        public static bool ConfirmDeleteRemoteBranch(IWin32Window owner, string branchName, string remote)
+        {
+            return MessageBox.Show(owner, string.Format(Instance._confirmDeleteRemoteBranch.Text, branchName, remote),
+                "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
     }
 }

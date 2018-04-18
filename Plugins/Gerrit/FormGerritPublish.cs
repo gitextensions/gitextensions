@@ -40,7 +40,7 @@ namespace Gerrit
         {
             remote = remote.ToPosixPath();
 
-            toBranch = GitCommandHelpers.GetFullBranchName(toBranch);
+            toBranch = GitRefName.GetFullBranchName(toBranch);
 
             const string fromBranch = "HEAD";
 

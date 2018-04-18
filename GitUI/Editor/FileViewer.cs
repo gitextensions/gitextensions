@@ -561,6 +561,7 @@ namespace GitUI.Editor
                                 ResetForImage();
                                 if (image != null)
                                 {
+                                    // TODO review whether we need DPI scaling here
                                     if (image.Size.Height > PictureBox.Size.Height ||
                                         image.Size.Width > PictureBox.Size.Width)
                                     {

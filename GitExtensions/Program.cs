@@ -167,15 +167,6 @@ namespace GitExtensions
                 }
             }
 
-            if (string.IsNullOrEmpty(workingDir))
-            {
-                string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
-                if (GitModule.IsValidGitWorkingDir(findWorkingDir))
-                {
-                    workingDir = findWorkingDir;
-                }
-            }
-
             return workingDir;
         }
 

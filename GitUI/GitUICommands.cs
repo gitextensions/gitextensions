@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
@@ -178,9 +179,9 @@ namespace GitUI
             return Module.RunGitCmd(arguments);
         }
 
-        public string CommandLineCommand(string cmd, string arguments)
+        public async Task<string> CommandLineCommandAsync(string cmd, string arguments)
         {
-            return Module.RunCmd(cmd, arguments);
+            return await Module.RunCmdAsync(cmd, arguments).ConfigureAwait(false);
         }
 
         private bool RequiresValidWorkingDir(object owner)
@@ -263,15 +264,20 @@ namespace GitUI
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
         {
-            return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
-                {
-                    using (var form = new FormDeleteBranch(this, branch))
-                    {
-                        form.ShowDialog(owner);
-                    }
+            return StartDeleteBranchDialog(owner, new string[] { branch });
+        }
 
-                    return true;
-                });
+        public bool StartDeleteBranchDialog(IWin32Window owner, IEnumerable<string> branches)
+        {
+            return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
+            {
+                using (var form = new FormDeleteBranch(this, branches))
+                {
+                    form.ShowDialog(owner);
+                }
+
+                return true;
+            });
         }
 
         public bool StartDeleteRemoteBranchDialog(IWin32Window owner, string remoteBranch)
@@ -285,11 +291,6 @@ namespace GitUI
 
                     return true;
                 });
-        }
-
-        public bool StartDeleteBranchDialog(string branch)
-        {
-            return StartDeleteBranchDialog(null, branch);
         }
 
         public bool StartCheckoutRevisionDialog(IWin32Window owner, string revision = null)
@@ -1471,6 +1472,38 @@ namespace GitUI
             StartFileHistoryDialog(fileName, null);
         }
 
+        public void OpenWithDifftool(IWin32Window owner, IReadOnlyList<GitRevision> revisions, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind, bool isTracked)
+        {
+            // Note: Order in revisions is that first clicked is last in array
+
+            string error = RevisionDiffInfoProvider.Get(revisions, diffKind,
+                out var extraDiffArgs, out var firstRevision, out var secondRevision);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(owner, error);
+            }
+            else
+            {
+                string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs, isTracked);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    MessageBox.Show(owner, output);
+                }
+            }
+        }
+
+        public FormDiff ShowFormDiff(bool firstParentIsValid, string baseCommitSha,
+            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        {
+            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha,
+                headCommitSha, baseCommitDisplayStr, headCommitDisplayStr);
+            diffForm.Show();
+            diffForm.ShowInTaskbar = true;
+
+            return diffForm;
+        }
+
         public bool StartPushDialog()
         {
             return StartPushDialog(false);
@@ -1771,7 +1804,7 @@ namespace GitUI
         // Please update FormCommandlineHelp if you add or change commands
         private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
         {
-            #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             switch (args[1])
             {
                 case "about":
@@ -1916,7 +1949,7 @@ namespace GitUI
 
                     break;
             }
-            #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
             Application.Run(new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen });
         }
@@ -2099,13 +2132,13 @@ namespace GitUI
             return arguments;
         }
 
-        private IReadOnlyList<string> FindFileMatches(string name)
+        private IEnumerable<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree("HEAD");
 
             var predicate = _fildFilePredicateProvider.Get(name, Module.WorkingDir);
 
-            return candidates.Where(predicate).ToList();
+            return candidates.Where(predicate);
         }
 
         private void Commit(Dictionary<string, string> arguments)

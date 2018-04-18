@@ -161,20 +161,6 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void GetFullBranchNameTest()
-        {
-            Assert.AreEqual(null, GitCommandHelpers.GetFullBranchName(null));
-            Assert.AreEqual("", GitCommandHelpers.GetFullBranchName(""));
-            Assert.AreEqual("", GitCommandHelpers.GetFullBranchName("    "));
-            Assert.AreEqual("4e0f0fe3f6add43557913c354de02560b8faec32", GitCommandHelpers.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32"));
-            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName("master"));
-            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName(" master "));
-            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName("refs/heads/master"));
-            Assert.AreEqual("refs/heads/release/2.48", GitCommandHelpers.GetFullBranchName("refs/heads/release/2.48"));
-            Assert.AreEqual("refs/tags/my-tag", GitCommandHelpers.GetFullBranchName("refs/tags/my-tag"));
-        }
-
-        [Test]
         public void TestGetPlinkCompatibleUrl_Incompatible()
         {
             // Test urls that are incompatible and need to be changed
@@ -632,6 +618,9 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "status --porcelain -z --untracked-files --ignore-submodules=none",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None));
+            Assert.AreEqual(
+                "status --porcelain -z --untracked-files --ignore-submodules=none",
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default));
             Assert.AreEqual(
                 "status --porcelain -z --untracked-files --ignore-submodules=untracked",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked));

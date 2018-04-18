@@ -28,6 +28,10 @@ namespace GitUI.Properties {
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources() {
+        }
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -127,51 +131,19 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap BuildCancelled {
-            get {
-                object obj = ResourceManager.GetObject("BuildCancelled", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap BuildFailed {
-            get {
-                object obj = ResourceManager.GetObject("BuildFailed", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap BuildSuccessful {
-            get {
-                object obj = ResourceManager.GetObject("BuildSuccessful", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### [Version 2.50.02] (06 September 2017)
+        ///### [Version 2.51.00] (28 Jan 2018)
         ///
-        ///#### Features: 
-        ///* Remote repositories modal defaults to inactive repo - Issue [3861]
-        ///* Allow cherry-picking multiple commits from FormBrowse menu - PR [3852]
-        ///
-        ///#### Fixes: 
-        ///* Clicking Commit causes a crash - Issue [3827]
-        ///* 2.50.01 Quoting issues on git checkout command - Issue [3969]
-        ///* Can&apos;t delete index.lock because it is being used by another process. - Issue [3902]
-        ///* Missing Newtonsoft.Json on startup exception - Issue [3879]
-        ///*  [rest of string was truncated]&quot;;.
+        ///#### Features:
+        ///* Commandline difftool raised Assert - PR [4386]
+        ///* Replace lightbulb images - PR [4351]
+        ///* Rename arguments related to diff to firstRevision, secondRevision to â€¦ - PR [4344]
+        ///* Use built-in stream.CopyTo method in SynchronizedProcessReader - PR [4343]
+        ///* Add icons in the browse form command menu - PR [4331]
+        ///* Display some missing shortcuts in Browse form menus - PR [4330]
+        ///* FormBrowse: Add option to display reflog references [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -180,11 +152,11 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Arkady Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+        ///   Looks up a localized string similar to Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, RussKie, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
         ///Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
         ///Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
         ///Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
-        ///Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmin [rest of string was truncated]&quot;;.
+        ///Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jø [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Coders {
             get {
@@ -779,19 +751,17 @@ namespace GitUI.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconBranchCheckout
-        {
-            get
-            {
+        internal static System.Drawing.Bitmap IconBranchCheckout {
+            get {
                 object obj = ResourceManager.GetObject("IconBranchCheckout", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -1061,7 +1031,7 @@ namespace GitUI.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

@@ -7,8 +7,7 @@ IF "%Configuration%"=="" SET Configuration=Release
 
 for /f "tokens=*" %%i in ('hMSBuild.bat -only-path -notamd64') do set msbuild="%%i"
 set project=..\GitExtensions.sln
-set EnableNuGetPackageRestore=true
-..\.nuget\nuget.exe restore %project%
+..\.nuget\nuget.exe restore -Verbosity Quiet %project%
 set msbuildparams=/p:Configuration=%Configuration% /t:Rebuild /nologo /v:m
 
 call BuildGitExtNative.cmd %Configuration% Rebuild

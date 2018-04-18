@@ -34,7 +34,6 @@
             this.lblDescription = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
-            this.GridColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtTitle = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblSourceRepository = new System.Windows.Forms.Label();
@@ -154,13 +153,6 @@
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.BtnCreateClick);
             // 
-            // GridColumnName
-            // 
-            this.GridColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.GridColumnName.DataPropertyName = "Slug";
-            this.GridColumnName.HeaderText = "Name";
-            this.GridColumnName.Name = "GridColumnName";
-            // 
             // txtTitle
             // 
             this.txtTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -209,7 +201,6 @@
             // 
             this.ddlRepositorySource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlRepositorySource.DisplayMember = "DisplayName";
             this.ddlRepositorySource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlRepositorySource.Enabled = false;
             this.ddlRepositorySource.FormattingEnabled = true;
@@ -223,7 +214,6 @@
             // 
             this.ddlBranchSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlBranchSource.DisplayMember = "DisplayName";
             this.ddlBranchSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlBranchSource.FormattingEnabled = true;
             this.ddlBranchSource.Location = new System.Drawing.Point(128, 58);
@@ -246,7 +236,6 @@
             // 
             this.ddlBranchTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlBranchTarget.DisplayMember = "DisplayName";
             this.ddlBranchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlBranchTarget.FormattingEnabled = true;
             this.ddlBranchTarget.Location = new System.Drawing.Point(127, 58);
@@ -274,7 +263,6 @@
             // 
             this.ddlRepositoryTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlRepositoryTarget.DisplayMember = "DisplayName";
             this.ddlRepositoryTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlRepositoryTarget.Enabled = false;
             this.ddlRepositoryTarget.FormattingEnabled = true;
@@ -730,7 +718,6 @@
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GridColumnName;
         private System.Windows.Forms.Label lblSourceRepository;
         private System.Windows.Forms.GroupBox groupBoxSource;
         private System.Windows.Forms.GroupBox groupBoxTarget;

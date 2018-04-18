@@ -12,7 +12,6 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private readonly RevisionGrid _revisionGrid;
         private string _baseCommitDisplayStr;
         private string _headCommitDisplayStr;
         private GitRevision _baseRevision;
@@ -22,6 +21,7 @@ namespace GitUI.CommandsDialogs
         private IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+        private readonly bool _firstParentIsValid;
 
         private readonly ToolTip _toolTipControl = new ToolTip();
 
@@ -32,12 +32,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _btnSwapTooltip =
             new TranslationString("Swap BASE and Compare commits");
 
-        public FormDiff(GitUICommands commands, RevisionGrid revisionGrid, string baseCommitSha,
+        public FormDiff(GitUICommands commands, bool firstParentIsValid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(commands)
         {
-            _revisionGrid = revisionGrid;
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
+            _firstParentIsValid = firstParentIsValid;
 
             InitializeComponent();
             Translate();
@@ -57,6 +57,7 @@ namespace GitUI.CommandsDialogs
             _baseRevision = new GitRevision(baseCommitSha);
             _headRevision = new GitRevision(headCommitSha);
             _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
+            ckCompareToMergeBase.Text += $" ({GitRevision.ToShortSha(_mergeBase.Guid)})";
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _revisionTester = new GitRevisionTester(_fullPathResolver);
@@ -160,7 +161,7 @@ namespace GitUI.CommandsDialogs
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
                 var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
-                _revisionGrid.OpenWithDifftool(revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
+                UICommands.OpenWithDifftool(this, revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
         }
 
@@ -198,10 +199,10 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = DiffFiles.GitItemStatuses;
 
-            IReadOnlyList<GitItemStatus> FindDiffFilesMatches(string name)
+            IEnumerable<GitItemStatus> FindDiffFilesMatches(string name)
             {
                 var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
-                return candidates.Where(item => predicate(item.Name) || predicate(item.OldName)).ToList();
+                return candidates.Where(item => predicate(item.Name) || predicate(item.OldName));
             }
 
             GitItemStatus selectedItem;
@@ -263,14 +264,12 @@ namespace GitUI.CommandsDialogs
             IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
-            var revisions = _revisionGrid.GetSelectedRevisions();
-            bool firstParentsValid = revisions != null && revisions.Count > 1;
 
             var selectionInfo = new ContextMenuDiffToolInfo(_headRevision, selectedItemParentRevs,
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
-                firstParentsValid: firstParentsValid,
+                firstParentsValid: _firstParentIsValid,
                 localExists: localExists);
             return selectionInfo;
         }

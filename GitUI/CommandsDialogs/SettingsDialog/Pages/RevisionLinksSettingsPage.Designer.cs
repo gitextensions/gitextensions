@@ -69,7 +69,6 @@
             this._NO_TRANSLATE_Name = new System.Windows.Forms.TextBox();
             this.EnabledChx = new System.Windows.Forms.CheckBox();
             this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -160,7 +159,6 @@
             // 
             // _NO_TRANSLATE_Categories
             // 
-            this._NO_TRANSLATE_Categories.DisplayMember = "Name";
             this._NO_TRANSLATE_Categories.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Categories.FormattingEnabled = true;
             this._NO_TRANSLATE_Categories.IntegralHeight = false;
@@ -201,15 +199,12 @@
             // 
             // CaptionCol
             // 
-            this.CaptionCol.DataPropertyName = "Caption";
             this.CaptionCol.HeaderText = "Caption";
             this.CaptionCol.Name = "CaptionCol";
-            this.CaptionCol.Width = 150;
             // 
             // URICol
             // 
             this.URICol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.URICol.DataPropertyName = "Format";
             this.URICol.HeaderText = "URI";
             this.URICol.Name = "URICol";
             // 
@@ -620,13 +615,6 @@
             this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 21);
             this.gotoUserManualControl1.TabIndex = 26;
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Title";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Title";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 150;
-            // 
             // RevisionLinksSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -678,7 +666,6 @@
         private System.Windows.Forms.Label CategoriesLabel;
         private System.Windows.Forms.Panel detailPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DataGridViewTextBoxColumn CaptionCol;

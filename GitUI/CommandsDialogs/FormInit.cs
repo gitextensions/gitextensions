@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -32,15 +32,15 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            Directory.Text = string.IsNullOrEmpty(dir)
-                ? AppSettings.DefaultCloneDestinationPath
-                : dir;
-        }
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
 
-        private void DirectoryDropDown(object sender, EventArgs e)
-        {
-            Directory.DataSource = Repositories.RepositoryHistory.Repositories;
-            Directory.DisplayMember = "Path";
+                await this.SwitchToMainThreadAsync();
+                Directory.DataSource = repositoryHistory;
+                Directory.DisplayMember = nameof(Repository.Path);
+                Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
+            });
         }
 
         private void InitClick(object sender, EventArgs e)
@@ -68,8 +68,8 @@ namespace GitUI.CommandsDialogs
 
             _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 
-            Repositories.AddMostRecentRepository(Directory.Text);
-
+            var path = Directory.Text;
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             Close();
         }
 

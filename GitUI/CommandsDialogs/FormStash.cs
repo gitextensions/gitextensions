@@ -38,6 +38,7 @@ namespace GitUI.CommandsDialogs
             Loading.Image = Properties.Resources.loadingpanel;
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
+            this.AdjustForDpiScaling();
         }
 
         private void ViewExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -72,7 +73,7 @@ namespace GitUI.CommandsDialogs
             Stashes.Text = "";
             StashMessage.Text = "";
             Stashes.SelectedItem = null;
-            Stashes.ComboBox.DisplayMember = "Message";
+            Stashes.ComboBox.DisplayMember = nameof(GitStash.Message);
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
             {

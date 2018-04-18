@@ -64,7 +64,6 @@
             this.Patches.Size = new System.Drawing.Size(675, 406);
             this.Patches.TabIndex = 0;
             this.Patches.DoubleClick += new System.EventHandler(this.Patches_DoubleClick);
-            this.Patches.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(dataGridView1_CellContentClick);
             // 
             // patchFileBindingSource
             // 
@@ -73,15 +72,12 @@
             // FileName
             // 
             this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.FileName.DataPropertyName = "Name";
             this.FileName.HeaderText = "Name";
             this.FileName.Name = "FileName";
             this.FileName.ReadOnly = true;
-            this.FileName.Width = 50;
             // 
             // subjectDataGridViewTextBoxColumn
             // 
-            this.subjectDataGridViewTextBoxColumn.DataPropertyName = "Subject";
             this.subjectDataGridViewTextBoxColumn.HeaderText = "Subject";
             this.subjectDataGridViewTextBoxColumn.Name = "subjectDataGridViewTextBoxColumn";
             this.subjectDataGridViewTextBoxColumn.ReadOnly = true;
@@ -89,29 +85,23 @@
             // authorDataGridViewTextBoxColumn
             // 
             this.authorDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
             this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
             this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
             this.authorDataGridViewTextBoxColumn.ReadOnly = true;
-            this.authorDataGridViewTextBoxColumn.Width = 140;
             // 
             // dateDataGridViewTextBoxColumn
             // 
             this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
             this.dateDataGridViewTextBoxColumn.HeaderText = "Date";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
             this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.Width = 160;
             // 
             // Status
             // 
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Status.DataPropertyName = "Status";
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
-            this.Status.Width = 80;
             // 
             // PatchGrid
             // 

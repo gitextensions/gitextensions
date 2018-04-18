@@ -76,8 +76,6 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<StartPageSettingsPage>(this), gitExtPageRef);
-
             var gitConfigSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
             settingsTreeView.AddSettingsPage(gitConfigSettingsSettingsPage, gitExtPageRef);
 
@@ -122,6 +120,8 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.GotoPage(initalPage);
             settingsTreeView.ResumeLayout();
+
+            this.AdjustForDpiScaling();
         }
 
         public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initalPage = null)

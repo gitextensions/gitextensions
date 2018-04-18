@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
@@ -15,8 +16,21 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             : base(commands)
         {
             InitializeComponent();
+            Path.Width = DpiUtil.Scale(35);
+            Type.Width = DpiUtil.Scale(37);
+            Branch.Width = DpiUtil.Scale(46);
+            Sha1.Width = DpiUtil.Scale(37);
+            IsDeleted.Width = DpiUtil.Scale(50);
+            Open.Width = DpiUtil.Scale(39);
+            Delete.Width = DpiUtil.Scale(44);
             Worktrees.AutoGenerateColumns = false;
             Translate();
+
+            Path.DataPropertyName = nameof(WorkTree.Path);
+            Type.DataPropertyName = nameof(WorkTree.Type);
+            Branch.DataPropertyName = nameof(WorkTree.Branch);
+            Sha1.DataPropertyName = nameof(WorkTree.Sha1);
+            IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)
@@ -32,7 +46,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var listWorktree = UICommands.CommandLineCommand("git", "worktree list --porcelain");
+            var listWorktree = ThreadHelper.JoinableTaskFactory.Run(() => UICommands.CommandLineCommandAsync("git", "worktree list --porcelain"));
             var worktreesLines = listWorktree.Split('\n').GetEnumerator();
             _worktrees = new List<WorkTree>();
             WorkTree currentWorktree = null;

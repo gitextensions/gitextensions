@@ -156,10 +156,7 @@
             this.TabControlTagBranch.Controls.Add(this.BranchTab);
             this.TabControlTagBranch.Controls.Add(this.TagTab);
             this.TabControlTagBranch.Controls.Add(this.MultipleBranchTab);
-            this.TabControlTagBranch.HotTrack = true;
-            this.TabControlTagBranch.ItemSize = new System.Drawing.Size(57, 18);
             this.TabControlTagBranch.Location = new System.Drawing.Point(12, 98);
-            this.TabControlTagBranch.Multiline = true;
             this.TabControlTagBranch.Name = "TabControlTagBranch";
             this.TabControlTagBranch.SelectedIndex = 0;
             this.TabControlTagBranch.ShowToolTips = true;
@@ -447,49 +444,39 @@
             // LocalColumn
             // 
             this.LocalColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LocalColumn.DataPropertyName = "Local";
             this.LocalColumn.HeaderText = "Local Branch";
             this.LocalColumn.Name = "LocalColumn";
             // 
             // RemoteColumn
             // 
             this.RemoteColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.RemoteColumn.DataPropertyName = "Remote";
             this.RemoteColumn.HeaderText = "Remote Branch";
             this.RemoteColumn.Name = "RemoteColumn";
             // 
             // NewColumn
             // 
             this.NewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.NewColumn.DataPropertyName = "New";
             this.NewColumn.HeaderText = "New at Remote";
             this.NewColumn.Name = "NewColumn";
             this.NewColumn.ReadOnly = true;
-            this.NewColumn.Width = 97;
             // 
             // PushColumn
             // 
             this.PushColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.PushColumn.DataPropertyName = "Push";
             this.PushColumn.HeaderText = "Push";
             this.PushColumn.Name = "PushColumn";
-            this.PushColumn.Width = 36;
             // 
             // ForceColumn
             // 
             this.ForceColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.ForceColumn.DataPropertyName = "Force";
             this.ForceColumn.HeaderText = "Push (Force Rewind)";
             this.ForceColumn.Name = "ForceColumn";
-            this.ForceColumn.Width = 101;
             // 
             // DeleteColumn
             // 
             this.DeleteColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.DeleteColumn.DataPropertyName = "Delete";
             this.DeleteColumn.HeaderText = "Delete Remote Branch";
             this.DeleteColumn.Name = "DeleteColumn";
-            this.DeleteColumn.Width = 108;
             // 
             // LoadSSHKey
             // 

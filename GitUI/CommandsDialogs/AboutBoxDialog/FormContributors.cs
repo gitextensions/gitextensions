@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         {
             SetupForm();
             Translate();
+            this.AdjustForDpiScaling();
         }
 
         private static TextBox GetNewTextBox()
@@ -50,11 +51,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0),
-                ItemSize = new Size(150, 26),
-                Margin = new Padding(0),
-                Padding = new Point(0, 0),
                 SelectedIndex = 0,
-                SizeMode = TabSizeMode.Fixed
             };
         }
 

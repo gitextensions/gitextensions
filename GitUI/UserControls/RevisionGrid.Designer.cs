@@ -131,9 +131,6 @@ namespace GitUI
             this.showMergeCommitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
             this.NoGit = new System.Windows.Forms.Panel();
@@ -230,7 +227,6 @@ namespace GitUI
             this.GraphDataGridViewColumn.Name = "Graph";
             this.GraphDataGridViewColumn.ReadOnly = true;
             this.GraphDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.GraphDataGridViewColumn.Width = 70;
             // 
             // Message
             // 
@@ -255,7 +251,6 @@ namespace GitUI
             this.AuthorDataGridViewColumn.Name = "Author";
             this.AuthorDataGridViewColumn.ReadOnly = true;
             this.AuthorDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.AuthorDataGridViewColumn.Width = 150;
             // 
             // Date
             // 
@@ -263,7 +258,6 @@ namespace GitUI
             this.DateDataGridViewColumn.Name = "Date";
             this.DateDataGridViewColumn.ReadOnly = true;
             this.DateDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.DateDataGridViewColumn.Width = 135;
             //
             // Id
             //
@@ -488,7 +482,7 @@ namespace GitUI
             // 
             this.compareToBranchToolStripMenuItem.Name = "compareToBranchToolStripMenuItem";
             this.compareToBranchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.compareToBranchToolStripMenuItem.Text = "Compare to branch";
+            this.compareToBranchToolStripMenuItem.Text = "Compare to branch...";
             this.compareToBranchToolStripMenuItem.Click += new System.EventHandler(this.CompareToBranchToolStripMenuItem_Click);
             // 
             // compareWithCurrentBranchToolStripMenuItem
@@ -646,33 +640,6 @@ namespace GitUI
             // 
             this.showMergeCommitsToolStripMenuItem.Name = "showMergeCommitsToolStripMenuItem";
             this.showMergeCommitsToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.Frozen = true;
-            this.dataGridViewTextBoxColumn3.HeaderText = "";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridViewTextBoxColumn3.Width = 70;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.Frozen = true;
-            this.dataGridViewTextBoxColumn2.HeaderText = "";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridViewTextBoxColumn2.Width = 70;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.Frozen = true;
-            this.dataGridViewTextBoxColumn1.HeaderText = "";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridViewTextBoxColumn1.Width = 70;
             // 
             // SelectionTimer
             // 
@@ -885,9 +852,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseInteractivelyToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.ToolStripMenuItem branchNameCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tagNameCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem messageCopyToolStripMenuItem;
@@ -899,7 +864,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem markRevisionAsGoodToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopBisectToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator bisectSeparator;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
         private System.Windows.Forms.Button CloneRepository;

@@ -63,7 +63,7 @@ namespace GitCommands.Statistics
             public DataPoint data;
         }
 
-        private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IGitModule _module;
 
         public ImpactLoader(IGitModule module)
@@ -82,21 +82,21 @@ namespace GitCommands.Statistics
             if (disposing)
             {
                 Stop();
-                _backgroundLoaderTokenSource.Dispose();
+                _cancellationTokenSequence.Dispose();
             }
         }
 
         public void Stop()
         {
-            _backgroundLoaderTokenSource.Cancel();
+            _cancellationTokenSequence.CancelCurrent();
         }
 
         public void Execute()
         {
-            _backgroundLoaderTokenSource.Cancel();
-            _backgroundLoaderTokenSource = new CancellationTokenSource();
-            var token = _backgroundLoaderTokenSource.Token;
+            var token = _cancellationTokenSequence.Next();
+
             JoinableTask[] tasks = GetTasks(token);
+
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 try

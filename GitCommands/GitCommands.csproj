@@ -41,35 +41,18 @@
     <DocumentationFile>bin\Release\GitCommands.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Threading, Version=15.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Threading.15.6.46\lib\net46\Microsoft.VisualStudio.Threading.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Validation, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Validation.15.3.15\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SmartFormat, Version=2.0.0.0, Culture=neutral, PublicKeyToken=568866805651201f, processorArchitecture=MSIL">
-      <HintPath>..\packages\SmartFormat.NET.2.0.0.0\lib\net45\SmartFormat.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Abstractions, Version=2.0.0.144, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Abstractions.2.0.0.144\lib\net40\System.IO.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="SmartFormat.NET" Version="2.0.0.0" />
+    <PackageReference Include="System.IO.Abstractions" Version="2.0.0.144" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -103,6 +86,7 @@
     <Compile Include="FullPathResolver.cs" />
     <Compile Include="GitRevisionInfoProvider.cs" />
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
+    <Compile Include="Git\DetachedHeadParser.cs" />
     <Compile Include="Git\EnvironmentConfiguration.cs" />
     <Compile Include="Git\FileDeleteException.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
@@ -110,6 +94,7 @@
     <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
     <Compile Include="Git\LongShaProvider.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
+    <Compile Include="Git\GitRefName.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchesCmd.cs" />
@@ -120,7 +105,13 @@
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
-    <Compile Include="Repository\RepositoryDescriptionProvider.cs" />
+    <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\LocalRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RemoteRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryHistoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryDescriptionProvider.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryStorage.cs" />
+    <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiser.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
@@ -171,8 +162,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Repository\Repository.cs" />
-    <Compile Include="Repository\RepositoryCategory.cs" />
+    <Compile Include="UserRepositoryHistory\Repository.cs" />
     <Compile Include="Git\GitBlame.cs" />
     <Compile Include="Git\GitItemStatus.cs" />
     <Compile Include="Git\GitPushAction.cs" />
@@ -185,10 +175,6 @@
     <Compile Include="Patches\Patch.cs" />
     <Compile Include="Patches\PatchFile.cs" />
     <Compile Include="Patches\PatchManager.cs" />
-    <Compile Include="Repository\Repositories.cs" />
-    <Compile Include="Repository\RepositoryCategoryType.cs" />
-    <Compile Include="Repository\RepositoryHistory.cs" />
-    <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
@@ -204,8 +190,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="gitcommandkey.snk.pfx" />
-    <Compile Include="Repository\RecentRepoInfo.cs" />
-    <None Include="packages.config" />
+    <Compile Include="UserRepositoryHistory\RecentRepoInfo.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -221,17 +206,5 @@
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.0-beta006\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.0-beta006\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.6.46\build\Microsoft.VisualStudio.Threading.Analyzers.targets'))" />
-  </Target>
 </Project>

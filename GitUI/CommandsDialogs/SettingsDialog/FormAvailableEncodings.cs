@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             try
             {
                 ListIncludedEncodings.Items.AddRange(includedEncoding.Values.ToArray());
-                ListIncludedEncodings.DisplayMember = "EncodingName";
+                ListIncludedEncodings.DisplayMember = nameof(Encoding.EncodingName);
             }
             finally
             {
@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             try
             {
                 ListAvailableEncodings.Items.AddRange(availableEncoding.ToArray());
-                ListAvailableEncodings.DisplayMember = "EncodingName";
+                ListAvailableEncodings.DisplayMember = nameof(Encoding.EncodingName);
             }
             finally
             {

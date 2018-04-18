@@ -25,7 +25,7 @@ namespace GitUI.HelperDialogs
                 Branches.MultiColumn = true;
             }
 
-            Branches.DisplayMember = "Name";
+            Branches.DisplayMember = nameof(IGitRef.Name);
             Branches.Items.AddRange(branchesToSelect.ToArray());
         }
 

@@ -16,5 +16,16 @@ namespace GitCommandsTests
         {
             Assert.AreEqual(expected, s.ShortenTo(length));
         }
+
+        [TestCase("Hello World", "Hello", true)]
+        [TestCase("Hello World", " ", true)]
+        [TestCase("Hello World", "World", true)]
+        [TestCase("Hello World", "", true)]
+        [TestCase("Hello World", "Hi", false)]
+        [TestCase("Hello World", "ldi", false)]
+        public void Contains_works_as_expected(string str, string other, bool expected)
+        {
+            Assert.AreEqual(expected, str.Contains(other, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }

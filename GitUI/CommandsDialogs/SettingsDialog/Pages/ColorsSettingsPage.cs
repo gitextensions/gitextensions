@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -211,28 +212,39 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ShowIconPreview()
         {
-            Icon icon;
             switch (IconStyle.SelectedIndex)
             {
                 case 0:
-                    IconPreview.Image = new Icon(GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32).ToBitmap();
-                    IconPreviewSmall.Image = new Icon(GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16).ToBitmap();
+                    IconPreview.Image = GetIcon("Large", 32);
+                    IconPreviewSmall.Image = GetIcon("Small", 16);
                     break;
                 case 1:
-                    icon = GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor());
-                    IconPreview.Image = new Icon(icon, 32, 32).ToBitmap();
-                    IconPreviewSmall.Image = new Icon(icon, 16, 16).ToBitmap();
+                    IconPreview.Image = GetIcon("Small", 32);
+                    IconPreviewSmall.Image = GetIcon("Small", 16);
                     break;
                 case 2:
-                    icon = GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor());
-                    IconPreview.Image = new Icon(icon, 32, 32).ToBitmap();
-                    IconPreviewSmall.Image = new Icon(icon, 16, 16).ToBitmap();
+                    IconPreview.Image = GetIcon("Large", 32);
+                    IconPreviewSmall.Image = GetIcon("Large", 16);
                     break;
                 case 3:
-                    icon = GitExtensionsForm.GetApplicationIcon("Cow", GetSelectedApplicationIconColor());
-                    IconPreview.Image = new Icon(icon, 32, 32).ToBitmap();
-                    IconPreviewSmall.Image = new Icon(icon, 16, 16).ToBitmap();
+                    IconPreview.Image = GetIcon("Cow", 32);
+                    IconPreviewSmall.Image = GetIcon("Cow", 16);
                     break;
+            }
+
+            Image GetIcon(string name, int size)
+            {
+                var icon = GitExtensionsForm.GetApplicationIcon(name, GetSelectedApplicationIconColor());
+
+                var targetWidth = (int)(DpiUtil.ScaleX * size);
+                var targetHeight = (int)(DpiUtil.ScaleY * size);
+
+                if (icon.Width != targetWidth && icon.Height != targetHeight)
+                {
+                    icon = new Icon(icon, targetWidth, targetHeight);
+                }
+
+                return icon.ToBitmap();
             }
         }
 

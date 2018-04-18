@@ -25,6 +25,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            this.AdjustForDpiScaling();
         }
 
         private void LoadSSHKey_Click(object sender, EventArgs e)

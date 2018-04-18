@@ -8,8 +8,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Remote;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -163,7 +164,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(remotes).ToList();
-            _NO_TRANSLATE_Remotes.DisplayMember = "Name";
+            _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
@@ -262,7 +263,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                Branches.DisplayMember = "LocalName";
+                Branches.DisplayMember = nameof(IGitRef.LocalName);
 
                 ////_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
                 _heads.Insert(0, GitRef.NoHead(Module));
@@ -395,7 +396,8 @@ namespace GitUI.CommandsDialogs
 
             if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
             {
-                Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
+                var path = comboBoxPullSource.Text;
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(path));
             }
 
             var source = CalculateSource();
@@ -506,7 +508,7 @@ namespace GitUI.CommandsDialogs
         private bool CalculateStashedValue(IWin32Window owner)
         {
             if (!Fetch.Checked && AutoStash.Checked && !Module.IsBareRepository() &&
-                Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
+                Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.All).Count > 0)
             {
                 UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
                 return true;
@@ -595,7 +597,7 @@ namespace GitUI.CommandsDialogs
 
             curRemoteBranch = Branches.Text;
 
-            if (GitModule.IsDetachedHead(_branch))
+            if (DetachedHeadParser.IsDetachedHead(_branch))
             {
                 curLocalBranch = null;
                 return true;
@@ -800,14 +802,6 @@ namespace GitUI.CommandsDialogs
             FillFormTitle();
         }
 
-        private void FillPullSourceDropDown()
-        {
-            string prevUrl = comboBoxPullSource.Text;
-            comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            comboBoxPullSource.DisplayMember = "Path";
-            comboBoxPullSource.Text = prevUrl;
-        }
-
         private void FillFormTitle()
         {
             var format = Fetch.Checked
@@ -867,7 +861,16 @@ namespace GitUI.CommandsDialogs
             Merge.Enabled = true;
             Rebase.Enabled = true;
 
-            FillPullSourceDropDown();
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                string prevUrl = comboBoxPullSource.Text;
+                comboBoxPullSource.DataSource = repositoryHistory;
+                comboBoxPullSource.DisplayMember = nameof(Repository.Path);
+                comboBoxPullSource.Text = prevUrl;
+            });
         }
 
         private void AddRemoteClick(object sender, EventArgs e)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Repository;
+using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -18,6 +18,17 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         {
             InitializeComponent();
             Translate();
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
+
+                await this.SwitchToMainThreadAsync();
+                Directory.DataSource = repositoryHistory;
+                Directory.DisplayMember = nameof(Repository.Path);
+                Directory.Text = "";
+                LocalPath.Text = "";
+            });
         }
 
         private void BrowseClick(object sender, EventArgs e)
@@ -52,14 +63,6 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             DirectoryTextUpdate(null, null);
         }
 
-        private void FormAddSubmoduleShown(object sender, EventArgs e)
-        {
-            Directory.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            Directory.DisplayMember = "Path";
-            Directory.Text = "";
-            LocalPath.Text = "";
-        }
-
         private void BranchDropDown(object sender, EventArgs e)
         {
             GitModule module = new GitModule(Directory.Text);
@@ -74,7 +77,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                 heads.AddRange(module.GetRefs(false));
             }
 
-            Branch.DisplayMember = "Name";
+            Branch.DisplayMember = nameof(IGitRef.Name);
             Branch.DataSource = heads;
         }
 

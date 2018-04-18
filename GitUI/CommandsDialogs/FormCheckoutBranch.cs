@@ -443,7 +443,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                _remoteName = GitCommandHelpers.GetRemoteName(branch, Module.GetRemotes(false));
+                _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemotes(false));
                 _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch);
                 var remoteBranchName = _remoteName.Length > 0 ? branch.Substring(_remoteName.Length + 1) : branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);
@@ -508,7 +508,7 @@ namespace GitUI.CommandsDialogs
             {
                 var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisons[0], LocalBranch.Checked,
                         !LocalBranch.Checked)
-                        .Where(a => !GitModule.IsDetachedHead(a) &&
+                        .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
             }
@@ -519,7 +519,7 @@ namespace GitUI.CommandsDialogs
                 var branches =
                     Module.GetAllBranchesWhichContainGivenCommit(containRevison, LocalBranch.Checked,
                         !LocalBranch.Checked)
-                        .Where(a => !GitModule.IsDetachedHead(a) &&
+                        .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                 result.IntersectWith(branches);
             }

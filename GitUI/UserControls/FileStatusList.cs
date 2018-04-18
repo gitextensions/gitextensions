@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
 using ResourceManager;
@@ -52,24 +53,31 @@ namespace GitUI
             SelectFirstItemOnSetItems = true;
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
+
             if (_images == null)
             {
-                _images = new ImageList();
-                _images.Images.Add(Resources.Removed); // 0
-                _images.Images.Add(Resources.Added); // 1
-                _images.Images.Add(Resources.Modified); // 2
-                _images.Images.Add(Resources.Renamed); // 3
-                _images.Images.Add(Resources.Copied); // 4
-                _images.Images.Add(Resources.IconSubmoduleDirty); // 5
-                _images.Images.Add(Resources.IconSubmoduleRevisionUp); // 6
-                _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
-                _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
-                _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
-                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUp); // 10
-                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUpDirty); // 11
-                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDown); // 12
-                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDownDirty); // 13
-                _images.Images.Add(Resources.IconFileStatusUnknown); // 14
+                _images = new ImageList
+                {
+                    ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
+                    Images =
+                    {
+                        Resources.Removed, // 0
+                        Resources.Added, // 1
+                        Resources.Modified, // 2
+                        Resources.Renamed, // 3
+                        Resources.Copied, // 4
+                        Resources.IconSubmoduleDirty, // 5
+                        Resources.IconSubmoduleRevisionUp, // 6
+                        Resources.IconSubmoduleRevisionUpDirty, // 7
+                        Resources.IconSubmoduleRevisionDown, // 8
+                        Resources.IconSubmoduleRevisionDownDirty, // 9
+                        Resources.IconSubmoduleRevisionSemiUp, // 10
+                        Resources.IconSubmoduleRevisionSemiUpDirty, // 11
+                        Resources.IconSubmoduleRevisionSemiDown, // 12
+                        Resources.IconSubmoduleRevisionSemiDownDirty, // 13
+                        Resources.IconFileStatusUnknown // 14
+                    }
+                };
             }
 
             FileStatusListView.SmallImageList = _images;

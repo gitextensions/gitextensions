@@ -9,11 +9,8 @@ _ReSharper*/
 TestResults/
 *.DS_Store*
 
-*/obj
-Plugins/*/obj
-Plugins/*/bin
-Plugins/*/*/obj
-Plugins/*/*/bin
+obj/
+bin/
 
 #ignore output mild compiler
 GitExtensionsShellEx/Generated/

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -15,6 +16,7 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
             Translate();
+            this.AdjustForDpiScaling();
         }
 
         private static string Coders => Resources.Coders.Replace(Environment.NewLine, " ");
@@ -40,7 +42,7 @@ namespace GitUI.CommandsDialogs
             Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
             if (image != null)
             {
-                logoPictureBox.Image = image;
+                logoPictureBox.Image = DpiUtil.Scale(image);
             }
 
             thanksTimer_Tick(null, null);
