@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -211,6 +212,22 @@ namespace GitCommandsTests.Git
             {
                 Assert.AreEqual(ObjectId.Parse(expected), id);
             }
+        }
+
+        [Test]
+        [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
+        public void ToShortString()
+        {
+            const string s = "0102030405060708091011121314151617181920";
+            var id = ObjectId.Parse(s);
+
+            for (var length = 0; length < ObjectId.Sha1CharCount; length++)
+            {
+                Assert.AreEqual(s.Substring(0, length), id.ToShortString(length));
+            }
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(ObjectId.Sha1CharCount + 1));
         }
     }
 }

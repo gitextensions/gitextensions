@@ -391,8 +391,30 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Returns the SHA-1 hash.
         /// </summary>
-        public override unsafe string ToString()
+        public override string ToString()
         {
+            return ToShortString(Sha1CharCount);
+        }
+
+        /// <summary>
+        /// Returns the first <paramref name="length"/> characters of the SHA-1 hash.
+        /// </summary>
+        /// <param name="length">The length of the returned string. Defaults to <c>10</c>.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than zero, or more than 40.</exception>
+        [Pure]
+        [NotNull]
+        public unsafe string ToShortString(int length = 10)
+        {
+            if (length < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Cannot be less than zero.");
+            }
+
+            if (length > Sha1CharCount)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length, $"Cannot be greater than {Sha1CharCount}.");
+            }
+
             char* buffer = stackalloc char[Sha1CharCount];
             var p = buffer;
 
@@ -402,7 +424,7 @@ namespace GitUIPluginInterfaces
             Write(_i4);
             Write(_i5);
 
-            return new string(buffer, 0, Sha1CharCount);
+            return new string(buffer, 0, length);
 
             void Write(uint i)
             {
@@ -417,18 +439,6 @@ namespace GitUIPluginInterfaces
             }
 
             char ParseHexDigit(uint j) => j < 10 ? (char)('0' + j) : (char)(j + 0x57);
-        }
-
-        /// <summary>
-        /// Returns the first <paramref name="maxLength"/> characters of the SHA-1 hash.
-        /// </summary>
-        /// <param name="maxLength">The maximum length of the returned string. Defaults to <c>10</c>.</param>
-        [NotNull]
-        public string ToShortString(int maxLength = 10)
-        {
-            // TODO optimise this for shorter lengths
-            var s = ToString();
-            return s.Substring(Math.Min(maxLength, s.Length));
         }
 
         #region Equality and hashing
