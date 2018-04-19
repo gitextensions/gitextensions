@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
 
@@ -389,14 +388,13 @@ namespace GitUIPluginInterfaces
             _i5 = i5;
         }
 
-        private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
         /// <summary>
         /// Returns the SHA-1 hash.
         /// </summary>
-        public override string ToString()
+        public override unsafe string ToString()
         {
-            var s = new StringBuilder(Sha1CharCount);
+            char* buffer = stackalloc char[Sha1CharCount];
+            var p = buffer;
 
             Write(_i1);
             Write(_i2);
@@ -404,19 +402,21 @@ namespace GitUIPluginInterfaces
             Write(_i4);
             Write(_i5);
 
-            return s.ToString();
+            return new string(buffer, 0, Sha1CharCount);
 
             void Write(uint i)
             {
-                s.Append(_hexDigits[i >> 28]);
-                s.Append(_hexDigits[(i >> 24) & 0xF]);
-                s.Append(_hexDigits[(i >> 20) & 0xF]);
-                s.Append(_hexDigits[(i >> 16) & 0xF]);
-                s.Append(_hexDigits[(i >> 12) & 0xF]);
-                s.Append(_hexDigits[(i >> 8) & 0xF]);
-                s.Append(_hexDigits[(i >> 4) & 0xF]);
-                s.Append(_hexDigits[i & 0xF]);
+                *p++ = ParseHexDigit(i >> 28);
+                *p++ = ParseHexDigit((i >> 24) & 0xF);
+                *p++ = ParseHexDigit((i >> 20) & 0xF);
+                *p++ = ParseHexDigit((i >> 16) & 0xF);
+                *p++ = ParseHexDigit((i >> 12) & 0xF);
+                *p++ = ParseHexDigit((i >> 8) & 0xF);
+                *p++ = ParseHexDigit((i >> 4) & 0xF);
+                *p++ = ParseHexDigit(i & 0xF);
             }
+
+            char ParseHexDigit(uint j) => j < 10 ? (char)('0' + j) : (char)(j + 0x57);
         }
 
         /// <summary>
