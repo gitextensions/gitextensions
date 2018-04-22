@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _tagsLoader.LoadAsync(
-                    () => Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByCommitDateDescending).ToList(),
+                    () => Module.GetTagRefs(AppSettings.BranchOrderingCriteria).ToList(),
                     list =>
                     {
                         comboBoxTags.Text = string.Empty;

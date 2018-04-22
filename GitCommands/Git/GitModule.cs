@@ -2831,52 +2831,13 @@ namespace GitCommands
             }
         }
 
-        /// <param name="option">Ordery by date is slower.</param>
-        public IReadOnlyList<IGitRef> GetTagRefs(GetTagRefsSortOrder option)
+        public IReadOnlyList<IGitRef> GetTagRefs(BranchOrdering ordering)
         {
             var list = GetRefs(true, false);
 
-            List<IGitRef> sortedList;
-            if (option == GetTagRefsSortOrder.ByCommitDateAscending)
-            {
-                sortedList = list.OrderBy(head =>
-                {
-                    var r = new GitRevision(head.Guid);
-                    return r.CommitDate;
-                }).ToList();
-            }
-            else if (option == GetTagRefsSortOrder.ByCommitDateDescending)
-            {
-                sortedList = list.OrderByDescending(head =>
-                {
-                    var r = new GitRevision(head.Guid);
-                    return r.CommitDate;
-                }).ToList();
-            }
-            else
-            {
-                sortedList = new List<IGitRef>(list);
-            }
+            // TODO call command, parse and sort output
 
-            return sortedList;
-        }
-
-        public enum GetTagRefsSortOrder
-        {
-            /// <summary>
-            /// default
-            /// </summary>
-            ByName,
-
-            /// <summary>
-            /// slower than ByName
-            /// </summary>
-            ByCommitDateAscending,
-
-            /// <summary>
-            /// slower than ByName
-            /// </summary>
-            ByCommitDateDescending
+            return new List<IGitRef>(list);
         }
 
         public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
