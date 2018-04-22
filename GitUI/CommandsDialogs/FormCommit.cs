@@ -2032,7 +2032,7 @@ namespace GitUI.CommandsDialogs
                 .Select(message => message.TrimEnd('\n'))
                 .ToList();
 
-            if (!prevMsgs.Contains(msg))
+            if (!string.IsNullOrWhiteSpace(msg) && !prevMsgs.Contains(msg))
             {
                 // If the list is already full
                 if (prevMsgs.Count == maxCount)
