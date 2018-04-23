@@ -479,17 +479,17 @@ namespace GitCommands
             }
         }
 
-        [NotNull]
-        public static string FindGitWorkingDir([CanBeNull] string startDir)
+        /// <summary>
+        /// Searches from <paramref name="startDir"/> and up through the directory
+        /// hierarchy for a valid git working directory. If found, the path is returned,
+        /// otherwise <c>null</c>.
+        /// </summary>
+        [CanBeNull]
+        public static string TryFindGitWorkingDir([CanBeNull] string startDir)
         {
-            if (string.IsNullOrEmpty(startDir))
-            {
-                return "";
-            }
+            var dir = startDir?.Trim();
 
-            var dir = startDir.Trim();
-
-            do
+            while (!string.IsNullOrWhiteSpace(dir))
             {
                 if (IsValidGitWorkingDir(dir))
                 {
@@ -498,9 +498,8 @@ namespace GitCommands
 
                 dir = PathUtil.GetDirectoryName(dir);
             }
-            while (!string.IsNullOrEmpty(dir));
 
-            return startDir;
+            return null;
         }
 
         [NotNull]

@@ -133,7 +133,7 @@ namespace GitExtensions
         [CanBeNull]
         private static string GetWorkingDir(string[] args)
         {
-            var workingDir = "";
+            string workingDir = null;
 
             if (args.Length >= 3)
             {
@@ -141,15 +141,13 @@ namespace GitExtensions
                 // while parsing command line arguments, it unescapes " incorectly
                 // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
-                if (Directory.Exists(dirArg))
+
+                if (!Directory.Exists(dirArg))
                 {
-                    workingDir = GitModule.FindGitWorkingDir(dirArg);
+                    dirArg = Path.GetDirectoryName(dirArg);
                 }
-                else
-                {
-                    workingDir = Path.GetDirectoryName(dirArg);
-                    workingDir = GitModule.FindGitWorkingDir(workingDir);
-                }
+
+                workingDir = GitModule.TryFindGitWorkingDir(dirArg);
 
                 if (Directory.Exists(workingDir))
                 {
@@ -162,7 +160,7 @@ namespace GitExtensions
                 ////   Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
-            if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && AppSettings.StartWithRecentWorkingDir)
+            if (args.Length <= 1 && workingDir == null && AppSettings.StartWithRecentWorkingDir)
             {
                 if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
                 {
@@ -170,17 +168,12 @@ namespace GitExtensions
                 }
             }
 
-            if (workingDir == "")
+            if (workingDir == null)
             {
                 // If no working dir is yet found, try to find one relative to the current working directory.
                 // This allows the `fileeditor` command to discover repository configuration which is
                 // required for core.commentChar support.
-                var cwd = Environment.CurrentDirectory;
-                var gitDir = GitModule.FindGitWorkingDir(cwd);
-                if (GitModule.IsValidGitWorkingDir(gitDir))
-                {
-                    workingDir = gitDir;
-                }
+                workingDir = GitModule.TryFindGitWorkingDir(Environment.CurrentDirectory);
             }
 
             return workingDir;
