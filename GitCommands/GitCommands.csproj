@@ -93,6 +93,7 @@
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
+    <Compile Include="Git\GitCommandResult.cs" />
     <Compile Include="Git\ListLocalTagsCommand.cs" />
     <Compile Include="Git\LocalGitRefList.cs" />
     <Compile Include="Git\LongShaProvider.cs" />
